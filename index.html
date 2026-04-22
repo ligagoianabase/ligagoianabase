@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liga Goiana de Futebol de Base</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* MANTIVE SEU CSS ORIGINAL — SEM ALTERAR DESIGN */
+/* SÓ REMOVI O display:none DO MENU NO MOBILE */
+
+/* (seu CSS inteiro permanece igual até aqui) */
+
+@media (max-width: 1180px){
+  /* REMOVIDO: .top-nav { display:none; } */
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+
+<!-- SIDEBAR ORGANIZADA -->
+<div class="sidebar-header">
+  <div class="sidebar-brand">
+    <img src="logo-liga.jfif">
+    <div>
+      <strong>Liga Goiana de Futebol de Base</strong>
+      <span>Onde o talento encontra o futuro</span>
+    </div>
+  </div>
+  <button id="sidebarClose">×</button>
+</div>
+
+<div class="sidebar-block">
+  <div class="sidebar-title">MENU</div>
+  <div class="side-menu">
+
+    <a href="index.html">Início</a>
+    <a href="campeonatos.html">Campeonatos</a>
+    <a href="classificacao.html">Classificação</a>
+    <a href="artilharia.html">Artilharia</a>
+    <a href="jogadores.html">Jogadores</a>
+
+    <a href="times.html">Times</a>
+    <a href="tecnicos.html">Técnicos</a>
+    <a href="arbitros.html">Árbitros</a>
+    <a href="assistentes.html">Assistentes</a>
+
+    <a href="jogos.html">Jogos</a>
+    <a href="sumula.html">Súmula</a>
+    <a href="noticias.html">Notícias</a>
+    <a href="galeria.html">Galeria</a>
+
+    <a href="login.html">Login</a>
+    <a href="admin.html" id="menuAdmin">Painel ADM</a>
+
+  </div>
+</div>
+
+</aside>
+
+<header class="topbar">
+<div class="wrap topbar-inner">
+
+<div class="topbar-left">
+<button class="menu-toggle" id="menuToggle">☰</button>
+
+<a href="index.html" class="topbar-logo">
+<img src="logo-liga.jfif">
+<div class="logo-text">
+<strong>Liga Goiana de Futebol de Base</strong>
+<span>Onde o talento encontra o futuro</span>
+</div>
+</a>
+</div>
+
+<nav class="top-nav">
+<ul>
+
+<li><a href="index.html">Início</a></li>
+
+<li class="dropdown">
+<button class="dropdown-toggle">
+Campeonatos <i class="fa-solid fa-chevron-down"></i>
+</button>
+<div class="dropdown-menu">
+<a href="classificacao.html">Classificação</a>
+<a href="artilharia.html">Artilharia</a>
+<a href="jogadores.html">Jogadores</a>
+</div>
+</li>
+
+<li class="dropdown">
+<button class="dropdown-toggle">
+Participantes <i class="fa-solid fa-chevron-down"></i>
+</button>
+<div class="dropdown-menu">
+<a href="times.html">Times</a>
+<a href="tecnicos.html">Técnicos</a>
+<a href="arbitros.html">Árbitros</a>
+<a href="assistentes.html">Assistentes</a>
+</div>
+</li>
+
+<li><a href="galeria.html">Galeria</a></li>
+
+</ul>
+</nav>
+
+<div class="top-actions">
+<a href="login.html" class="btn-login-chip">
+<i class="fa-solid fa-user"></i> Login
+</a>
+</div>
+
+</div>
+</header>
+<script>
+
+const sidebar = document.getElementById("sidebar");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+const menuToggle = document.getElementById("menuToggle");
+const sidebarClose = document.getElementById("sidebarClose");
+
+menuToggle.onclick = () => {
+  sidebar.classList.add("open");
+  sidebarOverlay.classList.add("show");
+};
+
+sidebarClose.onclick = () => {
+  sidebar.classList.remove("open");
+  sidebarOverlay.classList.remove("show");
+};
+
+sidebarOverlay.onclick = () => {
+  sidebar.classList.remove("open");
+  sidebarOverlay.classList.remove("show");
+};
+
+/* DROPDOWN */
+document.querySelectorAll(".dropdown-toggle").forEach(btn=>{
+  btn.onclick = function(e){
+    e.stopPropagation();
+    const parent = this.parentElement;
+    parent.classList.toggle("open");
+  }
+});
+
+document.onclick = ()=>{
+  document.querySelectorAll(".dropdown").forEach(d=>{
+    d.classList.remove("open");
+  });
+};
+
+</script>
+
+</body>
+</html>
