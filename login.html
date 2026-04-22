@@ -90,7 +90,6 @@
       border-radius:10px;
       display:none;
       font-weight:bold;
-      line-height:1.5;
     }
 
     .erro{
@@ -130,7 +129,7 @@
   <script type="module">
     import { auth, db } from "./firebase.js";
     import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const msgErro = document.getElementById("msgErro");
     const msgSucesso = document.getElementById("msgSucesso");
@@ -167,43 +166,27 @@
       if(valor === "jogador") return "jogador";
       if(valor === "tecnico") return "tecnico";
       if(valor === "técnico") return "tecnico";
-      if(valor === "assistente") return "assistente";
       if(valor === "arbitro") return "arbitro";
       if(valor === "árbitro") return "arbitro";
+      if(valor === "assistente") return "assistente";
       if(valor === "admin") return "admin";
-      if(valor === "administrador") return "admin";
 
       return valor;
     }
 
-    function destinoUsuarioComum(tipo){
+    function precisaAprovacao(tipo){
+      return ["admin", "arbitro", "assistente"].includes(tipo);
+    }
+
+    function destinoPorTipo(tipo){
+      if(tipo === "admin") return "admin.html";
+      if(tipo === "arbitro") return "sumula.html";
+      if(tipo === "assistente") return "perfil.html";
+      if(tipo === "tecnico") return "perfil.html";
+      if(tipo === "jogador") return "perfil.html";
       if(tipo === "pai_atleta") return "perfil.html";
       if(tipo === "torcedor") return "perfil.html";
       return "index.html";
-    }
-
-    async function garantirRegistroBasico(uid, email){
-      const userRef = doc(db, "usuarios", uid);
-      const userSnap = await getDoc(userRef);
-
-      if(userSnap.exists()){
-        return userSnap;
-      }
-
-      await setDoc(userRef, {
-        nome: "",
-        email: email,
-        cpf: "",
-        tipoUsuario: "torcedor",
-        time: "",
-        status: "ativo",
-        autorizado: false,
-        aprovado: true,
-        criadoEm: new Date().toISOString(),
-        atualizadoEm: new Date().toISOString()
-      });
-
-      return await getDoc(userRef);
     }
 
     window.login = async function(){
@@ -226,28 +209,45 @@
         const cred = await signInWithEmailAndPassword(auth, email, senha);
         const uid = cred.user.uid;
 
-        const userSnap = await garantirRegistroBasico(uid, email);
+        const userRef = doc(db, "usuarios", uid);
+        const userSnap = await getDoc(userRef);
 
         if(!userSnap.exists()){
-          mostrarErro("Seu cadastro não foi encontrado no sistema.");
+          if(email === "ruy.gram@gmail.com"){
+            mostrarSucesso("Login realizado com sucesso.");
+            setTimeout(() => {
+              window.location.href = "admin.html";
+            }, 600);
+            return;
+          }
+
+          window.location.href = "index.html";
           return;
         }
 
         const dados = userSnap.data();
 
         const tipoUsuario = normalizarTipo(dados.tipoUsuario || dados.tipo || "");
-        const autorizado = dados.autorizado === true;
         const aprovado = dados.aprovado === true;
-        const status = String(dados.status || "").trim().toLowerCase();
+        const permissaoPainelAdm = dados.permissaoPainelAdm === true;
+        const emailUsuario = String(dados.email || email).trim().toLowerCase();
+        const cpfUsuario = String(dados.cpf || "").trim();
 
-        if(status === "bloqueado"){
-          mostrarErro("Seu acesso está bloqueado.");
+        const ehDonoPrincipal =
+          emailUsuario === "ruy.gram@gmail.com" &&
+          cpfUsuario === "02354109261";
+
+        if(ehDonoPrincipal){
+          mostrarSucesso("Bem-vindo, administrador principal.");
+          setTimeout(() => {
+            window.location.href = "admin.html";
+          }, 600);
           return;
         }
 
         if(tipoUsuario === "admin"){
-          if(!autorizado || !aprovado){
-            mostrarErro("Seu acesso de administrador não está liberado.");
+          if(!aprovado && !permissaoPainelAdm){
+            mostrarErro("Seu acesso de administrador ainda não foi aprovado.");
             return;
           }
 
@@ -259,21 +259,21 @@
         }
 
         if(tipoUsuario === "arbitro"){
-          if(!autorizado || !aprovado){
-            mostrarErro("Seu acesso de árbitro ainda está pendente de autorização do administrador.");
+          if(!aprovado){
+            mostrarErro("Seu cadastro de árbitro ainda não foi aprovado pelo administrador.");
             return;
           }
 
           mostrarSucesso("Login realizado com sucesso.");
           setTimeout(() => {
-            window.location.href = "admin.html";
+            window.location.href = "sumula.html";
           }, 600);
           return;
         }
 
         if(tipoUsuario === "assistente"){
           if(!aprovado){
-            mostrarErro("Seu cadastro de assistente ainda está pendente de aprovação.");
+            mostrarErro("Seu cadastro de assistente ainda não foi aprovado pelo administrador.");
             return;
           }
 
@@ -284,56 +284,16 @@
           return;
         }
 
-        if(tipoUsuario === "tecnico"){
-          if(!aprovado){
-            mostrarErro("Seu cadastro de técnico ainda está pendente de aprovação.");
-            return;
-          }
-
-          mostrarSucesso("Login realizado com sucesso.");
-          setTimeout(() => {
-            window.location.href = "perfil.html";
-          }, 600);
+        if(precisaAprovacao(tipoUsuario) && !aprovado){
+          mostrarErro("Seu cadastro ainda não foi aprovado.");
           return;
         }
 
-        if(tipoUsuario === "jogador"){
-          if(!aprovado){
-            mostrarErro("Seu cadastro de jogador ainda está pendente de aprovação.");
-            return;
-          }
-
-          mostrarSucesso("Login realizado com sucesso.");
-          setTimeout(() => {
-            window.location.href = "perfil.html";
-          }, 600);
-          return;
-        }
-
-        if(tipoUsuario === "pai_atleta"){
-          if(!aprovado){
-            mostrarErro("Seu cadastro ainda está pendente de aprovação.");
-            return;
-          }
-
-          mostrarSucesso("Login realizado com sucesso.");
-          setTimeout(() => {
-            window.location.href = "perfil.html";
-          }, 600);
-          return;
-        }
-
-        if(tipoUsuario === "torcedor" || !tipoUsuario){
-          mostrarSucesso("Login realizado com sucesso.");
-          setTimeout(() => {
-            window.location.href = destinoUsuarioComum("torcedor");
-          }, 600);
-          return;
-        }
+        const destino = destinoPorTipo(tipoUsuario);
 
         mostrarSucesso("Login realizado com sucesso.");
         setTimeout(() => {
-          window.location.href = destinoUsuarioComum(tipoUsuario);
+          window.location.href = destino;
         }, 600);
 
       }catch(e){
@@ -341,8 +301,6 @@
           mostrarErro("Email ou senha inválidos.");
         }else if(e.code === "auth/invalid-email"){
           mostrarErro("Email inválido.");
-        }else if(e.code === "auth/user-disabled"){
-          mostrarErro("Este usuário foi desativado.");
         }else{
           mostrarErro("Erro ao entrar: " + e.message);
         }
