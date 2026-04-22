@@ -20,6 +20,7 @@
       --muted:#d6def0;
       --danger:#c62828;
       --success:#1f8b4c;
+      --warning:#9a6700;
       --shadow:0 8px 22px rgba(0,0,0,.28);
       --transition:.25s ease;
       --max:1280px;
@@ -45,7 +46,7 @@
       color:inherit;
     }
 
-    button, input, select{
+    button,input,select{
       font-family:inherit;
     }
 
@@ -120,7 +121,7 @@
     }
 
     .container{
-      padding:0 0 30px;
+      padding-bottom:30px;
     }
 
     .hero-panel,
@@ -146,9 +147,9 @@
       line-height:1.6;
     }
 
-    .form-grid{
+    .filtros{
       display:grid;
-      grid-template-columns:repeat(3, 1fr);
+      grid-template-columns:1.2fr .8fr .8fr .8fr;
       gap:12px;
       margin-top:16px;
     }
@@ -172,55 +173,30 @@
       font-size:14px;
     }
 
-    .field.full{
-      grid-column:1 / -1;
-    }
-
-    .actions-form{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
-
-    .btn-action{
-      border:none;
-      padding:12px 16px;
-      border-radius:10px;
-      font-weight:700;
-      cursor:pointer;
-      transition:var(--transition);
-    }
-
-    .btn-save{
-      background:var(--gold);
-      color:#111;
-    }
-
-    .btn-save:hover{
-      transform:translateY(-2px);
-    }
-
-    .btn-clear{
-      background:#d9e2f2;
-      color:#111;
-    }
-
-    .btn-clear:hover{
-      transform:translateY(-2px);
-    }
-
-    .filtros{
-      display:grid;
-      grid-template-columns:1.2fr .8fr .8fr;
-      gap:12px;
+    .msg{
       margin-top:14px;
+      padding:12px;
+      border-radius:12px;
+      font-weight:700;
+      display:none;
+    }
+
+    .msg.error{
+      background:rgba(198,40,40,.18);
+      color:#ffb7b7;
+      border:1px solid rgba(198,40,40,.35);
+    }
+
+    .msg.success{
+      background:rgba(31,139,76,.18);
+      color:#a8ffd0;
+      border:1px solid rgba(31,139,76,.35);
     }
 
     .lista{
       display:grid;
       gap:14px;
-      margin-top:16px;
+      margin-top:18px;
     }
 
     .user-card{
@@ -280,6 +256,12 @@
       border-color:rgba(198,40,40,.35);
     }
 
+    .tag.warning{
+      background:rgba(154,103,0,.18);
+      color:#ffd78a;
+      border-color:rgba(154,103,0,.35);
+    }
+
     .tag.gold{
       background:rgba(247,198,0,.14);
       color:#ffe479;
@@ -300,50 +282,31 @@
       font-weight:700;
       cursor:pointer;
       transition:var(--transition);
+      color:#fff;
     }
 
     .mini-btn:hover{
       transform:translateY(-2px);
     }
 
-    .mini-edit{
-      background:var(--gold);
-      color:#111;
+    .mini-approve{ background:var(--success); }
+    .mini-block{ background:var(--warning); }
+    .mini-delete{ background:var(--danger); }
+    .mini-edit{ background:var(--gold); color:#111; }
+    .mini-admin{ background:#5d3fd3; }
+
+    .form-edicao{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:12px;
+      margin-top:16px;
     }
 
-    .mini-approve{
-      background:var(--success);
-      color:#fff;
-    }
-
-    .mini-block{
-      background:#8b5e00;
-      color:#fff;
-    }
-
-    .mini-delete{
-      background:var(--danger);
-      color:#fff;
-    }
-
-    .msg{
-      margin-top:14px;
-      padding:12px;
-      border-radius:12px;
-      font-weight:700;
-      display:none;
-    }
-
-    .msg.error{
-      background:rgba(198,40,40,.18);
-      color:#ffb7b7;
-      border:1px solid rgba(198,40,40,.35);
-    }
-
-    .msg.success{
-      background:rgba(31,139,76,.18);
-      color:#a8ffd0;
-      border:1px solid rgba(31,139,76,.35);
+    .form-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
     }
 
     .vazio{
@@ -356,8 +319,8 @@
     }
 
     @media (max-width: 980px){
-      .form-grid,
-      .filtros{
+      .filtros,
+      .form-edicao{
         grid-template-columns:1fr;
       }
 
@@ -385,13 +348,12 @@
         align-items:stretch;
       }
 
-      .actions-form,
-      .user-actions{
+      .user-actions,
+      .form-actions{
         flex-direction:column;
       }
 
-      .mini-btn,
-      .btn-action{
+      .mini-btn{
         width:100%;
       }
     }
@@ -414,8 +376,8 @@
       <div class="header-title">Usuários e Permissões</div>
 
       <div class="header-right">
-        <button class="top-btn btn-gold" onclick="limparFormulario()">
-          <i class="fa-solid fa-user-plus"></i> Novo Usuário
+        <button class="top-btn btn-gold" type="button" onclick="limparEdicao()">
+          <i class="fa-solid fa-eraser"></i> Limpar edição
         </button>
       </div>
     </div>
@@ -424,80 +386,18 @@
   <div class="wrap container">
 
     <section class="hero-panel">
-      <h2>Cadastro e Controle de Usuários</h2>
+      <h2>Controle de Usuários</h2>
       <p>
-        Aqui o administrador cria, edita, autoriza, bloqueia e organiza os usuários do sistema.
+        Aqui o administrador aprova, autoriza, bloqueia, edita e organiza os usuários do sistema.
       </p>
 
       <div id="msgErro" class="msg error"></div>
       <div id="msgSucesso" class="msg success"></div>
 
-      <div class="form-grid">
-        <div class="field">
-          <label for="nome">Nome</label>
-          <input type="text" id="nome" placeholder="Digite o nome">
-        </div>
-
-        <div class="field">
-          <label for="email">Email</label>
-          <input type="email" id="email" placeholder="Digite o email">
-        </div>
-
-        <div class="field">
-          <label for="cpf">CPF</label>
-          <input type="text" id="cpf" placeholder="Digite o CPF">
-        </div>
-
-        <div class="field">
-          <label for="tipoUsuario">Tipo de usuário</label>
-          <select id="tipoUsuario">
-            <option value="torcedor">Torcedor</option>
-            <option value="pai_atleta">Pai de Atleta</option>
-            <option value="jogador">Jogador</option>
-            <option value="tecnico">Técnico</option>
-            <option value="assistente">Assistente</option>
-            <option value="arbitro">Árbitro</option>
-            <option value="admin">Administrador</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="time">Time</label>
-          <input type="text" id="time" placeholder="Nome do time">
-        </div>
-
-        <div class="field">
-          <label for="status">Status</label>
-          <select id="status">
-            <option value="ativo">Ativo</option>
-            <option value="bloqueado">Bloqueado</option>
-          </select>
-        </div>
-
-        <div class="field full">
-          <label for="uidUsuario">UID do usuário (se já existir no Auth)</label>
-          <input type="text" id="uidUsuario" placeholder="Opcional - se tiver UID do Firebase Auth">
-        </div>
-      </div>
-
-      <div class="actions-form">
-        <button class="btn-action btn-save" onclick="salvarUsuario()">
-          <i class="fa-solid fa-floppy-disk"></i> Salvar Usuário
-        </button>
-
-        <button class="btn-action btn-clear" onclick="limparFormulario()">
-          <i class="fa-solid fa-eraser"></i> Limpar
-        </button>
-      </div>
-    </section>
-
-    <section class="admin-block">
-      <h3 class="section-title">Filtros</h3>
-
       <div class="filtros">
         <div class="field">
           <label for="buscaUsuario">Buscar</label>
-          <input type="text" id="buscaUsuario" placeholder="Nome, email ou CPF" oninput="renderUsuarios()">
+          <input type="text" id="buscaUsuario" placeholder="Nome, email, CPF ou time" oninput="renderUsuarios()">
         </div>
 
         <div class="field">
@@ -515,6 +415,16 @@
         </div>
 
         <div class="field">
+          <label for="filtroStatus">Status</label>
+          <select id="filtroStatus" onchange="renderUsuarios()">
+            <option value="">Todos</option>
+            <option value="ativo">Ativo</option>
+            <option value="pendente">Pendente</option>
+            <option value="bloqueado">Bloqueado</option>
+          </select>
+        </div>
+
+        <div class="field">
           <label for="filtroAutorizado">Autorização</label>
           <select id="filtroAutorizado" onchange="renderUsuarios()">
             <option value="">Todos</option>
@@ -523,7 +433,80 @@
           </select>
         </div>
       </div>
+    </section>
 
+    <section class="admin-block">
+      <h3 class="section-title">Editar usuário selecionado</h3>
+
+      <div class="form-edicao">
+        <div class="field">
+          <label for="editNome">Nome</label>
+          <input type="text" id="editNome" placeholder="Nome do usuário">
+        </div>
+
+        <div class="field">
+          <label for="editEmail">Email</label>
+          <input type="email" id="editEmail" placeholder="Email">
+        </div>
+
+        <div class="field">
+          <label for="editCpf">CPF</label>
+          <input type="text" id="editCpf" placeholder="CPF">
+        </div>
+
+        <div class="field">
+          <label for="editTime">Time</label>
+          <input type="text" id="editTime" placeholder="Time">
+        </div>
+
+        <div class="field">
+          <label for="editTipo">Tipo</label>
+          <select id="editTipo">
+            <option value="torcedor">Torcedor</option>
+            <option value="pai_atleta">Pai de Atleta</option>
+            <option value="jogador">Jogador</option>
+            <option value="tecnico">Técnico</option>
+            <option value="assistente">Assistente</option>
+            <option value="arbitro">Árbitro</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="editStatus">Status</label>
+          <select id="editStatus">
+            <option value="ativo">Ativo</option>
+            <option value="pendente">Pendente</option>
+            <option value="bloqueado">Bloqueado</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="editAprovado">Aprovado</label>
+          <select id="editAprovado">
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="editAutorizado">Autorizado</label>
+          <select id="editAutorizado">
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="mini-btn mini-edit" onclick="salvarEdicao()">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar edição
+        </button>
+      </div>
+    </section>
+
+    <section class="admin-block">
+      <h3 class="section-title">Lista de usuários</h3>
       <div class="lista" id="listaUsuarios">
         <div class="vazio">Carregando usuários...</div>
       </div>
@@ -538,13 +521,12 @@
       getDocs,
       doc,
       getDoc,
-      setDoc,
       updateDoc,
       deleteDoc
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    let usuarioEditandoId = "";
     let usuariosCache = [];
+    let usuarioSelecionadoId = "";
 
     const msgErro = document.getElementById("msgErro");
     const msgSucesso = document.getElementById("msgSucesso");
@@ -578,15 +560,13 @@
 
     function normalizarTipo(tipo){
       const valor = normalizarTexto(tipo);
-
       if(valor === "publico" || valor === "publico_geral" || valor === "torcedor") return "torcedor";
       if(valor === "pai_atleta") return "pai_atleta";
       if(valor === "jogador") return "jogador";
-      if(valor === "tecnico" || valor === "tecnico") return "tecnico";
+      if(valor === "tecnico") return "tecnico";
       if(valor === "assistente") return "assistente";
-      if(valor === "arbitro" || valor === "arbitro") return "arbitro";
+      if(valor === "arbitro") return "arbitro";
       if(valor === "admin" || valor === "administrador") return "admin";
-
       return valor;
     }
 
@@ -620,38 +600,91 @@
       if(!usuarioSnap.exists()) return false;
 
       const dados = usuarioSnap.data();
-      const tipo = normalizarTipo(dados.tipoUsuario || dados.tipo || "");
-      return tipo === "admin";
+      return normalizarTipo(dados.tipoUsuario || dados.tipo || "") === "admin";
     }
 
-    function obterDadosFormulario(){
-      return {
-        nome: document.getElementById("nome").value.trim(),
-        email: document.getElementById("email").value.trim().toLowerCase(),
-        cpf: document.getElementById("cpf").value.trim(),
-        tipoUsuario: normalizarTipo(document.getElementById("tipoUsuario").value),
-        time: document.getElementById("time").value.trim(),
-        status: document.getElementById("status").value,
-        uidUsuario: document.getElementById("uidUsuario").value.trim()
-      };
+    function aplicarRegrasPorTipo(tipo){
+      const valor = normalizarTipo(tipo);
+
+      if(valor === "admin"){
+        return { aprovado: true, autorizado: true, status: "ativo" };
+      }
+
+      if(valor === "arbitro"){
+        return { aprovado: false, autorizado: false, status: "pendente" };
+      }
+
+      if(valor === "assistente"){
+        return { aprovado: false, autorizado: false, status: "pendente" };
+      }
+
+      if(valor === "tecnico"){
+        return { aprovado: false, autorizado: false, status: "pendente" };
+      }
+
+      if(valor === "jogador"){
+        return { aprovado: false, autorizado: false, status: "pendente" };
+      }
+
+      if(valor === "pai_atleta"){
+        return { aprovado: true, autorizado: false, status: "ativo" };
+      }
+
+      return { aprovado: true, autorizado: false, status: "ativo" };
     }
 
-    window.limparFormulario = function(){
-      usuarioEditandoId = "";
-      document.getElementById("nome").value = "";
-      document.getElementById("email").value = "";
-      document.getElementById("cpf").value = "";
-      document.getElementById("tipoUsuario").value = "torcedor";
-      document.getElementById("time").value = "";
-      document.getElementById("status").value = "ativo";
-      document.getElementById("uidUsuario").value = "";
+    window.limparEdicao = function(){
+      usuarioSelecionadoId = "";
+      document.getElementById("editNome").value = "";
+      document.getElementById("editEmail").value = "";
+      document.getElementById("editCpf").value = "";
+      document.getElementById("editTime").value = "";
+      document.getElementById("editTipo").value = "torcedor";
+      document.getElementById("editStatus").value = "ativo";
+      document.getElementById("editAprovado").value = "true";
+      document.getElementById("editAutorizado").value = "false";
       limparMensagens();
     };
 
-    window.salvarUsuario = async function(){
+    window.selecionarUsuario = function(id){
+      const usuario = usuariosCache.find(u => u.id === id);
+      if(!usuario) return;
+
+      usuarioSelecionadoId = id;
+      document.getElementById("editNome").value = usuario.nome || "";
+      document.getElementById("editEmail").value = usuario.email || "";
+      document.getElementById("editCpf").value = usuario.cpf || "";
+      document.getElementById("editTime").value = usuario.time || "";
+      document.getElementById("editTipo").value = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "torcedor");
+      document.getElementById("editStatus").value = usuario.status || "ativo";
+      document.getElementById("editAprovado").value = usuario.aprovado === true ? "true" : "false";
+      document.getElementById("editAutorizado").value = usuario.autorizado === true ? "true" : "false";
+
+      mostrarSucesso("Usuário carregado para edição.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    window.salvarEdicao = async function(){
       limparMensagens();
 
-      const dados = obterDadosFormulario();
+      if(!usuarioSelecionadoId){
+        mostrarErro("Selecione um usuário da lista para editar.");
+        return;
+      }
+
+      const tipo = normalizarTipo(document.getElementById("editTipo").value);
+
+      const dados = {
+        nome: document.getElementById("editNome").value.trim(),
+        email: document.getElementById("editEmail").value.trim().toLowerCase(),
+        cpf: document.getElementById("editCpf").value.trim(),
+        time: document.getElementById("editTime").value.trim(),
+        tipoUsuario: tipo,
+        status: document.getElementById("editStatus").value,
+        aprovado: document.getElementById("editAprovado").value === "true",
+        autorizado: document.getElementById("editAutorizado").value === "true",
+        atualizadoEm: new Date().toISOString()
+      };
 
       if(!dados.nome){
         mostrarErro("Digite o nome do usuário.");
@@ -663,89 +696,130 @@
         return;
       }
 
-      const autorizadoAutomatico = dados.tipoUsuario === "admin";
-      const aprovadoAutomatico = !["admin", "arbitro", "assistente"].includes(dados.tipoUsuario) ? true : autorizadoAutomatico;
-
-      const payload = {
-        nome: dados.nome,
-        email: dados.email,
-        cpf: dados.cpf,
-        tipoUsuario: dados.tipoUsuario,
-        time: dados.time,
-        status: dados.status,
-        autorizado: autorizadoAutomatico,
-        aprovado: aprovadoAutomatico,
-        atualizadoEm: new Date().toISOString()
-      };
-
       try{
-        if(usuarioEditandoId){
-          await updateDoc(doc(db, "usuarios", usuarioEditandoId), payload);
-          mostrarSucesso("Usuário atualizado com sucesso.");
-        }else{
-          const idDocumento = dados.uidUsuario || crypto.randomUUID();
+        await updateDoc(doc(db, "usuarios", usuarioSelecionadoId), dados);
+        await carregarUsuarios();
+        mostrarSucesso("Usuário atualizado com sucesso.");
+      }catch(erro){
+        console.error(erro);
+        mostrarErro("Erro ao atualizar usuário.");
+      }
+    };
 
-          await setDoc(doc(db, "usuarios", idDocumento), {
-            ...payload,
-            criadoEm: new Date().toISOString()
-          });
+    window.aplicarRegraPadrao = async function(id){
+      try{
+        const usuario = usuariosCache.find(u => u.id === id);
+        if(!usuario) return;
 
-          mostrarSucesso("Usuário criado com sucesso.");
+        const regra = aplicarRegrasPorTipo(usuario.tipoUsuario || usuario.tipo || "");
+
+        await updateDoc(doc(db, "usuarios", id), {
+          aprovado: regra.aprovado,
+          autorizado: regra.autorizado,
+          status: regra.status,
+          atualizadoEm: new Date().toISOString()
+        });
+
+        await carregarUsuarios();
+        mostrarSucesso("Regra padrão aplicada com sucesso.");
+      }catch(erro){
+        console.error(erro);
+        mostrarErro("Erro ao aplicar regra padrão.");
+      }
+    };
+
+    window.aprovarUsuario = async function(id){
+      try{
+        const usuario = usuariosCache.find(u => u.id === id);
+        if(!usuario) return;
+
+        const tipo = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "");
+        let aprovado = true;
+        let autorizado = false;
+        let status = "ativo";
+
+        if(tipo === "admin"){
+          aprovado = true;
+          autorizado = true;
+        }else if(tipo === "arbitro"){
+          aprovado = true;
+          autorizado = true;
+        }else if(tipo === "assistente"){
+          aprovado = true;
+          autorizado = false;
+        }else if(tipo === "tecnico" || tipo === "jogador"){
+          aprovado = true;
+          autorizado = false;
+        }else if(tipo === "pai_atleta" || tipo === "torcedor"){
+          aprovado = true;
+          autorizado = false;
         }
 
-        limparFormulario();
-        await carregarUsuarios();
-      }catch(erro){
-        console.error(erro);
-        mostrarErro("Erro ao salvar usuário.");
-      }
-    };
-
-    window.editarUsuario = function(id){
-      const usuario = usuariosCache.find(u => u.id === id);
-      if(!usuario) return;
-
-      usuarioEditandoId = id;
-      document.getElementById("nome").value = usuario.nome || "";
-      document.getElementById("email").value = usuario.email || "";
-      document.getElementById("cpf").value = usuario.cpf || "";
-      document.getElementById("tipoUsuario").value = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "torcedor");
-      document.getElementById("time").value = usuario.time || "";
-      document.getElementById("status").value = usuario.status || "ativo";
-      document.getElementById("uidUsuario").value = usuario.id || "";
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      mostrarSucesso("Usuário carregado para edição.");
-    };
-
-    window.autorizarUsuario = async function(id, valor){
-      try{
         await updateDoc(doc(db, "usuarios", id), {
-          autorizado: valor,
-          aprovado: valor,
+          aprovado,
+          autorizado,
+          status,
           atualizadoEm: new Date().toISOString()
         });
 
         await carregarUsuarios();
-        mostrarSucesso(valor ? "Usuário autorizado com sucesso." : "Usuário desautorizado com sucesso.");
+        mostrarSucesso("Usuário aprovado com sucesso.");
       }catch(erro){
         console.error(erro);
-        mostrarErro("Erro ao alterar autorização.");
+        mostrarErro("Erro ao aprovar usuário.");
       }
     };
 
-    window.bloquearUsuario = async function(id, status){
+    window.reprovarUsuario = async function(id){
       try{
+        const usuario = usuariosCache.find(u => u.id === id);
+        if(!usuario) return;
+
+        const tipo = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "");
+        const regra = aplicarRegrasPorTipo(tipo);
+
         await updateDoc(doc(db, "usuarios", id), {
-          status: status,
+          aprovado: false,
+          autorizado: false,
+          status: regra.status === "ativo" ? "pendente" : regra.status,
           atualizadoEm: new Date().toISOString()
         });
 
         await carregarUsuarios();
-        mostrarSucesso("Status atualizado com sucesso.");
+        mostrarSucesso("Usuário voltou para pendente.");
       }catch(erro){
         console.error(erro);
-        mostrarErro("Erro ao alterar status.");
+        mostrarErro("Erro ao reprovar usuário.");
+      }
+    };
+
+    window.bloquearUsuario = async function(id){
+      try{
+        await updateDoc(doc(db, "usuarios", id), {
+          status: "bloqueado",
+          atualizadoEm: new Date().toISOString()
+        });
+
+        await carregarUsuarios();
+        mostrarSucesso("Usuário bloqueado com sucesso.");
+      }catch(erro){
+        console.error(erro);
+        mostrarErro("Erro ao bloquear usuário.");
+      }
+    };
+
+    window.ativarUsuario = async function(id){
+      try{
+        await updateDoc(doc(db, "usuarios", id), {
+          status: "ativo",
+          atualizadoEm: new Date().toISOString()
+        });
+
+        await carregarUsuarios();
+        mostrarSucesso("Usuário ativado com sucesso.");
+      }catch(erro){
+        console.error(erro);
+        mostrarErro("Erro ao ativar usuário.");
       }
     };
 
@@ -767,20 +841,26 @@
       const lista = document.getElementById("listaUsuarios");
       const busca = normalizarTexto(document.getElementById("buscaUsuario").value);
       const filtroTipo = normalizarTipo(document.getElementById("filtroTipo").value);
+      const filtroStatus = normalizarTexto(document.getElementById("filtroStatus").value);
       const filtroAutorizado = document.getElementById("filtroAutorizado").value;
 
       let usuarios = [...usuariosCache];
 
       if(busca){
-        usuarios = usuarios.filter(u => {
-          return normalizarTexto(u.nome).includes(busca)
-            || normalizarTexto(u.email).includes(busca)
-            || normalizarTexto(u.cpf).includes(busca);
-        });
+        usuarios = usuarios.filter(u =>
+          normalizarTexto(u.nome).includes(busca) ||
+          normalizarTexto(u.email).includes(busca) ||
+          normalizarTexto(u.cpf).includes(busca) ||
+          normalizarTexto(u.time).includes(busca)
+        );
       }
 
       if(filtroTipo){
         usuarios = usuarios.filter(u => normalizarTipo(u.tipoUsuario || u.tipo) === filtroTipo);
+      }
+
+      if(filtroStatus){
+        usuarios = usuarios.filter(u => normalizarTexto(u.status) === filtroStatus);
       }
 
       if(filtroAutorizado === "sim"){
@@ -801,6 +881,7 @@
       lista.innerHTML = usuarios.map(usuario => {
         const tipo = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "");
         const autorizado = usuario.autorizado === true;
+        const aprovado = usuario.aprovado === true;
         const status = usuario.status || "ativo";
 
         return `
@@ -817,28 +898,33 @@
 
             <div class="tags">
               <span class="tag gold">${tipoLabel(tipo)}</span>
+              <span class="tag ${aprovado ? "success" : "warning"}">${aprovado ? "Aprovado" : "Pendente"}</span>
               <span class="tag ${autorizado ? "success" : "danger"}">${autorizado ? "Autorizado" : "Não autorizado"}</span>
-              <span class="tag ${status === "ativo" ? "success" : "danger"}">${status}</span>
+              <span class="tag ${status === "ativo" ? "success" : status === "bloqueado" ? "danger" : "warning"}">${status}</span>
             </div>
 
             <div class="user-actions">
-              <button class="mini-btn mini-edit" onclick="editarUsuario('${usuario.id}')">
+              <button class="mini-btn mini-edit" onclick="selecionarUsuario('${usuario.id}')">
                 <i class="fa-solid fa-pen"></i> Editar
               </button>
 
-              <button class="mini-btn mini-approve" onclick="autorizarUsuario('${usuario.id}', true)">
-                <i class="fa-solid fa-user-check"></i> Autorizar
+              <button class="mini-btn mini-approve" onclick="aprovarUsuario('${usuario.id}')">
+                <i class="fa-solid fa-user-check"></i> Aprovar
               </button>
 
-              <button class="mini-btn mini-block" onclick="autorizarUsuario('${usuario.id}', false)">
-                <i class="fa-solid fa-user-slash"></i> Desautorizar
+              <button class="mini-btn mini-block" onclick="reprovarUsuario('${usuario.id}')">
+                <i class="fa-solid fa-user-clock"></i> Pendente
               </button>
 
-              <button class="mini-btn mini-block" onclick="bloquearUsuario('${usuario.id}', 'bloqueado')">
+              <button class="mini-btn mini-admin" onclick="aplicarRegraPadrao('${usuario.id}')">
+                <i class="fa-solid fa-repeat"></i> Regra padrão
+              </button>
+
+              <button class="mini-btn mini-block" onclick="bloquearUsuario('${usuario.id}')">
                 <i class="fa-solid fa-ban"></i> Bloquear
               </button>
 
-              <button class="mini-btn mini-approve" onclick="bloquearUsuario('${usuario.id}', 'ativo')">
+              <button class="mini-btn mini-approve" onclick="ativarUsuario('${usuario.id}')">
                 <i class="fa-solid fa-check"></i> Ativar
               </button>
 
