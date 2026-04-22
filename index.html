@@ -1525,7 +1525,6 @@
     const campeonatosToggle = document.getElementById("campeonatosToggle");
     const participantesDropdown = document.getElementById("participantesDropdown");
     const participantesToggle = document.getElementById("participantesToggle");
-    const statusUser = document.getElementById("statusUser");
     const gamesTableBody = document.getElementById("gamesTableBody");
     const newsList = document.getElementById("newsList");
     const userChip = document.getElementById("userChip");
@@ -1568,6 +1567,7 @@
 
     if (campeonatosToggle) {
       campeonatosToggle.addEventListener("click", function(event) {
+        event.preventDefault();
         event.stopPropagation();
         if (participantesDropdown) participantesDropdown.classList.remove("open");
         if (userDropdown) userDropdown.classList.remove("open");
@@ -1577,6 +1577,7 @@
 
     if (participantesToggle) {
       participantesToggle.addEventListener("click", function(event) {
+        event.preventDefault();
         event.stopPropagation();
         if (campeonatosDropdown) campeonatosDropdown.classList.remove("open");
         if (userDropdown) userDropdown.classList.remove("open");
@@ -1586,10 +1587,11 @@
 
     if (userChip) {
       userChip.addEventListener("click", function(event) {
+        event.preventDefault();
         event.stopPropagation();
         if (campeonatosDropdown) campeonatosDropdown.classList.remove("open");
         if (participantesDropdown) participantesDropdown.classList.remove("open");
-        userDropdown.classList.toggle("open");
+        if (userDropdown) userDropdown.classList.toggle("open");
       });
     }
 
@@ -1598,14 +1600,14 @@
       const clickedMenuToggle = menuToggle && menuToggle.contains(event.target);
       const clickedCampeonatos = campeonatosDropdown && campeonatosDropdown.contains(event.target);
       const clickedParticipantes = participantesDropdown && participantesDropdown.contains(event.target);
-      const clickedUser = userDropdown && userDropdown.contains(event.target);
+      const clickedUserMenu = userDropdown && userDropdown.contains(event.target);
       const clickedUserChip = userChip && userChip.contains(event.target);
 
       if (sidebar && sidebar.classList.contains("open") && !clickedInsideSidebar && !clickedMenuToggle) {
         closeSidebar();
       }
 
-      if (!clickedCampeonatos && !clickedParticipantes && !clickedUser && !clickedUserChip) {
+      if (!clickedCampeonatos && !clickedParticipantes && !clickedUserMenu && !clickedUserChip) {
         closeAllDropdowns();
       }
     });
@@ -1616,11 +1618,6 @@
         closeAllDropdowns();
       }
     });
-
-    if (statusUser) {
-      statusUser.innerHTML = "";
-      statusUser.style.display = "none";
-    }
 
     const games = [
       {
@@ -1783,7 +1780,6 @@
       if(userChipEl) userChipEl.style.display = "inline-flex";
       if(sidebarLoginLink) sidebarLoginLink.style.display = "none";
       if(sidebarPerfilLink) sidebarPerfilLink.style.display = "flex";
-
       if(menuAdmin) menuAdmin.style.display = podePainel ? "flex" : "none";
       if(userAdminLink) userAdminLink.style.display = podePainel ? "flex" : "none";
 
@@ -1797,7 +1793,7 @@
 
       if(userCardRole){
         userCardRole.innerHTML = `
-          <i class="${ehArbitro ? 'fa-solid fa-whistle' : 'fa-solid fa-user'}"></i>
+          <i class="${ehArbitro ? "fa-solid fa-whistle" : "fa-solid fa-user"}"></i>
           <span>${tipoLabel(tipo)}</span>
         `;
       }
