@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root{
+      --bg:#0b1f3a;
+      --card:#102a52;
+      --card-hover:#153766;
+      --gold:#f7c600;
+      --gold-line:rgba(247,198,0,.30);
+      --white:#ffffff;
+      --muted:#d6def0;
+      --success:#1f8b4c;
+      --danger:#c62828;
+      --shadow:0 8px 22px rgba(0,0,0,.28);
+      --transition:.25s ease;
+      --max:1200px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:Arial, sans-serif;
+      background:
+        linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+        url("fundo.png") center/cover fixed no-repeat;
+      color:var(--white);
+      min-height:100vh;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    button,input,select,textarea{
+      font-family:inherit;
+    }
+
+    .wrap{
+      width:min(100% - 30px, var(--max));
+      margin:0 auto;
+    }
+
+    header{
+      background:rgba(8,23,44,.96);
+      border-bottom:3px solid var(--gold);
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+    }
+
+    .header-inner{
+      min-height:82px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      padding:14px 0;
+    }
+
+    .header-left,
+    .header-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .header-title{
+      flex:1;
+      text-align:center;
+      font-size:22px;
+      font-weight:700;
+      color:var(--white);
+    }
+
+    .top-btn{
+      border:none;
+      padding:10px 16px;
+      border-radius:10px;
+      font-weight:bold;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      cursor:pointer;
+      transition:var(--transition);
+    }
+
+    .btn-light{
+      background:#fff4cf;
+      color:#111;
+    }
+
+    .btn-light:hover{
+      background:var(--gold);
+      transform:translateY(-2px);
+    }
+
+    .btn-gold{
+      background:var(--gold);
+      color:#111;
+    }
+
+    .btn-gold:hover{
+      filter:brightness(1.05);
+      transform:translateY(-2px);
+    }
+
+    .container{
+      padding-bottom:30px;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, rgba(16,42,82,.95), rgba(10,28,56,.96));
+      border:1px solid var(--gold-line);
+      border-radius:20px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+    }
+
+    .perfil-topo{
+      display:grid;
+      grid-template-columns:280px 1fr;
+      gap:20px;
+      align-items:start;
+    }
+
+    .foto-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:18px;
+      padding:18px;
+      text-align:center;
+    }
+
+    .foto-preview{
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      object-fit:cover;
+      border:3px solid var(--gold);
+      background:#0f274c;
+      margin:0 auto 14px;
+      display:block;
+    }
+
+    .foto-placeholder{
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      margin:0 auto 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:64px;
+      color:var(--gold);
+      background:#0f274c;
+      border:3px solid var(--gold);
+    }
+
+    .foto-actions{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .btn-sec{
+      border:none;
+      padding:12px 14px;
+      border-radius:10px;
+      font-weight:700;
+      cursor:pointer;
+      transition:var(--transition);
+      background:#d9e2f2;
+      color:#111;
+    }
+
+    .btn-sec:hover{
+      transform:translateY(-2px);
+    }
+
+    .perfil-info h2{
+      color:var(--gold);
+      font-size:30px;
+      margin-bottom:8px;
+    }
+
+    .perfil-info p{
+      color:var(--muted);
+      line-height:1.6;
+      margin-bottom:12px;
+    }
+
+    .tags{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
+
+    .tag{
+      padding:7px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      border:1px solid rgba(255,255,255,.08);
+      background:#14335f;
+      color:#fff;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .field.full{
+      grid-column:1 / -1;
+    }
+
+    .field label{
+      font-size:14px;
+      font-weight:700;
+      color:#fff;
+    }
+
+    .field input,
+    .field select,
+    .field textarea{
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:10px;
+      background:#f4f7fb;
+      color:#111;
+      font-size:14px;
+      resize:vertical;
+    }
+
+    .acoes{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    .msg{
+      margin-top:14px;
+      padding:12px;
+      border-radius:12px;
+      font-weight:700;
+      display:none;
+    }
+
+    .msg.error{
+      background:rgba(198,40,40,.18);
+      color:#ffb7b7;
+      border:1px solid rgba(198,40,40,.35);
+    }
+
+    .msg.success{
+      background:rgba(31,139,76,.18);
+      color:#a8ffd0;
+      border:1px solid rgba(31,139,76,.35);
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:12px;
+      margin-top:10px;
+    }
+
+    .mini-card{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:16px;
+      text-align:center;
+    }
+
+    .mini-card strong{
+      display:block;
+      color:var(--gold);
+      font-size:26px;
+      margin-bottom:8px;
+    }
+
+    .mini-card span{
+      color:var(--muted);
+      font-size:14px;
+      font-weight:700;
+    }
+
+    @media (max-width: 980px){
+      .perfil-topo{
+        grid-template-columns:1fr;
+      }
+
+      .grid,
+      .mini-grid{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .header-title{
+        order:3;
+        width:100%;
+      }
+
+      .header-left,
+      .header-right{
+        width:100%;
+        justify-content:center;
+      }
+    }
+
+    @media (max-width: 600px){
+      .grid,
+      .mini-grid{
+        grid-template-columns:1fr;
+      }
+
+      .acoes,
+      .header-left,
+      .header-right{
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .top-btn,
+      .btn-sec{
+        width:100%;
+        justify-content:center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="wrap header-inner">
+      <div class="header-left">
+        <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+          <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
+
+        <a href="index.html" class="top-btn btn-light">
+          <i class="fa-solid fa-house"></i> Página Inicial
+        </a>
+      </div>
+
+      <div class="header-title">Meu Perfil</div>
+
+      <div class="header-right">
+        <button class="top-btn btn-gold" onclick="logout()">
+          <i class="fa-solid fa-right-from-bracket"></i> Sair
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap container">
+    <section class="panel">
+      <div class="perfil-topo">
+        <div class="foto-box">
+          <img id="fotoPreview" class="foto-preview" style="display:none;" alt="Foto do perfil">
+          <div id="fotoPlaceholder" class="foto-placeholder">
+            <i class="fa-solid fa-user"></i>
+          </div>
+
+          <div class="foto-actions">
+            <input type="file" id="fotoInput" accept="image/*" style="display:none;">
+            <button class="btn-sec" type="button" onclick="document.getElementById('fotoInput').click()">
+              <i class="fa-solid fa-camera"></i> Escolher foto
+            </button>
+            <button class="btn-sec" type="button" onclick="removerFoto()">
+              <i class="fa-solid fa-trash"></i> Remover foto
+            </button>
+          </div>
+        </div>
+
+        <div class="perfil-info">
+          <h2 id="tituloNome">Meu Perfil</h2>
+          <p>Edite aqui seu nome, foto e todos os dados do seu cadastro no sistema.</p>
+
+          <div class="tags">
+            <span class="tag" id="tagTipoUsuario">Tipo: -</span>
+            <span class="tag" id="tagStatusUsuario">Status: -</span>
+            <span class="tag" id="tagAprovacao">Aprovação: -</span>
+            <span class="tag" id="tagAutorizacao">Autorização: -</span>
+          </div>
+
+          <div id="msgErro" class="msg error"></div>
+          <div id="msgSucesso" class="msg success"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 style="color:var(--gold); margin-bottom:10px;">Dados do usuário</h2>
+
+      <div class="grid">
+        <div class="field">
+          <label for="nome">Nome completo</label>
+          <input type="text" id="nome" placeholder="Seu nome completo">
+        </div>
+
+        <div class="field">
+          <label for="nomeExibicao">Nome que quer usar</label>
+          <input type="text" id="nomeExibicao" placeholder="Nome de exibição">
+        </div>
+
+        <div class="field">
+          <label for="tipoUsuario">Tipo de usuário</label>
+          <input type="text" id="tipoUsuario" readonly>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" readonly>
+        </div>
+
+        <div class="field">
+          <label for="cpf">CPF</label>
+          <input type="text" id="cpf" placeholder="CPF">
+        </div>
+
+        <div class="field">
+          <label for="telefone">Telefone</label>
+          <input type="text" id="telefone" placeholder="Telefone">
+        </div>
+
+        <div class="field">
+          <label for="dataNascimento">Data de nascimento</label>
+          <input type="date" id="dataNascimento">
+        </div>
+
+        <div class="field">
+          <label for="time">Time</label>
+          <input type="text" id="time" placeholder="Nome do time">
+        </div>
+
+        <div class="field">
+          <label for="categoria">Categoria</label>
+          <select id="categoria">
+            <option value="">Selecione</option>
+            <option value="Sub-11">Sub-11</option>
+            <option value="Sub-12">Sub-12</option>
+            <option value="Sub-13">Sub-13</option>
+            <option value="Sub-14">Sub-14</option>
+            <option value="Sub-15">Sub-15</option>
+            <option value="Sub-16">Sub-16</option>
+            <option value="Sub-17">Sub-17</option>
+            <option value="Sub-18">Sub-18</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="funcao">Função / Cargo</label>
+          <input type="text" id="funcao" placeholder="Ex.: Goleiro, Técnico principal, Árbitro central">
+        </div>
+
+        <div class="field">
+          <label for="numeroCamisa">Número</label>
+          <input type="text" id="numeroCamisa" placeholder="Número da camisa">
+        </div>
+
+        <div class="field">
+          <label for="genero">Gênero</label>
+          <select id="genero">
+            <option value="">Selecione</option>
+            <option value="masculino">Masculino</option>
+            <option value="feminino">Feminino</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label for="bio">Observações / Biografia</label>
+          <textarea id="bio" rows="4" placeholder="Escreva algo sobre você"></textarea>
+        </div>
+      </div>
+
+      <div class="acoes">
+        <button class="top-btn btn-gold" type="button" onclick="salvarPerfil()">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar perfil
+        </button>
+
+        <button class="top-btn btn-light" type="button" onclick="recarregarDados()">
+          <i class="fa-solid fa-rotate"></i> Recarregar
+        </button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 style="color:var(--gold); margin-bottom:10px;">Resumo</h2>
+      <div class="mini-grid">
+        <div class="mini-card">
+          <strong id="resumoTipo">-</strong>
+          <span>Tipo de usuário</span>
+        </div>
+
+        <div class="mini-card">
+          <strong id="resumoTime">-</strong>
+          <span>Time</span>
+        </div>
+
+        <div class="mini-card">
+          <strong id="resumoCategoria">-</strong>
+          <span>Categoria</span>
+        </div>
+
+        <div class="mini-card">
+          <strong id="resumoStatus">-</strong>
+          <span>Status</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    let usuarioAtualId = "";
+    let fotoBase64Atual = "";
+
+    const msgErro = document.getElementById("msgErro");
+    const msgSucesso = document.getElementById("msgSucesso");
+    const fotoInput = document.getElementById("fotoInput");
+    const fotoPreview = document.getElementById("fotoPreview");
+    const fotoPlaceholder = document.getElementById("fotoPlaceholder");
+
+    function mostrarErro(texto){
+      msgSucesso.style.display = "none";
+      msgErro.style.display = "block";
+      msgErro.innerText = texto;
+    }
+
+    function mostrarSucesso(texto){
+      msgErro.style.display = "none";
+      msgSucesso.style.display = "block";
+      msgSucesso.innerText = texto;
+    }
+
+    function limparMensagens(){
+      msgErro.style.display = "none";
+      msgSucesso.style.display = "none";
+      msgErro.innerText = "";
+      msgSucesso.innerText = "";
+    }
+
+    function normalizarTexto(texto){
+      return String(texto || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function tipoLabel(tipo){
+      const valor = normalizarTexto(tipo);
+      if(valor === "admin" || valor === "administrador") return "Administrador";
+      if(valor === "arbitro" || valor === "árbitro") return "Árbitro";
+      if(valor === "assistente") return "Assistente";
+      if(valor === "tecnico" || valor === "técnico") return "Técnico";
+      if(valor === "jogador") return "Jogador";
+      if(valor === "pai_atleta") return "Pai de Atleta";
+      return "Torcedor";
+    }
+
+    function preencherFoto(src){
+      if(src){
+        fotoBase64Atual = src;
+        fotoPreview.src = src;
+        fotoPreview.style.display = "block";
+        fotoPlaceholder.style.display = "none";
+      }else{
+        fotoBase64Atual = "";
+        fotoPreview.src = "";
+        fotoPreview.style.display = "none";
+        fotoPlaceholder.style.display = "flex";
+      }
+    }
+
+    function preencherResumo(dados){
+      document.getElementById("resumoTipo").textContent = tipoLabel(dados.tipoUsuario || "");
+      document.getElementById("resumoTime").textContent = dados.time || "-";
+      document.getElementById("resumoCategoria").textContent = dados.categoria || "-";
+      document.getElementById("resumoStatus").textContent = dados.status || "-";
+    }
+
+    function preencherTela(dados){
+      document.getElementById("tituloNome").textContent = dados.nomeExibicao || dados.nome || "Meu Perfil";
+
+      document.getElementById("nome").value = dados.nome || "";
+      document.getElementById("nomeExibicao").value = dados.nomeExibicao || "";
+      document.getElementById("tipoUsuario").value = tipoLabel(dados.tipoUsuario || "");
+      document.getElementById("email").value = dados.email || auth.currentUser?.email || "";
+      document.getElementById("cpf").value = dados.cpf || "";
+      document.getElementById("telefone").value = dados.telefone || "";
+      document.getElementById("dataNascimento").value = dados.dataNascimento || dados.nascimento || "";
+      document.getElementById("time").value = dados.time || "";
+      document.getElementById("categoria").value = dados.categoria || "";
+      document.getElementById("funcao").value = dados.funcao || dados.posicao || "";
+      document.getElementById("numeroCamisa").value = dados.numeroCamisa || dados.numero || "";
+      document.getElementById("genero").value = dados.genero || "";
+      document.getElementById("bio").value = dados.bio || dados.observacoes || "";
+
+      document.getElementById("tagTipoUsuario").textContent = `Tipo: ${tipoLabel(dados.tipoUsuario || "")}`;
+      document.getElementById("tagStatusUsuario").textContent = `Status: ${dados.status || "-"}`;
+      document.getElementById("tagAprovacao").textContent = `Aprovação: ${dados.aprovado === true ? "Aprovado" : "Pendente"}`;
+      document.getElementById("tagAutorizacao").textContent = `Autorização: ${dados.autorizado === true ? "Autorizado" : "Não autorizado"}`;
+
+      preencherFoto(dados.fotoPerfil || "");
+      preencherResumo(dados);
+    }
+
+    async function carregarOuCriarPerfil(user){
+      usuarioAtualId = user.uid;
+
+      const ref = doc(db, "usuarios", user.uid);
+      const snap = await getDoc(ref);
+
+      if(!snap.exists()){
+        const base = {
+          nome: "",
+          nomeExibicao: "",
+          email: user.email || "",
+          cpf: "",
+          telefone: "",
+          dataNascimento: "",
+          time: "",
+          categoria: "",
+          funcao: "",
+          numeroCamisa: "",
+          genero: "",
+          bio: "",
+          fotoPerfil: "",
+          tipoUsuario: "torcedor",
+          aprovado: true,
+          autorizado: false,
+          status: "ativo",
+          criadoEm: new Date().toISOString(),
+          atualizadoEm: new Date().toISOString()
+        };
+
+        await setDoc(ref, base);
+        preencherTela(base);
+        return;
+      }
+
+      preencherTela(snap.data());
+    }
+
+    window.recarregarDados = async function(){
+      limparMensagens();
+
+      if(!auth.currentUser || !usuarioAtualId) return;
+
+      try{
+        const ref = doc(db, "usuarios", usuarioAtualId);
+        const snap = await getDoc(ref);
+
+        if(!snap.exists()){
+          mostrarErro("Perfil não encontrado.");
+          return;
+        }
+
+        preencherTela(snap.data());
+        mostrarSucesso("Dados recarregados com sucesso.");
+      }catch(erro){
+        console.error(erro);
+        mostrarErro("Erro ao recarregar perfil.");
+      }
+    };
+
+    window.salvarPerfil = async function(){
+      limparMensagens();
+
+      if(!auth.currentUser || !usuarioAtualId){
+        mostrarErro("Usuário não identificado.");
+        return;
+      }
+
+      const nome = document.getElementById("nome").value.trim();
+      const nomeExibicao = document.getElementById("nomeExibicao").value.trim();
+      const cpf = document.getElementById("cpf").value.trim();
+      const telefone = document.getElementById("telefone").value.trim();
+      const dataNascimento = document.getElementById("dataNascimento").value;
+      const time = document.getElementById("time").value.trim();
+      const categoria = document.getElementById("categoria").value;
+      const funcao = document.getElementById("funcao").value.trim();
+      const numeroCamisa = document.getElementById("numeroCamisa").value.trim();
+      const genero = document.getElementById("genero").value;
+      const bio = document.getElementById("bio").value.trim();
+
+      if(!nome){
+        mostrarErro("Digite seu nome.");
+        return;
+      }
+
+      try{
+        const ref = doc(db, "usuarios", usuarioAtualId);
+
+        await updateDoc(ref, {
+          nome,
+          nomeExibicao,
+          cpf,
+          telefone,
+          dataNascimento,
+          time,
+          categoria,
+          funcao,
+          numeroCamisa,
+          genero,
+          bio,
+          fotoPerfil: fotoBase64Atual,
+          atualizadoEm: new Date().toISOString()
+        });
+
+        mostrarSucesso("Perfil salvo com sucesso.");
+        await window.recarregarDados();
+      }catch(erro){
+        console.error(erro);
+        mostrarErro("Erro ao salvar perfil.");
+      }
+    };
+
+    window.removerFoto = function(){
+      preencherFoto("");
+      mostrarSucesso("Foto removida. Agora clique em salvar perfil.");
+    };
+
+    fotoInput.addEventListener("change", function(event){
+      const arquivo = event.target.files?.[0];
+      if(!arquivo) return;
+
+      const leitor = new FileReader();
+      leitor.onload = function(e){
+        preencherFoto(e.target.result);
+        mostrarSucesso("Foto carregada. Agora clique em salvar perfil.");
+      };
+      leitor.readAsDataURL(arquivo);
+    });
+
+    window.logout = function(){
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      }).catch((erro) => {
+        console.error(erro);
+        mostrarErro("Erro ao sair.");
+      });
+    };
+
+    window.voltarPagina = function(){
+      if(window.history.length > 1){
+        window.history.back();
+      }else{
+        window.location.href = "index.html";
+      }
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      if(!user){
+        window.location.href = "login.html";
+        return;
+      }
+
+      try{
+        await carregarOuCriarPerfil(user);
+      }catch(erro){
+        console.error(erro);
+        mostrarErro("Erro ao carregar perfil.");
+      }
+    });
+  </script>
+
+</body>
+</html>
