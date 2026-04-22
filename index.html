@@ -127,7 +127,8 @@
       border:2px solid var(--yellow);
       background:#fff;
     }
-.sidebar-brand-text strong{
+
+    .sidebar-brand-text strong{
       display:block;
       font-size:16px;
       color:var(--yellow);
@@ -141,8 +142,7 @@
       font-size:12px;
       line-height:1.35;
     }
-
-    .sidebar-close{
+.sidebar-close{
       width:36px;
       height:36px;
       border:none;
@@ -259,13 +259,15 @@
     }
 
     .topbar{
-      position:relative;
+      position:sticky;
+      top:0;
       z-index:100;
       backdrop-filter:blur(12px);
       background:rgba(1,9,24,.88);
       border-bottom:1px solid rgba(255,255,255,.08);
     }
-.topbar-inner{
+
+    .topbar-inner{
       min-height:84px;
       display:flex;
       align-items:center;
@@ -274,12 +276,12 @@
       padding:14px 0;
       flex-wrap:wrap;
     }
-
-    .topbar-left{
+.topbar-left{
       display:flex;
       align-items:center;
       gap:14px;
       min-width:0;
+      flex:1 1 auto;
     }
 
     .menu-toggle{
@@ -340,93 +342,6 @@
       text-overflow:ellipsis;
     }
 
-    .top-nav{
-      flex:1 1 100%;
-      order:3;
-      min-width:0;
-    }
-
-    .top-nav ul{
-      display:flex;
-      align-items:center;
-      gap:6px;
-      flex-wrap:wrap;
-      justify-content:center;
-    }
-
-    .top-nav li{
-      position:relative;
-    }
-
-    .top-nav a,
-    .dropdown-toggle{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 14px;
-      border-radius:12px;
-      color:var(--muted);
-      font-weight:600;
-      border:1px solid transparent;
-      background:transparent;
-      transition:var(--transition);
-      white-space:nowrap;
-    }
-
-    .top-nav a:hover,
-    .dropdown-toggle:hover,
-    .top-nav li:hover > a{
-      color:var(--yellow);
-      background:var(--yellow-soft);
-      border-color:var(--yellow-line);
-    }
-
-    .dropdown-toggle .fa-chevron-down{
-      transition:transform .2s ease;
-    }
-
-    .dropdown.open .dropdown-toggle{
-      color:var(--yellow);
-      background:var(--yellow-soft);
-      border-color:var(--yellow-line);
-    }
-
-    .dropdown.open .dropdown-toggle .fa-chevron-down{
-      transform:rotate(180deg);
-    }
-.dropdown-menu{
-      position:absolute;
-      top:calc(100% + 8px);
-      left:0;
-      min-width:240px;
-      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
-      border:1px solid var(--yellow-line);
-      border-radius:16px;
-      box-shadow:var(--shadow);
-      padding:8px;
-      display:none;
-      z-index:120;
-    }
-
-    .dropdown.open .dropdown-menu{
-      display:block;
-    }
-
-    .dropdown-menu a{
-      display:flex;
-      width:100%;
-      padding:12px 14px;
-      border-radius:12px;
-      color:var(--muted);
-      border:1px solid transparent;
-    }
-
-    .dropdown-menu a:hover{
-      color:var(--yellow);
-      background:var(--yellow-soft);
-      border-color:var(--yellow-line);
-    }
-
     .top-actions{
       display:flex;
       align-items:center;
@@ -467,6 +382,7 @@
       border:1px solid var(--yellow-line);
       background:rgba(255,212,0,.08);
       color:var(--yellow);
+      white-space:nowrap;
     }
 
     .btn-login-chip:hover{
@@ -483,6 +399,107 @@
       align-items:center;
       justify-content:center;
       color:inherit;
+    }
+.top-nav{
+      flex:1 1 100%;
+      order:3;
+      min-width:0;
+    }
+
+    .top-nav-scroll{
+      width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+    }
+
+    .top-nav-scroll::-webkit-scrollbar{
+      display:none;
+    }
+
+    .top-nav ul{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      flex-wrap:nowrap;
+      width:max-content;
+      min-width:100%;
+    }
+
+    .top-nav li{
+      position:relative;
+      flex-shrink:0;
+    }
+
+    .top-nav a,
+    .dropdown-toggle{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:12px;
+      color:var(--muted);
+      font-weight:600;
+      border:1px solid transparent;
+      background:transparent;
+      transition:var(--transition);
+      white-space:nowrap;
+    }
+
+    .top-nav a:hover,
+    .dropdown-toggle:hover,
+    .top-nav li:hover > a{
+      color:var(--yellow);
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+    }
+
+    .dropdown-toggle .fa-chevron-down{
+      transition:transform .2s ease;
+    }
+
+    .dropdown.open .dropdown-toggle{
+      color:var(--yellow);
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+    }
+
+    .dropdown.open .dropdown-toggle .fa-chevron-down{
+      transform:rotate(180deg);
+    }
+
+    .dropdown-menu{
+      position:absolute;
+      top:calc(100% + 8px);
+      left:0;
+      min-width:240px;
+      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
+      border:1px solid var(--yellow-line);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      padding:8px;
+      display:none;
+      z-index:120;
+    }
+
+    .dropdown.open .dropdown-menu{
+      display:block;
+    }
+
+    .dropdown-menu a{
+      display:flex;
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      color:var(--muted);
+      border:1px solid transparent;
+    }
+
+    .dropdown-menu a:hover{
+      color:var(--yellow);
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
     }
 
     .hero{
@@ -504,8 +521,7 @@
       align-items:center;
       padding:34px;
     }
-
-    .eyebrow{
+.eyebrow{
       display:inline-flex;
       align-items:center;
       gap:8px;
@@ -518,7 +534,8 @@
       font-weight:700;
       margin-bottom:16px;
     }
-.hero h1{
+
+    .hero h1{
       font-size:46px;
       line-height:1.08;
       margin-bottom:12px;
@@ -625,8 +642,7 @@
       box-shadow:var(--shadow);
       padding:22px;
     }
-
-    .panel-head{
+.panel-head{
       display:flex;
       justify-content:space-between;
       align-items:center;
@@ -652,7 +668,8 @@
       justify-content:center;
       font-size:20px;
     }
-.panel-head h2{
+
+    .panel-head h2{
       font-size:28px;
       color:#fff;
     }
@@ -752,8 +769,7 @@
       color:var(--muted);
       line-height:1.6;
     }
-
-    .status-user{
+.status-user{
       display:none;
     }
 
@@ -775,7 +791,8 @@
       border-radius:22px;
       padding:22px;
     }
-.footer-card h4{
+
+    .footer-card h4{
       color:var(--yellow);
       margin-bottom:14px;
       font-size:18px;
@@ -863,8 +880,7 @@
     #menuAdmin{
       display:flex;
     }
-
-    @media (max-width: 1180px){
+@media (max-width: 1180px){
       .hero-grid,
       .content-grid,
       .footer-grid,
@@ -872,8 +888,14 @@
         grid-template-columns:1fr 1fr;
       }
 
-      .top-nav ul{
-        justify-content:flex-start;
+      .topbar-inner{
+        gap:14px;
+      }
+
+      .top-nav a,
+      .dropdown-toggle{
+        padding:10px 12px;
+        font-size:14px;
       }
     }
 
@@ -894,28 +916,20 @@
       }
 
       .topbar-inner{
-        padding:14px 0;
+        padding:12px 0;
       }
 
       .top-actions{
-        width:100%;
-        justify-content:flex-start;
         margin-left:0;
       }
 
-      .top-nav{
-        width:100%;
-        overflow-x:auto;
-        padding-bottom:4px;
-      }
-
-      .top-nav ul{
-        flex-wrap:nowrap;
-        width:max-content;
-        min-width:100%;
+      .topbar-logo img{
+        width:52px;
+        height:52px;
       }
     }
-@media (max-width: 600px){
+
+    @media (max-width: 600px){
       .wrap{
         width:min(100% - 20px, var(--max));
       }
@@ -933,13 +947,17 @@
         width:100%;
       }
 
+      .topbar-left{
+        width:100%;
+      }
+
       .top-actions{
-        flex-direction:column;
-        align-items:stretch;
+        width:auto;
+        margin-left:auto;
       }
 
       .btn-login-chip{
-        justify-content:center;
+        padding:10px 14px;
       }
 
       .logo-text strong{
@@ -950,9 +968,48 @@
         font-size:12px;
       }
 
+      .top-nav{
+        padding-top:4px;
+      }
+
+      .top-nav a,
+      .dropdown-toggle{
+        padding:9px 12px;
+        font-size:14px;
+      }
+
+      .dropdown-menu{
+        min-width:220px;
+      }
+
       .match-table{
         display:block;
         overflow-x:auto;
+      }
+    }
+
+    @media (max-width: 480px){
+      .topbar-inner{
+        gap:10px;
+      }
+
+      .topbar-logo img{
+        width:46px;
+        height:46px;
+      }
+
+      .menu-toggle{
+        width:42px;
+        height:42px;
+      }
+
+      .btn-login-chip{
+        font-size:14px;
+      }
+
+      .login-avatar{
+        width:24px;
+        height:24px;
       }
     }
   </style>
@@ -994,8 +1051,7 @@
         <a href="#contato"><span class="side-icon"><i class="fa-solid fa-phone"></i></span>Contato</a>
       </div>
     </div>
-
-    <div class="sidebar-block">
+<div class="sidebar-block">
       <div class="sidebar-title">SISTEMA / ADM</div>
       <div class="sidebar-admin-actions">
         <a href="login.html" class="sidebar-login-btn">
@@ -1010,7 +1066,8 @@
       </div>
     </div>
   </aside>
-<header class="topbar">
+
+  <header class="topbar">
     <div class="wrap topbar-inner">
       <div class="topbar-left">
         <button class="menu-toggle" id="menuToggle" type="button">☰</button>
@@ -1032,40 +1089,42 @@
       </div>
 
       <nav class="top-nav">
-        <ul>
-          <li><a href="index.html">Início</a></li>
+        <div class="top-nav-scroll">
+          <ul>
+            <li><a href="index.html">Início</a></li>
 
-          <li class="dropdown" id="campeonatosDropdown">
-            <button class="dropdown-toggle" id="campeonatosToggle" type="button">
-              Campeonatos <i class="fa-solid fa-chevron-down"></i>
-            </button>
-            <div class="dropdown-menu">
-              <a href="campeonatos.html">Todos os Campeonatos</a>
-              <a href="classificacao.html">Classificação</a>
-              <a href="artilharia.html">Artilharia</a>
-              <a href="categorias.html">Categoria</a>
-              <a href="cartoes.html">Cartões</a>
-              <a href="suspensos.html">Suspensos</a>
-              <a href="regulamento.html">Regulamentos</a>
-            </div>
-          </li>
+            <li class="dropdown" id="campeonatosDropdown">
+              <button class="dropdown-toggle" id="campeonatosToggle" type="button">
+                Campeonatos <i class="fa-solid fa-chevron-down"></i>
+              </button>
+              <div class="dropdown-menu">
+                <a href="campeonatos.html">Todos os Campeonatos</a>
+                <a href="classificacao.html">Classificação</a>
+                <a href="artilharia.html">Artilharia</a>
+                <a href="categorias.html">Categoria</a>
+                <a href="cartoes.html">Cartões</a>
+                <a href="suspensos.html">Suspensos</a>
+                <a href="regulamento.html">Regulamentos</a>
+              </div>
+            </li>
 
-          <li><a href="jogadores.html">Jogadores</a></li>
+            <li><a href="jogadores.html">Jogadores</a></li>
 
-          <li class="dropdown" id="participantesDropdown">
-            <button class="dropdown-toggle" id="participantesToggle" type="button">
-              Participantes <i class="fa-solid fa-chevron-down"></i>
-            </button>
-            <div class="dropdown-menu">
-              <a href="times.html">Equipes</a>
-              <a href="tecnicos.html">Técnicos</a>
-              <a href="arbitros.html">Árbitro</a>
-              <a href="assistentes.html">Assistente</a>
-            </div>
-          </li>
+            <li class="dropdown" id="participantesDropdown">
+              <button class="dropdown-toggle" id="participantesToggle" type="button">
+                Participantes <i class="fa-solid fa-chevron-down"></i>
+              </button>
+              <div class="dropdown-menu">
+                <a href="times.html">Equipes</a>
+                <a href="tecnicos.html">Técnicos</a>
+                <a href="arbitros.html">Árbitro</a>
+                <a href="assistentes.html">Assistente</a>
+              </div>
+            </li>
 
-          <li><a href="galeria.html">Galeria</a></li>
-        </ul>
+            <li><a href="galeria.html">Galeria</a></li>
+          </ul>
+        </div>
       </nav>
     </div>
   </header>
@@ -1107,8 +1166,7 @@
             </div>
           </div>
         </div>
-
-        <div class="cards-pilares">
+<div class="cards-pilares">
           <div class="pillar">
             <div class="pillar-icon"><i class="fa-solid fa-trophy"></i></div>
             <div class="pillar-text">
@@ -1141,7 +1199,8 @@
             </div>
           </div>
         </div>
-<div class="content-grid">
+
+        <div class="content-grid">
           <section class="panel">
             <div class="panel-head">
               <div class="panel-head-title">
