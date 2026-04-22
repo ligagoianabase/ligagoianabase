@@ -18,6 +18,9 @@
       --gold-line:rgba(247,198,0,.30);
       --white:#ffffff;
       --muted:#d6def0;
+      --danger:#ff5b5b;
+      --success:#2db36a;
+      --warning:#ffb020;
       --shadow:0 8px 22px rgba(0,0,0,.28);
       --radius:14px;
       --transition:.25s ease;
@@ -143,6 +146,30 @@
       max-width:900px;
     }
 
+    .hero-info-row{
+      margin-top:16px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      font-size:13px;
+      font-weight:700;
+      color:var(--white);
+    }
+
+    .hero-badge i{
+      color:var(--gold);
+    }
+
     .grid{
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
@@ -232,12 +259,93 @@
       margin-bottom:18px;
     }
 
+    .alerts-grid,
+    .resumo-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:14px;
+    }
+
+    .alert-card,
+    .resumo-card{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+      border-radius:16px;
+      padding:16px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .alert-top,
+    .resumo-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .alert-top strong,
+    .resumo-top strong{
+      color:var(--white);
+      font-size:15px;
+    }
+
+    .alert-icon,
+    .resumo-icon{
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(255,255,255,.08);
+      color:var(--gold);
+      flex-shrink:0;
+    }
+
+    .alert-number,
+    .resumo-number{
+      font-size:30px;
+      font-weight:700;
+      color:var(--gold);
+      margin-bottom:6px;
+    }
+
+    .alert-text,
+    .resumo-text{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .status-danger{ color:var(--danger); }
+    .status-success{ color:var(--success); }
+    .status-warning{ color:var(--warning); }
+
     .footer-note{
       margin-top:20px;
       color:var(--muted);
       font-size:14px;
       line-height:1.6;
       text-align:center;
+    }
+
+    .loading-box{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:26px;
+      text-align:center;
+      box-shadow:var(--shadow);
+    }
+
+    .loading-box p{
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .hidden{
+      display:none !important;
     }
 
     @media (max-width: 900px){
@@ -270,12 +378,18 @@
         align-items:stretch;
       }
 
-      .menu{
+      .menu,
+      .alerts-grid,
+      .resumo-grid{
         grid-template-columns:1fr;
       }
 
       .grid{
         grid-template-columns:1fr 1fr;
+      }
+
+      .hero-info-row{
+        flex-direction:column;
       }
     }
   </style>
@@ -305,119 +419,206 @@
   </header>
 
   <div class="wrap container">
-
-    <section class="hero-panel">
-      <h2>Gestão Geral da Liga</h2>
-      <p>
-        Aqui você administra campeonatos, categorias, equipes, jogadores, comissão técnica,
-        arbitragem, jogos, súmulas, tabelas, notícias e configurações do sistema.
-      </p>
-    </section>
-
-    <div class="grid">
-      <div class="card">
-        <h3 id="totalCampeonatos">0</h3>
-        <p>Campeonatos</p>
-      </div>
-
-      <div class="card">
-        <h3 id="totalCategorias">0</h3>
-        <p>Categorias</p>
-      </div>
-
-      <div class="card">
-        <h3 id="totalTimes">0</h3>
-        <p>Times</p>
-      </div>
-
-      <div class="card">
-        <h3 id="totalJogadores">0</h3>
-        <p>Jogadores</p>
-      </div>
-
-      <div class="card">
-        <h3 id="totalTecnicos">0</h3>
-        <p>Técnicos</p>
-      </div>
-
-      <div class="card">
-        <h3 id="totalArbitros">0</h3>
-        <p>Árbitros</p>
-      </div>
-
-      <div class="card">
-        <h3 id="totalJogos">0</h3>
-        <p>Jogos</p>
-      </div>
-
-      <div class="card">
-        <h3 id="totalSumulas">0</h3>
-        <p>Súmulas</p>
-      </div>
+    <div id="loadingPainel" class="loading-box">
+      <p>Carregando painel administrativo...</p>
     </div>
 
-    <div class="admin-block">
-      <h3 class="section-title">Cadastros e Estrutura</h3>
-      <div class="menu">
-        <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos ADM</a>
-        <a href="categorias-admin.html"><i class="fa-solid fa-layer-group"></i> Categorias ADM</a>
-        <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times ADM</a>
-        <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores ADM</a>
-        <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos ADM</a>
-        <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros ADM</a>
-        <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes ADM</a>
-      </div>
-    </div>
+    <div id="conteudoPainel" class="hidden">
+      <section class="hero-panel">
+        <h2>Gestão Geral da Liga</h2>
+        <p>
+          Aqui você administra campeonatos, categorias, equipes, jogadores, comissão técnica,
+          arbitragem, jogos, súmulas, tabelas, notícias e configurações do sistema.
+        </p>
 
-    <div class="admin-block">
-      <h3 class="section-title">Competições e Operação</h3>
-      <div class="menu">
-        <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos ADM</a>
-        <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Criar Súmula ADM</a>
-        <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Ver Súmulas ADM</a>
-        <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Tabelas ADM</a>
-        <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação ADM</a>
-        <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas de Arbitragem</a>
-      </div>
-    </div>
+        <div class="hero-info-row">
+          <div class="hero-badge">
+            <i class="fa-solid fa-user"></i>
+            <span id="nomeUsuarioLogado">Usuário: -</span>
+          </div>
 
-    <div class="admin-block">
-      <h3 class="section-title">Comunicação e Sistema</h3>
-      <div class="menu">
-        <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias ADM</a>
-        <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria ADM</a>
-        <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários e Permissões</a>
-        <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Configurações</a>
-        <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
-      </div>
-    </div>
+          <div class="hero-badge">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span id="tipoAcessoLogado">Acesso: -</span>
+          </div>
+        </div>
+      </section>
 
-    <div class="footer-note">
-      Painel administrativo da Liga Goiana de Futebol de Base.
+      <div class="grid">
+        <div class="card">
+          <h3 id="totalCampeonatos">0</h3>
+          <p>Campeonatos</p>
+        </div>
+
+        <div class="card">
+          <h3 id="totalCategorias">0</h3>
+          <p>Categorias</p>
+        </div>
+
+        <div class="card">
+          <h3 id="totalTimes">0</h3>
+          <p>Times</p>
+        </div>
+
+        <div class="card">
+          <h3 id="totalJogadores">0</h3>
+          <p>Jogadores</p>
+        </div>
+
+        <div class="card">
+          <h3 id="totalTecnicos">0</h3>
+          <p>Técnicos</p>
+        </div>
+
+        <div class="card">
+          <h3 id="totalArbitros">0</h3>
+          <p>Árbitros</p>
+        </div>
+
+        <div class="card">
+          <h3 id="totalJogos">0</h3>
+          <p>Jogos</p>
+        </div>
+
+        <div class="card">
+          <h3 id="totalSumulas">0</h3>
+          <p>Súmulas</p>
+        </div>
+      </div>
+
+      <div class="admin-block">
+        <h3 class="section-title">Alertas Rápidos</h3>
+        <div class="alerts-grid">
+          <div class="alert-card">
+            <div class="alert-top">
+              <strong>Jogos sem súmula</strong>
+              <div class="alert-icon"><i class="fa-solid fa-file-circle-xmark"></i></div>
+            </div>
+            <div class="alert-number" id="alertJogosSemSumula">0</div>
+            <div class="alert-text">Jogos que ainda não tiveram súmula finalizada.</div>
+          </div>
+
+          <div class="alert-card">
+            <div class="alert-top">
+              <strong>Campeonatos ativos</strong>
+              <div class="alert-icon"><i class="fa-solid fa-trophy"></i></div>
+            </div>
+            <div class="alert-number" id="alertCampeonatosAtivos">0</div>
+            <div class="alert-text">Competições em andamento ou publicadas.</div>
+          </div>
+
+          <div class="alert-card">
+            <div class="alert-top">
+              <strong>Árbitros pendentes</strong>
+              <div class="alert-icon"><i class="fa-solid fa-whistle"></i></div>
+            </div>
+            <div class="alert-number" id="alertArbitrosPendentes">0</div>
+            <div class="alert-text">Árbitros ainda sem autorização do administrador.</div>
+          </div>
+
+          <div class="alert-card">
+            <div class="alert-top">
+              <strong>Notícias não publicadas</strong>
+              <div class="alert-icon"><i class="fa-solid fa-newspaper"></i></div>
+            </div>
+            <div class="alert-number" id="alertNoticiasPendentes">0</div>
+            <div class="alert-text">Itens cadastrados que ainda não foram publicados.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-block">
+        <h3 class="section-title">Resumo Operacional</h3>
+        <div class="resumo-grid">
+          <div class="resumo-card">
+            <div class="resumo-top">
+              <strong>Jogos pendentes</strong>
+              <div class="resumo-icon"><i class="fa-solid fa-clock"></i></div>
+            </div>
+            <div class="resumo-number" id="resumoJogosPendentes">0</div>
+            <div class="resumo-text">Jogos ainda não finalizados com súmula.</div>
+          </div>
+
+          <div class="resumo-card">
+            <div class="resumo-top">
+              <strong>Súmulas finalizadas</strong>
+              <div class="resumo-icon"><i class="fa-solid fa-file-circle-check"></i></div>
+            </div>
+            <div class="resumo-number" id="resumoSumulasFinalizadas">0</div>
+            <div class="resumo-text">Total de súmulas concluídas no sistema.</div>
+          </div>
+
+          <div class="resumo-card">
+            <div class="resumo-top">
+              <strong>Campeonatos publicados</strong>
+              <div class="resumo-icon"><i class="fa-solid fa-bullhorn"></i></div>
+            </div>
+            <div class="resumo-number" id="resumoCampeonatosPublicados">0</div>
+            <div class="resumo-text">Competições já liberadas no site público.</div>
+          </div>
+
+          <div class="resumo-card">
+            <div class="resumo-top">
+              <strong>Usuários autorizados</strong>
+              <div class="resumo-icon"><i class="fa-solid fa-user-check"></i></div>
+            </div>
+            <div class="resumo-number" id="resumoUsuariosAutorizados">0</div>
+            <div class="resumo-text">Usuários com acesso autorizado no sistema.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="blocoCadastros" class="admin-block">
+        <h3 class="section-title">Cadastros e Estrutura</h3>
+        <div class="menu">
+          <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos ADM</a>
+          <a href="categorias-admin.html"><i class="fa-solid fa-layer-group"></i> Categorias ADM</a>
+          <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times ADM</a>
+          <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores ADM</a>
+          <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos ADM</a>
+          <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros ADM</a>
+          <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes ADM</a>
+        </div>
+      </div>
+
+      <div class="admin-block">
+        <h3 class="section-title">Competições e Operação</h3>
+        <div class="menu">
+          <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos ADM</a>
+          <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Criar Súmula ADM</a>
+          <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Ver Súmulas ADM</a>
+          <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Tabelas ADM</a>
+          <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação ADM</a>
+          <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas de Arbitragem</a>
+        </div>
+      </div>
+
+      <div id="blocoComunicacao" class="admin-block">
+        <h3 class="section-title">Comunicação e Sistema</h3>
+        <div class="menu">
+          <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias ADM</a>
+          <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria ADM</a>
+          <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários e Permissões</a>
+          <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Configurações</a>
+          <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        Painel administrativo da Liga Goiana de Futebol de Base.
+      </div>
     </div>
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs
-    } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+    import { auth, db } from "./firebase.js";
+    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCyArj4yRlEl-yibkc0VEmL_4UJpRHHQSc",
-      authDomain: "liga-goiana-base.firebaseapp.com",
-      projectId: "liga-goiana-base",
-      storageBucket: "liga-goiana-base.firebasestorage.app",
-      messagingSenderId: "952863591183",
-      appId: "1:952863591183:web:4eea34f494ba2dd754cc7a"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    const loadingPainel = document.getElementById("loadingPainel");
+    const conteudoPainel = document.getElementById("conteudoPainel");
+    const blocoCadastros = document.getElementById("blocoCadastros");
+    const blocoComunicacao = document.getElementById("blocoComunicacao");
 
     function normalizarTexto(texto){
       return String(texto || "")
@@ -440,42 +641,128 @@
       return categorias.size;
     }
 
-    async function carregarTotaisPainel(){
+    function ehStatusAtivo(status){
+      const valor = normalizarTexto(status);
+      return ["ativo", "em andamento", "publicado", "publico", "público", "aberto"].includes(valor);
+    }
+
+    function ehAdminTipo(tipo){
+      const valor = normalizarTexto(tipo);
+      return valor === "admin" || valor === "administrador";
+    }
+
+    function ehArbitroTipo(tipo){
+      const valor = normalizarTexto(tipo);
+      return valor === "arbitro" || valor === "árbitro";
+    }
+
+    async function obterColecaoSeguro(nomeColecao){
       try{
-        const [
-          snapCampeonatos,
-          snapTimes,
-          snapJogadores,
-          snapTecnicos,
-          snapArbitros,
-          snapJogos,
-          snapSumulas
-        ] = await Promise.all([
-          getDocs(collection(db, "campeonatos")),
-          getDocs(collection(db, "times")),
-          getDocs(collection(db, "jogadores")),
-          getDocs(collection(db, "tecnicos")),
-          getDocs(collection(db, "arbitros")),
-          getDocs(collection(db, "jogos")),
-          getDocs(collection(db, "sumulas"))
-        ]);
-
-        const campeonatos = [];
-        snapCampeonatos.forEach(docSnap => {
-          campeonatos.push({ id: docSnap.id, ...docSnap.data() });
-        });
-
-        document.getElementById("totalCampeonatos").textContent = snapCampeonatos.size;
-        document.getElementById("totalCategorias").textContent = contarCategoriasDosCampeonatos(campeonatos);
-        document.getElementById("totalTimes").textContent = snapTimes.size;
-        document.getElementById("totalJogadores").textContent = snapJogadores.size;
-        document.getElementById("totalTecnicos").textContent = snapTecnicos.size;
-        document.getElementById("totalArbitros").textContent = snapArbitros.size;
-        document.getElementById("totalJogos").textContent = snapJogos.size;
-        document.getElementById("totalSumulas").textContent = snapSumulas.size;
+        const snap = await getDocs(collection(db, nomeColecao));
+        return snap.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
       }catch(erro){
-        console.error("Erro ao carregar totais do painel:", erro);
+        console.warn(`Coleção ${nomeColecao} não carregada:`, erro);
+        return [];
       }
+    }
+
+    function preencherUsuarioLogado(dadosUsuario){
+      const nome = dadosUsuario.nome || auth.currentUser?.email || "Sem nome";
+      const tipoUsuario = String(dadosUsuario.tipoUsuario || "").trim().toLowerCase();
+      const autorizado = dadosUsuario.autorizado === true;
+
+      document.getElementById("nomeUsuarioLogado").textContent = `Usuário: ${nome}`;
+
+      if(ehAdminTipo(tipoUsuario)){
+        document.getElementById("tipoAcessoLogado").textContent = "Acesso: Administrador";
+        blocoCadastros.classList.remove("hidden");
+        blocoComunicacao.classList.remove("hidden");
+      }else if(ehArbitroTipo(tipoUsuario) && autorizado){
+        document.getElementById("tipoAcessoLogado").textContent = "Acesso: Árbitro Autorizado";
+        blocoCadastros.classList.add("hidden");
+        blocoComunicacao.classList.add("hidden");
+      }else{
+        document.getElementById("tipoAcessoLogado").textContent = "Acesso: Restrito";
+      }
+    }
+
+    async function carregarPainelCompleto(){
+      const [
+        campeonatos,
+        times,
+        jogadores,
+        tecnicos,
+        arbitros,
+        jogos,
+        sumulas,
+        usuarios,
+        noticias
+      ] = await Promise.all([
+        obterColecaoSeguro("campeonatos"),
+        obterColecaoSeguro("times"),
+        obterColecaoSeguro("jogadores"),
+        obterColecaoSeguro("tecnicos"),
+        obterColecaoSeguro("arbitros"),
+        obterColecaoSeguro("jogos"),
+        obterColecaoSeguro("sumulas"),
+        obterColecaoSeguro("usuarios"),
+        obterColecaoSeguro("noticias")
+      ]);
+
+      document.getElementById("totalCampeonatos").textContent = campeonatos.length;
+      document.getElementById("totalCategorias").textContent = contarCategoriasDosCampeonatos(campeonatos);
+      document.getElementById("totalTimes").textContent = times.length;
+      document.getElementById("totalJogadores").textContent = jogadores.length;
+      document.getElementById("totalTecnicos").textContent = tecnicos.length;
+      document.getElementById("totalArbitros").textContent = arbitros.length;
+      document.getElementById("totalJogos").textContent = jogos.length;
+      document.getElementById("totalSumulas").textContent = sumulas.length;
+
+      const jogosSemSumula = jogos.filter(jogo => {
+        const status = normalizarTexto(jogo.status);
+        return status !== "sumula_enviada";
+      }).length;
+
+      const campeonatosAtivos = campeonatos.filter(campeonato => {
+        return ehStatusAtivo(campeonato.status) || campeonato.publicado === true || campeonato.publico === true;
+      }).length;
+
+      const arbitrosPendentes = usuarios.filter(usuario => {
+        return ehArbitroTipo(usuario.tipoUsuario) && usuario.autorizado !== true;
+      }).length;
+
+      const noticiasPendentes = noticias.filter(noticia => {
+        const status = normalizarTexto(noticia.status);
+        return noticia.publicado !== true && status !== "publicado";
+      }).length;
+
+      const jogosPendentes = jogos.filter(jogo => {
+        const status = normalizarTexto(jogo.status);
+        return status !== "sumula_enviada";
+      }).length;
+
+      const sumulasFinalizadas = sumulas.filter(sumula => {
+        return normalizarTexto(sumula.status) === "finalizada";
+      }).length;
+
+      const campeonatosPublicados = campeonatos.filter(campeonato => {
+        return campeonato.publicado === true || campeonato.publico === true || normalizarTexto(campeonato.status) === "publicado";
+      }).length;
+
+      const usuariosAutorizados = usuarios.filter(usuario => {
+        if(ehAdminTipo(usuario.tipoUsuario)) return true;
+        return usuario.autorizado === true;
+      }).length;
+
+      document.getElementById("alertJogosSemSumula").textContent = jogosSemSumula;
+      document.getElementById("alertCampeonatosAtivos").textContent = campeonatosAtivos;
+      document.getElementById("alertArbitrosPendentes").textContent = arbitrosPendentes;
+      document.getElementById("alertNoticiasPendentes").textContent = noticiasPendentes;
+
+      document.getElementById("resumoJogosPendentes").textContent = jogosPendentes;
+      document.getElementById("resumoSumulasFinalizadas").textContent = sumulasFinalizadas;
+      document.getElementById("resumoCampeonatosPublicados").textContent = campeonatosPublicados;
+      document.getElementById("resumoUsuariosAutorizados").textContent = usuariosAutorizados;
     }
 
     window.logout = function() {
@@ -496,13 +783,45 @@
       }
     };
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if(!user){
         window.location.href = "login.html";
         return;
       }
 
-      carregarTotaisPainel();
+      try{
+        const usuarioRef = doc(db, "usuarios", user.uid);
+        const usuarioSnap = await getDoc(usuarioRef);
+
+        if(!usuarioSnap.exists()){
+          alert("Usuário sem permissão de acesso.");
+          window.location.href = "index.html";
+          return;
+        }
+
+        const dadosUsuario = usuarioSnap.data();
+        const tipoUsuario = String(dadosUsuario.tipoUsuario || "").trim().toLowerCase();
+        const autorizado = dadosUsuario.autorizado === true;
+
+        const ehAdmin = ehAdminTipo(tipoUsuario);
+        const ehArbitroAutorizado = ehArbitroTipo(tipoUsuario) && autorizado;
+
+        if(!ehAdmin && !ehArbitroAutorizado){
+          alert("Acesso restrito.");
+          window.location.href = "index.html";
+          return;
+        }
+
+        preencherUsuarioLogado(dadosUsuario);
+        await carregarPainelCompleto();
+
+        loadingPainel.classList.add("hidden");
+        conteudoPainel.classList.remove("hidden");
+      }catch(erro){
+        console.error("Erro ao validar acesso:", erro);
+        alert("Erro ao validar acesso.");
+        window.location.href = "login.html";
+      }
     });
   </script>
 
