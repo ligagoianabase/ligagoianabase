@@ -1,105 +1,163 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Liga Goiana de Futebol de Base</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Copa União de Base</title>
+    <style>
+        body { background-color: #1a2a1a; background: linear-gradient(135deg, #1a2a1a 0%, #0f1d0f 100%); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; color: #fff; }
+        .container { text-align: center; width: 90%; max-width: 400px; }
+        .logo { width: 150px; margin-bottom: 15px; }
+        h1 { color: #d4af37; font-size: 22px; margin-bottom: 25px; }
+        
+        .input-group { position: relative; width: 100%; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #d4af37; background-color: #0f1d0f; color: white; border-radius: 5px; box-sizing: border-box; }
+        
+        /* Estilo do Olhinho */
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            cursor: pointer;
+            color: #d4af37;
+            font-size: 18px;
+            user-select: none;
+        }
 
-  <style>
-    :root{
-      --yellow:#ffd400;
-      --yellow-2:#ffe600;
-      --yellow-soft:rgba(255,212,0,.12);
-      --yellow-line:rgba(255,212,0,.22);
-      --white:#ffffff;
-      --muted:#d8e1ef;
-      --text-soft:#a8b6cf;
-      --shadow:0 12px 30px rgba(0,0,0,.35);
-      --transition:.25s ease;
-      --max:1280px;
-    }
+        /* Estilo das Checkboxes */
+        .options-container {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 20px;
+            color: #d4af37;
+        }
+        .option-item { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .option-item input { width: auto; margin: 0; cursor: pointer; }
 
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        linear-gradient(rgba(1,9,24,.86), rgba(1,9,24,.95)),
-        url("fundo.png") center/cover fixed no-repeat;
-      color:#fff;
-    }
-.sidebar{position:fixed;left:0;top:0;width:320px;height:100%;background:#021022;transform:translateX(-100%);transition:.3s;}
-    .sidebar.open{transform:translateX(0);}
-    .sidebar a{display:block;padding:12px;color:#ccc}
-    .sidebar a:hover{color:#ffd400}
-</style>
+        button { width: 100%; padding: 12px; background-color: #d4af37; border: none; border-radius: 5px; color: #000; font-weight: bold; cursor: pointer; }
+        .links { margin-top: 20px; font-size: 14px; }
+        .links a { color: #d4af37; display: block; margin-top: 10px; text-decoration: none; cursor: pointer; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <img src="logo.png" alt="Logo Copa União" class="logo">
+        <h1>COPA UNIÃO DE BASE</h1>
+        
+        <input type="text" id="identificador" placeholder="Email ou CPF">
+        
+        <div class="input-group">
+            <input type="password" id="senha" placeholder="Senha">
+            <span class="toggle-password" onclick="togglePassword()">👁️</span>
+        </div>
 
-<div id="sidebar" class="sidebar">
+        <div class="options-container">
+            <label class="option-item">
+                <input type="checkbox" id="lembrarEmail"> Lembrar E-mail
+            </label>
+            <label class="option-item">
+                <input type="checkbox" id="manterConectado"> Manter Conectado
+            </label>
+        </div>
 
-<h3 style="color:#ffd400;padding:15px">COMPETIÇÃO</h3>
-<a href="classificacao.html">Classificação</a>
-<a href="tabela.html">Tabela</a>
-<a href="jogos.html">Jogos</a>
-<a href="artilharia.html">Artilharia</a>
-<a href="cartoes.html">Cartões</a>
-<a href="suspensos.html">Suspensos</a>
-<h3 style="color:#ffd400;padding:15px">PARTICIPANTES</h3>
-<a href="times.html">Times</a>
-<a href="tecnicos.html">Técnicos</a>
-<a href="jogadores.html">Jogadores</a>
-<a href="arbitros.html">Árbitros</a>
-<a href="assistentes.html">Assistentes</a>
-<h3 style="color:#ffd400;padding:15px">INFORMAÇÕES</h3>
-<a href="campeonatos.html">Campeonatos</a>
-<a href="categorias.html">Categorias</a>
-<a href="regulamento.html">Regulamento</a>
-<a href="noticias.html">Notícias</a>
-<a href="galeria.html">Galeria</a>
-<a href="#contato">Contato</a>
-<h3 style="color:#ffd400;padding:15px">SISTEMA</h3>
-<a href="login.html">Login</a>
-<a href="admin.html">Painel ADM</a>
+        <button onclick="realizarLogin()">ENTRAR</button>
 
-</div>
-<header style="display:flex;justify-content:space-between;padding:15px;background:#010918">
+        <div class="links">
+            <a href="cadastro.html">Criar conta</a>
+            <a onclick="recuperarSenha()">Esqueci minha senha</a>
+        </div>
+    </div>
 
-<button onclick="toggleMenu()">☰</button>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        import { getFirestore, query, collection, where, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-<nav>
-<a href="index.html">Início</a>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBct9IeJNya7xq-dG6eFv1cdDdOn4IEEHw",
+            authDomain: "sumula-8027e.firebaseapp.com",
+            projectId: "sumula-8027e",
+            storageBucket: "sumula-8027e.firebasestorage.app",
+            messagingSenderId: "532547952520",
+            appId: "1:532547952520:web:ca5ef98c6de024aa48a43d"
+        };
 
-<div style="display:inline-block;position:relative">
-<button>Campeonatos ▾</button>
-<div class="dropdown">
-<a href="classificacao.html">Classificação</a>
-<a href="artilharia.html">Artilharia</a>
-<a href="jogadores.html">Jogadores</a>
-</div>
-</div>
-<div style="display:inline-block;position:relative">
-<button>Participantes ▾</button>
-<div class="dropdown">
-<a href="times.html">Times</a>
-<a href="tecnicos.html">Técnicos</a>
-<a href="arbitros.html">Árbitros</a>
-<a href="assistentes.html">Assistentes</a>
-</div>
-</div>
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-<a href="galeria.html">Galeria</a>
+        // Carrega o e-mail salvo se existir
+        window.onload = () => {
+            const emailSalvo = localStorage.getItem('emailSalvo');
+            if (emailSalvo) {
+                document.getElementById('identificador').value = emailSalvo;
+                document.getElementById('lembrarEmail').checked = true;
+            }
+        };
 
-</nav>
+        // Função do Olhinho
+        window.togglePassword = function() {
+            const senhaInput = document.getElementById('senha');
+            const icon = document.querySelector('.toggle-password');
+            if (senhaInput.type === "password") {
+                senhaInput.type = "text";
+                icon.innerText = "🔒"; // Muda para cadeado ou olho fechado
+            } else {
+                senhaInput.type = "password";
+                icon.innerText = "👁️";
+            }
+        };
 
-<a href="login.html">Login</a>
+        window.realizarLogin = async function() {
+            const id = document.getElementById('identificador').value;
+            const senha = document.getElementById('senha').value;
+            const manterConectado = document.getElementById('manterConectado').checked;
+            const lembrarEmail = document.getElementById('lembrarEmail').checked;
+            
+            try {
+                // Configura Persistência (Manter Conectado)
+                const persistencia = manterConectado ? browserLocalPersistence : browserSessionPersistence;
+                await setPersistence(auth, persistencia);
 
-</header>
-<script>
-function toggleMenu(){
-  document.getElementById("sidebar").classList.toggle("open");
-}
-</script>
+                let email = id;
+                if (!id.includes("@")) {
+                    const q = query(collection(db, "usuarios"), where("cpf", "==", id));
+                    const snap = await getDocs(q);
+                    if (snap.empty) throw new Error("CPF não encontrado");
+                    email = snap.docs[0].data().email;
+                }
 
+                await signInWithEmailAndPassword(auth, email, senha);
+
+                // Lógica de Lembrar E-mail
+                if (lembrarEmail) {
+                    localStorage.setItem('emailSalvo', email);
+                } else {
+                    localStorage.removeItem('emailSalvo');
+                }
+
+                // Identifica se é você pelo e-mail ou dados informados
+                if (email === "ruy.gram@gmail.com" || id === "02354109261") {
+                    localStorage.setItem('perfil', 'admin');
+                } else {
+                    localStorage.setItem('perfil', 'arbitro');
+                }
+                
+                localStorage.setItem('usuarioEmail', email);
+                window.location.href = "dashboard.html";
+
+            } catch (e) { 
+                alert("Erro: " + e.message); 
+            }
+        }
+
+        window.recuperarSenha = async function() {
+            const email = document.getElementById('identificador').value;
+            if (!email) { alert("Insira o e-mail no campo acima."); return; }
+            await sendPasswordResetEmail(auth, email);
+            alert("Email de redefinição enviado!");
+        }
+    </script>
 </body>
 </html>
