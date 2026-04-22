@@ -1,125 +1,105 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Liga Goiana de Futebol de Base</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-@media (max-width:1180px){
-/* REMOVIDO display:none da top-nav */
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liga Goiana de Futebol de Base</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root{
+      --yellow:#ffd400;
+      --yellow-2:#ffe600;
+      --yellow-soft:rgba(255,212,0,.12);
+      --yellow-line:rgba(255,212,0,.22);
+      --white:#ffffff;
+      --muted:#d8e1ef;
+      --text-soft:#a8b6cf;
+      --shadow:0 12px 30px rgba(0,0,0,.35);
+      --transition:.25s ease;
+      --max:1280px;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        linear-gradient(rgba(1,9,24,.86), rgba(1,9,24,.95)),
+        url("fundo.png") center/cover fixed no-repeat;
+      color:#fff;
+    }
+.sidebar{position:fixed;left:0;top:0;width:320px;height:100%;background:#021022;transform:translateX(-100%);transition:.3s;}
+    .sidebar.open{transform:translateX(0);}
+    .sidebar a{display:block;padding:12px;color:#ccc}
+    .sidebar a:hover{color:#ffd400}
 </style>
 </head>
 <body>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-<aside class="sidebar" id="sidebar">
-<div class="sidebar-header">
-<div class="sidebar-brand">
-<img src="logo-liga.jfif">
-<div class="sidebar-brand-text">
-<strong>Liga Goiana de Futebol de Base</strong>
-<span>Onde o talento encontra o futuro</span>
-</div>
-</div>
-<button class="sidebar-close" id="sidebarClose">×</button>
-</div>
-<div class="sidebar-block">
-<div class="sidebar-title">MENU</div>
-<div class="side-menu">
-<a href="index.html">Início</a>
-<a href="campeonatos.html">Campeonatos</a>
+
+<div id="sidebar" class="sidebar">
+
+<h3 style="color:#ffd400;padding:15px">COMPETIÇÃO</h3>
 <a href="classificacao.html">Classificação</a>
+<a href="tabela.html">Tabela</a>
+<a href="jogos.html">Jogos</a>
 <a href="artilharia.html">Artilharia</a>
-<a href="jogadores.html">Jogadores</a>
+<a href="cartoes.html">Cartões</a>
+<a href="suspensos.html">Suspensos</a>
+<h3 style="color:#ffd400;padding:15px">PARTICIPANTES</h3>
 <a href="times.html">Times</a>
 <a href="tecnicos.html">Técnicos</a>
+<a href="jogadores.html">Jogadores</a>
 <a href="arbitros.html">Árbitros</a>
 <a href="assistentes.html">Assistentes</a>
-<a href="jogos.html">Jogos</a>
-<a href="sumula.html">Súmula</a>
+<h3 style="color:#ffd400;padding:15px">INFORMAÇÕES</h3>
+<a href="campeonatos.html">Campeonatos</a>
+<a href="categorias.html">Categorias</a>
+<a href="regulamento.html">Regulamento</a>
 <a href="noticias.html">Notícias</a>
 <a href="galeria.html">Galeria</a>
+<a href="#contato">Contato</a>
+<h3 style="color:#ffd400;padding:15px">SISTEMA</h3>
 <a href="login.html">Login</a>
 <a href="admin.html">Painel ADM</a>
+
 </div>
-</div>
-</aside>
-<header class="topbar">
-<div class="wrap topbar-inner">
-<div class="topbar-left">
-<button class="menu-toggle" id="menuToggle">☰</button>
-<a href="index.html" class="topbar-logo">
-<img src="logo-liga.jfif">
-<div class="logo-text">
-<strong>Liga Goiana de Futebol de Base</strong>
-<span>Onde o talento encontra o futuro</span>
-</div>
-</a>
-</div>
-<nav class="top-nav">
-<ul>
-<li><a href="index.html">Início</a></li>
-<li class="dropdown">
-<button class="dropdown-toggle">
-Campeonatos <i class="fa-solid fa-chevron-down"></i>
-</button>
-<div class="dropdown-menu">
+<header style="display:flex;justify-content:space-between;padding:15px;background:#010918">
+
+<button onclick="toggleMenu()">☰</button>
+
+<nav>
+<a href="index.html">Início</a>
+
+<div style="display:inline-block;position:relative">
+<button>Campeonatos ▾</button>
+<div class="dropdown">
 <a href="classificacao.html">Classificação</a>
 <a href="artilharia.html">Artilharia</a>
 <a href="jogadores.html">Jogadores</a>
 </div>
-</li>
-<li class="dropdown">
-<button class="dropdown-toggle">
-Participantes <i class="fa-solid fa-chevron-down"></i>
-</button>
-<div class="dropdown-menu">
+</div>
+<div style="display:inline-block;position:relative">
+<button>Participantes ▾</button>
+<div class="dropdown">
 <a href="times.html">Times</a>
 <a href="tecnicos.html">Técnicos</a>
 <a href="arbitros.html">Árbitros</a>
 <a href="assistentes.html">Assistentes</a>
 </div>
-</li>
-<li><a href="galeria.html">Galeria</a></li>
-</ul>
+</div>
+
+<a href="galeria.html">Galeria</a>
+
 </nav>
-<div class="top-actions">
-<a href="login.html" class="btn-login-chip">
-<span class="login-avatar"><i class="fa-solid fa-user"></i></span>
-<span>Login</span>
-</a>
-</div>
-</div>
+
+<a href="login.html">Login</a>
+
 </header>
 <script>
-const sidebar = document.getElementById("sidebar");
-const sidebarOverlay = document.getElementById("sidebarOverlay");
-const menuToggle = document.getElementById("menuToggle");
-const sidebarClose = document.getElementById("sidebarClose");
-menuToggle.onclick = () => {
-sidebar.classList.add("open");
-sidebarOverlay.classList.add("show");
-};
-sidebarClose.onclick = () => {
-sidebar.classList.remove("open");
-sidebarOverlay.classList.remove("show");
-};
-sidebarOverlay.onclick = () => {
-sidebar.classList.remove("open");
-sidebarOverlay.classList.remove("show");
-};
-document.querySelectorAll(".dropdown-toggle").forEach(btn=>{
-btn.onclick = function(e){
-e.stopPropagation();
-this.parentElement.classList.toggle("open");
-};
-});
-document.onclick = ()=>{
-document.querySelectorAll(".dropdown").forEach(d=>{
-d.classList.remove("open");
-});
-};
+function toggleMenu(){
+  document.getElementById("sidebar").classList.toggle("open");
+}
 </script>
+
 </body>
 </html>
