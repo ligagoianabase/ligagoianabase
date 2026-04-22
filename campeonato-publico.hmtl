@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campeonato Público - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root{
+      --bg:#0b1f3a;
+      --bg-dark:#08172c;
+      --card:#102a52;
+      --card-hover:#153766;
+      --gold:#f7c600;
+      --gold-soft:rgba(247,198,0,.12);
+      --gold-line:rgba(247,198,0,.24);
+      --white:#ffffff;
+      --muted:#d8e1ef;
+      --shadow:0 8px 22px rgba(0,0,0,.28);
+      --transition:.25s ease;
+      --max:1240px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:Arial, sans-serif;
+      background:
+        linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+        url("fundo.png") center/cover fixed no-repeat;
+      color:var(--white);
+      min-height:100vh;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+      transition:var(--transition);
+    }
+
+    button{
+      font-family:inherit;
+      cursor:pointer;
+      transition:var(--transition);
+      border:none;
+      background:none;
+    }
+
+    .wrap{
+      width:min(100% - 28px, var(--max));
+      margin:0 auto;
+    }
+
+    header{
+      background:rgba(8,23,44,.96);
+      border-bottom:3px solid var(--gold);
+      box-shadow:var(--shadow);
+    }
+
+    .header-top{
+      min-height:82px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      padding:14px 0;
+    }
+
+    .header-left,
+    .header-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .header-title{
+      flex:1;
+      text-align:center;
+      font-size:24px;
+      font-weight:700;
+      color:var(--white);
+    }
+
+    .top-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 16px;
+      border-radius:10px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    .btn-light{
+      background:#fff4cf;
+      color:#111;
+    }
+
+    .btn-light:hover{
+      background:var(--gold);
+      transform:translateY(-2px);
+    }
+
+    .nav-bar{
+      background:rgba(16,42,82,.95);
+      border-top:1px solid rgba(255,255,255,.06);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .menu{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      padding:12px 8px;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+    }
+
+    .menu::-webkit-scrollbar{
+      display:none;
+    }
+
+    .menu a{
+      color:#fff;
+      font-weight:700;
+      font-size:14px;
+      background:#0d2346;
+      padding:10px 14px;
+      border-radius:10px;
+      border:1px solid transparent;
+      white-space:nowrap;
+      flex:0 0 auto;
+    }
+
+    .menu a:hover{
+      color:var(--gold);
+      background:var(--gold-soft);
+      border-color:var(--gold-line);
+    }
+
+    .menu a.ativo{
+      background:var(--gold);
+      color:#111;
+    }
+
+    .container{
+      padding:24px 0 34px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg, #102a52, #0d2346);
+      border:1px solid var(--gold-line);
+      border-radius:18px;
+      padding:24px;
+      margin-bottom:20px;
+      box-shadow:var(--shadow);
+    }
+
+    .hero-top{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .hero-logo{
+      width:96px;
+      height:96px;
+      border-radius:50%;
+      object-fit:cover;
+      border:2px solid rgba(255,255,255,.15);
+      background:#1a3f73;
+      flex-shrink:0;
+    }
+
+    .hero-info{
+      flex:1;
+      min-width:260px;
+    }
+
+    .hero h2{
+      margin:0 0 8px;
+      color:var(--gold);
+      font-size:30px;
+      line-height:1.2;
+    }
+
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:15px;
+      max-width:900px;
+    }
+
+    .hero-tags{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .hero-tag{
+      background:#0b1f3a;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      color:var(--white);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .actions-bar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    .btn-acao{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:11px 16px;
+      border-radius:10px;
+      font-weight:700;
+      font-size:14px;
+    }
+
+    .btn-principal{
+      background:var(--gold);
+      color:#111;
+    }
+
+    .btn-principal:hover{
+      filter:brightness(1.04);
+      transform:translateY(-1px);
+    }
+
+    .btn-secundario{
+      background:#1a3f73;
+      color:#fff;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .btn-secundario:hover{
+      background:#214a86;
+      transform:translateY(-1px);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:18px;
+      margin-bottom:18px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+      padding:18px;
+      border-radius:16px;
+      border:1px solid rgba(255,230,0,.10);
+      box-shadow:var(--shadow);
+    }
+
+    .card h3{
+      color:var(--gold);
+      font-size:22px;
+      margin-bottom:14px;
+    }
+
+    .card p{
+      color:var(--muted);
+      line-height:1.7;
+      font-size:14px;
+    }
+
+    .stats-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .stat-card{
+      background:#0b1f3a;
+      border-radius:12px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .stat-card strong{
+      display:block;
+      color:var(--gold);
+      font-size:13px;
+      margin-bottom:6px;
+    }
+
+    .stat-card span{
+      font-size:16px;
+      font-weight:700;
+      color:#fff;
+      line-height:1.45;
+    }
+
+    .tags{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .tag{
+      background:#1a3f73;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:13px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .bloco{
+      margin-bottom:18px;
+    }
+
+    .bloco:last-child{
+      margin-bottom:0;
+    }
+
+    .lista-info{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .info-item{
+      background:#0b1f3a;
+      border-radius:12px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .info-item strong{
+      display:block;
+      color:var(--gold);
+      font-size:13px;
+      margin-bottom:6px;
+    }
+
+    .info-item span{
+      color:#fff;
+      line-height:1.45;
+      font-size:15px;
+    }
+
+    .regra-lista{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .regra-item{
+      background:#0b1f3a;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:12px;
+      padding:14px;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px;
+    }
+
+    .vazio{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+      padding:30px;
+      border-radius:14px;
+      text-align:center;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,.06);
+      box-shadow:var(--shadow);
+    }
+
+    @media (max-width:900px){
+      .header-title{
+        order:3;
+        width:100%;
+        text-align:center;
+      }
+
+      .header-left,
+      .header-right{
+        width:100%;
+        justify-content:center;
+      }
+
+      .grid{
+        grid-template-columns:1fr;
+      }
+
+      .lista-info,
+      .stats-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:600px){
+      .header-top{
+        flex-direction:column;
+        align-items:center;
+      }
+
+      .header-title{
+        order:2;
+        width:100%;
+        text-align:center;
+      }
+
+      .header-left{
+        order:1;
+        width:100%;
+        display:flex;
+        flex-direction:row;
+        align-items:center;
+        justify-content:center;
+        gap:10px;
+        flex-wrap:nowrap;
+      }
+
+      .header-right{
+        display:none;
+      }
+
+      .top-btn{
+        width:auto;
+        min-width:0;
+        flex:1;
+        justify-content:center;
+        padding:10px 12px;
+        font-size:14px;
+      }
+
+      .hero h2{
+        font-size:24px;
+      }
+
+      .hero-top{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .hero-logo{
+        width:84px;
+        height:84px;
+      }
+
+      .actions-bar{
+        flex-direction:column;
+      }
+
+      .btn-acao{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap header-top">
+      <div class="header-left">
+        <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+          <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
+
+        <a href="index.html" class="top-btn btn-light">
+          <i class="fa-solid fa-house"></i> Página Inicial
+        </a>
+      </div>
+
+      <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
+
+      <div class="header-right"></div>
+    </div>
+
+    <div class="nav-bar">
+      <div class="wrap">
+        <nav class="menu">
+          <a href="index.html">Início</a>
+          <a href="campeonatos.html" class="ativo">Campeonatos</a>
+          <a href="tabela.html">Tabela</a>
+          <a href="jogos.html">Jogos</a>
+          <a href="times.html">Times</a>
+          <a href="tecnicos.html">Técnicos</a>
+          <a href="jogadores.html">Jogadores</a>
+          <a href="arbitros.html">Arbitros</a>
+          <a href="assistentes.html">Assistente</a>
+          <a href="sumula-publica.html">Súmula</a>
+          <a href="noticias.html">Notícias</a>
+          <a href="login.html">Login</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap container" id="paginaConteudo" style="display:none;">
+    <section class="hero">
+      <div class="hero-top">
+        <img id="heroLogo" class="hero-logo" src="logo-liga.jfif" alt="Logo campeonato">
+
+        <div class="hero-info">
+          <h2 id="heroTitulo">Campeonato</h2>
+          <p id="heroDescricao">Descrição do campeonato.</p>
+
+          <div class="hero-tags">
+            <div class="hero-tag" id="heroTagTemporada">Temporada: -</div>
+            <div class="hero-tag" id="heroTagStatus">Status: -</div>
+            <div class="hero-tag" id="heroTagCategorias">Categorias: 0</div>
+          </div>
+
+          <div class="actions-bar">
+            <a class="btn-acao btn-principal" id="btnClassificacao" href="classificacao.html">
+              <i class="fa-solid fa-table"></i> Classificação
+            </a>
+
+            <a class="btn-acao btn-secundario" id="btnJogos" href="jogos.html">
+              <i class="fa-solid fa-calendar-days"></i> Jogos
+            </a>
+
+            <a class="btn-acao btn-secundario" id="btnTimes" href="times.html">
+              <i class="fa-solid fa-shield-halved"></i> Equipes
+            </a>
+
+            <a class="btn-acao btn-secundario" id="btnJogadores" href="jogadores.html">
+              <i class="fa-solid fa-users"></i> Jogadores
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h3>Resumo do Campeonato</h3>
+
+        <div class="bloco">
+          <div class="lista-info">
+            <div class="info-item">
+              <strong>Nome</strong>
+              <span id="infoNome">-</span>
+            </div>
+
+            <div class="info-item">
+              <strong>Temporada</strong>
+              <span id="infoTemporada">-</span>
+            </div>
+
+            <div class="info-item">
+              <strong>Status</strong>
+              <span id="infoStatus">-</span>
+            </div>
+
+            <div class="info-item">
+              <strong>Tipo</strong>
+              <span id="infoTipo">-</span>
+            </div>
+
+            <div class="info-item">
+              <strong>Data de início</strong>
+              <span id="infoInicio">-</span>
+            </div>
+
+            <div class="info-item">
+              <strong>Data de encerramento</strong>
+              <span id="infoFim">-</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bloco">
+          <strong style="display:block;color:var(--gold);font-size:13px;margin-bottom:8px;">Descrição</strong>
+          <p id="descricaoCompleta">Sem descrição cadastrada.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Informações Gerais</h3>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <strong>Categorias</strong>
+            <span id="totalCategorias">0</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>Visibilidade</strong>
+            <span id="infoVisibilidade">Público</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>Publicação</strong>
+            <span id="infoPublicacao">Publicado</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>Regulamento</strong>
+            <span id="infoRegulamento">Disponível</span>
+          </div>
+        </div>
+
+        <div class="bloco" style="margin-top:18px;">
+          <strong style="display:block;color:var(--gold);font-size:13px;margin-bottom:8px;">Categorias do campeonato</strong>
+          <div class="tags" id="listaCategorias"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="card" style="margin-bottom:18px;">
+      <h3>Regras Disciplinares</h3>
+
+      <div class="regra-lista" id="listaRegras"></div>
+    </section>
+
+    <section class="card">
+      <h3>Observações e Regulamento</h3>
+      <p id="textoRegulamento">Sem regulamento cadastrado.</p>
+    </section>
+  </main>
+
+  <div class="wrap" id="boxCarregando">
+    <div class="vazio">Carregando campeonato...</div>
+  </div>
+
+  <div class="wrap" id="boxErro" style="display:none;">
+    <div class="vazio">Campeonato não encontrado ou não disponível para o público.</div>
+  </div>
+
+  <script type="module">
+    import { db } from "./firebase.js";
+    import {
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const paginaConteudo = document.getElementById("paginaConteudo");
+    const boxCarregando = document.getElementById("boxCarregando");
+    const boxErro = document.getElementById("boxErro");
+
+    function getParametro(nome){
+      const params = new URLSearchParams(window.location.search);
+      return params.get(nome);
+    }
+
+    window.voltarPagina = function(){
+      if(window.history.length > 1){
+        window.history.back();
+      }else{
+        window.location.href = "campeonatos.html";
+      }
+    };
+
+    function statusPublico(status = "") {
+      const s = String(status).trim().toLowerCase();
+      return ["ativo", "em breve", "publicado", "publico", "público"].includes(s);
+    }
+
+    function campeonatoEhPublico(campeonato) {
+      if (!campeonato) return false;
+      if (campeonato.publicado === true) return true;
+      if (campeonato.publico === true) return true;
+      if (campeonato.visivelPublico === true) return true;
+      if (statusPublico(campeonato.status)) return true;
+      return false;
+    }
+
+    function texto(valor, fallback = "-"){
+      if(valor === undefined || valor === null || valor === "") return fallback;
+      return String(valor);
+    }
+
+    function formatarData(valor){
+      if(!valor) return "-";
+
+      const data = new Date(valor);
+      if(!isNaN(data.getTime())){
+        return data.toLocaleDateString("pt-BR");
+      }
+
+      return String(valor);
+    }
+
+    function montarLinkComFiltro(pagina, nomeCampeonato){
+      return `${pagina}?campeonato=${encodeURIComponent(nomeCampeonato || "")}`;
+    }
+
+    function preencherTela(campeonato){
+      document.title = `${texto(campeonato.nome, "Campeonato")} - LIGA GOIANA DE FUTEBOL DE BASE`;
+
+      document.getElementById("heroLogo").src = campeonato.logo || "logo-liga.jfif";
+      document.getElementById("heroLogo").onerror = function(){
+        this.src = "logo-liga.jfif";
+      };
+
+      document.getElementById("heroTitulo").textContent = texto(campeonato.nome, "Campeonato");
+      document.getElementById("heroDescricao").textContent =
+        texto(campeonato.descricao || campeonato.resumo || campeonato.regulamentoResumo, "Sem descrição cadastrada.");
+
+      document.getElementById("heroTagTemporada").textContent = `Temporada: ${texto(campeonato.temporada)}`;
+      document.getElementById("heroTagStatus").textContent = `Status: ${texto(campeonato.status)}`;
+      document.getElementById("heroTagCategorias").textContent =
+        `Categorias: ${Array.isArray(campeonato.categorias) ? campeonato.categorias.length : 0}`;
+
+      document.getElementById("infoNome").textContent = texto(campeonato.nome);
+      document.getElementById("infoTemporada").textContent = texto(campeonato.temporada);
+      document.getElementById("infoStatus").textContent = texto(campeonato.status);
+      document.getElementById("infoTipo").textContent = texto(campeonato.tipo || campeonato.modelo || campeonato.formato);
+      document.getElementById("infoInicio").textContent = formatarData(campeonato.dataInicio || campeonato.inicio);
+      document.getElementById("infoFim").textContent = formatarData(campeonato.dataFim || campeonato.fim || campeonato.encerramento);
+      document.getElementById("descricaoCompleta").textContent =
+        texto(campeonato.descricao || campeonato.resumo || campeonato.regulamentoResumo, "Sem descrição cadastrada.");
+
+      const categorias = Array.isArray(campeonato.categorias) ? campeonato.categorias : [];
+      document.getElementById("totalCategorias").textContent = categorias.length;
+      document.getElementById("infoVisibilidade").textContent =
+        campeonatoEhPublico(campeonato) ? "Público" : "Privado";
+      document.getElementById("infoPublicacao").textContent =
+        campeonato.publicado === true ? "Publicado" : "Em análise";
+      document.getElementById("infoRegulamento").textContent =
+        campeonato.regulamento || campeonato.regulamentoTexto || campeonato.regulamentoResumo ? "Disponível" : "Não informado";
+
+      const listaCategorias = document.getElementById("listaCategorias");
+      listaCategorias.innerHTML = categorias.length
+        ? categorias.map(cat => `<span class="tag">${cat}</span>`).join("")
+        : `<span class="tag">Sem categorias</span>`;
+
+      const regras = campeonato.regrasCartoes || {};
+      const listaRegras = document.getElementById("listaRegras");
+      const regrasHtml = [];
+
+      regrasHtml.push(`
+        <div class="regra-item">
+          <strong style="color:var(--gold);display:block;margin-bottom:6px;">Suspensão por amarelos</strong>
+          ${Number(regras.amarelosParaSuspensao || 3)} amarelos = ${Number(regras.jogosSuspensaoAmarelos || 1)} jogo(s) de suspensão
+        </div>
+      `);
+
+      regrasHtml.push(`
+        <div class="regra-item">
+          <strong style="color:var(--gold);display:block;margin-bottom:6px;">Vermelho direto</strong>
+          Vermelho direto = ${Number(regras.jogosSuspensaoVermelhoDireto || 2)} jogo(s) de suspensão
+        </div>
+      `);
+
+      regrasHtml.push(`
+        <div class="regra-item">
+          <strong style="color:var(--gold);display:block;margin-bottom:6px;">Segundo amarelo</strong>
+          2º amarelo / vermelho por segundo amarelo = ${Number(regras.jogosSuspensaoSegundoAmarelo || 1)} jogo(s) de suspensão
+        </div>
+      `);
+
+      if(campeonato.woAtivo === true || campeonato.wo === true){
+        regrasHtml.push(`
+          <div class="regra-item">
+            <strong style="color:var(--gold);display:block;margin-bottom:6px;">W.O.</strong>
+            Campeonato com regra de W.O. ativa.
+          </div>
+        `);
+      }
+
+      listaRegras.innerHTML = regrasHtml.join("");
+
+      document.getElementById("textoRegulamento").textContent =
+        texto(
+          campeonato.regulamento ||
+          campeonato.regulamentoTexto ||
+          campeonato.regulamentoResumo ||
+          campeonato.observacoes,
+          "Sem regulamento cadastrado."
+        );
+
+      document.getElementById("btnClassificacao").href = montarLinkComFiltro("classificacao.html", campeonato.nome);
+      document.getElementById("btnJogos").href = montarLinkComFiltro("jogos.html", campeonato.nome);
+      document.getElementById("btnTimes").href = montarLinkComFiltro("times.html", campeonato.nome);
+      document.getElementById("btnJogadores").href = montarLinkComFiltro("jogadores.html", campeonato.nome);
+    }
+
+    async function iniciarPagina(){
+      try{
+        const id = getParametro("id");
+
+        if(!id){
+          throw new Error("ID não informado");
+        }
+
+        const ref = doc(db, "campeonatos", id);
+        const snap = await getDoc(ref);
+
+        if(!snap.exists()){
+          throw new Error("Campeonato não encontrado");
+        }
+
+        const campeonato = { id: snap.id, ...snap.data() };
+
+        if(!campeonatoEhPublico(campeonato)){
+          throw new Error("Campeonato não público");
+        }
+
+        preencherTela(campeonato);
+
+        boxCarregando.style.display = "none";
+        boxErro.style.display = "none";
+        paginaConteudo.style.display = "block";
+      }catch(erro){
+        console.error(erro);
+        boxCarregando.style.display = "none";
+        paginaConteudo.style.display = "none";
+        boxErro.style.display = "block";
+      }
+    }
+
+    iniciarPagina();
+  </script>
+
+</body>
+</html>
