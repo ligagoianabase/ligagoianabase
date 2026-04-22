@@ -159,7 +159,8 @@
       background:var(--yellow);
       color:#08172c;
     }
-.sidebar-block{
+
+    .sidebar-block{
       margin-bottom:22px;
       background:rgba(255,255,255,.03);
       border:1px solid rgba(255,255,255,.06);
@@ -174,8 +175,7 @@
       margin-bottom:12px;
       letter-spacing:.4px;
     }
-
-    .side-menu{
+.side-menu{
       display:flex;
       flex-direction:column;
       gap:8px;
@@ -206,6 +206,49 @@
       flex-shrink:0;
     }
 
+    .sidebar-admin-actions{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:4px;
+    }
+
+    .sidebar-login-btn,
+    .sidebar-admin-btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:14px;
+      font-weight:700;
+      border:1px solid transparent;
+      transition:var(--transition);
+    }
+
+    .sidebar-login-btn{
+      background:rgba(255,212,0,.08);
+      border-color:var(--yellow-line);
+      color:var(--yellow);
+    }
+
+    .sidebar-login-btn:hover{
+      background:var(--yellow);
+      color:#08172c;
+    }
+
+    .sidebar-admin-btn{
+      background:rgba(255,255,255,.06);
+      border-color:rgba(255,255,255,.08);
+      color:#fff;
+    }
+
+    .sidebar-admin-btn:hover{
+      background:var(--yellow);
+      color:#08172c;
+      border-color:var(--yellow);
+    }
+
     .topbar{
       position:relative;
       z-index:100;
@@ -221,6 +264,7 @@
       justify-content:space-between;
       gap:18px;
       padding:14px 0;
+      flex-wrap:wrap;
     }
 
     .topbar-left{
@@ -287,6 +331,11 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
+.top-nav{
+      flex:1 1 100%;
+      order:3;
+      min-width:0;
+    }
 
     .top-nav ul{
       display:flex;
@@ -312,6 +361,7 @@
       border:1px solid transparent;
       background:transparent;
       transition:var(--transition);
+      white-space:nowrap;
     }
 
     .top-nav a:hover,
@@ -321,7 +371,8 @@
       background:var(--yellow-soft);
       border-color:var(--yellow-line);
     }
-.dropdown-toggle .fa-chevron-down{
+
+    .dropdown-toggle .fa-chevron-down{
       transition:transform .2s ease;
     }
 
@@ -373,6 +424,7 @@
       align-items:center;
       gap:10px;
       flex-shrink:0;
+      margin-left:auto;
     }
 
     .btn-primary,
@@ -424,8 +476,7 @@
       justify-content:center;
       color:inherit;
     }
-
-    .hero{
+.hero{
       padding:34px 0 20px;
     }
 
@@ -458,7 +509,8 @@
       font-weight:700;
       margin-bottom:16px;
     }
-.hero h1{
+
+    .hero h1{
       font-size:46px;
       line-height:1.08;
       margin-bottom:12px;
@@ -565,8 +617,7 @@
       box-shadow:var(--shadow);
       padding:22px;
     }
-
-    .panel-head{
+.panel-head{
       display:flex;
       justify-content:space-between;
       align-items:center;
@@ -597,7 +648,8 @@
       font-size:28px;
       color:#fff;
     }
-.panel-head a{
+
+    .panel-head a{
       color:var(--yellow);
       font-weight:700;
       transition:var(--transition);
@@ -708,14 +760,14 @@
       grid-template-columns:1.2fr .8fr .8fr .8fr;
       gap:20px;
     }
-
-    .footer-card{
+.footer-card{
       background:rgba(255,255,255,.03);
       border:1px solid rgba(255,255,255,.06);
       border-radius:22px;
       padding:22px;
     }
-.footer-card h4{
+
+    .footer-card h4{
       color:var(--yellow);
       margin-bottom:14px;
       font-size:18px;
@@ -801,19 +853,19 @@
     }
 
     #menuAdmin{
-      display:none;
+      display:flex;
     }
 
     @media (max-width: 1180px){
-      .top-nav{
-        display:none;
-      }
-
       .hero-grid,
       .content-grid,
       .footer-grid,
       .cards-pilares{
         grid-template-columns:1fr 1fr;
+      }
+
+      .top-nav ul{
+        justify-content:flex-start;
       }
     }
 
@@ -834,13 +886,25 @@
       }
 
       .topbar-inner{
-        flex-wrap:wrap;
         padding:14px 0;
       }
 
       .top-actions{
         width:100%;
         justify-content:flex-start;
+        margin-left:0;
+      }
+
+      .top-nav{
+        width:100%;
+        overflow-x:auto;
+        padding-bottom:4px;
+      }
+
+      .top-nav ul{
+        flex-wrap:nowrap;
+        width:max-content;
+        min-width:100%;
       }
     }
 
@@ -848,7 +912,8 @@
       .wrap{
         width:min(100% - 20px, var(--max));
       }
-.hero-grid{
+
+      .hero-grid{
         padding:20px;
       }
 
@@ -886,8 +951,7 @@
   </style>
 </head>
 <body>
-
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -902,37 +966,45 @@
     </div>
 
     <div class="sidebar-block">
-      <div class="sidebar-title">NAVEGAÇÃO PÚBLICA</div>
+      <div class="sidebar-title">PÚBLICO</div>
       <div class="side-menu">
+        <a href="campeonatos.html"><span class="side-icon"><i class="fa-solid fa-trophy"></i></span>Campeonatos</a>
+        <a href="categorias.html"><span class="side-icon"><i class="fa-solid fa-layer-group"></i></span>Categorias</a>
         <a href="classificacao.html"><span class="side-icon"><i class="fa-solid fa-ranking-star"></i></span>Classificação</a>
-        <a href="jogos.html"><span class="side-icon"><i class="fa-solid fa-calendar-days"></i></span>Tabela de Jogos</a>
+        <a href="jogos.html"><span class="side-icon"><i class="fa-solid fa-calendar-days"></i></span>Jogos</a>
+        <a href="tabela.html"><span class="side-icon"><i class="fa-solid fa-table-list"></i></span>Tabela</a>
         <a href="artilharia.html"><span class="side-icon"><i class="fa-solid fa-futbol"></i></span>Artilharia</a>
         <a href="cartoes.html"><span class="side-icon"><i class="fa-solid fa-id-card"></i></span>Cartões</a>
         <a href="suspensos.html"><span class="side-icon"><i class="fa-solid fa-ban"></i></span>Suspensos</a>
+        <a href="times.html"><span class="side-icon"><i class="fa-solid fa-shield-halved"></i></span>Times</a>
+        <a href="tecnicos.html"><span class="side-icon"><i class="fa-solid fa-chalkboard-user"></i></span>Técnicos</a>
+        <a href="jogadores.html"><span class="side-icon"><i class="fa-solid fa-person-running"></i></span>Jogadores</a>
         <a href="arbitros.html"><span class="side-icon"><i class="fa-solid fa-whistle"></i></span>Árbitros</a>
         <a href="assistentes.html"><span class="side-icon"><i class="fa-solid fa-user-group"></i></span>Assistentes</a>
-      </div>
-    </div>
-
-    <div class="sidebar-block">
-      <div class="sidebar-title">INFORMAÇÕES</div>
-      <div class="side-menu">
-        <a href="categorias.html"><span class="side-icon"><i class="fa-solid fa-layer-group"></i></span>Categorias</a>
-        <a href="times.html"><span class="side-icon"><i class="fa-solid fa-shield-halved"></i></span>Clubes</a>
         <a href="regulamento.html"><span class="side-icon"><i class="fa-solid fa-book"></i></span>Regulamento</a>
+        <a href="noticias.html"><span class="side-icon"><i class="fa-solid fa-newspaper"></i></span>Notícias</a>
+        <a href="galeria.html"><span class="side-icon"><i class="fa-solid fa-images"></i></span>Galeria</a>
         <a href="#contato"><span class="side-icon"><i class="fa-solid fa-phone"></i></span>Contato</a>
       </div>
     </div>
 
     <div class="sidebar-block">
-      <div class="sidebar-title">ÁREA DO SISTEMA</div>
-      <div class="side-menu">
-        <a href="login.html"><span class="side-icon"><i class="fa-solid fa-user"></i></span>Login / Cadastro</a>
-        <a href="admin.html" id="menuAdmin"><span class="side-icon"><i class="fa-solid fa-gears"></i></span>Painel ADM</a>
+      <div class="sidebar-title">SISTEMA / ADM</div>
+      <div class="sidebar-admin-actions">
+        <a href="login.html" class="sidebar-login-btn">
+          <i class="fa-solid fa-user"></i>
+          <span>Login / Cadastro</span>
+        </a>
+
+        <a href="admin.html" class="sidebar-admin-btn" id="menuAdmin">
+          <i class="fa-solid fa-gears"></i>
+          <span>Painel ADM</span>
+        </a>
       </div>
     </div>
   </aside>
-<header class="topbar">
+
+  <header class="topbar">
     <div class="wrap topbar-inner">
       <div class="topbar-left">
         <button class="menu-toggle" id="menuToggle" type="button">☰</button>
@@ -946,33 +1018,50 @@
         </a>
       </div>
 
-      <nav class="top-nav">
-        <ul>
-          <li><a href="index.html">Início</a></li>
-          <li><a href="campeonatos.html">Campeonatos</a></li>
-          <li class="dropdown" id="statsDropdown">
-            <button class="dropdown-toggle" id="statsToggle" type="button">
-              Estatísticas <i class="fa-solid fa-chevron-down"></i>
-            </button>
-            <div class="dropdown-menu" id="statsMenu">
-              <a href="tabela.html">Tabelas</a>
-              <a href="classificacao.html">Classificação</a>
-              <a href="jogos.html">Tabela de Jogos</a>
-              <a href="artilharia.html">Artilharia</a>
-              <a href="cartoes.html">Cartões</a>
-              <a href="suspensos.html">Suspensos</a>
-            </div>
-          </li>
-          <li><a href="times.html">Times</a></li>
-        </ul>
-      </nav>
-
       <div class="top-actions">
         <a href="login.html" class="btn-login-chip">
           <span class="login-avatar"><i class="fa-solid fa-user"></i></span>
           <span>Login</span>
         </a>
       </div>
+
+      <nav class="top-nav">
+        <ul>
+          <li><a href="index.html">Início</a></li>
+
+          <li class="dropdown" id="campeonatosDropdown">
+            <button class="dropdown-toggle" id="campeonatosToggle" type="button">
+              Campeonatos <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+              <a href="campeonatos.html">Todos os Campeonatos</a>
+              <a href="categorias.html">Categorias</a>
+              <a href="regulamento.html">Regulamento</a>
+            </div>
+          </li>
+<li><a href="classificacao.html">Classificação</a></li>
+          <li><a href="artilharia.html">Artilharia</a></li>
+          <li><a href="jogadores.html">Jogadores</a></li>
+
+          <li class="dropdown" id="participantesDropdown">
+            <button class="dropdown-toggle" id="participantesToggle" type="button">
+              Participantes <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+              <a href="times.html">Times</a>
+              <a href="tecnicos.html">Técnicos</a>
+              <a href="arbitros.html">Árbitros</a>
+              <a href="assistentes.html">Assistentes</a>
+            </div>
+          </li>
+
+          <li><a href="times.html">Times</a></li>
+          <li><a href="tecnicos.html">Técnicos</a></li>
+          <li><a href="arbitros.html">Árbitros</a></li>
+          <li><a href="assistentes.html">Assistentes</a></li>
+          <li><a href="galeria.html">Galeria</a></li>
+        </ul>
+      </nav>
     </div>
   </header>
 
@@ -1013,7 +1102,8 @@
             </div>
           </div>
         </div>
-<div class="cards-pilares">
+
+        <div class="cards-pilares">
           <div class="pillar">
             <div class="pillar-icon"><i class="fa-solid fa-trophy"></i></div>
             <div class="pillar-text">
@@ -1056,8 +1146,7 @@
               </div>
               <a href="jogos.html">Ver todos <i class="fa-solid fa-arrow-right"></i></a>
             </div>
-
-            <table class="match-table">
+<table class="match-table">
               <thead>
                 <tr>
                   <th>Data e Hora</th>
@@ -1102,7 +1191,8 @@
       </div>
     </section>
   </main>
-<footer id="contato">
+
+  <footer id="contato">
     <div class="wrap">
       <div class="footer-grid">
         <div class="footer-card">
@@ -1167,14 +1257,18 @@
       </div>
     </div>
   </footer>
-
-  <script>
+<script>
     const sidebar = document.getElementById("sidebar");
     const sidebarOverlay = document.getElementById("sidebarOverlay");
     const menuToggle = document.getElementById("menuToggle");
     const sidebarClose = document.getElementById("sidebarClose");
-    const statsDropdown = document.getElementById("statsDropdown");
-    const statsToggle = document.getElementById("statsToggle");
+
+    const campeonatosDropdown = document.getElementById("campeonatosDropdown");
+    const campeonatosToggle = document.getElementById("campeonatosToggle");
+
+    const participantesDropdown = document.getElementById("participantesDropdown");
+    const participantesToggle = document.getElementById("participantesToggle");
+
     const statusUser = document.getElementById("statusUser");
     const menuAdmin = document.getElementById("menuAdmin");
     const gamesTableBody = document.getElementById("gamesTableBody");
@@ -1196,15 +1290,9 @@
       document.body.style.overflow = "";
     }
 
-    function toggleStatsDropdown(event) {
-      if (!statsDropdown) return;
-      event.stopPropagation();
-      statsDropdown.classList.toggle("open");
-    }
-
-    function closeStatsDropdown() {
-      if (!statsDropdown) return;
-      statsDropdown.classList.remove("open");
+    function closeAllDropdowns() {
+      if (campeonatosDropdown) campeonatosDropdown.classList.remove("open");
+      if (participantesDropdown) participantesDropdown.classList.remove("open");
     }
 
     if (menuToggle) {
@@ -1222,33 +1310,46 @@
       sidebarOverlay.addEventListener("click", closeSidebar);
     }
 
-    if (statsToggle) {
-      statsToggle.addEventListener("click", toggleStatsDropdown);
+    if (campeonatosToggle) {
+      campeonatosToggle.addEventListener("click", function(event) {
+        event.stopPropagation();
+        if (participantesDropdown) participantesDropdown.classList.remove("open");
+        campeonatosDropdown.classList.toggle("open");
+      });
+    }
+
+    if (participantesToggle) {
+      participantesToggle.addEventListener("click", function(event) {
+        event.stopPropagation();
+        if (campeonatosDropdown) campeonatosDropdown.classList.remove("open");
+        participantesDropdown.classList.toggle("open");
+      });
     }
 
     document.addEventListener("click", function(event) {
       const clickedInsideSidebar = sidebar && sidebar.contains(event.target);
       const clickedMenuToggle = menuToggle && menuToggle.contains(event.target);
-      const clickedStats = statsDropdown && statsDropdown.contains(event.target);
+      const clickedCampeonatos = campeonatosDropdown && campeonatosDropdown.contains(event.target);
+      const clickedParticipantes = participantesDropdown && participantesDropdown.contains(event.target);
 
       if (sidebar && sidebar.classList.contains("open") && !clickedInsideSidebar && !clickedMenuToggle) {
         closeSidebar();
       }
 
-      if (!clickedStats) {
-        closeStatsDropdown();
+      if (!clickedCampeonatos && !clickedParticipantes) {
+        closeAllDropdowns();
       }
     });
 
     document.addEventListener("keydown", function(event) {
       if (event.key === "Escape") {
         closeSidebar();
-        closeStatsDropdown();
+        closeAllDropdowns();
       }
     });
 
     if (menuAdmin) {
-      menuAdmin.style.display = "none";
+      menuAdmin.style.display = "flex";
     }
 
     if (statusUser) {
