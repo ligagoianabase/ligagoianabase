@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogadores ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root{
+      --bg:#0b1f3a;
+      --card:#102a52;
+      --card-hover:#153766;
+      --gold:#f7c600;
+      --gold-line:rgba(247,198,0,.30);
+      --white:#ffffff;
+      --muted:#d6def0;
+      --danger:#c62828;
+      --success:#1f8b4c;
+      --shadow:0 8px 22px rgba(0,0,0,.28);
+      --transition:.25s ease;
+      --max:1280px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:Arial, sans-serif;
+      background:
+        linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+        url("fundo.png") center/cover fixed no-repeat;
+      color:var(--white);
+      min-height:100vh;
+    }
+
+    a{ text-decoration:none; color:inherit; }
+    button,input,select{ font-family:inherit; }
+
+    .wrap{
+      width:min(100% - 30px, var(--max));
+      margin:0 auto;
+    }
+
+    header{
+      background:rgba(8,23,44,.96);
+      border-bottom:3px solid var(--gold);
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+    }
+
+    .header-inner{
+      min-height:82px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      padding:14px 0;
+    }
+
+    .header-left,.header-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .header-title{
+      flex:1;
+      text-align:center;
+      font-size:22px;
+      font-weight:700;
+    }
+
+    .top-btn{
+      border:none;
+      padding:10px 16px;
+      border-radius:10px;
+      font-weight:bold;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      cursor:pointer;
+      transition:var(--transition);
+    }
+
+    .btn-light{
+      background:#fff4cf;
+      color:#111;
+    }
+
+    .btn-light:hover{
+      background:var(--gold);
+      transform:translateY(-2px);
+    }
+
+    .btn-gold{
+      background:var(--gold);
+      color:#111;
+    }
+
+    .btn-gold:hover{
+      filter:brightness(1.05);
+      transform:translateY(-2px);
+    }
+
+    .container{
+      padding-bottom:30px;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, rgba(16,42,82,.95), rgba(10,28,56,.96));
+      border:1px solid var(--gold-line);
+      border-radius:20px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+    }
+
+    .panel h2,
+    .panel h3{
+      color:var(--gold);
+      margin-bottom:10px;
+    }
+
+    .panel p{
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .field label{
+      display:block;
+      margin-bottom:6px;
+      font-size:14px;
+      font-weight:700;
+    }
+
+    .field input,
+    .field select{
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:10px;
+      background:#f4f7fb;
+      color:#111;
+      font-size:14px;
+    }
+
+    .field.full{
+      grid-column:1 / -1;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    .btn-action{
+      border:none;
+      padding:12px 16px;
+      border-radius:10px;
+      font-weight:700;
+      cursor:pointer;
+      transition:var(--transition);
+    }
+
+    .btn-save{
+      background:var(--gold);
+      color:#111;
+    }
+
+    .btn-save:hover,
+    .btn-clear:hover{
+      transform:translateY(-2px);
+    }
+
+    .btn-clear{
+      background:#d9e2f2;
+      color:#111;
+    }
+
+    .msg{
+      margin-top:14px;
+      padding:12px;
+      border-radius:12px;
+      font-weight:700;
+      display:none;
+    }
+
+    .msg.error{
+      background:rgba(198,40,40,.18);
+      color:#ffb7b7;
+      border:1px solid rgba(198,40,40,.35);
+    }
+
+    .msg.success{
+      background:rgba(31,139,76,.18);
+      color:#a8ffd0;
+      border:1px solid rgba(31,139,76,.35);
+    }
+
+    .filtros{
+      display:grid;
+      grid-template-columns:1.2fr .8fr .8fr .8fr;
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .lista{
+      display:grid;
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
+
+    .card-top{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .card-info h3{
+      font-size:20px;
+      margin-bottom:6px;
+    }
+
+    .card-info p{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.55;
+    }
+
+    .tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .tag{
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      border:1px solid rgba(255,255,255,.08);
+      background:#14335f;
+      color:#fff;
+    }
+
+    .tag.success{
+      background:rgba(31,139,76,.18);
+      color:#a8ffd0;
+      border-color:rgba(31,139,76,.35);
+    }
+
+    .card-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .mini-btn{
+      border:none;
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:700;
+      cursor:pointer;
+      transition:var(--transition);
+      color:#fff;
+    }
+
+    .mini-btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .mini-edit{ background:var(--gold); color:#111; }
+    .mini-delete{ background:var(--danger); }
+
+    .vazio{
+      text-align:center;
+      color:var(--muted);
+      padding:24px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.03);
+    }
+
+    @media (max-width: 980px){
+      .grid,
+      .filtros{
+        grid-template-columns:1fr;
+      }
+
+      .header-title{
+        order:3;
+        width:100%;
+      }
+
+      .header-left,.header-right{
+        width:100%;
+        justify-content:center;
+      }
+    }
+
+    @media (max-width: 600px){
+      .top-btn,
+      .btn-action,
+      .mini-btn{
+        width:100%;
+        justify-content:center;
+      }
+
+      .header-left,.header-right,
+      .actions,.card-actions{
+        flex-direction:column;
+        align-items:stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="wrap header-inner">
+      <div class="header-left">
+        <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+          <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
+
+        <a href="admin.html" class="top-btn btn-light">
+          <i class="fa-solid fa-house"></i> Painel ADM
+        </a>
+      </div>
+
+      <div class="header-title">Jogadores ADM</div>
+
+      <div class="header-right">
+        <button class="top-btn btn-gold" type="button" onclick="limparFormulario()">
+          <i class="fa-solid fa-user-plus"></i> Novo Jogador
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap container">
+
+    <section class="panel">
+      <h2>Cadastro e edição de jogadores</h2>
+      <p>
+        Aqui o sistema usa o CPF para evitar duplicação e puxar informações já cadastradas na base de usuários.
+      </p>
+
+      <div id="msgErro" class="msg error"></div>
+      <div id="msgSucesso" class="msg success"></div>
+
+      <div class="grid">
+        <div class="field">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" placeholder="Nome do jogador">
+        </div>
+
+        <div class="field">
+          <label for="cpf">CPF</label>
+          <input type="text" id="cpf" placeholder="CPF do jogador" onblur="buscarPorCpf()">
+        </div>
+
+        <div class="field">
+          <label for="dataNascimento">Data de nascimento</label>
+          <input type="date" id="dataNascimento">
+        </div>
+
+        <div class="field">
+          <label for="numero">Número</label>
+          <input type="text" id="numero" placeholder="Número da camisa">
+        </div>
+
+        <div class="field">
+          <label for="time">Time</label>
+          <input type="text" id="time" placeholder="Nome do time">
+        </div>
+
+        <div class="field">
+          <label for="categoria">Categoria</label>
+          <select id="categoria">
+            <option value="">Selecione</option>
+            <option value="Sub-11">Sub-11</option>
+            <option value="Sub-12">Sub-12</option>
+            <option value="Sub-13">Sub-13</option>
+            <option value="Sub-14">Sub-14</option>
+            <option value="Sub-15">Sub-15</option>
+            <option value="Sub-16">Sub-16</option>
+            <option value="Sub-17">Sub-17</option>
+            <option value="Sub-18">Sub-18</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="posicao">Posição</label>
+          <input type="text" id="posicao" placeholder="Ex.: Atacante">
+        </div>
+
+        <div class="field">
+          <label for="status">Status</label>
+          <select id="status">
+            <option value="ativo">Ativo</option>
+            <option value="pendente">Pendente</option>
+            <option value="bloqueado">Bloqueado</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label for="observacoes">Observações</label>
+          <input type="text" id="observacoes" placeholder="Observações do jogador">
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-action btn-save" onclick="salvarJogador()">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar jogador
+        </button>
+
+        <button class="btn-action btn-clear" onclick="limparFormulario()">
+          <i class="fa-solid fa-eraser"></i> Limpar
+        </button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h3>Filtros</h3>
+
+      <div class="filtros">
+        <div class="field">
+          <label for="busca">Buscar</label>
+          <input type="text" id="busca" placeholder="Nome, CPF ou time" oninput="renderJogadores()">
+        </div>
+
+        <div class="field">
+          <label for="filtroCategoria">Categoria</label>
+          <select id="filtroCategoria" onchange="renderJogadores()">
+            <option value="">Todas</option>
+            <option value="Sub-11">Sub-11</option>
+            <option value="Sub-12">Sub-12</option>
+            <option value="Sub-13">Sub-13</option>
+            <option value="Sub-14">Sub-14</option>
+            <option value="Sub-15">Sub-15</option>
+            <option value="Sub-16">Sub-16</option>
+            <option value="Sub-17">Sub-17</option>
+            <option value="Sub-18">Sub-18</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="filtroTime">Time</label>
+          <input type="text" id="filtroTime" placeholder="Filtrar por time" oninput="renderJogadores()">
+        </div>
+
+        <div class="field">
+          <label for="filtroStatus">Status</label>
+          <select id="filtroStatus" onchange="renderJogadores()">
+            <option value="">Todos</option>
+            <option value="ativo">Ativo</option>
+            <option value="pendente">Pendente</option>
+            <option value="bloqueado">Bloqueado</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="lista" id="listaJogadores">
+        <div class="vazio">Carregando jogadores...</div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      collection,
+      getDocs,
+      doc,
+      getDoc,
+      setDoc,
+      updateDoc,
+      deleteDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    let jogadorEditandoId = "";
+    let jogadoresCache = [];
+    let usuariosCache = [];
+
+    const msgErro = document.getElementById("msgErro");
+    const msgSucesso = document.getElementById("msgSucesso");
+
+    function mostrarErro(texto){
+      msgSucesso.style.display = "none";
+      msgErro.style.display = "block";
+      msgErro.innerText = texto;
+    }
+
+    function mostrarSucesso(texto){
+      msgErro.style.display = "none";
+      msgSucesso.style.display = "block";
+      msgSucesso.innerText = texto;
+    }
+
+    function limparMensagens(){
+      msgErro.style.display = "none";
+      msgSucesso.style.display = "none";
+      msgErro.innerText = "";
+      msgSucesso.innerText = "";
+    }
+
+    function normalizarTexto(texto){
+      return String(texto || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function limparCpf(cpf){
+      return String(cpf || "").replace(/\D/g, "");
+    }
+
+    function voltarPagina(){
+      if(window.history.length > 1){
+        window.history.back();
+      }else{
+        window.location.href = "admin.html";
+      }
+    }
+
+    window.voltarPagina = voltarPagina;
+
+    async function validarAcessoAdmin(user){
+      if(!user) return false;
+
+      const usuarioRef = doc(db, "usuarios", user.uid);
+      const usuarioSnap = await getDoc(usuarioRef);
+
+      if(!usuarioSnap.exists()) return false;
+
+      const dados = usuarioSnap.data();
+      return normalizarTexto(dados.tipoUsuario || dados.tipo || "") === "admin";
+    }
+
+    function obterFormulario(){
+      return {
+        nome: document.getElementById("nome").value.trim(),
+        cpf: limparCpf(document.getElementById("cpf").value),
+        dataNascimento: document.getElementById("dataNascimento").value,
+        numero: document.getElementById("numero").value.trim(),
+        time: document.getElementById("time").value.trim(),
+        categoria: document.getElementById("categoria").value,
+        posicao: document.getElementById("posicao").value.trim(),
+        status: document.getElementById("status").value,
+        observacoes: document.getElementById("observacoes").value.trim()
+      };
+    }
+
+    window.limparFormulario = function(){
+      jogadorEditandoId = "";
+      document.getElementById("nome").value = "";
+      document.getElementById("cpf").value = "";
+      document.getElementById("dataNascimento").value = "";
+      document.getElementById("numero").value = "";
+      document.getElementById("time").value = "";
+      document.getElementById("categoria").value = "";
+      document.getElementById("posicao").value = "";
+      document.getElementById("status").value = "ativo";
+      document.getElementById("observacoes").value = "";
+      limparMensagens();
+    };
+
+    window.buscarPorCpf = function(){
+      const cpf = limparCpf(document.getElementById("cpf").value);
+      if(!cpf) return;
+
+      const usuario = usuariosCache.find(u => limparCpf(u.cpf) === cpf);
+      if(!usuario) return;
+
+      if(!document.getElementById("nome").value.trim()){
+        document.getElementById("nome").value = usuario.nome || "";
+      }
+
+      if(!document.getElementById("time").value.trim()){
+        document.getElementById("time").value = usuario.time || "";
+      }
+
+      if((usuario.dataNascimento || usuario.nascimento) && !document.getElementById("dataNascimento").value){
+        document.getElementById("dataNascimento").value = usuario.dataNascimento || usuario.nascimento || "";
+      }
+
+      mostrarSucesso("Dados vinculados ao CPF encontrados na base de usuários.");
+    };
+
+    window.salvarJogador = async function(){
+      limparMensagens();
+
+      const dados = obterFormulario();
+
+      if(!dados.nome){
+        mostrarErro("Digite o nome do jogador.");
+        return;
+      }
+
+      if(!dados.cpf){
+        mostrarErro("Digite o CPF do jogador.");
+        return;
+      }
+
+      if(!dados.categoria){
+        mostrarErro("Selecione a categoria.");
+        return;
+      }
+
+      if(!jogadorEditandoId){
+        const duplicado = jogadoresCache.find(j => limparCpf(j.cpf) === dados.cpf);
+        if(duplicado){
+          mostrarErro("Já existe um jogador cadastrado com este CPF.");
+          return;
+        }
+      }else{
+        const duplicado = jogadoresCache.find(j => limparCpf(j.cpf) === dados.cpf && j.id !== jogadorEditandoId);
+        if(duplicado){
+          mostrarErro("Já existe outro jogador cadastrado com este CPF.");
+          return;
+        }
+      }
+
+      const usuarioVinculado = usuariosCache.find(u => limparCpf(u.cpf) === dados.cpf);
+
+      const payload = {
+        nome: dados.nome,
+        cpf: dados.cpf,
+        dataNascimento: dados.dataNascimento,
+        numero: dados.numero,
+        time: dados.time,
+        categoria: dados.categoria,
+        categorias: dados.categoria ? [dados.categoria] : [],
+        posicao: dados.posicao,
+        status: dados.status,
+        observacoes: dados.observacoes,
+        usuarioId: usuarioVinculado ? usuarioVinculado.id : "",
+        email: usuarioVinculado ? (usuarioVinculado.email || "") : "",
+        atualizadoEm: new Date().toISOString()
+      };
+
+      try{
+        if(jogadorEditandoId){
+          await updateDoc(doc(db, "jogadores", jogadorEditandoId), payload);
+          mostrarSucesso("Jogador atualizado com sucesso.");
+        }else{
+          const id = crypto.randomUUID();
+          await setDoc(doc(db, "jogadores", id), {
+            ...payload,
+            criadoEm: new Date().toISOString()
+          });
+          mostrarSucesso("Jogador cadastrado com sucesso.");
+        }
+
+        await carregarTudo();
+        limparFormulario();
+      }catch(erro){
+        console.error(erro);
+        mostrarErro("Erro ao salvar jogador.");
+      }
+    };
+
+    window.editarJogador = function(id){
+      const jogador = jogadoresCache.find(j => j.id === id);
+      if(!jogador) return;
+
+      jogadorEditandoId = id;
+      document.getElementById("nome").value = jogador.nome || "";
+      document.getElementById("cpf").value = jogador.cpf || "";
+      document.getElementById("dataNascimento").value = jogador.dataNascimento || "";
+      document.getElementById("numero").value = jogador.numero || "";
+      document.getElementById("time").value = jogador.time || "";
+      document.getElementById("categoria").value = jogador.categoria || "";
+      document.getElementById("posicao").value = jogador.posicao || "";
+      document.getElementById("status").value = jogador.status || "ativo";
+      document.getElementById("observacoes").value = jogador.observacoes || "";
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      mostrarSucesso("Jogador carregado para edição.");
+    };
+
+    window.excluirJogador = async function(id){
+      const confirmar = confirm("Deseja realmente excluir este jogador?");
+      if(!confirmar) return;
+
+      try{
+        await deleteDoc(doc(db, "jogadores", id));
+        await carregarTudo();
+        mostrarSucesso("Jogador excluído com sucesso.");
+      }catch(erro){
+        console.error(erro);
+        mostrarErro("Erro ao excluir jogador.");
+      }
+    };
+
+    window.renderJogadores = function(){
+      const lista = document.getElementById("listaJogadores");
+      const busca = normalizarTexto(document.getElementById("busca").value);
+      const filtroCategoria = document.getElementById("filtroCategoria").value;
+      const filtroTime = normalizarTexto(document.getElementById("filtroTime").value);
+      const filtroStatus = normalizarTexto(document.getElementById("filtroStatus").value);
+
+      let jogadores = [...jogadoresCache];
+
+      if(busca){
+        jogadores = jogadores.filter(j =>
+          normalizarTexto(j.nome).includes(busca) ||
+          normalizarTexto(j.cpf).includes(busca) ||
+          normalizarTexto(j.time).includes(busca)
+        );
+      }
+
+      if(filtroCategoria){
+        jogadores = jogadores.filter(j => j.categoria === filtroCategoria);
+      }
+
+      if(filtroTime){
+        jogadores = jogadores.filter(j => normalizarTexto(j.time).includes(filtroTime));
+      }
+
+      if(filtroStatus){
+        jogadores = jogadores.filter(j => normalizarTexto(j.status) === filtroStatus);
+      }
+
+      jogadores.sort((a,b) => String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR"));
+
+      if(!jogadores.length){
+        lista.innerHTML = `<div class="vazio">Nenhum jogador encontrado.</div>`;
+        return;
+      }
+
+      lista.innerHTML = jogadores.map(jogador => `
+        <div class="card">
+          <div class="card-top">
+            <div class="card-info">
+              <h3>${jogador.nome || "Sem nome"}</h3>
+              <p><strong>CPF:</strong> ${jogador.cpf || "-"}</p>
+              <p><strong>Data de nascimento:</strong> ${jogador.dataNascimento || "-"}</p>
+              <p><strong>Time:</strong> ${jogador.time || "-"}</p>
+              <p><strong>Categoria:</strong> ${jogador.categoria || "-"}</p>
+              <p><strong>Número:</strong> ${jogador.numero || "-"}</p>
+              <p><strong>Posição:</strong> ${jogador.posicao || "-"}</p>
+            </div>
+          </div>
+
+          <div class="tags">
+            <span class="tag">${jogador.categoria || "Sem categoria"}</span>
+            <span class="tag success">${jogador.status || "ativo"}</span>
+            ${jogador.usuarioId ? '<span class="tag success">Vinculado ao usuário</span>' : '<span class="tag">Sem vínculo</span>'}
+          </div>
+
+          <div class="card-actions">
+            <button class="mini-btn mini-edit" onclick="editarJogador('${jogador.id}')">
+              <i class="fa-solid fa-pen"></i> Editar
+            </button>
+
+            <button class="mini-btn mini-delete" onclick="excluirJogador('${jogador.id}')">
+              <i class="fa-solid fa-trash"></i> Excluir
+            </button>
+          </div>
+        </div>
+      `).join("");
+    };
+
+    async function carregarTudo(){
+      const lista = document.getElementById("listaJogadores");
+      lista.innerHTML = `<div class="vazio">Carregando jogadores...</div>`;
+
+      try{
+        const [snapJogadores, snapUsuarios] = await Promise.all([
+          getDocs(collection(db, "jogadores")),
+          getDocs(collection(db, "usuarios"))
+        ]);
+
+        jogadoresCache = [];
+        usuariosCache = [];
+
+        snapJogadores.forEach(docSnap => {
+          jogadoresCache.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        snapUsuarios.forEach(docSnap => {
+          usuariosCache.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        window.renderJogadores();
+      }catch(erro){
+        console.error(erro);
+        lista.innerHTML = `<div class="vazio">Erro ao carregar jogadores.</div>`;
+      }
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if(!user){
+        window.location.href = "login.html";
+        return;
+      }
+
+      const acessoLiberado = await validarAcessoAdmin(user);
+
+      if(!acessoLiberado){
+        alert("Acesso restrito ao administrador.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      await carregarTudo();
+    });
+  </script>
+
+</body>
+</html>
