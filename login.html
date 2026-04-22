@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Liga Goiana</title>
+
+  <style>
+    body{
+      margin:0;
+      font-family:Arial, sans-serif;
+      background:linear-gradient(rgba(2,10,25,.75), rgba(2,10,25,.9)), url("fundo.png");
+      background-size:cover;
+      background-position:center;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+    }
+
+    .box{
+      width:100%;
+      max-width:420px;
+      background:rgba(3,16,34,.92);
+      border:1px solid rgba(255,230,0,.18);
+      border-radius:18px;
+      padding:28px;
+      box-shadow:0 12px 28px rgba(0,0,0,.35);
+    }
+
+    h1{
+      margin:0 0 8px;
+      color:#ffe600;
+      text-align:center;
+      text-transform:uppercase;
+      font-size:28px;
+    }
+
+    p{
+      margin:0 0 20px;
+      text-align:center;
+      color:#dbe3ee;
+    }
+
+    label{
+      display:block;
+      margin:12px 0 6px;
+      font-weight:bold;
+    }
+
+    input{
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:10px;
+      box-sizing:border-box;
+      font-size:14px;
+    }
+
+    button{
+      width:100%;
+      margin-top:18px;
+      padding:13px;
+      border:none;
+      border-radius:10px;
+      background:linear-gradient(to bottom, #fff04d, #ffd000);
+      color:#111;
+      font-weight:800;
+      font-size:15px;
+      cursor:pointer;
+    }
+
+    button:hover{
+      filter:brightness(1.04);
+    }
+
+    .voltar{
+      display:block;
+      margin-top:14px;
+      text-align:center;
+      color:#ffe600;
+      font-weight:bold;
+      text-decoration:none;
+    }
+
+    .msg{
+      margin-top:14px;
+      padding:12px;
+      border-radius:10px;
+      display:none;
+      font-weight:bold;
+      line-height:1.5;
+    }
+
+    .erro{
+      background:rgba(180,0,0,.22);
+      color:#ffb0b0;
+      border:1px solid rgba(255,120,120,.25);
+    }
+
+    .sucesso{
+      background:rgba(0,120,40,.22);
+      color:#b8ffd1;
+      border:1px solid rgba(120,255,170,.25);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h1>Login</h1>
+    <p>Entre para acessar o sistema</p>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="Digite seu email">
+
+    <label for="senha">Senha</label>
+    <input type="password" id="senha" placeholder="Digite sua senha">
+
+    <button onclick="login()">Entrar</button>
+
+    <div id="msgErro" class="msg erro"></div>
+    <div id="msgSucesso" class="msg sucesso"></div>
+
+    <a href="cadastro.html" class="voltar">Criar conta</a>
+    <a href="index.html" class="voltar">← Voltar para o site</a>
+  </div>
+
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import {
+      signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      doc,
+      getDoc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const msgErro = document.getElementById("msgErro");
+    const msgSucesso = document.getElementById("msgSucesso");
+
+    function limparMensagens(){
+      msgErro.style.display = "none";
+      msgErro.innerText = "";
+      msgSucesso.style.display = "none";
+      msgSucesso.innerText = "";
+    }
+
+    function mostrarErro(texto){
+      msgSucesso.style.display = "none";
+      msgErro.style.display = "block";
+      msgErro.innerText = texto;
+    }
+
+    function mostrarSucesso(texto){
+      msgErro.style.display = "none";
+      msgSucesso.style.display = "block";
+      msgSucesso.innerText = texto;
+    }
+
+    function normalizarTipo(tipo){
+      if(!tipo) return "";
+
+      const valor = String(tipo).trim().toLowerCase();
+
+      if(valor === "publico_geral") return "torcedor";
+      if(valor === "publico") return "torcedor";
+      if(valor === "público") return "torcedor";
+      if(valor === "torcedor") return "torcedor";
+      if(valor === "pai_atleta") return "pai_atleta";
+      if(valor === "jogador") return "jogador";
+      if(valor === "tecnico") return "tecnico";
+      if(valor === "técnico") return "tecnico";
+      if(valor === "arbitro") return "arbitro";
+      if(valor === "árbitro") return "arbitro";
+      if(valor === "assistente") return "assistente";
+      if(valor === "admin") return "admin";
+      if(valor === "administrador") return "admin";
+
+      return valor;
+    }
+
+    function destinoUsuarioComum(tipo){
+      if(tipo === "assistente") return "perfil.html";
+      if(tipo === "tecnico") return "perfil.html";
+      if(tipo === "jogador") return "perfil.html";
+      if(tipo === "pai_atleta") return "perfil.html";
+      if(tipo === "torcedor") return "perfil.html";
+      return "index.html";
+    }
+
+    async function buscarOuCriarRegistroBasico(uid, email){
+      const userRef = doc(db, "usuarios", uid);
+      const userSnap = await getDoc(userRef);
+
+      if(userSnap.exists()){
+        return userSnap;
+      }
+
+      await setDoc(userRef, {
+        email: email,
+        nome: "",
+        tipoUsuario: "torcedor",
+        autorizado: false,
+        aprovado: true,
+        criadoEm: new Date().toISOString()
+      });
+
+      return await getDoc(userRef);
+    }
+
+    window.login = async function(){
+      limparMensagens();
+
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const senha = document.getElementById("senha").value.trim();
+
+      if(!email){
+        mostrarErro("Digite o email.");
+        return;
+      }
+
+      if(!senha){
+        mostrarErro("Digite a senha.");
+        return;
+      }
+
+      try{
+        const cred = await signInWithEmailAndPassword(auth, email, senha);
+        const uid = cred.user.uid;
+
+        const userSnap = await buscarOuCriarRegistroBasico(uid, email);
+        const dados = userSnap.data();
+
+        const tipoUsuario = normalizarTipo(dados.tipoUsuario || dados.tipo || "");
+        const autorizado = dados.autorizado === true;
+        const aprovado = dados.aprovado === true;
+        const emailUsuario = String(dados.email || email).trim().toLowerCase();
+        const cpfUsuario = String(dados.cpf || "").trim();
+
+        const ehDonoPrincipal =
+          emailUsuario === "ruy.gram@gmail.com" &&
+          cpfUsuario === "02354109261";
+
+        if(ehDonoPrincipal){
+          mostrarSucesso("Bem-vindo, administrador principal.");
+          setTimeout(() => {
+            window.location.href = "admin.html";
+          }, 600);
+          return;
+        }
+
+        if(tipoUsuario === "admin"){
+          mostrarSucesso("Login realizado com sucesso.");
+          setTimeout(() => {
+            window.location.href = "admin.html";
+          }, 600);
+          return;
+        }
+
+        if(tipoUsuario === "arbitro"){
+          if(!autorizado){
+            mostrarErro("Seu acesso de árbitro ainda não foi autorizado pelo administrador.");
+            return;
+          }
+
+          mostrarSucesso("Login realizado com sucesso.");
+          setTimeout(() => {
+            window.location.href = "admin.html";
+          }, 600);
+          return;
+        }
+
+        if(tipoUsuario === "assistente"){
+          if(!aprovado){
+            mostrarErro("Seu cadastro de assistente ainda não foi aprovado pelo administrador.");
+            return;
+          }
+
+          mostrarSucesso("Login realizado com sucesso.");
+          setTimeout(() => {
+            window.location.href = "perfil.html";
+          }, 600);
+          return;
+        }
+
+        if((tipoUsuario === "tecnico" || tipoUsuario === "jogador" || tipoUsuario === "pai_atleta") && !aprovado){
+          mostrarErro("Seu cadastro ainda não foi aprovado.");
+          return;
+        }
+
+        const destino = destinoUsuarioComum(tipoUsuario);
+
+        mostrarSucesso("Login realizado com sucesso.");
+        setTimeout(() => {
+          window.location.href = destino;
+        }, 600);
+
+      }catch(e){
+        if(e.code === "auth/invalid-credential"){
+          mostrarErro("Email ou senha inválidos.");
+        }else if(e.code === "auth/invalid-email"){
+          mostrarErro("Email inválido.");
+        }else if(e.code === "auth/user-disabled"){
+          mostrarErro("Este usuário foi desativado.");
+        }else{
+          mostrarErro("Erro ao entrar: " + e.message);
+        }
+      }
+    };
+  </script>
+
+</body>
+</html>
