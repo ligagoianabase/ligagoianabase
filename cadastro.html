@@ -60,6 +60,30 @@
       font-size:14px;
     }
 
+    .senha-wrap{
+      position:relative;
+      width:100%;
+    }
+
+    .senha-wrap input{
+      padding-right:48px;
+    }
+
+    .toggle-senha{
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      border:none;
+      background:none;
+      cursor:pointer;
+      color:#444;
+      font-size:18px;
+      padding:0;
+      width:auto;
+      margin:0;
+    }
+
     button{
       width:100%;
       margin-top:18px;
@@ -107,6 +131,8 @@
       border:1px solid rgba(120,255,170,.25);
     }
   </style>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
@@ -138,10 +164,20 @@
     <input type="text" id="time" placeholder="Digite o nome do time, se tiver">
 
     <label for="senha">Senha</label>
-    <input type="password" id="senha" placeholder="Digite sua senha">
+    <div class="senha-wrap">
+      <input type="password" id="senha" placeholder="Digite sua senha">
+      <button type="button" class="toggle-senha" onclick="alternarSenha('senha', this)">
+        <i class="fa-solid fa-eye"></i>
+      </button>
+    </div>
 
     <label for="confirmarSenha">Confirmar senha</label>
-    <input type="password" id="confirmarSenha" placeholder="Confirme sua senha">
+    <div class="senha-wrap">
+      <input type="password" id="confirmarSenha" placeholder="Confirme sua senha">
+      <button type="button" class="toggle-senha" onclick="alternarSenha('confirmarSenha', this)">
+        <i class="fa-solid fa-eye"></i>
+      </button>
+    </div>
 
     <button onclick="cadastrar()">Criar conta</button>
 
@@ -156,11 +192,11 @@
     import { auth, db } from "./firebase.js";
     import {
       createUserWithEmailAndPassword
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
     import {
       doc,
       setDoc
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
     const msgErro = document.getElementById("msgErro");
     const msgSucesso = document.getElementById("msgSucesso");
@@ -255,6 +291,19 @@
         status: "ativo"
       };
     }
+
+    window.alternarSenha = function(idInput, botao){
+      const input = document.getElementById(idInput);
+      const icone = botao.querySelector("i");
+
+      if(input.type === "password"){
+        input.type = "text";
+        icone.className = "fa-solid fa-eye-slash";
+      }else{
+        input.type = "password";
+        icone.className = "fa-solid fa-eye";
+      }
+    };
 
     window.cadastrar = async function(){
       limparMensagens();
