@@ -378,6 +378,59 @@
       font-size:14px;
     }
 
+    .lista-jogos{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .jogo-item{
+      background:#0b1f3a;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:12px;
+      padding:14px;
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .jogo-item strong{
+      color:#fff;
+      font-size:15px;
+      display:block;
+      margin-bottom:6px;
+    }
+
+    .jogo-item small{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+      display:block;
+    }
+
+    .status-jogo{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    .status-finalizado{
+      background:#1b5e20;
+      color:#fff;
+    }
+
+    .status-agendado{
+      background:#7a5a00;
+      color:#fff;
+    }
+
     .vazio{
       background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
       padding:30px;
@@ -522,6 +575,9 @@
             <div class="hero-tag" id="heroTagTemporada">Temporada: -</div>
             <div class="hero-tag" id="heroTagStatus">Status: -</div>
             <div class="hero-tag" id="heroTagCategorias">Categorias: 0</div>
+            <div class="hero-tag" id="heroTagJogos">Jogos: 0</div>
+            <div class="hero-tag" id="heroTagTimes">Times: 0</div>
+            <div class="hero-tag" id="heroTagGols">Gols: 0</div>
           </div>
 
           <div class="actions-bar">
@@ -539,6 +595,10 @@
 
             <a class="btn-acao btn-secundario" id="btnJogadores" href="jogadores.html">
               <i class="fa-solid fa-users"></i> Jogadores
+            </a>
+
+            <a class="btn-acao btn-secundario" id="btnTecnicos" href="tecnicos.html">
+              <i class="fa-solid fa-user-tie"></i> Técnicos
             </a>
           </div>
         </div>
@@ -612,6 +672,36 @@
             <strong>Regulamento</strong>
             <span id="infoRegulamento">Disponível</span>
           </div>
+
+          <div class="stat-card">
+            <strong>Jogos cadastrados</strong>
+            <span id="infoJogosCadastrados">0</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>Jogos finalizados</strong>
+            <span id="infoJogosFinalizados">0</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>Equipes</strong>
+            <span id="infoTotalTimes">0</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>Jogadores</strong>
+            <span id="infoTotalJogadores">0</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>Técnicos</strong>
+            <span id="infoTotalTecnicos">0</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>Gols</strong>
+            <span id="infoTotalGols">0</span>
+          </div>
         </div>
 
         <div class="bloco" style="margin-top:18px;">
@@ -623,8 +713,12 @@
 
     <section class="card" style="margin-bottom:18px;">
       <h3>Regras Disciplinares</h3>
-
       <div class="regra-lista" id="listaRegras"></div>
+    </section>
+
+    <section class="card" style="margin-bottom:18px;">
+      <h3>Próximos Jogos / Últimos Resultados</h3>
+      <div class="lista-jogos" id="listaJogosCampeonato"></div>
     </section>
 
     <section class="card">
@@ -645,12 +739,21 @@
     import { db } from "./firebase.js";
     import {
       doc,
-      getDoc
+      getDoc,
+      collection,
+      getDocs
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const paginaConteudo = document.getElementById("paginaConteudo");
     const boxCarregando = document.getElementById("boxCarregando");
     const boxErro = document.getElementById("boxErro");
+
+    let campeonatoAtual = null;
+    let jogosCache = [];
+    let timesCache = [];
+    let jogadoresCache = [];
+    let tecnicosCache = [];
+    let sumulasCache = [];
 
     function getParametro(nome){
       const params = new URLSearchParams(window.location.search);
@@ -684,6 +787,14 @@
       return String(valor);
     }
 
+    function normalizarTexto(textoValor){
+      return String(textoValor || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
     function formatarData(valor){
       if(!valor) return "-";
 
@@ -695,11 +806,159 @@
       return String(valor);
     }
 
+    function formatarDataHora(valor){
+      if(!valor) return "-";
+
+      const data = new Date(valor);
+      if(!isNaN(data.getTime())){
+        return data.toLocaleString("pt-BR");
+      }
+
+      return String(valor);
+    }
+
+    function valorCampo(obj, chaves, fallback = ""){
+      for(const chave of chaves){
+        if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
+          return obj[chave];
+        }
+      }
+      return fallback;
+    }
+
+    function obterIdCampeonato(docItem){
+      return valorCampo(docItem, ["id", "campeonatoId"], "");
+    }
+
+    function obterNomeCampeonato(docItem){
+      return valorCampo(docItem, ["nome", "campeonato", "titulo"], "");
+    }
+
     function montarLinkComFiltro(pagina, nomeCampeonato){
       return `${pagina}?campeonato=${encodeURIComponent(nomeCampeonato || "")}`;
     }
 
+    function jogoPertenceAoCampeonato(jogo){
+      const jogoCampId = valorCampo(jogo, ["campeonatoId"], "");
+      const jogoCampNome = valorCampo(jogo, ["campeonato", "nomeCampeonato"], "");
+      const campeonatoId = obterIdCampeonato(campeonatoAtual);
+      const campeonatoNome = obterNomeCampeonato(campeonatoAtual);
+
+      return (
+        jogoCampId === campeonatoId ||
+        normalizarTexto(jogoCampNome) === normalizarTexto(campeonatoNome)
+      );
+    }
+
+    function filtrarJogosDoCampeonato(){
+      return jogosCache.filter(jogoPertenceAoCampeonato);
+    }
+
+    function calcularTotaisCampeonato(){
+      const jogosDoCampeonato = filtrarJogosDoCampeonato();
+      const categoriasSet = new Set();
+      const timesSet = new Set();
+
+      jogosDoCampeonato.forEach(j => {
+        const categoria = valorCampo(j, ["categoria"], "");
+        const timeA = valorCampo(j, ["timeA"], "");
+        const timeB = valorCampo(j, ["timeB"], "");
+
+        if(categoria) categoriasSet.add(categoria);
+        if(timeA) timesSet.add(normalizarTexto(timeA));
+        if(timeB) timesSet.add(normalizarTexto(timeB));
+      });
+
+      const nomesTimes = Array.from(timesSet);
+
+      const jogadores = jogadoresCache.filter(j => {
+        const timeJogador = normalizarTexto(valorCampo(j, ["time"], ""));
+        return nomesTimes.includes(timeJogador);
+      });
+
+      const tecnicos = tecnicosCache.filter(t => {
+        const timeTecnico = normalizarTexto(valorCampo(t, ["time"], ""));
+        return nomesTimes.includes(timeTecnico);
+      });
+
+      const jogosFinalizados = jogosDoCampeonato.filter(j =>
+        normalizarTexto(valorCampo(j, ["status"], "")) === "sumula_enviada"
+      );
+
+      let gols = 0;
+
+      jogosDoCampeonato.forEach(j => {
+        gols += Number(valorCampo(j, ["golsA"], 0) || 0);
+        gols += Number(valorCampo(j, ["golsB"], 0) || 0);
+      });
+
+      if(gols === 0){
+        const sumulasDoCampeonato = sumulasCache.filter(s =>
+          normalizarTexto(valorCampo(s, ["campeonato"], "")) === normalizarTexto(obterNomeCampeonato(campeonatoAtual))
+        );
+
+        sumulasDoCampeonato.forEach(s => {
+          gols += Number(valorCampo(s, ["golsA"], 0) || 0);
+          gols += Number(valorCampo(s, ["golsB"], 0) || 0);
+        });
+      }
+
+      return {
+        jogosDoCampeonato,
+        jogosFinalizados,
+        totalCategorias: categoriasSet.size || (Array.isArray(campeonatoAtual.categorias) ? campeonatoAtual.categorias.length : 0),
+        totalTimes: nomesTimes.length,
+        totalJogadores: jogadores.length,
+        totalTecnicos: tecnicos.length,
+        totalGols: gols
+      };
+    }
+
+    function preencherListaJogos(jogosDoCampeonato){
+      const lista = document.getElementById("listaJogosCampeonato");
+
+      if(!jogosDoCampeonato.length){
+        lista.innerHTML = `<div class="vazio">Nenhum jogo cadastrado para este campeonato.</div>`;
+        return;
+      }
+
+      const ordenados = [...jogosDoCampeonato].sort((a,b) => {
+        const dataA = new Date(valorCampo(a, ["data"], ""));
+        const dataB = new Date(valorCampo(b, ["data"], ""));
+        return dataA - dataB;
+      });
+
+      lista.innerHTML = ordenados.slice(0, 8).map(j => {
+        const timeA = valorCampo(j, ["timeA"], "-");
+        const timeB = valorCampo(j, ["timeB"], "-");
+        const categoria = valorCampo(j, ["categoria"], "-");
+        const local = valorCampo(j, ["local"], "-");
+        const data = formatarDataHora(valorCampo(j, ["data"], ""));
+        const status = normalizarTexto(valorCampo(j, ["status"], ""));
+        const finalizado = status === "sumula_enviada";
+        const placar = finalizado
+          ? `${Number(valorCampo(j, ["golsA"], 0))} x ${Number(valorCampo(j, ["golsB"], 0))}`
+          : "x";
+
+        return `
+          <div class="jogo-item">
+            <div>
+              <strong>${timeA} ${placar} ${timeB}</strong>
+              <small>Categoria: ${categoria}</small>
+              <small>Data: ${data}</small>
+              <small>Local: ${local}</small>
+            </div>
+            <div class="status-jogo ${finalizado ? "status-finalizado" : "status-agendado"}">
+              ${finalizado ? "Finalizado" : "Agendado"}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
     function preencherTela(campeonato){
+      const totais = calcularTotaisCampeonato();
+
       document.title = `${texto(campeonato.nome, "Campeonato")} - LIGA GOIANA DE FUTEBOL DE BASE`;
 
       document.getElementById("heroLogo").src = campeonato.logo || "logo-liga.jfif";
@@ -713,8 +972,10 @@
 
       document.getElementById("heroTagTemporada").textContent = `Temporada: ${texto(campeonato.temporada)}`;
       document.getElementById("heroTagStatus").textContent = `Status: ${texto(campeonato.status)}`;
-      document.getElementById("heroTagCategorias").textContent =
-        `Categorias: ${Array.isArray(campeonato.categorias) ? campeonato.categorias.length : 0}`;
+      document.getElementById("heroTagCategorias").textContent = `Categorias: ${totais.totalCategorias}`;
+      document.getElementById("heroTagJogos").textContent = `Jogos: ${totais.jogosDoCampeonato.length}`;
+      document.getElementById("heroTagTimes").textContent = `Times: ${totais.totalTimes}`;
+      document.getElementById("heroTagGols").textContent = `Gols: ${totais.totalGols}`;
 
       document.getElementById("infoNome").textContent = texto(campeonato.nome);
       document.getElementById("infoTemporada").textContent = texto(campeonato.temporada);
@@ -726,13 +987,19 @@
         texto(campeonato.descricao || campeonato.resumo || campeonato.regulamentoResumo, "Sem descrição cadastrada.");
 
       const categorias = Array.isArray(campeonato.categorias) ? campeonato.categorias : [];
-      document.getElementById("totalCategorias").textContent = categorias.length;
+      document.getElementById("totalCategorias").textContent = totais.totalCategorias;
       document.getElementById("infoVisibilidade").textContent =
         campeonatoEhPublico(campeonato) ? "Público" : "Privado";
       document.getElementById("infoPublicacao").textContent =
         campeonato.publicado === true ? "Publicado" : "Em análise";
       document.getElementById("infoRegulamento").textContent =
         campeonato.regulamento || campeonato.regulamentoTexto || campeonato.regulamentoResumo ? "Disponível" : "Não informado";
+      document.getElementById("infoJogosCadastrados").textContent = totais.jogosDoCampeonato.length;
+      document.getElementById("infoJogosFinalizados").textContent = totais.jogosFinalizados.length;
+      document.getElementById("infoTotalTimes").textContent = totais.totalTimes;
+      document.getElementById("infoTotalJogadores").textContent = totais.totalJogadores;
+      document.getElementById("infoTotalTecnicos").textContent = totais.totalTecnicos;
+      document.getElementById("infoTotalGols").textContent = totais.totalGols;
 
       const listaCategorias = document.getElementById("listaCategorias");
       listaCategorias.innerHTML = categorias.length
@@ -784,10 +1051,42 @@
           "Sem regulamento cadastrado."
         );
 
-      document.getElementById("btnClassificacao").href = montarLinkComFiltro("classificacao.html", campeonato.nome);
-      document.getElementById("btnJogos").href = montarLinkComFiltro("jogos.html", campeonato.nome);
-      document.getElementById("btnTimes").href = montarLinkComFiltro("times.html", campeonato.nome);
-      document.getElementById("btnJogadores").href = montarLinkComFiltro("jogadores.html", campeonato.nome);
+      const nomeCampeonato = obterNomeCampeonato(campeonato);
+      document.getElementById("btnClassificacao").href = montarLinkComFiltro("classificacao.html", nomeCampeonato);
+      document.getElementById("btnJogos").href = montarLinkComFiltro("jogos.html", nomeCampeonato);
+      document.getElementById("btnTimes").href = montarLinkComFiltro("times.html", nomeCampeonato);
+      document.getElementById("btnJogadores").href = montarLinkComFiltro("jogadores.html", nomeCampeonato);
+      document.getElementById("btnTecnicos").href = montarLinkComFiltro("tecnicos.html", nomeCampeonato);
+
+      preencherListaJogos(totais.jogosDoCampeonato);
+    }
+
+    async function carregarColecoesRelacionadas(){
+      const [
+        snapJogos,
+        snapTimes,
+        snapJogadores,
+        snapTecnicos,
+        snapSumulas
+      ] = await Promise.all([
+        getDocs(collection(db, "jogos")),
+        getDocs(collection(db, "times")),
+        getDocs(collection(db, "jogadores")),
+        getDocs(collection(db, "tecnicos")),
+        getDocs(collection(db, "sumulas"))
+      ]);
+
+      jogosCache = [];
+      timesCache = [];
+      jogadoresCache = [];
+      tecnicosCache = [];
+      sumulasCache = [];
+
+      snapJogos.forEach(docSnap => jogosCache.push({ id: docSnap.id, ...docSnap.data() }));
+      snapTimes.forEach(docSnap => timesCache.push({ id: docSnap.id, ...docSnap.data() }));
+      snapJogadores.forEach(docSnap => jogadoresCache.push({ id: docSnap.id, ...docSnap.data() }));
+      snapTecnicos.forEach(docSnap => tecnicosCache.push({ id: docSnap.id, ...docSnap.data() }));
+      snapSumulas.forEach(docSnap => sumulasCache.push({ id: docSnap.id, ...docSnap.data() }));
     }
 
     async function iniciarPagina(){
@@ -805,13 +1104,14 @@
           throw new Error("Campeonato não encontrado");
         }
 
-        const campeonato = { id: snap.id, ...snap.data() };
+        campeonatoAtual = { id: snap.id, ...snap.data() };
 
-        if(!campeonatoEhPublico(campeonato)){
+        if(!campeonatoEhPublico(campeonatoAtual)){
           throw new Error("Campeonato não público");
         }
 
-        preencherTela(campeonato);
+        await carregarColecoesRelacionadas();
+        preencherTela(campeonatoAtual);
 
         boxCarregando.style.display = "none";
         boxErro.style.display = "none";
