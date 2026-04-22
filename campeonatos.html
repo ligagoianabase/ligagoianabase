@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campeonatos - LIGA GOIANA</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root{
+      --bg:#0b1f3a;
+      --card:#102a52;
+      --gold:#f7c600;
+      --gold-soft:rgba(247,198,0,.12);
+      --gold-line:rgba(247,198,0,.24);
+      --white:#fff;
+      --muted:#d8e1ef;
+      --shadow:0 8px 22px rgba(0,0,0,.28);
+    }
+
+    body{
+      margin:0;
+      font-family:Arial;
+      background:linear-gradient(rgba(11,31,58,.9), rgba(11,31,58,.95)), url("fundo.png") center/cover;
+      color:var(--white);
+    }
+
+    header{
+      background:#08172c;
+      border-bottom:3px solid var(--gold);
+      padding:15px;
+      text-align:center;
+      font-weight:bold;
+    }
+
+    .container{
+      max-width:1200px;
+      margin:auto;
+      padding:20px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:15px;
+    }
+
+    .card{
+      background:var(--card);
+      padding:15px;
+      border-radius:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:var(--shadow);
+    }
+
+    .info{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+
+    .logo{
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      object-fit:cover;
+      background:#1a3f73;
+    }
+
+    .nome{
+      font-weight:bold;
+      font-size:16px;
+    }
+
+    .btn{
+      background:var(--gold);
+      color:#111;
+      padding:10px 14px;
+      border-radius:8px;
+      font-weight:bold;
+      text-decoration:none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  TODOS OS CAMPEONATOS
+</header>
+
+<div class="container">
+  <div class="grid" id="lista"></div>
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const lista = document.getElementById("lista");
+
+async function carregar(){
+  lista.innerHTML = "Carregando...";
+
+  const snap = await getDocs(collection(db, "campeonatos"));
+
+  let html = "";
+
+  snap.forEach(doc => {
+    const c = doc.data();
+
+    // 🔥 FILTRO PUBLICO
+    if(!(c.publicado || c.publico || c.status === "ativo")) return;
+
+    html += `
+      <div class="card">
+        <div class="info">
+          <img src="${c.logo || 'logo-liga.jfif'}" class="logo">
+          <div>
+            <div class="nome">${c.nome}</div>
+            <small>${c.temporada || ""}</small>
+          </div>
+        </div>
+
+        <a class="btn" href="campeonato-publico.html?id=${doc.id}">
+          Ver
+        </a>
+      </div>
+    `;
+  });
+
+  if(!html){
+    html = "Nenhum campeonato disponível";
+  }
+
+  lista.innerHTML = html;
+}
+
+carregar();
+</script>
+
+</body>
+</html>
