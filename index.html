@@ -295,24 +295,36 @@
       display:flex;
       justify-content:center;
       order:3;
+      overflow-x:auto;
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+    }
+
+    .top-nav::-webkit-scrollbar{
+      display:none;
     }
 
     .top-nav ul{
       display:flex;
       align-items:center;
       gap:6px;
-      flex-wrap:wrap;
+      flex-wrap:nowrap;
       justify-content:center;
+      width:max-content;
+      min-width:100%;
+      padding-bottom:2px;
     }
 
     .top-nav li{
       position:relative;
+      flex:0 0 auto;
     }
 
     .top-nav a,
     .dropdown-toggle{
       display:inline-flex;
       align-items:center;
+      justify-content:center;
       gap:8px;
       padding:10px 14px;
       border-radius:12px;
@@ -321,6 +333,7 @@
       border:1px solid transparent;
       background:transparent;
       transition:var(--transition);
+      white-space:nowrap;
     }
 
     .top-nav a:hover,
@@ -384,6 +397,7 @@
       align-items:center;
       gap:10px;
       flex-shrink:0;
+      position:relative;
     }
 
     .btn-primary,
@@ -434,6 +448,205 @@
       align-items:center;
       justify-content:center;
       color:inherit;
+      overflow:hidden;
+      flex-shrink:0;
+    }
+
+    .login-avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:50%;
+    }
+
+    .user-chip{
+      display:none;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:16px;
+      border:1px solid var(--yellow-line);
+      background:rgba(255,212,0,.08);
+      color:var(--yellow);
+      min-height:48px;
+      max-width:250px;
+    }
+
+    .user-chip:hover{
+      background:var(--yellow);
+      color:#08172c;
+    }
+
+    .user-chip-text{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      min-width:0;
+    }
+
+    .user-chip-text strong,
+    .user-chip-text span{
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:150px;
+    }
+
+    .user-chip-text strong{
+      font-size:13px;
+      line-height:1.2;
+    }
+
+    .user-chip-text span{
+      font-size:11px;
+      opacity:.9;
+    }
+
+    .apito-badge{
+      color:inherit;
+      font-size:13px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:18px;
+      flex-shrink:0;
+    }
+
+    .user-dropdown{
+      position:absolute;
+      top:calc(100% + 10px);
+      right:0;
+      width:320px;
+      max-width:calc(100vw - 24px);
+      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
+      border:1px solid var(--yellow-line);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      padding:14px;
+      display:none;
+      z-index:200;
+    }
+
+    .user-dropdown.open{
+      display:block;
+    }
+
+    .user-card-top{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding-bottom:14px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      margin-bottom:14px;
+    }
+
+    .user-card-avatar{
+      width:58px;
+      height:58px;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+      border:2px solid var(--yellow);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      color:var(--yellow);
+      font-size:22px;
+      flex-shrink:0;
+    }
+
+    .user-card-avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:50%;
+    }
+
+    .user-card-info{
+      min-width:0;
+    }
+
+    .user-card-info strong{
+      display:block;
+      color:#fff;
+      font-size:16px;
+      line-height:1.2;
+      margin-bottom:4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .user-card-info span{
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      margin-bottom:4px;
+    }
+
+    .user-role{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:5px 10px;
+      border-radius:999px;
+      background:var(--yellow-soft);
+      color:var(--yellow);
+      border:1px solid var(--yellow-line);
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .user-details{
+      display:grid;
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .user-detail-row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      color:var(--muted);
+      font-size:13px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      padding-bottom:8px;
+    }
+
+    .user-detail-row strong{
+      color:#fff;
+      font-size:13px;
+      font-weight:600;
+    }
+
+    .user-menu-actions{
+      display:grid;
+      gap:10px;
+    }
+
+    .user-menu-actions a,
+    .user-menu-actions button{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      width:100%;
+      padding:11px 12px;
+      border-radius:12px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color:var(--muted);
+      font-weight:700;
+      text-align:left;
+    }
+
+    .user-menu-actions a:hover,
+    .user-menu-actions button:hover{
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+      color:var(--yellow);
     }
 
     .hero{
@@ -815,7 +1028,7 @@
     }
 
     #menuAdmin{
-      display:flex;
+      display:none;
     }
 
     @media (max-width: 1180px){
@@ -849,8 +1062,14 @@
       }
 
       .top-actions{
-        width:100%;
-        justify-content:flex-start;
+        width:auto;
+        justify-content:flex-end;
+      }
+
+      .top-nav a,
+      .dropdown-toggle{
+        padding:9px 12px;
+        font-size:13px;
       }
     }
 
@@ -873,8 +1092,9 @@
       }
 
       .top-actions{
-        flex-direction:column;
-        align-items:stretch;
+        width:auto;
+        flex-direction:row;
+        align-items:center;
       }
 
       .btn-login-chip{
@@ -892,6 +1112,37 @@
       .match-table{
         display:block;
         overflow-x:auto;
+      }
+
+      .top-nav{
+        justify-content:flex-start;
+      }
+
+      .top-nav ul{
+        min-width:max-content;
+        justify-content:flex-start;
+      }
+
+      .top-nav a,
+      .dropdown-toggle{
+        padding:8px 10px;
+        font-size:12px;
+        border-radius:10px;
+      }
+
+      .dropdown-menu{
+        left:0;
+        transform:none;
+        min-width:220px;
+      }
+
+      .user-chip{
+        max-width:210px;
+      }
+
+      .user-chip-text strong,
+      .user-chip-text span{
+        max-width:110px;
       }
     }
   </style>
@@ -936,6 +1187,7 @@
         <a href="regulamento.html"><span class="side-icon"><i class="fa-solid fa-book"></i></span>Regulamento</a>
         <a href="noticias.html"><span class="side-icon"><i class="fa-solid fa-newspaper"></i></span>Notícias</a>
         <a href="galeria.html"><span class="side-icon"><i class="fa-solid fa-images"></i></span>Galeria</a>
+        <a href="fotografos.html"><span class="side-icon"><i class="fa-solid fa-camera-retro"></i></span>Fotógrafos</a>
         <a href="#contato"><span class="side-icon"><i class="fa-solid fa-phone"></i></span>Contato</a>
       </div>
     </div>
@@ -943,7 +1195,8 @@
     <div class="sidebar-block">
       <div class="sidebar-title">ÁREA DO SISTEMA</div>
       <div class="side-menu">
-        <a href="login.html"><span class="side-icon"><i class="fa-solid fa-user"></i></span>Login / Cadastro</a>
+        <a href="login.html" id="sidebarLoginLink"><span class="side-icon"><i class="fa-solid fa-user"></i></span>Login / Cadastro</a>
+        <a href="perfil.html" id="sidebarPerfilLink" style="display:none;"><span class="side-icon"><i class="fa-solid fa-id-badge"></i></span>Meu Perfil</a>
         <a href="admin.html" id="menuAdmin"><span class="side-icon"><i class="fa-solid fa-gears"></i></span>Painel ADM</a>
       </div>
     </div>
@@ -993,6 +1246,7 @@
               <a href="tecnicos.html">Técnicos</a>
               <a href="arbitros.html">Árbitro</a>
               <a href="assistentes.html">Assistente</a>
+              <a href="fotografos.html">Fotógrafos</a>
             </div>
           </li>
 
@@ -1001,10 +1255,69 @@
       </nav>
 
       <div class="top-actions">
-        <a href="login.html" class="btn-login-chip">
+        <a href="login.html" class="btn-login-chip" id="loginChip">
           <span class="login-avatar"><i class="fa-solid fa-user"></i></span>
           <span>Login</span>
         </a>
+
+        <button type="button" class="user-chip" id="userChip">
+          <span class="login-avatar" id="userChipAvatar">
+            <i class="fa-solid fa-user"></i>
+          </span>
+          <span class="user-chip-text">
+            <strong id="userChipName">Usuário</strong>
+            <span id="userChipRole">Perfil</span>
+          </span>
+          <span class="apito-badge" id="userChipWhistle" style="display:none;">
+            <i class="fa-solid fa-whistle"></i>
+          </span>
+        </button>
+
+        <div class="user-dropdown" id="userDropdown">
+          <div class="user-card-top">
+            <div class="user-card-avatar" id="userCardAvatar">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="user-card-info">
+              <strong id="userCardName">Usuário</strong>
+              <span id="userCardEmail">email@site.com</span>
+              <div class="user-role" id="userCardRole">
+                <i class="fa-solid fa-user"></i>
+                <span>Perfil</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="user-details">
+            <div class="user-detail-row">
+              <strong>Status</strong>
+              <span id="userCardStatus">-</span>
+            </div>
+            <div class="user-detail-row">
+              <strong>Time</strong>
+              <span id="userCardTime">-</span>
+            </div>
+            <div class="user-detail-row">
+              <strong>Categoria</strong>
+              <span id="userCardCategoria">-</span>
+            </div>
+          </div>
+
+          <div class="user-menu-actions">
+            <a href="perfil.html">
+              <i class="fa-solid fa-user-pen"></i>
+              <span>Editar perfil</span>
+            </a>
+            <a href="admin.html" id="userAdminLink" style="display:none;">
+              <i class="fa-solid fa-gears"></i>
+              <span>Painel ADM</span>
+            </a>
+            <button type="button" id="logoutBtn">
+              <i class="fa-solid fa-right-from-bracket"></i>
+              <span>Sair</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -1046,6 +1359,7 @@
             </div>
           </div>
         </div>
+
         <div class="cards-pilares">
           <div class="pillar">
             <div class="pillar-icon"><i class="fa-solid fa-trophy"></i></div>
@@ -1173,9 +1487,9 @@
             <span>(62) 98428-4785</span>
           </a>
 
-          <a href="mailto:ligagoianiafutebol@gmail.com" class="footer-contact-line">
+          <a href="mailto:Ligagoianaoficial@gmail.com" class="footer-contact-line">
             <i class="fa-solid fa-envelope"></i>
-            <span>ligagoianiafutebol@gmail.com</span>
+            <span>Ligagoianaoficial@gmail.com</span>
           </a>
 
           <div class="footer-contact-line">
@@ -1212,11 +1526,10 @@
     const participantesDropdown = document.getElementById("participantesDropdown");
     const participantesToggle = document.getElementById("participantesToggle");
     const statusUser = document.getElementById("statusUser");
-    const menuAdmin = document.getElementById("menuAdmin");
     const gamesTableBody = document.getElementById("gamesTableBody");
     const newsList = document.getElementById("newsList");
-
-    const usuarioLogado = null;
+    const userChip = document.getElementById("userChip");
+    const userDropdown = document.getElementById("userDropdown");
 
     function openSidebar() {
       if (!sidebar || !sidebarOverlay) return;
@@ -1235,6 +1548,7 @@
     function closeAllDropdowns() {
       if (campeonatosDropdown) campeonatosDropdown.classList.remove("open");
       if (participantesDropdown) participantesDropdown.classList.remove("open");
+      if (userDropdown) userDropdown.classList.remove("open");
     }
 
     if (menuToggle) {
@@ -1256,6 +1570,7 @@
       campeonatosToggle.addEventListener("click", function(event) {
         event.stopPropagation();
         if (participantesDropdown) participantesDropdown.classList.remove("open");
+        if (userDropdown) userDropdown.classList.remove("open");
         campeonatosDropdown.classList.toggle("open");
       });
     }
@@ -1264,7 +1579,17 @@
       participantesToggle.addEventListener("click", function(event) {
         event.stopPropagation();
         if (campeonatosDropdown) campeonatosDropdown.classList.remove("open");
+        if (userDropdown) userDropdown.classList.remove("open");
         participantesDropdown.classList.toggle("open");
+      });
+    }
+
+    if (userChip) {
+      userChip.addEventListener("click", function(event) {
+        event.stopPropagation();
+        if (campeonatosDropdown) campeonatosDropdown.classList.remove("open");
+        if (participantesDropdown) participantesDropdown.classList.remove("open");
+        userDropdown.classList.toggle("open");
       });
     }
 
@@ -1273,12 +1598,14 @@
       const clickedMenuToggle = menuToggle && menuToggle.contains(event.target);
       const clickedCampeonatos = campeonatosDropdown && campeonatosDropdown.contains(event.target);
       const clickedParticipantes = participantesDropdown && participantesDropdown.contains(event.target);
+      const clickedUser = userDropdown && userDropdown.contains(event.target);
+      const clickedUserChip = userChip && userChip.contains(event.target);
 
       if (sidebar && sidebar.classList.contains("open") && !clickedInsideSidebar && !clickedMenuToggle) {
         closeSidebar();
       }
 
-      if (!clickedCampeonatos && !clickedParticipantes) {
+      if (!clickedCampeonatos && !clickedParticipantes && !clickedUser && !clickedUserChip) {
         closeAllDropdowns();
       }
     });
@@ -1289,10 +1616,6 @@
         closeAllDropdowns();
       }
     });
-
-    if (menuAdmin) {
-      menuAdmin.style.display = "flex";
-    }
 
     if (statusUser) {
       statusUser.innerHTML = "";
@@ -1363,6 +1686,160 @@
           <p>${item.texto}</p>
         `;
         newsList.appendChild(article);
+      });
+    }
+  </script>
+
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+    const loginChip = document.getElementById("loginChip");
+    const sidebarLoginLink = document.getElementById("sidebarLoginLink");
+    const sidebarPerfilLink = document.getElementById("sidebarPerfilLink");
+    const menuAdmin = document.getElementById("menuAdmin");
+    const userChipEl = document.getElementById("userChip");
+    const userDropdownEl = document.getElementById("userDropdown");
+    const userChipName = document.getElementById("userChipName");
+    const userChipRole = document.getElementById("userChipRole");
+    const userChipWhistle = document.getElementById("userChipWhistle");
+    const userChipAvatar = document.getElementById("userChipAvatar");
+    const userCardAvatar = document.getElementById("userCardAvatar");
+    const userCardName = document.getElementById("userCardName");
+    const userCardEmail = document.getElementById("userCardEmail");
+    const userCardRole = document.getElementById("userCardRole");
+    const userCardStatus = document.getElementById("userCardStatus");
+    const userCardTime = document.getElementById("userCardTime");
+    const userCardCategoria = document.getElementById("userCardCategoria");
+    const userAdminLink = document.getElementById("userAdminLink");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    function normalizarTexto(texto){
+      return String(texto || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function normalizarTipo(tipo){
+      const valor = normalizarTexto(tipo);
+      if(valor === "admin" || valor === "administrador") return "admin";
+      if(valor === "arbitro" || valor === "árbitro") return "arbitro";
+      if(valor === "assistente") return "assistente";
+      if(valor === "tecnico" || valor === "técnico") return "tecnico";
+      if(valor === "jogador") return "jogador";
+      if(valor === "pai_atleta") return "pai_atleta";
+      if(valor === "torcedor" || valor === "publico" || valor === "público" || valor === "publico_geral") return "torcedor";
+      if(valor === "fotografo" || valor === "fotógrafo") return "fotografo";
+      return valor;
+    }
+
+    function tipoLabel(tipo){
+      const valor = normalizarTipo(tipo);
+      if(valor === "admin") return "Administrador";
+      if(valor === "arbitro") return "Árbitro";
+      if(valor === "assistente") return "Assistente";
+      if(valor === "tecnico") return "Técnico";
+      if(valor === "jogador") return "Jogador";
+      if(valor === "pai_atleta") return "Pai de Atleta";
+      if(valor === "fotografo") return "Fotógrafo";
+      return "Torcedor";
+    }
+
+    function preencherAvatar(elemento, foto){
+      if(!elemento) return;
+      if(foto){
+        elemento.innerHTML = `<img src="${foto}" alt="Foto do usuário">`;
+      }else{
+        elemento.innerHTML = `<i class="fa-solid fa-user"></i>`;
+      }
+    }
+
+    function mostrarUsuarioDeslogado(){
+      if(loginChip) loginChip.style.display = "inline-flex";
+      if(userChipEl) userChipEl.style.display = "none";
+      if(userDropdownEl) userDropdownEl.classList.remove("open");
+      if(menuAdmin) menuAdmin.style.display = "none";
+      if(userAdminLink) userAdminLink.style.display = "none";
+      if(sidebarLoginLink) sidebarLoginLink.style.display = "flex";
+      if(sidebarPerfilLink) sidebarPerfilLink.style.display = "none";
+    }
+
+    function mostrarUsuarioLogado(dados, user){
+      const tipo = normalizarTipo(dados.tipoUsuario || dados.tipousuario || dados.tipo || "");
+      const nome = dados.nomeExibicao || dados.nome || user.email || "Usuário";
+      const foto = dados.fotoPerfil || "";
+      const status = dados.status || "-";
+      const time = dados.time || "-";
+      const categoria = dados.categoria || "-";
+      const aprovado = dados.aprovado === true;
+      const autorizado = dados.autorizado === true;
+      const ehArbitro = tipo === "arbitro";
+      const podePainel = (tipo === "admin" && aprovado && autorizado) || (tipo === "arbitro" && aprovado && autorizado);
+
+      if(loginChip) loginChip.style.display = "none";
+      if(userChipEl) userChipEl.style.display = "inline-flex";
+      if(sidebarLoginLink) sidebarLoginLink.style.display = "none";
+      if(sidebarPerfilLink) sidebarPerfilLink.style.display = "flex";
+
+      if(menuAdmin) menuAdmin.style.display = podePainel ? "flex" : "none";
+      if(userAdminLink) userAdminLink.style.display = podePainel ? "flex" : "none";
+
+      if(userChipName) userChipName.textContent = nome;
+      if(userChipRole) userChipRole.textContent = tipoLabel(tipo);
+      if(userCardName) userCardName.textContent = nome;
+      if(userCardEmail) userCardEmail.textContent = dados.email || user.email || "-";
+      if(userCardStatus) userCardStatus.textContent = status;
+      if(userCardTime) userCardTime.textContent = time;
+      if(userCardCategoria) userCardCategoria.textContent = categoria;
+
+      if(userCardRole){
+        userCardRole.innerHTML = `
+          <i class="${ehArbitro ? 'fa-solid fa-whistle' : 'fa-solid fa-user'}"></i>
+          <span>${tipoLabel(tipo)}</span>
+        `;
+      }
+
+      if(userChipWhistle){
+        userChipWhistle.style.display = ehArbitro ? "inline-flex" : "none";
+      }
+
+      preencherAvatar(userChipAvatar, foto);
+      preencherAvatar(userCardAvatar, foto);
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if(!user){
+        mostrarUsuarioDeslogado();
+        return;
+      }
+
+      try{
+        const ref = doc(db, "usuarios", user.uid);
+        const snap = await getDoc(ref);
+
+        if(!snap.exists()){
+          mostrarUsuarioDeslogado();
+          return;
+        }
+
+        mostrarUsuarioLogado(snap.data(), user);
+      }catch(error){
+        console.error("Erro ao carregar usuário da página inicial:", error);
+        mostrarUsuarioDeslogado();
+      }
+    });
+
+    if(logoutBtn){
+      logoutBtn.addEventListener("click", async function(){
+        try{
+          await signOut(auth);
+          window.location.href = "index.html";
+        }catch(error){
+          console.error("Erro ao sair:", error);
+        }
       });
     }
   </script>
