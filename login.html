@@ -17,6 +17,7 @@
       align-items:center;
       justify-content:center;
       color:white;
+      padding:20px 0;
     }
 
     .box{
@@ -41,6 +42,7 @@
       margin:0 0 20px;
       text-align:center;
       color:#dbe3ee;
+      line-height:1.5;
     }
 
     label{
@@ -58,7 +60,31 @@
       font-size:14px;
     }
 
-    button{
+    .senha-wrap{
+      position:relative;
+      width:100%;
+    }
+
+    .senha-wrap input{
+      padding-right:48px;
+    }
+
+    .toggle-senha{
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      border:none;
+      background:none;
+      cursor:pointer;
+      color:#444;
+      font-size:18px;
+      padding:0;
+      width:auto;
+      margin:0;
+    }
+
+    .btn-principal{
       width:100%;
       margin-top:18px;
       padding:13px;
@@ -71,7 +97,7 @@
       cursor:pointer;
     }
 
-    button:hover{
+    .btn-principal:hover{
       filter:brightness(1.04);
     }
 
@@ -82,6 +108,20 @@
       color:#ffe600;
       font-weight:bold;
       text-decoration:none;
+    }
+
+    .link-auxiliar{
+      display:block;
+      margin-top:14px;
+      text-align:center;
+      color:#dbe3ee;
+      font-weight:bold;
+      text-decoration:none;
+    }
+
+    .link-auxiliar:hover,
+    .voltar:hover{
+      text-decoration:underline;
     }
 
     .msg{
@@ -105,6 +145,8 @@
       border:1px solid rgba(120,255,170,.25);
     }
   </style>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
@@ -116,21 +158,33 @@
     <input type="email" id="email" placeholder="Digite seu email">
 
     <label for="senha">Senha</label>
-    <input type="password" id="senha" placeholder="Digite sua senha">
+    <div class="senha-wrap">
+      <input type="password" id="senha" placeholder="Digite sua senha">
+      <button type="button" class="toggle-senha" onclick="alternarSenha('senha', this)">
+        <i class="fa-solid fa-eye"></i>
+      </button>
+    </div>
 
-    <button onclick="login()">Entrar</button>
+    <button class="btn-principal" onclick="login()">Entrar</button>
 
     <div id="msgErro" class="msg erro"></div>
     <div id="msgSucesso" class="msg sucesso"></div>
 
+    <a href="recuperar-senha.html" class="link-auxiliar">Esqueci minha senha</a>
     <a href="cadastro.html" class="voltar">Criar conta</a>
     <a href="index.html" class="voltar">← Voltar para o site</a>
   </div>
 
   <script type="module">
     import { auth, db } from "./firebase.js";
-    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import {
+      signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import {
+      doc,
+      getDoc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
     const msgErro = document.getElementById("msgErro");
     const msgSucesso = document.getElementById("msgSucesso");
@@ -176,12 +230,6 @@
       return valor;
     }
 
-    function destinoUsuarioComum(tipo){
-      if(tipo === "pai_atleta") return "perfil.html";
-      if(tipo === "torcedor") return "perfil.html";
-      return "index.html";
-    }
-
     async function garantirRegistroBasico(uid, email){
       const userRef = doc(db, "usuarios", uid);
       const userSnap = await getDoc(userRef);
@@ -205,6 +253,19 @@
 
       return await getDoc(userRef);
     }
+
+    window.alternarSenha = function(idInput, botao){
+      const input = document.getElementById(idInput);
+      const icone = botao.querySelector("i");
+
+      if(input.type === "password"){
+        input.type = "text";
+        icone.className = "fa-solid fa-eye-slash";
+      }else{
+        input.type = "password";
+        icone.className = "fa-solid fa-eye";
+      }
+    };
 
     window.login = async function(){
       limparMensagens();
@@ -235,7 +296,7 @@
 
         const dados = userSnap.data();
 
-        const tipoUsuario = normalizarTipo(dados.tipoUsuario || dados.tipo || "");
+        const tipoUsuario = normalizarTipo(dados.tipoUsuario || dados.tipousuario || dados.tipo || "");
         const autorizado = dados.autorizado === true;
         const aprovado = dados.aprovado === true;
         const status = String(dados.status || "").trim().toLowerCase();
@@ -251,9 +312,9 @@
             return;
           }
 
-          mostrarSucesso("Login realizado com sucesso.");
+          mostrarSucesso("Login realizado com sucesso. Redirecionando...");
           setTimeout(() => {
-            window.location.href = "admin.html";
+            window.location.href = "index.html";
           }, 600);
           return;
         }
@@ -264,9 +325,9 @@
             return;
           }
 
-          mostrarSucesso("Login realizado com sucesso.");
+          mostrarSucesso("Login realizado com sucesso. Redirecionando...");
           setTimeout(() => {
-            window.location.href = "admin.html";
+            window.location.href = "index.html";
           }, 600);
           return;
         }
@@ -277,9 +338,9 @@
             return;
           }
 
-          mostrarSucesso("Login realizado com sucesso.");
+          mostrarSucesso("Login realizado com sucesso. Redirecionando...");
           setTimeout(() => {
-            window.location.href = "perfil.html";
+            window.location.href = "index.html";
           }, 600);
           return;
         }
@@ -290,9 +351,9 @@
             return;
           }
 
-          mostrarSucesso("Login realizado com sucesso.");
+          mostrarSucesso("Login realizado com sucesso. Redirecionando...");
           setTimeout(() => {
-            window.location.href = "perfil.html";
+            window.location.href = "index.html";
           }, 600);
           return;
         }
@@ -303,9 +364,9 @@
             return;
           }
 
-          mostrarSucesso("Login realizado com sucesso.");
+          mostrarSucesso("Login realizado com sucesso. Redirecionando...");
           setTimeout(() => {
-            window.location.href = "perfil.html";
+            window.location.href = "index.html";
           }, 600);
           return;
         }
@@ -316,24 +377,24 @@
             return;
           }
 
-          mostrarSucesso("Login realizado com sucesso.");
+          mostrarSucesso("Login realizado com sucesso. Redirecionando...");
           setTimeout(() => {
-            window.location.href = "perfil.html";
+            window.location.href = "index.html";
           }, 600);
           return;
         }
 
         if(tipoUsuario === "torcedor" || !tipoUsuario){
-          mostrarSucesso("Login realizado com sucesso.");
+          mostrarSucesso("Login realizado com sucesso. Redirecionando...");
           setTimeout(() => {
-            window.location.href = destinoUsuarioComum("torcedor");
+            window.location.href = "index.html";
           }, 600);
           return;
         }
 
-        mostrarSucesso("Login realizado com sucesso.");
+        mostrarSucesso("Login realizado com sucesso. Redirecionando...");
         setTimeout(() => {
-          window.location.href = destinoUsuarioComum(tipoUsuario);
+          window.location.href = "index.html";
         }, 600);
 
       }catch(e){
