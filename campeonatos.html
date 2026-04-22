@@ -3,144 +3,690 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Campeonatos - LIGA GOIANA</title>
+  <title>Campeonatos - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
     :root{
       --bg:#0b1f3a;
+      --bg-dark:#08172c;
       --card:#102a52;
+      --card-hover:#153766;
       --gold:#f7c600;
       --gold-soft:rgba(247,198,0,.12);
       --gold-line:rgba(247,198,0,.24);
-      --white:#fff;
+      --white:#ffffff;
       --muted:#d8e1ef;
       --shadow:0 8px 22px rgba(0,0,0,.28);
+      --transition:.25s ease;
+      --max:1240px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
     }
 
     body{
-      margin:0;
-      font-family:Arial;
-      background:linear-gradient(rgba(11,31,58,.9), rgba(11,31,58,.95)), url("fundo.png") center/cover;
+      font-family:Arial, sans-serif;
+      background:
+        linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+        url("fundo.png") center/cover fixed no-repeat;
       color:var(--white);
+      min-height:100vh;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+      transition:var(--transition);
+    }
+
+    button{
+      font-family:inherit;
+      cursor:pointer;
+      transition:var(--transition);
+      border:none;
+      background:none;
+    }
+
+    input, select{
+      font-family:inherit;
+    }
+
+    .wrap{
+      width:min(100% - 28px, var(--max));
+      margin:0 auto;
     }
 
     header{
-      background:#08172c;
+      background:rgba(8,23,44,.96);
       border-bottom:3px solid var(--gold);
-      padding:15px;
-      text-align:center;
-      font-weight:bold;
-    }
-
-    .container{
-      max-width:1200px;
-      margin:auto;
-      padding:20px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-      gap:15px;
-    }
-
-    .card{
-      background:var(--card);
-      padding:15px;
-      border-radius:12px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      border:1px solid rgba(255,255,255,.08);
       box-shadow:var(--shadow);
     }
 
-    .info{
+    .header-top{
+      min-height:82px;
       display:flex;
-      gap:12px;
       align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      padding:14px 0;
+    }
+
+    .header-left,
+    .header-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .header-title{
+      flex:1;
+      text-align:center;
+      font-size:24px;
+      font-weight:700;
+      color:var(--white);
+    }
+
+    .top-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 16px;
+      border-radius:10px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    .btn-light{
+      background:#fff4cf;
+      color:#111;
+    }
+
+    .btn-light:hover{
+      background:var(--gold);
+      transform:translateY(-2px);
+    }
+
+    .nav-bar{
+      background:rgba(16,42,82,.95);
+      border-top:1px solid rgba(255,255,255,.06);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .menu{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      padding:12px 8px;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+    }
+
+    .menu::-webkit-scrollbar{
+      display:none;
+    }
+
+    .menu a{
+      color:#fff;
+      font-weight:700;
+      font-size:14px;
+      background:#0d2346;
+      padding:10px 14px;
+      border-radius:10px;
+      border:1px solid transparent;
+      white-space:nowrap;
+      flex:0 0 auto;
+    }
+
+    .menu a:hover{
+      color:var(--gold);
+      background:var(--gold-soft);
+      border-color:var(--gold-line);
+    }
+
+    .menu a.ativo{
+      background:var(--gold);
+      color:#111;
+    }
+
+    .container{
+      padding:24px 0 34px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg, #102a52, #0d2346);
+      border:1px solid var(--gold-line);
+      border-radius:18px;
+      padding:22px;
+      margin-bottom:20px;
+      box-shadow:var(--shadow);
+    }
+
+    .hero h2{
+      margin:0 0 8px;
+      color:var(--gold);
+      font-size:28px;
+    }
+
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:15px;
+      max-width:850px;
+    }
+
+    .filtros{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:12px;
+      margin-bottom:20px;
+    }
+
+    input, select{
+      width:100%;
+      padding:13px;
+      border:none;
+      border-radius:10px;
+      font-size:14px;
+      box-sizing:border-box;
+      background:#f5f7fb;
+      color:#111;
+    }
+
+    input:focus, select:focus{
+      outline:2px solid rgba(247,198,0,.5);
+    }
+
+    .lista-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+      gap:14px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+      padding:16px;
+      border-radius:16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      border:1px solid rgba(255,230,0,.10);
+      box-shadow:var(--shadow);
+      transition:var(--transition);
+    }
+
+    .card:hover{
+      transform:translateY(-2px);
+      border-color:var(--gold-line);
+    }
+
+    .item{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+      flex:1;
     }
 
     .logo{
-      width:60px;
-      height:60px;
+      width:68px;
+      height:68px;
       border-radius:50%;
       object-fit:cover;
+      border:2px solid rgba(255,255,255,.15);
       background:#1a3f73;
+      flex-shrink:0;
     }
 
-    .nome{
-      font-weight:bold;
-      font-size:16px;
+    .item-info{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width:0;
     }
 
-    .btn{
+    .nome-campeonato{
+      font-weight:700;
+      font-size:18px;
+      color:#fff;
+    }
+
+    .item-info small{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .tags{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
+
+    .tag{
+      background:#1a3f73;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:12px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn-acao{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:11px 14px;
+      border-radius:10px;
+      font-weight:700;
+      font-size:13px;
+      border:none;
+      cursor:pointer;
+    }
+
+    .btn-ver{
       background:var(--gold);
       color:#111;
-      padding:10px 14px;
-      border-radius:8px;
-      font-weight:bold;
-      text-decoration:none;
+    }
+
+    .btn-ver:hover{
+      filter:brightness(1.04);
+      transform:translateY(-1px);
+    }
+
+    .vazio{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+      padding:30px;
+      border-radius:14px;
+      text-align:center;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,.06);
+      box-shadow:var(--shadow);
+    }
+
+    @media (max-width:900px){
+      .header-title{
+        order:3;
+        width:100%;
+        text-align:center;
+      }
+
+      .header-left,
+      .header-right{
+        width:100%;
+        justify-content:center;
+      }
+
+      .filtros{
+        grid-template-columns:1fr;
+      }
+
+      .card{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .actions{
+        width:100%;
+        justify-content:flex-start;
+      }
+    }
+
+    @media (max-width:600px){
+      .header-top{
+        flex-direction:column;
+        align-items:center;
+      }
+
+      .header-title{
+        order:2;
+        width:100%;
+        text-align:center;
+      }
+
+      .header-left{
+        order:1;
+        width:100%;
+        display:flex;
+        flex-direction:row;
+        align-items:center;
+        justify-content:center;
+        gap:10px;
+        flex-wrap:nowrap;
+      }
+
+      .header-right{
+        display:none;
+      }
+
+      .top-btn{
+        width:auto;
+        min-width:0;
+        flex:1;
+        justify-content:center;
+        padding:10px 12px;
+        font-size:14px;
+      }
+
+      .filtros{
+        grid-template-columns:1fr;
+      }
+
+      .hero h2{
+        font-size:24px;
+      }
     }
   </style>
 </head>
 <body>
-
 <header>
-  TODOS OS CAMPEONATOS
-</header>
+    <div class="wrap header-top">
+      <div class="header-left">
+        <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+          <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
 
-<div class="container">
-  <div class="grid" id="lista"></div>
-</div>
-
-<script type="module">
-import { db } from "./firebase.js";
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const lista = document.getElementById("lista");
-
-async function carregar(){
-  lista.innerHTML = "Carregando...";
-
-  const snap = await getDocs(collection(db, "campeonatos"));
-
-  let html = "";
-
-  snap.forEach(doc => {
-    const c = doc.data();
-
-    // 🔥 FILTRO PUBLICO
-    if(!(c.publicado || c.publico || c.status === "ativo")) return;
-
-    html += `
-      <div class="card">
-        <div class="info">
-          <img src="${c.logo || 'logo-liga.jfif'}" class="logo">
-          <div>
-            <div class="nome">${c.nome}</div>
-            <small>${c.temporada || ""}</small>
-          </div>
-        </div>
-
-        <a class="btn" href="campeonato-publico.html?id=${doc.id}">
-          Ver
+        <a href="index.html" class="top-btn btn-light">
+          <i class="fa-solid fa-house"></i> Página Inicial
         </a>
       </div>
-    `;
-  });
 
-  if(!html){
-    html = "Nenhum campeonato disponível";
-  }
+      <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
-  lista.innerHTML = html;
-}
+      <div class="header-right"></div>
+    </div>
 
-carregar();
-</script>
+    <div class="nav-bar">
+      <div class="wrap">
+        <nav class="menu">
+          <a href="index.html">Início</a>
+          <a href="campeonatos.html" class="ativo">Campeonatos</a>
+          <a href="tabela.html">Tabela</a>
+          <a href="jogos.html">Jogos</a>
+          <a href="times.html">Times</a>
+          <a href="tecnicos.html">Técnicos</a>
+          <a href="jogadores.html">Jogadores</a>
+          <a href="arbitros.html">Arbitros</a>
+          <a href="assistentes.html">Assistente</a>
+          <a href="sumula-publica.html">Súmula</a>
+          <a href="noticias.html">Notícias</a>
+          <a href="login.html">Login</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap container">
+    <section class="hero">
+      <h2>Campeonatos</h2>
+      <p>Veja os campeonatos publicados, filtre por nome, campeonato e categoria.</p>
+    </section>
+
+    <section class="filtros">
+      <input id="buscaCampeonato" placeholder="Pesquisar campeonato..." oninput="carregarCampeonatos()">
+
+      <select id="filtroCampeonato" onchange="carregarCampeonatos()">
+        <option value="">Todos os campeonatos</option>
+      </select>
+
+      <select id="filtroCategoria" onchange="carregarCampeonatos()">
+        <option value="">Todas categorias</option>
+      </select>
+    </section>
+
+    <section class="lista-grid" id="listaCampeonatos"></section>
+  </main>
+
+  <script type="module">
+    import { db } from "./firebase.js";
+    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    let campeonatosCache = [];
+    let jogosCache = [];
+    let sumulasCache = [];
+
+    window.voltarPagina = function(){
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "index.html";
+      }
+    };
+
+    function statusPublico(status = "") {
+      const s = String(status).trim().toLowerCase();
+      return ["ativo", "em breve", "publicado", "publico", "público"].includes(s);
+    }
+
+    function campeonatoEhPublico(campeonato) {
+      if (campeonato.publicado === true) return true;
+      if (campeonato.publico === true) return true;
+      if (campeonato.visivelPublico === true) return true;
+      if (statusPublico(campeonato.status)) return true;
+      return false;
+    }
+
+    function normalizarTexto(texto) {
+      return String(texto || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function valorCampo(obj, chaves, fallback = ""){
+      for(const chave of chaves){
+        if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
+          return obj[chave];
+        }
+      }
+      return fallback;
+    }
+
+    function obterNomeCampeonato(doc){
+      return valorCampo(doc, ["nome", "campeonato", "titulo"], "");
+    }
+
+    function filtrarJogosDoCampeonato(nomeCampeonato){
+      return jogosCache.filter(j => {
+        const nome = valorCampo(j, ["campeonato", "nomeCampeonato"], "");
+        return normalizarTexto(nome) === normalizarTexto(nomeCampeonato);
+      });
+    }
+
+    function calcularGolsDoCampeonato(nomeCampeonato){
+      let gols = 0;
+
+      const jogos = filtrarJogosDoCampeonato(nomeCampeonato);
+      jogos.forEach(j => {
+        gols += Number(valorCampo(j, ["golsA"], 0) || 0);
+        gols += Number(valorCampo(j, ["golsB"], 0) || 0);
+      });
+
+      if(gols === 0){
+        const sumulas = sumulasCache.filter(s =>
+          normalizarTexto(valorCampo(s, ["campeonato"], "")) === normalizarTexto(nomeCampeonato)
+        );
+
+        sumulas.forEach(s => {
+          gols += Number(valorCampo(s, ["golsA"], 0) || 0);
+          gols += Number(valorCampo(s, ["golsB"], 0) || 0);
+        });
+      }
+
+      return gols;
+    }
+
+    function preencherFiltroCampeonato(){
+      const select = document.getElementById("filtroCampeonato");
+
+      const lista = [...new Set(
+        campeonatosCache
+          .filter(campeonatoEhPublico)
+          .map(c => obterNomeCampeonato(c))
+          .filter(Boolean)
+      )].sort((a,b) => String(a).localeCompare(String(b), "pt-BR"));
+
+      select.innerHTML = '<option value="">Todos os campeonatos</option>';
+
+      lista.forEach(nome => {
+        select.innerHTML += `<option value="${nome}">${nome}</option>`;
+      });
+    }
+
+    function preencherFiltroCategoria(){
+      const select = document.getElementById("filtroCategoria");
+      const categorias = new Set();
+
+      campeonatosCache
+        .filter(campeonatoEhPublico)
+        .forEach(c => {
+          (c.categorias || []).forEach(cat => {
+            if(cat) categorias.add(cat);
+          });
+        });
+
+      select.innerHTML = '<option value="">Todas categorias</option>';
+
+      Array.from(categorias)
+        .sort((a,b) => String(a).localeCompare(String(b), "pt-BR"))
+        .forEach(cat => {
+          select.innerHTML += `<option value="${cat}">${cat}</option>`;
+        });
+    }
+
+    window.carregarCampeonatos = function(){
+      const lista = document.getElementById("listaCampeonatos");
+      const busca = (document.getElementById("buscaCampeonato").value || "").toLowerCase().trim();
+      const campeonatoFiltro = document.getElementById("filtroCampeonato").value;
+      const categoriaFiltro = document.getElementById("filtroCategoria").value;
+
+      let campeonatos = campeonatosCache.filter(campeonatoEhPublico);
+
+      if (busca) {
+        campeonatos = campeonatos.filter(c =>
+          String(obterNomeCampeonato(c)).toLowerCase().includes(busca) ||
+          String(c.temporada || "").toLowerCase().includes(busca) ||
+          String(c.status || "").toLowerCase().includes(busca)
+        );
+      }
+
+      if (campeonatoFiltro) {
+        campeonatos = campeonatos.filter(c => obterNomeCampeonato(c) === campeonatoFiltro);
+      }
+
+      if (categoriaFiltro) {
+        campeonatos = campeonatos.filter(c =>
+          Array.isArray(c.categorias) && c.categorias.includes(categoriaFiltro)
+        );
+      }
+
+      campeonatos.sort((a, b) =>
+        String(obterNomeCampeonato(a)).localeCompare(String(obterNomeCampeonato(b)), "pt-BR")
+      );
+
+      if (!campeonatos.length) {
+        lista.innerHTML = `<div class="vazio">Nenhum campeonato publicado encontrado.</div>`;
+        return;
+      }
+
+      lista.innerHTML = "";
+
+      campeonatos.forEach(campeonato => {
+        const nomeCampeonato = obterNomeCampeonato(campeonato);
+        const categorias = (campeonato.categorias || [])
+          .map(c => `<span class="tag">${c}</span>`)
+          .join("");
+
+        const jogosDoCampeonato = filtrarJogosDoCampeonato(nomeCampeonato);
+        const totalGols = calcularGolsDoCampeonato(nomeCampeonato);
+
+        lista.innerHTML += `
+          <article class="card">
+            <div class="item">
+              <img
+                src="${campeonato.logo || 'logo-liga.jfif'}"
+                class="logo"
+                alt="${nomeCampeonato || 'Campeonato'}"
+                onerror="this.src='logo-liga.jfif'"
+              >
+
+              <div class="item-info">
+                <div class="nome-campeonato">${nomeCampeonato || "-"}</div>
+                <small>Temporada: ${campeonato.temporada || "-"}</small>
+                <small>Status: ${campeonato.status || "-"}</small>
+                <small>Jogos: ${jogosDoCampeonato.length} | Gols: ${totalGols}</small>
+                <div class="tags">${categorias || '<span class="tag">Sem categorias</span>'}</div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <a class="btn-acao btn-ver" href="campeonato-publico.html?id=${campeonato.id}">
+                <i class="fa-solid fa-eye"></i> Ver Campeonato
+              </a>
+            </div>
+          </article>
+        `;
+      });
+    };
+
+    async function iniciarPagina(){
+      const lista = document.getElementById("listaCampeonatos");
+      lista.innerHTML = `<div class="vazio">Carregando campeonatos...</div>`;
+
+      try{
+        const [snapCampeonatos, snapJogos, snapSumulas] = await Promise.all([
+          getDocs(collection(db, "campeonatos")),
+          getDocs(collection(db, "jogos")),
+          getDocs(collection(db, "sumulas"))
+        ]);
+
+        campeonatosCache = [];
+        jogosCache = [];
+        sumulasCache = [];
+
+        snapCampeonatos.forEach(docSnap => {
+          campeonatosCache.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        snapJogos.forEach(docSnap => {
+          jogosCache.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        snapSumulas.forEach(docSnap => {
+          sumulasCache.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        preencherFiltroCampeonato();
+        preencherFiltroCategoria();
+        carregarCampeonatos();
+      }catch(erro){
+        console.error(erro);
+        lista.innerHTML = `<div class="vazio">Erro ao carregar os campeonatos.</div>`;
+      }
+    }
+
+    iniciarPagina();
+  </script>
 
 </body>
 </html>
