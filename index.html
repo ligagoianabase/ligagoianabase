@@ -204,58 +204,6 @@
       text-align:center;
       color:var(--yellow);
       flex-shrink:0;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .side-icon i{
-      font-size:18px;
-      width:20px;
-      text-align:center;
-    }
-
-    .sidebar-admin-actions{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      margin-top:4px;
-    }
-
-    .sidebar-login-btn,
-    .sidebar-admin-btn{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding:12px 14px;
-      border-radius:14px;
-      font-weight:700;
-      border:1px solid transparent;
-      transition:var(--transition);
-    }
-
-    .sidebar-login-btn{
-      background:rgba(255,212,0,.08);
-      border-color:var(--yellow-line);
-      color:var(--yellow);
-    }
-
-    .sidebar-login-btn:hover{
-      background:var(--yellow);
-      color:#08172c;
-    }
-
-    .sidebar-admin-btn{
-      background:rgba(255,255,255,.06);
-      border-color:rgba(255,255,255,.08);
-      color:#fff;
-    }
-
-    .sidebar-admin-btn:hover{
-      background:var(--yellow);
-      color:#08172c;
-      border-color:var(--yellow);
     }
 
     .topbar{
@@ -281,7 +229,6 @@
       align-items:center;
       gap:14px;
       min-width:0;
-      flex:1 1 auto;
     }
 
     .menu-toggle{
@@ -341,12 +288,115 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
-.top-actions{
+
+    .top-nav{
+      width:100%;
+      order:3;
+      display:flex;
+      justify-content:center;
+    }
+
+    .top-nav-scroll{
+      width:100%;
+      overflow-x:auto;
+      overflow-y:visible;
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+    }
+
+    .top-nav-scroll::-webkit-scrollbar{
+      display:none;
+    }
+
+    .top-nav ul{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      flex-wrap:nowrap;
+      justify-content:center;
+      min-width:max-content;
+      width:100%;
+    }
+.top-nav li{
+      position:relative;
+      flex-shrink:0;
+    }
+
+    .top-nav a,
+    .dropdown-toggle{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:12px;
+      color:var(--muted);
+      font-weight:600;
+      border:1px solid transparent;
+      background:transparent;
+      transition:var(--transition);
+    }
+
+    .top-nav a:hover,
+    .dropdown-toggle:hover,
+    .top-nav li:hover > a{
+      color:var(--yellow);
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+    }
+
+    .dropdown-toggle .fa-chevron-down{
+      transition:transform .2s ease;
+    }
+
+    .dropdown.open .dropdown-toggle{
+      color:var(--yellow);
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+    }
+
+    .dropdown.open .dropdown-toggle .fa-chevron-down{
+      transform:rotate(180deg);
+    }
+
+    .dropdown-menu{
+      position:absolute;
+      top:calc(100% + 8px);
+      left:50%;
+      transform:translateX(-50%);
+      min-width:240px;
+      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
+      border:1px solid var(--yellow-line);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      padding:8px;
+      display:none;
+      z-index:120;
+    }
+
+    .dropdown.open .dropdown-menu{
+      display:block;
+    }
+
+    .dropdown-menu a{
+      display:flex;
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      color:var(--muted);
+      border:1px solid transparent;
+    }
+
+    .dropdown-menu a:hover{
+      color:var(--yellow);
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+    }
+
+    .top-actions{
       display:flex;
       align-items:center;
       gap:10px;
       flex-shrink:0;
-      margin-left:auto;
     }
 
     .btn-primary,
@@ -381,7 +431,6 @@
       border:1px solid var(--yellow-line);
       background:rgba(255,212,0,.08);
       color:var(--yellow);
-      white-space:nowrap;
     }
 
     .btn-login-chip:hover{
@@ -400,616 +449,953 @@
       color:inherit;
     }
 
-    .top-nav{
-      flex:1 1 100%;
-      order:3;
-      min-width:0;
-      display:flex;
-      justify-content:center;
+    .hero{
+      padding:34px 0 20px;
     }
 
-    .top-nav-scroll{
-      width:100%;
-      overflow-x:auto;
-      overflow-y:visible;
-      -webkit-overflow-scrolling:touch;
-      scrollbar-width:none;
-      display:flex;
-      justify-content:center;
+    .hero-card{
+      background:linear-gradient(135deg, rgba(7,28,68,.9), rgba(3,17,45,.92));
+      border:1px solid var(--yellow-line);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
     }
 
-    .top-nav-scroll::-webkit-scrollbar{
-      display:none;
-    }
-
-    .top-nav ul{
-      display:flex;
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:26px;
       align-items:center;
-      gap:8px;
-      flex-wrap:nowrap;
-      width:max-content;
-      min-width:100%;
-      justify-content:center;
+      padding:34px;
     }
-
-    .top-nav li{
-      position:relative;
-      flex-shrink:0;
-    }
-
-    .top-nav a,
-    .dropdown-toggle{
+.eyebrow{
       display:inline-flex;
       align-items:center;
       gap:8px;
-      padding:10px 14px;
-      border-radius:12px;
-      color:var(--muted);
-      font-weight:600;
-      border:1px solid transparent;
-      background:transparent;
-      transition:var(--transition);
-      white-space:nowrap;
-    }
-
-    .top-nav a:hover,
-    .dropdown-toggle:hover,
-    .top-nav li:hover > a{
-      color:var(--yellow);
-      background:var(--yellow-soft);
-      border-color:var(--yellow-line);
-    }
-
-    .dropdown-toggle .fa-chevron-down{
-      transition:transform .2s ease;
-    }
-
-    .dropdown.open .dropdown-toggle{
-      color:var(--yellow);
-      background:var(--yellow-soft);
-      border-color:var(--yellow-line);
-    }
-
-    .dropdown.open .dropdown-toggle .fa-chevron-down{
-      transform:rotate(180deg);
-    }
-
-    .dropdown-menu{
-      position:absolute;
-      top:calc(100% + 8px);
-      left:0;
-      min-width:240px;
-      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(255,212,0,.12);
       border:1px solid var(--yellow-line);
-      border-radius:16px;
-      box-shadow:var(--shadow);
-      padding:8px;
-      display:none;
-      z-index:120;
-    }
-
-    .dropdown.open .dropdown-menu{
-      display:block;
-    }
-
-    .dropdown-menu a{
-      display:flex;
-      width:100%;
-      padding:12px 14px;
-      border-radius:12px;
-      color:var(--muted);
-      border:1px solid transparent;
-    }
-
-    .dropdown-menu a:hover{
       color:var(--yellow);
-      background:var(--yellow-soft);
-      border-color:var(--yellow-line);
-    }
-.hero{
-      position:relative;
-      margin-top:18px;
-      border-radius:22px;
-      overflow:hidden;
-      box-shadow:var(--shadow);
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:16px;
     }
 
-    .hero::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(90deg, rgba(1,9,24,.82), rgba(1,9,24,.4));
-      z-index:1;
-    }
-
-    .hero-bg{
-      width:100%;
-      height:340px;
-      object-fit:cover;
-    }
-
-    .hero-content{
-      position:absolute;
-      inset:0;
-      z-index:2;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      padding:28px;
-      max-width:640px;
-    }
-
-    .hero-title{
-      font-size:34px;
-      font-weight:800;
-      color:var(--yellow);
+    .hero h1{
+      font-size:46px;
+      line-height:1.08;
       margin-bottom:12px;
+      color:var(--yellow);
     }
 
-    .hero-sub{
-      font-size:16px;
+    .hero p{
       color:var(--muted);
+      font-size:18px;
+      line-height:1.7;
+      max-width:700px;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-top:26px;
+    }
+
+    .btn-secondary{
+      padding:14px 18px;
+      border:1px solid var(--yellow-line);
+      color:#fff;
+      background:rgba(255,255,255,.06);
+    }
+
+    .btn-secondary:hover{
+      transform:translateY(-2px);
+      background:var(--yellow);
+      color:#08172c;
+    }
+
+    .hero-art img{
+      width:100%;
+      height:100%;
+      min-height:360px;
+      object-fit:cover;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:var(--shadow);
+    }
+
+    .cards-pilares{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:18px;
+      margin:28px 0 10px;
+    }
+
+    .pillar{
+      background:linear-gradient(180deg, rgba(7,24,59,.94), rgba(3,17,45,.96));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:20px;
+      padding:22px 18px;
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      box-shadow:var(--shadow);
+      transition:var(--transition);
+    }
+
+    .pillar:hover{
+      border-color:var(--yellow-line);
+      transform:translateY(-2px);
+    }
+
+    .pillar-icon{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:var(--yellow-soft);
+      color:var(--yellow);
+      font-size:22px;
+      flex-shrink:0;
+    }
+
+    .pillar-text h3{
+      font-size:18px;
+      margin-bottom:8px;
+      color:#fff;
+    }
+
+    .pillar-text p{
+      font-size:14px;
       line-height:1.6;
-      margin-bottom:18px;
+      color:var(--muted);
     }
 
-    .section{
-      margin-top:28px;
+    .content-grid{
+      display:grid;
+      grid-template-columns:1.3fr .9fr;
+      gap:22px;
+      margin:28px 0;
     }
 
-    .section-header{
+    .panel{
+      background:linear-gradient(180deg, rgba(7,24,59,.94), rgba(3,17,45,.96));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .panel-head{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      margin-bottom:12px;
+      gap:12px;
+      margin-bottom:18px;
       flex-wrap:wrap;
-      gap:8px;
     }
 
-    .section-header h2{
-      font-size:20px;
-      color:var(--yellow);
-      font-weight:800;
-    }
-
-    .section-header a{
-      font-size:13px;
-      color:var(--muted);
-      border:1px solid rgba(255,255,255,.1);
-      padding:6px 10px;
-      border-radius:8px;
-    }
-
-    .section-header a:hover{
-      color:var(--yellow);
-      border-color:var(--yellow-line);
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    .panel-head-title{
+      display:flex;
+      align-items:center;
       gap:12px;
     }
 
-    .card{
-      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
-      border-radius:16px;
-      padding:14px;
-      border:1px solid rgba(255,255,255,.06);
-      box-shadow:var(--shadow);
+    .panel-head-icon{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      background:var(--yellow-soft);
+      color:var(--yellow);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
+    }
+
+    .panel-head h2{
+      font-size:28px;
+      color:#fff;
+    }
+.panel-head a{
+      color:var(--yellow);
+      font-weight:700;
       transition:var(--transition);
     }
 
-    .card:hover{
-      transform:translateY(-3px);
+    .panel-head a:hover{
+      color:#fff176;
+    }
+
+    .match-table{
+      width:100%;
+      border-collapse:collapse;
+      overflow:hidden;
+      border-radius:16px;
+    }
+
+    .match-table thead th{
+      background:rgba(255,212,0,.12);
+      color:var(--yellow);
+      text-align:left;
+      padding:14px 12px;
+      font-size:14px;
+    }
+
+    .match-table tbody td{
+      padding:14px 12px;
+      border-top:1px solid rgba(255,255,255,.08);
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .match-table tbody tr:hover{
+      background:rgba(255,212,0,.08);
+    }
+
+    .news-list{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .news-item{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      transition:var(--transition);
+    }
+
+    .news-item:hover{
+      transform:translateY(-2px);
+      background:rgba(255,212,0,.08);
       border-color:var(--yellow-line);
     }
 
-    .card h3{
-      font-size:16px;
+    .news-item h3{
+      font-size:17px;
+      color:#fff;
+      margin-bottom:8px;
+    }
+
+    .news-item p{
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px;
+    }
+
+    .cta-banner{
+      margin:10px 0 34px;
+    }
+
+    .cta-banner-inner{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      flex-wrap:wrap;
+      background:linear-gradient(135deg, rgba(255,212,0,.16), rgba(255,255,255,.05));
+      border:1px solid var(--yellow-line);
+      border-radius:24px;
+      padding:26px;
+      box-shadow:var(--shadow);
+    }
+
+    .cta-banner-inner h3{
+      font-size:30px;
+      color:#fff;
+      margin-bottom:8px;
+    }
+
+    .cta-banner-inner p{
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .status-user{
+      display:none;
+    }
+
+    footer{
+      background:linear-gradient(180deg, rgba(2,10,24,.96), rgba(1,9,24,1));
+      border-top:1px solid rgba(255,255,255,.08);
+      padding:40px 0 18px;
+    }
+
+    .footer-grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr .8fr .8fr;
+      gap:20px;
+    }
+
+    .footer-card{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:22px;
+      padding:22px;
+    }
+
+    .footer-card h4{
+      color:var(--yellow);
+      margin-bottom:14px;
+      font-size:18px;
+    }
+
+    .footer-brand{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      margin-bottom:14px;
+    }
+
+    .footer-brand img{
+      width:62px;
+      height:62px;
+      border-radius:16px;
+      border:2px solid var(--yellow);
+      object-fit:cover;
+      background:#fff;
+    }
+.footer-brand-text h3{
+      font-size:20px;
       margin-bottom:6px;
       color:#fff;
     }
 
-    .card small{
+    .footer-brand-text p{
       color:var(--muted);
-      font-size:13px;
-      line-height:1.4;
+      line-height:1.5;
+      font-size:14px;
     }
 
-    footer{
-      margin-top:34px;
-      padding:18px 0 28px;
+    .footer-card a{
+      display:block;
+      color:var(--muted);
+      margin-bottom:10px;
+      transition:var(--transition);
+    }
+
+    .footer-card a:hover{
+      color:var(--yellow);
+    }
+
+    .footer-contact-line{
+      display:flex !important;
+      align-items:center;
+      gap:10px;
+      margin-bottom:12px !important;
+    }
+
+    .footer-social{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .footer-social a{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      background:rgba(255,255,255,.07);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--yellow);
+      margin-bottom:0;
+    }
+
+    .footer-social a:hover{
+      background:var(--yellow);
+      color:#08172c;
+    }
+
+    .copyright{
+      margin-top:18px;
+      padding-top:18px;
+      border-top:1px solid rgba(255,255,255,.08);
       text-align:center;
-      font-size:13px;
-      color:var(--muted);
+      color:var(--text-soft);
+      font-size:14px;
     }
 
-    @media(max-width:900px){
+    #menuAdmin{
+      display:none;
+    }
+
+    @media (max-width: 1180px){
+      .hero-grid,
+      .content-grid,
+      .footer-grid,
+      .cards-pilares{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media (max-width: 900px){
+      .hero-grid,
+      .content-grid,
+      .footer-grid,
+      .cards-pilares{
+        grid-template-columns:1fr;
+      }
+
+      .hero h1{
+        font-size:36px;
+      }
+
+      .panel-head h2{
+        font-size:24px;
+      }
 
       .topbar-inner{
-        gap:12px;
+        flex-wrap:wrap;
+        padding:14px 0;
       }
-
-      .hero-title{
-        font-size:26px;
-      }
-
-      .hero-bg{
-        height:280px;
-      }
-
-    }
-
-    @media(max-width:600px){
 
       .top-actions{
         width:100%;
-        justify-content:flex-end;
+        justify-content:center;
       }
 
-      .btn-primary{
-        width:100%;
+      .top-nav{
+        display:flex;
       }
 
-      .hero-content{
+      .top-nav ul{
+        justify-content:center;
+      }
+    }
+
+    @media (max-width: 600px){
+      .wrap{
+        width:min(100% - 20px, var(--max));
+      }
+
+      .hero-grid{
         padding:20px;
       }
 
-      .hero-title{
-        font-size:22px;
+      .hero h1{
+        font-size:30px;
       }
 
-      .hero-bg{
-        height:240px;
+      .btn-primary,
+      .btn-secondary{
+        width:100%;
       }
 
+      .top-actions{
+        flex-direction:column;
+        align-items:center;
+      }
+
+      .btn-login-chip{
+        justify-content:center;
+      }
+
+      .logo-text strong{
+        font-size:15px;
+      }
+
+      .logo-text span{
+        font-size:12px;
+      }
+
+      .match-table{
+        display:block;
+        overflow-x:auto;
+      }
+
+      .top-nav{
+        display:flex;
+        justify-content:center;
+      }
+
+      .top-nav ul{
+        justify-content:center;
+      }
+
+      .dropdown-menu{
+        left:50%;
+        transform:translateX(-50%);
+      }
     }
   </style>
 </head>
 <body>
-<!-- OVERLAY -->
-  <div id="overlay" class="sidebar-overlay"></div>
 
-  <!-- SIDEBAR -->
-  <aside id="sidebar" class="sidebar">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <div class="sidebar-header">
+  <aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
       <div class="sidebar-brand">
-        <img src="logo-liga.jfif">
+        <img src="logo-liga.jfif" alt="Logo Liga Goiana">
         <div class="sidebar-brand-text">
-          <strong>Liga Goiana</strong>
-          <span>Futebol de Base</span>
+          <strong>Liga Goiana de Futebol de Base</strong>
+          <span>Onde o talento encontra o futuro</span>
         </div>
       </div>
-
-      <button class="sidebar-close" onclick="fecharMenu()">×</button>
+      <button class="sidebar-close" id="sidebarClose" type="button">×</button>
     </div>
 
     <div class="sidebar-block">
-      <div class="sidebar-title">Menu Principal</div>
-
-      <nav class="side-menu">
-        <a href="index.html">
-          <span class="side-icon"><i class="fa-solid fa-house"></i></span>
-          Início
-        </a>
-
-        <a href="campeonatos.html">
-          <span class="side-icon"><i class="fa-solid fa-trophy"></i></span>
-          Campeonatos
-        </a>
-
-        <a href="tabela.html">
-          <span class="side-icon"><i class="fa-solid fa-table"></i></span>
-          Tabela
-        </a>
-
-        <a href="jogos.html">
-          <span class="side-icon"><i class="fa-solid fa-calendar-days"></i></span>
-          Jogos
-        </a>
-
-        <a href="sumula.html">
-          <span class="side-icon"><i class="fa-solid fa-file-signature"></i></span>
-          Súmula
-        </a>
-
-        <a href="noticias.html">
-          <span class="side-icon"><i class="fa-solid fa-newspaper"></i></span>
-          Notícias
-        </a>
-      </nav>
-    </div>
-
-    <div class="sidebar-block">
-      <div class="sidebar-title">Participantes</div>
-
-      <nav class="side-menu">
-        <a href="times.html">
-          <span class="side-icon"><i class="fa-solid fa-shield-halved"></i></span>
-          Times
-        </a>
-
-        <a href="jogadores.html">
-          <span class="side-icon"><i class="fa-solid fa-users"></i></span>
-          Jogadores
-        </a>
-
-        <a href="tecnicos.html">
-          <span class="side-icon"><i class="fa-solid fa-user-tie"></i></span>
-          Técnicos
-        </a>
-
-        <a href="arbitros.html">
-          <span class="side-icon"><i class="fa-solid fa-whistle"></i></span>
-          Árbitros
-        </a>
-
-        <a href="assistente.html">
-          <span class="side-icon"><i class="fa-solid fa-user-group"></i></span>
-          Assistentes
-        </a>
-      </nav>
-    </div>
-
-    <div class="sidebar-block">
-      <div class="sidebar-title">Acesso</div>
-
-      <div class="sidebar-admin-actions">
-        <a href="login.html" class="sidebar-login-btn">
-          <i class="fa-solid fa-user"></i> Login
-        </a>
-
-        <a href="admin.html" class="sidebar-admin-btn">
-          <i class="fa-solid fa-gears"></i> Painel ADM
-        </a>
+      <div class="sidebar-title">NAVEGAÇÃO PÚBLICA</div>
+      <div class="side-menu">
+        <a href="classificacao.html"><span class="side-icon"><i class="fa-solid fa-ranking-star"></i></span>Classificação</a>
+        <a href="jogos.html"><span class="side-icon"><i class="fa-solid fa-calendar-days"></i></span>Tabela de Jogos</a>
+        <a href="sumula.html"><span class="side-icon"><i class="fa-solid fa-file-signature"></i></span>Súmula</a>
+        <a href="artilharia.html"><span class="side-icon"><i class="fa-solid fa-futbol"></i></span>Artilharia</a>
+        <a href="cartoes.html"><span class="side-icon"><i class="fa-solid fa-id-card"></i></span>Cartões</a>
+        <a href="suspensos.html"><span class="side-icon"><i class="fa-solid fa-ban"></i></span>Suspensos</a>
+        <a href="arbitros.html"><span class="side-icon"><i class="fa-solid fa-whistle"></i></span>Árbitros</a>
+        <a href="assistentes.html"><span class="side-icon"><i class="fa-solid fa-user-group"></i></span>Assistentes</a>
       </div>
     </div>
 
+    <div class="sidebar-block">
+      <div class="sidebar-title">INFORMAÇÕES</div>
+      <div class="side-menu">
+        <a href="categorias.html"><span class="side-icon"><i class="fa-solid fa-layer-group"></i></span>Categorias</a>
+        <a href="times.html"><span class="side-icon"><i class="fa-solid fa-shield-halved"></i></span>Clubes</a>
+        <a href="regulamento.html"><span class="side-icon"><i class="fa-solid fa-book"></i></span>Regulamento</a>
+        <a href="#contato"><span class="side-icon"><i class="fa-solid fa-phone"></i></span>Contato</a>
+      </div>
+    </div>
+
+    <div class="sidebar-block">
+      <div class="sidebar-title">ÁREA DO SISTEMA</div>
+      <div class="side-menu">
+        <a href="login.html"><span class="side-icon"><i class="fa-solid fa-user"></i></span>Login / Cadastro</a>
+        <a href="admin.html" id="menuAdmin"><span class="side-icon"><i class="fa-solid fa-gears"></i></span>Painel ADM</a>
+      </div>
+    </div>
   </aside>
-<!-- TOPBAR -->
+
   <header class="topbar">
     <div class="wrap topbar-inner">
-
-      <!-- ESQUERDA -->
       <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle" type="button">☰</button>
 
-        <button class="menu-toggle" onclick="abrirMenu()">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-
-        <div class="topbar-logo">
-          <img src="logo-liga.jfif">
-
+        <a href="index.html" class="topbar-logo">
+          <img src="logo-liga.jfif" alt="Logo Liga Goiana">
           <div class="logo-text">
-            <strong>LIGA GOIANA</strong>
-            <span>FUTEBOL DE BASE</span>
+            <strong>Liga Goiana de Futebol de Base</strong>
+            <span>Onde o talento encontra o futuro</span>
           </div>
-        </div>
-
-      </div>
-
-      <!-- DIREITA -->
-      <div class="top-actions">
-        <a href="login.html" class="btn-login-chip">
-          <span class="login-avatar">
-            <i class="fa-solid fa-user"></i>
-          </span>
-          Entrar
         </a>
       </div>
 
-      <!-- MENU CENTRAL -->
+      <div class="top-actions">
+        <a href="login.html" class="btn-login-chip">
+          <span class="login-avatar"><i class="fa-solid fa-user"></i></span>
+          <span>Login</span>
+        </a>
+      </div>
+
       <nav class="top-nav">
         <div class="top-nav-scroll">
           <ul>
-
             <li><a href="index.html">Início</a></li>
 
-            <!-- CAMPEONATOS -->
-            <li class="dropdown">
-              <button class="dropdown-toggle" onclick="toggleDropdown(event, this)">
-                Campeonatos
-                <i class="fa-solid fa-chevron-down"></i>
+            <li class="dropdown" id="campeonatosDropdown">
+              <button class="dropdown-toggle" id="campeonatosToggle" type="button">
+                Campeonatos <i class="fa-solid fa-chevron-down"></i>
               </button>
-
               <div class="dropdown-menu">
-                <a href="campeonatos.html">Todos Campeonatos</a>
-                <a href="tabela.html">Tabela</a>
-                <a href="jogos.html">Jogos</a>
-                <a href="sumula.html">Súmula</a>
+                <a href="campeonatos.html">Todos os campeonatos</a>
+                <a href="classificacao.html">Classificação</a>
+                <a href="artilharia.html">Artilharia</a>
+                <a href="categorias.html">Categoria</a>
+                <a href="cartoes.html">Cartões</a>
+                <a href="suspensos.html">Suspensos</a>
+                <a href="regulamento.html">Regulamentos</a>
               </div>
             </li>
 
-            <!-- PARTICIPANTES -->
-            <li class="dropdown">
-              <button class="dropdown-toggle" onclick="toggleDropdown(event, this)">
-                Participantes
-                <i class="fa-solid fa-chevron-down"></i>
-              </button>
+            <li><a href="jogadores.html">Jogadores</a></li>
 
+            <li class="dropdown" id="participantesDropdown">
+              <button class="dropdown-toggle" id="participantesToggle" type="button">
+                Participantes <i class="fa-solid fa-chevron-down"></i>
+              </button>
               <div class="dropdown-menu">
-                <a href="times.html">Times</a>
-                <a href="jogadores.html">Jogadores</a>
+                <a href="times.html">Equipes</a>
                 <a href="tecnicos.html">Técnicos</a>
-                <a href="arbitros.html">Árbitros</a>
-                <a href="assistente.html">Assistentes</a>
+                <a href="arbitros.html">Árbitro</a>
+                <a href="assistentes.html">Assistente</a>
               </div>
             </li>
 
-            <li><a href="noticias.html">Notícias</a></li>
-
+            <li><a href="galeria.html">Galeria</a></li>
           </ul>
         </div>
       </nav>
-
     </div>
   </header>
-<!-- HERO -->
-  <section class="wrap hero">
-    <img src="fundo.png" class="hero-bg">
+<main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-card">
+          <div class="hero-grid">
+            <div class="hero-content">
+              <div class="eyebrow">
+                <i class="fa-solid fa-trophy"></i>
+                Liga Oficial
+              </div>
 
-    <div class="hero-content">
-      <div class="hero-title">
-        Bem-vindo à Liga Goiana de Base
+              <h1>Bem-vindo à Liga Goiana de Base</h1>
+
+              <p>Onde o talento encontra o futuro!</p>
+
+              <p>
+                Competição, formação e desenvolvimento para revelar talentos
+                e fortalecer o futebol de base em Goiás.
+              </p>
+
+              <div class="hero-actions">
+                <a href="campeonatos.html" class="btn-primary">
+                  <i class="fa-solid fa-trophy"></i> Ver Campeonatos
+                </a>
+                <a href="times.html" class="btn-secondary">
+                  <i class="fa-solid fa-users"></i> Conhecer Equipes
+                </a>
+              </div>
+
+              <div class="status-user" id="statusUser"></div>
+            </div>
+
+            <div class="hero-art">
+              <img src="hero-liga.jpeg" alt="Liga Goiana Elite de Base" onerror="this.src='fundo.png'">
+            </div>
+          </div>
+        </div>
+
+        <div class="cards-pilares">
+          <div class="pillar">
+            <div class="pillar-icon"><i class="fa-solid fa-trophy"></i></div>
+            <div class="pillar-text">
+              <h3>Competição de alto nível</h3>
+              <p>Jogos organizados e arbitragem qualificada.</p>
+            </div>
+          </div>
+
+          <div class="pillar">
+            <div class="pillar-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="pillar-text">
+              <h3>Formação de atletas</h3>
+              <p>Desenvolvimento dentro e fora de campo.</p>
+            </div>
+          </div>
+
+          <div class="pillar">
+            <div class="pillar-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="pillar-text">
+              <h3>Desenvolvimento que transforma</h3>
+              <p>Estrutura que impulsiona sonhos e resultados.</p>
+            </div>
+          </div>
+
+          <div class="pillar">
+            <div class="pillar-icon"><i class="fa-solid fa-handshake"></i></div>
+            <div class="pillar-text">
+              <h3>Respeito, união e propósito</h3>
+              <p>Valores que constroem campeões para a vida.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-grid">
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-head-title">
+                <div class="panel-head-icon"><i class="fa-solid fa-calendar-days"></i></div>
+                <h2>Próximos Jogos</h2>
+              </div>
+              <a href="jogos.html">Ver todos <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <table class="match-table">
+              <thead>
+                <tr>
+                  <th>Data e Hora</th>
+                  <th>Confronto</th>
+                  <th>Categoria</th>
+                  <th>Local</th>
+                </tr>
+              </thead>
+              <tbody id="gamesTableBody"></tbody>
+            </table>
+          </section>
+
+          <aside class="panel">
+            <div class="panel-head">
+              <div class="panel-head-title">
+                <div class="panel-head-icon"><i class="fa-solid fa-newspaper"></i></div>
+                <h2>Últimas Notícias</h2>
+              </div>
+              <a href="noticias.html">Ver notícias <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="news-list" id="newsList"></div>
+          </aside>
+        </div>
+<section class="cta-banner">
+          <div class="cta-banner-inner">
+            <div>
+              <h3>Faça parte dessa história!</h3>
+              <p>Inscreva sua equipe e viva o futebol de base no mais alto nível.</p>
+            </div>
+
+            <a
+              href="https://wa.me/5562981916316?text=Ol%C3%A1%2C%20quero%20participar%20da%20Liga%20Goiana%20de%20Futebol%20de%20Base."
+              class="btn-primary"
+              target="_blank"
+            >
+              <i class="fa-solid fa-trophy"></i> Quero Participar!
+            </a>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contato">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-card">
+          <div class="footer-brand">
+            <img src="logo-liga.jfif" alt="Logo da Liga">
+            <div class="footer-brand-text">
+              <h3>Liga Goiana de Futebol de Base</h3>
+              <p>Onde o talento encontra o futuro!</p>
+            </div>
+          </div>
+
+          <div class="footer-social">
+            <a href="https://www.instagram.com/" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.facebook.com/" target="_blank" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="https://www.youtube.com/" target="_blank" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-card">
+          <h4>Acesso Rápido</h4>
+          <a href="index.html">Início</a>
+          <a href="campeonatos.html">Campeonatos</a>
+          <a href="times.html">Equipes</a>
+          <a href="jogos.html">Resultados</a>
+          <a href="arbitros.html">Árbitros</a>
+          <a href="#contato">Contato</a>
+        </div>
+
+        <div class="footer-card">
+          <h4>Contato</h4>
+
+          <a href="https://wa.me/5562984284785" target="_blank" class="footer-contact-line">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>(62) 98428-4785</span>
+          </a>
+
+          <a href="mailto:ligagoianiafutebol@gmail.com" class="footer-contact-line">
+            <i class="fa-solid fa-envelope"></i>
+            <span>ligagoianiafutebol@gmail.com</span>
+          </a>
+
+          <div class="footer-contact-line">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>Goiânia - GO</span>
+          </div>
+        </div>
+
+        <div class="footer-card">
+          <h4>Siga a Liga</h4>
+          <p style="color: var(--muted); line-height:1.6; margin-bottom:12px;">Acompanhe nossas redes sociais</p>
+
+          <div class="footer-social">
+            <a href="https://www.instagram.com/" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.facebook.com/" target="_blank" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="https://www.youtube.com/" target="_blank" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
       </div>
 
-      <div class="hero-sub">
-        Acompanhe campeonatos, jogos, estatísticas e o desempenho dos atletas da base em um só lugar.
+      <div class="copyright">
+        © 2026 Liga Goiana de Futebol de Base. Todos os direitos reservados.
       </div>
-
-      <a href="campeonatos.html" class="btn-primary">
-        Ver Campeonatos
-      </a>
     </div>
-  </section>
-
-  <!-- CAMPEONATOS -->
-  <section class="wrap section">
-    <div class="section-header">
-      <h2>Campeonatos</h2>
-      <a href="campeonatos.html">Ver todos</a>
-    </div>
-
-    <div class="grid">
-      <div class="card">
-        <h3>Copa União</h3>
-        <small>Sub-11 até Sub-18</small>
-      </div>
-
-      <div class="card">
-        <h3>Liga Elite</h3>
-        <small>Sub-11 até Sub-18</small>
-      </div>
-    </div>
-  </section>
-
-  <!-- JOGOS -->
-  <section class="wrap section">
-    <div class="section-header">
-      <h2>Próximos Jogos</h2>
-      <a href="jogos.html">Ver jogos</a>
-    </div>
-
-    <div class="grid">
-      <div class="card">
-        <h3>Atlético GO vs Vila Nova</h3>
-        <small>Sub-15 | 10:00 | Campo 1</small>
-      </div>
-
-      <div class="card">
-        <h3>Campinas vs Hidrolândia</h3>
-        <small>Sub-13 | 11:30 | Campo 2</small>
-      </div>
-    </div>
-  </section>
-
-  <!-- NOTÍCIAS -->
-  <section class="wrap section">
-    <div class="section-header">
-      <h2>Últimas Notícias</h2>
-      <a href="noticias.html">Ver notícias</a>
-    </div>
-
-    <div class="grid">
-      <div class="card">
-        <h3>Campeonato começa</h3>
-        <small>Abertura oficial da temporada com todos os times.</small>
-      </div>
-
-      <div class="card">
-        <h3>Novos talentos</h3>
-        <small>Jogadores se destacam nas categorias de base.</small>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    © Liga Goiana de Futebol de Base
   </footer>
 <script>
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const menuToggle = document.getElementById("menuToggle");
+    const sidebarClose = document.getElementById("sidebarClose");
 
-    function abrirMenu(){
-      document.getElementById("sidebar").classList.add("open");
-      document.getElementById("overlay").classList.add("show");
+    const campeonatosDropdown = document.getElementById("campeonatosDropdown");
+    const campeonatosToggle = document.getElementById("campeonatosToggle");
+
+    const participantesDropdown = document.getElementById("participantesDropdown");
+    const participantesToggle = document.getElementById("participantesToggle");
+
+    const statusUser = document.getElementById("statusUser");
+    const menuAdmin = document.getElementById("menuAdmin");
+    const gamesTableBody = document.getElementById("gamesTableBody");
+    const newsList = document.getElementById("newsList");
+
+    const usuarioLogado = null;
+
+    function openSidebar() {
+      if (!sidebar || !sidebarOverlay) return;
+      sidebar.classList.add("open");
+      sidebarOverlay.classList.add("show");
+      document.body.style.overflow = "hidden";
     }
 
-    function fecharMenu(){
-      document.getElementById("sidebar").classList.remove("open");
-      document.getElementById("overlay").classList.remove("show");
+    function closeSidebar() {
+      if (!sidebar || !sidebarOverlay) return;
+      sidebar.classList.remove("open");
+      sidebarOverlay.classList.remove("show");
+      document.body.style.overflow = "";
     }
 
-    document.getElementById("overlay").addEventListener("click", fecharMenu);
+    function closeAllDropdowns() {
+      if (campeonatosDropdown) campeonatosDropdown.classList.remove("open");
+      if (participantesDropdown) participantesDropdown.classList.remove("open");
+    }
 
-    function toggleDropdown(event, el){
-      event.stopPropagation();
-
-      const parent = el.parentElement;
-      const todos = document.querySelectorAll(".dropdown");
-
-      todos.forEach(d => {
-        if(d !== parent){
-          d.classList.remove("open");
-        }
+    if (menuToggle) {
+      menuToggle.addEventListener("click", function(event) {
+        event.stopPropagation();
+        openSidebar();
       });
-
-      parent.classList.toggle("open");
     }
 
-    document.addEventListener("click", function(){
-      document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("open"));
-    });
-
-    document.querySelectorAll(".dropdown-menu").forEach(menu => {
-      menu.addEventListener("click", function(e){
-        e.stopPropagation();
-      });
-    });
-
-  </script>
-<script>
-
-    // 🔥 GARANTE QUE DROPDOWN FUNCIONE EM MOBILE TAMBÉM
-    function ajustarDropdownMobile(){
-
-      const largura = window.innerWidth;
-
-      document.querySelectorAll(".dropdown-toggle").forEach(btn => {
-
-        btn.onclick = function(e){
-          e.stopPropagation();
-
-          const parent = this.parentElement;
-
-          // fecha outros
-          document.querySelectorAll(".dropdown").forEach(d => {
-            if(d !== parent){
-              d.classList.remove("open");
-            }
-          });
-
-          // toggle atual
-          parent.classList.toggle("open");
-        };
-
-      });
-
+    if (sidebarClose) {
+      sidebarClose.addEventListener("click", closeSidebar);
     }
 
-    ajustarDropdownMobile();
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener("click", closeSidebar);
+    }
 
-    window.addEventListener("resize", ajustarDropdownMobile);
+    if (campeonatosToggle) {
+      campeonatosToggle.addEventListener("click", function(event) {
+        event.stopPropagation();
+        if (participantesDropdown) participantesDropdown.classList.remove("open");
+        campeonatosDropdown.classList.toggle("open");
+      });
+    }
 
-  </script>
-<script>
-    // fecha dropdown com ESC
-    document.addEventListener("keydown", function(e){
-      if(e.key === "Escape"){
-        fecharMenu();
-        document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("open"));
+    if (participantesToggle) {
+      participantesToggle.addEventListener("click", function(event) {
+        event.stopPropagation();
+        if (campeonatosDropdown) campeonatosDropdown.classList.remove("open");
+        participantesDropdown.classList.toggle("open");
+      });
+    }
+
+    document.addEventListener("click", function(event) {
+      const clickedInsideSidebar = sidebar && sidebar.contains(event.target);
+      const clickedMenuToggle = menuToggle && menuToggle.contains(event.target);
+      const clickedCampeonatos = campeonatosDropdown && campeonatosDropdown.contains(event.target);
+      const clickedParticipantes = participantesDropdown && participantesDropdown.contains(event.target);
+
+      if (sidebar && sidebar.classList.contains("open") && !clickedInsideSidebar && !clickedMenuToggle) {
+        closeSidebar();
+      }
+
+      if (!clickedCampeonatos && !clickedParticipantes) {
+        closeAllDropdowns();
       }
     });
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") {
+        closeSidebar();
+        closeAllDropdowns();
+      }
+    });
+
+    if (menuAdmin) {
+      menuAdmin.style.display = "none";
+    }
+
+    if (statusUser) {
+      statusUser.innerHTML = "";
+      statusUser.style.display = "none";
+    }
+
+    const games = [
+      {
+        dataHora: "20/04/2026 - 08:00",
+        confronto: "Atlético GO x Vila Nova",
+        categoria: "Sub-15",
+        local: "Campo 1"
+      },
+      {
+        dataHora: "20/04/2026 - 10:00",
+        confronto: "Campinas x Hidrolândia",
+        categoria: "Sub-13",
+        local: "Campo 2"
+      },
+      {
+        dataHora: "21/04/2026 - 09:30",
+        confronto: "Goiás x Bela Vista",
+        categoria: "Sub-17",
+        local: "Arena Central"
+      },
+      {
+        dataHora: "21/04/2026 - 14:00",
+        confronto: "Trindade x Aparecida",
+        categoria: "Sub-11",
+        local: "Campo Municipal"
+      }
+    ];
+
+    const news = [
+      {
+        titulo: "Liga Goiana inicia nova temporada com grandes expectativas",
+        texto: "A abertura da competição promete movimentar o futebol de base com organização, talento e muita emoção."
+      },
+      {
+        titulo: "Categorias de base seguem em expansão em Goiás",
+        texto: "A Liga Goiana fortalece o desenvolvimento esportivo e amplia oportunidades para atletas de várias idades."
+      },
+      {
+        titulo: "Inscrições abertas para equipes interessadas",
+        texto: "Clubes e projetos já podem entrar em contato para participar da próxima edição da Liga Goiana de Futebol de Base."
+      }
+    ];
+
+    if (gamesTableBody) {
+      games.forEach(jogo => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${jogo.dataHora}</td>
+          <td>${jogo.confronto}</td>
+          <td>${jogo.categoria}</td>
+          <td>${jogo.local}</td>
+        `;
+        gamesTableBody.appendChild(tr);
+      });
+    }
+
+    if (newsList) {
+      news.forEach(item => {
+        const article = document.createElement("div");
+        article.className = "news-item";
+        article.innerHTML = `
+          <h3>${item.titulo}</h3>
+          <p>${item.texto}</p>
+        `;
+        newsList.appendChild(article);
+      });
+    }
   </script>
 
 </body>
