@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Admin - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root{
+      --bg:#0b1f3a;
+      --bg-dark:#08172c;
+      --card:#102a52;
+      --card-hover:#153766;
+      --gold:#f7c600;
+      --gold-soft:rgba(247,198,0,.12);
+      --gold-line:rgba(247,198,0,.30);
+      --white:#ffffff;
+      --muted:#d6def0;
+      --shadow:0 8px 22px rgba(0,0,0,.28);
+      --radius:14px;
+      --transition:.25s ease;
+      --max:1280px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:Arial, sans-serif;
+      background:
+        linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+        url("fundo.png") center/cover fixed no-repeat;
+      color:var(--white);
+      min-height:100vh;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    button{
+      font-family:inherit;
+      cursor:pointer;
+      transition:var(--transition);
+      border:none;
+    }
+
+    .wrap{
+      width:min(100% - 30px, var(--max));
+      margin:0 auto;
+    }
+
+    header{
+      background:rgba(8,23,44,.96);
+      border-bottom:3px solid var(--gold);
+      box-shadow:var(--shadow);
+    }
+
+    .header-inner{
+      min-height:82px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      padding:14px 0;
+    }
+
+    .header-left,
+    .header-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .header-title{
+      flex:1;
+      text-align:center;
+      font-size:22px;
+      font-weight:700;
+      color:var(--white);
+    }
+
+    .top-btn{
+      border:none;
+      padding:10px 16px;
+      border-radius:10px;
+      font-weight:bold;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .btn-light{
+      background:#fff4cf;
+      color:#111;
+    }
+
+    .btn-light:hover{
+      background:var(--gold);
+      transform:translateY(-2px);
+    }
+
+    .btn-gold{
+      background:var(--gold);
+      color:#111;
+    }
+
+    .btn-gold:hover{
+      filter:brightness(1.05);
+      transform:translateY(-2px);
+    }
+
+    .container{
+      padding:22px 0 30px;
+    }
+
+    .hero-panel{
+      background:linear-gradient(180deg, rgba(16,42,82,.95), rgba(10,28,56,.96));
+      border:1px solid var(--gold-line);
+      border-radius:20px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:22px;
+    }
+
+    .hero-panel h2{
+      font-size:28px;
+      color:var(--white);
+      margin-bottom:8px;
+    }
+
+    .hero-panel p{
+      color:var(--muted);
+      line-height:1.6;
+      max-width:900px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:14px;
+      margin-bottom:24px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+      border-radius:16px;
+      padding:18px;
+      text-align:center;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.05);
+      transition:var(--transition);
+    }
+
+    .card:hover{
+      transform:translateY(-3px);
+      border-color:var(--gold-line);
+    }
+
+    .card h3{
+      margin:0;
+      font-size:34px;
+      color:var(--gold);
+    }
+
+    .card p{
+      margin:10px 0 0;
+      font-size:15px;
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    .section-title{
+      font-size:20px;
+      color:var(--gold);
+      margin:0 0 14px;
+      font-weight:700;
+    }
+
+    .menu{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+      gap:14px;
+    }
+
+    .menu a{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+      color:white;
+      padding:15px 16px;
+      border-radius:14px;
+      text-align:left;
+      font-weight:bold;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.05);
+      transition:var(--transition);
+    }
+
+    .menu a i{
+      color:var(--gold);
+      width:20px;
+      text-align:center;
+      flex-shrink:0;
+    }
+
+    .menu a:hover{
+      background:var(--card-hover);
+      border-color:var(--gold-line);
+      color:var(--gold);
+      transform:translateY(-2px);
+    }
+
+    .menu a:hover i{
+      color:var(--gold);
+    }
+
+    .admin-block{
+      background:rgba(16,42,82,.45);
+      border:1px solid rgba(255,255,255,.05);
+      border-radius:18px;
+      padding:18px;
+      margin-bottom:18px;
+    }
+
+    .footer-note{
+      margin-top:20px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      text-align:center;
+    }
+
+    @media (max-width: 900px){
+      .header-title{
+        order:3;
+        width:100%;
+        text-align:center;
+      }
+
+      .header-left,
+      .header-right{
+        width:100%;
+        justify-content:center;
+      }
+
+      .hero-panel h2{
+        font-size:24px;
+      }
+    }
+
+    @media (max-width: 600px){
+      .top-btn{
+        width:100%;
+        justify-content:center;
+      }
+
+      .header-left,
+      .header-right{
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .menu{
+        grid-template-columns:1fr;
+      }
+
+      .grid{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="wrap header-inner">
+      <div class="header-left">
+        <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+          <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
+
+        <a href="index.html" class="top-btn btn-light">
+          <i class="fa-solid fa-house"></i> Página Inicial
+        </a>
+      </div>
+
+      <div class="header-title">Painel do Administrador</div>
+
+      <div class="header-right">
+        <button class="top-btn btn-gold" onclick="logout()">
+          <i class="fa-solid fa-right-from-bracket"></i> Sair
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap container">
+
+    <section class="hero-panel">
+      <h2>Gestão Geral da Liga</h2>
+      <p>
+        Aqui você administra campeonatos, categorias, equipes, jogadores, comissão técnica,
+        arbitragem, jogos, súmulas, tabelas, notícias e configurações do sistema.
+      </p>
+    </section>
+
+    <div class="grid">
+      <div class="card">
+        <h3 id="totalCampeonatos">0</h3>
+        <p>Campeonatos</p>
+      </div>
+
+      <div class="card">
+        <h3 id="totalCategorias">0</h3>
+        <p>Categorias</p>
+      </div>
+
+      <div class="card">
+        <h3 id="totalTimes">0</h3>
+        <p>Times</p>
+      </div>
+
+      <div class="card">
+        <h3 id="totalJogadores">0</h3>
+        <p>Jogadores</p>
+      </div>
+
+      <div class="card">
+        <h3 id="totalTecnicos">0</h3>
+        <p>Técnicos</p>
+      </div>
+
+      <div class="card">
+        <h3 id="totalArbitros">0</h3>
+        <p>Árbitros</p>
+      </div>
+
+      <div class="card">
+        <h3 id="totalJogos">0</h3>
+        <p>Jogos</p>
+      </div>
+
+      <div class="card">
+        <h3 id="totalSumulas">0</h3>
+        <p>Súmulas</p>
+      </div>
+    </div>
+
+    <div class="admin-block">
+      <h3 class="section-title">Cadastros e Estrutura</h3>
+      <div class="menu">
+        <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos ADM</a>
+        <a href="categorias-admin.html"><i class="fa-solid fa-layer-group"></i> Categorias ADM</a>
+        <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times ADM</a>
+        <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores ADM</a>
+        <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos ADM</a>
+        <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros ADM</a>
+        <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes ADM</a>
+      </div>
+    </div>
+
+    <div class="admin-block">
+      <h3 class="section-title">Competições e Operação</h3>
+      <div class="menu">
+        <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos ADM</a>
+        <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Criar Súmula ADM</a>
+        <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Ver Súmulas ADM</a>
+        <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Tabelas ADM</a>
+        <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação ADM</a>
+        <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas de Arbitragem</a>
+      </div>
+    </div>
+
+    <div class="admin-block">
+      <h3 class="section-title">Comunicação e Sistema</h3>
+      <div class="menu">
+        <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias ADM</a>
+        <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria ADM</a>
+        <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários e Permissões</a>
+        <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Configurações</a>
+        <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Painel administrativo da Liga Goiana de Futebol de Base.
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCyArj4yRlEl-yibkc0VEmL_4UJpRHHQSc",
+      authDomain: "liga-goiana-base.firebaseapp.com",
+      projectId: "liga-goiana-base",
+      storageBucket: "liga-goiana-base.firebasestorage.app",
+      messagingSenderId: "952863591183",
+      appId: "1:952863591183:web:4eea34f494ba2dd754cc7a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    function normalizarTexto(texto){
+      return String(texto || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function contarCategoriasDosCampeonatos(campeonatos){
+      const categorias = new Set();
+
+      campeonatos.forEach(c => {
+        const lista = Array.isArray(c.categorias) ? c.categorias : [];
+        lista.forEach(cat => {
+          if(cat) categorias.add(String(cat));
+        });
+      });
+
+      return categorias.size;
+    }
+
+    async function carregarTotaisPainel(){
+      try{
+        const [
+          snapCampeonatos,
+          snapTimes,
+          snapJogadores,
+          snapTecnicos,
+          snapArbitros,
+          snapJogos,
+          snapSumulas
+        ] = await Promise.all([
+          getDocs(collection(db, "campeonatos")),
+          getDocs(collection(db, "times")),
+          getDocs(collection(db, "jogadores")),
+          getDocs(collection(db, "tecnicos")),
+          getDocs(collection(db, "arbitros")),
+          getDocs(collection(db, "jogos")),
+          getDocs(collection(db, "sumulas"))
+        ]);
+
+        const campeonatos = [];
+        snapCampeonatos.forEach(docSnap => {
+          campeonatos.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        document.getElementById("totalCampeonatos").textContent = snapCampeonatos.size;
+        document.getElementById("totalCategorias").textContent = contarCategoriasDosCampeonatos(campeonatos);
+        document.getElementById("totalTimes").textContent = snapTimes.size;
+        document.getElementById("totalJogadores").textContent = snapJogadores.size;
+        document.getElementById("totalTecnicos").textContent = snapTecnicos.size;
+        document.getElementById("totalArbitros").textContent = snapArbitros.size;
+        document.getElementById("totalJogos").textContent = snapJogos.size;
+        document.getElementById("totalSumulas").textContent = snapSumulas.size;
+      }catch(erro){
+        console.error("Erro ao carregar totais do painel:", erro);
+      }
+    }
+
+    window.logout = function() {
+      signOut(auth).then(() => {
+        alert("Saiu do sistema");
+        window.location.href = "index.html";
+      }).catch((error) => {
+        alert("Erro ao sair.");
+        console.error(error);
+      });
+    };
+
+    window.voltarPagina = function() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "index.html";
+      }
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      if(!user){
+        window.location.href = "login.html";
+        return;
+      }
+
+      carregarTotaisPainel();
+    });
+  </script>
+
+</body>
+</html>
