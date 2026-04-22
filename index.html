@@ -292,9 +292,9 @@
 
     .top-nav{
       width:100%;
-      order:3;
       display:flex;
       justify-content:center;
+      order:3;
     }
 
     .top-nav ul{
@@ -815,11 +815,7 @@
     }
 
     #menuAdmin{
-      display:none;
-      margin-top:10px;
-      background:rgba(255,212,0,.08);
-      border-color:var(--yellow-line);
-      color:var(--yellow);
+      display:flex;
     }
 
     @media (max-width: 1180px){
@@ -854,15 +850,7 @@
 
       .top-actions{
         width:100%;
-        justify-content:center;
-      }
-
-      .top-nav{
-        display:flex;
-      }
-
-      .top-nav ul{
-        justify-content:center;
+        justify-content:flex-start;
       }
     }
 
@@ -886,7 +874,7 @@
 
       .top-actions{
         flex-direction:column;
-        align-items:center;
+        align-items:stretch;
       }
 
       .btn-login-chip{
@@ -904,20 +892,6 @@
       .match-table{
         display:block;
         overflow-x:auto;
-      }
-
-      .top-nav{
-        display:flex;
-        justify-content:center;
-      }
-
-      .top-nav ul{
-        justify-content:center;
-      }
-
-      .dropdown-menu{
-        left:50%;
-        transform:translateX(-50%);
       }
     }
   </style>
@@ -943,7 +917,7 @@
       <div class="side-menu">
         <a href="classificacao.html"><span class="side-icon"><i class="fa-solid fa-ranking-star"></i></span>Classificação</a>
         <a href="jogos.html"><span class="side-icon"><i class="fa-solid fa-calendar-days"></i></span>Tabela de Jogos</a>
-        <a href="sumula.html"><span class="side-icon"><i class="fa-solid fa-file-signature"></i></span>Súmula</a>
+        <a href="sumula-publica.html"><span class="side-icon"><i class="fa-solid fa-file-signature"></i></span>Súmula</a>
         <a href="artilharia.html"><span class="side-icon"><i class="fa-solid fa-futbol"></i></span>Artilharia</a>
         <a href="cartoes.html"><span class="side-icon"><i class="fa-solid fa-id-card"></i></span>Cartões</a>
         <a href="suspensos.html"><span class="side-icon"><i class="fa-solid fa-ban"></i></span>Suspensos</a>
@@ -989,13 +963,6 @@
         </a>
       </div>
 
-      <div class="top-actions">
-        <a href="login.html" class="btn-login-chip">
-          <span class="login-avatar"><i class="fa-solid fa-user"></i></span>
-          <span>Login</span>
-        </a>
-      </div>
-
       <nav class="top-nav">
         <ul>
           <li><a href="index.html">Início</a></li>
@@ -1032,6 +999,13 @@
           <li><a href="galeria.html">Galeria</a></li>
         </ul>
       </nav>
+
+      <div class="top-actions">
+        <a href="login.html" class="btn-login-chip">
+          <span class="login-avatar"><i class="fa-solid fa-user"></i></span>
+          <span>Login</span>
+        </a>
+      </div>
     </div>
   </header>
 
@@ -1072,7 +1046,6 @@
             </div>
           </div>
         </div>
-
         <div class="cards-pilares">
           <div class="pillar">
             <div class="pillar-icon"><i class="fa-solid fa-trophy"></i></div>
@@ -1234,13 +1207,10 @@
     const sidebarOverlay = document.getElementById("sidebarOverlay");
     const menuToggle = document.getElementById("menuToggle");
     const sidebarClose = document.getElementById("sidebarClose");
-
     const campeonatosDropdown = document.getElementById("campeonatosDropdown");
     const campeonatosToggle = document.getElementById("campeonatosToggle");
-
     const participantesDropdown = document.getElementById("participantesDropdown");
     const participantesToggle = document.getElementById("participantesToggle");
-
     const statusUser = document.getElementById("statusUser");
     const menuAdmin = document.getElementById("menuAdmin");
     const gamesTableBody = document.getElementById("gamesTableBody");
@@ -1321,7 +1291,7 @@
     });
 
     if (menuAdmin) {
-      menuAdmin.style.display = "none";
+      menuAdmin.style.display = "flex";
     }
 
     if (statusUser) {
