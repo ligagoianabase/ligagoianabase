@@ -206,13 +206,13 @@
       color:var(--yellow);
       flex-shrink:0;
     }
-
-    .topbar{
+.topbar{
       position:relative;
       z-index:100;
       backdrop-filter:blur(12px);
       background:rgba(1,9,24,.88);
       border-bottom:1px solid rgba(255,255,255,.08);
+      overflow:visible;
     }
 
     .topbar-inner{
@@ -223,6 +223,7 @@
       gap:18px;
       padding:14px 0;
       flex-wrap:wrap;
+      overflow:visible;
     }
 
     .topbar-left{
@@ -289,12 +290,15 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
-.top-nav{
+
+    .top-nav{
       width:100%;
       display:flex;
       justify-content:center;
       order:3;
       overflow:visible;
+      position:relative;
+      z-index:150;
     }
 
     .top-nav ul{
@@ -305,6 +309,7 @@
       justify-content:center;
       width:100%;
       padding-bottom:2px;
+      overflow:visible;
     }
 
     .top-nav li{
@@ -362,7 +367,7 @@
       box-shadow:var(--shadow);
       padding:8px;
       display:none;
-      z-index:120;
+      z-index:9999;
     }
 
     .dropdown.open .dropdown-menu{
@@ -390,9 +395,9 @@
       gap:10px;
       flex-shrink:0;
       position:relative;
+      z-index:180;
     }
-
-    .btn-primary,
+.btn-primary,
     .btn-secondary,
     .btn-login-chip{
       display:inline-flex;
@@ -503,7 +508,8 @@
       width:18px;
       flex-shrink:0;
     }
-.user-dropdown{
+
+    .user-dropdown{
       position:absolute;
       top:calc(100% + 10px);
       right:0;
@@ -515,7 +521,7 @@
       box-shadow:var(--shadow);
       padding:14px;
       display:none;
-      z-index:200;
+      z-index:9999;
     }
 
     .user-dropdown.open{
@@ -590,8 +596,7 @@
       font-size:12px;
       font-weight:700;
     }
-
-    .user-details{
+.user-details{
       display:grid;
       gap:10px;
       margin-bottom:14px;
@@ -642,6 +647,8 @@
 
     .hero{
       padding:34px 0 20px;
+      position:relative;
+      z-index:1;
     }
 
     .hero-card{
@@ -717,7 +724,8 @@
       border:1px solid rgba(255,255,255,.08);
       box-shadow:var(--shadow);
     }
-.cards-pilares{
+
+    .cards-pilares{
       display:grid;
       grid-template-columns:repeat(4, 1fr);
       gap:18px;
@@ -765,8 +773,7 @@
       line-height:1.6;
       color:var(--muted);
     }
-
-    .content-grid{
+.content-grid{
       display:grid;
       grid-template-columns:1.3fr .9fr;
       gap:22px;
@@ -918,7 +925,8 @@
       border-top:1px solid rgba(255,255,255,.08);
       padding:40px 0 18px;
     }
-.footer-grid{
+
+    .footer-grid{
       display:grid;
       grid-template-columns:1.2fr .8fr .8fr .8fr;
       gap:20px;
@@ -936,8 +944,7 @@
       margin-bottom:14px;
       font-size:18px;
     }
-
-    .footer-brand{
+.footer-brand{
       display:flex;
       gap:14px;
       align-items:center;
@@ -1020,7 +1027,7 @@
       display:none;
     }
 
-    @media (max-width: 1180px){
+    @media (max-width:1180px){
       .hero-grid,
       .content-grid,
       .footer-grid,
@@ -1029,7 +1036,7 @@
       }
     }
 
-    @media (max-width: 900px){
+    @media (max-width:900px){
       .hero-grid,
       .content-grid,
       .footer-grid,
@@ -1055,6 +1062,15 @@
         justify-content:flex-end;
       }
 
+      .top-nav{
+        overflow:visible;
+      }
+
+      .top-nav ul{
+        flex-wrap:wrap;
+        justify-content:center;
+      }
+
       .top-nav a,
       .dropdown-toggle{
         padding:9px 12px;
@@ -1062,9 +1078,61 @@
       }
     }
 
-    @media (max-width: 600px){
+    @media (max-width:600px){
       .wrap{
         width:min(100% - 20px, var(--max));
+      }
+
+      .topbar{
+        overflow:visible;
+      }
+
+      .topbar-inner{
+        overflow:visible;
+        gap:12px;
+      }
+
+      .topbar-left{
+        width:100%;
+        justify-content:center;
+      }
+
+      .top-actions{
+        width:100%;
+        flex-direction:row;
+        align-items:center;
+        justify-content:center;
+      }
+
+      .top-nav{
+        justify-content:center;
+        overflow:visible;
+        width:100%;
+      }
+
+      .top-nav ul{
+        width:100%;
+        min-width:100%;
+        justify-content:center;
+        flex-wrap:wrap;
+        gap:5px;
+      }
+
+      .top-nav a,
+      .dropdown-toggle{
+        padding:8px 9px;
+        font-size:12px;
+        border-radius:10px;
+      }
+
+      .dropdown-menu{
+        position:absolute;
+        left:50%;
+        transform:translateX(-50%);
+        top:calc(100% + 8px);
+        min-width:220px;
+        max-width:92vw;
+        z-index:9999;
       }
 
       .hero-grid{
@@ -1078,12 +1146,6 @@
       .btn-primary,
       .btn-secondary{
         width:100%;
-      }
-
-      .top-actions{
-        width:auto;
-        flex-direction:row;
-        align-items:center;
       }
 
       .btn-login-chip{
@@ -1103,44 +1165,13 @@
         overflow-x:auto;
       }
 
-      .top-nav{
-        justify-content:center;
-        overflow-x:auto;
-        scrollbar-width:none;
-        -ms-overflow-style:none;
-      }
-
-      .top-nav::-webkit-scrollbar{
-        display:none;
-      }
-
-      .top-nav ul{
-        min-width:max-content;
-        width:max-content;
-        justify-content:center;
-        flex-wrap:nowrap;
-      }
-
-      .top-nav a,
-      .dropdown-toggle{
-        padding:8px 10px;
-        font-size:12px;
-        border-radius:10px;
-      }
-
-      .dropdown-menu{
-        left:0;
-        transform:none;
-        min-width:220px;
-      }
-
       .user-chip{
-        max-width:210px;
+        max-width:230px;
       }
 
       .user-chip-text strong,
       .user-chip-text span{
-        max-width:110px;
+        max-width:130px;
       }
     }
   </style>
@@ -1160,7 +1191,8 @@
       </div>
       <button class="sidebar-close" id="sidebarClose" type="button">×</button>
     </div>
-<div class="sidebar-block">
+
+    <div class="sidebar-block">
       <div class="sidebar-title">NAVEGAÇÃO PÚBLICA</div>
       <div class="side-menu">
         <a href="classificacao.html"><span class="side-icon"><i class="fa-solid fa-ranking-star"></i></span>Classificação</a>
@@ -1238,7 +1270,7 @@
             <button class="dropdown-toggle" id="participantesToggle" type="button">
               Participantes <i class="fa-solid fa-chevron-down"></i>
             </button>
-            <div class="dropdown-menu">
+<div class="dropdown-menu">
               <a href="times.html">Equipes</a>
               <a href="tecnicos.html">Técnicos</a>
               <a href="arbitros.html">Árbitro</a>
@@ -1256,7 +1288,8 @@
           <span class="login-avatar"><i class="fa-solid fa-user"></i></span>
           <span>Login</span>
         </a>
-<button type="button" class="user-chip" id="userChip">
+
+        <button type="button" class="user-chip" id="userChip">
           <span class="login-avatar" id="userChipAvatar">
             <i class="fa-solid fa-user"></i>
           </span>
@@ -1563,9 +1596,13 @@
       campeonatosToggle.addEventListener("click", function(event) {
         event.preventDefault();
         event.stopPropagation();
-        if (participantesDropdown) participantesDropdown.classList.remove("open");
-        if (userDropdown) userDropdown.classList.remove("open");
-        campeonatosDropdown.classList.toggle("open");
+
+        const vaiAbrir = !campeonatosDropdown.classList.contains("open");
+        closeAllDropdowns();
+
+        if (vaiAbrir) {
+          campeonatosDropdown.classList.add("open");
+        }
       });
     }
 
@@ -1573,9 +1610,13 @@
       participantesToggle.addEventListener("click", function(event) {
         event.preventDefault();
         event.stopPropagation();
-        if (campeonatosDropdown) campeonatosDropdown.classList.remove("open");
-        if (userDropdown) userDropdown.classList.remove("open");
-        participantesDropdown.classList.toggle("open");
+
+        const vaiAbrir = !participantesDropdown.classList.contains("open");
+        closeAllDropdowns();
+
+        if (vaiAbrir) {
+          participantesDropdown.classList.add("open");
+        }
       });
     }
 
@@ -1583,9 +1624,13 @@
       userChip.addEventListener("click", function(event) {
         event.preventDefault();
         event.stopPropagation();
-        if (campeonatosDropdown) campeonatosDropdown.classList.remove("open");
-        if (participantesDropdown) participantesDropdown.classList.remove("open");
-        if (userDropdown) userDropdown.classList.toggle("open");
+
+        const vaiAbrir = !userDropdown.classList.contains("open");
+        closeAllDropdowns();
+
+        if (vaiAbrir) {
+          userDropdown.classList.add("open");
+        }
       });
     }
 
@@ -1614,16 +1659,16 @@
     });
 
     const games = [
-      { dataHora: "20/04/2026 - 08:00", confronto: "Atlético GO x Vila Nova", categoria: "Sub-15", local: "Campo 1" },
-      { dataHora: "20/04/2026 - 10:00", confronto: "Campinas x Hidrolândia", categoria: "Sub-13", local: "Campo 2" },
-      { dataHora: "21/04/2026 - 09:30", confronto: "Goiás x Bela Vista", categoria: "Sub-17", local: "Arena Central" },
-      { dataHora: "21/04/2026 - 14:00", confronto: "Trindade x Aparecida", categoria: "Sub-11", local: "Campo Municipal" }
+      { dataHora:"20/04/2026 - 08:00", confronto:"Atlético GO x Vila Nova", categoria:"Sub-15", local:"Campo 1" },
+      { dataHora:"20/04/2026 - 10:00", confronto:"Campinas x Hidrolândia", categoria:"Sub-13", local:"Campo 2" },
+      { dataHora:"21/04/2026 - 09:30", confronto:"Goiás x Bela Vista", categoria:"Sub-17", local:"Arena Central" },
+      { dataHora:"21/04/2026 - 14:00", confronto:"Trindade x Aparecida", categoria:"Sub-11", local:"Campo Municipal" }
     ];
 
     const news = [
-      { titulo: "Liga Goiana inicia nova temporada com grandes expectativas", texto: "A abertura da competição promete movimentar o futebol de base com organização, talento e muita emoção." },
-      { titulo: "Categorias de base seguem em expansão em Goiás", texto: "A Liga Goiana fortalece o desenvolvimento esportivo e amplia oportunidades para atletas de várias idades." },
-      { titulo: "Inscrições abertas para equipes interessadas", texto: "Clubes e projetos já podem entrar em contato para participar da próxima edição da Liga Goiana de Futebol de Base." }
+      { titulo:"Liga Goiana inicia nova temporada com grandes expectativas", texto:"A abertura da competição promete movimentar o futebol de base com organização, talento e muita emoção." },
+      { titulo:"Categorias de base seguem em expansão em Goiás", texto:"A Liga Goiana fortalece o desenvolvimento esportivo e amplia oportunidades para atletas de várias idades." },
+      { titulo:"Inscrições abertas para equipes interessadas", texto:"Clubes e projetos já podem entrar em contato para participar da próxima edição da Liga Goiana de Futebol de Base." }
     ];
 
     if (gamesTableBody) {
@@ -1651,7 +1696,8 @@
       });
     }
   </script>
-<script type="module">
+
+  <script type="module">
     import { auth, db } from "./firebase.js";
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
