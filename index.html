@@ -289,29 +289,21 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
-
-    .top-nav{
+.top-nav{
       width:100%;
       display:flex;
       justify-content:center;
       order:3;
-      overflow-x:auto;
-      scrollbar-width:none;
-      -ms-overflow-style:none;
-    }
-
-    .top-nav::-webkit-scrollbar{
-      display:none;
+      overflow:visible;
     }
 
     .top-nav ul{
       display:flex;
       align-items:center;
       gap:6px;
-      flex-wrap:nowrap;
+      flex-wrap:wrap;
       justify-content:center;
-      width:max-content;
-      min-width:100%;
+      width:100%;
       padding-bottom:2px;
     }
 
@@ -511,8 +503,7 @@
       width:18px;
       flex-shrink:0;
     }
-
-    .user-dropdown{
+.user-dropdown{
       position:absolute;
       top:calc(100% + 10px);
       right:0;
@@ -726,8 +717,7 @@
       border:1px solid rgba(255,255,255,.08);
       box-shadow:var(--shadow);
     }
-
-    .cards-pilares{
+.cards-pilares{
       display:grid;
       grid-template-columns:repeat(4, 1fr);
       gap:18px;
@@ -928,8 +918,7 @@
       border-top:1px solid rgba(255,255,255,.08);
       padding:40px 0 18px;
     }
-
-    .footer-grid{
+.footer-grid{
       display:grid;
       grid-template-columns:1.2fr .8fr .8fr .8fr;
       gap:20px;
@@ -1115,12 +1104,21 @@
       }
 
       .top-nav{
-        justify-content:flex-start;
+        justify-content:center;
+        overflow-x:auto;
+        scrollbar-width:none;
+        -ms-overflow-style:none;
+      }
+
+      .top-nav::-webkit-scrollbar{
+        display:none;
       }
 
       .top-nav ul{
         min-width:max-content;
-        justify-content:flex-start;
+        width:max-content;
+        justify-content:center;
+        flex-wrap:nowrap;
       }
 
       .top-nav a,
@@ -1162,8 +1160,7 @@
       </div>
       <button class="sidebar-close" id="sidebarClose" type="button">×</button>
     </div>
-
-    <div class="sidebar-block">
+<div class="sidebar-block">
       <div class="sidebar-title">NAVEGAÇÃO PÚBLICA</div>
       <div class="side-menu">
         <a href="classificacao.html"><span class="side-icon"><i class="fa-solid fa-ranking-star"></i></span>Classificação</a>
@@ -1259,8 +1256,7 @@
           <span class="login-avatar"><i class="fa-solid fa-user"></i></span>
           <span>Login</span>
         </a>
-
-        <button type="button" class="user-chip" id="userChip">
+<button type="button" class="user-chip" id="userChip">
           <span class="login-avatar" id="userChipAvatar">
             <i class="fa-solid fa-user"></i>
           </span>
@@ -1393,8 +1389,7 @@
             </div>
           </div>
         </div>
-
-        <div class="content-grid">
+<div class="content-grid">
           <section class="panel">
             <div class="panel-head">
               <div class="panel-head-title">
@@ -1515,8 +1510,7 @@
       </div>
     </div>
   </footer>
-
-  <script>
+<script>
     const sidebar = document.getElementById("sidebar");
     const sidebarOverlay = document.getElementById("sidebarOverlay");
     const menuToggle = document.getElementById("menuToggle");
@@ -1620,45 +1614,16 @@
     });
 
     const games = [
-      {
-        dataHora: "20/04/2026 - 08:00",
-        confronto: "Atlético GO x Vila Nova",
-        categoria: "Sub-15",
-        local: "Campo 1"
-      },
-      {
-        dataHora: "20/04/2026 - 10:00",
-        confronto: "Campinas x Hidrolândia",
-        categoria: "Sub-13",
-        local: "Campo 2"
-      },
-      {
-        dataHora: "21/04/2026 - 09:30",
-        confronto: "Goiás x Bela Vista",
-        categoria: "Sub-17",
-        local: "Arena Central"
-      },
-      {
-        dataHora: "21/04/2026 - 14:00",
-        confronto: "Trindade x Aparecida",
-        categoria: "Sub-11",
-        local: "Campo Municipal"
-      }
+      { dataHora: "20/04/2026 - 08:00", confronto: "Atlético GO x Vila Nova", categoria: "Sub-15", local: "Campo 1" },
+      { dataHora: "20/04/2026 - 10:00", confronto: "Campinas x Hidrolândia", categoria: "Sub-13", local: "Campo 2" },
+      { dataHora: "21/04/2026 - 09:30", confronto: "Goiás x Bela Vista", categoria: "Sub-17", local: "Arena Central" },
+      { dataHora: "21/04/2026 - 14:00", confronto: "Trindade x Aparecida", categoria: "Sub-11", local: "Campo Municipal" }
     ];
 
     const news = [
-      {
-        titulo: "Liga Goiana inicia nova temporada com grandes expectativas",
-        texto: "A abertura da competição promete movimentar o futebol de base com organização, talento e muita emoção."
-      },
-      {
-        titulo: "Categorias de base seguem em expansão em Goiás",
-        texto: "A Liga Goiana fortalece o desenvolvimento esportivo e amplia oportunidades para atletas de várias idades."
-      },
-      {
-        titulo: "Inscrições abertas para equipes interessadas",
-        texto: "Clubes e projetos já podem entrar em contato para participar da próxima edição da Liga Goiana de Futebol de Base."
-      }
+      { titulo: "Liga Goiana inicia nova temporada com grandes expectativas", texto: "A abertura da competição promete movimentar o futebol de base com organização, talento e muita emoção." },
+      { titulo: "Categorias de base seguem em expansão em Goiás", texto: "A Liga Goiana fortalece o desenvolvimento esportivo e amplia oportunidades para atletas de várias idades." },
+      { titulo: "Inscrições abertas para equipes interessadas", texto: "Clubes e projetos já podem entrar em contato para participar da próxima edição da Liga Goiana de Futebol de Base." }
     ];
 
     if (gamesTableBody) {
@@ -1686,8 +1651,7 @@
       });
     }
   </script>
-
-  <script type="module">
+<script type="module">
     import { auth, db } from "./firebase.js";
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
@@ -1713,11 +1677,7 @@
     const logoutBtn = document.getElementById("logoutBtn");
 
     function normalizarTexto(texto){
-      return String(texto || "")
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
+      return String(texto || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
 
     function normalizarTipo(tipo){
