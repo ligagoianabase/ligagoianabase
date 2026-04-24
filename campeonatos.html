@@ -197,6 +197,7 @@
       background:#f5f7fb;
       color:#111;
       box-shadow:0 8px 20px rgba(0,0,0,.20);
+      outline:none;
     }
 
     input:focus,select:focus{
@@ -208,7 +209,8 @@
       grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
       gap:16px;
     }
-.card{
+
+    .card{
       background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
       padding:18px;
       border-radius:20px;
@@ -219,11 +221,16 @@
       border:1px solid rgba(247,198,0,.18);
       box-shadow:var(--shadow);
       transition:var(--transition);
+      cursor:pointer;
     }
 
     .card:hover{
       transform:translateY(-3px);
       border-color:var(--gold-line);
+    }
+
+    .card:hover .nome-campeonato{
+      color:var(--gold);
     }
 
     .item{
@@ -255,12 +262,31 @@
       font-weight:900;
       font-size:18px;
       color:#fff;
+      transition:var(--transition);
     }
 
     .item-info small{
       color:var(--muted);
       font-size:13px;
       line-height:1.5;
+    }
+
+    .status-tag{
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      display:inline-block;
+      color:#fff;
+      margin-left:4px;
+    }
+
+    .status-ativo{
+      background:#1b5e20;
+    }
+
+    .status-encerrado{
+      background:#7a5a00;
     }
 
     .tags{
@@ -279,33 +305,18 @@
       font-weight:800;
     }
 
-    .actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .btn-acao{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:12px 15px;
-      border-radius:13px;
-      font-weight:900;
-      font-size:13px;
-      cursor:pointer;
-    }
-
-    .btn-ver{
+    .card-arrow{
+      width:42px;
+      height:42px;
+      border-radius:50%;
       background:linear-gradient(135deg, var(--gold), var(--gold-2));
       color:#111;
-    }
-
-    .btn-ver:hover{
-      filter:brightness(1.04);
-      transform:translateY(-2px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      flex-shrink:0;
+      box-shadow:0 10px 22px rgba(247,198,0,.18);
     }
 
     .vazio{
@@ -316,6 +327,8 @@
       color:var(--muted);
       border:1px solid rgba(255,255,255,.06);
       box-shadow:var(--shadow);
+      grid-column:1/-1;
+      font-weight:700;
     }
 
     @media (max-width:900px){
@@ -333,13 +346,7 @@
       .filtros{grid-template-columns:1fr;}
 
       .card{
-        flex-direction:column;
         align-items:flex-start;
-      }
-
-      .actions{
-        width:100%;
-        justify-content:flex-start;
       }
     }
 
@@ -409,8 +416,9 @@
         border-radius:16px;
       }
 
-      .btn-acao{
-        width:100%;
+      .card-arrow{
+        width:38px;
+        height:38px;
       }
     }
   </style>
@@ -457,7 +465,7 @@
 <main class="wrap container">
   <section class="hero">
     <h2>Campeonatos</h2>
-    <p>Veja os campeonatos publicados, filtre por nome, campeonato e categoria.</p>
+    <p>Veja os campeonatos publicados, acompanhe categorias, jogos, gols e acesse os detalhes oficiais da competição.</p>
   </section>
 
   <section class="filtros">
@@ -474,6 +482,7 @@
 
   <section class="lista-grid" id="listaCampeonatos"></section>
 </main>
+
 <script type="module">
   import { db } from "./firebase.js";
   import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -496,10 +505,10 @@
   }
 
   function campeonatoEhPublico(campeonato) {
-    if (campeonato.publicado === true) return true;
-    if (campeonato.publico === true) return true;
-    if (campeonato.visivelPublico === true) return true;
-    if (statusPublico(campeonato.status)) return true;
+    if(campeonato.publicado === true) return true;
+    if(campeonato.publico === true) return true;
+    if(campeonato.visivelPublico === true) return true;
+    if(statusPublico(campeonato.status)) return true;
     return false;
   }
 
@@ -524,17 +533,43 @@
     return valorCampo(doc, ["nome", "campeonato", "titulo"], "");
   }
 
-  function filtrarJogosDoCampeonato(nomeCampeonato){
-    return jogosCache.filter(j => {
-      const nome = valorCampo(j, ["campeonato", "nomeCampeonato"], "");
-      return normalizarTexto(nome) === normalizarTexto(nomeCampeonato);
+  function obterLogoCampeonato(campeonato){
+    return valorCampo(campeonato, ["logo", "logoCampeonato", "imagem", "logoUrl", "urlLogo"], "logo-liga.jfif");
+  }
+
+  function categoriaExiste(campeonato, categoriaFiltro){
+    if(!categoriaFiltro) return true;
+
+    const categorias = Array.isArray(campeonato.categorias) ? campeonato.categorias : [];
+
+    return categorias.some(cat => {
+      if(typeof cat === "string"){
+        return normalizarTexto(cat) === normalizarTexto(categoriaFiltro);
+      }
+
+      return normalizarTexto(cat.nome || cat.categoria || "") === normalizarTexto(categoriaFiltro);
     });
   }
 
-  function calcularGolsDoCampeonato(nomeCampeonato){
+  function filtrarJogosDoCampeonato(campeonato){
+    const idCamp = campeonato.id;
+    const nomeCampeonato = obterNomeCampeonato(campeonato);
+
+    return jogosCache.filter(j => {
+      const jogoCampId = valorCampo(j, ["campeonatoId"], "");
+      const jogoCampNome = valorCampo(j, ["campeonato", "nomeCampeonato"], "");
+
+      return jogoCampId === idCamp ||
+        normalizarTexto(jogoCampNome) === normalizarTexto(nomeCampeonato);
+    });
+  }
+
+  function calcularGolsDoCampeonato(campeonato){
+    const nomeCampeonato = obterNomeCampeonato(campeonato);
+    const jogos = filtrarJogosDoCampeonato(campeonato);
+
     let gols = 0;
 
-    const jogos = filtrarJogosDoCampeonato(nomeCampeonato);
     jogos.forEach(j => {
       gols += Number(valorCampo(j, ["golsA"], 0) || 0);
       gols += Number(valorCampo(j, ["golsB"], 0) || 0);
@@ -542,7 +577,8 @@
 
     if(gols === 0){
       const sumulas = sumulasCache.filter(s =>
-        normalizarTexto(valorCampo(s, ["campeonato"], "")) === normalizarTexto(nomeCampeonato)
+        normalizarTexto(valorCampo(s, ["campeonato"], "")) === normalizarTexto(nomeCampeonato) ||
+        valorCampo(s, ["campeonatoId"], "") === campeonato.id
       );
 
       sumulas.forEach(s => {
@@ -579,7 +615,8 @@
       .filter(campeonatoEhPublico)
       .forEach(c => {
         (c.categorias || []).forEach(cat => {
-          if(cat) categorias.add(cat);
+          if(typeof cat === "string" && cat) categorias.add(cat);
+          if(typeof cat === "object" && (cat.nome || cat.categoria)) categorias.add(cat.nome || cat.categoria);
         });
       });
 
@@ -592,37 +629,62 @@
       });
   }
 
+  function classeStatus(status){
+    const s = normalizarTexto(status);
+    if(s === "ativo" || s === "publicado" || s === "em andamento"){
+      return "status-ativo";
+    }
+
+    return "status-encerrado";
+  }
+
+  function montarCategoriasHtml(campeonato){
+    const categorias = Array.isArray(campeonato.categorias) ? campeonato.categorias : [];
+
+    if(!categorias.length){
+      return '<span class="tag">Sem categorias</span>';
+    }
+
+    return categorias.map(cat => {
+      const nome = typeof cat === "string" ? cat : (cat.nome || cat.categoria || "");
+      return nome ? `<span class="tag">${nome}</span>` : "";
+    }).join("");
+  }
+
   window.carregarCampeonatos = function(){
     const lista = document.getElementById("listaCampeonatos");
-    const busca = (document.getElementById("buscaCampeonato").value || "").toLowerCase().trim();
+    const busca = normalizarTexto(document.getElementById("buscaCampeonato").value || "");
     const campeonatoFiltro = document.getElementById("filtroCampeonato").value;
     const categoriaFiltro = document.getElementById("filtroCategoria").value;
 
     let campeonatos = campeonatosCache.filter(campeonatoEhPublico);
 
-    if (busca) {
+    if(busca){
       campeonatos = campeonatos.filter(c =>
-        String(obterNomeCampeonato(c)).toLowerCase().includes(busca) ||
-        String(c.temporada || "").toLowerCase().includes(busca) ||
-        String(c.status || "").toLowerCase().includes(busca)
+        normalizarTexto(obterNomeCampeonato(c)).includes(busca) ||
+        normalizarTexto(c.temporada).includes(busca) ||
+        normalizarTexto(c.status).includes(busca)
       );
     }
 
-    if (campeonatoFiltro) {
+    if(campeonatoFiltro){
       campeonatos = campeonatos.filter(c => obterNomeCampeonato(c) === campeonatoFiltro);
     }
 
-    if (categoriaFiltro) {
-      campeonatos = campeonatos.filter(c =>
-        Array.isArray(c.categorias) && c.categorias.includes(categoriaFiltro)
-      );
+    if(categoriaFiltro){
+      campeonatos = campeonatos.filter(c => categoriaExiste(c, categoriaFiltro));
     }
 
-    campeonatos.sort((a, b) =>
-      String(obterNomeCampeonato(a)).localeCompare(String(obterNomeCampeonato(b)), "pt-BR")
-    );
+    campeonatos.sort((a,b) => {
+      const jogosA = filtrarJogosDoCampeonato(a).length;
+      const jogosB = filtrarJogosDoCampeonato(b).length;
 
-    if (!campeonatos.length) {
+      if(jogosB !== jogosA) return jogosB - jogosA;
+
+      return obterNomeCampeonato(a).localeCompare(obterNomeCampeonato(b), "pt-BR");
+    });
+
+    if(!campeonatos.length){
       lista.innerHTML = `<div class="vazio">Nenhum campeonato publicado encontrado.</div>`;
       return;
     }
@@ -631,18 +693,15 @@
 
     campeonatos.forEach(campeonato => {
       const nomeCampeonato = obterNomeCampeonato(campeonato);
-      const categorias = (campeonato.categorias || [])
-        .map(c => `<span class="tag">${c}</span>`)
-        .join("");
-
-      const jogosDoCampeonato = filtrarJogosDoCampeonato(nomeCampeonato);
-      const totalGols = calcularGolsDoCampeonato(nomeCampeonato);
+      const jogosDoCampeonato = filtrarJogosDoCampeonato(campeonato);
+      const totalGols = calcularGolsDoCampeonato(campeonato);
+      const status = campeonato.status || "-";
 
       lista.innerHTML += `
-        <article class="card">
+        <a class="card" href="campeonato-publico.html?id=${campeonato.id}">
           <div class="item">
             <img
-              src="${campeonato.logo || 'logo-liga.jfif'}"
+              src="${obterLogoCampeonato(campeonato)}"
               class="logo"
               alt="${nomeCampeonato || 'Campeonato'}"
               onerror="this.src='logo-liga.jfif'"
@@ -651,25 +710,26 @@
             <div class="item-info">
               <div class="nome-campeonato">${nomeCampeonato || "-"}</div>
               <small>Temporada: ${campeonato.temporada || "-"}</small>
-              <small>Status: ${campeonato.status || "-"}</small>
+              <small>
+                Status:
+                <span class="status-tag ${classeStatus(status)}">${status}</span>
+              </small>
               <small>Jogos: ${jogosDoCampeonato.length} | Gols: ${totalGols}</small>
-              <div class="tags">${categorias || '<span class="tag">Sem categorias</span>'}</div>
+              <div class="tags">${montarCategoriasHtml(campeonato)}</div>
             </div>
           </div>
 
-          <div class="actions">
-            <a class="btn-acao btn-ver" href="campeonato-publico.html?id=${campeonato.id}">
-              <i class="fa-solid fa-eye"></i> Ver Campeonato
-            </a>
+          <div class="card-arrow">
+            <i class="fa-solid fa-arrow-right"></i>
           </div>
-        </article>
+        </a>
       `;
     });
   };
 
   async function iniciarPagina(){
     const lista = document.getElementById("listaCampeonatos");
-    lista.innerHTML = `<div class="vazio">Carregando campeonatos...</div>`;
+    lista.innerHTML = `<div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando campeonatos...</div>`;
 
     try{
       const [snapCampeonatos, snapJogos, snapSumulas] = await Promise.all([
@@ -683,15 +743,15 @@
       sumulasCache = [];
 
       snapCampeonatos.forEach(docSnap => {
-        campeonatosCache.push({ id: docSnap.id, ...docSnap.data() });
+        campeonatosCache.push({ id:docSnap.id, ...docSnap.data() });
       });
 
       snapJogos.forEach(docSnap => {
-        jogosCache.push({ id: docSnap.id, ...docSnap.data() });
+        jogosCache.push({ id:docSnap.id, ...docSnap.data() });
       });
 
       snapSumulas.forEach(docSnap => {
-        sumulasCache.push({ id: docSnap.id, ...docSnap.data() });
+        sumulasCache.push({ id:docSnap.id, ...docSnap.data() });
       });
 
       preencherFiltroCampeonato();
