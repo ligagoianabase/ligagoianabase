@@ -11,20 +11,19 @@
 <style>
 :root{
   --bg:#061427;
-  --bg-dark:#08172c;
-  --card:#102a52;
-  --card2:#0d2346;
+  --card:#071d37;
+  --card2:#0d2a52;
   --gold:#f7c600;
   --gold2:#ffe45c;
-  --gold-soft:rgba(247,198,0,.12);
-  --gold-line:rgba(247,198,0,.32);
   --white:#ffffff;
-  --muted:#d8e1ef;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
   --green:#1b5e20;
-  --yellow-dark:#7a5a00;
-  --red:#d94141;
-  --shadow:0 14px 34px rgba(0,0,0,.36);
-  --transition:.25s ease;
+  --yellow:#7a5a00;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
   --max:1240px;
 }
 
@@ -37,7 +36,7 @@
 body{
   font-family:Arial, sans-serif;
   background:
-    linear-gradient(rgba(3,12,29,.88), rgba(3,12,29,.96)),
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
     url("fundo.png") center/cover fixed no-repeat;
   color:var(--white);
   min-height:100vh;
@@ -47,19 +46,22 @@ body{
 a{
   text-decoration:none;
   color:inherit;
-  transition:var(--transition);
 }
 
 button{
   font-family:inherit;
   cursor:pointer;
-  transition:var(--transition);
   border:none;
-  background:none;
 }
 
+input,
 select{
   font-family:inherit;
+}
+
+img{
+  display:block;
+  max-width:100%;
 }
 
 .wrap{
@@ -67,114 +69,74 @@ select{
   margin:0 auto;
 }
 
-header{
-  background:linear-gradient(180deg, rgba(8,23,44,.98), rgba(3,12,29,.98));
+/* HEADER PADRÃO */
+.site-header{
+  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
   border-bottom:3px solid var(--gold);
   box-shadow:var(--shadow);
 }
 
 .header-top{
-  min-height:84px;
+  min-height:92px;
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  flex-wrap:wrap;
-  padding:14px 0;
-}
-
-.header-left,
-.header-right{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
+  justify-content:center;
+  padding:18px 0;
 }
 
 .header-title{
-  flex:1;
   text-align:center;
-  font-size:24px;
+  font-size:26px;
   font-weight:900;
-  color:var(--white);
+  letter-spacing:.8px;
   text-transform:uppercase;
-  letter-spacing:.5px;
+  line-height:1.15;
 }
 
-.top-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:11px 16px;
-  border-radius:14px;
-  font-weight:900;
-  white-space:nowrap;
-  box-shadow:0 10px 22px rgba(0,0,0,.22);
-}
-
-.btn-light{
-  background:#fff4cf;
-  color:#111;
-}
-
-.btn-light:hover{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  transform:translateY(-2px);
-}
-
+/* MENU FINAL PADRÃO */
 .nav-bar{
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
   border-top:1px solid rgba(255,255,255,.06);
-  border-bottom:1px solid rgba(255,255,255,.08);
   overflow:hidden;
 }
 
 .menu{
   display:flex;
   justify-content:center;
-  gap:10px;
-  padding:14px 8px;
+  align-items:center;
+  gap:clamp(4px, .55vw, 10px);
+  padding:14px 6px;
   flex-wrap:nowrap;
-  overflow-x:auto;
-  overflow-y:hidden;
-  scrollbar-width:none;
-  -ms-overflow-style:none;
-  scroll-behavior:smooth;
-}
-
-.menu::-webkit-scrollbar{
-  display:none;
+  overflow:hidden;
 }
 
 .menu a{
   color:#fff;
   font-weight:900;
-  font-size:14px;
+  font-size:clamp(11px, .92vw, 15px);
   background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
-  padding:12px 16px;
-  border-radius:14px;
+  padding:clamp(8px, .75vw, 12px) clamp(9px, 1vw, 18px);
+  border-radius:clamp(10px, .9vw, 15px);
   border:1px solid rgba(255,255,255,.07);
   white-space:nowrap;
-  flex:0 0 auto;
-  box-shadow:0 8px 18px rgba(0,0,0,.22);
+  flex:0 1 auto;
+  box-shadow:0 10px 22px rgba(0,0,0,.24);
+  transition:.25s ease;
 }
 
 .menu a:hover{
   color:var(--gold);
-  background:var(--gold-soft);
   border-color:var(--gold-line);
-  transform:translateY(-2px);
 }
 
 .menu a.ativo{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
   color:#111;
-  border-color:var(--gold);
 }
 
+/* PÁGINA */
 .container{
-  padding:26px 0 36px;
+  padding:22px 0 34px;
 }
 
 .hero{
@@ -182,23 +144,23 @@ header{
     radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
     linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
   border:1px solid var(--gold-line);
-  border-radius:26px;
-  padding:24px;
-  margin-bottom:20px;
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
   box-shadow:var(--shadow);
 }
 
 .hero-top{
   display:flex;
   align-items:center;
-  gap:18px;
+  gap:16px;
   flex-wrap:wrap;
 }
 
 .hero-logo{
-  width:82px;
-  height:82px;
-  border-radius:22px;
+  width:76px;
+  height:76px;
+  border-radius:20px;
   object-fit:cover;
   border:2px solid var(--gold);
   background:#fff;
@@ -212,77 +174,122 @@ header{
 
 .hero h2{
   color:var(--gold);
-  font-size:30px;
+  font-size:28px;
   font-weight:900;
-  margin-bottom:8px;
+  margin-bottom:6px;
 }
 
 .hero p{
   color:var(--muted);
-  line-height:1.6;
-  font-size:15px;
-  max-width:850px;
+  line-height:1.5;
+  font-size:14px;
 }
 
 .hero-tags{
   display:flex;
-  gap:8px;
+  gap:6px;
   flex-wrap:wrap;
-  margin-top:14px;
+  margin-top:12px;
 }
 
 .hero-tag{
-  background:rgba(3,12,29,.55);
-  padding:8px 12px;
+  background:rgba(26,63,115,.9);
+  padding:6px 10px;
   border-radius:999px;
-  font-size:12px;
-  font-weight:900;
-  color:var(--white);
+  font-size:11px;
   border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
 }
 
 .filtros{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-bottom:20px;
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border:1px solid rgba(247,198,0,.18);
-  border-radius:20px;
-  padding:16px;
-  box-shadow:var(--shadow);
+  gap:10px;
+  margin-bottom:14px;
 }
 
 select{
   width:100%;
-  padding:13px;
+  padding:12px;
   border:none;
   border-radius:12px;
   font-size:14px;
   background:#f5f7fb;
   color:#111;
   outline:none;
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
 }
 
 select:focus{
-  outline:2px solid rgba(247,198,0,.55);
+  outline:2px solid rgba(247,198,0,.65);
+}
+
+.exemplo-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:12px;
+  margin-bottom:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+.exemplo-bar span{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+
+.exemplo-bar strong{
+  color:var(--gold);
+}
+
+.exemplo-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.btn-mini{
+  padding:9px 12px;
+  border-radius:11px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  font-size:13px;
+}
+
+.btn-gold{
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+}
+
+.btn-red{
+  background:var(--red);
+  color:#fff;
 }
 
 .titulo-secao{
-  font-size:24px;
   color:var(--gold);
+  font-size:22px;
   font-weight:900;
-  margin:0 0 16px;
+  margin:0 0 12px;
 }
 
 .abas{
   display:flex;
-  gap:10px;
+  gap:8px;
   flex-wrap:nowrap;
   overflow-x:auto;
   scrollbar-width:none;
   -ms-overflow-style:none;
-  margin-bottom:18px;
+  margin-bottom:14px;
 }
 
 .abas::-webkit-scrollbar{
@@ -292,109 +299,93 @@ select:focus{
 .aba{
   color:#fff;
   font-weight:900;
-  font-size:14px;
+  font-size:13px;
   background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
-  padding:11px 15px;
-  border-radius:14px;
+  padding:10px 13px;
+  border-radius:13px;
   border:1px solid rgba(255,255,255,.07);
   cursor:pointer;
   white-space:nowrap;
   flex:0 0 auto;
 }
 
-.aba:hover{
-  color:var(--gold);
-  background:var(--gold-soft);
-  border-color:var(--gold-line);
-  transform:translateY(-2px);
-}
-
 .aba.ativa{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
   color:#111;
-  border-color:var(--gold);
 }
 
-.card{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  padding:18px;
-  border-radius:20px;
-  border:1px solid rgba(247,198,0,.18);
-  box-shadow:var(--shadow);
-}
-
-.stats-grid{
+/* CARDS COMPACTOS */
+.cards-resumo{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
+  grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
+  gap:10px;
 }
 
-.stat-card{
-  background:rgba(3,12,29,.55);
-  border-radius:14px;
-  padding:14px;
-  border:1px solid rgba(255,255,255,.08);
+.card-resumo{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  text-align:center;
 }
 
-.stat-card strong{
+.card-resumo-icon{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  margin:0 auto 8px;
+}
+
+.card-resumo strong{
   display:block;
   color:var(--gold);
-  font-size:13px;
-  margin-bottom:6px;
-}
-
-.stat-card span{
-  font-size:18px;
-  font-weight:900;
-  color:#fff;
-}
-
-.tags{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  margin-top:12px;
-}
-
-.tag{
-  background:#1a3f73;
-  padding:6px 10px;
-  border-radius:999px;
   font-size:12px;
-  border:1px solid rgba(255,255,255,.08);
-  font-weight:800;
+  margin-bottom:5px;
 }
 
-.vazio{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  padding:30px;
-  border-radius:18px;
-  text-align:center;
+.card-resumo span{
+  display:block;
+  color:#fff;
+  font-size:17px;
+  font-weight:900;
+  line-height:1.25;
+}
+
+.card-resumo small{
+  display:block;
   color:var(--muted);
-  border:1px solid rgba(255,255,255,.06);
-  box-shadow:var(--shadow);
-  font-weight:700;
+  font-size:11px;
+  margin-top:4px;
+  line-height:1.35;
 }
 
+/* TABELA CLASSIFICAÇÃO */
 .box-tabela{
   overflow-x:auto;
-  border-radius:18px;
+  border-radius:15px;
 }
 
 .table{
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border-radius:18px;
+  border-radius:15px;
   overflow:hidden;
-  border:1px solid rgba(247,198,0,.18);
-  box-shadow:var(--shadow);
+  border:1px solid rgba(247,198,0,.22);
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
 }
 
 .row{
   display:flex;
   align-items:center;
-  padding:12px 8px;
+  padding:10px 8px;
   border-bottom:1px solid rgba(255,255,255,.08);
-  min-width:980px;
+  min-width:880px;
 }
 
 .row.header{
@@ -405,12 +396,12 @@ select:focus{
 
 .col-pos{width:45px;text-align:center;}
 .col-time{flex:1;padding:0 8px;}
-.col{width:55px;text-align:center;font-weight:800;}
+.col{width:52px;text-align:center;font-weight:800;}
 
 .team{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:8px;
   font-weight:900;
 }
 
@@ -424,280 +415,269 @@ select:focus{
   flex-shrink:0;
 }
 
-.card-lista{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-.topo-jogo{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+/* LISTAGENS */
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
   gap:10px;
-  flex-wrap:wrap;
 }
 
-.times-jogo{
+.card-item{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  text-align:center;
+}
+
+.card-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:10px;
+}
+
+.card-icon{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+}
+
+.status-tag{
+  color:#fff;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.status-finalizado{background:var(--green);}
+.status-agendado{background:var(--yellow);}
+.status-exemplo{background:var(--blue);}
+
+.times-linha{
   display:grid;
   grid-template-columns:1fr auto 1fr;
   align-items:center;
-  gap:14px;
-  font-size:16px;
-  font-weight:900;
-  width:100%;
+  gap:8px;
+  margin:8px 0 10px;
 }
 
-.time-jogo{
+.time-box{
   display:flex;
   align-items:center;
-  gap:10px;
-  color:#fff;
+  gap:6px;
+  min-width:0;
+  font-size:13px;
+  font-weight:900;
 }
 
-.time-jogo.visitante{
+.time-box.visitante{
   justify-content:flex-end;
   text-align:right;
 }
 
+.time-box span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
 .placar{
-  font-weight:900;
-  font-size:24px;
   color:var(--gold);
-  min-width:110px;
-  text-align:center;
-  background:rgba(3,12,29,.72);
-  border:1px solid var(--gold-line);
-  border-radius:14px;
-  padding:10px 14px;
-}
-
-.info{
-  font-size:13px;
-  color:var(--muted);
-  margin-top:12px;
-  line-height:1.7;
-}
-
-.status{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  margin-top:12px;
-  padding:8px 12px;
-  border-radius:999px;
-  font-size:12px;
+  font-size:17px;
   font-weight:900;
-  background:#0d2346;
+  background:rgba(2,10,24,.72);
+  border:1px solid var(--gold-line);
+  border-radius:10px;
+  padding:6px 9px;
+  white-space:nowrap;
 }
 
-.finalizado{
-  background:var(--green);
+.info-item{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  text-align:center;
+  margin:8px 0 10px;
+}
+
+.info-item strong{
   color:#fff;
 }
 
-.agendado{
-  background:var(--yellow-dark);
-  color:#fff;
-}
-
-.acoes-jogo{
+.tags{
   display:flex;
-  gap:10px;
+  justify-content:center;
+  gap:5px;
   flex-wrap:wrap;
-  margin-top:12px;
+  margin-bottom:10px;
 }
 
-.btn-acao{
-  display:inline-flex;
+.tag{
+  background:rgba(26,63,115,.9);
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+
+.btn-ver{
+  width:100%;
+  padding:9px 12px;
+  border-radius:11px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+  font-weight:900;
+  display:flex;
   align-items:center;
   justify-content:center;
-  gap:8px;
-  padding:11px 15px;
-  border-radius:12px;
-  font-weight:900;
+  gap:7px;
   font-size:13px;
-  border:none;
-  cursor:pointer;
 }
 
-.btn-sumula{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#111;
-}
-
-.btn-secundario{
-  background:#1a3f73;
-  color:#fff;
-  border:1px solid rgba(255,255,255,.08);
-}
-
-.linha-ranking{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  padding:14px;
-  border-radius:16px;
-  border:1px solid rgba(247,198,0,.14);
-  box-shadow:0 8px 22px rgba(0,0,0,.25);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:14px;
-}
-
-.player{
-  display:flex;
-  align-items:center;
+/* RANKING */
+.ranking-lista{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
   gap:10px;
 }
 
-.photo{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  object-fit:cover;
-  background:#1a3f73;
-  border:1px solid rgba(255,255,255,.12);
+.ranking-card{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+.ranking-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.player-box{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
 }
 
 .pos{
   width:28px;
-  font-weight:900;
   color:var(--gold);
+  font-weight:900;
   text-align:center;
 }
 
-.numero-destaque{
-  font-weight:900;
-  font-size:22px;
-  color:var(--gold);
-}
-
-.subinfo{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.45;
-}
-
-.times-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:12px;
-}
-
-.time-card{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border-radius:16px;
-  padding:16px;
-  border:1px solid rgba(247,198,0,.14);
-  box-shadow:var(--shadow);
-}
-
-.time-card-top{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:10px;
-}
-
-.time-card-top img{
-  width:56px;
-  height:56px;
-  object-fit:cover;
+.photo{
+  width:40px;
+  height:40px;
   border-radius:50%;
+  object-fit:cover;
   background:#fff;
-  border:2px solid var(--gold);
+  border:1px solid var(--gold-line);
+  flex-shrink:0;
 }
 
+.player-info{
+  min-width:0;
+}
+
+.player-info strong{
+  display:block;
+  color:#fff;
+  font-size:13px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.player-info small{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  margin-top:3px;
+}
+
+.numero-destaque{
+  color:var(--gold);
+  font-size:24px;
+  font-weight:900;
+  text-align:right;
+}
+
+.numero-destaque small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+}
+
+.vazio{
+  color:var(--muted);
+  text-align:center;
+  padding:18px;
+  background:rgba(7,29,55,.9);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+}
+
+/* CELULAR */
 @media(max-width:900px){
   .header-title{
-    order:3;
-    width:100%;
-    text-align:center;
+    font-size:20px;
   }
 
-  .header-left,
-  .header-right{
-    width:100%;
-    justify-content:center;
+  .menu{
+    justify-content:flex-start;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:14px;
+    gap:10px;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+  }
+
+  .menu::-webkit-scrollbar{
+    display:none;
+  }
+
+  .menu a{
+    flex:0 0 auto;
+    font-size:15px;
+    padding:12px 18px;
+    border-radius:15px;
   }
 
   .filtros{
     grid-template-columns:1fr;
   }
 
-  .stats-grid{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .times-jogo{
-    grid-template-columns:1fr;
-    text-align:center;
-  }
-
-  .time-jogo,
-  .time-jogo.visitante{
-    justify-content:center;
-    text-align:center;
-  }
-
-  .placar{
-    margin:0 auto;
-  }
-}
-
-@media(max-width:600px){
-  .wrap{
-    width:min(100% - 18px, var(--max));
-  }
-
-  .header-left{
-    display:none;
-  }
-
-  .header-title{
-    order:1;
-    font-size:17px;
-    line-height:1.25;
-  }
-
-  .nav-bar .wrap{
-    width:100%;
-  }
-
-  .menu{
-    justify-content:flex-start;
-    padding:14px;
-  }
-
-  .hero{
-    padding:20px;
-    border-radius:22px;
-  }
-
-  .hero h2{
-    font-size:25px;
+  .hero-top{
+    align-items:flex-start;
   }
 
   .hero-logo{
-    width:68px;
-    height:68px;
-    border-radius:18px;
+    width:64px;
+    height:64px;
+    border-radius:16px;
   }
 
-  .stats-grid{
+  .lista-grid,
+  .ranking-lista{
     grid-template-columns:1fr;
-  }
-
-  .time-jogo{
-    flex-direction:column;
-  }
-
-  .btn-acao{
-    width:100%;
-  }
-
-  .linha-ranking{
-    align-items:flex-start;
   }
 }
 </style>
@@ -705,21 +685,9 @@ select:focus{
 
 <body>
 
-<header>
+<header class="site-header">
   <div class="wrap header-top">
-    <div class="header-left">
-      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
-        <i class="fa-solid fa-arrow-left"></i> Voltar
-      </button>
-
-      <a href="index.html" class="top-btn btn-light">
-        <i class="fa-solid fa-house"></i> Página Inicial
-      </a>
-    </div>
-
     <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
-
-    <div class="header-right"></div>
   </div>
 
   <div class="nav-bar">
@@ -750,7 +718,7 @@ select:focus{
 
       <div class="hero-info">
         <h2 id="heroTitulo">Tabela da Competição</h2>
-        <p id="heroSub">Selecione o campeonato e a categoria para visualizar os dados automáticos.</p>
+        <p id="heroSub">Classificação, jogos, artilharia, cartões e suspensos gerados automaticamente.</p>
 
         <div class="hero-tags">
           <div class="hero-tag" id="heroTagCategoria">Categoria: -</div>
@@ -762,17 +730,34 @@ select:focus{
     </div>
   </section>
 
+  <section class="exemplo-bar">
+    <span>
+      <strong>Dados de exemplo:</strong>
+      Copa do Mundo FIFA 2002, Brasil 2 x 0 Alemanha, Ronaldo artilheiro.
+    </span>
+
+    <div class="exemplo-actions">
+      <button class="btn-mini btn-red" onclick="excluirExemplos()">
+        <i class="fa-solid fa-trash"></i> Excluir Exemplos
+      </button>
+
+      <button class="btn-mini btn-gold" onclick="restaurarExemplos()">
+        <i class="fa-solid fa-rotate-left"></i> Restaurar
+      </button>
+    </div>
+  </section>
+
   <section class="filtros">
     <select id="filtroCampeonato">
       <option value="">Selecione o campeonato</option>
     </select>
 
     <select id="filtroCategoria">
-      <option value="">Selecione a categoria</option>
+      <option value="">Todas categorias</option>
     </select>
   </section>
 
-  <section class="bloco-tabela">
+  <section>
     <h2 class="titulo-secao" id="tituloTabela">Tabela</h2>
 
     <div class="abas">
@@ -789,7 +774,6 @@ select:focus{
   </section>
 
 </main>
-
 <script type="module">
 import { db } from "./firebase.js";
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -800,14 +784,193 @@ let jogadores = [];
 let sumulas = [];
 let campeonatos = [];
 let abaAtual = "detalhes";
+let exemplosAtivos = localStorage.getItem("ocultarExemplosTabela") !== "sim";
 
-window.voltarPagina = function(){
-  if(window.history.length > 1){
-    window.history.back();
-  }else{
-    window.location.href = "index.html";
+const campeonatosExemplo = [
+  {
+    id:"copa-mundo-2002",
+    nome:"Copa do Mundo FIFA 2002",
+    temporada:"2002",
+    status:"Finalizado",
+    logo:"logo-liga.jfif",
+    categorias:["Seleção Principal"],
+    regrasCartoes:{
+      amarelosParaSuspensao:2,
+      jogosSuspensaoAmarelos:1,
+      jogosSuspensaoVermelhoDireto:1,
+      jogosSuspensaoSegundoAmarelo:1
+    },
+    exemplo:true
+  },
+  {
+    id:"copa-uniao-base",
+    nome:"Copa União de Base",
+    temporada:"2025",
+    status:"Ativo",
+    logo:"logo-liga.jfif",
+    categorias:["Sub-11","Sub-13","Sub-15","Sub-17"],
+    exemplo:true
   }
-};
+];
+
+const timesExemplo = [
+  {
+    id:"brasil-2002",
+    nome:"Brasil",
+    escudo:"logo-liga.jfif",
+    categorias:["Seleção Principal"],
+    exemplo:true
+  },
+  {
+    id:"alemanha-2002",
+    nome:"Alemanha",
+    escudo:"logo-liga.jfif",
+    categorias:["Seleção Principal"],
+    exemplo:true
+  },
+  {
+    id:"atletico-go",
+    nome:"Atlético GO",
+    escudo:"logo-liga.jfif",
+    categorias:["Sub-15"],
+    exemplo:true
+  },
+  {
+    id:"vila-nova",
+    nome:"Vila Nova",
+    escudo:"logo-liga.jfif",
+    categorias:["Sub-15"],
+    exemplo:true
+  }
+];
+
+const jogadoresExemplo = [
+  {
+    id:"ronaldo-2002",
+    nome:"Ronaldo",
+    time:"Brasil",
+    foto:"logo-liga.jfif",
+    exemplo:true
+  },
+  {
+    id:"rivaldo-2002",
+    nome:"Rivaldo",
+    time:"Brasil",
+    foto:"logo-liga.jfif",
+    exemplo:true
+  },
+  {
+    id:"kahn-2002",
+    nome:"Oliver Kahn",
+    time:"Alemanha",
+    foto:"logo-liga.jfif",
+    exemplo:true
+  }
+];
+
+const jogosExemplo = [
+  {
+    id:"final-copa-2002",
+    campeonatoId:"copa-mundo-2002",
+    campeonato:"Copa do Mundo FIFA 2002",
+    categoria:"Seleção Principal",
+    rodada:"Final",
+    fase:"Final",
+    data:"2002-06-30T08:00:00",
+    local:"International Stadium Yokohama",
+    timeA:"Brasil",
+    timeB:"Alemanha",
+    golsA:2,
+    golsB:0,
+    logoTimeA:"logo-liga.jfif",
+    logoTimeB:"logo-liga.jfif",
+    status:"finalizado",
+    arbitro:"Pierluigi Collina",
+    exemplo:true
+  },
+  {
+    id:"jogo-exemplo-base-1",
+    campeonatoId:"copa-uniao-base",
+    campeonato:"Copa União de Base",
+    categoria:"Sub-15",
+    rodada:"1",
+    fase:"Primeira fase",
+    data:"2025-05-18T16:00:00",
+    local:"Serra Dourada",
+    timeA:"Atlético GO",
+    timeB:"Vila Nova",
+    golsA:2,
+    golsB:1,
+    logoTimeA:"logo-liga.jfif",
+    logoTimeB:"logo-liga.jfif",
+    status:"finalizado",
+    arbitro:"Árbitro Exemplo",
+    exemplo:true
+  }
+];
+
+const sumulasExemplo = [
+  {
+    id:"final-copa-2002",
+    jogoId:"final-copa-2002",
+    campeonatoId:"copa-mundo-2002",
+    campeonato:"Copa do Mundo FIFA 2002",
+    categoria:"Seleção Principal",
+    dataJogo:"2002-06-30T08:00:00",
+    local:"International Stadium Yokohama",
+    timeA:"Brasil",
+    timeB:"Alemanha",
+    golsA:2,
+    golsB:0,
+    golsDetalhadosA:[
+      { nome:"Ronaldo", numero:"9", minuto:"67" },
+      { nome:"Ronaldo", numero:"9", minuto:"79" }
+    ],
+    golsDetalhadosB:[],
+    amarelosDetalhadosA:[
+      { nome:"Rivaldo", numero:"10", minuto:"90" }
+    ],
+    amarelosDetalhadosB:[
+      { nome:"Miroslav Klose", numero:"11", minuto:"74" },
+      { nome:"Carsten Ramelow", numero:"5", minuto:"9" }
+    ],
+    vermelhosDetalhadosA:[],
+    vermelhosDetalhadosB:[],
+    observacoes:"Súmula de exemplo da final da Copa do Mundo FIFA 2002.",
+    status:"finalizada",
+    exemplo:true
+  },
+  {
+    id:"jogo-exemplo-base-1",
+    jogoId:"jogo-exemplo-base-1",
+    campeonatoId:"copa-uniao-base",
+    campeonato:"Copa União de Base",
+    categoria:"Sub-15",
+    dataJogo:"2025-05-18T16:00:00",
+    local:"Serra Dourada",
+    timeA:"Atlético GO",
+    timeB:"Vila Nova",
+    golsA:2,
+    golsB:1,
+    golsDetalhadosA:[
+      { nome:"João Silva", numero:"10", minuto:"22" },
+      { nome:"Pedro Lima", numero:"9", minuto:"61" }
+    ],
+    golsDetalhadosB:[
+      { nome:"Carlos Souza", numero:"7", minuto:"44" }
+    ],
+    amarelosDetalhadosA:[
+      { nome:"João Silva", numero:"10", minuto:"70" }
+    ],
+    amarelosDetalhadosB:[
+      { nome:"Carlos Souza", numero:"7", minuto:"35" }
+    ],
+    vermelhosDetalhadosA:[],
+    vermelhosDetalhadosB:[],
+    status:"finalizada",
+    exemplo:true
+  }
+];
 
 function normalizarTexto(texto){
   return String(texto || "")
@@ -826,52 +989,25 @@ function valorCampo(obj, chaves, fallback = ""){
   return fallback;
 }
 
-function campo(valor, fallback = "-"){
-  if(valor === undefined || valor === null || valor === "") return fallback;
-  return valor;
+function obterIdCampeonato(item){
+  return valorCampo(item, ["id", "campeonatoId"], "");
 }
 
-function getParametro(nome){
-  return new URLSearchParams(window.location.search).get(nome);
-}
-
-function obterNomeCampeonato(c){
-  return valorCampo(c, ["nome", "campeonato", "titulo"], "");
-}
-
-function obterIdCampeonato(c){
-  return valorCampo(c, ["id", "campeonatoId"], "");
+function obterNomeCampeonato(item){
+  return valorCampo(item, ["nome", "campeonato", "titulo"], "");
 }
 
 function logoItem(item){
   return valorCampo(item, ["logo", "escudo", "foto", "imagem", "logoUrl", "urlLogo"], "logo-liga.jfif");
 }
 
-async function carregarDados(){
-  const [snapJogos, snapTimes, snapJogadores, snapSumulas, snapCampeonatos] = await Promise.all([
-    getDocs(collection(db, "jogos")),
-    getDocs(collection(db, "times")),
-    getDocs(collection(db, "jogadores")),
-    getDocs(collection(db, "sumulas")),
-    getDocs(collection(db, "campeonatos"))
-  ]);
-
-  jogos = [];
-  times = [];
-  jogadores = [];
-  sumulas = [];
-  campeonatos = [];
-
-  snapJogos.forEach(d => jogos.push({ id:d.id, ...d.data() }));
-  snapTimes.forEach(d => times.push({ id:d.id, ...d.data() }));
-  snapJogadores.forEach(d => jogadores.push({ id:d.id, ...d.data() }));
-  snapSumulas.forEach(d => sumulas.push({ id:d.id, ...d.data() }));
-  snapCampeonatos.forEach(d => campeonatos.push({ id:d.id, ...d.data() }));
+function getParametro(nome){
+  return new URLSearchParams(window.location.search).get(nome);
 }
 
 function getCampeonatoSelecionado(){
   const id = document.getElementById("filtroCampeonato").value;
-  return campeonatos.find(c => obterIdCampeonato(c) === id) || null;
+  return campeonatos.find(c => obterIdCampeonato(c) === id || obterNomeCampeonato(c) === id) || null;
 }
 
 function getFiltros(){
@@ -884,53 +1020,59 @@ function getFiltros(){
   };
 }
 
-function jogoPertenceAoFiltro(j){
+function itemPertenceAoFiltro(item){
   const { campeonatoId, campeonato, categoria } = getFiltros();
 
   if(!campeonatoId) return false;
 
-  const jogoCampId = valorCampo(j, ["campeonatoId"], "");
-  const jogoCampNome = valorCampo(j, ["campeonato", "nomeCampeonato"], "");
-  const jogoCategoria = valorCampo(j, ["categoria"], "");
+  const itemCampId = valorCampo(item, ["campeonatoId"], "");
+  const itemCampNome = valorCampo(item, ["campeonato", "nomeCampeonato"], "");
+  const itemCategoria = valorCampo(item, ["categoria"], "");
 
-  const mesmoCamp = jogoCampId === campeonatoId ||
-    normalizarTexto(jogoCampNome) === normalizarTexto(campeonato);
+  const mesmoCamp =
+    itemCampId === campeonatoId ||
+    normalizarTexto(itemCampNome) === normalizarTexto(campeonato);
 
-  return mesmoCamp && (!categoria || jogoCategoria === categoria);
-}
-
-function sumulaPertenceAoFiltro(s){
-  const { campeonatoId, campeonato, categoria } = getFiltros();
-
-  if(!campeonatoId) return false;
-
-  const sCampId = valorCampo(s, ["campeonatoId"], "");
-  const sCampNome = valorCampo(s, ["campeonato", "nomeCampeonato"], "");
-  const sCategoria = valorCampo(s, ["categoria"], "");
-
-  const mesmoCamp = sCampId === campeonatoId ||
-    normalizarTexto(sCampNome) === normalizarTexto(campeonato);
-
-  return mesmoCamp && (!categoria || sCategoria === categoria);
+  return mesmoCamp && (!categoria || itemCategoria === categoria);
 }
 
 function filtrarJogos(){
-  return jogos.filter(jogoPertenceAoFiltro);
+  return jogos.filter(itemPertenceAoFiltro);
 }
 
 function filtrarSumulas(){
-  return sumulas.filter(sumulaPertenceAoFiltro);
-}
-
-function jogoFinalizado(j){
-  return normalizarTexto(j.status) === "sumula_enviada" ||
-    normalizarTexto(j.status) === "finalizado" ||
-    j.sumulaFinalizada === true ||
-    sumulas.some(s => s.id === j.id);
+  return sumulas.filter(itemPertenceAoFiltro);
 }
 
 function pegarSumulaDoJogo(jogoId){
   return sumulas.find(s => s.id === jogoId || s.jogoId === jogoId) || null;
+}
+
+function jogoFinalizado(j){
+  const status = normalizarTexto(valorCampo(j, ["status"], ""));
+
+  return status === "finalizado" ||
+    status === "sumula_enviada" ||
+    valorCampo(j, ["sumulaFinalizada"], false) === true ||
+    !!pegarSumulaDoJogo(j.id);
+}
+
+function formatarDataHora(valor){
+  if(!valor) return "-";
+
+  const data = new Date(valor);
+
+  if(isNaN(data.getTime())){
+    return String(valor);
+  }
+
+  return data.toLocaleString("pt-BR", {
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric",
+    hour:"2-digit",
+    minute:"2-digit"
+  });
 }
 
 function pegarEscudo(nome, jogo = null, lado = ""){
@@ -944,65 +1086,123 @@ function pegarEscudo(nome, jogo = null, lado = ""){
     if(direto) return direto;
   }
 
-  const time = times.find(t => normalizarTexto(valorCampo(t, ["nome"], "")) === normalizarTexto(nome));
+  const time = times.find(t =>
+    normalizarTexto(valorCampo(t, ["nome"], "")) === normalizarTexto(nome)
+  );
+
   return logoItem(time || {});
 }
 
 function pegarFotoJogador(nome, timeNome = ""){
   const jogador = jogadores.find(j =>
-    normalizarTexto(j.nome) === normalizarTexto(nome) &&
-    (!timeNome || normalizarTexto(j.time) === normalizarTexto(timeNome))
+    normalizarTexto(valorCampo(j, ["nome"], "")) === normalizarTexto(nome) &&
+    (!timeNome || normalizarTexto(valorCampo(j, ["time"], "")) === normalizarTexto(timeNome))
   );
 
-  return valorCampo(jogador, ["foto", "imagem", "fotoPerfil"], "logo-liga.jfif");
+  return logoItem(jogador || {});
 }
 
-function preencherFiltros(){
+async function carregarDados(){
+  try{
+    const [snapJogos, snapTimes, snapJogadores, snapSumulas, snapCampeonatos] = await Promise.all([
+      getDocs(collection(db, "jogos")),
+      getDocs(collection(db, "times")),
+      getDocs(collection(db, "jogadores")),
+      getDocs(collection(db, "sumulas")),
+      getDocs(collection(db, "campeonatos"))
+    ]);
+
+    jogos = [];
+    times = [];
+    jogadores = [];
+    sumulas = [];
+    campeonatos = [];
+
+    snapJogos.forEach(docSnap => jogos.push({ id:docSnap.id, ...docSnap.data() }));
+    snapTimes.forEach(docSnap => times.push({ id:docSnap.id, ...docSnap.data() }));
+    snapJogadores.forEach(docSnap => jogadores.push({ id:docSnap.id, ...docSnap.data() }));
+    snapSumulas.forEach(docSnap => sumulas.push({ id:docSnap.id, ...docSnap.data() }));
+    snapCampeonatos.forEach(docSnap => campeonatos.push({ id:docSnap.id, ...docSnap.data() }));
+  }catch(erro){
+    console.error(erro);
+    jogos = [];
+    times = [];
+    jogadores = [];
+    sumulas = [];
+    campeonatos = [];
+  }
+
+  if(exemplosAtivos){
+    campeonatos = [...campeonatosExemplo, ...campeonatos];
+    times = [...timesExemplo, ...times];
+    jogadores = [...jogadoresExemplo, ...jogadores];
+    jogos = [...jogosExemplo, ...jogos];
+    sumulas = [...sumulasExemplo, ...sumulas];
+  }
+
+  if(!campeonatos.length) campeonatos = campeonatosExemplo;
+  if(!times.length) times = timesExemplo;
+  if(!jogadores.length) jogadores = jogadoresExemplo;
+  if(!jogos.length) jogos = jogosExemplo;
+  if(!sumulas.length) sumulas = sumulasExemplo;
+}
+
+function preencherCampeonatos(){
   const select = document.getElementById("filtroCampeonato");
   select.innerHTML = `<option value="">Selecione o campeonato</option>`;
 
+  const usados = new Set();
+
   campeonatos
-    .sort((a,b)=>obterNomeCampeonato(a).localeCompare(obterNomeCampeonato(b),"pt-BR"))
+    .filter(c => obterNomeCampeonato(c))
+    .sort((a,b)=>obterNomeCampeonato(a).localeCompare(obterNomeCampeonato(b), "pt-BR"))
     .forEach(c => {
-      select.innerHTML += `<option value="${obterIdCampeonato(c)}">${obterNomeCampeonato(c)}</option>`;
+      const id = obterIdCampeonato(c);
+      const nome = obterNomeCampeonato(c);
+      const chave = id || nome;
+
+      if(usados.has(chave)) return;
+      usados.add(chave);
+
+      select.innerHTML += `<option value="${chave}">${nome}</option>`;
     });
 }
 
 function obterCategoriasDoCampeonato(camp){
   if(!camp) return [];
 
-  let categorias = [];
+  const categorias = new Set();
 
-  if(Array.isArray(camp.categorias) && camp.categorias.length){
-    categorias = camp.categorias.map(cat => {
-      if(typeof cat === "string") return cat;
-      return cat.nome || cat.categoria || "";
-    }).filter(Boolean);
-  }
+  const cadastro = valorCampo(camp, ["categorias"], []);
 
-  if(!categorias.length){
-    const campId = obterIdCampeonato(camp);
-    const nomeCamp = obterNomeCampeonato(camp);
-    const set = new Set();
-
-    jogos.forEach(j => {
-      const mesmoCamp = valorCampo(j, ["campeonatoId"], "") === campId ||
-        normalizarTexto(valorCampo(j, ["campeonato"], "")) === normalizarTexto(nomeCamp);
-
-      if(mesmoCamp && j.categoria) set.add(j.categoria);
+  if(Array.isArray(cadastro)){
+    cadastro.forEach(cat => {
+      const nome = typeof cat === "string" ? cat : (cat.nome || cat.categoria || "");
+      if(nome) categorias.add(nome);
     });
-
-    categorias = Array.from(set);
   }
 
-  return [...new Set(categorias)].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+  const campId = obterIdCampeonato(camp);
+  const campNome = obterNomeCampeonato(camp);
+
+  jogos.forEach(j => {
+    const mesmoCamp =
+      valorCampo(j, ["campeonatoId"], "") === campId ||
+      normalizarTexto(valorCampo(j, ["campeonato", "nomeCampeonato"], "")) === normalizarTexto(campNome);
+
+    if(mesmoCamp && valorCampo(j, ["categoria"], "")){
+      categorias.add(valorCampo(j, ["categoria"], ""));
+    }
+  });
+
+  return Array.from(categorias).sort((a,b)=>a.localeCompare(b,"pt-BR"));
 }
 
 function preencherCategorias(){
   const select = document.getElementById("filtroCategoria");
   const camp = getCampeonatoSelecionado();
 
-  select.innerHTML = `<option value="">Todas as categorias</option>`;
+  select.innerHTML = `<option value="">Todas categorias</option>`;
 
   if(!camp) return;
 
@@ -1016,19 +1216,51 @@ function aplicarFiltrosDaURL(){
   const categoriaURL = getParametro("categoria");
 
   if(campeonatoURL){
-    const camp = campeonatos.find(c => normalizarTexto(obterNomeCampeonato(c)) === normalizarTexto(campeonatoURL));
+    const camp = campeonatos.find(c =>
+      normalizarTexto(obterNomeCampeonato(c)) === normalizarTexto(campeonatoURL) ||
+      obterIdCampeonato(c) === campeonatoURL
+    );
+
     if(camp){
-      document.getElementById("filtroCampeonato").value = obterIdCampeonato(camp);
+      document.getElementById("filtroCampeonato").value = obterIdCampeonato(c) || obterNomeCampeonato(c);
       preencherCategorias();
     }
   }
 
   if(categoriaURL){
     const selectCat = document.getElementById("filtroCategoria");
-    const opcao = Array.from(selectCat.options).find(op => normalizarTexto(op.value) === normalizarTexto(categoriaURL));
+    const opcao = Array.from(selectCat.options).find(op =>
+      normalizarTexto(op.value) === normalizarTexto(categoriaURL)
+    );
+
     if(opcao) selectCat.value = opcao.value;
   }
 }
+
+window.excluirExemplos = function(){
+  localStorage.setItem("ocultarExemplosTabela", "sim");
+  exemplosAtivos = false;
+
+  campeonatos = campeonatos.filter(c => !c.exemplo);
+  times = times.filter(t => !t.exemplo);
+  jogadores = jogadores.filter(j => !j.exemplo);
+  jogos = jogos.filter(j => !j.exemplo);
+  sumulas = sumulas.filter(s => !s.exemplo);
+
+  preencherCampeonatos();
+  preencherCategorias();
+  atualizarTela();
+};
+
+window.restaurarExemplos = async function(){
+  localStorage.removeItem("ocultarExemplosTabela");
+  exemplosAtivos = true;
+
+  await carregarDados();
+  preencherCampeonatos();
+  preencherCategorias();
+  atualizarTela();
+};
 
 function atualizarTitulo(){
   const { campeonato, categoria } = getFiltros();
@@ -1051,8 +1283,10 @@ function atualizarHero(){
   });
 
   let gols = 0;
+
   sumulasFiltradas.forEach(s => {
-    gols += Number(s.golsA || 0) + Number(s.golsB || 0);
+    gols += Number(valorCampo(s, ["golsA"], 0) || 0);
+    gols += Number(valorCampo(s, ["golsB"], 0) || 0);
   });
 
   document.getElementById("heroTitulo").textContent = campeonato || "Tabela da Competição";
@@ -1068,7 +1302,6 @@ function atualizarHero(){
   document.getElementById("heroLogo").src = camp ? logoItem(camp) : "logo-liga.jfif";
   document.getElementById("heroLogo").onerror = function(){ this.src = "logo-liga.jfif"; };
 }
-
 function renderDetalhes(){
   const area = document.getElementById("areaTabela");
   const { campeonato, categoria } = getFiltros();
@@ -1089,25 +1322,54 @@ function renderDetalhes(){
   });
 
   let gols = 0;
+
   sumulasFiltradas.forEach(s => {
-    gols += Number(s.golsA || 0) + Number(s.golsB || 0);
+    gols += Number(valorCampo(s, ["golsA"], 0) || 0);
+    gols += Number(valorCampo(s, ["golsB"], 0) || 0);
   });
 
   area.innerHTML = `
-    <div class="card">
-      <div class="stats-grid">
-        <div class="stat-card"><strong>Campeonato</strong><span>${campeonato || "-"}</span></div>
-        <div class="stat-card"><strong>Categoria</strong><span>${categoria || "Todas"}</span></div>
-        <div class="stat-card"><strong>Jogos finalizados</strong><span>${sumulasFiltradas.length}</span></div>
-        <div class="stat-card"><strong>Jogos cadastrados</strong><span>${jogosFiltrados.length}</span></div>
-        <div class="stat-card"><strong>Times</strong><span>${timesSet.size}</span></div>
-        <div class="stat-card"><strong>Gols</strong><span>${gols}</span></div>
-        <div class="stat-card"><strong>Temporada</strong><span>${camp?.temporada || "-"}</span></div>
-        <div class="stat-card"><strong>Status</strong><span>${camp?.status || "-"}</span></div>
+    <div class="cards-resumo">
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-trophy"></i></div>
+        <strong>Campeonato</strong>
+        <span>${campeonato}</span>
+        <small>${camp?.temporada || "-"}</small>
       </div>
 
-      <div class="tags">
-        ${obterCategoriasDoCampeonato(camp).map(c => `<div class="tag">${c}</div>`).join("")}
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-users"></i></div>
+        <strong>Categoria</strong>
+        <span>${categoria || "Todas"}</span>
+        <small>${obterCategoriasDoCampeonato(camp).length} categoria(s)</small>
+      </div>
+
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-calendar-check"></i></div>
+        <strong>Jogos finalizados</strong>
+        <span>${sumulasFiltradas.length}</span>
+        <small>${jogosFiltrados.length} jogo(s) cadastrado(s)</small>
+      </div>
+
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <strong>Times</strong>
+        <span>${timesSet.size}</span>
+        <small>Status: ${camp?.status || "-"}</small>
+      </div>
+
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-futbol"></i></div>
+        <strong>Gols</strong>
+        <span>${gols}</span>
+        <small>Média por súmula: ${sumulasFiltradas.length ? (gols / sumulasFiltradas.length).toFixed(1) : "0"}</small>
+      </div>
+
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-database"></i></div>
+        <strong>Origem</strong>
+        <span>${camp?.exemplo ? "Exemplo" : "Firebase"}</span>
+        <small>${camp?.exemplo ? "Pode excluir depois" : "Dados reais"}</small>
       </div>
     </div>
   `;
@@ -1141,13 +1403,13 @@ function renderClassificacao(){
   jogosFiltrados.forEach(j => {
     const sumula = pegarSumulaDoJogo(j.id);
 
-    const golsA = Number(valorCampo(j, ["golsA"], valorCampo(sumula, ["golsA"], 0)) || 0);
-    const golsB = Number(valorCampo(j, ["golsB"], valorCampo(sumula, ["golsB"], 0)) || 0);
-
-    const timeA = j.timeA || sumula?.timeA;
-    const timeB = j.timeB || sumula?.timeB;
+    const timeA = valorCampo(j, ["timeA"], valorCampo(sumula, ["timeA"], ""));
+    const timeB = valorCampo(j, ["timeB"], valorCampo(sumula, ["timeB"], ""));
 
     if(!timeA || !timeB) return;
+
+    const golsA = Number(valorCampo(j, ["golsA"], valorCampo(sumula, ["golsA"], 0)) || 0);
+    const golsB = Number(valorCampo(j, ["golsB"], valorCampo(sumula, ["golsB"], 0)) || 0);
 
     if(!tabela[timeA]) tabela[timeA] = criarLinhaClassificacao(timeA);
     if(!tabela[timeB]) tabela[timeB] = criarLinhaClassificacao(timeB);
@@ -1209,12 +1471,14 @@ function renderClassificacao(){
         ${lista.map((t,index) => `
           <div class="row">
             <div class="col-pos">${index + 1}</div>
+
             <div class="col-time">
               <div class="team">
                 <img src="${pegarEscudo(t.nome)}" class="escudo" onerror="this.src='logo-liga.jfif'">
                 ${t.nome}
               </div>
             </div>
+
             <div class="col">${t.pontos}</div>
             <div class="col">${t.jogos}</div>
             <div class="col">${t.vitorias}</div>
@@ -1230,115 +1494,82 @@ function renderClassificacao(){
   `;
 }
 
-function formatarDataHora(dataString){
-  if(!dataString) return "-";
-
-  const data = new Date(dataString);
-  if(isNaN(data.getTime())) return String(dataString);
-
-  const dia = String(data.getDate()).padStart(2, "0");
-  const mes = String(data.getMonth() + 1).padStart(2, "0");
-  const ano = data.getFullYear();
-  const hora = String(data.getHours()).padStart(2, "0");
-  const minuto = String(data.getMinutes()).padStart(2, "0");
-
-  return `${dia}/${mes}/${ano} - ${hora}:${minuto}`;
-}
-
-function numeroRodada(valor){
-  if(valor === undefined || valor === null || valor === "") return 999999;
-
-  const numero = parseInt(String(valor).replace(/\D/g, ""), 10);
-  return isNaN(numero) ? 999999 : numero;
-}
-
 function renderJogos(){
   const area = document.getElementById("areaTabela");
-  let filtrados = filtrarJogos();
+  const filtrados = filtrarJogos();
 
   if(!filtrados.length){
     area.innerHTML = `<div class="vazio">Nenhum jogo encontrado.</div>`;
     return;
   }
 
-  filtrados.sort((a,b) => {
-    const rodadaA = numeroRodada(a.rodada);
-    const rodadaB = numeroRodada(b.rodada);
-    if(rodadaA !== rodadaB) return rodadaA - rodadaB;
-    return String(a.data || "").localeCompare(String(b.data || ""));
-  });
+  const ordenados = [...filtrados].sort((a,b) =>
+    String(valorCampo(a, ["data"], "")).localeCompare(String(valorCampo(b, ["data"], "")))
+  );
 
-  const grupos = {};
+  area.innerHTML = `
+    <div class="lista-grid">
+      ${ordenados.map(j => {
+        const finalizado = jogoFinalizado(j);
+        const sumula = pegarSumulaDoJogo(j.id);
 
-  filtrados.forEach(j => {
-    const chave = j.rodada ? `Rodada ${j.rodada}` : "Sem rodada";
-    if(!grupos[chave]) grupos[chave] = [];
-    grupos[chave].push(j);
-  });
+        const golsA = Number(valorCampo(j, ["golsA"], valorCampo(sumula, ["golsA"], 0)) || 0);
+        const golsB = Number(valorCampo(j, ["golsB"], valorCampo(sumula, ["golsB"], 0)) || 0);
 
-  area.innerHTML = `<div class="card-lista"></div>`;
-  const lista = area.querySelector(".card-lista");
+        const placar = finalizado ? `${golsA} x ${golsB}` : "x";
 
-  Object.keys(grupos).forEach(rodada => {
-    const bloco = document.createElement("div");
-    bloco.innerHTML = `<div class="titulo-secao" style="font-size:19px;margin-bottom:10px;">${rodada}</div>`;
-    lista.appendChild(bloco);
+        return `
+          <article class="card-item">
+            <div class="card-top">
+              <div class="card-icon">
+                <i class="fa-solid fa-calendar-days"></i>
+              </div>
 
-    grupos[rodada].forEach(j => {
-      const finalizado = jogoFinalizado(j);
-      const sumula = pegarSumulaDoJogo(j.id);
-
-      const golsA = Number(valorCampo(j, ["golsA"], valorCampo(sumula, ["golsA"], 0)) || 0);
-      const golsB = Number(valorCampo(j, ["golsB"], valorCampo(sumula, ["golsB"], 0)) || 0);
-
-      const placar = finalizado ? `${golsA} x ${golsB}` : "x";
-
-      const card = document.createElement("div");
-      card.className = "card";
-
-      card.innerHTML = `
-        <div class="topo-jogo">
-          <div class="times-jogo">
-            <div class="time-jogo">
-              <img src="${pegarEscudo(j.timeA, j, "A")}" class="escudo" onerror="this.src='logo-liga.jfif'">
-              <span>${j.timeA || "-"}</span>
+              <div class="status-tag ${finalizado ? "status-finalizado" : "status-agendado"}">
+                ${finalizado ? "Finalizado" : "Agendado"}
+              </div>
             </div>
 
-            <div class="placar">${placar}</div>
+            <div class="times-linha">
+              <div class="time-box">
+                <img src="${pegarEscudo(j.timeA, j, "A")}" class="escudo" onerror="this.src='logo-liga.jfif'">
+                <span>${j.timeA || "-"}</span>
+              </div>
 
-            <div class="time-jogo visitante">
-              <span>${j.timeB || "-"}</span>
-              <img src="${pegarEscudo(j.timeB, j, "B")}" class="escudo" onerror="this.src='logo-liga.jfif'">
+              <div class="placar">${placar}</div>
+
+              <div class="time-box visitante">
+                <span>${j.timeB || "-"}</span>
+                <img src="${pegarEscudo(j.timeB, j, "B")}" class="escudo" onerror="this.src='logo-liga.jfif'">
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div class="info">
-          ${formatarDataHora(j.data)}<br>
-          ${j.local || "-"}<br>
-          Campeonato: ${j.campeonato || "-"} | Categoria: ${j.categoria || "-"}
-        </div>
+            <div class="info-item">
+              <strong>${j.campeonato || "-"}</strong><br>
+              ${j.categoria || "-"}<br>
+              ${formatarDataHora(j.data)}<br>
+              ${j.local || "-"}
+            </div>
 
-        <div class="status ${finalizado ? "finalizado" : "agendado"}">
-          <i class="fa-solid ${finalizado ? "fa-check" : "fa-clock"}"></i>
-          ${finalizado ? "Finalizado" : "Agendado"}
-        </div>
+            <div class="tags">
+              <span class="tag">${j.exemplo ? "Exemplo" : "Firebase"}</span>
+              <span class="tag">${j.rodada || j.fase || "Jogo"}</span>
+            </div>
 
-        <div class="acoes-jogo">
-          ${finalizado ? `
-            <a class="btn-acao btn-sumula" href="sumula-publica.html?id=${j.id}">
-              <i class="fa-solid fa-file-lines"></i> Ver Súmula
-            </a>
-          ` : ""}
-          <a class="btn-acao btn-secundario" href="jogos.html?campeonato=${encodeURIComponent(j.campeonato || "")}&categoria=${encodeURIComponent(j.categoria || "")}">
-            <i class="fa-solid fa-calendar-days"></i> Jogos
-          </a>
-        </div>
-      `;
-
-      lista.appendChild(card);
-    });
-  });
+            ${
+              finalizado
+                ? `
+                  <a class="btn-ver" href="sumula-publica.html?id=${j.id}">
+                    <i class="fa-solid fa-file-lines"></i> Ver Súmula
+                  </a>
+                `
+                : ""
+            }
+          </article>
+        `;
+      }).join("")}
+    </div>
+  `;
 }
 
 function renderTimes(){
@@ -1359,23 +1590,40 @@ function renderTimes(){
   }
 
   area.innerHTML = `
-    <div class="times-grid">
+    <div class="lista-grid">
       ${lista.map(nome => {
         const time = times.find(t => normalizarTexto(t.nome) === normalizarTexto(nome));
         return `
-          <div class="time-card">
-            <div class="time-card-top">
-              <img src="${pegarEscudo(nome)}" onerror="this.src='logo-liga.jfif'">
-              <div>
-                <div style="font-weight:900;">${nome}</div>
-                <div class="subinfo">${getFiltros().categoria || "Categoria geral"}</div>
+          <article class="card-item">
+            <div class="card-top">
+              <div class="card-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+
+              <div class="status-tag ${time?.exemplo ? "status-exemplo" : "status-finalizado"}">
+                ${time?.exemplo ? "Exemplo" : "Ativo"}
               </div>
             </div>
 
-            <div class="tags">
-              ${((time?.categorias || []).length ? time.categorias : (getFiltros().categoria ? [getFiltros().categoria] : [])).map(c => `<div class="tag">${c}</div>`).join("")}
+            <img src="${pegarEscudo(nome)}" class="escudo" style="width:64px;height:64px;margin:0 auto 10px;" onerror="this.src='logo-liga.jfif'">
+
+            <div class="info-item">
+              <strong>${nome}</strong><br>
+              ${getFiltros().categoria || "Categoria geral"}
             </div>
-          </div>
+
+            <div class="tags">
+              ${
+                (Array.isArray(time?.categorias) && time.categorias.length)
+                  ? time.categorias.map(c => `<span class="tag">${c}</span>`).join("")
+                  : `<span class="tag">${getFiltros().categoria || "Sem categoria"}</span>`
+              }
+            </div>
+
+            <a class="btn-ver" href="time-publico.html?id=${time?.id || ""}">
+              <i class="fa-solid fa-eye"></i> Ver Time
+            </a>
+          </article>
         `;
       }).join("")}
     </div>
@@ -1400,7 +1648,11 @@ function renderArtilharia(){
     const chave = `${normalizarTexto(nome)}|${normalizarTexto(timeNome)}`;
 
     if(!ranking[chave]){
-      ranking[chave] = { nome, time:timeNome || "-", gols:0 };
+      ranking[chave] = {
+        nome,
+        time:timeNome || "-",
+        gols:0
+      };
     }
 
     ranking[chave].gols++;
@@ -1421,19 +1673,26 @@ function renderArtilharia(){
   }
 
   area.innerHTML = `
-    <div class="card-lista">
+    <div class="ranking-lista">
       ${lista.map((jogador,index) => `
-        <div class="linha-ranking">
-          <div class="player">
-            <div class="pos">${index + 1}</div>
-            <img src="${pegarFotoJogador(jogador.nome, jogador.time)}" class="photo" onerror="this.src='logo-liga.jfif'">
-            <div>
-              <div style="font-weight:900;">${jogador.nome}</div>
-              <div class="subinfo">${jogador.time}</div>
+        <article class="ranking-card">
+          <div class="ranking-top">
+            <div class="player-box">
+              <div class="pos">${index + 1}</div>
+              <img src="${pegarFotoJogador(jogador.nome, jogador.time)}" class="photo" onerror="this.src='logo-liga.jfif'">
+
+              <div class="player-info">
+                <strong>${jogador.nome}</strong>
+                <small>${jogador.time}</small>
+              </div>
+            </div>
+
+            <div class="numero-destaque">
+              ${jogador.gols}
+              <small>gol(s)</small>
             </div>
           </div>
-          <div class="numero-destaque">${jogador.gols}</div>
-        </div>
+        </article>
       `).join("")}
     </div>
   `;
@@ -1444,7 +1703,7 @@ function renderCartoes(){
   const sumulasFiltradas = filtrarSumulas();
 
   if(!sumulasFiltradas.length){
-    area.innerHTML = `<div class="vazio">Nenhuma súmula encontrada para montar os cartões.</div>`;
+    area.innerHTML = `<div class="vazio">Nenhuma súmula encontrada para montar cartões.</div>`;
     return;
   }
 
@@ -1457,7 +1716,12 @@ function renderCartoes(){
     const chave = `${normalizarTexto(nome)}|${normalizarTexto(timeNome)}`;
 
     if(!ranking[chave]){
-      ranking[chave] = { nome, time:timeNome || "-", amarelos:0, vermelhos:0 };
+      ranking[chave] = {
+        nome,
+        time:timeNome || "-",
+        amarelos:0,
+        vermelhos:0
+      };
     }
 
     if(tipo === "amarelo") ranking[chave].amarelos++;
@@ -1485,24 +1749,26 @@ function renderCartoes(){
   }
 
   area.innerHTML = `
-    <div class="card-lista">
+    <div class="ranking-lista">
       ${lista.map((jogador,index) => `
-        <div class="linha-ranking">
-          <div class="player">
-            <div class="pos">${index + 1}</div>
-            <img src="${pegarFotoJogador(jogador.nome, jogador.time)}" class="photo" onerror="this.src='logo-liga.jfif'">
-            <div>
-              <div style="font-weight:900;">${jogador.nome}</div>
-              <div class="subinfo">${jogador.time}</div>
+        <article class="ranking-card">
+          <div class="ranking-top">
+            <div class="player-box">
+              <div class="pos">${index + 1}</div>
+              <img src="${pegarFotoJogador(jogador.nome, jogador.time)}" class="photo" onerror="this.src='logo-liga.jfif'">
+
+              <div class="player-info">
+                <strong>${jogador.nome}</strong>
+                <small>${jogador.time}</small>
+              </div>
+            </div>
+
+            <div class="numero-destaque">
+              🟨 ${jogador.amarelos}<br>
+              🟥 ${jogador.vermelhos}
             </div>
           </div>
-          <div style="text-align:right;">
-            <div class="numero-destaque">${jogador.amarelos}</div>
-            <div class="subinfo">Amarelos</div>
-            <div class="numero-destaque" style="margin-top:6px;">${jogador.vermelhos}</div>
-            <div class="subinfo">Vermelhos</div>
-          </div>
-        </div>
+        </article>
       `).join("")}
     </div>
   `;
@@ -1585,27 +1851,27 @@ function renderSuspensos(){
   }
 
   area.innerHTML = `
-    <div class="card-lista">
+    <div class="ranking-lista">
       ${lista.map((jogador,index) => `
-        <div class="linha-ranking">
-          <div class="player">
-            <div class="pos">${index + 1}</div>
-            <img src="${pegarFotoJogador(jogador.nome, jogador.time)}" class="photo" onerror="this.src='logo-liga.jfif'">
-            <div>
-              <div style="font-weight:900;">${jogador.nome}</div>
-              <div class="subinfo">${jogador.time}</div>
-              <div class="subinfo">
-                ${jogador.amarelos} amarelo(s) •
-                ${jogador.vermelhosDiretos} vermelho(s) direto(s) •
-                ${jogador.segundosAmarelos} por 2º amarelo
+        <article class="ranking-card">
+          <div class="ranking-top">
+            <div class="player-box">
+              <div class="pos">${index + 1}</div>
+              <img src="${pegarFotoJogador(jogador.nome, jogador.time)}" class="photo" onerror="this.src='logo-liga.jfif'">
+
+              <div class="player-info">
+                <strong>${jogador.nome}</strong>
+                <small>${jogador.time}</small>
+                <small>${jogador.amarelos} amarelo(s) • ${jogador.vermelhosDiretos} vermelho(s)</small>
               </div>
             </div>
+
+            <div class="numero-destaque">
+              ${jogador.totalSuspensoes}
+              <small>jogo(s)</small>
+            </div>
           </div>
-          <div style="text-align:right;">
-            <div class="numero-destaque">${jogador.totalSuspensoes}</div>
-            <div class="subinfo">Jogo(s)</div>
-          </div>
-        </div>
+        </article>
       `).join("")}
     </div>
   `;
@@ -1641,10 +1907,31 @@ document.getElementById("filtroCampeonato").addEventListener("change", () => {
 
 document.getElementById("filtroCategoria").addEventListener("change", atualizarTela);
 
-await carregarDados();
-preencherFiltros();
-aplicarFiltrosDaURL();
-atualizarTela();
+async function iniciarPagina(){
+  document.getElementById("areaTabela").innerHTML =
+    `<div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando tabela...</div>`;
+
+  await carregarDados();
+  preencherCampeonatos();
+
+  const campPadrao = campeonatos.find(c => c.id === "copa-mundo-2002") || campeonatos[0];
+
+  if(campPadrao){
+    document.getElementById("filtroCampeonato").value = obterIdCampeonato(campPadrao) || obterNomeCampeonato(campPadrao);
+  }
+
+  preencherCategorias();
+
+  const categoriaPadrao = document.getElementById("filtroCategoria").querySelector("option[value='Seleção Principal']");
+  if(categoriaPadrao){
+    document.getElementById("filtroCategoria").value = "Seleção Principal";
+  }
+
+  aplicarFiltrosDaURL();
+  atualizarTela();
+}
+
+iniciarPagina();
 </script>
 
 </body>
