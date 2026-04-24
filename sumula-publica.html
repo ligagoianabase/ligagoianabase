@@ -3,81 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Súmulas - Liga Goiana</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 :root{
   --bg:#061427;
   --card:#071d37;
-  --card2:#0d2a52;
   --gold:#f7c600;
   --gold2:#ffe45c;
-  --white:#ffffff;
+  --white:#fff;
   --muted:#cbd6ea;
-  --line:rgba(255,255,255,.12);
   --gold-line:rgba(247,198,0,.45);
-  --green:#42e85f;
-  --yellow:#ffd400;
-  --red:#ff2738;
-  --blue:#4d8dff;
   --shadow:0 14px 34px rgba(0,0,0,.38);
   --max:1240px;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-  font-family:Arial, sans-serif;
+  font-family:Arial,sans-serif;
   background:
-    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    linear-gradient(rgba(2,8,20,.88),rgba(2,8,20,.96)),
     url("fundo.png") center/cover fixed no-repeat;
   color:var(--white);
   min-height:100vh;
   overflow-x:hidden;
 }
 
-a{
-  text-decoration:none;
-  color:inherit;
-}
-
-button{
-  font-family:inherit;
-  cursor:pointer;
-  border:none;
-}
-
-img{
-  display:block;
-  max-width:100%;
-}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;cursor:pointer;border:none;}
+img{max-width:100%;display:block;}
 
 .wrap{
-  width:min(100% - 28px, var(--max));
+  width:min(100% - 28px,var(--max));
   margin:0 auto;
 }
 
-/* HEADER PADRÃO */
+/* HEADER */
 .site-header{
-  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
+  background:linear-gradient(180deg,rgba(2,10,24,.98),rgba(8,23,44,.96));
   border-bottom:3px solid var(--gold);
   box-shadow:var(--shadow);
-  position:relative;
-  z-index:10;
 }
 
 .header-top{
@@ -92,14 +60,14 @@ img{
   text-align:center;
   font-size:26px;
   font-weight:900;
-  color:#fff;
   letter-spacing:.8px;
   text-transform:uppercase;
   line-height:1.15;
 }
 
+/* MENU PADRÃO */
 .nav-bar{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.98));
   border-top:1px solid rgba(255,255,255,.06);
   overflow:hidden;
 }
@@ -110,45 +78,39 @@ img{
   align-items:center;
   gap:10px;
   padding:14px 8px;
-  flex-wrap:wrap;
-  overflow:visible;
+  flex-wrap:nowrap;
+  overflow:hidden;
 }
 
 .menu a{
   color:#fff;
   font-weight:900;
   font-size:15px;
-  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
+  background:linear-gradient(180deg,rgba(16,42,82,.98),rgba(12,33,64,.98));
   padding:12px 18px;
   border-radius:15px;
   border:1px solid rgba(255,255,255,.07);
   white-space:nowrap;
+  flex:0 0 auto;
   box-shadow:0 10px 22px rgba(0,0,0,.24);
-  transition:.25s ease;
-}
-
-.menu a:hover{
-  color:var(--gold);
-  border-color:var(--gold-line);
-  transform:translateY(-2px);
 }
 
 .menu a.ativo{
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
   color:#111;
 }
 
 /* PÁGINA */
 .page{
-  width:min(100% - 22px, 1120px);
+  width:min(100% - 22px,1120px);
   margin:0 auto;
   padding:22px 0 28px;
 }
 
 .hero{
   background:
-    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
-    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+    radial-gradient(circle at top left,rgba(247,198,0,.16),transparent 34%),
+    linear-gradient(135deg,rgba(16,42,82,.96),rgba(8,23,44,.96));
   border:1px solid var(--gold-line);
   border-radius:20px;
   padding:20px;
@@ -169,7 +131,7 @@ img{
   font-size:14px;
 }
 
-/* LISTA DE SÚMULAS COMPACTA */
+/* CARDS */
 .sumulas-lista{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
@@ -178,24 +140,17 @@ img{
 }
 
 .sumula-card{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.97));
   border:1px solid rgba(247,198,0,.22);
   border-radius:15px;
   padding:10px;
   box-shadow:0 8px 20px rgba(0,0,0,.25);
-  transition:.25s ease;
-}
-
-.sumula-card:hover{
-  transform:translateY(-2px);
-  border-color:var(--gold);
 }
 
 .sumula-card-top{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:8px;
   margin-bottom:8px;
 }
 
@@ -209,7 +164,6 @@ img{
   align-items:center;
   justify-content:center;
   font-size:16px;
-  flex-shrink:0;
 }
 
 .sumula-status{
@@ -234,8 +188,8 @@ img{
   align-items:center;
   gap:6px;
   font-weight:900;
-  min-width:0;
   font-size:13px;
+  min-width:0;
 }
 
 .sumula-time.right{
@@ -252,11 +206,10 @@ img{
 .sumula-time img{
   width:28px;
   height:28px;
-  object-fit:cover;
   border-radius:50%;
-  background:#fff;
   border:1px solid var(--gold);
-  flex-shrink:0;
+  object-fit:cover;
+  background:#fff;
 }
 
 .sumula-placar{
@@ -267,7 +220,6 @@ img{
   border:1px solid var(--gold-line);
   border-radius:10px;
   padding:6px 9px;
-  white-space:nowrap;
 }
 
 .sumula-info{
@@ -293,6 +245,22 @@ img{
   font-size:13px;
 }
 
+#areaSumula{
+  display:none;
+  margin-top:18px;
+  padding:20px;
+  border:2px solid var(--gold);
+  border-radius:16px;
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.97));
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+
+#areaSumula h2{
+  color:var(--gold);
+  margin-bottom:10px;
+}
+
 .vazio{
   color:var(--muted);
   text-align:center;
@@ -303,290 +271,30 @@ img{
   grid-column:1/-1;
 }
 
-/* SÚMULA ABERTA */
-#areaSumula{
-  background:
-    radial-gradient(circle at top center, rgba(24,72,130,.55), transparent 38%),
-    linear-gradient(180deg, rgba(2,12,28,.98), rgba(3,13,28,.98));
-  border:2px solid var(--gold);
-  border-radius:12px;
-  box-shadow:var(--shadow);
-  overflow:hidden;
-  display:none;
-}
-
-.header{
-  display:grid;
-  grid-template-columns:120px 1fr 120px;
-  align-items:center;
-  gap:14px;
-  padding:18px 24px;
-  border-bottom:2px solid var(--gold);
-}
-
-.logo{
-  width:92px;
-  height:92px;
-  object-fit:cover;
-  border-radius:18px;
-  border:2px solid var(--gold);
-  background:#fff;
-}
-
-.logo.right{
-  justify-self:end;
-}
-
-.titulo{
-  text-align:center;
-}
-
-.titulo strong{
-  display:block;
-  color:var(--gold);
-  font-size:46px;
-  font-weight:900;
-  letter-spacing:1px;
-  line-height:1;
-}
-
-.titulo span{
-  display:block;
-  margin-top:10px;
-  color:#fff;
-  font-size:20px;
-  font-weight:800;
-}
-.meta-bar{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:22px;
-  flex-wrap:wrap;
-  padding:14px 18px;
-  border-bottom:1px solid var(--line);
-  background:rgba(3,12,29,.55);
-  font-weight:800;
-}
-
-.meta-item{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  white-space:nowrap;
-}
-
-.meta-item i{
-  color:var(--gold);
-}
-
-.score-area{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  align-items:center;
-  gap:18px;
-  padding:26px 28px;
-}
-
-.team-head{
-  display:flex;
-  align-items:center;
-  gap:18px;
-}
-
-.team-head.right{
-  justify-content:flex-end;
-}
-
-.team-logo{
-  width:90px;
-  height:90px;
-  border-radius:50%;
-  object-fit:cover;
-  background:#fff;
-  border:3px solid rgba(255,255,255,.20);
-}
-
-.team-name{
-  font-size:24px;
-  font-weight:900;
-}
-
-.team-sub{
-  font-size:14px;
-  color:var(--muted);
-}
-
-.score{
-  padding:12px 24px;
-  border-radius:12px;
-  border:1px solid var(--gold);
-  color:var(--gold);
-  font-size:52px;
-  font-weight:900;
-  background:rgba(2,10,24,.72);
-}
-
-.content{
-  padding:18px;
-}
-
-.rosters{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-}
-
-.panel{
-  background:rgba(2,15,32,.86);
-  border:1px solid rgba(255,255,255,.25);
-  border-radius:10px;
-  overflow:hidden;
-}
-
-.panel-title{
-  color:var(--gold);
-  text-align:center;
-  font-size:18px;
-  font-weight:900;
-  padding:10px;
-  border-bottom:1px solid rgba(255,255,255,.25);
-}
-
-.table-head,
-.player-row{
-  display:grid;
-  grid-template-columns:52px 1fr;
-  gap:10px;
-  padding:8px 14px;
-  border-bottom:1px solid rgba(255,255,255,.10);
-}
-
-.player-row{
-  font-size:14px;
-  font-weight:700;
-}
-
-.num{
-  color:var(--gold);
-}
-
-.blocks{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-  margin-top:18px;
-}
-
-.event-panel{
-  background:rgba(2,15,32,.86);
-  border-radius:10px;
-  overflow:hidden;
-}
-
-.event-panel.green{border:1px solid rgba(66,232,95,.75);}
-.event-panel.yellow{border:1px solid rgba(255,212,0,.75);}
-.event-panel.red{border:1px solid rgba(255,39,56,.75);}
-
-.event-title{
-  padding:10px 14px;
-  font-size:16px;
-  font-weight:900;
-  border-bottom:1px solid rgba(255,255,255,.18);
-}
-
-.green .event-title{color:var(--green);}
-.yellow .event-title{color:var(--yellow);}
-.red .event-title{color:var(--red);}
-
-.event-row{
-  display:grid;
-  grid-template-columns:40px 60px 1fr;
-  padding:8px 12px;
-  font-size:13px;
-}
-
-.event-row.empty{
-  grid-template-columns:1fr;
-  text-align:center;
-  color:var(--muted);
-}
-
-.obs-box{
-  margin-top:18px;
-  background:rgba(2,15,32,.86);
-  border:1px solid rgba(255,255,255,.28);
-  border-radius:10px;
-}
-
-.obs-title{
-  text-align:center;
-  color:var(--blue);
-  font-size:18px;
-  font-weight:900;
-  padding:10px;
-}
-
-.obs-text{
-  padding:14px;
-  line-height:1.6;
-}
-
-.botoes{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-  margin:14px 0;
-}
-
-.btn{
-  padding:12px 14px;
-  border-radius:10px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.btn-home{background:#092343;}
-.btn-img{background:#238d35;}
-.btn-pdf{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111;}
-.btn-wpp{background:#239b38;}
-
-/* MOBILE */
+/* CELULAR */
 @media(max-width:900px){
+  .header-title{
+    font-size:20px;
+  }
+
   .menu{
-    flex-wrap:nowrap;
-    overflow-x:auto;
     justify-content:flex-start;
+    overflow-x:auto;
+    overflow-y:hidden;
     padding:14px;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+  }
+
+  .menu::-webkit-scrollbar{
+    display:none;
   }
 
   .menu a{
     flex:0 0 auto;
   }
 
-  .header-title{
-    font-size:20px;
-  }
-
   .sumulas-lista{
-    grid-template-columns:1fr;
-  }
-
-  .score-area{
-    grid-template-columns:1fr;
-    text-align:center;
-  }
-
-  .team-head,
-  .team-head.right{
-    justify-content:center;
-  }
-
-  .rosters,
-  .blocks{
     grid-template-columns:1fr;
   }
 }
@@ -621,86 +329,91 @@ img{
 
 <div class="page">
 
-  <div class="hero">
+  <section class="hero">
     <h1>Súmulas Oficiais</h1>
-    <p>Veja as súmulas finalizadas. Clique em "Ver Súmula" para abrir na mesma página.</p>
-  </div>
+    <p>Veja as súmulas finalizadas. Clique em “Ver Súmula” para abrir na mesma página.</p>
+  </section>
 
-  <div class="sumulas-lista" id="listaSumulas"></div>
+  <section class="sumulas-lista" id="listaSumulas"></section>
 
-  <!-- SÚMULA ABERTA -->
-  <div id="areaSumula"></div>
+  <section id="areaSumula"></section>
 
 </div>
 
 <script>
-/* DADOS DE EXEMPLO (COPA 2002 + OUTROS) */
 const SUMULAS_EXEMPLO = [
-{
-  id:"1",
-  campeonato:"Copa do Mundo FIFA 2002",
-  categoria:"Seleção Principal",
-  data:"30/06/2002 - 08:00",
-  local:"International Stadium Yokohama",
-  status:"finalizado",
-  timeA:"Brasil",
-  timeB:"Alemanha",
-  golsA:2,
-  golsB:0,
-  logoA:"logo-liga.jfif",
-  logoB:"logo-liga.jfif"
-},
-{
-  id:"2",
-  campeonato:"Copa União de Base",
-  categoria:"Sub-15",
-  data:"18/05/2025 - 16:00",
-  local:"Serra Dourada",
-  status:"finalizado",
-  timeA:"Atlético GO",
-  timeB:"Vila Nova",
-  golsA:2,
-  golsB:1,
-  logoA:"logo-liga.jfif",
-  logoB:"logo-liga.jfif"
-},
-{
-  id:"3",
-  campeonato:"Liga Goiana Elite",
-  categoria:"Sub-13",
-  data:"17/05/2025 - 15:30",
-  local:"Campo 1",
-  status:"finalizado",
-  timeA:"Goiás",
-  timeB:"Anápolis",
-  golsA:1,
-  golsB:1,
-  logoA:"logo-liga.jfif",
-  logoB:"logo-liga.jfif"
-},
-{
-  id:"4",
-  campeonato:"Copa União de Base",
-  categoria:"Sub-17",
-  data:"16/05/2025 - 19:00",
-  local:"Estádio Olímpico",
-  status:"finalizado",
-  timeA:"Cruzeiro",
-  timeB:"Goianésia",
-  golsA:3,
-  golsB:0,
-  logoA:"logo-liga.jfif",
-  logoB:"logo-liga.jfif"
-}
+  {
+    id:"1",
+    campeonato:"Copa do Mundo FIFA 2002",
+    categoria:"Seleção Principal",
+    data:"30/06/2002 - 08:00",
+    local:"International Stadium Yokohama",
+    timeA:"Brasil",
+    timeB:"Alemanha",
+    golsA:2,
+    golsB:0,
+    logoA:"logo-liga.jfif",
+    logoB:"logo-liga.jfif"
+  },
+  {
+    id:"2",
+    campeonato:"Copa União de Base",
+    categoria:"Sub-15",
+    data:"18/05/2025 - 16:00",
+    local:"Serra Dourada",
+    timeA:"Atlético GO",
+    timeB:"Vila Nova",
+    golsA:2,
+    golsB:1,
+    logoA:"logo-liga.jfif",
+    logoB:"logo-liga.jfif"
+  },
+  {
+    id:"3",
+    campeonato:"Liga Goiana Elite",
+    categoria:"Sub-13",
+    data:"17/05/2025 - 15:30",
+    local:"Campo 1",
+    timeA:"Goiás",
+    timeB:"Anápolis",
+    golsA:1,
+    golsB:1,
+    logoA:"logo-liga.jfif",
+    logoB:"logo-liga.jfif"
+  },
+  {
+    id:"4",
+    campeonato:"Copa União de Base",
+    categoria:"Sub-17",
+    data:"16/05/2025 - 19:00",
+    local:"Estádio Olímpico",
+    timeA:"Cruzeiro",
+    timeB:"Goianésia",
+    golsA:3,
+    golsB:0,
+    logoA:"logo-liga.jfif",
+    logoB:"logo-liga.jfif"
+  },
+  {
+    id:"5",
+    campeonato:"Liga Goiana Elite",
+    categoria:"Sub-11",
+    data:"15/05/2025 - 09:00",
+    local:"Campo Society 2",
+    timeA:"Aparecidense",
+    timeB:"Trindade",
+    golsA:0,
+    golsB:0,
+    logoA:"logo-liga.jfif",
+    logoB:"logo-liga.jfif"
+  }
 ];
 
-/* CRIAR CARDS */
 function renderLista(){
   const lista = document.getElementById("listaSumulas");
 
   lista.innerHTML = SUMULAS_EXEMPLO.map(j => `
-    <div class="sumula-card">
-      
+    <article class="sumula-card">
       <div class="sumula-card-top">
         <div class="sumula-icon">
           <i class="fa-solid fa-file-signature"></i>
@@ -710,7 +423,7 @@ function renderLista(){
 
       <div class="sumula-times">
         <div class="sumula-time">
-          <img src="${j.logoA}">
+          <img src="${j.logoA}" onerror="this.src='logo-liga.jfif'">
           <span>${j.timeA}</span>
         </div>
 
@@ -718,12 +431,12 @@ function renderLista(){
 
         <div class="sumula-time right">
           <span>${j.timeB}</span>
-          <img src="${j.logoB}">
+          <img src="${j.logoB}" onerror="this.src='logo-liga.jfif'">
         </div>
       </div>
 
       <div class="sumula-info">
-        ${j.campeonato}<br>
+        <strong>${j.campeonato}</strong><br>
         ${j.categoria}<br>
         ${j.data}<br>
         ${j.local}
@@ -732,12 +445,10 @@ function renderLista(){
       <button class="btn-ver-sumula" onclick="abrirSumula('${j.id}')">
         <i class="fa-solid fa-eye"></i> Ver Súmula
       </button>
-
-    </div>
+    </article>
   `).join("");
 }
 
-/* ABRIR SÚMULA */
 function abrirSumula(id){
   const s = SUMULAS_EXEMPLO.find(x => x.id === id);
   const area = document.getElementById("areaSumula");
@@ -745,20 +456,15 @@ function abrirSumula(id){
   area.style.display = "block";
 
   area.innerHTML = `
-    <div style="padding:20px;text-align:center;">
-      <h2 style="color:#f7c600;margin-bottom:10px;">SÚMULA OFICIAL</h2>
-      <p>${s.timeA} ${s.golsA} x ${s.golsB} ${s.timeB}</p>
-      <p>${s.campeonato}</p>
-      <p>${s.categoria}</p>
-      <p>${s.data}</p>
-      <p>${s.local}</p>
-    </div>
+    <h2>SÚMULA OFICIAL</h2>
+    <p><strong>${s.timeA}</strong> ${s.golsA} x ${s.golsB} <strong>${s.timeB}</strong></p>
+    <p>${s.campeonato}</p>
+    <p>${s.categoria}</p>
+    <p>${s.data}</p>
+    <p>${s.local}</p>
   `;
 
-  window.scrollTo({
-    top: area.offsetTop - 80,
-    behavior: "smooth"
-  });
+  area.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 renderLista();
