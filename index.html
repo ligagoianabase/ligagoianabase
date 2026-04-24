@@ -147,8 +147,7 @@
       margin-bottom:12px;
       letter-spacing:.4px;
     }
-
-    .side-menu{
+.side-menu{
       display:flex;
       flex-direction:column;
       gap:8px;
@@ -177,7 +176,8 @@
       color:var(--yellow);
       flex-shrink:0;
     }
-.topbar{
+
+    .topbar{
       position:relative;
       z-index:100;
       backdrop-filter:blur(12px);
@@ -191,7 +191,7 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:18px;
+      gap:16px;
       padding:14px 0;
       flex-wrap:wrap;
       overflow:visible;
@@ -202,7 +202,9 @@
       display:flex;
       align-items:center;
       gap:14px;
+      flex:0 0 auto;
       min-width:0;
+      order:1;
     }
 
     .menu-toggle{
@@ -230,6 +232,8 @@
       align-items:center;
       gap:12px;
       min-width:0;
+      flex:1 1 auto;
+      order:2;
     }
 
     .topbar-logo img{
@@ -242,7 +246,9 @@
       flex-shrink:0;
     }
 
-    .logo-text{min-width:0;}
+    .logo-text{
+      min-width:0;
+    }
 
     .logo-text strong{
       display:block;
@@ -261,11 +267,22 @@
       text-overflow:ellipsis;
     }
 
+    .top-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex:0 0 auto;
+      position:relative;
+      z-index:180;
+      order:3;
+      margin-left:auto;
+    }
+
     .top-nav{
       width:100%;
       display:flex;
       justify-content:center;
-      order:3;
+      order:4;
       overflow:visible;
       position:relative;
       z-index:150;
@@ -309,8 +326,7 @@
       background:var(--yellow-soft);
       border-color:var(--yellow-line);
     }
-
-    .dropdown-toggle .fa-chevron-down{
+.dropdown-toggle .fa-chevron-down{
       transition:transform .2s ease;
     }
 
@@ -371,15 +387,7 @@
       border-color:var(--yellow-line);
     }
 
-    .top-actions{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-shrink:0;
-      position:relative;
-      z-index:180;
-    }
-.btn-primary,
+    .btn-primary,
     .btn-secondary,
     .btn-login-chip{
       display:inline-flex;
@@ -411,6 +419,7 @@
       border:1px solid var(--yellow-line);
       background:rgba(255,212,0,.08);
       color:var(--yellow);
+      white-space:nowrap;
     }
 
     .btn-login-chip:hover{
@@ -490,8 +499,7 @@
       width:18px;
       flex-shrink:0;
     }
-
-    .user-dropdown{
+.user-dropdown{
       position:absolute;
       top:calc(100% + 10px);
       right:0;
@@ -578,7 +586,8 @@
       font-size:12px;
       font-weight:700;
     }
-.user-details{
+
+    .user-details{
       display:grid;
       gap:10px;
       margin-bottom:14px;
@@ -662,8 +671,7 @@
       font-weight:700;
       margin-bottom:16px;
     }
-
-    .hero h1{
+.hero h1{
       font-size:46px;
       line-height:1.08;
       margin-bottom:12px;
@@ -755,7 +763,8 @@
       line-height:1.6;
       color:var(--muted);
     }
-.content-grid{
+
+    .content-grid{
       display:grid;
       grid-template-columns:1.3fr .9fr;
       gap:22px;
@@ -826,8 +835,7 @@
       padding:14px 12px;
       font-size:14px;
     }
-
-    .match-table tbody td{
+.match-table tbody td{
       padding:14px 12px;
       border-top:1px solid rgba(255,255,255,.08);
       color:var(--muted);
@@ -965,7 +973,8 @@
     .footer-card a:hover{
       color:var(--yellow);
     }
-.footer-contact-line{
+
+    .footer-contact-line{
       display:flex !important;
       align-items:center;
       gap:10px;
@@ -990,8 +999,7 @@
       color:var(--yellow);
       margin-bottom:0;
     }
-
-    .footer-social a:hover{
+.footer-social a:hover{
       background:var(--yellow);
       color:#08172c;
     }
@@ -1039,11 +1047,6 @@
         padding:14px 0;
       }
 
-      .top-actions{
-        width:auto;
-        justify-content:flex-end;
-      }
-
       .top-nav{
         overflow:visible;
       }
@@ -1070,49 +1073,89 @@
       }
 
       .topbar-inner{
-        gap:10px;
+        min-height:auto;
+        flex-wrap:nowrap;
+        gap:8px;
         align-items:center;
-        justify-content:flex-start;
+        justify-content:space-between;
+        padding:10px 0;
       }
 
       .topbar-left{
-        width:auto;
-        justify-content:flex-start;
-        gap:8px;
         order:1;
+        width:auto;
+        flex:0 0 auto;
       }
 
       .menu-toggle{
-        width:44px;
-        height:44px;
-        margin-left:0;
-      }
-
-      .top-actions{
-        width:auto;
-        order:2;
-        justify-content:flex-start;
-        flex-direction:row;
-        align-items:center;
+        width:42px;
+        height:42px;
+        border-radius:12px;
+        font-size:19px;
       }
 
       .topbar-logo{
-        order:3;
-        width:100%;
-        justify-content:center;
+        order:2;
+        flex:1 1 auto;
+        width:auto;
+        justify-content:flex-start;
+        gap:7px;
+        min-width:0;
       }
 
       .topbar-logo img{
-        width:56px;
-        height:56px;
+        width:42px;
+        height:42px;
+        border-radius:11px;
       }
 
       .logo-text strong{
-        font-size:15px;
+        font-size:12px;
+        line-height:1.12;
+        white-space:normal;
       }
 
       .logo-text span{
-        font-size:12px;
+        font-size:10px;
+        margin-top:2px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+
+      .top-actions{
+        order:3;
+        width:auto;
+        flex:0 0 auto;
+        margin-left:0;
+        justify-content:flex-end;
+      }
+
+      .btn-login-chip{
+        min-height:42px;
+        padding:7px 9px;
+        border-radius:12px;
+      }
+
+      .btn-login-chip > span:last-child{
+        display:none;
+      }
+
+      .login-avatar{
+        width:26px;
+        height:26px;
+      }
+
+      .user-chip{
+        min-height:42px;
+        padding:7px 9px;
+        border-radius:12px;
+        max-width:48px;
+      }
+
+      .user-chip-text,
+      .apito-badge{
+        display:none !important;
       }
 
       .top-nav{
@@ -1143,22 +1186,16 @@
         font-size:12px;
         border-radius:10px;
       }
-
-      .dropdown-menu{
+.dropdown-menu{
         min-width:220px;
         max-width:92vw;
         z-index:9999;
       }
 
-      .btn-login-chip,
-      .user-chip{
-        min-height:44px;
-        max-width:235px;
-      }
-
-      .user-chip-text strong,
-      .user-chip-text span{
-        max-width:130px;
+      .user-dropdown{
+        right:0;
+        width:300px;
+        max-width:calc(100vw - 20px);
       }
 
       .hero-grid{
@@ -1182,7 +1219,7 @@
   </style>
 </head>
 <body>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -1234,12 +1271,19 @@
       </div>
     </div>
   </aside>
-
-  <header class="topbar">
+<header class="topbar">
     <div class="wrap topbar-inner">
       <div class="topbar-left">
         <button class="menu-toggle" id="menuToggle" type="button">☰</button>
       </div>
+
+      <a href="index.html" class="topbar-logo">
+        <img src="logo-liga.jfif" alt="Logo Liga Goiana">
+        <div class="logo-text">
+          <strong>Liga Goiana de Futebol de Base</strong>
+          <span>Onde o talento encontra o futuro</span>
+        </div>
+      </a>
 
       <div class="top-actions">
         <a href="login.html" class="btn-login-chip" id="loginChip">
@@ -1274,7 +1318,8 @@
               </div>
             </div>
           </div>
-<div class="user-details">
+
+          <div class="user-details">
             <div class="user-detail-row">
               <strong>Status</strong>
               <span id="userCardStatus">-</span>
@@ -1305,14 +1350,6 @@
           </div>
         </div>
       </div>
-
-      <a href="index.html" class="topbar-logo">
-        <img src="logo-liga.jfif" alt="Logo Liga Goiana">
-        <div class="logo-text">
-          <strong>Liga Goiana de Futebol de Base</strong>
-          <span>Onde o talento encontra o futuro</span>
-        </div>
-      </a>
 
       <nav class="top-nav">
         <ul>
@@ -1353,8 +1390,7 @@
       </nav>
     </div>
   </header>
-
-  <main>
+<main>
     <section class="hero">
       <div class="wrap">
         <div class="hero-card">
@@ -1400,7 +1436,8 @@
               <p>Jogos organizados e arbitragem qualificada.</p>
             </div>
           </div>
-<div class="pillar">
+
+          <div class="pillar">
             <div class="pillar-icon"><i class="fa-solid fa-shield-halved"></i></div>
             <div class="pillar-text">
               <h3>Formação de atletas</h3>
@@ -1546,7 +1583,8 @@
       </div>
     </div>
   </footer>
-<script>
+
+  <script>
     const sidebar = document.getElementById("sidebar");
     const sidebarOverlay = document.getElementById("sidebarOverlay");
     const menuToggle = document.getElementById("menuToggle");
@@ -1853,6 +1891,5 @@
       });
     }
   </script>
-
 </body>
 </html>
