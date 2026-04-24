@@ -14,86 +14,326 @@
       --card:#102a52;
       --card-hover:#153766;
       --gold:#f7c600;
+      --gold-soft:rgba(247,198,0,.12);
       --gold-line:rgba(247,198,0,.30);
       --white:#ffffff;
       --muted:#d6def0;
       --shadow:0 8px 22px rgba(0,0,0,.28);
+      --max:1280px;
     }
 
     *{margin:0;padding:0;box-sizing:border-box;}
 
     body{
-      font-family:Arial;
+      font-family:Arial, sans-serif;
       background:
         linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
         url("fundo.png") center/cover fixed no-repeat;
       color:var(--white);
+      min-height:100vh;
+      overflow-x:hidden;
     }
 
-    .wrap{width:min(100% - 30px,1280px);margin:0 auto;}
+    a{text-decoration:none;color:inherit;}
+    button{font-family:inherit;cursor:pointer;border:none;}
+
+    .wrap{
+      width:min(100% - 30px, var(--max));
+      margin:0 auto;
+    }
+
+    .sidebar-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      opacity:0;
+      visibility:hidden;
+      transition:.25s ease;
+      z-index:998;
+    }
+
+    .sidebar-overlay.show{
+      opacity:1;
+      visibility:visible;
+    }
+
+    .sidebar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:320px;
+      max-width:88%;
+      height:100vh;
+      background:linear-gradient(180deg,#04132d,#021022);
+      border-right:1px solid var(--gold-line);
+      box-shadow:var(--shadow);
+      padding:22px 18px;
+      transform:translateX(-105%);
+      transition:.25s ease;
+      z-index:999;
+      overflow-y:auto;
+    }
+
+    .sidebar.open{
+      transform:translateX(0);
+    }
+
+    .sidebar-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:var(--gold);
+      font-size:18px;
+      font-weight:bold;
+      padding-bottom:16px;
+      margin-bottom:16px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .sidebar-close{
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      font-size:24px;
+    }
+
+    .side-menu{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .side-menu a{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:12px;
+      border-radius:12px;
+      color:var(--muted);
+      font-weight:bold;
+    }
+
+    .side-menu a i{
+      color:var(--gold);
+      width:20px;
+      text-align:center;
+    }
+
+    .side-menu a:hover{
+      background:var(--gold-soft);
+      color:var(--gold);
+    }
 
     header{
-      background:#08172c;
+      background:rgba(8,23,44,.96);
       border-bottom:3px solid var(--gold);
+      box-shadow:var(--shadow);
     }
 
     .header-inner{
+      min-height:82px;
       display:flex;
       align-items:center;
       justify-content:space-between;
+      gap:14px;
       padding:14px 0;
-      flex-wrap:wrap;
     }
 
-    .header-left,.header-right{
-      display:flex;
-      gap:10px;
-      align-items:center;
+    .menu-toggle{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      border:1px solid var(--gold-line);
+      background:var(--gold-soft);
+      color:var(--gold);
+      font-size:20px;
+      flex-shrink:0;
     }
 
     .header-title{
       flex:1;
       text-align:center;
       font-size:22px;
-      font-weight:bold;
+      font-weight:700;
+      color:var(--white);
     }
 
     .top-btn{
       padding:10px 16px;
       border-radius:10px;
       font-weight:bold;
-      display:flex;
+      display:inline-flex;
       align-items:center;
+      justify-content:center;
       gap:8px;
     }
 
-    .btn-light{background:#fff4cf;color:#111;}
-    .btn-gold{background:var(--gold);color:#111;}
+    .btn-gold{
+      background:var(--gold);
+      color:#111;
+    }
 
-    .mobile-btn{display:none;}
+    .container{
+      padding:22px 0 30px;
+    }
+
+    .hero-panel{
+      background:linear-gradient(180deg, rgba(16,42,82,.95), rgba(10,28,56,.96));
+      border:1px solid var(--gold-line);
+      border-radius:20px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:22px;
+    }
+
+    .hero-panel h2{
+      font-size:28px;
+      margin-bottom:8px;
+    }
+
+    .hero-panel p{
+      color:var(--muted);
+      line-height:1.6;
+      max-width:900px;
+    }
+
+    .status-box{
+      margin-top:14px;
+      padding:14px;
+      border-radius:12px;
+      display:none;
+      font-weight:700;
+    }
+
+    .status-info{
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .status-erro{
+      background:rgba(180,0,0,.22);
+      color:#ffb0b0;
+      border:1px solid rgba(255,120,120,.25);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:14px;
+      margin-bottom:24px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+      border-radius:16px;
+      padding:18px;
+      text-align:center;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .card h3{
+      font-size:34px;
+      color:var(--gold);
+    }
+
+    .card p{
+      margin-top:10px;
+      font-size:15px;
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    .admin-block{
+      background:rgba(16,42,82,.45);
+      border:1px solid rgba(255,255,255,.05);
+      border-radius:18px;
+      padding:18px;
+      margin-bottom:18px;
+    }
+
+    .section-title{
+      font-size:20px;
+      color:var(--gold);
+      margin-bottom:14px;
+      font-weight:700;
+    }
+
+    .menu{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+      gap:14px;
+    }
+
+    .menu a{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+      color:white;
+      padding:15px 16px;
+      border-radius:14px;
+      font-weight:bold;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .menu a i{
+      color:var(--gold);
+      width:20px;
+      text-align:center;
+    }
+
+    .menu a:hover{
+      background:var(--card-hover);
+      color:var(--gold);
+    }
+
+    .footer-note{
+      margin-top:20px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      text-align:center;
+    }
+
+    #painelConteudo{
+      display:none;
+    }
 
     @media (max-width:600px){
-
-      .header-left{display:none;}
-
-      .header-right{
-        width:100%;
-        justify-content:center;
-        flex-direction:row;
-        gap:8px;
+      .header-inner{
+        flex-wrap:nowrap;
+        gap:10px;
       }
 
-      .mobile-btn{
-        display:flex;
+      .header-title{
+        font-size:17px;
+        line-height:1.2;
+      }
+
+      .top-btn{
+        padding:10px 12px;
+        min-width:46px;
       }
 
       .top-btn span{
         display:none;
       }
 
-      .top-btn{
-        width:auto;
-        padding:10px;
+      .menu{
+        grid-template-columns:1fr;
+      }
+
+      .grid{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .hero-panel h2{
+        font-size:24px;
       }
     }
   </style>
@@ -101,53 +341,253 @@
 
 <body>
 
-<header>
-  <div class="wrap header-inner">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <div class="header-left">
-      <button class="top-btn btn-light" onclick="history.back()">
-        <i class="fa-solid fa-arrow-left"></i> Voltar
-      </button>
-
-      <a href="./index.html" class="top-btn btn-light">
-        <i class="fa-solid fa-house"></i> Página Inicial
-      </a>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span>Painel ADM</span>
+      <button class="sidebar-close" id="sidebarClose" type="button">×</button>
     </div>
 
-    <div class="header-title">Painel do Administrador</div>
+    <div class="side-menu">
+      <a href="./admin.html"><i class="fa-solid fa-house-user"></i> Painel ADM</a>
+      <a href="./index.html"><i class="fa-solid fa-house"></i> Página Inicial</a>
+      <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos</a>
+      <a href="categorias-admin.html"><i class="fa-solid fa-layer-group"></i> Categorias</a>
+      <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times</a>
+      <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores</a>
+      <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos</a>
+      <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros</a>
+      <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes</a>
+      <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários e Permissões</a>
+      <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
+      <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Criar Súmula</a>
+      <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Ver Súmulas</a>
+      <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Tabelas</a>
+      <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação</a>
+      <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas</a>
+      <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
+      <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria</a>
+      <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Configurações</a>
+      <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
+    </div>
+  </aside>
 
-    <div class="header-right">
+  <header>
+    <div class="wrap header-inner">
+      <button class="menu-toggle" id="menuToggle" type="button">☰</button>
 
-      <!-- MOBILE BOTÕES -->
-      <a href="./index.html" class="top-btn btn-light mobile-btn">
-        <i class="fa-solid fa-house"></i>
-      </a>
+      <div class="header-title">Painel do Administrador</div>
 
-      <a href="./admin.html" class="top-btn btn-light mobile-btn">
-        <i class="fa-solid fa-house-user"></i>
-      </a>
-
-      <!-- SAIR (FUNCIONA EM TODOS) -->
       <button class="top-btn btn-gold" onclick="logout()">
         <i class="fa-solid fa-right-from-bracket"></i>
         <span>Sair</span>
       </button>
-
     </div>
+  </header>
 
+  <div class="wrap container">
+    <section class="hero-panel">
+      <h2>Gestão Geral da Liga</h2>
+      <p>
+        Aqui você administra campeonatos, categorias, equipes, jogadores, comissão técnica,
+        arbitragem, jogos, súmulas, tabelas, notícias e configurações do sistema.
+      </p>
+
+      <div id="statusInfo" class="status-box status-info">Carregando painel administrativo...</div>
+      <div id="statusErro" class="status-box status-erro"></div>
+    </section>
+
+    <div id="painelConteudo">
+      <div class="grid">
+        <div class="card"><h3 id="totalCampeonatos">0</h3><p>Campeonatos</p></div>
+        <div class="card"><h3 id="totalCategorias">0</h3><p>Categorias</p></div>
+        <div class="card"><h3 id="totalTimes">0</h3><p>Times</p></div>
+        <div class="card"><h3 id="totalJogadores">0</h3><p>Jogadores</p></div>
+        <div class="card"><h3 id="totalTecnicos">0</h3><p>Técnicos</p></div>
+        <div class="card"><h3 id="totalArbitros">0</h3><p>Árbitros</p></div>
+        <div class="card"><h3 id="totalJogos">0</h3><p>Jogos</p></div>
+        <div class="card"><h3 id="totalSumulas">0</h3><p>Súmulas</p></div>
+      </div>
+
+      <div class="admin-block">
+        <h3 class="section-title">Cadastros e Estrutura</h3>
+        <div class="menu">
+          <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos ADM</a>
+          <a href="categorias-admin.html"><i class="fa-solid fa-layer-group"></i> Categorias ADM</a>
+          <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times ADM</a>
+          <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores ADM</a>
+          <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos ADM</a>
+          <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros ADM</a>
+          <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes ADM</a>
+          <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários e Permissões</a>
+        </div>
+      </div>
+
+      <div class="admin-block">
+        <h3 class="section-title">Competições e Operação</h3>
+        <div class="menu">
+          <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos ADM</a>
+          <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Criar Súmula ADM</a>
+          <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Ver Súmulas ADM</a>
+          <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Tabelas ADM</a>
+          <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação ADM</a>
+          <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas de Arbitragem</a>
+        </div>
+      </div>
+
+      <div class="admin-block">
+        <h3 class="section-title">Comunicação e Sistema</h3>
+        <div class="menu">
+          <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias ADM</a>
+          <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria ADM</a>
+          <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Configurações</a>
+          <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        Painel administrativo da Liga Goiana de Futebol de Base.
+      </div>
+    </div>
   </div>
-</header>
 
-<script type="module">
-  import { auth } from "./firebase.js";
-  import { signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+  <script>
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const menuToggle = document.getElementById("menuToggle");
+    const sidebarClose = document.getElementById("sidebarClose");
 
-  window.logout = function(){
-    signOut(auth).then(()=>{
-      window.location.href = "login.html";
+    function openSidebar(){
+      sidebar.classList.add("open");
+      sidebarOverlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeSidebar(){
+      sidebar.classList.remove("open");
+      sidebarOverlay.classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    menuToggle.addEventListener("click", openSidebar);
+    sidebarClose.addEventListener("click", closeSidebar);
+    sidebarOverlay.addEventListener("click", closeSidebar);
+  </script>
+
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+    const statusInfo = document.getElementById("statusInfo");
+    const statusErro = document.getElementById("statusErro");
+    const painelConteudo = document.getElementById("painelConteudo");
+
+    function mostrarInfo(texto){
+      statusInfo.style.display = "block";
+      statusInfo.textContent = texto;
+      statusErro.style.display = "none";
+    }
+
+    function mostrarErro(texto){
+      statusInfo.style.display = "none";
+      statusErro.style.display = "block";
+      statusErro.textContent = texto;
+    }
+
+    function normalizarTexto(texto){
+      return String(texto || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function normalizarTipo(tipo){
+      const valor = normalizarTexto(tipo);
+      if(valor === "admin" || valor === "administrador") return "admin";
+      if(valor === "arbitro" || valor === "árbitro") return "arbitro";
+      return valor;
+    }
+
+    async function validarAcessoPainel(user){
+      if(!user) return { liberado:false, motivo:"Usuário não autenticado." };
+
+      const usuarioSnap = await getDoc(doc(db, "usuarios", user.uid));
+
+      if(!usuarioSnap.exists()){
+        return { liberado:false, motivo:"Seu cadastro não foi encontrado." };
+      }
+
+      const dados = usuarioSnap.data();
+      const tipo = normalizarTipo(dados.tipoUsuario || dados.tipousuario || dados.tipo || "");
+      const aprovado = dados.aprovado === true;
+      const autorizado = dados.autorizado === true;
+      const status = normalizarTexto(dados.status || "ativo");
+
+      if(status === "bloqueado"){
+        return { liberado:false, motivo:"Seu acesso está bloqueado." };
+      }
+
+      if((tipo === "admin" || tipo === "arbitro") && aprovado && autorizado){
+        return { liberado:true, dados };
+      }
+
+      return { liberado:false, motivo:"Seu usuário não tem permissão para entrar no painel ADM." };
+    }
+
+    async function carregarTotaisPainel(){
+      const [campeonatos,times,jogadores,tecnicos,arbitros,jogos,sumulas] = await Promise.all([
+        getDocs(collection(db,"campeonatos")),
+        getDocs(collection(db,"times")),
+        getDocs(collection(db,"jogadores")),
+        getDocs(collection(db,"tecnicos")),
+        getDocs(collection(db,"arbitros")),
+        getDocs(collection(db,"jogos")),
+        getDocs(collection(db,"sumulas"))
+      ]);
+
+      document.getElementById("totalCampeonatos").textContent = campeonatos.size;
+      document.getElementById("totalCategorias").textContent = 0;
+      document.getElementById("totalTimes").textContent = times.size;
+      document.getElementById("totalJogadores").textContent = jogadores.size;
+      document.getElementById("totalTecnicos").textContent = tecnicos.size;
+      document.getElementById("totalArbitros").textContent = arbitros.size;
+      document.getElementById("totalJogos").textContent = jogos.size;
+      document.getElementById("totalSumulas").textContent = sumulas.size;
+    }
+
+    window.logout = function(){
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      });
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      try{
+        mostrarInfo("Carregando painel administrativo...");
+
+        if(!user){
+          window.location.href = "login.html";
+          return;
+        }
+
+        const validacao = await validarAcessoPainel(user);
+
+        if(!validacao.liberado){
+          mostrarErro(validacao.motivo);
+          setTimeout(() => window.location.href = "index.html", 1800);
+          return;
+        }
+
+        await carregarTotaisPainel();
+
+        statusInfo.style.display = "none";
+        statusErro.style.display = "none";
+        painelConteudo.style.display = "block";
+      }catch(error){
+        console.error(error);
+        mostrarErro("Erro ao validar acesso.");
+      }
     });
-  }
-</script>
+  </script>
 
 </body>
 </html>
