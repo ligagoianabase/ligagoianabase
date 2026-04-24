@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jogadores - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --yellow:#7a5a00;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1240px;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
+  border:none;
+}
+
+input,
+select{
+  font-family:inherit;
+}
+
+img{
+  display:block;
+  max-width:100%;
+}
+
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
+
+/* HEADER PADRÃO */
+.site-header{
+  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.header-top{
+  min-height:92px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px 0;
+}
+
+.header-title{
+  text-align:center;
+  font-size:26px;
+  font-weight:900;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  line-height:1.15;
+}
+
+/* MENU FINAL PADRÃO */
+.nav-bar{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
+  border-top:1px solid rgba(255,255,255,.06);
+  overflow:hidden;
+}
+
+.menu{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:clamp(4px, .55vw, 10px);
+  padding:14px 6px;
+  flex-wrap:nowrap;
+  overflow:hidden;
+}
+.menu a{
+  color:#fff;
+  font-weight:900;
+  font-size:clamp(11px, .92vw, 15px);
+  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
+  padding:clamp(8px, .75vw, 12px) clamp(9px, 1vw, 18px);
+  border-radius:clamp(10px, .9vw, 15px);
+  border:1px solid rgba(255,255,255,.07);
+  white-space:nowrap;
+  flex:0 1 auto;
+  box-shadow:0 10px 22px rgba(0,0,0,.24);
+  transition:.25s ease;
+}
+
+.menu a:hover{
+  color:var(--gold);
+  border-color:var(--gold-line);
+}
+
+.menu a.ativo{
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+}
+
+/* PÁGINA */
+.container{
+  padding:22px 0 34px;
+}
+
+.hero{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+
+.hero h2{
+  color:var(--gold);
+  font-size:28px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+
+.hero p{
+  color:var(--muted);
+  line-height:1.5;
+  font-size:14px;
+}
+
+.exemplo-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:12px;
+  margin-bottom:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+.exemplo-bar span{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+
+.exemplo-bar strong{
+  color:var(--gold);
+}
+.btn-exemplo{
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:900;
+  font-size:12px;
+  border:1px solid rgba(255,255,255,.12);
+  background:#1a3f73;
+  color:#fff;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
+.btn-exemplo.danger{
+  background:#7a1f1f;
+}
+
+/* FILTROS */
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+input, select{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  font-size:13px;
+  background:#f5f7fb;
+  color:#111;
+}
+
+input:focus, select:focus{
+  outline:2px solid rgba(247,198,0,.55);
+}
+
+/* LISTA */
+.lista{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* CARD */
+.card{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px;
+  border-radius:14px;
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid rgba(247,198,0,.18);
+  box-shadow:0 8px 18px rgba(0,0,0,.25);
+}
+
+.player{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex:1;
+  min-width:0;
+}
+
+.photo{
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid rgba(255,255,255,.15);
+  background:#1a3f73;
+}
+
+.info{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-width:0;
+}
+
+.nome{
+  font-weight:900;
+  font-size:14px;
+}
+
+.sub{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.tags{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+}
+
+.tag{
+  background:#1a3f73;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:11px;
+}
+.stats{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.4;
+}
+
+.actions{
+  display:flex;
+  align-items:center;
+}
+
+.btn-ver{
+  padding:10px 12px;
+  border-radius:10px;
+  font-weight:900;
+  font-size:12px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+}
+
+/* VAZIO */
+.vazio{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  padding:22px;
+  border-radius:14px;
+  text-align:center;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .filtros{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:600px){
+  .header-title{
+    font-size:16px;
+  }
+
+  .menu{
+    justify-content:flex-start;
+    overflow-x:auto;
+  }
+
+  .hero{
+    padding:14px;
+  }
+
+  .hero h2{
+    font-size:22px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="site-header">
+  <div class="wrap header-top">
+    <div class="header-title">
+      LIGA GOIANA DE FUTEBOL DE BASE
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="wrap">
+      <nav class="menu">
+        <a href="index.html">Início</a>
+        <a href="campeonatos.html">Campeonatos</a>
+        <a href="tabela.html">Tabela</a>
+        <a href="jogos.html">Jogos</a>
+        <a href="times.html">Times</a>
+        <a href="tecnicos.html">Técnicos</a>
+        <a href="jogadores.html" class="ativo">Jogadores</a>
+        <a href="arbitros.html">Árbitros</a>
+        <a href="assistentes.html">Assistente</a>
+        <a href="sumula-publica.html">Súmula</a>
+        <a href="noticias.html">Notícias</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </div>
+  </div>
+</header>
+<main class="wrap container">
+
+  <!-- HERO -->
+  <section class="hero">
+    <h2>Jogadores</h2>
+    <p>Visualize atletas por campeonato, categoria e desempenho completo.</p>
+  </section>
+
+  <!-- EXEMPLO -->
+  <div class="exemplo-bar">
+    <span>
+      <strong>Modo exemplo:</strong> Copa do Mundo 2002 (Brasil x Alemanha)
+    </span>
+
+    <div>
+      <button class="btn-exemplo" onclick="ativarExemplo()">
+        Ativar exemplo
+      </button>
+
+      <button class="btn-exemplo danger" onclick="removerExemplo()">
+        Remover
+      </button>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filtros">
+    <input id="busca" placeholder="Buscar jogador...">
+
+    <select id="filtroCampeonato"></select>
+
+    <select id="filtroCategoria"></select>
+  </div>
+
+  <!-- LISTA -->
+  <div class="lista" id="lista"></div>
+
+</main>
+<script type="module">
+import { db } from "./firebase.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+let jogadores = [];
+let jogos = [];
+let campeonatos = [];
+
+/* UTIL */
+function n(txt){
+  return String(txt || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function val(obj, chaves, f=""){
+  for(const c of chaves){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== ""){
+      return obj[c];
+    }
+  }
+  return f;
+}
+
+/* EXEMPLO */
+const jogadoresExemplo = [
+  { nome:"Ronaldo", time:"Brasil", numero:9, gols:8, posicao:"Atacante" },
+  { nome:"Rivaldo", time:"Brasil", numero:10, gols:5, posicao:"Meia" },
+  { nome:"Ronaldinho", time:"Brasil", numero:11, gols:2, posicao:"Meia" },
+  { nome:"Cafu", time:"Brasil", numero:2, gols:0, posicao:"Lateral" },
+  { nome:"Roberto Carlos", time:"Brasil", numero:6, gols:1, posicao:"Lateral" },
+  { nome:"Klose", time:"Alemanha", numero:11, gols:5, posicao:"Atacante" },
+  { nome:"Oliver Kahn", time:"Alemanha", numero:1, gols:0, posicao:"Goleiro" }
+];
+
+let modoExemplo = false;
+
+window.ativarExemplo = function(){
+  modoExemplo = true;
+  render();
+};
+
+window.removerExemplo = function(){
+  modoExemplo = false;
+  render();
+};
+/* FILTROS */
+function getCampSelecionado(){
+  const id = document.getElementById("filtroCampeonato").value;
+  return campeonatos.find(c => val(c,["id"]) === id);
+}
+
+function getFiltro(){
+  return {
+    camp:getCampSelecionado(),
+    categoria:document.getElementById("filtroCategoria").value,
+    busca:n(document.getElementById("buscaJogador").value)
+  };
+}
+
+function jogoDoCamp(j, camp){
+  if(!camp) return false;
+
+  const id = val(j,["campeonatoId"]);
+  const nome = val(j,["campeonato","nomeCampeonato"]);
+
+  return id === camp.id || n(nome) === n(camp.nome);
+}
+
+/* MAPA TIMES */
+function mapaTimes(){
+  const { camp, categoria } = getFiltro();
+  const mapa = new Set();
+
+  jogos.forEach(j=>{
+    if(!jogoDoCamp(j,camp)) return;
+    if(categoria && j.categoria !== categoria) return;
+
+    if(j.timeA) mapa.add(n(j.timeA));
+    if(j.timeB) mapa.add(n(j.timeB));
+  });
+
+  return mapa;
+}
+/* FILTRAR JOGADORES */
+function filtrarJogadores(){
+  const { camp, categoria, busca } = getFiltro();
+  const mapa = mapaTimes();
+
+  if(!camp) return [];
+
+  return jogadores.filter(j=>{
+    const nome = val(j,["nome"]);
+    const time = val(j,["time"]);
+    const pos = val(j,["posicao"]);
+
+    // participa no campeonato
+    if(!mapa.has(n(time))) return false;
+
+    // categoria
+    if(categoria){
+      const cats = val(j,["categorias"],[]);
+      if(Array.isArray(cats) && cats.length){
+        if(!cats.includes(categoria)) return false;
+      }
+    }
+
+    // busca
+    if(busca){
+      if(
+        !n(nome).includes(busca) &&
+        !n(time).includes(busca) &&
+        !n(pos).includes(busca)
+      ) return false;
+    }
+
+    return true;
+  }).sort((a,b)=>{
+    const na = Number(val(a,["numero"],999));
+    const nb = Number(val(b,["numero"],999));
+    if(na !== nb) return na - nb;
+    return val(a,["nome"]).localeCompare(val(b,["nome"]),"pt-BR");
+  });
+}
+/* RENDER */
+function render(){
+  const box = document.getElementById("listaJogadores");
+  const lista = filtrarJogadores();
+
+  if(!document.getElementById("filtroCampeonato").value){
+    box.innerHTML = `<div class="vazio">Selecione um campeonato.</div>`;
+    return;
+  }
+
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhum jogador encontrado.</div>`;
+    return;
+  }
+
+  box.innerHTML = lista.map(j=>{
+    const nome = val(j,["nome"]);
+    const numero = val(j,["numero"],"-");
+    const time = val(j,["time"]);
+    const pos = val(j,["posicao"]);
+    const foto = val(j,["foto","imagem"],"logo-liga.jfif");
+
+    const jogosJ = Number(val(j,["jogos"],0));
+    const gols = Number(val(j,["gols"],0));
+    const ast = Number(val(j,["assistencias"],0));
+    const ama = Number(val(j,["amarelos"],0));
+    const ver = Number(val(j,["vermelhos"],0));
+
+    const cats = val(j,["categorias"],[]);
+
+    return `
+    <div class="card">
+      <div class="player">
+        <img src="${foto}" class="photo" onerror="this.src='logo-liga.jfif'">
+
+        <div class="player-info">
+          <div class="nome-jogador">
+            ${numero} - ${nome}
+          </div>
+
+          <small>Time: ${time || "-"}</small>
+          <small>Posição: ${pos || "-"}</small>
+
+          <small>
+            Jogos: ${jogosJ} |
+            Gols: ${gols} |
+            Assist: ${ast}
+          </small>
+
+          <small>
+            Amarelos: ${ama} |
+            Vermelhos: ${ver}
+          </small>
+
+          <div class="tags">
+            ${
+              Array.isArray(cats) && cats.length
+              ? cats.map(c=>`<span class="tag">${c}</span>`).join("")
+              : `<span class="tag">Sem categoria</span>`
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="btn-acao btn-ver" href="jogador-publico.html?id=${j.id}">
+          <i class="fa-solid fa-eye"></i> Ver Jogador
+        </a>
+      </div>
+    </div>
+    `;
+  }).join("");
+}
+async function carregarDados(){
+  const box = document.getElementById("lista");
+  box.innerHTML = `<div class="vazio">Carregando jogadores...</div>`;
+
+  try{
+    const [snapJogadores, snapJogos, snapCampeonatos] = await Promise.all([
+      getDocs(collection(db, "jogadores")),
+      getDocs(collection(db, "jogos")),
+      getDocs(collection(db, "campeonatos"))
+    ]);
+
+    jogadores = [];
+    jogos = [];
+    campeonatos = [];
+
+    snapJogadores.forEach(docSnap=>{
+      jogadores.push({ id:docSnap.id, ...docSnap.data() });
+    });
+
+    snapJogos.forEach(docSnap=>{
+      jogos.push({ id:docSnap.id, ...docSnap.data() });
+    });
+
+    snapCampeonatos.forEach(docSnap=>{
+      campeonatos.push({ id:docSnap.id, ...docSnap.data() });
+    });
+
+  }catch(erro){
+    console.error(erro);
+    jogadores = [];
+    jogos = [];
+    campeonatos = [];
+  }
+
+  if(!campeonatos.length){
+    campeonatos = [
+      {
+        id:"copa-mundo-2002",
+        nome:"Copa do Mundo FIFA 2002",
+        categorias:["Seleção Principal"]
+      }
+    ];
+  }
+
+  if(!jogos.length){
+    jogos = [
+      {
+        id:"final-copa-2002",
+        campeonatoId:"copa-mundo-2002",
+        campeonato:"Copa do Mundo FIFA 2002",
+        categoria:"Seleção Principal",
+        timeA:"Brasil",
+        timeB:"Alemanha",
+        status:"finalizado"
+      }
+    ];
+  }
+
+  if(!jogadores.length){
+    jogadores = jogadoresExemplo.map((j,index)=>({
+      id:`jogador-exemplo-${index + 1}`,
+      ...j,
+      categorias:["Seleção Principal"],
+      jogos:1,
+      assistencias:0,
+      amarelos:0,
+      vermelhos:0,
+      foto:"logo-liga.jfif",
+      exemplo:true
+    }));
+  }
+
+  preencherCampeonatos();
+  preencherCategorias();
+  selecionarPadrao();
+  renderFinal();
+}
+
+function preencherCampeonatos(){
+  const select = document.getElementById("filtroCampeonato");
+
+  select.innerHTML = `<option value="">Selecione o campeonato</option>`;
+
+  campeonatos
+    .sort((a,b)=>val(a,["nome"]).localeCompare(val(b,["nome"]),"pt-BR"))
+    .forEach(c=>{
+      select.innerHTML += `
+        <option value="${c.id}">
+          ${val(c,["nome","campeonato","titulo"],"-")}
+        </option>
+      `;
+    });
+}
+
+function preencherCategorias(){
+  const select = document.getElementById("filtroCategoria");
+  const camp = getCampSelecionado();
+
+  select.innerHTML = `<option value="">Todas categorias</option>`;
+
+  if(!camp) return;
+
+  const categorias = new Set();
+
+  const catsCamp = val(camp,["categorias"],[]);
+  if(Array.isArray(catsCamp)){
+    catsCamp.forEach(c=>categorias.add(c));
+  }
+
+  jogos.forEach(j=>{
+    if(jogoDoCamp(j,camp) && j.categoria){
+      categorias.add(j.categoria);
+    }
+  });
+
+  jogadores.forEach(j=>{
+    const cats = val(j,["categorias"],[]);
+    if(Array.isArray(cats)){
+      cats.forEach(c=>categorias.add(c));
+    }
+  });
+
+  Array.from(categorias)
+    .sort((a,b)=>String(a).localeCompare(String(b),"pt-BR"))
+    .forEach(cat=>{
+      select.innerHTML += `<option value="${cat}">${cat}</option>`;
+    });
+}
+
+function selecionarPadrao(){
+  const selectCamp = document.getElementById("filtroCampeonato");
+  const camp2002 = campeonatos.find(c=>c.id === "copa-mundo-2002");
+
+  if(camp2002){
+    selectCamp.value = "copa-mundo-2002";
+    preencherCategorias();
+  }
+
+  const selectCat = document.getElementById("filtroCategoria");
+  if([...selectCat.options].some(op=>op.value === "Seleção Principal")){
+    selectCat.value = "Seleção Principal";
+  }
+}
+
+function getFiltroFinal(){
+  return {
+    camp:getCampSelecionado(),
+    categoria:document.getElementById("filtroCategoria").value,
+    busca:n(document.getElementById("busca").value)
+  };
+}
+
+function filtrarJogadoresFinal(){
+  const { camp, categoria, busca } = getFiltroFinal();
+
+  if(!camp) return [];
+
+  const mapa = new Set();
+
+  jogos.forEach(j=>{
+    if(!jogoDoCamp(j,camp)) return;
+    if(categoria && j.categoria !== categoria) return;
+
+    if(j.timeA) mapa.add(n(j.timeA));
+    if(j.timeB) mapa.add(n(j.timeB));
+  });
+
+  return jogadores.filter(j=>{
+    const nome = val(j,["nome"]);
+    const time = val(j,["time"]);
+    const pos = val(j,["posicao"]);
+
+    if(!mapa.has(n(time))) return false;
+
+    if(categoria){
+      const cats = val(j,["categorias"],[]);
+      if(Array.isArray(cats) && cats.length && !cats.includes(categoria)){
+        return false;
+      }
+    }
+
+    if(busca){
+      const texto = n(`${nome} ${time} ${pos}`);
+      if(!texto.includes(busca)) return false;
+    }
+
+    return true;
+  }).sort((a,b)=>{
+    const na = Number(val(a,["numero"],999));
+    const nb = Number(val(b,["numero"],999));
+
+    if(na !== nb) return na - nb;
+
+    return val(a,["nome"]).localeCompare(val(b,["nome"]),"pt-BR");
+  });
+}
+
+function renderFinal(){
+  const box = document.getElementById("lista");
+  const campId = document.getElementById("filtroCampeonato").value;
+  const lista = filtrarJogadoresFinal();
+
+  if(!campId){
+    box.innerHTML = `<div class="vazio">Selecione um campeonato.</div>`;
+    return;
+  }
+
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhum jogador encontrado.</div>`;
+    return;
+  }
+
+  box.innerHTML = lista.map(j=>{
+    const nome = val(j,["nome"],"-");
+    const numero = val(j,["numero"],"-");
+    const time = val(j,["time"],"-");
+    const pos = val(j,["posicao"],"-");
+    const foto = val(j,["foto","imagem"],"logo-liga.jfif");
+
+    const jogosJ = Number(val(j,["jogos"],0));
+    const gols = Number(val(j,["gols"],0));
+    const ast = Number(val(j,["assistencias"],0));
+    const ama = Number(val(j,["amarelos"],0));
+    const ver = Number(val(j,["vermelhos"],0));
+
+    const cats = val(j,["categorias"],[]);
+
+    return `
+      <div class="card">
+        <div class="player">
+          <img src="${foto}" class="photo" onerror="this.src='logo-liga.jfif'">
+
+          <div class="info">
+            <div class="nome">${numero} - ${nome}</div>
+            <div class="sub">Time: ${time}</div>
+            <div class="sub">Posição: ${pos}</div>
+
+            <div class="stats">
+              Jogos: ${jogosJ} |
+              Gols: ${gols} |
+              Assist: ${ast}<br>
+              Amarelos: ${ama} |
+              Vermelhos: ${ver}
+            </div>
+
+            <div class="tags">
+              ${
+                Array.isArray(cats) && cats.length
+                ? cats.map(c=>`<span class="tag">${c}</span>`).join("")
+                : `<span class="tag">Sem categoria</span>`
+              }
+
+              ${j.exemplo ? `<span class="tag">Exemplo</span>` : `<span class="tag">Firebase</span>`}
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="btn-ver" href="jogador-publico.html?id=${j.id}">
+            <i class="fa-solid fa-eye"></i> Ver Jogador
+          </a>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+window.ativarExemplo = function(){
+  const jaTem = jogadores.some(j=>j.exemplo);
+
+  if(!jaTem){
+    jogadores = [
+      ...jogadoresExemplo.map((j,index)=>({
+        id:`jogador-exemplo-${index + 1}`,
+        ...j,
+        categorias:["Seleção Principal"],
+        jogos:1,
+        assistencias:0,
+        amarelos:0,
+        vermelhos:0,
+        foto:"logo-liga.jfif",
+        exemplo:true
+      })),
+      ...jogadores
+    ];
+  }
+
+  if(!campeonatos.some(c=>c.id === "copa-mundo-2002")){
+    campeonatos.unshift({
+      id:"copa-mundo-2002",
+      nome:"Copa do Mundo FIFA 2002",
+      categorias:["Seleção Principal"]
+    });
+  }
+
+  if(!jogos.some(j=>j.id === "final-copa-2002")){
+    jogos.unshift({
+      id:"final-copa-2002",
+      campeonatoId:"copa-mundo-2002",
+      campeonato:"Copa do Mundo FIFA 2002",
+      categoria:"Seleção Principal",
+      timeA:"Brasil",
+      timeB:"Alemanha",
+      status:"finalizado"
+    });
+  }
+
+  preencherCampeonatos();
+  selecionarPadrao();
+  renderFinal();
+};
+
+window.removerExemplo = function(){
+  jogadores = jogadores.filter(j=>!j.exemplo);
+  jogos = jogos.filter(j=>j.id !== "final-copa-2002");
+  campeonatos = campeonatos.filter(c=>c.id !== "copa-mundo-2002");
+
+  preencherCampeonatos();
+  preencherCategorias();
+  renderFinal();
+};
+
+document.getElementById("busca").addEventListener("input", renderFinal);
+
+document.getElementById("filtroCampeonato").addEventListener("change", ()=>{
+  preencherCategorias();
+  renderFinal();
+});
+
+document.getElementById("filtroCategoria").addEventListener("change", renderFinal);
+
+carregarDados();
+</script>
+
+</body>
+</html>
