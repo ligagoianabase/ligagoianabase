@@ -26,11 +26,7 @@
   --radius:18px;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
   font-family:Arial, sans-serif;
@@ -41,11 +37,7 @@ body{
   min-height:100vh;
 }
 
-button,
-input,
-textarea{
-  font-family:inherit;
-}
+button,input,textarea{font-family:inherit;}
 
 .page{
   width:min(100% - 24px, 1180px);
@@ -53,7 +45,6 @@ textarea{
   padding:18px 0 28px;
 }
 
-/* HEADER */
 .header{
   background:linear-gradient(180deg, rgba(8,23,44,.98), rgba(3,12,29,.98));
   border:1px solid var(--gold-line);
@@ -76,9 +67,7 @@ textarea{
   background:#fff;
 }
 
-.titulo{
-  text-align:center;
-}
+.titulo{text-align:center;}
 
 .titulo strong{
   display:block;
@@ -96,7 +85,6 @@ textarea{
   font-weight:700;
 }
 
-/* INFO JOGO */
 .info-jogo{
   margin:18px 0;
   background:
@@ -132,15 +120,13 @@ textarea{
   box-shadow:0 12px 28px rgba(0,0,0,.28);
 }
 
-/* GRID */
 .container{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:18px;
 }
 
-.time,
-.eventos{
+.time,.eventos{
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
   padding:20px;
   border-radius:var(--radius);
@@ -148,23 +134,29 @@ textarea{
   box-shadow:var(--shadow);
 }
 
-.time h2,
-.eventos h2{
+.time-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.time-logo{
+  width:54px;
+  height:54px;
+  border-radius:14px;
+  object-fit:cover;
+  background:#fff;
+  border:2px solid var(--gold);
+}
+
+.time h2,.eventos h2{
   color:var(--gold);
   font-size:22px;
   font-weight:900;
-  margin-bottom:14px;
   display:flex;
   align-items:center;
   gap:10px;
-}
-
-.time h2::before{
-  content:"";
-  width:10px;
-  height:28px;
-  border-radius:999px;
-  background:var(--gold);
 }
 
 .lista{
@@ -213,23 +205,15 @@ textarea{
   border-radius:14px;
   font-weight:900;
   cursor:pointer;
-  box-shadow:0 10px 22px rgba(247,198,0,.18);
 }
 
-.btn-add:hover{
-  transform:translateY(-2px);
-}
-
-/* EVENTOS */
-.eventos{
-  grid-column:1 / -1;
-}
+.eventos{grid-column:1 / -1;}
 
 .eventos-top{
   display:flex;
   flex-wrap:wrap;
   gap:10px;
-  margin-bottom:16px;
+  margin:16px 0;
 }
 
 .btn{
@@ -245,18 +229,9 @@ textarea{
   gap:8px;
 }
 
-.gol{
-  background:var(--green);
-}
-
-.amarelo{
-  background:var(--gold);
-  color:#111;
-}
-
-.vermelho{
-  background:var(--danger);
-}
+.gol{background:var(--green);}
+.amarelo{background:var(--gold);color:#111;}
+.vermelho{background:var(--danger);}
 
 #listaEventos{
   display:flex;
@@ -288,10 +263,6 @@ textarea{
   font-size:15px;
 }
 
-.obs::placeholder{
-  color:#b8c3d8;
-}
-
 .finalizar{
   background:linear-gradient(135deg, var(--gold), var(--gold-2));
   color:#111;
@@ -300,29 +271,15 @@ textarea{
   padding:15px;
   border-radius:16px;
   font-size:16px;
-  box-shadow:0 12px 26px rgba(247,198,0,.22);
 }
 
-.finalizar:hover{
-  transform:translateY(-2px);
-}
-
-/* RESPONSIVO */
 @media(max-width:900px){
-  .container{
-    grid-template-columns:1fr;
-  }
-
-  .placar{
-    font-size:36px;
-  }
+  .container{grid-template-columns:1fr;}
+  .placar{font-size:36px;}
 }
 
 @media(max-width:600px){
-  .page{
-    width:min(100% - 18px, 1180px);
-    padding-top:10px;
-  }
+  .page{width:min(100% - 18px, 1180px);padding-top:10px;}
 
   .header{
     grid-template-columns:60px 1fr 60px;
@@ -331,29 +288,13 @@ textarea{
     border-radius:0 0 18px 18px;
   }
 
-  .logo{
-    width:54px;
-    height:54px;
-    border-radius:14px;
-  }
+  .logo{width:54px;height:54px;border-radius:14px;}
 
-  .titulo strong{
-    font-size:18px;
-    line-height:1.15;
-  }
+  .titulo strong{font-size:18px;line-height:1.15;}
+  .titulo span{font-size:11px;}
 
-  .titulo span{
-    font-size:11px;
-  }
-
-  .info-jogo{
-    padding:18px;
-    border-radius:20px;
-  }
-
-  #dadosJogo{
-    font-size:13px;
-  }
+  .info-jogo{padding:18px;border-radius:20px;}
+  #dadosJogo{font-size:13px;}
 
   .placar{
     font-size:30px;
@@ -361,28 +302,11 @@ textarea{
     padding:12px 20px;
   }
 
-  .time,
-  .eventos{
-    padding:16px;
-    border-radius:18px;
-  }
-
-  .time h2,
-  .eventos h2{
-    font-size:19px;
-  }
-
-  .jogador{
-    grid-template-columns:74px 1fr;
-  }
-
-  .eventos-top{
-    flex-direction:column;
-  }
-
-  .btn{
-    width:100%;
-  }
+  .time,.eventos{padding:16px;border-radius:18px;}
+  .time h2,.eventos h2{font-size:19px;}
+  .jogador{grid-template-columns:74px 1fr;}
+  .eventos-top{flex-direction:column;}
+  .btn{width:100%;}
 }
 </style>
 </head>
@@ -399,7 +323,7 @@ textarea{
       <span>Liga Goiana de Futebol de Base</span>
     </div>
 
-    <img id="logoCampeonato" src="logo-campeonato.png" class="logo" onerror="this.src='logo-liga.jfif'">
+    <img id="logoCampeonato" src="logo-liga.jfif" class="logo" onerror="this.src='logo-liga.jfif'">
   </div>
 
   <div class="info-jogo">
@@ -410,16 +334,26 @@ textarea{
   <div class="container">
 
     <div class="time">
-      <h2 id="timeA">Time A</h2>
+      <div class="time-head">
+        <img id="logoTimeA" src="logo-liga.jfif" class="time-logo">
+        <h2 id="timeA">Time A</h2>
+      </div>
+
       <div id="listaA" class="lista"></div>
+
       <button class="btn-add" onclick="addJogador('A')">
         <i class="fa-solid fa-user-plus"></i> Adicionar Jogador
       </button>
     </div>
 
     <div class="time">
-      <h2 id="timeB">Time B</h2>
+      <div class="time-head">
+        <img id="logoTimeB" src="logo-liga.jfif" class="time-logo">
+        <h2 id="timeB">Time B</h2>
+      </div>
+
       <div id="listaB" class="lista"></div>
+
       <button class="btn-add" onclick="addJogador('B')">
         <i class="fa-solid fa-user-plus"></i> Adicionar Jogador
       </button>
@@ -447,7 +381,7 @@ textarea{
 </div>
 
 <script type="module">
-import { db, auth } from "./firebase.js";
+import { db } from "./firebase.js";
 import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 let jogoId = new URLSearchParams(window.location.search).get("id");
@@ -456,6 +390,11 @@ let jogadoresA = [];
 let jogadoresB = [];
 let eventos = [];
 let jogoAtual = null;
+
+function campo(valor, fallback = ""){
+  if(valor === undefined || valor === null || valor === "") return fallback;
+  return valor;
+}
 
 function render(lado){
   const lista = document.getElementById(lado === "A" ? "listaA" : "listaB");
@@ -483,11 +422,13 @@ function renderEventos(){
 
   lista.innerHTML = eventos.map((e, i) => {
     let icone = "📌";
+    let time = e.lado === "A" ? jogoAtual?.timeA : jogoAtual?.timeB;
+
     if(e.tipo === "gol") icone = "⚽";
     if(e.tipo === "amarelo") icone = "🟨";
     if(e.tipo === "vermelho") icone = "🟥";
 
-    return `<div class="evento-item">${icone} Evento ${i + 1}: ${e.tipo.toUpperCase()} - camisa ${e.numero}</div>`;
+    return `<div class="evento-item">${icone} ${e.tipo.toUpperCase()} - Camisa ${e.numero} - ${time || "-"}</div>`;
   }).join("");
 }
 
@@ -510,56 +451,119 @@ window.addEvento = function(tipo){
   const numero = prompt("Número do jogador");
   if(!numero) return;
 
-  const lado = confirm("Esse evento foi do Time A? Clique OK para Time A ou Cancelar para Time B.") ? "A" : "B";
+  const lado = confirm("Esse evento foi do Time A? OK = Time A / Cancelar = Time B") ? "A" : "B";
 
-  eventos.push({tipo, numero, lado});
+  const jogadores = lado === "A" ? jogadoresA : jogadoresB;
+  const jogador = jogadores.find(j => String(j.numero || "") === String(numero));
+
+  eventos.push({
+    tipo,
+    numero,
+    lado,
+    nome: jogador?.nome || `Camisa ${numero}`,
+    minuto: ""
+  });
 
   atualizarPlacar();
   renderEventos();
 };
 
 function atualizarPlacar(){
-  let a=0,b=0;
+  const golsA = eventos.filter(e => e.tipo==="gol" && e.lado==="A").length;
+  const golsB = eventos.filter(e => e.tipo==="gol" && e.lado==="B").length;
 
-  eventos.forEach(e=>{
-    if(e.tipo==="gol"){
-      if(e.lado === "A") a++;
-      if(e.lado === "B") b++;
-    }
-  });
+  document.getElementById("placar").innerText = `${golsA} x ${golsB}`;
+}
 
-  document.getElementById("placar").innerText = `${a} x ${b}`;
+function separarEventos(tipo, lado){
+  return eventos
+    .filter(e => e.tipo === tipo && e.lado === lado)
+    .map(e => ({
+      nome: e.nome || `Camisa ${e.numero}`,
+      numero: e.numero || "",
+      minuto: e.minuto || ""
+    }));
 }
 
 window.finalizar = async function(){
-  const golsA = eventos.filter(e => e.tipo === "gol" && e.lado === "A").length;
-  const golsB = eventos.filter(e => e.tipo === "gol" && e.lado === "B").length;
+  if(!jogoAtual){
+    alert("Jogo não carregado.");
+    return;
+  }
+
+  const golsDetalhadosA = separarEventos("gol", "A");
+  const golsDetalhadosB = separarEventos("gol", "B");
+
+  const amarelosDetalhadosA = separarEventos("amarelo", "A");
+  const amarelosDetalhadosB = separarEventos("amarelo", "B");
+
+  const vermelhosDetalhadosA = separarEventos("vermelho", "A");
+  const vermelhosDetalhadosB = separarEventos("vermelho", "B");
 
   const dados = {
     jogoId,
+
+    campeonatoId: jogoAtual?.campeonatoId || "",
     campeonato: jogoAtual?.campeonato || "",
+    logoCampeonato: jogoAtual?.logoCampeonato || "",
+
     categoria: jogoAtual?.categoria || "",
     dataJogo: jogoAtual?.data || "",
     local: jogoAtual?.local || "",
+    rodada: jogoAtual?.rodada || "",
+
+    timeAId: jogoAtual?.timeAId || "",
     timeA: jogoAtual?.timeA || "",
+    logoTimeA: jogoAtual?.logoTimeA || "",
+
+    timeBId: jogoAtual?.timeBId || "",
     timeB: jogoAtual?.timeB || "",
-    golsA,
-    golsB,
+    logoTimeB: jogoAtual?.logoTimeB || "",
+
+    tecnicoA: jogoAtual?.tecnicoA || "",
+    tecnicoB: jogoAtual?.tecnicoB || "",
+    assistenteA1: jogoAtual?.assistenteA1 || "",
+    assistenteA2: jogoAtual?.assistenteA2 || "",
+    assistenteB1: jogoAtual?.assistenteB1 || "",
+    assistenteB2: jogoAtual?.assistenteB2 || "",
+
+    arbitro: jogoAtual?.arbitro || "",
+    arbitroAuxiliar: jogoAtual?.arbitroAuxiliar || "",
+    assistente: jogoAtual?.assistente || "",
+    assistente2: jogoAtual?.assistente2 || "",
+
+    golsA: golsDetalhadosA.length,
+    golsB: golsDetalhadosB.length,
+
     jogadoresA,
     jogadoresB,
+
+    golsDetalhadosA,
+    golsDetalhadosB,
+    amarelosDetalhadosA,
+    amarelosDetalhadosB,
+    vermelhosDetalhadosA,
+    vermelhosDetalhadosB,
+
     eventos,
+
     observacoes: document.getElementById("obs").value,
     status:"finalizada",
-    data:new Date().toISOString()
+    finalizadaEm:new Date().toISOString()
   };
 
   await setDoc(doc(db,"sumulas",jogoId),dados);
 
   await updateDoc(doc(db,"jogos",jogoId),{
-    status:"sumula_enviada"
+    status:"sumula_enviada",
+    sumulaFinalizada:true,
+    golsA:golsDetalhadosA.length,
+    golsB:golsDetalhadosB.length,
+    finalizadoEm:new Date().toISOString()
   });
 
   alert("Súmula finalizada!");
+  window.location.href = "sumula-publica.html?id=" + jogoId;
 };
 
 async function init(){
@@ -577,15 +581,19 @@ async function init(){
 
   jogoAtual = snap.data();
 
-  document.getElementById("timeA").innerText = jogoAtual.timeA || "Time A";
-  document.getElementById("timeB").innerText = jogoAtual.timeB || "Time B";
+  document.getElementById("timeA").innerText = campo(jogoAtual.timeA, "Time A");
+  document.getElementById("timeB").innerText = campo(jogoAtual.timeB, "Time B");
 
   document.getElementById("dadosJogo").innerText =
-    `${jogoAtual.campeonato || "-"} | ${jogoAtual.categoria || "-"} | ${jogoAtual.data || "-"} | ${jogoAtual.local || "-"}`;
+    `${campo(jogoAtual.campeonato, "-")} | ${campo(jogoAtual.categoria, "-")} | ${campo(jogoAtual.data, "-")} | ${campo(jogoAtual.local, "-")}`;
 
-  if(jogoAtual.logoCampeonato){
-    document.getElementById("logoCampeonato").src = jogoAtual.logoCampeonato;
-  }
+  document.getElementById("logoCampeonato").src = jogoAtual.logoCampeonato || "logo-liga.jfif";
+  document.getElementById("logoTimeA").src = jogoAtual.logoTimeA || "logo-liga.jfif";
+  document.getElementById("logoTimeB").src = jogoAtual.logoTimeB || "logo-liga.jfif";
+
+  document.getElementById("logoCampeonato").onerror = function(){ this.src = "logo-liga.jfif"; };
+  document.getElementById("logoTimeA").onerror = function(){ this.src = "logo-liga.jfif"; };
+  document.getElementById("logoTimeB").onerror = function(){ this.src = "logo-liga.jfif"; };
 }
 
 init();
