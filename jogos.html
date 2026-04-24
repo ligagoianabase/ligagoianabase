@@ -1,513 +1,478 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jogos - LIGA GOIANA DE FUTEBOL DE BASE</title>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <style>
-    :root{
-      --bg:#061427;
-      --bg-dark:#08172c;
-      --card:#102a52;
-      --card2:#0d2346;
-      --gold:#f7c600;
-      --gold2:#ffe45c;
-      --gold-soft:rgba(247,198,0,.12);
-      --gold-line:rgba(247,198,0,.32);
-      --white:#ffffff;
-      --muted:#d8e1ef;
-      --green:#1b5e20;
-      --yellow-dark:#7a5a00;
-      --shadow:0 14px 34px rgba(0,0,0,.36);
-      --transition:.25s ease;
-      --max:1240px;
-    }
-
-    *{margin:0;padding:0;box-sizing:border-box;}
-
-    body{
-      font-family:Arial, sans-serif;
-      background:
-        linear-gradient(rgba(3,12,29,.88), rgba(3,12,29,.96)),
-        url("fundo.png") center/cover fixed no-repeat;
-      color:var(--white);
-      min-height:100vh;
-      overflow-x:hidden;
-    }
-
-    a{text-decoration:none;color:inherit;transition:var(--transition);}
-    button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none;}
-
-    .wrap{
-      width:min(100% - 28px, var(--max));
-      margin:0 auto;
-    }
-
-    header{
-      background:linear-gradient(180deg, rgba(8,23,44,.98), rgba(3,12,29,.98));
-      border-bottom:3px solid var(--gold);
-      box-shadow:var(--shadow);
-    }
-
-    .header-top{
-      min-height:84px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-      padding:14px 0;
-    }
-
-    .header-left,
-    .header-right{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .header-title{
-      flex:1;
-      text-align:center;
-      font-size:24px;
-      font-weight:900;
-      color:var(--white);
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-
-    .top-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:11px 16px;
-      border-radius:14px;
-      font-weight:900;
-      white-space:nowrap;
-      box-shadow:0 10px 22px rgba(0,0,0,.22);
-    }
-
-    .btn-light{
-      background:#fff4cf;
-      color:#111;
-    }
-
-    .btn-light:hover{
-      background:linear-gradient(135deg,var(--gold),var(--gold2));
-      transform:translateY(-2px);
-    }
-
-    .nav-bar{
-      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
-      border-top:1px solid rgba(255,255,255,.06);
-      border-bottom:1px solid rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-
-    .menu{
-      display:flex;
-      justify-content:center;
-      gap:10px;
-      padding:14px 8px;
-      flex-wrap:nowrap;
-      overflow-x:auto;
-      overflow-y:hidden;
-      scrollbar-width:none;
-      -ms-overflow-style:none;
-      scroll-behavior:smooth;
-    }
-
-    .menu::-webkit-scrollbar{display:none;}
-
-    .menu a{
-      color:#fff;
-      font-weight:900;
-      font-size:14px;
-      background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
-      padding:12px 16px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.07);
-      white-space:nowrap;
-      flex:0 0 auto;
-      box-shadow:0 8px 18px rgba(0,0,0,.22);
-    }
-
-    .menu a:hover{
-      color:var(--gold);
-      background:var(--gold-soft);
-      border-color:var(--gold-line);
-      transform:translateY(-2px);
-    }
-
-    .menu a.ativo{
-      background:linear-gradient(135deg,var(--gold),var(--gold2));
-      color:#111;
-      border-color:var(--gold);
-    }
-
-    .container{
-      padding:26px 0 36px;
-    }
-
-    .hero{
-      background:
-        radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
-        linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
-      border:1px solid var(--gold-line);
-      border-radius:26px;
-      padding:24px;
-      margin-bottom:20px;
-      box-shadow:var(--shadow);
-    }
-
-    .hero h2{
-      color:var(--gold);
-      font-size:30px;
-      font-weight:900;
-      margin-bottom:8px;
-    }
-
-    .hero p{
-      color:var(--muted);
-      line-height:1.6;
-      font-size:15px;
-      max-width:850px;
-    }
-
-    .filtros{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-bottom:20px;
-      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-      border:1px solid rgba(247,198,0,.18);
-      border-radius:20px;
-      padding:16px;
-      box-shadow:var(--shadow);
-    }
-
-    select{
-      width:100%;
-      padding:13px;
-      border:none;
-      border-radius:12px;
-      font-size:14px;
-      background:#f5f7fb;
-      color:#111;
-      font-family:inherit;
-      outline:none;
-    }
-
-    select:focus{
-      outline:2px solid rgba(247,198,0,.55);
-    }
-
-    .titulo{
-      font-size:24px;
-      font-weight:900;
-      color:var(--gold);
-      margin-bottom:16px;
-    }
-
-    .rodada{
-      font-weight:900;
-      margin:22px 0 12px;
-      font-size:20px;
-      color:var(--gold);
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-
-    .rodada::before{
-      content:"";
-      width:10px;
-      height:28px;
-      border-radius:999px;
-      background:var(--gold);
-    }
-
-    .jogo{
-      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-      padding:18px;
-      border-radius:20px;
-      margin-bottom:14px;
-      border:1px solid rgba(247,198,0,.18);
-      box-shadow:var(--shadow);
-      transition:var(--transition);
-    }
-
-    .jogo:hover{
-      transform:translateY(-2px);
-      border-color:var(--gold-line);
-    }
-
-    .topo-jogo{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .times{
-      display:grid;
-      grid-template-columns:1fr auto 1fr;
-      align-items:center;
-      gap:14px;
-      width:100%;
-    }
-
-    .time{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-      font-size:16px;
-      font-weight:900;
-      color:#fff;
-    }
-
-    .time.visitante{
-      justify-content:flex-end;
-      text-align:right;
-    }
-
-    .escudo{
-      width:46px;
-      height:46px;
-      object-fit:cover;
-      border-radius:50%;
-      background:#fff;
-      border:2px solid var(--gold);
-      flex-shrink:0;
-    }
-
-    .time span{
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-    }
-
-    .placar{
-      font-weight:900;
-      font-size:24px;
-      color:var(--gold);
-      min-width:110px;
-      text-align:center;
-      background:rgba(3,12,29,.72);
-      border:1px solid var(--gold-line);
-      border-radius:14px;
-      padding:10px 14px;
-      box-shadow:0 10px 22px rgba(0,0,0,.20);
-    }
-
-    .info{
-      font-size:13px;
-      color:var(--muted);
-      margin-top:12px;
-      line-height:1.7;
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:8px 12px;
-    }
-
-    .info div{
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:12px;
-      padding:9px 10px;
-    }
-
-    .info strong{
-      color:#fff;
-    }
-
-    .status{
-      display:inline-flex;
-      align-items:center;
-      gap:7px;
-      margin-top:12px;
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:900;
-      background:#0d2346;
-    }
-
-    .finalizado{background:var(--green);}
-    .agendado{background:var(--yellow-dark);}
-
-    .vazio{
-      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-      padding:30px;
-      border-radius:18px;
-      text-align:center;
-      color:var(--muted);
-      box-shadow:var(--shadow);
-      border:1px solid rgba(255,255,255,.06);
-      font-weight:700;
-    }
-
-    .acoes-jogo{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-
-    .btn-acao{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:11px 15px;
-      border-radius:12px;
-      font-weight:900;
-      font-size:13px;
-      border:none;
-      cursor:pointer;
-    }
-
-    .btn-sumula{
-      background:linear-gradient(135deg,var(--gold),var(--gold2));
-      color:#111;
-    }
-
-    .btn-secundario{
-      background:#1a3f73;
-      color:#fff;
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .btn-sumula:hover,
-    .btn-secundario:hover{
-      transform:translateY(-2px);
-      filter:brightness(1.05);
-    }
-
-    @media(max-width:900px){
-      .header-title{
-        order:3;
-        width:100%;
-        text-align:center;
-      }
-
-      .header-left,
-      .header-right{
-        width:100%;
-        justify-content:center;
-      }
-
-      .filtros,
-      .info{
-        grid-template-columns:1fr;
-      }
-
-      .times{
-        grid-template-columns:1fr;
-        text-align:center;
-      }
-
-      .time,
-      .time.visitante{
-        justify-content:center;
-        text-align:center;
-      }
-
-      .placar{
-        margin:0 auto;
-      }
-    }
-
-    @media(max-width:600px){
-      .wrap{
-        width:min(100% - 18px, var(--max));
-      }
-
-      .header-left{
-        display:none;
-      }
-
-      .header-title{
-        order:1;
-        font-size:17px;
-        line-height:1.25;
-      }
-
-      .nav-bar .wrap{
-        width:100%;
-      }
-
-      .menu{
-        justify-content:flex-start;
-        padding:14px;
-      }
-
-      .hero{
-        padding:20px;
-        border-radius:22px;
-      }
-
-      .hero h2{
-        font-size:25px;
-      }
-
-      .jogo{
-        padding:16px;
-        border-radius:18px;
-      }
-
-      .time{
-        flex-direction:column;
-      }
-
-      .time span{
-        white-space:normal;
-      }
-
-      .escudo{
-        width:58px;
-        height:58px;
-      }
-
-      .placar{
-        font-size:28px;
-      }
-
-      .btn-acao{
-        width:100%;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jogos - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --yellow:#7a5a00;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1240px;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
+  border:none;
+}
+
+input,
+select{
+  font-family:inherit;
+}
+
+img{
+  display:block;
+  max-width:100%;
+}
+
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
+
+/* HEADER PADRÃO */
+.site-header{
+  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.header-top{
+  min-height:92px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px 0;
+}
+
+.header-title{
+  text-align:center;
+  font-size:26px;
+  font-weight:900;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  line-height:1.15;
+}
+
+/* MENU RESPONSIVO FINAL */
+.nav-bar{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
+  border-top:1px solid rgba(255,255,255,.06);
+  overflow:hidden;
+}
+
+.menu{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:clamp(4px, .55vw, 10px);
+  padding:14px 6px;
+  flex-wrap:nowrap;
+  overflow:hidden;
+}
+
+.menu a{
+  color:#fff;
+  font-weight:900;
+  font-size:clamp(11px, .92vw, 15px);
+  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
+  padding:clamp(8px, .75vw, 12px) clamp(9px, 1vw, 18px);
+  border-radius:clamp(10px, .9vw, 15px);
+  border:1px solid rgba(255,255,255,.07);
+  white-space:nowrap;
+  flex:0 1 auto;
+  box-shadow:0 10px 22px rgba(0,0,0,.24);
+  transition:.25s ease;
+}
+
+.menu a:hover{
+  color:var(--gold);
+  border-color:var(--gold-line);
+}
+
+.menu a.ativo{
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+}
+
+/* PÁGINA */
+.container{
+  padding:22px 0 34px;
+}
+
+.hero{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+
+.hero h2{
+  color:var(--gold);
+  font-size:28px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+
+.hero p{
+  color:var(--muted);
+  line-height:1.5;
+  font-size:14px;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+input,
+select{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
+}
+
+input:focus,
+select:focus{
+  outline:2px solid rgba(247,198,0,.65);
+}
+
+.titulo-secao{
+  color:var(--gold);
+  font-size:22px;
+  font-weight:900;
+  margin:0 0 12px;
+}
+
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  gap:10px;
+}
+
+/* CARD COMPACTO */
+.card-jogo{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  transition:.25s ease;
+  text-align:center;
+}
+
+.card-jogo:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold);
+}
+
+.card-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:10px;
+}
+
+.card-icon{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  flex-shrink:0;
+}
+
+.status-tag{
+  color:#fff;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.status-finalizado{
+  background:var(--green);
+}
+
+.status-agendado{
+  background:var(--yellow);
+}
+
+.status-exemplo{
+  background:var(--blue);
+}
+
+.times-linha{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:8px;
+  margin:8px 0 10px;
+}
+
+.time-box{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+  font-size:13px;
+  font-weight:900;
+}
+
+.time-box.visitante{
+  justify-content:flex-end;
+  text-align:right;
+}
+
+.time-box span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.escudo{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  border:1px solid var(--gold);
+  object-fit:cover;
+  background:#fff;
+  flex-shrink:0;
+}
+
+.placar{
+  color:var(--gold);
+  font-size:17px;
+  font-weight:900;
+  background:rgba(2,10,24,.72);
+  border:1px solid var(--gold-line);
+  border-radius:10px;
+  padding:6px 9px;
+  white-space:nowrap;
+}
+
+.info-jogo{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  text-align:center;
+  margin:8px 0 10px;
+}
+
+.info-jogo strong{
+  color:#fff;
+}
+
+.tags{
+  display:flex;
+  justify-content:center;
+  gap:5px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+
+.tag{
+  background:rgba(26,63,115,.9);
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+
+.acoes{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:7px;
+}
+
+.btn-acao{
+  width:100%;
+  padding:9px 12px;
+  border-radius:11px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  font-size:13px;
+}
+
+.btn-ver{
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+}
+
+.btn-secundario{
+  background:#1a3f73;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.btn-danger{
+  background:var(--red);
+  color:#fff;
+}
+
+/* DETALHE DO JOGO */
+.detalhe-jogo{
+  display:none;
+  margin-top:18px;
+  padding:18px;
+  border:2px solid var(--gold);
+  border-radius:16px;
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+
+.detalhe-jogo h2{
+  color:var(--gold);
+  font-size:24px;
+  margin-bottom:12px;
+}
+
+.detalhe-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:14px;
+}
+
+.detalhe-item{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  padding:12px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+
+.detalhe-item strong{
+  display:block;
+  color:var(--gold);
+  margin-bottom:5px;
+}
+
+.vazio{
+  color:var(--muted);
+  text-align:center;
+  padding:18px;
+  background:rgba(7,29,55,.9);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  grid-column:1/-1;
+}
+
+/* CELULAR */
+@media(max-width:900px){
+  .header-title{
+    font-size:20px;
+  }
+
+  .menu{
+    justify-content:flex-start;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:14px;
+    gap:10px;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+  }
+
+  .menu::-webkit-scrollbar{
+    display:none;
+  }
+
+  .menu a{
+    flex:0 0 auto;
+    font-size:15px;
+    padding:12px 18px;
+    border-radius:15px;
+  }
+
+  .filtros{
+    grid-template-columns:1fr;
+  }
+
+  .lista-grid{
+    grid-template-columns:1fr;
+  }
+
+  .detalhe-grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
 </head>
 
 <body>
-<header>
+
+<header class="site-header">
   <div class="wrap header-top">
-    <div class="header-left">
-      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
-        <i class="fa-solid fa-arrow-left"></i> Voltar
-      </button>
-
-      <a href="index.html" class="top-btn btn-light">
-        <i class="fa-solid fa-house"></i> Página Inicial
-      </a>
-    </div>
-
     <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
-
-    <div class="header-right"></div>
   </div>
 
   <div class="nav-bar">
     <div class="wrap">
-      <div class="menu">
+      <nav class="menu">
         <a href="index.html">Início</a>
         <a href="campeonatos.html">Campeonatos</a>
         <a href="tabela.html">Tabela</a>
@@ -519,34 +484,39 @@
         <a href="assistentes.html">Assistente</a>
         <a href="sumula-publica.html">Súmula</a>
         <a href="noticias.html">Notícias</a>
-        <a href="login.html">Login</a>
-      </div>
+      </nav>
     </div>
   </div>
 </header>
 
-<div class="wrap container">
+<main class="wrap container">
 
-  <div class="hero">
+  <section class="hero">
     <h2>Jogos</h2>
-    <p>Acompanhe todos os jogos publicados da competição, com filtros por campeonato e categoria. Quando a súmula for finalizada, o botão “Ver Súmula” aparece automaticamente.</p>
-  </div>
+    <p>Acompanhe os jogos publicados, filtrando por campeonato, categoria e nome do time.</p>
+  </section>
 
-  <div class="filtros">
+  <section class="filtros">
+    <input id="buscaJogo" placeholder="Pesquisar time ou local...">
+
     <select id="filtroCampeonato">
-      <option value="">Selecione o campeonato</option>
+      <option value="">Todos os campeonatos</option>
     </select>
 
     <select id="filtroCategoria">
-      <option value="">Selecione a categoria</option>
+      <option value="">Todas categorias</option>
     </select>
-  </div>
+  </section>
 
-  <div class="titulo" id="tituloPagina">Jogos</div>
+  <h2 class="titulo-secao" id="tituloPagina">Jogos</h2>
 
-  <div id="listaJogos"></div>
+  <section class="lista-grid" id="listaJogos">
+    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando jogos...</div>
+  </section>
 
-</div>
+  <section class="detalhe-jogo" id="detalheJogo"></section>
+
+</main>
 
 <script type="module">
 import { db } from "./firebase.js";
@@ -555,19 +525,146 @@ import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/fireba
 let jogos = [];
 let times = [];
 let campeonatos = [];
+let exemplosAtivos = localStorage.getItem("ocultarExemplosJogos") !== "sim";
 
-window.voltarPagina = function(){
-  if(window.history.length > 1){
-    window.history.back();
-  }else{
-    window.location.href = "index.html";
+const campeonatosExemplo = [
+  {
+    id:"copa-mundo-2002",
+    nome:"Copa do Mundo FIFA 2002",
+    categorias:["Seleção Principal"],
+    exemplo:true
+  },
+  {
+    id:"copa-uniao-base",
+    nome:"Copa União de Base",
+    categorias:["Sub-11","Sub-13","Sub-15","Sub-17"],
+    exemplo:true
+  },
+  {
+    id:"liga-goiana-elite",
+    nome:"Liga Goiana Elite",
+    categorias:["Sub-11","Sub-13","Sub-15","Sub-17"],
+    exemplo:true
   }
-};
+];
 
-function getParametro(nome){
-  const params = new URLSearchParams(window.location.search);
-  return params.get(nome);
-}
+const timesExemplo = [
+  {
+    id:"brasil-2002",
+    nome:"Brasil",
+    escudo:"logo-liga.jfif",
+    exemplo:true
+  },
+  {
+    id:"alemanha-2002",
+    nome:"Alemanha",
+    escudo:"logo-liga.jfif",
+    exemplo:true
+  },
+  {
+    id:"atletico-go",
+    nome:"Atlético GO",
+    escudo:"logo-liga.jfif",
+    exemplo:true
+  },
+  {
+    id:"vila-nova",
+    nome:"Vila Nova",
+    escudo:"logo-liga.jfif",
+    exemplo:true
+  },
+  {
+    id:"goias",
+    nome:"Goiás",
+    escudo:"logo-liga.jfif",
+    exemplo:true
+  },
+  {
+    id:"anapolis",
+    nome:"Anápolis",
+    escudo:"logo-liga.jfif",
+    exemplo:true
+  }
+];
+
+const jogosExemplo = [
+  {
+    id:"final-copa-2002",
+    campeonatoId:"copa-mundo-2002",
+    campeonato:"Copa do Mundo FIFA 2002",
+    categoria:"Seleção Principal",
+    rodada:"Final",
+    data:"2002-06-30T08:00:00",
+    local:"International Stadium Yokohama",
+    timeA:"Brasil",
+    timeB:"Alemanha",
+    golsA:2,
+    golsB:0,
+    logoTimeA:"logo-liga.jfif",
+    logoTimeB:"logo-liga.jfif",
+    status:"finalizado",
+    arbitro:"Pierluigi Collina",
+    fase:"Final",
+    exemplo:true
+  },
+  {
+    id:"jogo-exemplo-2",
+    campeonatoId:"copa-uniao-base",
+    campeonato:"Copa União de Base",
+    categoria:"Sub-15",
+    rodada:"1",
+    data:"2025-05-18T16:00:00",
+    local:"Serra Dourada",
+    timeA:"Atlético GO",
+    timeB:"Vila Nova",
+    golsA:2,
+    golsB:1,
+    logoTimeA:"logo-liga.jfif",
+    logoTimeB:"logo-liga.jfif",
+    status:"finalizado",
+    arbitro:"Árbitro Exemplo",
+    fase:"Primeira fase",
+    exemplo:true
+  },
+  {
+    id:"jogo-exemplo-3",
+    campeonatoId:"liga-goiana-elite",
+    campeonato:"Liga Goiana Elite",
+    categoria:"Sub-13",
+    rodada:"2",
+    data:"2025-05-17T15:30:00",
+    local:"Campo 1",
+    timeA:"Goiás",
+    timeB:"Anápolis",
+    golsA:1,
+    golsB:1,
+    logoTimeA:"logo-liga.jfif",
+    logoTimeB:"logo-liga.jfif",
+    status:"finalizado",
+    arbitro:"Árbitro Exemplo",
+    fase:"Primeira fase",
+    exemplo:true
+  },
+  {
+    id:"jogo-exemplo-4",
+    campeonatoId:"copa-uniao-base",
+    campeonato:"Copa União de Base",
+    categoria:"Sub-17",
+    rodada:"3",
+    data:"2025-05-20T19:00:00",
+    local:"Estádio Olímpico",
+    timeA:"Vila Nova",
+    timeB:"Goiás",
+    golsA:0,
+    golsB:0,
+    logoTimeA:"logo-liga.jfif",
+    logoTimeB:"logo-liga.jfif",
+    status:"agendado",
+    arbitro:"A definir",
+    fase:"Primeira fase",
+    exemplo:true
+  }
+];
 
 function normalizarTexto(texto){
   return String(texto || "")
@@ -586,338 +683,416 @@ function valorCampo(obj, chaves, fallback = ""){
   return fallback;
 }
 
-function obterIdCampeonato(docItem){
-  return valorCampo(docItem, ["id", "campeonatoId"], "");
+function obterIdCampeonato(c){
+  return valorCampo(c, ["id", "campeonatoId"], "");
 }
 
-function obterNomeCampeonato(docItem){
-  return valorCampo(docItem, ["nome", "campeonato", "titulo"], "");
+function obterNomeCampeonato(c){
+  return valorCampo(c, ["nome", "campeonato", "titulo"], "");
 }
 
-function montarLinkPagina(pagina, campeonatoNome, categoria){
-  const params = new URLSearchParams();
+function formatarDataHora(valor){
+  if(!valor) return "-";
 
-  if(campeonatoNome) params.set("campeonato", campeonatoNome);
-  if(categoria) params.set("categoria", categoria);
+  const data = new Date(valor);
 
-  const query = params.toString();
-  return query ? `${pagina}?${query}` : pagina;
+  if(isNaN(data.getTime())){
+    return String(valor);
+  }
+
+  return data.toLocaleString("pt-BR", {
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric",
+    hour:"2-digit",
+    minute:"2-digit"
+  });
 }
 
-function montarLinkCampeonatoPublico(campeonatoNome){
-  const camp = campeonatos.find(c => normalizarTexto(obterNomeCampeonato(c)) === normalizarTexto(campeonatoNome));
-  if(!camp) return "campeonatos.html";
-  return `campeonato-publico.html?id=${obterIdCampeonato(camp)}`;
+function pegarEscudo(nomeTime, direto){
+  if(direto) return direto;
+
+  const time = times.find(t =>
+    normalizarTexto(valorCampo(t, ["nome"], "")) === normalizarTexto(nomeTime)
+  );
+
+  return valorCampo(time, ["escudo", "logo", "logoUrl"], "logo-liga.jfif");
+}
+
+function jogoFinalizado(j){
+  const status = normalizarTexto(valorCampo(j, ["status"], ""));
+  return status === "finalizado" || status === "sumula_enviada";
+}
+
+function textoStatus(j){
+  if(jogoFinalizado(j)) return "Finalizado";
+  return "Agendado";
+}
+
+function classeStatus(j){
+  if(jogoFinalizado(j)) return "status-finalizado";
+  return "status-agendado";
 }
 
 async function carregarDados(){
-  const [snapJogos, snapTimes, snapCampeonatos] = await Promise.all([
-    getDocs(collection(db, "jogos")),
-    getDocs(collection(db, "times")),
-    getDocs(collection(db, "campeonatos"))
-  ]);
+  try{
+    const [snapJogos, snapTimes, snapCampeonatos] = await Promise.all([
+      getDocs(collection(db, "jogos")),
+      getDocs(collection(db, "times")),
+      getDocs(collection(db, "campeonatos"))
+    ]);
 
-  jogos = [];
-  times = [];
-  campeonatos = [];
+    jogos = [];
+    times = [];
+    campeonatos = [];
 
-  snapJogos.forEach(docSnap => jogos.push({ id:docSnap.id, ...docSnap.data() }));
-  snapTimes.forEach(docSnap => times.push({ id:docSnap.id, ...docSnap.data() }));
-  snapCampeonatos.forEach(docSnap => campeonatos.push({ id:docSnap.id, ...docSnap.data() }));
-}
+    snapJogos.forEach(docSnap => {
+      jogos.push({ id:docSnap.id, ...docSnap.data() });
+    });
 
-function pegarEscudoDoJogo(j, lado){
-  if(lado === "A"){
-    const direto = valorCampo(j, ["logoTimeA", "escudoA", "logoA"], "");
-    if(direto) return direto;
+    snapTimes.forEach(docSnap => {
+      times.push({ id:docSnap.id, ...docSnap.data() });
+    });
 
-    const nome = valorCampo(j, ["timeA"], "");
-    const time = times.find(t => normalizarTexto(valorCampo(t, ["nome"], "")) === normalizarTexto(nome));
-    return valorCampo(time, ["escudo", "logo", "logoUrl", "urlLogo"], "logo-liga.jfif");
+    snapCampeonatos.forEach(docSnap => {
+      campeonatos.push({ id:docSnap.id, ...docSnap.data() });
+    });
+
+  }catch(erro){
+    console.error(erro);
+    jogos = [];
+    times = [];
+    campeonatos = [];
   }
 
-  const direto = valorCampo(j, ["logoTimeB", "escudoB", "logoB"], "");
-  if(direto) return direto;
-
-  const nome = valorCampo(j, ["timeB"], "");
-  const time = times.find(t => normalizarTexto(valorCampo(t, ["nome"], "")) === normalizarTexto(nome));
-  return valorCampo(time, ["escudo", "logo", "logoUrl", "urlLogo"], "logo-liga.jfif");
-}
-
-function obterCategoriasDoCampeonato(camp){
-  const lista = valorCampo(camp, ["categorias"], []);
-
-  if(Array.isArray(lista) && lista.length){
-    return lista.map(cat => {
-      if(typeof cat === "string") return cat;
-      return cat.nome || cat.categoria || "";
-    }).filter(Boolean);
+  if(exemplosAtivos){
+    campeonatos = [...campeonatosExemplo, ...campeonatos];
+    times = [...timesExemplo, ...times];
+    jogos = [...jogosExemplo, ...jogos];
   }
 
-  const campId = obterIdCampeonato(camp);
-  const nomeCamp = obterNomeCampeonato(camp);
-  const setCategorias = new Set();
+  if(!campeonatos.length){
+    campeonatos = campeonatosExemplo;
+  }
 
-  jogos.forEach(j => {
-    const jogoCampId = valorCampo(j, ["campeonatoId"], "");
-    const jogoCampNome = valorCampo(j, ["campeonato", "nomeCampeonato"], "");
-    const categoria = valorCampo(j, ["categoria"], "");
+  if(!times.length){
+    times = timesExemplo;
+  }
 
-    const mesmoCamp =
-      (campId && jogoCampId === campId) ||
-      normalizarTexto(jogoCampNome) === normalizarTexto(nomeCamp);
-
-    if(mesmoCamp && categoria) setCategorias.add(categoria);
-  });
-
-  return Array.from(setCategorias).sort((a,b)=>String(a).localeCompare(String(b),"pt-BR"));
+  if(!jogos.length){
+    jogos = jogosExemplo;
+  }
 }
 
-function preencherFiltros(){
-  const selectCamp = document.getElementById("filtroCampeonato");
-  selectCamp.innerHTML = '<option value="">Selecione o campeonato</option>';
+function preencherCampeonatos(){
+  const select = document.getElementById("filtroCampeonato");
+
+  select.innerHTML = `<option value="">Todos os campeonatos</option>`;
+
+  const usados = new Set();
 
   campeonatos
-    .sort((a,b)=>obterNomeCampeonato(a).localeCompare(obterNomeCampeonato(b),"pt-BR"))
+    .filter(c => obterNomeCampeonato(c))
+    .sort((a,b)=>obterNomeCampeonato(a).localeCompare(obterNomeCampeonato(b), "pt-BR"))
     .forEach(c => {
+      const id = obterIdCampeonato(c);
+      const nome = obterNomeCampeonato(c);
+
+      if(usados.has(id || nome)) return;
+      usados.add(id || nome);
+
       const option = document.createElement("option");
-      option.value = obterIdCampeonato(c);
-      option.textContent = obterNomeCampeonato(c);
-      selectCamp.appendChild(option);
+      option.value = id || nome;
+      option.textContent = nome;
+      select.appendChild(option);
     });
 }
 
 function preencherCategorias(){
-  const selectCat = document.getElementById("filtroCategoria");
-  const campeonatoId = document.getElementById("filtroCampeonato").value;
+  const select = document.getElementById("filtroCategoria");
+  const campeonatoSelecionado = document.getElementById("filtroCampeonato").value;
 
-  selectCat.innerHTML = '<option value="">Todas as categorias</option>';
+  select.innerHTML = `<option value="">Todas categorias</option>`;
 
-  if(!campeonatoId) return;
+  const categorias = new Set();
 
-  const camp = campeonatos.find(c => obterIdCampeonato(c) === campeonatoId);
-  if(!camp) return;
+  jogos.forEach(j => {
+    const campId = valorCampo(j, ["campeonatoId"], "");
+    const campNome = valorCampo(j, ["campeonato", "nomeCampeonato"], "");
+    const categoria = valorCampo(j, ["categoria"], "");
 
-  const categorias = obterCategoriasDoCampeonato(camp);
+    if(!categoria) return;
 
-  categorias.forEach(cat => {
-    const option = document.createElement("option");
-    option.value = cat;
-    option.textContent = cat;
-    selectCat.appendChild(option);
-  });
-}
-
-function aplicarFiltrosDaURL(){
-  const campeonatoURL = getParametro("campeonato");
-  const categoriaURL = getParametro("categoria");
-
-  if(campeonatoURL){
-    const camp = campeonatos.find(c => normalizarTexto(obterNomeCampeonato(c)) === normalizarTexto(campeonatoURL));
-    if(camp){
-      document.getElementById("filtroCampeonato").value = obterIdCampeonato(camp);
-      preencherCategorias();
+    if(!campeonatoSelecionado){
+      categorias.add(categoria);
+      return;
     }
-  }
 
-  if(categoriaURL){
-    const selectCat = document.getElementById("filtroCategoria");
-    const opcoes = Array.from(selectCat.options);
-    const opcao = opcoes.find(op => normalizarTexto(op.value) === normalizarTexto(categoriaURL));
-    if(opcao) selectCat.value = opcao.value;
-  }
-}
+    if(campId === campeonatoSelecionado || campNome === campeonatoSelecionado){
+      categorias.add(categoria);
+    }
+  });
 
-function formatarDataHora(dataString){
-  if(!dataString) return "-";
-
-  const data = new Date(dataString);
-  if(isNaN(data.getTime())) return String(dataString);
-
-  const dia = String(data.getDate()).padStart(2, "0");
-  const mes = String(data.getMonth() + 1).padStart(2, "0");
-  const ano = data.getFullYear();
-  const hora = String(data.getHours()).padStart(2, "0");
-  const minuto = String(data.getMinutes()).padStart(2, "0");
-
-  return `${dia}/${mes}/${ano} - ${hora}:${minuto}`;
-}
-
-function numeroRodada(valor){
-  if(valor === undefined || valor === null || valor === "") return 999999;
-
-  const texto = String(valor);
-  const numero = parseInt(texto.replace(/\D/g, ""), 10);
-
-  return isNaN(numero) ? 999999 : numero;
+  Array.from(categorias)
+    .sort((a,b)=>a.localeCompare(b, "pt-BR"))
+    .forEach(cat => {
+      const option = document.createElement("option");
+      option.value = cat;
+      option.textContent = cat;
+      select.appendChild(option);
+    });
 }
 
 function jogosFiltrados(){
-  const campeonatoId = document.getElementById("filtroCampeonato").value;
-  const categoria = document.getElementById("filtroCategoria").value;
-
-  if(!campeonatoId) return [];
-
-  const campeonatoSelecionado = campeonatos.find(c => obterIdCampeonato(c) === campeonatoId);
-  if(!campeonatoSelecionado) return [];
-
-  const nomeCamp = obterNomeCampeonato(campeonatoSelecionado);
+  const busca = normalizarTexto(document.getElementById("buscaJogo").value);
+  const campeonatoSelecionado = document.getElementById("filtroCampeonato").value;
+  const categoriaSelecionada = document.getElementById("filtroCategoria").value;
 
   return jogos.filter(j => {
-    const jogoCampId = valorCampo(j, ["campeonatoId"], "");
-    const jogoCampNome = valorCampo(j, ["campeonato", "nomeCampeonato"], "");
-    const jogoCategoria = valorCampo(j, ["categoria"], "");
+    const campeonatoId = valorCampo(j, ["campeonatoId"], "");
+    const campeonatoNome = valorCampo(j, ["campeonato", "nomeCampeonato"], "");
+    const categoria = valorCampo(j, ["categoria"], "");
+    const timeA = valorCampo(j, ["timeA"], "");
+    const timeB = valorCampo(j, ["timeB"], "");
+    const local = valorCampo(j, ["local"], "");
 
-    const mesmoCamp =
-      jogoCampId === campeonatoId ||
-      normalizarTexto(jogoCampNome) === normalizarTexto(nomeCamp);
+    if(campeonatoSelecionado){
+      const mesmoCamp =
+        campeonatoId === campeonatoSelecionado ||
+        campeonatoNome === campeonatoSelecionado;
 
-    return mesmoCamp && (!categoria || jogoCategoria === categoria);
+      if(!mesmoCamp) return false;
+    }
+
+    if(categoriaSelecionada && categoria !== categoriaSelecionada){
+      return false;
+    }
+
+    if(busca){
+      const texto = normalizarTexto(`${timeA} ${timeB} ${local} ${campeonatoNome} ${categoria}`);
+      if(!texto.includes(busca)) return false;
+    }
+
+    return true;
   });
 }
 
-async function temSumulaDoJogo(id){
-  const snap = await getDoc(doc(db, "sumulas", id));
-  return snap.exists();
-}
+window.excluirExemplos = function(){
+  localStorage.setItem("ocultarExemplosJogos", "sim");
+  exemplosAtivos = false;
 
-window.carregarJogos = async function(){
+  jogos = jogos.filter(j => !j.exemplo);
+  campeonatos = campeonatos.filter(c => !c.exemplo);
+  times = times.filter(t => !t.exemplo);
+
+  preencherCampeonatos();
+  preencherCategorias();
+  carregarJogos();
+};
+
+window.restaurarExemplos = async function(){
+  localStorage.removeItem("ocultarExemplosJogos");
+  exemplosAtivos = true;
+  await carregarDados();
+  preencherCampeonatos();
+  preencherCategorias();
+  carregarJogos();
+};
+
+window.abrirJogo = function(id){
+  const j = jogos.find(item => item.id === id);
+  if(!j) return;
+
+  const detalhe = document.getElementById("detalheJogo");
+  const finalizado = jogoFinalizado(j);
+
+  detalhe.style.display = "block";
+
+  detalhe.innerHTML = `
+    <h2>${valorCampo(j, ["timeA"], "-")} ${finalizado ? `${Number(valorCampo(j, ["golsA"], 0))} x ${Number(valorCampo(j, ["golsB"], 0))}` : "x"} ${valorCampo(j, ["timeB"], "-")}</h2>
+
+    <div class="detalhe-grid">
+      <div class="detalhe-item">
+        <strong>Campeonato</strong>
+        ${valorCampo(j, ["campeonato", "nomeCampeonato"], "-")}
+      </div>
+
+      <div class="detalhe-item">
+        <strong>Categoria</strong>
+        ${valorCampo(j, ["categoria"], "-")}
+      </div>
+
+      <div class="detalhe-item">
+        <strong>Data</strong>
+        ${formatarDataHora(valorCampo(j, ["data"], ""))}
+      </div>
+
+      <div class="detalhe-item">
+        <strong>Local</strong>
+        ${valorCampo(j, ["local"], "-")}
+      </div>
+
+      <div class="detalhe-item">
+        <strong>Rodada/Fase</strong>
+        ${valorCampo(j, ["rodada", "fase"], "-")}
+      </div>
+
+      <div class="detalhe-item">
+        <strong>Árbitro</strong>
+        ${valorCampo(j, ["arbitro"], "-")}
+      </div>
+
+      <div class="detalhe-item">
+        <strong>Status</strong>
+        ${textoStatus(j)}
+      </div>
+
+      <div class="detalhe-item">
+        <strong>Origem</strong>
+        ${j.exemplo ? "Dado de exemplo" : "Firebase"}
+      </div>
+    </div>
+  `;
+
+  detalhe.scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
+};
+
+window.carregarJogos = function(){
   const lista = document.getElementById("listaJogos");
-  const campeonatoId = document.getElementById("filtroCampeonato").value;
-  const categoria = document.getElementById("filtroCategoria").value;
-  const campeonatoSelecionado = campeonatos.find(c => obterIdCampeonato(c) === campeonatoId) || null;
-  const campeonatoNome = campeonatoSelecionado ? obterNomeCampeonato(campeonatoSelecionado) : "";
+  const titulo = document.getElementById("tituloPagina");
+  const filtrados = jogosFiltrados();
 
-  let filtrados = jogosFiltrados();
+  const campeonatoSelecionado = document.getElementById("filtroCampeonato").value;
+  const categoriaSelecionada = document.getElementById("filtroCategoria").value;
 
-  document.getElementById("tituloPagina").textContent =
-    `Jogos${categoria ? " - " + categoria : ""}${campeonatoNome ? " | " + campeonatoNome : ""}`;
+  const campObj = campeonatos.find(c =>
+    obterIdCampeonato(c) === campeonatoSelecionado ||
+    obterNomeCampeonato(c) === campeonatoSelecionado
+  );
 
-  if(!campeonatoId){
-    lista.innerHTML = `<div class="vazio">Selecione um campeonato para ver os jogos.</div>`;
-    return;
-  }
+  const campNome = campObj ? obterNomeCampeonato(campObj) : "";
 
-  if(filtrados.length === 0){
+  titulo.textContent =
+    `Jogos${categoriaSelecionada ? " - " + categoriaSelecionada : ""}${campNome ? " | " + campNome : ""}`;
+
+  if(!filtrados.length){
     lista.innerHTML = `<div class="vazio">Nenhum jogo encontrado.</div>`;
     return;
   }
 
-  filtrados.sort((a,b)=>{
-    const rodadaA = numeroRodada(valorCampo(a, ["rodada"], ""));
-    const rodadaB = numeroRodada(valorCampo(b, ["rodada"], ""));
-    if(rodadaA !== rodadaB) return rodadaA - rodadaB;
-
-    return String(valorCampo(a, ["data"], "")).localeCompare(String(valorCampo(b, ["data"], "")));
+  const ordenados = [...filtrados].sort((a,b) => {
+    const dataA = String(valorCampo(a, ["data"], ""));
+    const dataB = String(valorCampo(b, ["data"], ""));
+    return dataA.localeCompare(dataB);
   });
 
-  const grupos = {};
+  lista.innerHTML = ordenados.map(j => {
+    const finalizado = jogoFinalizado(j);
+    const placar = finalizado
+      ? `${Number(valorCampo(j, ["golsA"], 0))} x ${Number(valorCampo(j, ["golsB"], 0))}`
+      : "x";
 
-  filtrados.forEach(j => {
-    const chave = valorCampo(j, ["rodada"], "")
-      ? `Rodada ${valorCampo(j, ["rodada"], "")}`
-      : "Sem rodada";
+    const timeA = valorCampo(j, ["timeA"], "-");
+    const timeB = valorCampo(j, ["timeB"], "-");
+    const campeonato = valorCampo(j, ["campeonato", "nomeCampeonato"], "-");
+    const categoria = valorCampo(j, ["categoria"], "-");
+    const local = valorCampo(j, ["local"], "-");
+    const data = formatarDataHora(valorCampo(j, ["data"], ""));
+    const escudoA = pegarEscudo(timeA, valorCampo(j, ["logoTimeA", "escudoA", "logoA"], ""));
+    const escudoB = pegarEscudo(timeB, valorCampo(j, ["logoTimeB", "escudoB", "logoB"], ""));
 
-    if(!grupos[chave]) grupos[chave] = [];
-    grupos[chave].push(j);
-  });
-
-  lista.innerHTML = "";
-
-  for(const rodada of Object.keys(grupos)){
-    lista.innerHTML += `<div class="rodada">${rodada}</div>`;
-
-    for(const j of grupos[rodada]){
-      const status = normalizarTexto(valorCampo(j, ["status"], ""));
-      const existeSumula = await temSumulaDoJogo(j.id);
-      const finalizado = status === "sumula_enviada" || status === "finalizado" || existeSumula;
-
-      const placar = finalizado
-        ? `${Number(valorCampo(j, ["golsA"], 0))} x ${Number(valorCampo(j, ["golsB"], 0))}`
-        : "x";
-
-      const nomeCampJogo = valorCampo(j, ["campeonato", "nomeCampeonato"], campeonatoNome);
-      const categoriaJogo = valorCampo(j, ["categoria"], "");
-      const linkCampeonato = montarLinkCampeonatoPublico(nomeCampJogo || "");
-      const linkTabela = montarLinkPagina("tabela.html", nomeCampJogo || "", categoriaJogo || "");
-      const linkJogos = montarLinkPagina("jogos.html", nomeCampJogo || "", categoriaJogo || "");
-      const linkSuspensos = montarLinkPagina("suspensos.html", nomeCampJogo || "", categoriaJogo || "");
-
-      lista.innerHTML += `
-        <div class="jogo">
-          <div class="topo-jogo">
-            <div class="times">
-              <div class="time">
-                <img src="${pegarEscudoDoJogo(j, "A")}" class="escudo" alt="${valorCampo(j, ["timeA"], "-")}" onerror="this.src='logo-liga.jfif'">
-                <span>${valorCampo(j, ["timeA"], "-")}</span>
-              </div>
-
-              <div class="placar">${placar}</div>
-
-              <div class="time visitante">
-                <span>${valorCampo(j, ["timeB"], "-")}</span>
-                <img src="${pegarEscudoDoJogo(j, "B")}" class="escudo" alt="${valorCampo(j, ["timeB"], "-")}" onerror="this.src='logo-liga.jfif'">
-              </div>
-            </div>
+    return `
+      <article class="card-jogo">
+        <div class="card-top">
+          <div class="card-icon">
+            <i class="fa-solid fa-calendar-days"></i>
           </div>
 
-          <div class="info">
-            <div><strong>Data</strong><br>${formatarDataHora(valorCampo(j, ["data"], ""))}</div>
-            <div><strong>Local</strong><br>${valorCampo(j, ["local"], "-")}</div>
-            <div><strong>Campeonato</strong><br>${nomeCampJogo || "-"}</div>
-            <div><strong>Categoria</strong><br>${categoriaJogo || "-"}</div>
-          </div>
-
-          <div class="status ${finalizado ? "finalizado" : "agendado"}">
-            <i class="fa-solid ${finalizado ? "fa-check" : "fa-clock"}"></i>
-            ${finalizado ? "Finalizado" : "Agendado"}
-          </div>
-
-          <div class="acoes-jogo">
-            ${
-              finalizado
-                ? `
-                  <a class="btn-acao btn-sumula" href="sumula-publica.html?id=${j.id}">
-                    <i class="fa-solid fa-file-lines"></i> Ver Súmula
-                  </a>
-                `
-                : ""
-            }
-
-            <a class="btn-acao btn-secundario" href="${linkCampeonato}">
-              <i class="fa-solid fa-trophy"></i> Campeonato
-            </a>
-
-            <a class="btn-acao btn-secundario" href="${linkTabela}">
-              <i class="fa-solid fa-table"></i> Tabela
-            </a>
-
-            <a class="btn-acao btn-secundario" href="${linkJogos}">
-              <i class="fa-solid fa-calendar-days"></i> Jogos
-            </a>
-
-            <a class="btn-acao btn-secundario" href="${linkSuspensos}">
-              <i class="fa-solid fa-ban"></i> Suspensos
-            </a>
+          <div class="status-tag ${classeStatus(j)}">
+            ${textoStatus(j)}
           </div>
         </div>
-      `;
-    }
-  }
+
+        <div class="times-linha">
+          <div class="time-box">
+            <img src="${escudoA}" class="escudo" onerror="this.src='logo-liga.jfif'">
+            <span>${timeA}</span>
+          </div>
+
+          <div class="placar">${placar}</div>
+
+          <div class="time-box visitante">
+            <span>${timeB}</span>
+            <img src="${escudoB}" class="escudo" onerror="this.src='logo-liga.jfif'">
+          </div>
+        </div>
+
+        <div class="info-jogo">
+          <strong>${campeonato}</strong><br>
+          ${categoria}<br>
+          ${data}<br>
+          ${local}
+        </div>
+
+        <div class="tags">
+          ${j.exemplo ? `<span class="tag">Exemplo</span>` : `<span class="tag">Firebase</span>`}
+          <span class="tag">${valorCampo(j, ["rodada", "fase"], "Jogo")}</span>
+        </div>
+
+        <div class="acoes">
+          <button class="btn-acao btn-ver" onclick="abrirJogo('${j.id}')">
+            <i class="fa-solid fa-eye"></i> Ver Jogo
+          </button>
+
+          ${
+            finalizado
+              ? `
+                <a class="btn-acao btn-secundario" href="sumula-publica.html?id=${j.id}">
+                  <i class="fa-solid fa-file-lines"></i> Ver Súmula
+                </a>
+              `
+              : ""
+          }
+
+          ${
+            j.exemplo
+              ? `
+                <button class="btn-acao btn-danger" onclick="excluirExemplos()">
+                  <i class="fa-solid fa-trash"></i> Excluir Exemplos
+                </button>
+              `
+              : ""
+          }
+        </div>
+      </article>
+    `;
+  }).join("");
 };
 
-document.getElementById("filtroCampeonato").addEventListener("change", async () => {
+document.getElementById("buscaJogo").addEventListener("input", carregarJogos);
+
+document.getElementById("filtroCampeonato").addEventListener("change", () => {
   preencherCategorias();
   document.getElementById("filtroCategoria").value = "";
-  await carregarJogos();
+  carregarJogos();
 });
 
 document.getElementById("filtroCategoria").addEventListener("change", carregarJogos);
 
-await carregarDados();
-preencherFiltros();
-aplicarFiltrosDaURL();
-await carregarJogos();
+async function iniciarPagina(){
+  const lista = document.getElementById("listaJogos");
+  lista.innerHTML = `<div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando jogos...</div>`;
+
+  await carregarDados();
+  preencherCampeonatos();
+  preencherCategorias();
+  carregarJogos();
+}
+
+iniciarPagina();
 </script>
 
 </body>
