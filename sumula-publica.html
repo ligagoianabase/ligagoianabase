@@ -3,47 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Súmulas - Liga Goiana</title>
+
+<title>Súmula Pública - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 :root{
   --bg:#061427;
   --card:#071d37;
+  --card2:#0d2a52;
   --gold:#f7c600;
   --gold2:#ffe45c;
-  --white:#fff;
+  --white:#ffffff;
   --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
   --gold-line:rgba(247,198,0,.45);
+  --green:#42e85f;
+  --yellow:#ffd400;
+  --red:#ff2738;
+  --blue:#4d8dff;
   --shadow:0 14px 34px rgba(0,0,0,.38);
   --max:1240px;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
 body{
-  font-family:Arial,sans-serif;
+  font-family:Arial, sans-serif;
   background:
-    linear-gradient(rgba(2,8,20,.88),rgba(2,8,20,.96)),
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
     url("fundo.png") center/cover fixed no-repeat;
   color:var(--white);
   min-height:100vh;
   overflow-x:hidden;
 }
 
-a{text-decoration:none;color:inherit;}
-button{font-family:inherit;cursor:pointer;border:none;}
-img{max-width:100%;display:block;}
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
+  border:none;
+}
+
+img{
+  display:block;
+  max-width:100%;
+}
 
 .wrap{
-  width:min(100% - 28px,var(--max));
+  width:min(100% - 28px, var(--max));
   margin:0 auto;
 }
 
-/* HEADER */
+/* HEADER PADRÃO */
 .site-header{
-  background:linear-gradient(180deg,rgba(2,10,24,.98),rgba(8,23,44,.96));
+  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
   border-bottom:3px solid var(--gold);
   box-shadow:var(--shadow);
 }
@@ -65,9 +91,9 @@ img{max-width:100%;display:block;}
   line-height:1.15;
 }
 
-/* MENU RESPONSIVO PADRÃO */
+/* MENU FINAL PADRÃO */
 .nav-bar{
-  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.98));
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
   border-top:1px solid rgba(255,255,255,.06);
   overflow:hidden;
 }
@@ -86,222 +112,286 @@ img{max-width:100%;display:block;}
   color:#fff;
   font-weight:900;
   font-size:clamp(11px, .92vw, 15px);
-  background:linear-gradient(180deg,rgba(16,42,82,.98),rgba(12,33,64,.98));
+  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
   padding:clamp(8px, .75vw, 12px) clamp(9px, 1vw, 18px);
   border-radius:clamp(10px, .9vw, 15px);
   border:1px solid rgba(255,255,255,.07);
   white-space:nowrap;
   flex:0 1 auto;
   box-shadow:0 10px 22px rgba(0,0,0,.24);
+  transition:.25s ease;
+}
+
+.menu a:hover{
+  color:var(--gold);
+  border-color:var(--gold-line);
 }
 
 .menu a.ativo{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
   color:#111;
 }
 
 /* PÁGINA */
-.page{
-  width:min(100% - 22px,1120px);
-  margin:0 auto;
-  padding:22px 0 28px;
+.container{
+  padding:22px 0 34px;
 }
 
-.hero{
+#areaSumula{
   background:
-    radial-gradient(circle at top left,rgba(247,198,0,.16),transparent 34%),
-    linear-gradient(135deg,rgba(16,42,82,.96),rgba(8,23,44,.96));
-  border:1px solid var(--gold-line);
-  border-radius:20px;
-  padding:20px;
-  margin-bottom:14px;
+    radial-gradient(circle at top center, rgba(24,72,130,.55), transparent 38%),
+    linear-gradient(180deg, rgba(2,12,28,.98), rgba(3,13,28,.98));
+  border:2px solid var(--gold);
+  border-radius:18px;
   box-shadow:var(--shadow);
+  overflow:hidden;
 }
 
-.hero h1{
-  color:var(--gold);
-  font-size:28px;
-  font-weight:900;
-  margin-bottom:6px;
-}
-
-.hero p{
-  color:var(--muted);
-  line-height:1.5;
-  font-size:14px;
-}
-
-/* CARDS */
-.sumulas-lista{
+.sumula-header{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:10px;
-  margin-bottom:18px;
-}
-
-.sumula-card{
-  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.97));
-  border:1px solid rgba(247,198,0,.22);
-  border-radius:15px;
-  padding:10px;
-  box-shadow:0 8px 20px rgba(0,0,0,.25);
-}
-
-.sumula-card-top{
-  display:flex;
+  grid-template-columns:96px 1fr 96px;
   align-items:center;
-  justify-content:space-between;
-  margin-bottom:8px;
+  gap:14px;
+  padding:18px 22px;
+  border-bottom:2px solid var(--gold);
 }
 
-.sumula-icon{
-  width:34px;
-  height:34px;
-  border-radius:10px;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#111;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:16px;
+.logo-oficial{
+  width:82px;
+  height:82px;
+  object-fit:cover;
+  border-radius:18px;
+  border:2px solid var(--gold);
+  background:#fff;
 }
 
-.sumula-status{
-  background:#1b5e20;
-  color:#fff;
-  padding:5px 8px;
-  border-radius:999px;
-  font-size:11px;
+.logo-oficial.right{
+  justify-self:end;
+}
+
+.titulo-oficial{
+  text-align:center;
+}
+
+.titulo-oficial strong{
+  display:block;
+  color:var(--gold);
+  font-size:38px;
   font-weight:900;
+  letter-spacing:1px;
+  line-height:1;
 }
 
-.sumula-times{
+.titulo-oficial span{
+  display:block;
+  margin-top:9px;
+  color:#fff;
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:.5px;
+}
+
+.meta-bar{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+  padding:13px 16px;
+  border-bottom:1px solid var(--line);
+  background:rgba(3,12,29,.55);
+  font-weight:900;
+  color:#fff;
+}
+
+.meta-item{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  white-space:nowrap;
+  font-size:13px;
+}
+
+.meta-item i{
+  color:var(--gold);
+}
+<style>
+
+/* TIMES E PLACAR */
+.score-board{
   display:grid;
   grid-template-columns:1fr auto 1fr;
   align-items:center;
-  gap:8px;
-  margin:8px 0;
+  gap:20px;
+  padding:22px;
+  border-bottom:1px solid var(--line);
 }
 
-.sumula-time{
+.time{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+
+.time.visitante{
+  align-items:flex-end;
+}
+
+.escudo{
+  width:82px;
+  height:82px;
+  object-fit:cover;
+  border-radius:50%;
+  border:2px solid var(--gold);
+  background:#fff;
+}
+
+.nome-time{
+  font-weight:900;
+  font-size:16px;
+  text-align:center;
+}
+
+.placar{
+  font-size:46px;
+  font-weight:900;
+  color:var(--gold);
+  background:rgba(3,12,29,.8);
+  border:2px solid var(--gold);
+  padding:12px 18px;
+  border-radius:16px;
+  text-align:center;
+  min-width:120px;
+}
+
+/* SEÇÕES */
+.section{
+  padding:18px 20px;
+  border-bottom:1px solid var(--line);
+}
+
+.section h3{
+  color:var(--gold);
+  font-size:16px;
+  margin-bottom:12px;
+  font-weight:900;
+}
+
+/* GRID DE EVENTOS */
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+/* EVENTOS */
+.evento{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:9px 12px;
+  border-radius:10px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  font-size:13px;
+}
+
+.evento span{
   display:flex;
   align-items:center;
   gap:6px;
   font-weight:900;
-  font-size:13px;
-  min-width:0;
 }
 
-.sumula-time.right{
-  justify-content:flex-end;
-  text-align:right;
-}
-
-.sumula-time span{
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.sumula-time img{
-  width:28px;
-  height:28px;
-  border-radius:50%;
-  border:1px solid var(--gold);
-  object-fit:cover;
-  background:#fff;
-}
-
-.sumula-placar{
-  color:var(--gold);
-  font-size:16px;
-  font-weight:900;
-  background:rgba(2,10,24,.72);
-  border:1px solid var(--gold-line);
-  border-radius:10px;
-  padding:6px 9px;
-}
-
-.sumula-info{
+.minuto{
   color:var(--muted);
   font-size:12px;
-  line-height:1.45;
-  text-align:center;
-  margin-top:8px;
+  font-weight:700;
 }
 
-.btn-ver-sumula{
-  width:100%;
-  margin-top:9px;
-  padding:9px 12px;
-  border-radius:11px;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#111;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  font-size:13px;
+/* TIPOS */
+.gol i{color:var(--green);}
+.amarelo i{color:var(--yellow);}
+.vermelho i{color:var(--red);}
+
+/* LISTA JOGADORES */
+.lista-jogadores{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
 }
 
-#areaSumula{
-  display:none;
-  margin-top:18px;
-  padding:20px;
-  border:2px solid var(--gold);
-  border-radius:16px;
-  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.97));
-  text-align:center;
-  box-shadow:var(--shadow);
-}
-
-#areaSumula h2{
-  color:var(--gold);
-  margin-bottom:10px;
-}
-
-.vazio{
-  color:var(--muted);
-  text-align:center;
-  padding:18px;
-  background:rgba(7,29,55,.9);
+.jogador{
+  padding:8px 10px;
+  border-radius:8px;
+  background:rgba(255,255,255,.05);
   border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  grid-column:1/-1;
+  font-size:13px;
+  font-weight:800;
 }
 
-/* CELULAR */
-@media(max-width:900px){
-  .header-title{
-    font-size:20px;
+/* OBSERVAÇÕES */
+.obs{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+/* AÇÕES */
+.acoes{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:18px;
+}
+
+.btn{
+  flex:1;
+  padding:12px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:13px;
+  text-align:center;
+}
+
+.btn-whats{
+  background:#25D366;
+  color:#fff;
+}
+
+.btn-email{
+  background:#1a3f73;
+}
+
+.btn-pdf{
+  background:var(--gold);
+  color:#111;
+}
+
+.btn-voltar{
+  background:#0d2346;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+
+  .score-board{
+    grid-template-columns:1fr;
+    text-align:center;
   }
 
-  .menu{
-    justify-content:flex-start;
-    overflow-x:auto;
-    overflow-y:hidden;
-    padding:14px;
-    gap:10px;
-    scrollbar-width:none;
-    -ms-overflow-style:none;
+  .time.visitante{
+    align-items:center;
   }
 
-  .menu::-webkit-scrollbar{
-    display:none;
-  }
-
-  .menu a{
-    flex:0 0 auto;
-    font-size:15px;
-    padding:12px 18px;
-    border-radius:15px;
-  }
-
-  .sumulas-lista{
+  .grid-2,
+  .lista-jogadores{
     grid-template-columns:1fr;
   }
+
 }
+
 </style>
 </head>
 
@@ -309,7 +399,9 @@ img{max-width:100%;display:block;}
 
 <header class="site-header">
   <div class="wrap header-top">
-    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
+    <div class="header-title">
+      LIGA GOIANA DE FUTEBOL DE BASE
+    </div>
   </div>
 
   <div class="nav-bar">
@@ -326,152 +418,399 @@ img{max-width:100%;display:block;}
         <a href="assistentes.html">Assistente</a>
         <a href="sumula-publica.html" class="ativo">Súmula</a>
         <a href="noticias.html">Notícias</a>
+        <a href="login.html">Login</a>
       </nav>
     </div>
   </div>
 </header>
 
-<div class="page">
+<main class="wrap container">
 
-  <section class="hero">
-    <h1>Súmulas Oficiais</h1>
-    <p>Veja as súmulas finalizadas. Clique em “Ver Súmula” para abrir na mesma página.</p>
-  </section>
+  <div id="areaSumula"></div>
 
-  <section class="sumulas-lista" id="listaSumulas"></section>
+</main>
+<script type="module">
+import { db } from "./firebase.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  <section id="areaSumula"></section>
+const area = document.getElementById("areaSumula");
 
-</div>
-
-<script>
-const SUMULAS_EXEMPLO = [
-  {
-    id:"1",
-    campeonato:"Copa do Mundo FIFA 2002",
-    categoria:"Seleção Principal",
-    data:"30/06/2002 - 08:00",
-    local:"International Stadium Yokohama",
-    timeA:"Brasil",
-    timeB:"Alemanha",
-    golsA:2,
-    golsB:0,
-    logoA:"logo-liga.jfif",
-    logoB:"logo-liga.jfif"
-  },
-  {
-    id:"2",
-    campeonato:"Copa União de Base",
-    categoria:"Sub-15",
-    data:"18/05/2025 - 16:00",
-    local:"Serra Dourada",
-    timeA:"Atlético GO",
-    timeB:"Vila Nova",
-    golsA:2,
-    golsB:1,
-    logoA:"logo-liga.jfif",
-    logoB:"logo-liga.jfif"
-  },
-  {
-    id:"3",
-    campeonato:"Liga Goiana Elite",
-    categoria:"Sub-13",
-    data:"17/05/2025 - 15:30",
-    local:"Campo 1",
-    timeA:"Goiás",
-    timeB:"Anápolis",
-    golsA:1,
-    golsB:1,
-    logoA:"logo-liga.jfif",
-    logoB:"logo-liga.jfif"
-  },
-  {
-    id:"4",
-    campeonato:"Copa União de Base",
-    categoria:"Sub-17",
-    data:"16/05/2025 - 19:00",
-    local:"Estádio Olímpico",
-    timeA:"Cruzeiro",
-    timeB:"Goianésia",
-    golsA:3,
-    golsB:0,
-    logoA:"logo-liga.jfif",
-    logoB:"logo-liga.jfif"
-  },
-  {
-    id:"5",
-    campeonato:"Liga Goiana Elite",
-    categoria:"Sub-11",
-    data:"15/05/2025 - 09:00",
-    local:"Campo Society 2",
-    timeA:"Aparecidense",
-    timeB:"Trindade",
-    golsA:0,
-    golsB:0,
-    logoA:"logo-liga.jfif",
-    logoB:"logo-liga.jfif"
-  }
-];
-
-function renderLista(){
-  const lista = document.getElementById("listaSumulas");
-
-  lista.innerHTML = SUMULAS_EXEMPLO.map(j => `
-    <article class="sumula-card">
-      <div class="sumula-card-top">
-        <div class="sumula-icon">
-          <i class="fa-solid fa-file-signature"></i>
-        </div>
-        <div class="sumula-status">Finalizada</div>
-      </div>
-
-      <div class="sumula-times">
-        <div class="sumula-time">
-          <img src="${j.logoA}" onerror="this.src='logo-liga.jfif'">
-          <span>${j.timeA}</span>
-        </div>
-
-        <div class="sumula-placar">${j.golsA} x ${j.golsB}</div>
-
-        <div class="sumula-time right">
-          <span>${j.timeB}</span>
-          <img src="${j.logoB}" onerror="this.src='logo-liga.jfif'">
-        </div>
-      </div>
-
-      <div class="sumula-info">
-        <strong>${j.campeonato}</strong><br>
-        ${j.categoria}<br>
-        ${j.data}<br>
-        ${j.local}
-      </div>
-
-      <button class="btn-ver-sumula" onclick="abrirSumula('${j.id}')">
-        <i class="fa-solid fa-eye"></i> Ver Súmula
-      </button>
-    </article>
-  `).join("");
+function getId(){
+  return new URLSearchParams(window.location.search).get("id");
 }
 
-function abrirSumula(id){
-  const s = SUMULAS_EXEMPLO.find(x => x.id === id);
-  const area = document.getElementById("areaSumula");
+function campo(valor, fallback = "-"){
+  if(valor === undefined || valor === null || valor === "") return fallback;
+  return valor;
+}
 
-  area.style.display = "block";
+function normalizar(valor){
+  return String(valor || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function dataBR(valor){
+  if(!valor) return "-";
+
+  const d = new Date(valor);
+
+  if(isNaN(d.getTime())){
+    return String(valor);
+  }
+
+  return d.toLocaleString("pt-BR", {
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric",
+    hour:"2-digit",
+    minute:"2-digit"
+  });
+}
+
+function evento(item, tipo){
+  const nome = campo(item.nome || item.jogador, "Jogador");
+  const numero = item.numero ? `#${item.numero}` : "";
+  const minuto = campo(item.minuto || item.tempo || item.min, "");
+
+  let icon = "fa-futbol";
+  if(tipo === "amarelo") icon = "fa-square";
+  if(tipo === "vermelho") icon = "fa-square";
+
+  return `
+    <div class="evento ${tipo}">
+      <span><i class="fa-solid ${icon}"></i> ${numero} ${nome}</span>
+      <div class="minuto">${minuto ? minuto + "'" : ""}</div>
+    </div>
+  `;
+}
+
+function listaEventos(lista, tipo){
+  if(!lista || !lista.length){
+    return `<div class="evento"><span>Nenhum</span></div>`;
+  }
+
+  return lista.map(item => evento(item, tipo)).join("");
+}
+
+function jogadorLinha(j){
+  const numero = campo(j.numero, "-");
+  const nome = campo(j.nome, "Jogador");
+
+  return `
+    <div class="jogador">
+      ${numero} - ${nome}
+    </div>
+  `;
+}
+
+function listaJogadores(lista){
+  if(!lista || !lista.length){
+    return `<div class="jogador">Nenhum jogador informado.</div>`;
+  }
+
+  return lista.map(jogadorLinha).join("");
+}
+
+function montarSumula(s){
+  const timeA = campo(s.timeA, "Time A");
+  const timeB = campo(s.timeB, "Time B");
+
+  const golsA = Number(s.golsA || (s.golsDetalhadosA || []).length || 0);
+  const golsB = Number(s.golsB || (s.golsDetalhadosB || []).length || 0);
+
+  const logoA = s.logoTimeA || s.escudoA || s.logoA || "logo-liga.jfif";
+  const logoB = s.logoTimeB || s.escudoB || s.logoB || "logo-liga.jfif";
+  const logoCamp = s.logoCampeonato || "logo-liga.jfif";
+
+  const campeonato = campo(s.campeonato || s.nomeCampeonato, "Campeonato");
+  const categoria = campo(s.categoria, "Categoria");
+  const data = dataBR(s.dataJogo || s.data);
+  const local = campo(s.local, "Local");
+  const rodada = campo(s.rodada || s.fase, "Jogo");
+  const arbitro = campo(s.arbitro || s.arbitroPrincipal, "Não informado");
+  const assistente1 = campo(s.assistente1 || s.assistenteA, "Não informado");
+  const assistente2 = campo(s.assistente2 || s.assistenteB, "Não informado");
 
   area.innerHTML = `
-    <h2>SÚMULA OFICIAL</h2>
-    <p><strong>${s.timeA}</strong> ${s.golsA} x ${s.golsB} <strong>${s.timeB}</strong></p>
-    <p>${s.campeonato}</p>
-    <p>${s.categoria}</p>
-    <p>${s.data}</p>
-    <p>${s.local}</p>
-  `;
+    <div class="sumula-header">
+      <img src="logo-liga.jfif" class="logo-oficial" onerror="this.src='logo-liga.jfif'">
 
-  area.scrollIntoView({behavior:"smooth",block:"start"});
+      <div class="titulo-oficial">
+        <strong>SÚMULA OFICIAL</strong>
+        <span>LIGA GOIANA DE FUTEBOL DE BASE</span>
+      </div>
+
+      <img src="${logoCamp}" class="logo-oficial right" onerror="this.src='logo-liga.jfif'">
+    </div>
+
+    <div class="meta-bar">
+      <div class="meta-item"><i class="fa-solid fa-trophy"></i> ${campeonato}</div>
+      <div class="meta-item"><i class="fa-solid fa-users"></i> ${categoria}</div>
+      <div class="meta-item"><i class="fa-solid fa-calendar-days"></i> ${data}</div>
+      <div class="meta-item"><i class="fa-solid fa-location-dot"></i> ${local}</div>
+      <div class="meta-item"><i class="fa-solid fa-flag"></i> ${rodada}</div>
+    </div>
+
+    <section class="score-board">
+      <div class="time">
+        <img src="${logoA}" class="escudo" onerror="this.src='logo-liga.jfif'">
+        <div class="nome-time">${timeA}</div>
+      </div>
+
+      <div class="placar">${golsA} x ${golsB}</div>
+
+      <div class="time visitante">
+        <img src="${logoB}" class="escudo" onerror="this.src='logo-liga.jfif'">
+        <div class="nome-time">${timeB}</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3><i class="fa-solid fa-user-tie"></i> Arbitragem</h3>
+      <div class="grid-2">
+        <div class="evento"><span>Árbitro</span><div>${arbitro}</div></div>
+        <div class="evento"><span>Assistente 1</span><div>${assistente1}</div></div>
+        <div class="evento"><span>Assistente 2</span><div>${assistente2}</div></div>
+        <div class="evento"><span>Status</span><div>${campo(s.status, "Finalizada")}</div></div>
+      </div>
+    </section>
+<section class="section">
+      <h3><i class="fa-solid fa-users"></i> Jogadores Relacionados</h3>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size:14px;">${timeA}</h3>
+          <div class="lista-jogadores">
+            ${listaJogadores(s.jogadoresA || s.elencoA || [])}
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size:14px;">${timeB}</h3>
+          <div class="lista-jogadores">
+            ${listaJogadores(s.jogadoresB || s.elencoB || [])}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3><i class="fa-solid fa-futbol"></i> Gols</h3>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size:14px;">${timeA}</h3>
+          ${listaEventos(s.golsDetalhadosA || [], "gol")}
+        </div>
+
+        <div>
+          <h3 style="font-size:14px;">${timeB}</h3>
+          ${listaEventos(s.golsDetalhadosB || [], "gol")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3><i class="fa-solid fa-square"></i> Cartões Amarelos</h3>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size:14px;">${timeA}</h3>
+          ${listaEventos(s.amarelosDetalhadosA || [], "amarelo")}
+        </div>
+
+        <div>
+          <h3 style="font-size:14px;">${timeB}</h3>
+          ${listaEventos(s.amarelosDetalhadosB || [], "amarelo")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3><i class="fa-solid fa-square"></i> Cartões Vermelhos</h3>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size:14px;">${timeA}</h3>
+          ${listaEventos(s.vermelhosDetalhadosA || [], "vermelho")}
+        </div>
+
+        <div>
+          <h3 style="font-size:14px;">${timeB}</h3>
+          ${listaEventos(s.vermelhosDetalhadosB || [], "vermelho")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3><i class="fa-solid fa-clipboard"></i> Observações do Árbitro</h3>
+      <div class="obs">
+        ${campo(s.observacoes || s.obs || s.observacao, "Sem observações do árbitro.")}
+      </div>
+    </section>
+
+    <div class="acoes">
+      <button class="btn btn-pdf" onclick="baixarImagem()">
+        <i class="fa-solid fa-image"></i> Baixar Imagem
+      </button>
+
+      <button class="btn btn-pdf" onclick="baixarPDF()">
+        <i class="fa-solid fa-file-pdf"></i> Baixar PDF
+      </button>
+
+      <button class="btn btn-whats" onclick="compartilharWhatsApp()">
+        <i class="fa-brands fa-whatsapp"></i> WhatsApp
+      </button>
+
+      <button class="btn btn-email" onclick="compartilharEmail()">
+        <i class="fa-solid fa-envelope"></i> E-mail
+      </button>
+
+      <a class="btn btn-voltar" href="jogos.html">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+  `;
 }
 
-renderLista();
+const sumulaExemplo = {
+  id:"final-copa-2002",
+  campeonato:"Copa do Mundo FIFA 2002",
+  categoria:"Seleção Principal",
+  dataJogo:"2002-06-30T08:00:00",
+  local:"International Stadium Yokohama",
+  rodada:"Final",
+  timeA:"Brasil",
+  timeB:"Alemanha",
+  golsA:2,
+  golsB:0,
+  logoTimeA:"logo-liga.jfif",
+  logoTimeB:"logo-liga.jfif",
+  logoCampeonato:"logo-liga.jfif",
+  arbitro:"Pierluigi Collina",
+  assistente1:"Leif Lindberg",
+  assistente2:"Philip Sharp",
+  status:"Finalizada",
+  jogadoresA:[
+    {numero:1,nome:"Marcos"},
+    {numero:2,nome:"Cafu"},
+    {numero:3,nome:"Lúcio"},
+    {numero:4,nome:"Roque Júnior"},
+    {numero:6,nome:"Roberto Carlos"},
+    {numero:5,nome:"Edmílson"},
+    {numero:8,nome:"Gilberto Silva"},
+    {numero:11,nome:"Ronaldinho"},
+    {numero:10,nome:"Rivaldo"},
+    {numero:7,nome:"Kléberson"},
+    {numero:9,nome:"Ronaldo"}
+  ],
+  jogadoresB:[
+    {numero:1,nome:"Oliver Kahn"},
+    {numero:2,nome:"Thomas Linke"},
+    {numero:5,nome:"Carsten Ramelow"},
+    {numero:6,nome:"Christian Ziege"},
+    {numero:8,nome:"Dietmar Hamann"},
+    {numero:11,nome:"Miroslav Klose"},
+    {numero:13,nome:"Michael Ballack"},
+    {numero:16,nome:"Jens Jeremies"},
+    {numero:19,nome:"Bernd Schneider"},
+    {numero:21,nome:"Christoph Metzelder"},
+    {numero:22,nome:"Torsten Frings"}
+  ],
+  golsDetalhadosA:[
+    {numero:9,nome:"Ronaldo",minuto:"67"},
+    {numero:9,nome:"Ronaldo",minuto:"79"}
+  ],
+  golsDetalhadosB:[],
+  amarelosDetalhadosA:[
+    {numero:10,nome:"Rivaldo",minuto:"90"}
+  ],
+  amarelosDetalhadosB:[
+    {numero:5,nome:"Carsten Ramelow",minuto:"9"},
+    {numero:11,nome:"Miroslav Klose",minuto:"74"}
+  ],
+  vermelhosDetalhadosA:[],
+  vermelhosDetalhadosB:[],
+  observacoes:"Súmula demonstrativa da final da Copa do Mundo FIFA 2002 para visualização do sistema."
+};
+
+async function carregar(){
+  const id = getId();
+
+  try{
+    if(!id || id === "final-copa-2002"){
+      montarSumula(sumulaExemplo);
+      return;
+    }
+
+    const snap = await getDoc(doc(db, "sumulas", id));
+
+    if(!snap.exists()){
+      area.innerHTML = `<div style="padding:22px;text-align:center;">Súmula não encontrada.</div>`;
+      return;
+    }
+
+    montarSumula({id:snap.id, ...snap.data()});
+  }catch(erro){
+    console.error(erro);
+    montarSumula(sumulaExemplo);
+  }
+}
+
+window.baixarImagem = async function(){
+  const canvas = await html2canvas(area, {
+    scale:2,
+    useCORS:true,
+    backgroundColor:"#061427"
+  });
+
+  const link = document.createElement("a");
+  link.download = "sumula-oficial.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+};
+
+window.baixarPDF = async function(){
+  const canvas = await html2canvas(area, {
+    scale:2,
+    useCORS:true,
+    backgroundColor:"#061427"
+  });
+
+  const img = canvas.toDataURL("image/png");
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF("p", "mm", "a4");
+
+  const pageWidth = 210;
+  const margin = 8;
+  const imgWidth = pageWidth - margin * 2;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  pdf.addImage(img, "PNG", margin, 8, imgWidth, imgHeight);
+  pdf.save("sumula-oficial.pdf");
+};
+
+window.compartilharWhatsApp = function(){
+  const texto = encodeURIComponent(
+    `Súmula oficial da Liga Goiana de Futebol de Base:\n${window.location.href}`
+  );
+
+  window.open(`https://wa.me/?text=${texto}`, "_blank");
+};
+
+window.compartilharEmail = function(){
+  const assunto = encodeURIComponent("Súmula oficial");
+  const corpo = encodeURIComponent(
+    `Súmula oficial da Liga Goiana de Futebol de Base:\n${window.location.href}`
+  );
+
+  window.location.href = `mailto:?subject=${assunto}&body=${corpo}`;
+};
+
+carregar();
 </script>
 
 </body>
