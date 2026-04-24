@@ -14,47 +14,31 @@
       --card:#102a52;
       --card-hover:#153766;
       --gold:#f7c600;
+      --gold-2:#ffe45c;
       --gold-soft:rgba(247,198,0,.12);
-      --gold-line:rgba(247,198,0,.24);
+      --gold-line:rgba(247,198,0,.30);
       --white:#ffffff;
       --muted:#d8e1ef;
-      --shadow:0 8px 22px rgba(0,0,0,.28);
+      --shadow:0 14px 34px rgba(0,0,0,.36);
       --transition:.25s ease;
       --max:1240px;
     }
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
+    *{margin:0;padding:0;box-sizing:border-box;}
 
     body{
       font-family:Arial, sans-serif;
       background:
-        linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+        linear-gradient(rgba(3,12,29,.88), rgba(3,12,29,.96)),
         url("fundo.png") center/cover fixed no-repeat;
       color:var(--white);
       min-height:100vh;
+      overflow-x:hidden;
     }
 
-    a{
-      text-decoration:none;
-      color:inherit;
-      transition:var(--transition);
-    }
-
-    button{
-      font-family:inherit;
-      cursor:pointer;
-      transition:var(--transition);
-      border:none;
-      background:none;
-    }
-
-    input, select{
-      font-family:inherit;
-    }
+    a{text-decoration:none;color:inherit;transition:var(--transition);}
+    button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none;}
+    input,select{font-family:inherit;}
 
     .wrap{
       width:min(100% - 28px, var(--max));
@@ -62,23 +46,24 @@
     }
 
     header{
-      background:rgba(8,23,44,.96);
+      background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
       border-bottom:3px solid var(--gold);
       box-shadow:var(--shadow);
+      position:relative;
+      z-index:20;
     }
 
     .header-top{
-      min-height:82px;
+      min-height:92px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:14px;
       flex-wrap:wrap;
-      padding:14px 0;
+      padding:16px 0;
     }
 
-    .header-left,
-    .header-right{
+    .header-left,.header-right{
       display:flex;
       align-items:center;
       gap:10px;
@@ -88,9 +73,13 @@
     .header-title{
       flex:1;
       text-align:center;
-      font-size:24px;
-      font-weight:700;
+      font-size:26px;
+      font-weight:900;
       color:var(--white);
+      letter-spacing:.8px;
+      text-transform:uppercase;
+      text-shadow:0 4px 16px rgba(0,0,0,.35);
+      line-height:1.15;
     }
 
     .top-btn{
@@ -98,10 +87,12 @@
       align-items:center;
       justify-content:center;
       gap:8px;
-      padding:10px 16px;
-      border-radius:10px;
-      font-weight:700;
+      padding:11px 18px;
+      border-radius:14px;
+      font-weight:800;
       white-space:nowrap;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
     }
 
     .btn-light{
@@ -110,78 +101,83 @@
     }
 
     .btn-light:hover{
-      background:var(--gold);
+      background:linear-gradient(135deg, var(--gold), var(--gold-2));
       transform:translateY(-2px);
     }
 
     .nav-bar{
-      background:rgba(16,42,82,.95);
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
       border-top:1px solid rgba(255,255,255,.06);
       border-bottom:1px solid rgba(255,255,255,.08);
+      overflow:hidden;
     }
 
     .menu{
       display:flex;
       justify-content:center;
       gap:10px;
-      padding:12px 8px;
+      padding:14px 8px;
       flex-wrap:nowrap;
       overflow-x:auto;
+      overflow-y:hidden;
       scrollbar-width:none;
       -ms-overflow-style:none;
+      scroll-behavior:smooth;
     }
 
-    .menu::-webkit-scrollbar{
-      display:none;
-    }
+    .menu::-webkit-scrollbar{display:none;}
 
     .menu a{
       color:#fff;
-      font-weight:700;
-      font-size:14px;
-      background:#0d2346;
-      padding:10px 14px;
-      border-radius:10px;
-      border:1px solid transparent;
+      font-weight:900;
+      font-size:15px;
+      background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
+      padding:12px 18px;
+      border-radius:15px;
+      border:1px solid rgba(255,255,255,.07);
       white-space:nowrap;
       flex:0 0 auto;
+      box-shadow:0 10px 22px rgba(0,0,0,.24);
     }
 
     .menu a:hover{
       color:var(--gold);
       background:var(--gold-soft);
       border-color:var(--gold-line);
+      transform:translateY(-2px);
     }
 
     .menu a.ativo{
-      background:var(--gold);
+      background:linear-gradient(135deg, var(--gold), var(--gold-2));
       color:#111;
+      border-color:var(--gold);
     }
 
-    .container{
-      padding:24px 0 34px;
-    }
+    .container{padding:30px 0 38px;}
 
     .hero{
-      background:linear-gradient(135deg, #102a52, #0d2346);
+      background:
+        radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+        linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
       border:1px solid var(--gold-line);
-      border-radius:18px;
-      padding:22px;
-      margin-bottom:20px;
+      border-radius:26px;
+      padding:28px;
+      margin-bottom:22px;
       box-shadow:var(--shadow);
     }
 
     .hero h2{
       margin:0 0 8px;
       color:var(--gold);
-      font-size:28px;
+      font-size:32px;
+      font-weight:900;
     }
 
     .hero p{
       margin:0;
       color:var(--muted);
-      line-height:1.6;
-      font-size:15px;
+      line-height:1.7;
+      font-size:16px;
       max-width:850px;
     }
 
@@ -189,45 +185,44 @@
       display:grid;
       grid-template-columns:1fr 1fr 1fr;
       gap:12px;
-      margin-bottom:20px;
+      margin-bottom:22px;
     }
 
-    input, select{
+    input,select{
       width:100%;
-      padding:13px;
+      padding:14px;
       border:none;
-      border-radius:10px;
+      border-radius:14px;
       font-size:14px;
-      box-sizing:border-box;
       background:#f5f7fb;
       color:#111;
+      box-shadow:0 8px 20px rgba(0,0,0,.20);
     }
 
-    input:focus, select:focus{
-      outline:2px solid rgba(247,198,0,.5);
+    input:focus,select:focus{
+      outline:2px solid rgba(247,198,0,.65);
     }
 
     .lista-grid{
       display:grid;
       grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
-      gap:14px;
+      gap:16px;
     }
-
-    .card{
-      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
-      padding:16px;
-      border-radius:16px;
+.card{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+      padding:18px;
+      border-radius:20px;
       display:flex;
       justify-content:space-between;
       align-items:center;
       gap:14px;
-      border:1px solid rgba(255,230,0,.10);
+      border:1px solid rgba(247,198,0,.18);
       box-shadow:var(--shadow);
       transition:var(--transition);
     }
 
     .card:hover{
-      transform:translateY(-2px);
+      transform:translateY(-3px);
       border-color:var(--gold-line);
     }
 
@@ -240,12 +235,12 @@
     }
 
     .logo{
-      width:68px;
-      height:68px;
-      border-radius:50%;
+      width:72px;
+      height:72px;
+      border-radius:18px;
       object-fit:cover;
-      border:2px solid rgba(255,255,255,.15);
-      background:#1a3f73;
+      border:2px solid var(--gold);
+      background:#fff;
       flex-shrink:0;
     }
 
@@ -257,7 +252,7 @@
     }
 
     .nome-campeonato{
-      font-weight:700;
+      font-weight:900;
       font-size:18px;
       color:#fff;
     }
@@ -276,11 +271,12 @@
     }
 
     .tag{
-      background:#1a3f73;
-      padding:5px 9px;
+      background:rgba(26,63,115,.9);
+      padding:6px 10px;
       border-radius:999px;
       font-size:12px;
       border:1px solid rgba(255,255,255,.08);
+      font-weight:800;
     }
 
     .actions{
@@ -295,28 +291,27 @@
       align-items:center;
       justify-content:center;
       gap:8px;
-      padding:11px 14px;
-      border-radius:10px;
-      font-weight:700;
+      padding:12px 15px;
+      border-radius:13px;
+      font-weight:900;
       font-size:13px;
-      border:none;
       cursor:pointer;
     }
 
     .btn-ver{
-      background:var(--gold);
+      background:linear-gradient(135deg, var(--gold), var(--gold-2));
       color:#111;
     }
 
     .btn-ver:hover{
       filter:brightness(1.04);
-      transform:translateY(-1px);
+      transform:translateY(-2px);
     }
 
     .vazio{
-      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
       padding:30px;
-      border-radius:14px;
+      border-radius:18px;
       text-align:center;
       color:var(--muted);
       border:1px solid rgba(255,255,255,.06);
@@ -330,15 +325,12 @@
         text-align:center;
       }
 
-      .header-left,
-      .header-right{
+      .header-left,.header-right{
         width:100%;
         justify-content:center;
       }
 
-      .filtros{
-        grid-template-columns:1fr;
-      }
+      .filtros{grid-template-columns:1fr;}
 
       .card{
         flex-direction:column;
@@ -352,341 +344,367 @@
     }
 
     @media (max-width:600px){
+      .wrap{
+        width:min(100% - 20px, var(--max));
+      }
+
+      .header-left,.header-right{
+        display:none !important;
+      }
+
       .header-top{
-        flex-direction:column;
-        align-items:center;
+        min-height:auto;
+        padding:18px 0;
+        justify-content:center;
       }
 
       .header-title{
-        order:2;
+        order:1 !important;
         width:100%;
+        font-size:18px;
+        line-height:1.25;
         text-align:center;
       }
 
-      .header-left{
-        order:1;
+      .nav-bar .wrap{
         width:100%;
-        display:flex;
-        flex-direction:row;
-        align-items:center;
-        justify-content:center;
+      }
+
+      .menu{
+        justify-content:flex-start;
+        padding:14px 14px;
         gap:10px;
-        flex-wrap:nowrap;
       }
 
-      .header-right{
-        display:none;
-      }
-
-      .top-btn{
-        width:auto;
-        min-width:0;
-        flex:1;
-        justify-content:center;
-        padding:10px 12px;
+      .menu a{
         font-size:14px;
+        padding:12px 16px;
+        border-radius:14px;
       }
 
-      .filtros{
-        grid-template-columns:1fr;
+      .container{
+        padding:24px 0 34px;
+      }
+
+      .hero{
+        padding:22px;
+        border-radius:22px;
       }
 
       .hero h2{
-        font-size:24px;
+        font-size:26px;
+      }
+
+      .lista-grid{
+        grid-template-columns:1fr;
+      }
+
+      .item{
+        align-items:flex-start;
+      }
+
+      .logo{
+        width:64px;
+        height:64px;
+        border-radius:16px;
+      }
+
+      .btn-acao{
+        width:100%;
       }
     }
   </style>
 </head>
+
 <body>
 <header>
-    <div class="wrap header-top">
-      <div class="header-left">
-        <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
-          <i class="fa-solid fa-arrow-left"></i> Voltar
-        </button>
+  <div class="wrap header-top">
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
 
-        <a href="index.html" class="top-btn btn-light">
-          <i class="fa-solid fa-house"></i> Página Inicial
-        </a>
-      </div>
-
-      <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
-
-      <div class="header-right"></div>
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
     </div>
 
-    <div class="nav-bar">
-      <div class="wrap">
-        <nav class="menu">
-          <a href="index.html">Início</a>
-          <a href="campeonatos.html" class="ativo">Campeonatos</a>
-          <a href="tabela.html">Tabela</a>
-          <a href="jogos.html">Jogos</a>
-          <a href="times.html">Times</a>
-          <a href="tecnicos.html">Técnicos</a>
-          <a href="jogadores.html">Jogadores</a>
-          <a href="arbitros.html">Arbitros</a>
-          <a href="assistentes.html">Assistente</a>
-          <a href="sumula-publica.html">Súmula</a>
-          <a href="noticias.html">Notícias</a>
-          <a href="login.html">Login</a>
-        </nav>
-      </div>
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
+
+    <div class="header-right"></div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="wrap">
+      <nav class="menu">
+        <a href="index.html">Início</a>
+        <a href="campeonatos.html" class="ativo">Campeonatos</a>
+        <a href="tabela.html">Tabela</a>
+        <a href="jogos.html">Jogos</a>
+        <a href="times.html">Times</a>
+        <a href="tecnicos.html">Técnicos</a>
+        <a href="jogadores.html">Jogadores</a>
+        <a href="arbitros.html">Árbitros</a>
+        <a href="assistentes.html">Assistente</a>
+        <a href="sumula-publica.html">Súmula</a>
+        <a href="noticias.html">Notícias</a>
+        <a href="login.html">Login</a>
+      </nav>
     </div>
-  </header>
+  </div>
+</header>
 
-  <main class="wrap container">
-    <section class="hero">
-      <h2>Campeonatos</h2>
-      <p>Veja os campeonatos publicados, filtre por nome, campeonato e categoria.</p>
-    </section>
+<main class="wrap container">
+  <section class="hero">
+    <h2>Campeonatos</h2>
+    <p>Veja os campeonatos publicados, filtre por nome, campeonato e categoria.</p>
+  </section>
 
-    <section class="filtros">
-      <input id="buscaCampeonato" placeholder="Pesquisar campeonato..." oninput="carregarCampeonatos()">
+  <section class="filtros">
+    <input id="buscaCampeonato" placeholder="Pesquisar campeonato..." oninput="carregarCampeonatos()">
 
-      <select id="filtroCampeonato" onchange="carregarCampeonatos()">
-        <option value="">Todos os campeonatos</option>
-      </select>
+    <select id="filtroCampeonato" onchange="carregarCampeonatos()">
+      <option value="">Todos os campeonatos</option>
+    </select>
 
-      <select id="filtroCategoria" onchange="carregarCampeonatos()">
-        <option value="">Todas categorias</option>
-      </select>
-    </section>
+    <select id="filtroCategoria" onchange="carregarCampeonatos()">
+      <option value="">Todas categorias</option>
+    </select>
+  </section>
 
-    <section class="lista-grid" id="listaCampeonatos"></section>
-  </main>
+  <section class="lista-grid" id="listaCampeonatos"></section>
+</main>
+<script type="module">
+  import { db } from "./firebase.js";
+  import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  <script type="module">
-    import { db } from "./firebase.js";
-    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  let campeonatosCache = [];
+  let jogosCache = [];
+  let sumulasCache = [];
 
-    let campeonatosCache = [];
-    let jogosCache = [];
-    let sumulasCache = [];
+  window.voltarPagina = function(){
+    if(document.referrer && document.referrer !== ""){
+      window.history.back();
+    }else{
+      window.location.href = "index.html";
+    }
+  };
 
-    window.voltarPagina = function(){
-      if(document.referrer && document.referrer !== ""){
-        window.history.back();
-      }else{
-        window.location.href = "index.html";
+  function statusPublico(status = "") {
+    const s = String(status).trim().toLowerCase();
+    return ["ativo", "em breve", "publicado", "publico", "público"].includes(s);
+  }
+
+  function campeonatoEhPublico(campeonato) {
+    if (campeonato.publicado === true) return true;
+    if (campeonato.publico === true) return true;
+    if (campeonato.visivelPublico === true) return true;
+    if (statusPublico(campeonato.status)) return true;
+    return false;
+  }
+
+  function normalizarTexto(texto) {
+    return String(texto || "")
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function valorCampo(obj, chaves, fallback = ""){
+    for(const chave of chaves){
+      if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
+        return obj[chave];
       }
-    };
-
-    function statusPublico(status = "") {
-      const s = String(status).trim().toLowerCase();
-      return ["ativo", "em breve", "publicado", "publico", "público"].includes(s);
     }
+    return fallback;
+  }
 
-    function campeonatoEhPublico(campeonato) {
-      if (campeonato.publicado === true) return true;
-      if (campeonato.publico === true) return true;
-      if (campeonato.visivelPublico === true) return true;
-      if (statusPublico(campeonato.status)) return true;
-      return false;
-    }
+  function obterNomeCampeonato(doc){
+    return valorCampo(doc, ["nome", "campeonato", "titulo"], "");
+  }
 
-    function normalizarTexto(texto) {
-      return String(texto || "")
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-    }
+  function filtrarJogosDoCampeonato(nomeCampeonato){
+    return jogosCache.filter(j => {
+      const nome = valorCampo(j, ["campeonato", "nomeCampeonato"], "");
+      return normalizarTexto(nome) === normalizarTexto(nomeCampeonato);
+    });
+  }
 
-    function valorCampo(obj, chaves, fallback = ""){
-      for(const chave of chaves){
-        if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
-          return obj[chave];
-        }
-      }
-      return fallback;
-    }
+  function calcularGolsDoCampeonato(nomeCampeonato){
+    let gols = 0;
 
-    function obterNomeCampeonato(doc){
-      return valorCampo(doc, ["nome", "campeonato", "titulo"], "");
-    }
+    const jogos = filtrarJogosDoCampeonato(nomeCampeonato);
+    jogos.forEach(j => {
+      gols += Number(valorCampo(j, ["golsA"], 0) || 0);
+      gols += Number(valorCampo(j, ["golsB"], 0) || 0);
+    });
 
-    function filtrarJogosDoCampeonato(nomeCampeonato){
-      return jogosCache.filter(j => {
-        const nome = valorCampo(j, ["campeonato", "nomeCampeonato"], "");
-        return normalizarTexto(nome) === normalizarTexto(nomeCampeonato);
-      });
-    }
-
-    function calcularGolsDoCampeonato(nomeCampeonato){
-      let gols = 0;
-
-      const jogos = filtrarJogosDoCampeonato(nomeCampeonato);
-      jogos.forEach(j => {
-        gols += Number(valorCampo(j, ["golsA"], 0) || 0);
-        gols += Number(valorCampo(j, ["golsB"], 0) || 0);
-      });
-
-      if(gols === 0){
-        const sumulas = sumulasCache.filter(s =>
-          normalizarTexto(valorCampo(s, ["campeonato"], "")) === normalizarTexto(nomeCampeonato)
-        );
-
-        sumulas.forEach(s => {
-          gols += Number(valorCampo(s, ["golsA"], 0) || 0);
-          gols += Number(valorCampo(s, ["golsB"], 0) || 0);
-        });
-      }
-
-      return gols;
-    }
-
-    function preencherFiltroCampeonato(){
-      const select = document.getElementById("filtroCampeonato");
-
-      const lista = [...new Set(
-        campeonatosCache
-          .filter(campeonatoEhPublico)
-          .map(c => obterNomeCampeonato(c))
-          .filter(Boolean)
-      )].sort((a,b) => String(a).localeCompare(b, "pt-BR"));
-
-      select.innerHTML = '<option value="">Todos os campeonatos</option>';
-
-      lista.forEach(nome => {
-        select.innerHTML += `<option value="${nome}">${nome}</option>`;
-      });
-    }
-
-    function preencherFiltroCategoria(){
-      const select = document.getElementById("filtroCategoria");
-      const categorias = new Set();
-
-      campeonatosCache
-        .filter(campeonatoEhPublico)
-        .forEach(c => {
-          (c.categorias || []).forEach(cat => {
-            if(cat) categorias.add(cat);
-          });
-        });
-
-      select.innerHTML = '<option value="">Todas categorias</option>';
-
-      Array.from(categorias)
-        .sort((a,b) => String(a).localeCompare(String(b), "pt-BR"))
-        .forEach(cat => {
-          select.innerHTML += `<option value="${cat}">${cat}</option>`;
-        });
-    }
-
-    window.carregarCampeonatos = function(){
-      const lista = document.getElementById("listaCampeonatos");
-      const busca = (document.getElementById("buscaCampeonato").value || "").toLowerCase().trim();
-      const campeonatoFiltro = document.getElementById("filtroCampeonato").value;
-      const categoriaFiltro = document.getElementById("filtroCategoria").value;
-
-      let campeonatos = campeonatosCache.filter(campeonatoEhPublico);
-
-      if (busca) {
-        campeonatos = campeonatos.filter(c =>
-          String(obterNomeCampeonato(c)).toLowerCase().includes(busca) ||
-          String(c.temporada || "").toLowerCase().includes(busca) ||
-          String(c.status || "").toLowerCase().includes(busca)
-        );
-      }
-
-      if (campeonatoFiltro) {
-        campeonatos = campeonatos.filter(c => obterNomeCampeonato(c) === campeonatoFiltro);
-      }
-
-      if (categoriaFiltro) {
-        campeonatos = campeonatos.filter(c =>
-          Array.isArray(c.categorias) && c.categorias.includes(categoriaFiltro)
-        );
-      }
-
-      campeonatos.sort((a, b) =>
-        String(obterNomeCampeonato(a)).localeCompare(String(obterNomeCampeonato(b)), "pt-BR")
+    if(gols === 0){
+      const sumulas = sumulasCache.filter(s =>
+        normalizarTexto(valorCampo(s, ["campeonato"], "")) === normalizarTexto(nomeCampeonato)
       );
 
-      if (!campeonatos.length) {
-        lista.innerHTML = `<div class="vazio">Nenhum campeonato publicado encontrado.</div>`;
-        return;
-      }
-
-      lista.innerHTML = "";
-
-      campeonatos.forEach(campeonato => {
-        const nomeCampeonato = obterNomeCampeonato(campeonato);
-        const categorias = (campeonato.categorias || [])
-          .map(c => `<span class="tag">${c}</span>`)
-          .join("");
-
-        const jogosDoCampeonato = filtrarJogosDoCampeonato(nomeCampeonato);
-        const totalGols = calcularGolsDoCampeonato(nomeCampeonato);
-
-        lista.innerHTML += `
-          <article class="card">
-            <div class="item">
-              <img
-                src="${campeonato.logo || 'logo-liga.jfif'}"
-                class="logo"
-                alt="${nomeCampeonato || 'Campeonato'}"
-                onerror="this.src='logo-liga.jfif'"
-              >
-
-              <div class="item-info">
-                <div class="nome-campeonato">${nomeCampeonato || "-"}</div>
-                <small>Temporada: ${campeonato.temporada || "-"}</small>
-                <small>Status: ${campeonato.status || "-"}</small>
-                <small>Jogos: ${jogosDoCampeonato.length} | Gols: ${totalGols}</small>
-                <div class="tags">${categorias || '<span class="tag">Sem categorias</span>'}</div>
-              </div>
-            </div>
-
-            <div class="actions">
-              <a class="btn-acao btn-ver" href="campeonato-publico.html?id=${campeonato.id}">
-                <i class="fa-solid fa-eye"></i> Ver Campeonato
-              </a>
-            </div>
-          </article>
-        `;
+      sumulas.forEach(s => {
+        gols += Number(valorCampo(s, ["golsA"], 0) || 0);
+        gols += Number(valorCampo(s, ["golsB"], 0) || 0);
       });
-    };
-
-    async function iniciarPagina(){
-      const lista = document.getElementById("listaCampeonatos");
-      lista.innerHTML = `<div class="vazio">Carregando campeonatos...</div>`;
-
-      try{
-        const [snapCampeonatos, snapJogos, snapSumulas] = await Promise.all([
-          getDocs(collection(db, "campeonatos")),
-          getDocs(collection(db, "jogos")),
-          getDocs(collection(db, "sumulas"))
-        ]);
-
-        campeonatosCache = [];
-        jogosCache = [];
-        sumulasCache = [];
-
-        snapCampeonatos.forEach(docSnap => {
-          campeonatosCache.push({ id: docSnap.id, ...docSnap.data() });
-        });
-
-        snapJogos.forEach(docSnap => {
-          jogosCache.push({ id: docSnap.id, ...docSnap.data() });
-        });
-
-        snapSumulas.forEach(docSnap => {
-          sumulasCache.push({ id: docSnap.id, ...docSnap.data() });
-        });
-
-        preencherFiltroCampeonato();
-        preencherFiltroCategoria();
-        carregarCampeonatos();
-      }catch(erro){
-        console.error(erro);
-        lista.innerHTML = `<div class="vazio">Erro ao carregar os campeonatos.</div>`;
-      }
     }
 
-    iniciarPagina();
-  </script>
+    return gols;
+  }
+
+  function preencherFiltroCampeonato(){
+    const select = document.getElementById("filtroCampeonato");
+
+    const lista = [...new Set(
+      campeonatosCache
+        .filter(campeonatoEhPublico)
+        .map(c => obterNomeCampeonato(c))
+        .filter(Boolean)
+    )].sort((a,b) => String(a).localeCompare(b, "pt-BR"));
+
+    select.innerHTML = '<option value="">Todos os campeonatos</option>';
+
+    lista.forEach(nome => {
+      select.innerHTML += `<option value="${nome}">${nome}</option>`;
+    });
+  }
+
+  function preencherFiltroCategoria(){
+    const select = document.getElementById("filtroCategoria");
+    const categorias = new Set();
+
+    campeonatosCache
+      .filter(campeonatoEhPublico)
+      .forEach(c => {
+        (c.categorias || []).forEach(cat => {
+          if(cat) categorias.add(cat);
+        });
+      });
+
+    select.innerHTML = '<option value="">Todas categorias</option>';
+
+    Array.from(categorias)
+      .sort((a,b) => String(a).localeCompare(String(b), "pt-BR"))
+      .forEach(cat => {
+        select.innerHTML += `<option value="${cat}">${cat}</option>`;
+      });
+  }
+
+  window.carregarCampeonatos = function(){
+    const lista = document.getElementById("listaCampeonatos");
+    const busca = (document.getElementById("buscaCampeonato").value || "").toLowerCase().trim();
+    const campeonatoFiltro = document.getElementById("filtroCampeonato").value;
+    const categoriaFiltro = document.getElementById("filtroCategoria").value;
+
+    let campeonatos = campeonatosCache.filter(campeonatoEhPublico);
+
+    if (busca) {
+      campeonatos = campeonatos.filter(c =>
+        String(obterNomeCampeonato(c)).toLowerCase().includes(busca) ||
+        String(c.temporada || "").toLowerCase().includes(busca) ||
+        String(c.status || "").toLowerCase().includes(busca)
+      );
+    }
+
+    if (campeonatoFiltro) {
+      campeonatos = campeonatos.filter(c => obterNomeCampeonato(c) === campeonatoFiltro);
+    }
+
+    if (categoriaFiltro) {
+      campeonatos = campeonatos.filter(c =>
+        Array.isArray(c.categorias) && c.categorias.includes(categoriaFiltro)
+      );
+    }
+
+    campeonatos.sort((a, b) =>
+      String(obterNomeCampeonato(a)).localeCompare(String(obterNomeCampeonato(b)), "pt-BR")
+    );
+
+    if (!campeonatos.length) {
+      lista.innerHTML = `<div class="vazio">Nenhum campeonato publicado encontrado.</div>`;
+      return;
+    }
+
+    lista.innerHTML = "";
+
+    campeonatos.forEach(campeonato => {
+      const nomeCampeonato = obterNomeCampeonato(campeonato);
+      const categorias = (campeonato.categorias || [])
+        .map(c => `<span class="tag">${c}</span>`)
+        .join("");
+
+      const jogosDoCampeonato = filtrarJogosDoCampeonato(nomeCampeonato);
+      const totalGols = calcularGolsDoCampeonato(nomeCampeonato);
+
+      lista.innerHTML += `
+        <article class="card">
+          <div class="item">
+            <img
+              src="${campeonato.logo || 'logo-liga.jfif'}"
+              class="logo"
+              alt="${nomeCampeonato || 'Campeonato'}"
+              onerror="this.src='logo-liga.jfif'"
+            >
+
+            <div class="item-info">
+              <div class="nome-campeonato">${nomeCampeonato || "-"}</div>
+              <small>Temporada: ${campeonato.temporada || "-"}</small>
+              <small>Status: ${campeonato.status || "-"}</small>
+              <small>Jogos: ${jogosDoCampeonato.length} | Gols: ${totalGols}</small>
+              <div class="tags">${categorias || '<span class="tag">Sem categorias</span>'}</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <a class="btn-acao btn-ver" href="campeonato-publico.html?id=${campeonato.id}">
+              <i class="fa-solid fa-eye"></i> Ver Campeonato
+            </a>
+          </div>
+        </article>
+      `;
+    });
+  };
+
+  async function iniciarPagina(){
+    const lista = document.getElementById("listaCampeonatos");
+    lista.innerHTML = `<div class="vazio">Carregando campeonatos...</div>`;
+
+    try{
+      const [snapCampeonatos, snapJogos, snapSumulas] = await Promise.all([
+        getDocs(collection(db, "campeonatos")),
+        getDocs(collection(db, "jogos")),
+        getDocs(collection(db, "sumulas"))
+      ]);
+
+      campeonatosCache = [];
+      jogosCache = [];
+      sumulasCache = [];
+
+      snapCampeonatos.forEach(docSnap => {
+        campeonatosCache.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      snapJogos.forEach(docSnap => {
+        jogosCache.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      snapSumulas.forEach(docSnap => {
+        sumulasCache.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      preencherFiltroCampeonato();
+      preencherFiltroCategoria();
+      carregarCampeonatos();
+    }catch(erro){
+      console.error(erro);
+      lista.innerHTML = `<div class="vazio">Erro ao carregar os campeonatos.</div>`;
+    }
+  }
+
+  iniciarPagina();
+</script>
 
 </body>
 </html>
