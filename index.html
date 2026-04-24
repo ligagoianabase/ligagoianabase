@@ -146,13 +146,10 @@
     .sidebar-close{
       width:36px;
       height:36px;
-      border:none;
       border-radius:50%;
       background:rgba(255,255,255,.08);
       color:#fff;
       font-size:24px;
-      cursor:pointer;
-      transition:var(--transition);
     }
 
     .sidebar-close:hover{
@@ -189,7 +186,6 @@
       padding:11px 12px;
       border-radius:12px;
       color:var(--muted);
-      transition:var(--transition);
       border:1px solid transparent;
     }
 
@@ -329,7 +325,6 @@
       font-weight:600;
       border:1px solid transparent;
       background:transparent;
-      transition:var(--transition);
       white-space:nowrap;
     }
 
@@ -583,8 +578,7 @@
       text-overflow:ellipsis;
       margin-bottom:4px;
     }
-
-    .user-role{
+.user-role{
       display:inline-flex;
       align-items:center;
       gap:6px;
@@ -596,7 +590,8 @@
       font-size:12px;
       font-weight:700;
     }
-.user-details{
+
+    .user-details{
       display:grid;
       gap:10px;
       margin-bottom:14px;
@@ -1105,17 +1100,24 @@
       }
 
       .top-nav{
-        justify-content:center;
-        overflow:visible;
+        justify-content:flex-start;
+        overflow-x:auto;
+        overflow-y:visible;
         width:100%;
+        scrollbar-width:none;
+        -ms-overflow-style:none;
+      }
+
+      .top-nav::-webkit-scrollbar{
+        display:none;
       }
 
       .top-nav ul{
-        width:100%;
-        min-width:100%;
-        justify-content:center;
-        flex-wrap:wrap;
-        gap:5px;
+        width:max-content;
+        min-width:max-content;
+        justify-content:flex-start;
+        flex-wrap:nowrap;
+        gap:6px;
       }
 
       .top-nav a,
@@ -1127,8 +1129,8 @@
 
       .dropdown-menu{
         position:absolute;
-        left:50%;
-        transform:translateX(-50%);
+        left:0;
+        transform:none;
         top:calc(100% + 8px);
         min-width:220px;
         max-width:92vw;
@@ -1600,9 +1602,7 @@
         const vaiAbrir = !campeonatosDropdown.classList.contains("open");
         closeAllDropdowns();
 
-        if (vaiAbrir) {
-          campeonatosDropdown.classList.add("open");
-        }
+        if (vaiAbrir) campeonatosDropdown.classList.add("open");
       });
     }
 
@@ -1614,9 +1614,7 @@
         const vaiAbrir = !participantesDropdown.classList.contains("open");
         closeAllDropdowns();
 
-        if (vaiAbrir) {
-          participantesDropdown.classList.add("open");
-        }
+        if (vaiAbrir) participantesDropdown.classList.add("open");
       });
     }
 
@@ -1628,9 +1626,7 @@
         const vaiAbrir = !userDropdown.classList.contains("open");
         closeAllDropdowns();
 
-        if (vaiAbrir) {
-          userDropdown.classList.add("open");
-        }
+        if (vaiAbrir) userDropdown.classList.add("open");
       });
     }
 
@@ -1674,12 +1670,7 @@
     if (gamesTableBody) {
       games.forEach(jogo => {
         const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${jogo.dataHora}</td>
-          <td>${jogo.confronto}</td>
-          <td>${jogo.categoria}</td>
-          <td>${jogo.local}</td>
-        `;
+        tr.innerHTML = `<td>${jogo.dataHora}</td><td>${jogo.confronto}</td><td>${jogo.categoria}</td><td>${jogo.local}</td>`;
         gamesTableBody.appendChild(tr);
       });
     }
@@ -1688,10 +1679,7 @@
       news.forEach(item => {
         const article = document.createElement("div");
         article.className = "news-item";
-        article.innerHTML = `
-          <h3>${item.titulo}</h3>
-          <p>${item.texto}</p>
-        `;
+        article.innerHTML = `<h3>${item.titulo}</h3><p>${item.texto}</p>`;
         newsList.appendChild(article);
       });
     }
@@ -1798,15 +1786,10 @@
       if(userCardCategoria) userCardCategoria.textContent = categoria;
 
       if(userCardRole){
-        userCardRole.innerHTML = `
-          <i class="${ehArbitro ? "fa-solid fa-whistle" : "fa-solid fa-user"}"></i>
-          <span>${tipoLabel(tipo)}</span>
-        `;
+        userCardRole.innerHTML = `<i class="${ehArbitro ? "fa-solid fa-whistle" : "fa-solid fa-user"}"></i><span>${tipoLabel(tipo)}</span>`;
       }
 
-      if(userChipWhistle){
-        userChipWhistle.style.display = ehArbitro ? "inline-flex" : "none";
-      }
+      if(userChipWhistle) userChipWhistle.style.display = ehArbitro ? "inline-flex" : "none";
 
       preencherAvatar(userChipAvatar, foto);
       preencherAvatar(userCardAvatar, foto);
