@@ -20,18 +20,11 @@
       --max:1280px;
     }
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
-
-    html{
-      scroll-behavior:smooth;
-    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
 
     body{
-      font-family: Arial, Helvetica, sans-serif;
+      font-family:Arial, Helvetica, sans-serif;
       background:
         linear-gradient(rgba(1,9,24,.86), rgba(1,9,24,.95)),
         url("fundo.png") center/cover fixed no-repeat;
@@ -39,28 +32,10 @@
       overflow-x:hidden;
     }
 
-    a{
-      text-decoration:none;
-      color:inherit;
-      transition:var(--transition);
-    }
-
-    button{
-      font-family:inherit;
-      transition:var(--transition);
-      cursor:pointer;
-      border:none;
-      background:none;
-    }
-
-    ul{
-      list-style:none;
-    }
-
-    img{
-      max-width:100%;
-      display:block;
-    }
+    a{text-decoration:none;color:inherit;transition:var(--transition);}
+    button{font-family:inherit;transition:var(--transition);cursor:pointer;border:none;background:none;}
+    ul{list-style:none;}
+    img{max-width:100%;display:block;}
 
     .wrap{
       width:min(100% - 32px, var(--max));
@@ -220,6 +195,7 @@
       padding:14px 0;
       flex-wrap:wrap;
       overflow:visible;
+      position:relative;
     }
 
     .topbar-left{
@@ -266,9 +242,7 @@
       flex-shrink:0;
     }
 
-    .logo-text{
-      min-width:0;
-    }
+    .logo-text{min-width:0;}
 
     .logo-text strong{
       display:block;
@@ -367,6 +341,19 @@
 
     .dropdown.open .dropdown-menu{
       display:block;
+    }
+
+    .dropdown.mobile-fixed .dropdown-menu{
+      position:fixed;
+      left:10px !important;
+      right:10px !important;
+      top:120px;
+      transform:none !important;
+      width:auto;
+      min-width:0;
+      max-width:calc(100vw - 20px);
+      max-height:60vh;
+      overflow-y:auto;
     }
 
     .dropdown-menu a{
@@ -578,7 +565,8 @@
       text-overflow:ellipsis;
       margin-bottom:4px;
     }
-.user-role{
+
+    .user-role{
       display:inline-flex;
       align-items:center;
       gap:6px;
@@ -590,8 +578,7 @@
       font-size:12px;
       font-weight:700;
     }
-
-    .user-details{
+.user-details{
       display:grid;
       gap:10px;
       margin-bottom:14px;
@@ -939,7 +926,8 @@
       margin-bottom:14px;
       font-size:18px;
     }
-.footer-brand{
+
+    .footer-brand{
       display:flex;
       gap:14px;
       align-items:center;
@@ -977,8 +965,7 @@
     .footer-card a:hover{
       color:var(--yellow);
     }
-
-    .footer-contact-line{
+.footer-contact-line{
       display:flex !important;
       align-items:center;
       gap:10px;
@@ -1083,23 +1070,53 @@
       }
 
       .topbar-inner{
-        overflow:visible;
-        gap:12px;
+        gap:10px;
+        align-items:center;
+        justify-content:flex-start;
       }
 
       .topbar-left{
-        width:100%;
-        justify-content:center;
+        width:auto;
+        justify-content:flex-start;
+        gap:8px;
+        order:1;
+      }
+
+      .menu-toggle{
+        width:44px;
+        height:44px;
+        margin-left:0;
       }
 
       .top-actions{
-        width:100%;
+        width:auto;
+        order:2;
+        justify-content:flex-start;
         flex-direction:row;
         align-items:center;
+      }
+
+      .topbar-logo{
+        order:3;
+        width:100%;
         justify-content:center;
       }
 
+      .topbar-logo img{
+        width:56px;
+        height:56px;
+      }
+
+      .logo-text strong{
+        font-size:15px;
+      }
+
+      .logo-text span{
+        font-size:12px;
+      }
+
       .top-nav{
+        order:4;
         justify-content:flex-start;
         overflow-x:auto;
         overflow-y:visible;
@@ -1122,19 +1139,26 @@
 
       .top-nav a,
       .dropdown-toggle{
-        padding:8px 9px;
+        padding:8px 10px;
         font-size:12px;
         border-radius:10px;
       }
 
       .dropdown-menu{
-        position:absolute;
-        left:0;
-        transform:none;
-        top:calc(100% + 8px);
         min-width:220px;
         max-width:92vw;
         z-index:9999;
+      }
+
+      .btn-login-chip,
+      .user-chip{
+        min-height:44px;
+        max-width:235px;
+      }
+
+      .user-chip-text strong,
+      .user-chip-text span{
+        max-width:130px;
       }
 
       .hero-grid{
@@ -1150,37 +1174,15 @@
         width:100%;
       }
 
-      .btn-login-chip{
-        justify-content:center;
-      }
-
-      .logo-text strong{
-        font-size:15px;
-      }
-
-      .logo-text span{
-        font-size:12px;
-      }
-
       .match-table{
         display:block;
         overflow-x:auto;
-      }
-
-      .user-chip{
-        max-width:230px;
-      }
-
-      .user-chip-text strong,
-      .user-chip-text span{
-        max-width:130px;
       }
     }
   </style>
 </head>
 <body>
-
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -1237,53 +1239,7 @@
     <div class="wrap topbar-inner">
       <div class="topbar-left">
         <button class="menu-toggle" id="menuToggle" type="button">☰</button>
-
-        <a href="index.html" class="topbar-logo">
-          <img src="logo-liga.jfif" alt="Logo Liga Goiana">
-          <div class="logo-text">
-            <strong>Liga Goiana de Futebol de Base</strong>
-            <span>Onde o talento encontra o futuro</span>
-          </div>
-        </a>
       </div>
-
-      <nav class="top-nav">
-        <ul>
-          <li><a href="index.html">Início</a></li>
-
-          <li class="dropdown" id="campeonatosDropdown">
-            <button class="dropdown-toggle" id="campeonatosToggle" type="button">
-              Campeonatos <i class="fa-solid fa-chevron-down"></i>
-            </button>
-            <div class="dropdown-menu">
-              <a href="campeonatos.html">Todos os campeonatos</a>
-              <a href="classificacao.html">Classificação</a>
-              <a href="artilharia.html">Artilharia</a>
-              <a href="categorias.html">Categoria</a>
-              <a href="cartoes.html">Cartões</a>
-              <a href="suspensos.html">Suspensos</a>
-              <a href="regulamento.html">Regulamentos</a>
-            </div>
-          </li>
-
-          <li><a href="jogadores.html">Jogadores</a></li>
-
-          <li class="dropdown" id="participantesDropdown">
-            <button class="dropdown-toggle" id="participantesToggle" type="button">
-              Participantes <i class="fa-solid fa-chevron-down"></i>
-            </button>
-<div class="dropdown-menu">
-              <a href="times.html">Equipes</a>
-              <a href="tecnicos.html">Técnicos</a>
-              <a href="arbitros.html">Árbitro</a>
-              <a href="assistentes.html">Assistente</a>
-              <a href="fotografos.html">Fotógrafos</a>
-            </div>
-          </li>
-
-          <li><a href="galeria.html">Galeria</a></li>
-        </ul>
-      </nav>
 
       <div class="top-actions">
         <a href="login.html" class="btn-login-chip" id="loginChip">
@@ -1318,8 +1274,7 @@
               </div>
             </div>
           </div>
-
-          <div class="user-details">
+<div class="user-details">
             <div class="user-detail-row">
               <strong>Status</strong>
               <span id="userCardStatus">-</span>
@@ -1350,6 +1305,52 @@
           </div>
         </div>
       </div>
+
+      <a href="index.html" class="topbar-logo">
+        <img src="logo-liga.jfif" alt="Logo Liga Goiana">
+        <div class="logo-text">
+          <strong>Liga Goiana de Futebol de Base</strong>
+          <span>Onde o talento encontra o futuro</span>
+        </div>
+      </a>
+
+      <nav class="top-nav">
+        <ul>
+          <li><a href="index.html">Início</a></li>
+
+          <li class="dropdown" id="campeonatosDropdown">
+            <button class="dropdown-toggle" id="campeonatosToggle" type="button">
+              Campeonatos <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+              <a href="campeonatos.html">Todos os campeonatos</a>
+              <a href="classificacao.html">Classificação</a>
+              <a href="artilharia.html">Artilharia</a>
+              <a href="categorias.html">Categoria</a>
+              <a href="cartoes.html">Cartões</a>
+              <a href="suspensos.html">Suspensos</a>
+              <a href="regulamento.html">Regulamentos</a>
+            </div>
+          </li>
+
+          <li><a href="jogadores.html">Jogadores</a></li>
+
+          <li class="dropdown" id="participantesDropdown">
+            <button class="dropdown-toggle" id="participantesToggle" type="button">
+              Participantes <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+              <a href="times.html">Equipes</a>
+              <a href="tecnicos.html">Técnicos</a>
+              <a href="arbitros.html">Árbitro</a>
+              <a href="assistentes.html">Assistente</a>
+              <a href="fotografos.html">Fotógrafos</a>
+            </div>
+          </li>
+
+          <li><a href="galeria.html">Galeria</a></li>
+        </ul>
+      </nav>
     </div>
   </header>
 
@@ -1399,8 +1400,7 @@
               <p>Jogos organizados e arbitragem qualificada.</p>
             </div>
           </div>
-
-          <div class="pillar">
+<div class="pillar">
             <div class="pillar-icon"><i class="fa-solid fa-shield-halved"></i></div>
             <div class="pillar-text">
               <h3>Formação de atletas</h3>
@@ -1424,7 +1424,8 @@
             </div>
           </div>
         </div>
-<div class="content-grid">
+
+        <div class="content-grid">
           <section class="panel">
             <div class="panel-head">
               <div class="panel-head-title">
@@ -1559,78 +1560,108 @@
     const userChip = document.getElementById("userChip");
     const userDropdown = document.getElementById("userDropdown");
 
-    function openSidebar() {
-      if (!sidebar || !sidebarOverlay) return;
+    function isMobile(){
+      return window.innerWidth <= 700;
+    }
+
+    function openSidebar(){
+      if(!sidebar || !sidebarOverlay) return;
       sidebar.classList.add("open");
       sidebarOverlay.classList.add("show");
       document.body.style.overflow = "hidden";
     }
 
-    function closeSidebar() {
-      if (!sidebar || !sidebarOverlay) return;
+    function closeSidebar(){
+      if(!sidebar || !sidebarOverlay) return;
       sidebar.classList.remove("open");
       sidebarOverlay.classList.remove("show");
       document.body.style.overflow = "";
     }
 
-    function closeAllDropdowns() {
-      if (campeonatosDropdown) campeonatosDropdown.classList.remove("open");
-      if (participantesDropdown) participantesDropdown.classList.remove("open");
-      if (userDropdown) userDropdown.classList.remove("open");
+    function resetDropdown(dropdown){
+      if(!dropdown) return;
+      dropdown.classList.remove("open");
+      dropdown.classList.remove("mobile-fixed");
+
+      const menu = dropdown.querySelector(".dropdown-menu");
+      if(menu){
+        menu.style.top = "";
+      }
     }
 
-    if (menuToggle) {
-      menuToggle.addEventListener("click", function(event) {
+    function closeAllDropdowns(){
+      resetDropdown(campeonatosDropdown);
+      resetDropdown(participantesDropdown);
+      if(userDropdown) userDropdown.classList.remove("open");
+    }
+
+    function openMenuDropdown(dropdown, toggle){
+      if(!dropdown || !toggle) return;
+
+      const vaiAbrir = !dropdown.classList.contains("open");
+      closeAllDropdowns();
+
+      if(!vaiAbrir) return;
+
+      dropdown.classList.add("open");
+
+      if(isMobile()){
+        dropdown.classList.add("mobile-fixed");
+        const menu = dropdown.querySelector(".dropdown-menu");
+        const rect = toggle.getBoundingClientRect();
+
+        if(menu){
+          menu.style.top = (rect.bottom + 8) + "px";
+        }
+      }
+    }
+
+    if(menuToggle){
+      menuToggle.addEventListener("click", function(event){
         event.stopPropagation();
         openSidebar();
       });
     }
 
-    if (sidebarClose) {
+    if(sidebarClose){
       sidebarClose.addEventListener("click", closeSidebar);
     }
 
-    if (sidebarOverlay) {
+    if(sidebarOverlay){
       sidebarOverlay.addEventListener("click", closeSidebar);
     }
 
-    if (campeonatosToggle) {
-      campeonatosToggle.addEventListener("click", function(event) {
+    if(campeonatosToggle){
+      campeonatosToggle.addEventListener("click", function(event){
         event.preventDefault();
         event.stopPropagation();
-
-        const vaiAbrir = !campeonatosDropdown.classList.contains("open");
-        closeAllDropdowns();
-
-        if (vaiAbrir) campeonatosDropdown.classList.add("open");
+        openMenuDropdown(campeonatosDropdown, campeonatosToggle);
       });
     }
 
-    if (participantesToggle) {
-      participantesToggle.addEventListener("click", function(event) {
+    if(participantesToggle){
+      participantesToggle.addEventListener("click", function(event){
         event.preventDefault();
         event.stopPropagation();
-
-        const vaiAbrir = !participantesDropdown.classList.contains("open");
-        closeAllDropdowns();
-
-        if (vaiAbrir) participantesDropdown.classList.add("open");
+        openMenuDropdown(participantesDropdown, participantesToggle);
       });
     }
 
-    if (userChip) {
-      userChip.addEventListener("click", function(event) {
+    if(userChip){
+      userChip.addEventListener("click", function(event){
         event.preventDefault();
         event.stopPropagation();
 
         const vaiAbrir = !userDropdown.classList.contains("open");
         closeAllDropdowns();
 
-        if (vaiAbrir) userDropdown.classList.add("open");
+        if(vaiAbrir){
+          userDropdown.classList.add("open");
+        }
       });
     }
 
-    document.addEventListener("click", function(event) {
+    document.addEventListener("click", function(event){
       const clickedInsideSidebar = sidebar && sidebar.contains(event.target);
       const clickedMenuToggle = menuToggle && menuToggle.contains(event.target);
       const clickedCampeonatos = campeonatosDropdown && campeonatosDropdown.contains(event.target);
@@ -1638,17 +1669,19 @@
       const clickedUserMenu = userDropdown && userDropdown.contains(event.target);
       const clickedUserChip = userChip && userChip.contains(event.target);
 
-      if (sidebar && sidebar.classList.contains("open") && !clickedInsideSidebar && !clickedMenuToggle) {
+      if(sidebar && sidebar.classList.contains("open") && !clickedInsideSidebar && !clickedMenuToggle){
         closeSidebar();
       }
 
-      if (!clickedCampeonatos && !clickedParticipantes && !clickedUserMenu && !clickedUserChip) {
+      if(!clickedCampeonatos && !clickedParticipantes && !clickedUserMenu && !clickedUserChip){
         closeAllDropdowns();
       }
     });
 
-    document.addEventListener("keydown", function(event) {
-      if (event.key === "Escape") {
+    window.addEventListener("resize", closeAllDropdowns);
+
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
         closeSidebar();
         closeAllDropdowns();
       }
@@ -1667,7 +1700,7 @@
       { titulo:"Inscrições abertas para equipes interessadas", texto:"Clubes e projetos já podem entrar em contato para participar da próxima edição da Liga Goiana de Futebol de Base." }
     ];
 
-    if (gamesTableBody) {
+    if(gamesTableBody){
       games.forEach(jogo => {
         const tr = document.createElement("tr");
         tr.innerHTML = `<td>${jogo.dataHora}</td><td>${jogo.confronto}</td><td>${jogo.categoria}</td><td>${jogo.local}</td>`;
@@ -1675,7 +1708,7 @@
       });
     }
 
-    if (newsList) {
+    if(newsList){
       news.forEach(item => {
         const article = document.createElement("div");
         article.className = "news-item";
@@ -1722,9 +1755,8 @@
       if(valor === "tecnico" || valor === "técnico") return "tecnico";
       if(valor === "jogador") return "jogador";
       if(valor === "pai_atleta") return "pai_atleta";
-      if(valor === "torcedor" || valor === "publico" || valor === "público" || valor === "publico_geral") return "torcedor";
       if(valor === "fotografo" || valor === "fotógrafo") return "fotografo";
-      return valor;
+      return "torcedor";
     }
 
     function tipoLabel(tipo){
@@ -1741,11 +1773,7 @@
 
     function preencherAvatar(elemento, foto){
       if(!elemento) return;
-      if(foto){
-        elemento.innerHTML = `<img src="${foto}" alt="Foto do usuário">`;
-      }else{
-        elemento.innerHTML = `<i class="fa-solid fa-user"></i>`;
-      }
+      elemento.innerHTML = foto ? `<img src="${foto}" alt="Foto do usuário">` : `<i class="fa-solid fa-user"></i>`;
     }
 
     function mostrarUsuarioDeslogado(){
@@ -1762,9 +1790,6 @@
       const tipo = normalizarTipo(dados.tipoUsuario || dados.tipousuario || dados.tipo || "");
       const nome = dados.nomeExibicao || dados.nome || user.email || "Usuário";
       const foto = dados.fotoPerfil || "";
-      const status = dados.status || "-";
-      const time = dados.time || "-";
-      const categoria = dados.categoria || "-";
       const aprovado = dados.aprovado === true;
       const autorizado = dados.autorizado === true;
       const ehArbitro = tipo === "arbitro";
@@ -1781,9 +1806,9 @@
       if(userChipRole) userChipRole.textContent = tipoLabel(tipo);
       if(userCardName) userCardName.textContent = nome;
       if(userCardEmail) userCardEmail.textContent = dados.email || user.email || "-";
-      if(userCardStatus) userCardStatus.textContent = status;
-      if(userCardTime) userCardTime.textContent = time;
-      if(userCardCategoria) userCardCategoria.textContent = categoria;
+      if(userCardStatus) userCardStatus.textContent = dados.status || "-";
+      if(userCardTime) userCardTime.textContent = dados.time || "-";
+      if(userCardCategoria) userCardCategoria.textContent = dados.categoria || "-";
 
       if(userCardRole){
         userCardRole.innerHTML = `<i class="${ehArbitro ? "fa-solid fa-whistle" : "fa-solid fa-user"}"></i><span>${tipoLabel(tipo)}</span>`;
