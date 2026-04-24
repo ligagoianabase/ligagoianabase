@@ -36,6 +36,10 @@
   box-sizing:border-box;
 }
 
+html{
+  scroll-behavior:smooth;
+}
+
 body{
   font-family:Arial, sans-serif;
   background:
@@ -57,38 +61,34 @@ button{
   border:none;
 }
 
+img{
+  display:block;
+  max-width:100%;
+}
+
 .wrap{
   width:min(100% - 28px, var(--max));
   margin:0 auto;
 }
 
-/* MENU PADRÃO */
+/* HEADER PADRÃO */
 .site-header{
   background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
   border-bottom:3px solid var(--gold);
   box-shadow:var(--shadow);
+  position:relative;
+  z-index:10;
 }
 
 .header-top{
   min-height:92px;
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  flex-wrap:wrap;
-  padding:16px 0;
-}
-
-.header-left,
-.header-right{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
+  justify-content:center;
+  padding:18px 0;
 }
 
 .header-title{
-  flex:1;
   text-align:center;
   font-size:26px;
   font-weight:900;
@@ -96,21 +96,6 @@ button{
   letter-spacing:.8px;
   text-transform:uppercase;
   line-height:1.15;
-}
-
-.top-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:11px 18px;
-  border-radius:14px;
-  font-weight:800;
-  white-space:nowrap;
-  background:#fff4cf;
-  color:#111;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 10px 22px rgba(0,0,0,.22);
 }
 
 .nav-bar{
@@ -122,18 +107,11 @@ button{
 .menu{
   display:flex;
   justify-content:center;
+  align-items:center;
   gap:10px;
   padding:14px 8px;
-  flex-wrap:nowrap;
-  overflow-x:auto;
-  overflow-y:hidden;
-  scrollbar-width:none;
-  -ms-overflow-style:none;
-  scroll-behavior:smooth;
-}
-
-.menu::-webkit-scrollbar{
-  display:none;
+  flex-wrap:wrap;
+  overflow:visible;
 }
 
 .menu a{
@@ -145,8 +123,14 @@ button{
   border-radius:15px;
   border:1px solid rgba(255,255,255,.07);
   white-space:nowrap;
-  flex:0 0 auto;
   box-shadow:0 10px 22px rgba(0,0,0,.24);
+  transition:.25s ease;
+}
+
+.menu a:hover{
+  color:var(--gold);
+  border-color:var(--gold-line);
+  transform:translateY(-2px);
 }
 
 .menu a.ativo{
@@ -389,6 +373,7 @@ button{
   display:flex;
   align-items:center;
   gap:8px;
+  white-space:nowrap;
 }
 
 .meta-item i{
@@ -414,8 +399,8 @@ button{
 }
 
 .team-logo{
-  width:108px;
-  height:108px;
+  width:90px;
+  height:90px;
   border-radius:50%;
   object-fit:cover;
   background:#fff;
@@ -423,40 +408,185 @@ button{
 }
 
 .team-name{
-  font-size:28px;
+  font-size:24px;
   font-weight:900;
 }
 
 .team-sub{
-  font-size:15px;
-  font-weight:800;
+  font-size:14px;
   color:var(--muted);
 }
 
 .score{
-  min-width:240px;
-  padding:16px 24px;
-  border-radius:14px;
+  padding:12px 24px;
+  border-radius:12px;
   border:1px solid var(--gold);
-  text-align:center;
   color:var(--gold);
-  font-size:58px;
+  font-size:52px;
   font-weight:900;
+  background:rgba(2,10,24,.72);
 }
 
 .content{
-  padding:20px;
+  padding:18px;
 }
 
-/* RESPONSIVO */
-@media(max-width:700px){
-  .sumulas-lista{
-    grid-template-columns:1fr 1fr;
+.rosters{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.panel{
+  background:rgba(2,15,32,.86);
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.panel-title{
+  color:var(--gold);
+  text-align:center;
+  font-size:18px;
+  font-weight:900;
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,.25);
+}
+
+.table-head,
+.player-row{
+  display:grid;
+  grid-template-columns:52px 1fr;
+  gap:10px;
+  padding:8px 14px;
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+
+.player-row{
+  font-size:14px;
+  font-weight:700;
+}
+
+.num{
+  color:var(--gold);
+}
+
+.blocks{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  margin-top:18px;
+}
+
+.event-panel{
+  background:rgba(2,15,32,.86);
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.event-panel.green{border:1px solid rgba(66,232,95,.75);}
+.event-panel.yellow{border:1px solid rgba(255,212,0,.75);}
+.event-panel.red{border:1px solid rgba(255,39,56,.75);}
+
+.event-title{
+  padding:10px 14px;
+  font-size:16px;
+  font-weight:900;
+  border-bottom:1px solid rgba(255,255,255,.18);
+}
+
+.green .event-title{color:var(--green);}
+.yellow .event-title{color:var(--yellow);}
+.red .event-title{color:var(--red);}
+
+.event-row{
+  display:grid;
+  grid-template-columns:40px 60px 1fr;
+  padding:8px 12px;
+  font-size:13px;
+}
+
+.event-row.empty{
+  grid-template-columns:1fr;
+  text-align:center;
+  color:var(--muted);
+}
+
+.obs-box{
+  margin-top:18px;
+  background:rgba(2,15,32,.86);
+  border:1px solid rgba(255,255,255,.28);
+  border-radius:10px;
+}
+
+.obs-title{
+  text-align:center;
+  color:var(--blue);
+  font-size:18px;
+  font-weight:900;
+  padding:10px;
+}
+
+.obs-text{
+  padding:14px;
+  line-height:1.6;
+}
+
+.botoes{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:14px 0;
+}
+
+.btn{
+  padding:12px 14px;
+  border-radius:10px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.btn-home{background:#092343;}
+.btn-img{background:#238d35;}
+.btn-pdf{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111;}
+.btn-wpp{background:#239b38;}
+
+/* MOBILE */
+@media(max-width:900px){
+  .menu{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    justify-content:flex-start;
+    padding:14px;
   }
-}
 
-@media(max-width:500px){
+  .menu a{
+    flex:0 0 auto;
+  }
+
+  .header-title{
+    font-size:20px;
+  }
+
   .sumulas-lista{
+    grid-template-columns:1fr;
+  }
+
+  .score-area{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+
+  .team-head,
+  .team-head.right{
+    justify-content:center;
+  }
+
+  .rosters,
+  .blocks{
     grid-template-columns:1fr;
   }
 }
@@ -467,17 +597,7 @@ button{
 
 <header class="site-header">
   <div class="wrap header-top">
-    <div class="header-left">
-      <a href="index.html" class="top-btn">
-        <i class="fa-solid fa-house"></i> Início
-      </a>
-    </div>
-
-    <div class="header-title">
-      LIGA GOIANA DE FUTEBOL DE BASE
-    </div>
-
-    <div class="header-right"></div>
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
   </div>
 
   <div class="nav-bar">
@@ -492,7 +612,7 @@ button{
         <a href="jogadores.html">Jogadores</a>
         <a href="arbitros.html">Árbitros</a>
         <a href="assistentes.html">Assistente</a>
-        <a class="ativo">Súmula</a>
+        <a href="sumula-publica.html" class="ativo">Súmula</a>
         <a href="noticias.html">Notícias</a>
       </nav>
     </div>
@@ -506,258 +626,142 @@ button{
     <p>Veja as súmulas finalizadas. Clique em "Ver Súmula" para abrir na mesma página.</p>
   </div>
 
-  <div id="listaSumulas" class="sumulas-lista"></div>
+  <div class="sumulas-lista" id="listaSumulas"></div>
 
-  <!-- SÚMULA COMPLETA -->
-  <div id="areaSumula">
-
-    <div class="header">
-      <img src="logo-liga.jfif" class="logo">
-
-      <div class="titulo">
-        <strong>SÚMULA OFICIAL</strong>
-        <span>LIGA GOIANA DE FUTEBOL DE BASE</span>
-      </div>
-
-      <img id="logoCampeonato" src="logo-liga.jfif" class="logo right">
-    </div>
-
-    <div class="meta-bar">
-      <div class="meta-item"><i class="fa-solid fa-trophy"></i><span id="metaCampeonato"></span></div>
-      <div class="meta-item"><i class="fa-solid fa-users"></i><span id="metaCategoria"></span></div>
-      <div class="meta-item"><i class="fa-solid fa-calendar-days"></i><span id="metaData"></span></div>
-      <div class="meta-item"><i class="fa-solid fa-location-dot"></i><span id="metaLocal"></span></div>
-    </div>
-
-    <div class="score-area">
-      <div class="team-head">
-        <img id="escudoA" class="team-logo">
-        <div>
-          <div class="team-name" id="nomeTimeA"></div>
-          <div class="team-sub">Mandante</div>
-        </div>
-      </div>
-
-      <div class="score" id="placar"></div>
-
-      <div class="team-head right">
-        <div>
-          <div class="team-name" id="nomeTimeB"></div>
-          <div class="team-sub">Visitante</div>
-        </div>
-        <img id="escudoB" class="team-logo">
-      </div>
-    </div>
-
-    <div class="content">
-      <div id="obs"></div>
-    </div>
-
-  </div>
+  <!-- SÚMULA ABERTA -->
+  <div id="areaSumula"></div>
 
 </div>
-<script type="module">
-import { db } from "./firebase.js";
-import {
-  collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-let sumulas = [];
-
-const sumulasExemplo = [
-  {
-    id:"exemplo-1",
-    campeonato:"Copa do Mundo FIFA 2002",
-    categoria:"Seleção Principal",
-    dataJogo:"30/06/2002 - 08:00",
-    local:"International Stadium Yokohama",
-    timeA:"Brasil",
-    timeB:"Alemanha",
-    golsA:2,
-    golsB:0,
-    logoTimeA:"logo-liga.jfif",
-    logoTimeB:"logo-liga.jfif",
-    logoCampeonato:"logo-liga.jfif",
-    observacoes:"Súmula de exemplo para visualizar o funcionamento."
-  },
-  {
-    id:"exemplo-2",
-    campeonato:"Copa União de Base",
-    categoria:"Sub-15",
-    dataJogo:"18/05/2025 - 16:00",
-    local:"Estádio Serra Dourada",
-    timeA:"Atlético GO",
-    timeB:"Vila Nova",
-    golsA:2,
-    golsB:1,
-    logoTimeA:"logo-liga.jfif",
-    logoTimeB:"logo-liga.jfif",
-    logoCampeonato:"logo-liga.jfif",
-    observacoes:"Jogo finalizado sem ocorrências graves."
-  },
-  {
-    id:"exemplo-3",
-    campeonato:"Liga Goiana Elite",
-    categoria:"Sub-13",
-    dataJogo:"17/05/2025 - 15:30",
-    local:"Campo 1",
-    timeA:"Goiás",
-    timeB:"Anápolis",
-    golsA:1,
-    golsB:1,
-    logoTimeA:"logo-liga.jfif",
-    logoTimeB:"logo-liga.jfif",
-    logoCampeonato:"logo-liga.jfif",
-    observacoes:"Partida equilibrada."
-  },
-  {
-    id:"exemplo-4",
-    campeonato:"Copa União de Base",
-    categoria:"Sub-17",
-    dataJogo:"16/05/2025 - 19:00",
-    local:"Estádio Olímpico",
-    timeA:"Cruzeiro",
-    timeB:"Goiânia",
-    golsA:3,
-    golsB:0,
-    logoTimeA:"logo-liga.jfif",
-    logoTimeB:"logo-liga.jfif",
-    logoCampeonato:"logo-liga.jfif",
-    observacoes:"Súmula gerada automaticamente."
-  },
-  {
-    id:"exemplo-5",
-    campeonato:"Liga Goiana Elite",
-    categoria:"Sub-11",
-    dataJogo:"15/05/2025 - 09:00",
-    local:"Campo Society 2",
-    timeA:"Aparecidense",
-    timeB:"Trindade",
-    golsA:0,
-    golsB:0,
-    logoTimeA:"logo-liga.jfif",
-    logoTimeB:"logo-liga.jfif",
-    logoCampeonato:"logo-liga.jfif",
-    observacoes:"Empate sem gols."
-  }
+<script>
+/* DADOS DE EXEMPLO (COPA 2002 + OUTROS) */
+const SUMULAS_EXEMPLO = [
+{
+  id:"1",
+  campeonato:"Copa do Mundo FIFA 2002",
+  categoria:"Seleção Principal",
+  data:"30/06/2002 - 08:00",
+  local:"International Stadium Yokohama",
+  status:"finalizado",
+  timeA:"Brasil",
+  timeB:"Alemanha",
+  golsA:2,
+  golsB:0,
+  logoA:"logo-liga.jfif",
+  logoB:"logo-liga.jfif"
+},
+{
+  id:"2",
+  campeonato:"Copa União de Base",
+  categoria:"Sub-15",
+  data:"18/05/2025 - 16:00",
+  local:"Serra Dourada",
+  status:"finalizado",
+  timeA:"Atlético GO",
+  timeB:"Vila Nova",
+  golsA:2,
+  golsB:1,
+  logoA:"logo-liga.jfif",
+  logoB:"logo-liga.jfif"
+},
+{
+  id:"3",
+  campeonato:"Liga Goiana Elite",
+  categoria:"Sub-13",
+  data:"17/05/2025 - 15:30",
+  local:"Campo 1",
+  status:"finalizado",
+  timeA:"Goiás",
+  timeB:"Anápolis",
+  golsA:1,
+  golsB:1,
+  logoA:"logo-liga.jfif",
+  logoB:"logo-liga.jfif"
+},
+{
+  id:"4",
+  campeonato:"Copa União de Base",
+  categoria:"Sub-17",
+  data:"16/05/2025 - 19:00",
+  local:"Estádio Olímpico",
+  status:"finalizado",
+  timeA:"Cruzeiro",
+  timeB:"Goianésia",
+  golsA:3,
+  golsB:0,
+  logoA:"logo-liga.jfif",
+  logoB:"logo-liga.jfif"
+}
 ];
 
-function campo(valor, fallback="-"){
-  if(valor === undefined || valor === null || valor === "") return fallback;
-  return valor;
-}
-
+/* CRIAR CARDS */
 function renderLista(){
   const lista = document.getElementById("listaSumulas");
 
-  if(!sumulas.length){
-    lista.innerHTML = `<div class="vazio">Nenhuma súmula encontrada.</div>`;
-    return;
-  }
-
-  lista.innerHTML = sumulas.map(s => `
+  lista.innerHTML = SUMULAS_EXEMPLO.map(j => `
     <div class="sumula-card">
+      
       <div class="sumula-card-top">
         <div class="sumula-icon">
           <i class="fa-solid fa-file-signature"></i>
         </div>
-
         <div class="sumula-status">Finalizada</div>
       </div>
 
       <div class="sumula-times">
         <div class="sumula-time">
-          <img src="${campo(s.logoTimeA, "logo-liga.jfif")}" onerror="this.src='logo-liga.jfif'">
-          <span>${campo(s.timeA)}</span>
+          <img src="${j.logoA}">
+          <span>${j.timeA}</span>
         </div>
 
-        <div class="sumula-placar">
-          ${Number(s.golsA || 0)} x ${Number(s.golsB || 0)}
-        </div>
+        <div class="sumula-placar">${j.golsA} x ${j.golsB}</div>
 
         <div class="sumula-time right">
-          <span>${campo(s.timeB)}</span>
-          <img src="${campo(s.logoTimeB, "logo-liga.jfif")}" onerror="this.src='logo-liga.jfif'">
+          <span>${j.timeB}</span>
+          <img src="${j.logoB}">
         </div>
       </div>
 
       <div class="sumula-info">
-        <strong>${campo(s.campeonato)}</strong><br>
-        ${campo(s.categoria)}<br>
-        ${campo(s.dataJogo || s.data)}<br>
-        ${campo(s.local)}
+        ${j.campeonato}<br>
+        ${j.categoria}<br>
+        ${j.data}<br>
+        ${j.local}
       </div>
 
-      <button class="btn-ver-sumula" onclick="abrirSumula('${s.id}')">
+      <button class="btn-ver-sumula" onclick="abrirSumula('${j.id}')">
         <i class="fa-solid fa-eye"></i> Ver Súmula
       </button>
+
     </div>
   `).join("");
 }
 
-window.abrirSumula = function(id){
-  const s = sumulas.find(item => item.id === id);
-  if(!s) return;
+/* ABRIR SÚMULA */
+function abrirSumula(id){
+  const s = SUMULAS_EXEMPLO.find(x => x.id === id);
+  const area = document.getElementById("areaSumula");
 
-  document.getElementById("metaCampeonato").textContent = campo(s.campeonato);
-  document.getElementById("metaCategoria").textContent = campo(s.categoria);
-  document.getElementById("metaData").textContent = campo(s.dataJogo || s.data);
-  document.getElementById("metaLocal").textContent = campo(s.local);
+  area.style.display = "block";
 
-  document.getElementById("nomeTimeA").textContent = campo(s.timeA);
-  document.getElementById("nomeTimeB").textContent = campo(s.timeB);
-
-  document.getElementById("escudoA").src = campo(s.logoTimeA, "logo-liga.jfif");
-  document.getElementById("escudoB").src = campo(s.logoTimeB, "logo-liga.jfif");
-  document.getElementById("logoCampeonato").src = campo(s.logoCampeonato, "logo-liga.jfif");
-
-  document.getElementById("placar").textContent =
-    `${Number(s.golsA || 0)} x ${Number(s.golsB || 0)}`;
-
-  document.getElementById("obs").innerHTML = `
-    <div class="vazio">
-      <strong>Observações:</strong><br>
-      ${campo(s.observacoes, "Sem observações do árbitro.")}
+  area.innerHTML = `
+    <div style="padding:20px;text-align:center;">
+      <h2 style="color:#f7c600;margin-bottom:10px;">SÚMULA OFICIAL</h2>
+      <p>${s.timeA} ${s.golsA} x ${s.golsB} ${s.timeB}</p>
+      <p>${s.campeonato}</p>
+      <p>${s.categoria}</p>
+      <p>${s.data}</p>
+      <p>${s.local}</p>
     </div>
   `;
 
-  document.getElementById("areaSumula").style.display = "block";
-
-  document.getElementById("areaSumula").scrollIntoView({
-    behavior:"smooth",
-    block:"start"
+  window.scrollTo({
+    top: area.offsetTop - 80,
+    behavior: "smooth"
   });
-};
-
-async function carregar(){
-  const lista = document.getElementById("listaSumulas");
-  lista.innerHTML = `<div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando súmulas...</div>`;
-
-  try{
-    const snap = await getDocs(collection(db, "sumulas"));
-
-    sumulas = [];
-    snap.forEach(docSnap => {
-      sumulas.push({
-        id:docSnap.id,
-        ...docSnap.data()
-      });
-    });
-
-    if(!sumulas.length){
-      sumulas = sumulasExemplo;
-    }
-
-    renderLista();
-  }catch(erro){
-    console.error(erro);
-    sumulas = sumulasExemplo;
-    renderLista();
-  }
 }
 
-carregar();
+renderLista();
 </script>
 
 </body>
