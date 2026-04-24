@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogos ADM - Liga Goiana</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root{
+      --bg:#061427;
+      --bg-dark:#08172c;
+      --card:#102a52;
+      --card2:#0d2346;
+      --gold:#f7c600;
+      --gold2:#ffe45c;
+      --gold-soft:rgba(247,198,0,.12);
+      --gold-line:rgba(247,198,0,.35);
+      --white:#ffffff;
+      --muted:#d9e3f2;
+      --green:#1f9d55;
+      --red:#d94141;
+      --blue:#3b82f6;
+      --shadow:0 14px 34px rgba(0,0,0,.36);
+      --max:1240px;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;}
+
+    body{
+      font-family:Arial, sans-serif;
+      background:
+        linear-gradient(rgba(3,12,29,.88), rgba(3,12,29,.96)),
+        url("fundo.png") center/cover fixed no-repeat;
+      color:var(--white);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    a{text-decoration:none;color:inherit;}
+    button{font-family:inherit;cursor:pointer;border:none;}
+    input,select{font-family:inherit;}
+
+    .wrap{
+      width:min(100% - 28px, var(--max));
+      margin:0 auto;
+    }
+
+    header{
+      background:linear-gradient(180deg, rgba(8,23,44,.98), rgba(3,12,29,.98));
+      border-bottom:3px solid var(--gold);
+      box-shadow:var(--shadow);
+    }
+
+    .header-inner{
+      min-height:86px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      padding:14px 0;
+    }
+
+    .header-left,
+    .header-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .header-title{
+      flex:1;
+      text-align:center;
+      font-size:25px;
+      font-weight:900;
+      color:var(--white);
+      text-transform:uppercase;
+      letter-spacing:.6px;
+    }
+
+    .top-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:11px 16px;
+      border-radius:14px;
+      font-weight:900;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+    }
+
+    .btn-light{
+      background:#fff4cf;
+      color:#111;
+    }
+
+    .btn-light:hover{
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      transform:translateY(-2px);
+    }
+
+    .btn-gold{
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      color:#111;
+    }
+
+    .btn-gold:hover{
+      filter:brightness(1.05);
+      transform:translateY(-2px);
+    }
+
+    .container{
+      padding:26px 0 36px;
+    }
+
+    .hero-panel{
+      background:
+        radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+        linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+      border:1px solid var(--gold-line);
+      border-radius:26px;
+      padding:24px;
+      box-shadow:var(--shadow);
+      margin-bottom:22px;
+    }
+
+    .hero-panel h2{
+      font-size:30px;
+      color:var(--gold);
+      margin-bottom:8px;
+      font-weight:900;
+    }
+
+    .hero-panel p{
+      color:var(--muted);
+      line-height:1.6;
+      font-size:15px;
+    }
+
+    .form-panel,
+    .list-panel{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+      border:1px solid rgba(247,198,0,.18);
+      border-radius:22px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+    }
+
+    .bloco-titulo{
+      color:var(--gold);
+      font-size:20px;
+      font-weight:900;
+      margin-bottom:14px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .full{grid-column:1/-1;}
+
+    label{
+      display:block;
+      margin-bottom:6px;
+      font-weight:900;
+      color:#eef4ff;
+      font-size:14px;
+    }
+
+    input,select{
+      width:100%;
+      padding:13px;
+      border:none;
+      border-radius:12px;
+      font-size:14px;
+      background:#f5f7fb;
+      color:#111;
+      outline:none;
+    }
+
+    input:focus,
+    select:focus{
+      outline:2px solid rgba(247,198,0,.6);
+    }
+
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    .link-btn,
+    .action-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      color:#111;
+      padding:11px 15px;
+      border-radius:12px;
+      font-weight:900;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .btn-danger{
+      background:var(--red);
+      color:#fff;
+    }
+
+    .btn-blue{
+      background:var(--blue);
+      color:#fff;
+    }
+
+    .btn-green{
+      background:var(--green);
+      color:#fff;
+    }
+
+    .lista-jogos{
+      display:grid;
+      gap:16px;
+    }
+
+    .card{
+      background:rgba(3,12,29,.55);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:18px;
+      transition:.25s ease;
+    }
+
+    .card:hover{
+      border-color:var(--gold-line);
+      transform:translateY(-2px);
+    }
+
+    .card-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+
+    .card-title{
+      color:var(--gold);
+      font-size:21px;
+      font-weight:900;
+    }
+
+    .status-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .status-pendente{
+      background:#7a5a00;
+      color:#fff;
+    }
+
+    .status-finalizada{
+      background:#1b5e20;
+      color:#fff;
+    }
+
+    .card-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px 14px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .card-grid div{
+      background:rgba(255,255,255,.04);
+      padding:11px;
+      border-radius:12px;
+    }
+
+    .card-grid span{
+      display:block;
+      color:#fff;
+      font-weight:900;
+      margin-bottom:4px;
+    }
+
+    .card-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .mensagem-vazia{
+      color:var(--muted);
+      text-align:center;
+      padding:20px 0;
+      font-weight:700;
+    }
+
+    @media(max-width:900px){
+      .header-title{
+        order:3;
+        width:100%;
+        font-size:22px;
+      }
+
+      .header-left,
+      .header-right{
+        width:100%;
+        justify-content:center;
+      }
+
+      .grid,
+      .card-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:600px){
+      .wrap{
+        width:min(100% - 18px, var(--max));
+      }
+
+      .header-inner{
+        gap:10px;
+      }
+
+      .header-left{
+        display:none;
+      }
+
+      .header-title{
+        order:1;
+        font-size:18px;
+        line-height:1.2;
+      }
+
+      .header-right{
+        order:2;
+        width:100%;
+      }
+
+      .top-btn,
+      .action-btn,
+      .link-btn{
+        width:100%;
+      }
+
+      .hero-panel,
+      .form-panel,
+      .list-panel{
+        padding:18px;
+        border-radius:20px;
+      }
+
+      .hero-panel h2{
+        font-size:25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
+
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
+
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
+    </div>
+
+    <div class="header-title">Cadastro de Jogos</div>
+
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarJogo()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Jogo
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+  <section class="hero-panel">
+    <h2>Gestão de Jogos</h2>
+    <p>
+      Cadastre partidas, vincule campeonato, categoria, equipes e arbitragem.
+      Depois a súmula será aberta pelo jogo e, ao finalizar, ficará disponível automaticamente para o público.
+    </p>
+  </section>
+
+  <section class="form-panel">
+    <h3 class="bloco-titulo"><i class="fa-solid fa-calendar-days"></i> Informações do Jogo</h3>
+
+    <div class="grid">
+      <div>
+        <label for="dataJogo">Data e hora</label>
+        <input id="dataJogo" type="datetime-local">
+      </div>
+
+      <div>
+        <label for="localJogo">Local</label>
+        <input id="localJogo" placeholder="Ex: Campo 1">
+      </div>
+
+      <div>
+        <label for="campeonato">Campeonato</label>
+        <input id="campeonato" placeholder="Ex: Copa União de Base">
+      </div>
+
+      <div>
+        <label for="logoCampeonato">Logo do campeonato</label>
+        <input id="logoCampeonato" placeholder="Ex: logo-campeonato.png">
+      </div>
+
+      <div>
+        <label for="rodada">Rodada</label>
+        <input id="rodada" placeholder="Ex: 1">
+      </div>
+
+      <div>
+        <label for="categoria">Categoria</label>
+        <select id="categoria">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="timeA">Time mandante</label>
+        <select id="timeA">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="timeB">Time visitante</label>
+        <select id="timeB">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-panel">
+    <h3 class="bloco-titulo"><i class="fa-solid fa-users-gear"></i> Comissão Técnica</h3>
+
+    <div class="grid">
+      <div>
+        <label for="tecnicoA">Técnico Mandante</label>
+        <input id="tecnicoA" placeholder="Nome do técnico mandante">
+      </div>
+
+      <div>
+        <label for="tecnicoB">Técnico Visitante</label>
+        <input id="tecnicoB" placeholder="Nome do técnico visitante">
+      </div>
+
+      <div>
+        <label for="assistenteA1">Assistente 1 Mandante</label>
+        <input id="assistenteA1" placeholder="Assistente 1 mandante">
+      </div>
+
+      <div>
+        <label for="assistenteB1">Assistente 1 Visitante</label>
+        <input id="assistenteB1" placeholder="Assistente 1 visitante">
+      </div>
+
+      <div>
+        <label for="assistenteA2">Assistente 2 Mandante</label>
+        <input id="assistenteA2" placeholder="Assistente 2 mandante">
+      </div>
+
+      <div>
+        <label for="assistenteB2">Assistente 2 Visitante</label>
+        <input id="assistenteB2" placeholder="Assistente 2 visitante">
+      </div>
+    </div>
+  </section>
+
+  <section class="form-panel">
+    <h3 class="bloco-titulo"><i class="fa-solid fa-whistle"></i> Arbitragem</h3>
+
+    <div class="grid">
+      <div>
+        <label for="arbitro">Árbitro</label>
+        <select id="arbitro">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="arbitroAuxiliar">Árbitro Auxiliar</label>
+        <select id="arbitroAuxiliar">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="assistente1">Árbitro Assistente 1</label>
+        <select id="assistente1">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="assistente2">Árbitro Assistente 2</label>
+        <select id="assistente2">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button class="action-btn" type="button" onclick="salvarJogo()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Jogo
+      </button>
+    </div>
+  </section>
+
+  <section class="list-panel">
+    <h3 class="bloco-titulo"><i class="fa-solid fa-list"></i> Jogos Cadastrados</h3>
+    <div id="listaJogos" class="lista-jogos">
+      <div class="mensagem-vazia">Carregando jogos...</div>
+    </div>
+  </section>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  deleteDoc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+window.voltarPagina = function(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = "admin.html";
+  }
+};
+
+function normalizarTexto(texto){
+  return String(texto || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function normalizarTipo(tipo){
+  const valor = normalizarTexto(tipo);
+  if(valor === "admin" || valor === "administrador") return "admin";
+  if(valor === "arbitro" || valor === "árbitro") return "arbitro";
+  if(valor === "assistente") return "assistente";
+  return valor;
+}
+
+function pegarNomeUsuario(u){
+  return u.nome || u.nomeExibicao || u.email || "Sem nome";
+}
+
+async function carregarTimes(){
+  const selectA = document.getElementById("timeA");
+  const selectB = document.getElementById("timeB");
+
+  selectA.innerHTML = '<option value="">Selecione</option>';
+  selectB.innerHTML = '<option value="">Selecione</option>';
+
+  const snap = await getDocs(collection(db, "times"));
+  let times = [];
+
+  snap.forEach(d => times.push({ id:d.id, ...d.data() }));
+
+  times.sort((a,b)=>(a.nome||"").localeCompare(b.nome||"", "pt-BR"));
+
+  times.forEach(t => {
+    const nome = t.nome || "";
+    selectA.innerHTML += `<option value="${nome}">${nome}</option>`;
+    selectB.innerHTML += `<option value="${nome}">${nome}</option>`;
+  });
+}
+
+async function carregarCategorias(){
+  const select = document.getElementById("categoria");
+  select.innerHTML = '<option value="">Selecione</option>';
+
+  const snap = await getDocs(collection(db, "categorias"));
+  let categorias = [];
+
+  snap.forEach(d => categorias.push(d.data()));
+
+  categorias.sort((a,b)=>(a.nome||"").localeCompare(b.nome||"", "pt-BR"));
+
+  categorias.forEach(c => {
+    select.innerHTML += `<option value="${c.nome}">${c.nome}</option>`;
+  });
+}
+
+async function carregarUsuarios(){
+  const arbitro = document.getElementById("arbitro");
+  const assistente1 = document.getElementById("assistente1");
+  const assistente2 = document.getElementById("assistente2");
+  const arbitroAuxiliar = document.getElementById("arbitroAuxiliar");
+
+  arbitro.innerHTML = '<option value="">Selecione</option>';
+  assistente1.innerHTML = '<option value="">Selecione</option>';
+  assistente2.innerHTML = '<option value="">Selecione</option>';
+  arbitroAuxiliar.innerHTML = '<option value="">Selecione</option>';
+
+  const snap = await getDocs(collection(db, "usuarios"));
+
+  let arbitros = [];
+  let assistentes = [];
+
+  snap.forEach(d => {
+    const u = { id:d.id, ...d.data() };
+    const tipo = normalizarTipo(u.tipoUsuario || u.tipousuario || u.tipo || "");
+    const aprovado = u.aprovado === true;
+    const autorizado = u.autorizado === true;
+
+    const ehArbitro = tipo === "arbitro" || u.ehArbitro === true;
+    const ehAssistente = tipo === "assistente";
+
+    if(ehArbitro && aprovado && autorizado){
+      arbitros.push(pegarNomeUsuario(u));
+    }
+
+    if(ehAssistente && aprovado){
+      assistentes.push(pegarNomeUsuario(u));
+    }
+  });
+
+  arbitros.sort((a,b)=>a.localeCompare(b,"pt-BR"));
+  assistentes.sort((a,b)=>a.localeCompare(b,"pt-BR"));
+
+  arbitros.forEach(nome => {
+    arbitro.innerHTML += `<option value="${nome}">${nome}</option>`;
+    arbitroAuxiliar.innerHTML += `<option value="${nome}">${nome}</option>`;
+  });
+
+  assistentes.forEach(nome => {
+    assistente1.innerHTML += `<option value="${nome}">${nome}</option>`;
+    assistente2.innerHTML += `<option value="${nome}">${nome}</option>`;
+  });
+}
+
+window.salvarJogo = async function(){
+  const jogo = {
+    data: document.getElementById("dataJogo").value,
+    local: document.getElementById("localJogo").value.trim(),
+    campeonato: document.getElementById("campeonato").value.trim(),
+    logoCampeonato: document.getElementById("logoCampeonato").value.trim(),
+    rodada: document.getElementById("rodada").value.trim(),
+    categoria: document.getElementById("categoria").value,
+    timeA: document.getElementById("timeA").value,
+    timeB: document.getElementById("timeB").value,
+
+    tecnicoA: document.getElementById("tecnicoA").value.trim(),
+    tecnicoB: document.getElementById("tecnicoB").value.trim(),
+    assistenteA1: document.getElementById("assistenteA1").value.trim(),
+    assistenteB1: document.getElementById("assistenteB1").value.trim(),
+    assistenteA2: document.getElementById("assistenteA2").value.trim(),
+    assistenteB2: document.getElementById("assistenteB2").value.trim(),
+
+    arbitro: document.getElementById("arbitro").value,
+    arbitroAuxiliar: document.getElementById("arbitroAuxiliar").value,
+    assistente: document.getElementById("assistente1").value,
+    assistente2: document.getElementById("assistente2").value,
+
+    status: "pendente",
+    sumulaFinalizada: false,
+    criadoEm: new Date().toISOString()
+  };
+
+  if(!jogo.data) return alert("Escolha a data e hora.");
+  if(!jogo.local) return alert("Digite o local.");
+  if(!jogo.rodada) return alert("Digite a rodada.");
+  if(!jogo.campeonato) return alert("Digite o campeonato.");
+  if(!jogo.categoria) return alert("Selecione a categoria.");
+  if(!jogo.timeA || !jogo.timeB) return alert("Selecione os times.");
+  if(jogo.timeA === jogo.timeB) return alert("Os times não podem ser iguais.");
+
+  await addDoc(collection(db, "jogos"), jogo);
+
+  alert("Jogo criado com sucesso!");
+  location.reload();
+};
+
+window.excluirJogo = async function(id){
+  if(!confirm("Deseja excluir este jogo?")) return;
+
+  await deleteDoc(doc(db, "jogos", id));
+  await carregarJogos();
+};
+
+async function existeSumula(id){
+  const snap = await getDoc(doc(db, "sumulas", id));
+  return snap.exists();
+}
+
+function statusClasse(status, temSumula){
+  if(status === "sumula_enviada" || temSumula) return "status-finalizada";
+  return "status-pendente";
+}
+
+function statusTexto(status, temSumula){
+  if(status === "sumula_enviada" || temSumula) return "Súmula Finalizada";
+  return "Pendente";
+}
+
+async function carregarJogos(){
+  const lista = document.getElementById("listaJogos");
+  lista.innerHTML = "";
+
+  const snap = await getDocs(collection(db, "jogos"));
+  let jogos = [];
+
+  snap.forEach(d => jogos.push({id:d.id, ...d.data()}));
+
+  jogos.sort((a,b)=>(a.data||"").localeCompare(b.data||""));
+
+  if(jogos.length === 0){
+    lista.innerHTML = `<div class="mensagem-vazia">Nenhum jogo cadastrado ainda.</div>`;
+    return;
+  }
+
+  for(const j of jogos){
+    const temSumula = await existeSumula(j.id);
+    const finalizada = j.status === "sumula_enviada" || temSumula;
+
+    lista.innerHTML += `
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">${j.timeA || "-"} x ${j.timeB || "-"}</div>
+          <div class="status-badge ${statusClasse(j.status, temSumula)}">
+            ${statusTexto(j.status, temSumula)}
+          </div>
+        </div>
+
+        <div class="card-grid">
+          <div><span>Rodada</span>${j.rodada || "-"}</div>
+          <div><span>Categoria</span>${j.categoria || "-"}</div>
+          <div><span>Campeonato</span>${j.campeonato || "-"}</div>
+          <div><span>Data</span>${j.data || "-"}</div>
+          <div><span>Local</span>${j.local || "-"}</div>
+          <div><span>Status</span>${statusTexto(j.status, temSumula)}</div>
+          <div><span>Técnico Mandante</span>${j.tecnicoA || "-"}</div>
+          <div><span>Técnico Visitante</span>${j.tecnicoB || "-"}</div>
+          <div><span>Árbitro</span>${j.arbitro || "-"}</div>
+          <div><span>Árbitro Auxiliar</span>${j.arbitroAuxiliar || "-"}</div>
+          <div><span>Assistente 1</span>${j.assistente || "-"}</div>
+          <div><span>Assistente 2</span>${j.assistente2 || "-"}</div>
+        </div>
+
+        <div class="card-actions">
+          ${
+            finalizada
+              ? `
+                <a class="link-btn btn-green" href="sumula-publica.html?id=${j.id}">
+                  <i class="fa-solid fa-eye"></i> Ver Súmula
+                </a>
+              `
+              : `
+                <a class="link-btn" href="sumula.html?id=${j.id}">
+                  <i class="fa-solid fa-file-signature"></i> Abrir Súmula
+                </a>
+              `
+          }
+
+          <a class="link-btn btn-blue" href="sumula.html?id=${j.id}">
+            <i class="fa-solid fa-pen-to-square"></i> Editar/Preencher
+          </a>
+
+          <button class="action-btn btn-danger" onclick="excluirJogo('${j.id}')">
+            <i class="fa-solid fa-trash"></i> Excluir
+          </button>
+        </div>
+      </div>
+    `;
+  }
+}
+
+await carregarTimes();
+await carregarCategorias();
+await carregarUsuarios();
+await carregarJogos();
+</script>
+
+</body>
+</html>
