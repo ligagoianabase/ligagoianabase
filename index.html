@@ -147,7 +147,8 @@
       margin-bottom:12px;
       letter-spacing:.4px;
     }
-.side-menu{
+
+    .side-menu{
       display:flex;
       flex-direction:column;
       gap:8px;
@@ -326,7 +327,8 @@
       background:var(--yellow-soft);
       border-color:var(--yellow-line);
     }
-.dropdown-toggle .fa-chevron-down{
+
+    .dropdown-toggle .fa-chevron-down{
       transition:transform .2s ease;
     }
 
@@ -499,7 +501,8 @@
       width:18px;
       flex-shrink:0;
     }
-.user-dropdown{
+
+    .user-dropdown{
       position:absolute;
       top:calc(100% + 10px);
       right:0;
@@ -671,7 +674,8 @@
       font-weight:700;
       margin-bottom:16px;
     }
-.hero h1{
+
+    .hero h1{
       font-size:46px;
       line-height:1.08;
       margin-bottom:12px;
@@ -835,7 +839,8 @@
       padding:14px 12px;
       font-size:14px;
     }
-.match-table tbody td{
+
+    .match-table tbody td{
       padding:14px 12px;
       border-top:1px solid rgba(255,255,255,.08);
       color:var(--muted);
@@ -999,7 +1004,8 @@
       color:var(--yellow);
       margin-bottom:0;
     }
-.footer-social a:hover{
+
+    .footer-social a:hover{
       background:var(--yellow);
       color:#08172c;
     }
@@ -1074,17 +1080,21 @@
 
       .topbar-inner{
         min-height:auto;
-        flex-wrap:nowrap;
+        display:grid;
+        grid-template-columns:auto 1fr auto;
+        grid-template-areas:
+          "menu logo login"
+          "nav nav nav";
         gap:8px;
         align-items:center;
-        justify-content:space-between;
         padding:10px 0;
       }
 
       .topbar-left{
-        order:1;
+        grid-area:menu;
         width:auto;
-        flex:0 0 auto;
+        min-width:0;
+        order:initial;
       }
 
       .menu-toggle{
@@ -1095,12 +1105,12 @@
       }
 
       .topbar-logo{
-        order:2;
-        flex:1 1 auto;
+        grid-area:logo;
         width:auto;
         justify-content:flex-start;
         gap:7px;
         min-width:0;
+        order:initial;
       }
 
       .topbar-logo img{
@@ -1124,11 +1134,12 @@
       }
 
       .top-actions{
-        order:3;
+        grid-area:login;
         width:auto;
-        flex:0 0 auto;
+        min-width:0;
         margin-left:0;
         justify-content:flex-end;
+        order:initial;
       }
 
       .btn-login-chip{
@@ -1159,11 +1170,13 @@
       }
 
       .top-nav{
-        order:4;
+        grid-area:nav;
+        order:initial;
         justify-content:flex-start;
         overflow-x:auto;
         overflow-y:visible;
         width:100%;
+        margin-top:4px;
         scrollbar-width:none;
         -ms-overflow-style:none;
       }
@@ -1186,7 +1199,8 @@
         font-size:12px;
         border-radius:10px;
       }
-.dropdown-menu{
+
+      .dropdown-menu{
         min-width:220px;
         max-width:92vw;
         z-index:9999;
@@ -1196,6 +1210,10 @@
         right:0;
         width:300px;
         max-width:calc(100vw - 20px);
+      }
+
+      .hero{
+        padding-top:24px;
       }
 
       .hero-grid{
@@ -1271,7 +1289,8 @@
       </div>
     </div>
   </aside>
-<header class="topbar">
+
+  <header class="topbar">
     <div class="wrap topbar-inner">
       <div class="topbar-left">
         <button class="menu-toggle" id="menuToggle" type="button">☰</button>
@@ -1390,7 +1409,8 @@
       </nav>
     </div>
   </header>
-<main>
+
+  <main>
     <section class="hero">
       <div class="wrap">
         <div class="hero-card">
