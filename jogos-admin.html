@@ -98,34 +98,33 @@
       color:#111;
     }
 
-    .btn-light:hover{
-      background:linear-gradient(135deg,var(--gold),var(--gold2));
-      transform:translateY(-2px);
-    }
-
-    .btn-gold{
+    .btn-gold,
+    .action-btn,
+    .link-btn{
       background:linear-gradient(135deg,var(--gold),var(--gold2));
       color:#111;
-    }
-
-    .btn-gold:hover{
-      filter:brightness(1.05);
-      transform:translateY(-2px);
     }
 
     .container{
       padding:26px 0 36px;
     }
 
+    .hero-panel,
+    .form-panel,
+    .list-panel{
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+      border:1px solid rgba(247,198,0,.18);
+      border-radius:22px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+    }
+
     .hero-panel{
       background:
         radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
         linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
-      border:1px solid var(--gold-line);
       border-radius:26px;
-      padding:24px;
-      box-shadow:var(--shadow);
-      margin-bottom:22px;
     }
 
     .hero-panel h2{
@@ -139,16 +138,6 @@
       color:var(--muted);
       line-height:1.6;
       font-size:15px;
-    }
-
-    .form-panel,
-    .list-panel{
-      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-      border:1px solid rgba(247,198,0,.18);
-      border-radius:22px;
-      padding:22px;
-      box-shadow:var(--shadow);
-      margin-bottom:20px;
     }
 
     .bloco-titulo{
@@ -193,6 +182,48 @@
       outline:2px solid rgba(247,198,0,.6);
     }
 
+    .preview-grid{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .preview-card{
+      background:rgba(3,12,29,.55);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:14px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-height:86px;
+    }
+
+    .preview-card img{
+      width:56px;
+      height:56px;
+      border-radius:14px;
+      object-fit:cover;
+      background:#fff;
+      border:2px solid var(--gold);
+      flex-shrink:0;
+    }
+
+    .preview-card strong{
+      color:var(--gold);
+      display:block;
+      font-size:13px;
+      margin-bottom:4px;
+    }
+
+    .preview-card span{
+      color:#fff;
+      font-weight:800;
+      font-size:13px;
+      line-height:1.3;
+    }
+
     .top-actions{
       display:flex;
       gap:10px;
@@ -206,28 +237,15 @@
       align-items:center;
       justify-content:center;
       gap:8px;
-      background:linear-gradient(135deg,var(--gold),var(--gold2));
-      color:#111;
       padding:11px 15px;
       border-radius:12px;
       font-weight:900;
       border:1px solid rgba(255,255,255,.08);
     }
 
-    .btn-danger{
-      background:var(--red);
-      color:#fff;
-    }
-
-    .btn-blue{
-      background:var(--blue);
-      color:#fff;
-    }
-
-    .btn-green{
-      background:var(--green);
-      color:#fff;
-    }
+    .btn-danger{background:var(--red);color:#fff;}
+    .btn-blue{background:var(--blue);color:#fff;}
+    .btn-green{background:var(--green);color:#fff;}
 
     .lista-jogos{
       display:grid;
@@ -273,15 +291,8 @@
       border:1px solid rgba(255,255,255,.12);
     }
 
-    .status-pendente{
-      background:#7a5a00;
-      color:#fff;
-    }
-
-    .status-finalizada{
-      background:#1b5e20;
-      color:#fff;
-    }
+    .status-pendente{background:#7a5a00;color:#fff;}
+    .status-finalizada{background:#1b5e20;color:#fff;}
 
     .card-grid{
       display:grid;
@@ -333,7 +344,8 @@
       }
 
       .grid,
-      .card-grid{
+      .card-grid,
+      .preview-grid{
         grid-template-columns:1fr;
       }
     }
@@ -341,10 +353,6 @@
     @media(max-width:600px){
       .wrap{
         width:min(100% - 18px, var(--max));
-      }
-
-      .header-inner{
-        gap:10px;
       }
 
       .header-left{
@@ -415,8 +423,8 @@
   <section class="hero-panel">
     <h2>Gestão de Jogos</h2>
     <p>
-      Cadastre partidas, vincule campeonato, categoria, equipes e arbitragem.
-      Depois a súmula será aberta pelo jogo e, ao finalizar, ficará disponível automaticamente para o público.
+      Cadastre partidas com tudo conectado: campeonato, categoria, times, logos,
+      comissão técnica, arbitragem e súmula pública automática.
     </p>
   </section>
 
@@ -436,12 +444,9 @@
 
       <div>
         <label for="campeonato">Campeonato</label>
-        <input id="campeonato" placeholder="Ex: Copa União de Base">
-      </div>
-
-      <div>
-        <label for="logoCampeonato">Logo do campeonato</label>
-        <input id="logoCampeonato" placeholder="Ex: logo-campeonato.png">
+        <select id="campeonato">
+          <option value="">Selecione</option>
+        </select>
       </div>
 
       <div>
@@ -452,7 +457,7 @@
       <div>
         <label for="categoria">Categoria</label>
         <select id="categoria">
-          <option value="">Selecione</option>
+          <option value="">Selecione o campeonato primeiro</option>
         </select>
       </div>
 
@@ -470,40 +475,66 @@
         </select>
       </div>
     </div>
+
+    <div class="preview-grid">
+      <div class="preview-card">
+        <img id="previewLogoCampeonato" src="logo-liga.jfif" alt="Logo campeonato">
+        <div>
+          <strong>Campeonato</strong>
+          <span id="previewNomeCampeonato">Nenhum selecionado</span>
+        </div>
+      </div>
+
+      <div class="preview-card">
+        <img id="previewLogoTimeA" src="logo-liga.jfif" alt="Logo mandante">
+        <div>
+          <strong>Mandante</strong>
+          <span id="previewNomeTimeA">Nenhum selecionado</span>
+        </div>
+      </div>
+
+      <div class="preview-card">
+        <img id="previewLogoTimeB" src="logo-liga.jfif" alt="Logo visitante">
+        <div>
+          <strong>Visitante</strong>
+          <span id="previewNomeTimeB">Nenhum selecionado</span>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="form-panel">
-    <h3 class="bloco-titulo"><i class="fa-solid fa-users-gear"></i> Comissão Técnica</h3>
+    <h3 class="bloco-titulo"><i class="fa-solid fa-users-gear"></i> Comissão Técnica Automática</h3>
 
     <div class="grid">
       <div>
         <label for="tecnicoA">Técnico Mandante</label>
-        <input id="tecnicoA" placeholder="Nome do técnico mandante">
+        <input id="tecnicoA" placeholder="Será puxado pelo time e categoria">
       </div>
 
       <div>
         <label for="tecnicoB">Técnico Visitante</label>
-        <input id="tecnicoB" placeholder="Nome do técnico visitante">
+        <input id="tecnicoB" placeholder="Será puxado pelo time e categoria">
       </div>
 
       <div>
         <label for="assistenteA1">Assistente 1 Mandante</label>
-        <input id="assistenteA1" placeholder="Assistente 1 mandante">
+        <input id="assistenteA1" placeholder="Será puxado pelo time e categoria">
       </div>
 
       <div>
         <label for="assistenteB1">Assistente 1 Visitante</label>
-        <input id="assistenteB1" placeholder="Assistente 1 visitante">
+        <input id="assistenteB1" placeholder="Será puxado pelo time e categoria">
       </div>
 
       <div>
         <label for="assistenteA2">Assistente 2 Mandante</label>
-        <input id="assistenteA2" placeholder="Assistente 2 mandante">
+        <input id="assistenteA2" placeholder="Será puxado pelo time e categoria">
       </div>
 
       <div>
         <label for="assistenteB2">Assistente 2 Visitante</label>
-        <input id="assistenteB2" placeholder="Assistente 2 visitante">
+        <input id="assistenteB2" placeholder="Será puxado pelo time e categoria">
       </div>
     </div>
   </section>
@@ -568,6 +599,12 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+let campeonatosCache = [];
+let categoriasCache = [];
+let timesCache = [];
+let tecnicosCache = [];
+let assistentesCache = [];
+
 window.voltarPagina = function(){
   if(window.history.length > 1){
     window.history.back();
@@ -584,16 +621,109 @@ function normalizarTexto(texto){
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-function normalizarTipo(tipo){
-  const valor = normalizarTexto(tipo);
-  if(valor === "admin" || valor === "administrador") return "admin";
-  if(valor === "arbitro" || valor === "árbitro") return "arbitro";
-  if(valor === "assistente") return "assistente";
-  return valor;
+function valorCampo(obj, chaves, fallback = ""){
+  for(const chave of chaves){
+    if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
+      return obj[chave];
+    }
+  }
+  return fallback;
 }
 
-function pegarNomeUsuario(u){
-  return u.nome || u.nomeExibicao || u.email || "Sem nome";
+function nomeItem(item){
+  return valorCampo(item, ["nome", "nomeExibicao", "titulo", "email"], "Sem nome");
+}
+
+function logoItem(item){
+  return valorCampo(item, ["logo", "escudo", "foto", "imagem", "logoUrl", "urlLogo"], "logo-liga.jfif");
+}
+
+function getCampeonatoSelecionado(){
+  const id = document.getElementById("campeonato").value;
+  return campeonatosCache.find(c => c.id === id) || null;
+}
+
+function getTimePorNome(nome){
+  return timesCache.find(t => normalizarTexto(nomeItem(t)) === normalizarTexto(nome)) || null;
+}
+
+function preencherPreview(){
+  const campeonato = getCampeonatoSelecionado();
+  const timeA = getTimePorNome(document.getElementById("timeA").value);
+  const timeB = getTimePorNome(document.getElementById("timeB").value);
+
+  document.getElementById("previewNomeCampeonato").textContent = campeonato ? nomeItem(campeonato) : "Nenhum selecionado";
+  document.getElementById("previewLogoCampeonato").src = campeonato ? logoItem(campeonato) : "logo-liga.jfif";
+
+  document.getElementById("previewNomeTimeA").textContent = timeA ? nomeItem(timeA) : "Nenhum selecionado";
+  document.getElementById("previewLogoTimeA").src = timeA ? logoItem(timeA) : "logo-liga.jfif";
+
+  document.getElementById("previewNomeTimeB").textContent = timeB ? nomeItem(timeB) : "Nenhum selecionado";
+  document.getElementById("previewLogoTimeB").src = timeB ? logoItem(timeB) : "logo-liga.jfif";
+}
+
+async function carregarCampeonatos(){
+  const select = document.getElementById("campeonato");
+  select.innerHTML = '<option value="">Selecione</option>';
+
+  const snap = await getDocs(collection(db, "campeonatos"));
+  campeonatosCache = [];
+
+  snap.forEach(d => campeonatosCache.push({ id:d.id, ...d.data() }));
+
+  campeonatosCache.sort((a,b)=>nomeItem(a).localeCompare(nomeItem(b), "pt-BR"));
+
+  campeonatosCache.forEach(c => {
+    select.innerHTML += `<option value="${c.id}">${nomeItem(c)}</option>`;
+  });
+}
+
+async function carregarCategoriasBase(){
+  const snap = await getDocs(collection(db, "categorias"));
+  categoriasCache = [];
+  snap.forEach(d => categoriasCache.push({ id:d.id, ...d.data() }));
+}
+
+function carregarCategoriasDoCampeonato(){
+  const select = document.getElementById("categoria");
+  const campeonato = getCampeonatoSelecionado();
+
+  select.innerHTML = '<option value="">Selecione</option>';
+
+  if(!campeonato){
+    select.innerHTML = '<option value="">Selecione o campeonato primeiro</option>';
+    return;
+  }
+
+  let categorias = [];
+
+  if(Array.isArray(campeonato.categorias) && campeonato.categorias.length){
+    categorias = campeonato.categorias.map(cat => {
+      if(typeof cat === "string") return cat;
+      return cat.nome || cat.categoria || "";
+    }).filter(Boolean);
+  }
+
+  if(!categorias.length){
+    categorias = categoriasCache
+      .filter(c =>
+        c.campeonatoId === campeonato.id ||
+        normalizarTexto(c.campeonato) === normalizarTexto(nomeItem(campeonato)) ||
+        normalizarTexto(c.nomeCampeonato) === normalizarTexto(nomeItem(campeonato))
+      )
+      .map(c => nomeItem(c));
+  }
+
+  categorias = [...new Set(categorias)].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+
+  if(!categorias.length){
+    select.innerHTML = '<option value="">Nenhuma categoria vinculada</option>';
+    return;
+  }
+
+  categorias.forEach(cat => {
+    select.innerHTML += `<option value="${cat}">${cat}</option>`;
+  });
 }
 
 async function carregarTimes(){
@@ -604,33 +734,69 @@ async function carregarTimes(){
   selectB.innerHTML = '<option value="">Selecione</option>';
 
   const snap = await getDocs(collection(db, "times"));
-  let times = [];
+  timesCache = [];
 
-  snap.forEach(d => times.push({ id:d.id, ...d.data() }));
+  snap.forEach(d => timesCache.push({ id:d.id, ...d.data() }));
 
-  times.sort((a,b)=>(a.nome||"").localeCompare(b.nome||"", "pt-BR"));
+  timesCache.sort((a,b)=>nomeItem(a).localeCompare(nomeItem(b), "pt-BR"));
 
-  times.forEach(t => {
-    const nome = t.nome || "";
+  timesCache.forEach(t => {
+    const nome = nomeItem(t);
     selectA.innerHTML += `<option value="${nome}">${nome}</option>`;
     selectB.innerHTML += `<option value="${nome}">${nome}</option>`;
   });
 }
 
-async function carregarCategorias(){
-  const select = document.getElementById("categoria");
-  select.innerHTML = '<option value="">Selecione</option>';
+async function carregarTecnicosEAssistentes(){
+  tecnicosCache = [];
+  assistentesCache = [];
 
-  const snap = await getDocs(collection(db, "categorias"));
-  let categorias = [];
+  try{
+    const snapTecnicos = await getDocs(collection(db, "tecnicos"));
+    snapTecnicos.forEach(d => tecnicosCache.push({ id:d.id, ...d.data() }));
+  }catch(e){
+    console.warn("Coleção tecnicos não carregada:", e);
+  }
 
-  snap.forEach(d => categorias.push(d.data()));
+  try{
+    const snapAssistentes = await getDocs(collection(db, "assistentes"));
+    snapAssistentes.forEach(d => assistentesCache.push({ id:d.id, ...d.data() }));
+  }catch(e){
+    console.warn("Coleção assistentes não carregada:", e);
+  }
+}
 
-  categorias.sort((a,b)=>(a.nome||"").localeCompare(b.nome||"", "pt-BR"));
+function pertenceAoTimeECategoria(item, time, categoria){
+  const itemTime = normalizarTexto(valorCampo(item, ["time", "timeNome", "equipe", "clube"], ""));
+  const itemCategoria = normalizarTexto(valorCampo(item, ["categoria", "categoriaNome"], ""));
 
-  categorias.forEach(c => {
-    select.innerHTML += `<option value="${c.nome}">${c.nome}</option>`;
-  });
+  const bateTime = itemTime === normalizarTexto(time);
+  const bateCategoria = !itemCategoria || itemCategoria === normalizarTexto(categoria);
+
+  return bateTime && bateCategoria;
+}
+
+function puxarComissao(){
+  const categoria = document.getElementById("categoria").value;
+  const timeA = document.getElementById("timeA").value;
+  const timeB = document.getElementById("timeB").value;
+
+  const tecnicosA = tecnicosCache.filter(t => pertenceAoTimeECategoria(t, timeA, categoria));
+  const tecnicosB = tecnicosCache.filter(t => pertenceAoTimeECategoria(t, timeB, categoria));
+
+  const assistentesA = assistentesCache.filter(a => pertenceAoTimeECategoria(a, timeA, categoria));
+  const assistentesB = assistentesCache.filter(a => pertenceAoTimeECategoria(a, timeB, categoria));
+
+  document.getElementById("tecnicoA").value = tecnicosA[0] ? nomeItem(tecnicosA[0]) : "";
+  document.getElementById("tecnicoB").value = tecnicosB[0] ? nomeItem(tecnicosB[0]) : "";
+
+  document.getElementById("assistenteA1").value = assistentesA[0] ? nomeItem(assistentesA[0]) : "";
+  document.getElementById("assistenteA2").value = assistentesA[1] ? nomeItem(assistentesA[1]) : "";
+
+  document.getElementById("assistenteB1").value = assistentesB[0] ? nomeItem(assistentesB[0]) : "";
+  document.getElementById("assistenteB2").value = assistentesB[1] ? nomeItem(assistentesB[1]) : "";
+
+  preencherPreview();
 }
 
 async function carregarUsuarios(){
@@ -651,19 +817,19 @@ async function carregarUsuarios(){
 
   snap.forEach(d => {
     const u = { id:d.id, ...d.data() };
-    const tipo = normalizarTipo(u.tipoUsuario || u.tipousuario || u.tipo || "");
+    const tipo = normalizarTexto(u.tipoUsuario || u.tipousuario || u.tipo || "");
     const aprovado = u.aprovado === true;
     const autorizado = u.autorizado === true;
 
-    const ehArbitro = tipo === "arbitro" || u.ehArbitro === true;
+    const ehArbitro = tipo === "arbitro" || tipo === "árbitro" || u.ehArbitro === true;
     const ehAssistente = tipo === "assistente";
 
     if(ehArbitro && aprovado && autorizado){
-      arbitros.push(pegarNomeUsuario(u));
+      arbitros.push(nomeItem(u));
     }
 
     if(ehAssistente && aprovado){
-      assistentes.push(pegarNomeUsuario(u));
+      assistentes.push(nomeItem(u));
     }
   });
 
@@ -682,15 +848,28 @@ async function carregarUsuarios(){
 }
 
 window.salvarJogo = async function(){
+  const campeonatoObj = getCampeonatoSelecionado();
+  const timeAObj = getTimePorNome(document.getElementById("timeA").value);
+  const timeBObj = getTimePorNome(document.getElementById("timeB").value);
+
   const jogo = {
     data: document.getElementById("dataJogo").value,
     local: document.getElementById("localJogo").value.trim(),
-    campeonato: document.getElementById("campeonato").value.trim(),
-    logoCampeonato: document.getElementById("logoCampeonato").value.trim(),
+
+    campeonatoId: campeonatoObj?.id || "",
+    campeonato: campeonatoObj ? nomeItem(campeonatoObj) : "",
+    logoCampeonato: campeonatoObj ? logoItem(campeonatoObj) : "",
+
     rodada: document.getElementById("rodada").value.trim(),
     categoria: document.getElementById("categoria").value,
-    timeA: document.getElementById("timeA").value,
-    timeB: document.getElementById("timeB").value,
+
+    timeAId: timeAObj?.id || "",
+    timeA: timeAObj ? nomeItem(timeAObj) : "",
+    logoTimeA: timeAObj ? logoItem(timeAObj) : "",
+
+    timeBId: timeBObj?.id || "",
+    timeB: timeBObj ? nomeItem(timeBObj) : "",
+    logoTimeB: timeBObj ? logoItem(timeBObj) : "",
 
     tecnicoA: document.getElementById("tecnicoA").value.trim(),
     tecnicoB: document.getElementById("tecnicoB").value.trim(),
@@ -712,7 +891,7 @@ window.salvarJogo = async function(){
   if(!jogo.data) return alert("Escolha a data e hora.");
   if(!jogo.local) return alert("Digite o local.");
   if(!jogo.rodada) return alert("Digite a rodada.");
-  if(!jogo.campeonato) return alert("Digite o campeonato.");
+  if(!jogo.campeonato) return alert("Selecione o campeonato.");
   if(!jogo.categoria) return alert("Selecione a categoria.");
   if(!jogo.timeA || !jogo.timeB) return alert("Selecione os times.");
   if(jogo.timeA === jogo.timeB) return alert("Os times não podem ser iguais.");
@@ -817,8 +996,24 @@ async function carregarJogos(){
   }
 }
 
+document.getElementById("campeonato").addEventListener("change", () => {
+  carregarCategoriasDoCampeonato();
+  preencherPreview();
+  puxarComissao();
+});
+
+document.getElementById("categoria").addEventListener("change", puxarComissao);
+document.getElementById("timeA").addEventListener("change", puxarComissao);
+document.getElementById("timeB").addEventListener("change", puxarComissao);
+
+document.getElementById("previewLogoCampeonato").onerror = function(){ this.src = "logo-liga.jfif"; };
+document.getElementById("previewLogoTimeA").onerror = function(){ this.src = "logo-liga.jfif"; };
+document.getElementById("previewLogoTimeB").onerror = function(){ this.src = "logo-liga.jfif"; };
+
+await carregarCampeonatos();
+await carregarCategoriasBase();
 await carregarTimes();
-await carregarCategorias();
+await carregarTecnicosEAssistentes();
 await carregarUsuarios();
 await carregarJogos();
 </script>
