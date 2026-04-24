@@ -4,599 +4,813 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Súmula Oficial - Liga Goiana</title>
+<title>Súmula Pública - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
 :root{
-  --bg:#0b1f3a;
-  --bg-dark:#08172c;
-  --card:#102a52;
-  --card-2:#0d2346;
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
   --gold:#f7c600;
-  --gold-2:#ffe45c;
-  --gold-soft:rgba(247,198,0,.12);
-  --gold-line:rgba(247,198,0,.28);
-  --white:#fff;
-  --muted:#d8e1ef;
-  --danger:#d72638;
-  --green:#1f9d55;
-  --shadow:0 14px 34px rgba(0,0,0,.35);
-  --radius:18px;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#42e85f;
+  --yellow:#ffd400;
+  --red:#ff2738;
+  --blue:#4d8dff;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1240px;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
 body{
   font-family:Arial, sans-serif;
   background:
-    linear-gradient(rgba(3,12,29,.88), rgba(3,12,29,.96)),
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
     url("fundo.png") center/cover fixed no-repeat;
   color:var(--white);
   min-height:100vh;
+  overflow-x:hidden;
 }
 
-button,input,textarea{font-family:inherit;}
+a{
+  text-decoration:none;
+  color:inherit;
+}
 
-.page{
-  width:min(100% - 24px, 1180px);
+button{
+  font-family:inherit;
+  cursor:pointer;
+  border:none;
+}
+
+img{
+  display:block;
+  max-width:100%;
+}
+
+.wrap{
+  width:min(100% - 28px, var(--max));
   margin:0 auto;
-  padding:18px 0 28px;
 }
 
-.header{
-  background:linear-gradient(180deg, rgba(8,23,44,.98), rgba(3,12,29,.98));
-  border:1px solid var(--gold-line);
+/* HEADER PADRÃO */
+.site-header{
+  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
   border-bottom:3px solid var(--gold);
-  border-radius:0 0 24px 24px;
   box-shadow:var(--shadow);
-  padding:16px;
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  align-items:center;
-  gap:16px;
 }
 
-.logo{
-  width:72px;
-  height:72px;
+.header-top{
+  min-height:92px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px 0;
+}
+
+.header-title{
+  text-align:center;
+  font-size:26px;
+  font-weight:900;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  line-height:1.15;
+}
+
+/* MENU FINAL PADRÃO */
+.nav-bar{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
+  border-top:1px solid rgba(255,255,255,.06);
+  overflow:hidden;
+}
+
+.menu{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:clamp(4px, .55vw, 10px);
+  padding:14px 6px;
+  flex-wrap:nowrap;
+  overflow:hidden;
+}
+
+.menu a{
+  color:#fff;
+  font-weight:900;
+  font-size:clamp(11px, .92vw, 15px);
+  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
+  padding:clamp(8px, .75vw, 12px) clamp(9px, 1vw, 18px);
+  border-radius:clamp(10px, .9vw, 15px);
+  border:1px solid rgba(255,255,255,.07);
+  white-space:nowrap;
+  flex:0 1 auto;
+  box-shadow:0 10px 22px rgba(0,0,0,.24);
+  transition:.25s ease;
+}
+
+.menu a:hover{
+  color:var(--gold);
+  border-color:var(--gold-line);
+}
+
+.menu a.ativo{
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+}
+
+/* PÁGINA */
+.container{
+  padding:22px 0 34px;
+}
+
+#areaSumula{
+  background:
+    radial-gradient(circle at top center, rgba(24,72,130,.55), transparent 38%),
+    linear-gradient(180deg, rgba(2,12,28,.98), rgba(3,13,28,.98));
+  border:2px solid var(--gold);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.sumula-header{
+  display:grid;
+  grid-template-columns:96px 1fr 96px;
+  align-items:center;
+  gap:14px;
+  padding:18px 22px;
+  border-bottom:2px solid var(--gold);
+}
+
+.logo-oficial{
+  width:82px;
+  height:82px;
   object-fit:cover;
   border-radius:18px;
   border:2px solid var(--gold);
   background:#fff;
 }
 
-.titulo{text-align:center;}
+.logo-oficial.right{
+  justify-self:end;
+}
 
-.titulo strong{
+.titulo-oficial{
+  text-align:center;
+}
+
+.titulo-oficial strong{
   display:block;
   color:var(--gold);
-  font-size:28px;
+  font-size:38px;
   font-weight:900;
-  letter-spacing:.8px;
+  letter-spacing:1px;
+  line-height:1;
 }
 
-.titulo span{
+.titulo-oficial span{
   display:block;
-  margin-top:5px;
-  color:var(--muted);
-  font-size:14px;
-  font-weight:700;
+  margin-top:9px;
+  color:#fff;
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:.5px;
 }
 
-.info-jogo{
-  margin:18px 0;
-  background:
-    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 32%),
-    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
-  border:1px solid var(--gold-line);
-  border-radius:24px;
+.meta-bar{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+  padding:13px 16px;
+  border-bottom:1px solid var(--line);
+  background:rgba(3,12,29,.55);
+  font-weight:900;
+  color:#fff;
+}
+
+.meta-item{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  white-space:nowrap;
+  font-size:13px;
+}
+
+.meta-item i{
+  color:var(--gold);
+}
+<style>
+
+/* TIMES E PLACAR */
+.score-board{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:20px;
   padding:22px;
-  text-align:center;
-  box-shadow:var(--shadow);
+  border-bottom:1px solid var(--line);
 }
 
-#dadosJogo{
-  color:var(--muted);
-  font-size:15px;
-  line-height:1.6;
-  font-weight:700;
+.time{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+
+.time.visitante{
+  align-items:flex-end;
+}
+
+.escudo{
+  width:82px;
+  height:82px;
+  object-fit:cover;
+  border-radius:50%;
+  border:2px solid var(--gold);
+  background:#fff;
+}
+
+.nome-time{
+  font-weight:900;
+  font-size:16px;
+  text-align:center;
 }
 
 .placar{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-width:190px;
-  margin-top:16px;
-  padding:14px 26px;
-  border-radius:20px;
-  background:rgba(3,12,29,.72);
-  border:1px solid var(--gold-line);
-  color:var(--gold);
-  font-size:42px;
+  font-size:46px;
   font-weight:900;
-  box-shadow:0 12px 28px rgba(0,0,0,.28);
+  color:var(--gold);
+  background:rgba(3,12,29,.8);
+  border:2px solid var(--gold);
+  padding:12px 18px;
+  border-radius:16px;
+  text-align:center;
+  min-width:120px;
 }
 
-.container{
+/* SEÇÕES */
+.section{
+  padding:18px 20px;
+  border-bottom:1px solid var(--line);
+}
+
+.section h3{
+  color:var(--gold);
+  font-size:16px;
+  margin-bottom:12px;
+  font-weight:900;
+}
+
+/* GRID DE EVENTOS */
+.grid-2{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:18px;
+  gap:14px;
 }
 
-.time,.eventos{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  padding:20px;
-  border-radius:var(--radius);
-  border:1px solid rgba(247,198,0,.18);
-  box-shadow:var(--shadow);
-}
-
-.time-head{
+/* EVENTOS */
+.evento{
   display:flex;
+  justify-content:space-between;
   align-items:center;
-  gap:12px;
-  margin-bottom:14px;
-}
-
-.time-logo{
-  width:54px;
-  height:54px;
-  border-radius:14px;
-  object-fit:cover;
-  background:#fff;
-  border:2px solid var(--gold);
-}
-
-.time h2,.eventos h2{
-  color:var(--gold);
-  font-size:22px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.lista{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  min-height:120px;
-  margin-bottom:14px;
-}
-
-.jogador{
-  display:grid;
-  grid-template-columns:88px 1fr;
-  align-items:center;
-  gap:10px;
-  background:rgba(3,12,29,.55);
-  border:1px solid rgba(255,255,255,.08);
-  padding:10px;
-  border-radius:14px;
-}
-
-.jogador input{
-  width:100%;
-  padding:10px;
-  border:none;
-  outline:none;
+  padding:9px 12px;
   border-radius:10px;
-  background:#fff;
-  color:#111;
-  font-weight:800;
-  text-align:center;
-}
-
-.jogador span{
-  font-weight:800;
-  color:#fff;
-  line-height:1.4;
-}
-
-.btn-add{
-  width:100%;
-  background:linear-gradient(135deg, var(--gold), var(--gold-2));
-  color:#111;
-  padding:12px 16px;
-  border:none;
-  border-radius:14px;
-  font-weight:900;
-  cursor:pointer;
-}
-
-.eventos{grid-column:1 / -1;}
-
-.eventos-top{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin:16px 0;
-}
-
-.btn{
-  padding:12px 16px;
-  border:none;
-  border-radius:14px;
-  font-weight:900;
-  cursor:pointer;
-  color:#fff;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-
-.gol{background:var(--green);}
-.amarelo{background:var(--gold);color:#111;}
-.vermelho{background:var(--danger);}
-
-#listaEventos{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  margin:12px 0;
-}
-
-.evento-item{
-  background:rgba(3,12,29,.55);
+  background:rgba(255,255,255,.05);
   border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  padding:12px;
+  font-size:13px;
+}
+
+.evento span{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-weight:900;
+}
+
+.minuto{
   color:var(--muted);
+  font-size:12px;
   font-weight:700;
 }
 
+/* TIPOS */
+.gol i{color:var(--green);}
+.amarelo i{color:var(--yellow);}
+.vermelho i{color:var(--red);}
+
+/* LISTA JOGADORES */
+.lista-jogadores{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.jogador{
+  padding:8px 10px;
+  border-radius:8px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  font-size:13px;
+  font-weight:800;
+}
+
+/* OBSERVAÇÕES */
 .obs{
-  width:100%;
-  min-height:130px;
-  resize:vertical;
-  margin-top:12px;
-  padding:14px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(3,12,29,.65);
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+/* AÇÕES */
+.acoes{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:18px;
+}
+
+.btn{
+  flex:1;
+  padding:12px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:13px;
+  text-align:center;
+}
+
+.btn-whats{
+  background:#25D366;
   color:#fff;
-  outline:none;
-  font-size:15px;
 }
 
-.finalizar{
-  background:linear-gradient(135deg, var(--gold), var(--gold-2));
+.btn-email{
+  background:#1a3f73;
+}
+
+.btn-pdf{
+  background:var(--gold);
   color:#111;
-  width:100%;
-  margin-top:14px;
-  padding:15px;
-  border-radius:16px;
-  font-size:16px;
 }
 
-@media(max-width:900px){
-  .container{grid-template-columns:1fr;}
-  .placar{font-size:36px;}
+.btn-voltar{
+  background:#0d2346;
 }
 
-@media(max-width:600px){
-  .page{width:min(100% - 18px, 1180px);padding-top:10px;}
+/* MOBILE */
+@media(max-width:700px){
 
-  .header{
-    grid-template-columns:60px 1fr 60px;
-    gap:8px;
-    padding:12px;
-    border-radius:0 0 18px 18px;
+  .score-board{
+    grid-template-columns:1fr;
+    text-align:center;
   }
 
-  .logo{width:54px;height:54px;border-radius:14px;}
-
-  .titulo strong{font-size:18px;line-height:1.15;}
-  .titulo span{font-size:11px;}
-
-  .info-jogo{padding:18px;border-radius:20px;}
-  #dadosJogo{font-size:13px;}
-
-  .placar{
-    font-size:30px;
-    min-width:150px;
-    padding:12px 20px;
+  .time.visitante{
+    align-items:center;
   }
 
-  .time,.eventos{padding:16px;border-radius:18px;}
-  .time h2,.eventos h2{font-size:19px;}
-  .jogador{grid-template-columns:74px 1fr;}
-  .eventos-top{flex-direction:column;}
-  .btn{width:100%;}
+  .grid-2,
+  .lista-jogadores{
+    grid-template-columns:1fr;
+  }
+
 }
+
 </style>
 </head>
 
 <body>
 
-<div class="page">
-
-  <div class="header">
-    <img src="logo-liga.jfif" class="logo">
-
-    <div class="titulo">
-      <strong>SÚMULA OFICIAL</strong>
-      <span>Liga Goiana de Futebol de Base</span>
+<header class="site-header">
+  <div class="wrap header-top">
+    <div class="header-title">
+      LIGA GOIANA DE FUTEBOL DE BASE
     </div>
-
-    <img id="logoCampeonato" src="logo-liga.jfif" class="logo" onerror="this.src='logo-liga.jfif'">
   </div>
 
-  <div class="info-jogo">
-    <div id="dadosJogo">Carregando dados do jogo...</div>
-    <div class="placar" id="placar">0 x 0</div>
+  <div class="nav-bar">
+    <div class="wrap">
+      <nav class="menu">
+        <a href="index.html">Início</a>
+        <a href="campeonatos.html">Campeonatos</a>
+        <a href="tabela.html">Tabela</a>
+        <a href="jogos.html">Jogos</a>
+        <a href="times.html">Times</a>
+        <a href="tecnicos.html">Técnicos</a>
+        <a href="jogadores.html">Jogadores</a>
+        <a href="arbitros.html">Árbitros</a>
+        <a href="assistentes.html">Assistente</a>
+        <a href="sumula-publica.html" class="ativo">Súmula</a>
+        <a href="noticias.html">Notícias</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </div>
   </div>
+</header>
 
-  <div class="container">
+<main class="wrap container">
 
-    <div class="time">
-      <div class="time-head">
-        <img id="logoTimeA" src="logo-liga.jfif" class="time-logo">
-        <h2 id="timeA">Time A</h2>
-      </div>
+  <div id="areaSumula"></div>
 
-      <div id="listaA" class="lista"></div>
-
-      <button class="btn-add" onclick="addJogador('A')">
-        <i class="fa-solid fa-user-plus"></i> Adicionar Jogador
-      </button>
-    </div>
-
-    <div class="time">
-      <div class="time-head">
-        <img id="logoTimeB" src="logo-liga.jfif" class="time-logo">
-        <h2 id="timeB">Time B</h2>
-      </div>
-
-      <div id="listaB" class="lista"></div>
-
-      <button class="btn-add" onclick="addJogador('B')">
-        <i class="fa-solid fa-user-plus"></i> Adicionar Jogador
-      </button>
-    </div>
-
-    <div class="eventos">
-      <h2><i class="fa-solid fa-clipboard-list"></i> Eventos da Partida</h2>
-
-      <div class="eventos-top">
-        <button class="btn gol" onclick="addEvento('gol')">⚽ Gol</button>
-        <button class="btn amarelo" onclick="addEvento('amarelo')">🟨 Amarelo</button>
-        <button class="btn vermelho" onclick="addEvento('vermelho')">🟥 Vermelho</button>
-      </div>
-
-      <div id="listaEventos"></div>
-
-      <textarea class="obs" id="obs" placeholder="Observações do árbitro"></textarea>
-
-      <button class="btn finalizar" onclick="finalizar()">
-        <i class="fa-solid fa-check"></i> FINALIZAR SÚMULA
-      </button>
-    </div>
-
-  </div>
-</div>
-
+</main>
 <script type="module">
 import { db } from "./firebase.js";
-import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-let jogoId = new URLSearchParams(window.location.search).get("id");
+const area = document.getElementById("areaSumula");
 
-let jogadoresA = [];
-let jogadoresB = [];
-let eventos = [];
-let jogoAtual = null;
+function getId(){
+  return new URLSearchParams(window.location.search).get("id");
+}
 
-function campo(valor, fallback = ""){
+function campo(valor, fallback = "-"){
   if(valor === undefined || valor === null || valor === "") return fallback;
   return valor;
 }
 
-function render(lado){
-  const lista = document.getElementById(lado === "A" ? "listaA" : "listaB");
-  const jogadores = lado === "A" ? jogadoresA : jogadoresB;
+function normalizar(valor){
+  return String(valor || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
 
-  lista.innerHTML = "";
+function dataBR(valor){
+  if(!valor) return "-";
 
-  jogadores.forEach((j,i)=>{
-    lista.innerHTML += `
-      <div class="jogador">
-        <input placeholder="Nº" value="${j.numero || ""}" onchange="setNum('${lado}',${i},this.value)">
-        <span>${j.nome}</span>
+  const d = new Date(valor);
+
+  if(isNaN(d.getTime())){
+    return String(valor);
+  }
+
+  return d.toLocaleString("pt-BR", {
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric",
+    hour:"2-digit",
+    minute:"2-digit"
+  });
+}
+
+function evento(item, tipo){
+  const nome = campo(item.nome || item.jogador, "Jogador");
+  const numero = item.numero ? `#${item.numero}` : "";
+  const minuto = campo(item.minuto || item.tempo || item.min, "");
+
+  let icon = "fa-futbol";
+  if(tipo === "amarelo") icon = "fa-square";
+  if(tipo === "vermelho") icon = "fa-square";
+
+  return `
+    <div class="evento ${tipo}">
+      <span><i class="fa-solid ${icon}"></i> ${numero} ${nome}</span>
+      <div class="minuto">${minuto ? minuto + "'" : ""}</div>
+    </div>
+  `;
+}
+
+function listaEventos(lista, tipo){
+  if(!lista || !lista.length){
+    return `<div class="evento"><span>Nenhum</span></div>`;
+  }
+
+  return lista.map(item => evento(item, tipo)).join("");
+}
+
+function jogadorLinha(j){
+  const numero = campo(j.numero, "-");
+  const nome = campo(j.nome, "Jogador");
+
+  return `
+    <div class="jogador">
+      ${numero} - ${nome}
+    </div>
+  `;
+}
+
+function listaJogadores(lista){
+  if(!lista || !lista.length){
+    return `<div class="jogador">Nenhum jogador informado.</div>`;
+  }
+
+  return lista.map(jogadorLinha).join("");
+}
+
+function montarSumula(s){
+  const timeA = campo(s.timeA, "Time A");
+  const timeB = campo(s.timeB, "Time B");
+
+  const golsA = Number(s.golsA || (s.golsDetalhadosA || []).length || 0);
+  const golsB = Number(s.golsB || (s.golsDetalhadosB || []).length || 0);
+
+  const logoA = s.logoTimeA || s.escudoA || s.logoA || "logo-liga.jfif";
+  const logoB = s.logoTimeB || s.escudoB || s.logoB || "logo-liga.jfif";
+  const logoCamp = s.logoCampeonato || "logo-liga.jfif";
+
+  const campeonato = campo(s.campeonato || s.nomeCampeonato, "Campeonato");
+  const categoria = campo(s.categoria, "Categoria");
+  const data = dataBR(s.dataJogo || s.data);
+  const local = campo(s.local, "Local");
+  const rodada = campo(s.rodada || s.fase, "Jogo");
+  const arbitro = campo(s.arbitro || s.arbitroPrincipal, "Não informado");
+  const assistente1 = campo(s.assistente1 || s.assistenteA, "Não informado");
+  const assistente2 = campo(s.assistente2 || s.assistenteB, "Não informado");
+
+  area.innerHTML = `
+    <div class="sumula-header">
+      <img src="logo-liga.jfif" class="logo-oficial" onerror="this.src='logo-liga.jfif'">
+
+      <div class="titulo-oficial">
+        <strong>SÚMULA OFICIAL</strong>
+        <span>LIGA GOIANA DE FUTEBOL DE BASE</span>
       </div>
-    `;
+
+      <img src="${logoCamp}" class="logo-oficial right" onerror="this.src='logo-liga.jfif'">
+    </div>
+
+    <div class="meta-bar">
+      <div class="meta-item"><i class="fa-solid fa-trophy"></i> ${campeonato}</div>
+      <div class="meta-item"><i class="fa-solid fa-users"></i> ${categoria}</div>
+      <div class="meta-item"><i class="fa-solid fa-calendar-days"></i> ${data}</div>
+      <div class="meta-item"><i class="fa-solid fa-location-dot"></i> ${local}</div>
+      <div class="meta-item"><i class="fa-solid fa-flag"></i> ${rodada}</div>
+    </div>
+
+    <section class="score-board">
+      <div class="time">
+        <img src="${logoA}" class="escudo" onerror="this.src='logo-liga.jfif'">
+        <div class="nome-time">${timeA}</div>
+      </div>
+
+      <div class="placar">${golsA} x ${golsB}</div>
+
+      <div class="time visitante">
+        <img src="${logoB}" class="escudo" onerror="this.src='logo-liga.jfif'">
+        <div class="nome-time">${timeB}</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3><i class="fa-solid fa-user-tie"></i> Arbitragem</h3>
+      <div class="grid-2">
+        <div class="evento"><span>Árbitro</span><div>${arbitro}</div></div>
+        <div class="evento"><span>Assistente 1</span><div>${assistente1}</div></div>
+        <div class="evento"><span>Assistente 2</span><div>${assistente2}</div></div>
+        <div class="evento"><span>Status</span><div>${campo(s.status, "Finalizada")}</div></div>
+      </div>
+    </section>
+<section class="section">
+      <h3><i class="fa-solid fa-users"></i> Jogadores Relacionados</h3>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size:14px;">${timeA}</h3>
+          <div class="lista-jogadores">
+            ${listaJogadores(s.jogadoresA || s.elencoA || [])}
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size:14px;">${timeB}</h3>
+          <div class="lista-jogadores">
+            ${listaJogadores(s.jogadoresB || s.elencoB || [])}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3><i class="fa-solid fa-futbol"></i> Gols</h3>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size:14px;">${timeA}</h3>
+          ${listaEventos(s.golsDetalhadosA || [], "gol")}
+        </div>
+
+        <div>
+          <h3 style="font-size:14px;">${timeB}</h3>
+          ${listaEventos(s.golsDetalhadosB || [], "gol")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3><i class="fa-solid fa-square"></i> Cartões Amarelos</h3>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size:14px;">${timeA}</h3>
+          ${listaEventos(s.amarelosDetalhadosA || [], "amarelo")}
+        </div>
+
+        <div>
+          <h3 style="font-size:14px;">${timeB}</h3>
+          ${listaEventos(s.amarelosDetalhadosB || [], "amarelo")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3><i class="fa-solid fa-square"></i> Cartões Vermelhos</h3>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size:14px;">${timeA}</h3>
+          ${listaEventos(s.vermelhosDetalhadosA || [], "vermelho")}
+        </div>
+
+        <div>
+          <h3 style="font-size:14px;">${timeB}</h3>
+          ${listaEventos(s.vermelhosDetalhadosB || [], "vermelho")}
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3><i class="fa-solid fa-clipboard"></i> Observações do Árbitro</h3>
+      <div class="obs">
+        ${campo(s.observacoes || s.obs || s.observacao, "Sem observações do árbitro.")}
+      </div>
+    </section>
+
+    <div class="acoes">
+      <button class="btn btn-pdf" onclick="baixarImagem()">
+        <i class="fa-solid fa-image"></i> Baixar Imagem
+      </button>
+
+      <button class="btn btn-pdf" onclick="baixarPDF()">
+        <i class="fa-solid fa-file-pdf"></i> Baixar PDF
+      </button>
+
+      <button class="btn btn-whats" onclick="compartilharWhatsApp()">
+        <i class="fa-brands fa-whatsapp"></i> WhatsApp
+      </button>
+
+      <button class="btn btn-email" onclick="compartilharEmail()">
+        <i class="fa-solid fa-envelope"></i> E-mail
+      </button>
+
+      <a class="btn btn-voltar" href="jogos.html">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+  `;
+}
+
+const sumulaExemplo = {
+  id:"final-copa-2002",
+  campeonato:"Copa do Mundo FIFA 2002",
+  categoria:"Seleção Principal",
+  dataJogo:"2002-06-30T08:00:00",
+  local:"International Stadium Yokohama",
+  rodada:"Final",
+  timeA:"Brasil",
+  timeB:"Alemanha",
+  golsA:2,
+  golsB:0,
+  logoTimeA:"logo-liga.jfif",
+  logoTimeB:"logo-liga.jfif",
+  logoCampeonato:"logo-liga.jfif",
+  arbitro:"Pierluigi Collina",
+  assistente1:"Leif Lindberg",
+  assistente2:"Philip Sharp",
+  status:"Finalizada",
+  jogadoresA:[
+    {numero:1,nome:"Marcos"},
+    {numero:2,nome:"Cafu"},
+    {numero:3,nome:"Lúcio"},
+    {numero:4,nome:"Roque Júnior"},
+    {numero:6,nome:"Roberto Carlos"},
+    {numero:5,nome:"Edmílson"},
+    {numero:8,nome:"Gilberto Silva"},
+    {numero:11,nome:"Ronaldinho"},
+    {numero:10,nome:"Rivaldo"},
+    {numero:7,nome:"Kléberson"},
+    {numero:9,nome:"Ronaldo"}
+  ],
+  jogadoresB:[
+    {numero:1,nome:"Oliver Kahn"},
+    {numero:2,nome:"Thomas Linke"},
+    {numero:5,nome:"Carsten Ramelow"},
+    {numero:6,nome:"Christian Ziege"},
+    {numero:8,nome:"Dietmar Hamann"},
+    {numero:11,nome:"Miroslav Klose"},
+    {numero:13,nome:"Michael Ballack"},
+    {numero:16,nome:"Jens Jeremies"},
+    {numero:19,nome:"Bernd Schneider"},
+    {numero:21,nome:"Christoph Metzelder"},
+    {numero:22,nome:"Torsten Frings"}
+  ],
+  golsDetalhadosA:[
+    {numero:9,nome:"Ronaldo",minuto:"67"},
+    {numero:9,nome:"Ronaldo",minuto:"79"}
+  ],
+  golsDetalhadosB:[],
+  amarelosDetalhadosA:[
+    {numero:10,nome:"Rivaldo",minuto:"90"}
+  ],
+  amarelosDetalhadosB:[
+    {numero:5,nome:"Carsten Ramelow",minuto:"9"},
+    {numero:11,nome:"Miroslav Klose",minuto:"74"}
+  ],
+  vermelhosDetalhadosA:[],
+  vermelhosDetalhadosB:[],
+  observacoes:"Súmula demonstrativa da final da Copa do Mundo FIFA 2002 para visualização do sistema."
+};
+
+async function carregar(){
+  const id = getId();
+
+  try{
+    if(!id || id === "final-copa-2002"){
+      montarSumula(sumulaExemplo);
+      return;
+    }
+
+    const snap = await getDoc(doc(db, "sumulas", id));
+
+    if(!snap.exists()){
+      area.innerHTML = `<div style="padding:22px;text-align:center;">Súmula não encontrada.</div>`;
+      return;
+    }
+
+    montarSumula({id:snap.id, ...snap.data()});
+  }catch(erro){
+    console.error(erro);
+    montarSumula(sumulaExemplo);
+  }
+}
+
+window.baixarImagem = async function(){
+  const canvas = await html2canvas(area, {
+    scale:2,
+    useCORS:true,
+    backgroundColor:"#061427"
   });
-}
 
-function renderEventos(){
-  const lista = document.getElementById("listaEventos");
-
-  if(!eventos.length){
-    lista.innerHTML = "";
-    return;
-  }
-
-  lista.innerHTML = eventos.map((e, i) => {
-    let icone = "📌";
-    let time = e.lado === "A" ? jogoAtual?.timeA : jogoAtual?.timeB;
-
-    if(e.tipo === "gol") icone = "⚽";
-    if(e.tipo === "amarelo") icone = "🟨";
-    if(e.tipo === "vermelho") icone = "🟥";
-
-    return `<div class="evento-item">${icone} ${e.tipo.toUpperCase()} - Camisa ${e.numero} - ${time || "-"}</div>`;
-  }).join("");
-}
-
-window.addJogador = function(lado){
-  const nome = prompt("Nome do jogador");
-  if(!nome) return;
-
-  if(lado==="A") jogadoresA.push({nome});
-  else jogadoresB.push({nome});
-
-  render(lado);
+  const link = document.createElement("a");
+  link.download = "sumula-oficial.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
 };
 
-window.setNum = function(lado,i,v){
-  if(lado==="A") jogadoresA[i].numero = v;
-  else jogadoresB[i].numero = v;
-};
-
-window.addEvento = function(tipo){
-  const numero = prompt("Número do jogador");
-  if(!numero) return;
-
-  const lado = confirm("Esse evento foi do Time A? OK = Time A / Cancelar = Time B") ? "A" : "B";
-
-  const jogadores = lado === "A" ? jogadoresA : jogadoresB;
-  const jogador = jogadores.find(j => String(j.numero || "") === String(numero));
-
-  eventos.push({
-    tipo,
-    numero,
-    lado,
-    nome: jogador?.nome || `Camisa ${numero}`,
-    minuto: ""
+window.baixarPDF = async function(){
+  const canvas = await html2canvas(area, {
+    scale:2,
+    useCORS:true,
+    backgroundColor:"#061427"
   });
 
-  atualizarPlacar();
-  renderEventos();
+  const img = canvas.toDataURL("image/png");
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF("p", "mm", "a4");
+
+  const pageWidth = 210;
+  const margin = 8;
+  const imgWidth = pageWidth - margin * 2;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  pdf.addImage(img, "PNG", margin, 8, imgWidth, imgHeight);
+  pdf.save("sumula-oficial.pdf");
 };
 
-function atualizarPlacar(){
-  const golsA = eventos.filter(e => e.tipo==="gol" && e.lado==="A").length;
-  const golsB = eventos.filter(e => e.tipo==="gol" && e.lado==="B").length;
+window.compartilharWhatsApp = function(){
+  const texto = encodeURIComponent(
+    `Súmula oficial da Liga Goiana de Futebol de Base:\n${window.location.href}`
+  );
 
-  document.getElementById("placar").innerText = `${golsA} x ${golsB}`;
-}
-
-function separarEventos(tipo, lado){
-  return eventos
-    .filter(e => e.tipo === tipo && e.lado === lado)
-    .map(e => ({
-      nome: e.nome || `Camisa ${e.numero}`,
-      numero: e.numero || "",
-      minuto: e.minuto || ""
-    }));
-}
-
-window.finalizar = async function(){
-  if(!jogoAtual){
-    alert("Jogo não carregado.");
-    return;
-  }
-
-  const golsDetalhadosA = separarEventos("gol", "A");
-  const golsDetalhadosB = separarEventos("gol", "B");
-
-  const amarelosDetalhadosA = separarEventos("amarelo", "A");
-  const amarelosDetalhadosB = separarEventos("amarelo", "B");
-
-  const vermelhosDetalhadosA = separarEventos("vermelho", "A");
-  const vermelhosDetalhadosB = separarEventos("vermelho", "B");
-
-  const dados = {
-    jogoId,
-
-    campeonatoId: jogoAtual?.campeonatoId || "",
-    campeonato: jogoAtual?.campeonato || "",
-    logoCampeonato: jogoAtual?.logoCampeonato || "",
-
-    categoria: jogoAtual?.categoria || "",
-    dataJogo: jogoAtual?.data || "",
-    local: jogoAtual?.local || "",
-    rodada: jogoAtual?.rodada || "",
-
-    timeAId: jogoAtual?.timeAId || "",
-    timeA: jogoAtual?.timeA || "",
-    logoTimeA: jogoAtual?.logoTimeA || "",
-
-    timeBId: jogoAtual?.timeBId || "",
-    timeB: jogoAtual?.timeB || "",
-    logoTimeB: jogoAtual?.logoTimeB || "",
-
-    tecnicoA: jogoAtual?.tecnicoA || "",
-    tecnicoB: jogoAtual?.tecnicoB || "",
-    assistenteA1: jogoAtual?.assistenteA1 || "",
-    assistenteA2: jogoAtual?.assistenteA2 || "",
-    assistenteB1: jogoAtual?.assistenteB1 || "",
-    assistenteB2: jogoAtual?.assistenteB2 || "",
-
-    arbitro: jogoAtual?.arbitro || "",
-    arbitroAuxiliar: jogoAtual?.arbitroAuxiliar || "",
-    assistente: jogoAtual?.assistente || "",
-    assistente2: jogoAtual?.assistente2 || "",
-
-    golsA: golsDetalhadosA.length,
-    golsB: golsDetalhadosB.length,
-
-    jogadoresA,
-    jogadoresB,
-
-    golsDetalhadosA,
-    golsDetalhadosB,
-    amarelosDetalhadosA,
-    amarelosDetalhadosB,
-    vermelhosDetalhadosA,
-    vermelhosDetalhadosB,
-
-    eventos,
-
-    observacoes: document.getElementById("obs").value,
-    status:"finalizada",
-    finalizadaEm:new Date().toISOString()
-  };
-
-  await setDoc(doc(db,"sumulas",jogoId),dados);
-
-  await updateDoc(doc(db,"jogos",jogoId),{
-    status:"sumula_enviada",
-    sumulaFinalizada:true,
-    golsA:golsDetalhadosA.length,
-    golsB:golsDetalhadosB.length,
-    finalizadoEm:new Date().toISOString()
-  });
-
-  alert("Súmula finalizada!");
-  window.location.href = "sumula-publica.html?id=" + jogoId;
+  window.open(`https://wa.me/?text=${texto}`, "_blank");
 };
 
-async function init(){
-  if(!jogoId){
-    document.getElementById("dadosJogo").innerText = "Jogo não informado.";
-    return;
-  }
+window.compartilharEmail = function(){
+  const assunto = encodeURIComponent("Súmula oficial");
+  const corpo = encodeURIComponent(
+    `Súmula oficial da Liga Goiana de Futebol de Base:\n${window.location.href}`
+  );
 
-  const snap = await getDoc(doc(db,"jogos",jogoId));
+  window.location.href = `mailto:?subject=${assunto}&body=${corpo}`;
+};
 
-  if(!snap.exists()){
-    document.getElementById("dadosJogo").innerText = "Jogo não encontrado.";
-    return;
-  }
-
-  jogoAtual = snap.data();
-
-  document.getElementById("timeA").innerText = campo(jogoAtual.timeA, "Time A");
-  document.getElementById("timeB").innerText = campo(jogoAtual.timeB, "Time B");
-
-  document.getElementById("dadosJogo").innerText =
-    `${campo(jogoAtual.campeonato, "-")} | ${campo(jogoAtual.categoria, "-")} | ${campo(jogoAtual.data, "-")} | ${campo(jogoAtual.local, "-")}`;
-
-  document.getElementById("logoCampeonato").src = jogoAtual.logoCampeonato || "logo-liga.jfif";
-  document.getElementById("logoTimeA").src = jogoAtual.logoTimeA || "logo-liga.jfif";
-  document.getElementById("logoTimeB").src = jogoAtual.logoTimeB || "logo-liga.jfif";
-
-  document.getElementById("logoCampeonato").onerror = function(){ this.src = "logo-liga.jfif"; };
-  document.getElementById("logoTimeA").onerror = function(){ this.src = "logo-liga.jfif"; };
-  document.getElementById("logoTimeB").onerror = function(){ this.src = "logo-liga.jfif"; };
-}
-
-init();
+carregar();
 </script>
 
 </body>
