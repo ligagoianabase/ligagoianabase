@@ -4,123 +4,87 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Súmula - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Súmula Oficial - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 :root{
   --bg:#061427;
   --card:#0d2a52;
   --gold:#f7c600;
-  --white:#fff;
   --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
 }
-
 *{margin:0;padding:0;box-sizing:border-box}
-
 body{
   font-family:Arial;
-  background:linear-gradient(rgba(2,8,20,.9), rgba(2,8,20,.96)), url("fundo.png") center/cover fixed no-repeat;
+  background:linear-gradient(rgba(2,8,20,.9), rgba(2,8,20,.96)), url("fundo.png") center/cover fixed;
   color:#fff;
 }
 
-.wrap{
-  width:min(100% - 28px, 1100px);
-  margin:auto;
-}
+.site-header{background:#08172c;border-bottom:3px solid var(--gold)}
+.header-top{text-align:center;padding:18px;font-weight:900;font-size:22px}
+.menu{display:flex;justify-content:center;gap:10px;padding:12px;flex-wrap:wrap}
+.menu a{background:#102a52;padding:10px 14px;border-radius:10px;font-weight:900}
+.menu a.ativo{background:var(--gold);color:#111}
 
-/* HEADER PADRÃO */
-.site-header{
-  background:#08172c;
-  border-bottom:3px solid var(--gold);
-}
-
-.header-top{
-  padding:18px;
-  text-align:center;
-  font-weight:900;
-  font-size:22px;
-}
-
-.nav-bar{background:#0d2a52}
-
-.menu{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  padding:12px;
-  flex-wrap:wrap;
-}
-
-.menu a{color:#fff;font-weight:900}
-.menu .ativo{
-  background:var(--gold);
-  color:#111;
-  padding:6px 10px;
-  border-radius:6px;
-}
-
-/* SUMULA */
-.container{padding:20px}
+.wrap{width:min(100% - 28px,1100px);margin:auto;padding:20px}
 
 .card{
   background:var(--card);
-  border-radius:16px;
-  padding:20px;
-}
-
-.titulo{
-  text-align:center;
-  color:var(--gold);
-  font-size:24px;
-  font-weight:900;
-  margin-bottom:10px;
+  border-radius:14px;
+  padding:16px;
+  border:1px solid var(--line);
 }
 
 .placar{
   text-align:center;
-  font-size:38px;
-  color:var(--gold);
+  font-size:26px;
   font-weight:900;
-  margin:15px 0;
+  color:var(--gold);
+  margin:10px 0;
 }
 
-.times{
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.box{
+  background:#081c3a;
+  padding:10px;
+  border-radius:10px;
+}
+
+.item{
+  padding:6px;
+  font-size:13px;
+  border-bottom:1px solid var(--line);
+}
+
+.acoes{
   display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.time{
-  text-align:center;
-  font-weight:900;
-}
-
-.secao{
-  margin-top:20px;
-}
-
-.secao h3{
-  color:var(--gold);
-  margin-bottom:8px;
-}
-
-.lista{
-  font-size:14px;
-  color:var(--muted);
+  gap:10px;
+  margin-top:15px;
 }
 
 .btn{
-  display:block;
-  margin-top:20px;
-  padding:12px;
-  background:var(--gold);
-  color:#111;
-  text-align:center;
+  flex:1;
+  padding:10px;
   border-radius:10px;
   font-weight:900;
+}
+
+.whats{background:#25d366}
+.pdf{background:var(--gold);color:#111}
+.voltar{background:#1a3f73}
+
+@media(max-width:800px){
+  .grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -128,136 +92,142 @@ body{
 <body>
 
 <header class="site-header">
-  <div class="header-top">
-    LIGA GOIANA DE FUTEBOL DE BASE
-  </div>
+  <div class="header-top">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
-  <div class="nav-bar">
-    <nav class="menu">
-      <a href="index.html">Início</a>
-      <a href="campeonatos.html">Campeonatos</a>
-      <a href="tabela.html">Tabela</a>
-      <a href="jogos.html">Jogos</a>
-      <a href="sumulas.html" class="ativo">Súmula</a>
-    </nav>
-  </div>
+  <nav class="menu">
+    <a href="index.html">Início</a>
+    <a href="jogos.html">Jogos</a>
+    <a href="sumula.html" class="ativo">Súmula</a>
+  </nav>
 </header>
 
-<main class="wrap container">
-
+<div class="wrap">
 <div id="area" class="card"></div>
-
-<a class="btn" href="sumulas.html">← Voltar</a>
-
-</main>
+</div>
 
 <script type="module">
 import { db } from "./firebase.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const area=document.getElementById("area");
+const id=new URLSearchParams(location.search).get("id");
 
-function getId(){
-  return new URLSearchParams(location.search).get("id");
-}
-
-/* EXEMPLO COMPLETO */
-const exemplo={
-id:"final-2002",
-timeA:"Brasil",
-timeB:"Alemanha",
-golsA:2,
-golsB:0,
-categoria:"Seleção Principal",
-campeonato:"Copa do Mundo 2002",
-local:"Yokohama",
-data:"2002-06-30",
+/* 🔥 COPA 2022 COMPLETA */
+const copa2022={
+"final-copa-2022":{
+timeA:"Argentina",timeB:"França",golsA:3,golsB:3,
 golsDetalhadosA:[
-{nome:"Ronaldo",minuto:67},
-{nome:"Ronaldo",minuto:79}
+{numero:10,nome:"Messi",minuto:"23"},
+{numero:10,nome:"Messi",minuto:"108"},
+{numero:11,nome:"Di María",minuto:"36"}
 ],
-amarelosDetalhadosA:[
-{nome:"Rivaldo",minuto:90}
-]
+golsDetalhadosB:[
+{numero:10,nome:"Mbappé",minuto:"80"},
+{numero:10,nome:"Mbappé",minuto:"81"},
+{numero:10,nome:"Mbappé",minuto:"118"}
+],
+campeonato:"Copa do Mundo 2022",
+categoria:"Principal"
+},
+
+"terceiro-copa-2022":{
+timeA:"Croácia",timeB:"Marrocos",golsA:2,golsB:1,
+golsDetalhadosA:[
+{numero:18,nome:"Oršić",minuto:"42"}
+],
+golsDetalhadosB:[
+{numero:19,nome:"Dari",minuto:"9"}
+],
+campeonato:"Copa do Mundo 2022",
+categoria:"Principal"
+}
 };
 
-function campo(v){return v||"-"}
-
-function dataBR(d){
-if(!d)return"-";
-return new Date(d).toLocaleDateString("pt-BR");
-}
-
-function lista(arr){
-if(!arr||!arr.length)return "Nenhum";
-return arr.map(i=>`${i.nome} (${i.minuto}')`).join("<br>");
-}
-
+/* 🔥 CARREGAR */
 async function carregar(){
 
-let s=null;
-
 try{
-const snap=await getDoc(doc(db,"sumulas",getId()));
-if(snap.exists()) s=snap.data();
-}catch{}
-
-if(!s) s=exemplo;
-
-render(s);
+if(!id){
+render(copa2022["final-copa-2022"]);
+return;
 }
 
+const snap=await getDoc(doc(db,"sumulas",id));
+
+if(snap.exists()){
+render(snap.data());
+return;
+}
+
+if(copa2022[id]){
+render(copa2022[id]);
+return;
+}
+
+render(copa2022["final-copa-2022"]);
+
+}catch{
+render(copa2022["final-copa-2022"]);
+}
+}
+
+/* 🔥 LISTA */
+function lista(arr){
+if(!arr||!arr.length)return "<div class='item'>Nenhum</div>";
+return arr.map(i=>`<div class="item">#${i.numero} ${i.nome} ${i.minuto||""}'</div>`).join("");
+}
+
+/* 🔥 RENDER */
 function render(s){
 
 area.innerHTML=`
-
-<div class="titulo">
-SÚMULA OFICIAL
-</div>
-
-<div class="times">
-<div class="time">${campo(s.timeA)}</div>
-<div class="time">${campo(s.timeB)}</div>
-</div>
+<h2 style="text-align:center;color:var(--gold)">SÚMULA OFICIAL</h2>
 
 <div class="placar">
-${s.golsA||0} x ${s.golsB||0}
+${s.timeA} ${s.golsA||0} x ${s.golsB||0} ${s.timeB}
 </div>
 
-<div class="secao">
-<h3>Dados do jogo</h3>
-<div class="lista">
-${campo(s.campeonato)}<br>
-${campo(s.categoria)}<br>
-${dataBR(s.data)} - ${campo(s.local)}
-</div>
+<div class="grid">
+<div class="box">
+<h3>${s.timeA}</h3>
+${lista(s.golsDetalhadosA)}
+${lista(s.amarelosDetalhadosA)}
+${lista(s.vermelhosDetalhadosA)}
 </div>
 
-<div class="secao">
-<h3>Gols</h3>
-<div class="lista">
-${lista(s.golsDetalhadosA)}<br><br>
+<div class="box">
+<h3>${s.timeB}</h3>
 ${lista(s.golsDetalhadosB)}
-</div>
-</div>
-
-<div class="secao">
-<h3>Cartões</h3>
-<div class="lista">
-${lista(s.amarelosDetalhadosA)}<br><br>
 ${lista(s.amarelosDetalhadosB)}
+${lista(s.vermelhosDetalhadosB)}
 </div>
 </div>
 
-<div class="secao">
-<h3>Observações</h3>
-<div class="lista">
-${campo(s.observacoes)}
-</div>
+<div style="margin-top:10px;font-size:13px;color:#cbd6ea">
+${s.campeonato||""} - ${s.categoria||""}
 </div>
 
+<div class="acoes">
+<button class="btn whats" onclick="zap()">WhatsApp</button>
+<button class="btn pdf" onclick="pdf()">PDF</button>
+<a class="btn voltar" href="sumula.html">Voltar</a>
+</div>
 `;
 }
+
+/* 🔥 AÇÕES */
+window.zap=()=>{
+window.open(`https://wa.me/?text=Súmula ${location.href}`,"_blank");
+};
+
+window.pdf=async()=>{
+const canvas=await html2canvas(area);
+const img=canvas.toDataURL("image/png");
+const { jsPDF }=window.jspdf;
+const pdf=new jsPDF();
+pdf.addImage(img,"PNG",10,10,190,0);
+pdf.save("sumula.pdf");
+};
 
 carregar();
 </script>
