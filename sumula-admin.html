@@ -3,203 +3,309 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Súmula ADM - Liga Goiana</title>
 
-<title>Súmula Admin</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 body{
-  background:#0b1f3a;
   font-family:Arial;
+  background:#061427;
   color:#fff;
   margin:0;
+  padding:0;
 }
 
-/* AREA QUE VAI VIRAR IMAGEM */
-#area{
-  width:900px;
-  margin:20px auto;
-  background:#08172c;
-  padding:20px;
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  padding:15px;
+}
+
+.topo{
+  text-align:center;
+  margin-bottom:15px;
+}
+
+.placar{
+  font-size:26px;
+  font-weight:900;
+  color:#f7c600;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.box{
+  background:#0d2a52;
+  padding:12px;
   border-radius:10px;
 }
 
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:2px solid gold;
-  padding-bottom:10px;
+h3{
+  color:#f7c600;
+  margin-bottom:8px;
 }
 
-.logo{height:60px;}
-
-.placar{
-  text-align:center;
-  font-size:40px;
-  margin:20px 0;
-}
-
-.times{
-  display:flex;
-  justify-content:space-between;
-}
-
-.col{
-  width:45%;
-}
-
-.evento{
-  margin:5px 0;
-}
-
-/* BOTÕES */
-.botoes{
-  text-align:center;
-  margin:20px;
-}
-
-button{
-  padding:12px 20px;
-  margin:5px;
-  font-weight:bold;
+input,select{
+  width:100%;
+  padding:8px;
+  border-radius:6px;
   border:none;
+  margin-top:5px;
+}
+
+.btn{
+  background:#f7c600;
+  color:#000;
+  padding:10px;
   border-radius:8px;
+  font-weight:900;
+  margin-top:6px;
   cursor:pointer;
 }
 
-.pdf{background:gold;}
-.img{background:green;color:#fff;}
-.wpp{background:#25D366;color:#fff;}
+.lista{
+  margin-top:8px;
+}
+
+.item{
+  background:#081c3a;
+  padding:6px;
+  border-radius:6px;
+  margin-bottom:4px;
+  font-size:13px;
+}
+
+.finalizar{
+  background:#25d366;
+  color:#fff;
+  margin-top:15px;
+}
+
+img{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#fff;
+}
 </style>
 </head>
 
 <body>
 
-<div id="area">
+<div id="bloqueado" style="display:none;text-align:center;margin-top:100px;">
+<h2>❌ Acesso negado</h2>
+</div>
 
-  <div class="header">
-    <img src="logo-liga.jfif" class="logo">
+<div id="app" class="wrap" style="display:none;">
 
-    <h2>SÚMULA OFICIAL</h2>
+<div class="topo">
+<img id="logoCampeonato">
+<h2>SÚMULA ADM</h2>
+<div class="placar">
+<img id="escudoA"> 
+<span id="timeA"></span>
+<span id="golsA">0</span> x
+<span id="golsB">0</span>
+<span id="timeB"></span>
+<img id="escudoB">
+</div>
+</div>
 
-    <img id="logoCamp" class="logo">
-  </div>
+<div class="grid">
 
-  <div id="dados" style="text-align:center;margin-top:10px;"></div>
+<div class="box">
+<h3 id="nomeTimeA">Time A</h3>
 
-  <div class="placar" id="placar"></div>
+<input id="golNumeroA" placeholder="Nº camisa">
+<input id="golMinutoA" placeholder="Minuto">
+<button class="btn" onclick="addGol('A')">Gol</button>
 
-  <div class="times">
-    <div class="col">
-      <h3 id="timeA"></h3>
-      <div id="jogadoresA"></div>
-    </div>
+<div id="listaGolsA" class="lista"></div>
 
-    <div class="col">
-      <h3 id="timeB"></h3>
-      <div id="jogadoresB"></div>
-    </div>
-  </div>
+<input id="cartaoNumeroA" placeholder="Nº camisa">
+<select id="cartaoTipoA">
+<option value="amarelo">Amarelo</option>
+<option value="vermelho">Vermelho</option>
+</select>
+<input id="cartaoMinutoA" placeholder="Minuto">
+<button class="btn" onclick="addCartao('A')">Cartão</button>
 
-  <hr>
+<div id="listaCartoesA" class="lista"></div>
+</div>
 
-  <div id="eventos"></div>
+<div class="box">
+<h3 id="nomeTimeB">Time B</h3>
 
-  <hr>
+<input id="golNumeroB" placeholder="Nº camisa">
+<input id="golMinutoB" placeholder="Minuto">
+<button class="btn" onclick="addGol('B')">Gol</button>
 
-  <div id="obs"></div>
+<div id="listaGolsB" class="lista"></div>
+
+<input id="cartaoNumeroB" placeholder="Nº camisa">
+<select id="cartaoTipoB">
+<option value="amarelo">Amarelo</option>
+<option value="vermelho">Vermelho</option>
+</select>
+<input id="cartaoMinutoB" placeholder="Minuto">
+<button class="btn" onclick="addCartao('B')">Cartão</button>
+
+<div id="listaCartoesB" class="lista"></div>
+</div>
 
 </div>
 
-<div class="botoes">
-  <button class="img" onclick="gerarImagem()">📸 Baixar Imagem</button>
-  <button class="pdf" onclick="gerarPDF()">📄 Baixar PDF</button>
-  <button class="wpp" onclick="enviarWhatsApp()">📲 WhatsApp</button>
+<button class="btn finalizar" onclick="finalizar()">FINALIZAR SÚMULA</button>
+
 </div>
 
 <script type="module">
-import { db } from "./firebase.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { db, auth } from "./firebase.js";
+import {
+collection,getDocs,doc,getDoc,setDoc,updateDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-const jogoId = new URLSearchParams(window.location.search).get("id");
+let jogadores=[], jogo=null;
+let golsA=[],golsB=[],cartoesA=[],cartoesB=[];
+let mapaNumerosA={}, mapaNumerosB={};
 
-let imagemGerada = "";
+const id=new URLSearchParams(location.search).get("id");
 
-async function carregar(){
-
-  const snap = await getDoc(doc(db,"sumulas",jogoId));
-  const s = snap.data();
-
-  document.getElementById("dados").innerText =
-    `${s.campeonato} | ${s.categoria} | ${s.data} | ${s.local}`;
-
-  document.getElementById("placar").innerText =
-    `${s.golsA} x ${s.golsB}`;
-
-  document.getElementById("timeA").innerText = s.timeA;
-  document.getElementById("timeB").innerText = s.timeB;
-
-  document.getElementById("logoCamp").src =
-    s.logoCampeonato || "logo-liga.jfif";
-
-  document.getElementById("jogadoresA").innerHTML =
-    (s.jogadoresA || []).map(j => `#${j.numero} ${j.nome}`).join("<br>");
-
-  document.getElementById("jogadoresB").innerHTML =
-    (s.jogadoresB || []).map(j => `#${j.numero} ${j.nome}`).join("<br>");
-
-  document.getElementById("eventos").innerHTML =
-    (s.golsDetalhadosA || []).map(e => `⚽ ${e.nome} (${s.timeA})`).join("<br>")
-    +
-    (s.golsDetalhadosB || []).map(e => `⚽ ${e.nome} (${s.timeB})`).join("<br>")
-    +
-    (s.amarelosDetalhadosA || []).map(e => `🟨 ${e.nome}`).join("<br>")
-    +
-    (s.vermelhosDetalhadosA || []).map(e => `🟥 ${e.nome}`).join("<br>");
-
-  document.getElementById("obs").innerText =
-    s.observacoes || "";
+async function carregarJogadores(){
+const snap=await getDocs(collection(db,"jogadores"));
+snap.forEach(d=>jogadores.push({id:d.id,...d.data()}));
 }
 
-carregar();
-
-/* GERAR IMAGEM */
-window.gerarImagem = async function(){
-
-  const canvas = await html2canvas(document.getElementById("area"));
-  const img = canvas.toDataURL("image/png");
-
-  imagemGerada = img;
-
-  const link = document.createElement("a");
-  link.download = "sumula.png";
-  link.href = img;
-  link.click();
+function buscarPorNumero(numero,lado){
+return lado==="A"?mapaNumerosA[numero]:mapaNumerosB[numero];
 }
 
-/* GERAR PDF */
-window.gerarPDF = async function(){
+window.addGol=(lado)=>{
+const numero=document.getElementById(`golNumero${lado}`).value;
+const minuto=document.getElementById(`golMinuto${lado}`).value;
 
-  if(!imagemGerada){
-    await gerarImagem();
-  }
+const j=buscarPorNumero(numero,lado);
+if(!j)return alert("Número não definido na súmula");
 
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
+const obj={numero,nome:j.nome,minuto};
 
-  pdf.addImage(imagemGerada, 'PNG', 10, 10, 190, 0);
-  pdf.save("sumula.pdf");
+lado==="A"?golsA.push(obj):golsB.push(obj);
+render(lado);
+placar();
 }
 
-/* WHATSAPP */
-window.enviarWhatsApp = function(){
+window.addCartao=(lado)=>{
+const numero=document.getElementById(`cartaoNumero${lado}`).value;
+const tipo=document.getElementById(`cartaoTipo${lado}`).value;
+const minuto=document.getElementById(`cartaoMinuto${lado}`).value;
 
-  const texto = encodeURIComponent("Súmula do jogo disponível");
+const j=buscarPorNumero(numero,lado);
+if(!j)return alert("Número não definido");
 
-  window.open(`https://wa.me/?text=${texto}`, "_blank");
+const obj={numero,nome:j.nome,minuto,tipo};
+
+lado==="A"?cartoesA.push(obj):cartoesB.push(obj);
+render(lado);
+}
+
+function render(l){
+document.getElementById(`listaGols${l}`).innerHTML=(l==="A"?golsA:golsB).map(g=>`<div class="item">${g.nome} ${g.minuto}'</div>`).join("");
+document.getElementById(`listaCartoes${l}`).innerHTML=(l==="A"?cartoesA:cartoesB).map(c=>`<div class="item">${c.nome} ${c.tipo}</div>`).join("");
+}
+
+function placar(){
+document.getElementById("golsA").textContent=golsA.length;
+document.getElementById("golsB").textContent=golsB.length;
+}
+
+async function carregarJogo(){
+
+const snap=await getDoc(doc(db,"jogos",id));
+jogo={id:snap.id,...snap.data()};
+
+document.getElementById("timeA").textContent=jogo.timeA;
+document.getElementById("timeB").textContent=jogo.timeB;
+document.getElementById("nomeTimeA").textContent=jogo.timeA;
+document.getElementById("nomeTimeB").textContent=jogo.timeB;
+
+// logos
+const timeA=await getDoc(doc(db,"times",jogo.timeAId));
+const timeB=await getDoc(doc(db,"times",jogo.timeBId));
+const camp=await getDoc(doc(db,"campeonatos",jogo.campeonatoId));
+
+document.getElementById("escudoA").src=timeA.data().escudo||"logo-liga.jfif";
+document.getElementById("escudoB").src=timeB.data().escudo||"logo-liga.jfif";
+document.getElementById("logoCampeonato").src=camp.data().logo||"logo-liga.jfif";
+
+// jogadores do time
+const listaA=jogadores.filter(j=>j.timeId===jogo.timeAId);
+const listaB=jogadores.filter(j=>j.timeId===jogo.timeBId);
+
+// definir números
+listaA.forEach(j=>{
+const numero=prompt(`Número camisa: ${j.nome}`);
+mapaNumerosA[numero]=j;
+});
+
+listaB.forEach(j=>{
+const numero=prompt(`Número camisa: ${j.nome}`);
+mapaNumerosB[numero]=j;
+});
+
+}
+
+async function atualizarEstatisticas(){
+
+for(const g of [...golsA,...golsB]){
+const j=jogadores.find(x=>x.nome===g.nome);
+await updateDoc(doc(db,"jogadores",j.id),{
+gols:(j.gols||0)+1,
+jogos:(j.jogos||0)+1
+});
+}
+
+}
+
+window.finalizar=async()=>{
+
+await setDoc(doc(db,"sumulas",id),{
+golsDetalhadosA:golsA,
+golsDetalhadosB:golsB,
+amarelosDetalhadosA:cartoesA,
+amarelosDetalhadosB:cartoesB,
+status:"Finalizada"
+});
+
+await updateDoc(doc(db,"jogos",id),{status:"finalizado"});
+
+await atualizarEstatisticas();
+
+location.href=`sumula-publica.html?id=${id}`;
+}
+
+// segurança
+onAuthStateChanged(auth, async user=>{
+if(!user)return bloquear();
+
+await carregarJogadores();
+await carregarJogo();
+
+if(jogo.arbitroId!==user.uid){
+bloquear();
+}else{
+document.getElementById("app").style.display="block";
+}
+});
+
+function bloquear(){
+document.getElementById("bloqueado").style.display="block";
 }
 </script>
 
