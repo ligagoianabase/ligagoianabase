@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Súmula ADM - Liga Goiana</title>
+<title>Súmula ADM - LIGA GOIANA</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -19,55 +19,44 @@ body{font-family:Arial;background:var(--bg);color:#fff}
 
 .wrap{max-width:1200px;margin:auto;padding:15px}
 
-.topo{text-align:center;margin-bottom:15px}
-.placar{
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  font-weight:900;color:var(--gold);font-size:22px
-}
-
-.escudo{
-  width:45px;height:45px;border-radius:50%;
-  background:#fff;border:2px solid var(--gold);object-fit:cover
-}
+.topo{text-align:center;margin-bottom:10px}
+.placar{font-size:22px;font-weight:900;color:var(--gold)}
 
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
 .box{
   background:var(--card);
-  padding:12px;
+  padding:10px;
   border-radius:10px;
   border:1px solid var(--line)
 }
-
-h3{color:var(--gold);margin-bottom:6px}
 
 input,select{
   width:100%;padding:10px;border-radius:8px;border:none;margin-top:5px
 }
 
 .btn{
-  width:100%;padding:10px;border-radius:10px;border:none;
+  width:100%;padding:10px;border-radius:10px;
   font-weight:900;margin-top:6px;cursor:pointer
 }
 
 .btn-gold{background:var(--gold);color:#111}
 .btn-green{background:#25d366;color:#fff}
 
-.lista{margin-top:8px}
 .item{
-  background:#081c3a;border:1px solid var(--line);
-  padding:6px;border-radius:6px;margin-bottom:4px;font-size:13px
+  background:#081c3a;
+  padding:6px;
+  margin-top:4px;
+  border-radius:6px;
+  font-size:13px
 }
 
 .jog{
-  background:#081c3a;border:1px solid var(--line);
-  border-radius:6px;padding:6px;margin-bottom:4px;
-  display:grid;grid-template-columns:1fr 80px;gap:5px;font-size:13px
-}
-
-small{color:#cbd6ea}
-
-@media(max-width:900px){
-  .grid{grid-template-columns:1fr}
+  background:#081c3a;
+  padding:6px;
+  border-radius:6px;
+  margin-top:5px;
+  font-size:13px
 }
 </style>
 </head>
@@ -81,16 +70,9 @@ small{color:#cbd6ea}
 <div id="app" class="wrap" style="display:none">
 
 <div class="topo">
-<img id="logoCampeonato" class="escudo">
 <h2>SÚMULA ADM</h2>
-
 <div class="placar">
-<img id="escudoA" class="escudo">
-<span id="timeA"></span>
-<span id="golsA">0</span> x
-<span id="golsB">0</span>
-<span id="timeB"></span>
-<img id="escudoB" class="escudo">
+<span id="timeA"></span> <span id="golsA">0</span> x <span id="golsB">0</span> <span id="timeB"></span>
 </div>
 </div>
 
@@ -98,12 +80,13 @@ small{color:#cbd6ea}
 
 <div class="box">
 <h3 id="nomeTimeA"></h3>
+<input id="buscaA" placeholder="Buscar jogador...">
+<div id="jogadoresA"></div>
 
 <input id="numeroA" placeholder="Nº camisa">
 <input id="minutoA" placeholder="Minuto">
 <button class="btn btn-gold" onclick="gol('A')">Gol</button>
-
-<div id="listaGolsA" class="lista"></div>
+<div id="listaGolsA"></div>
 
 <input id="numeroCartaoA" placeholder="Nº camisa">
 <select id="tipoCartaoA">
@@ -112,20 +95,18 @@ small{color:#cbd6ea}
 </select>
 <input id="minutoCartaoA" placeholder="Minuto">
 <button class="btn btn-gold" onclick="cartao('A')">Cartão</button>
-
-<div id="listaCartoesA" class="lista"></div>
-
-<div id="jogadoresA"></div>
+<div id="listaCartoesA"></div>
 </div>
 
 <div class="box">
 <h3 id="nomeTimeB"></h3>
+<input id="buscaB" placeholder="Buscar jogador...">
+<div id="jogadoresB"></div>
 
 <input id="numeroB" placeholder="Nº camisa">
 <input id="minutoB" placeholder="Minuto">
 <button class="btn btn-gold" onclick="gol('B')">Gol</button>
-
-<div id="listaGolsB" class="lista"></div>
+<div id="listaGolsB"></div>
 
 <input id="numeroCartaoB" placeholder="Nº camisa">
 <select id="tipoCartaoB">
@@ -134,10 +115,7 @@ small{color:#cbd6ea}
 </select>
 <input id="minutoCartaoB" placeholder="Minuto">
 <button class="btn btn-gold" onclick="cartao('B')">Cartão</button>
-
-<div id="listaCartoesB" class="lista"></div>
-
-<div id="jogadoresB"></div>
+<div id="listaCartoesB"></div>
 </div>
 
 </div>
@@ -153,27 +131,36 @@ collection,getDocs,doc,getDoc,setDoc,updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-let jogo,jogadores=[],mapaA={},mapaB={},golsA=[],golsB=[],cartoesA=[],cartoesB=[];
+/* 🔥 COPA 2022 */
+const jogosCopa={
+"final-copa-2022":{
+timeA:"Argentina",
+timeB:"França",
+timeAId:"arg",
+timeBId:"fra",
+campeonatoId:"copa2022",
+status:"finalizado"
+}
+};
 
+let jogo,jogadores=[],mapA={},mapB={},golsA=[],golsB=[],cartA=[],cartB=[];
 const id=new URLSearchParams(location.search).get("id");
 
+/* 🔥 INICIAR */
 async function iniciar(){
 
-const snap=await getDoc(doc(db,"jogos",id));
+let snap=await getDoc(doc(db,"jogos",id));
+
+if(snap.exists()){
 jogo={id:snap.id,...snap.data()};
+}else{
+jogo=jogosCopa[id];
+}
 
 timeA.textContent=jogo.timeA;
 timeB.textContent=jogo.timeB;
 nomeTimeA.textContent=jogo.timeA;
 nomeTimeB.textContent=jogo.timeB;
-
-const tA=await getDoc(doc(db,"times",jogo.timeAId));
-const tB=await getDoc(doc(db,"times",jogo.timeBId));
-const camp=await getDoc(doc(db,"campeonatos",jogo.campeonatoId));
-
-escudoA.src=tA.data().escudo||"logo-liga.jfif";
-escudoB.src=tB.data().escudo||"logo-liga.jfif";
-logoCampeonato.src=camp.data().logo||"logo-liga.jfif";
 
 const snapJog=await getDocs(collection(db,"jogadores"));
 snapJog.forEach(d=>jogadores.push({id:d.id,...d.data()}));
@@ -181,6 +168,7 @@ snapJog.forEach(d=>jogadores.push({id:d.id,...d.data()}));
 renderJogadores();
 }
 
+/* 🔥 RENDER JOGADORES */
 function renderJogadores(){
 
 const listaA=jogadores.filter(j=>j.timeId===jogo.timeAId);
@@ -188,73 +176,85 @@ const listaB=jogadores.filter(j=>j.timeId===jogo.timeBId);
 
 jogadoresA.innerHTML=listaA.map(j=>`
 <div class="jog">
-<div>
-<b>${j.nome}</b>
-<small>${j.cpf} | ${j.nascimento}</small>
-</div>
+<b>${j.nome}</b><br>
+<small>${j.nascimento}</small>
 <input placeholder="Nº" oninput="definir('A','${j.id}',this.value)">
 </div>
 `).join("");
 
 jogadoresB.innerHTML=listaB.map(j=>`
 <div class="jog">
-<div>
-<b>${j.nome}</b>
-<small>${j.cpf} | ${j.nascimento}</small>
-</div>
+<b>${j.nome}</b><br>
+<small>${j.nascimento}</small>
 <input placeholder="Nº" oninput="definir('B','${j.id}',this.value)">
 </div>
 `).join("");
 }
 
-window.definir=(lado,idJog,numero)=>{
-const j=jogadores.find(x=>x.id===idJog);
-if(!j)return;
+/* 🔥 MAPEAR NÚMERO */
+window.definir=(lado,idJog,num)=>{
+if(!num)return;
 
-if(lado==="A")mapaA[numero]=j;
-else mapaB[numero]=j;
+if(lado==="A"){
+if(mapA[num]) return alert("Número já usado");
+mapA[num]=jogadores.find(j=>j.id===idJog);
+}else{
+if(mapB[num]) return alert("Número já usado");
+mapB[num]=jogadores.find(j=>j.id===idJog);
 }
+};
 
+/* 🔥 GOL */
 window.gol=(l)=>{
 const n=document.getElementById(`numero${l}`).value;
 const m=document.getElementById(`minuto${l}`).value;
-const j=l==="A"?mapaA[n]:mapaB[n];
+const j=l==="A"?mapA[n]:mapB[n];
 if(!j)return alert("Número inválido");
 
-(l==="A"?golsA:golsB).push({n,j:j.nome,m});
+(l==="A"?golsA:golsB).push({numero:n,nome:j.nome,minuto:m});
 render();
-}
+};
 
+/* 🔥 CARTÃO */
 window.cartao=(l)=>{
 const n=document.getElementById(`numeroCartao${l}`).value;
-const tipo=document.getElementById(`tipoCartao${l}`).value;
+const t=document.getElementById(`tipoCartao${l}`).value;
 const m=document.getElementById(`minutoCartao${l}`).value;
-const j=l==="A"?mapaA[n]:mapaB[n];
+const j=l==="A"?mapA[n]:mapB[n];
 if(!j)return alert("Número inválido");
 
-(l==="A"?cartoesA:cartoesB).push({n,j:j.nome,tipo,m});
+(l==="A"?cartA:cartB).push({numero:n,nome:j.nome,tipo:t,minuto:m});
 render();
-}
+};
 
+/* 🔥 RENDER */
 function render(){
-listaGolsA.innerHTML=golsA.map(g=>`<div class="item">${g.j} ${g.m}'</div>`).join("");
-listaGolsB.innerHTML=golsB.map(g=>`<div class="item">${g.j} ${g.m}'</div>`).join("");
+listaGolsA.innerHTML=golsA.map(g=>`<div class="item">${g.nome} ${g.minuto}'</div>`).join("");
+listaGolsB.innerHTML=golsB.map(g=>`<div class="item">${g.nome} ${g.minuto}'</div>`).join("");
 
-listaCartoesA.innerHTML=cartoesA.map(c=>`<div class="item">${c.j} ${c.tipo}</div>`).join("");
-listaCartoesB.innerHTML=cartoesB.map(c=>`<div class="item">${c.j} ${c.tipo}</div>`).join("");
+listaCartoesA.innerHTML=cartA.map(c=>`<div class="item">${c.nome} ${c.tipo}</div>`).join("");
+listaCartoesB.innerHTML=cartB.map(c=>`<div class="item">${c.nome} ${c.tipo}</div>`).join("");
 
 golsAEl.textContent=golsA.length;
 golsBEl.textContent=golsB.length;
 }
 
+/* 🔥 FINALIZAR */
 window.finalizar=async()=>{
 
 await setDoc(doc(db,"sumulas",id),{
-jogoId:id,
+timeA:jogo.timeA,
+timeB:jogo.timeB,
+golsA:golsA.length,
+golsB:golsB.length,
 golsDetalhadosA:golsA,
 golsDetalhadosB:golsB,
-cartoesA,
-cartoesB,
+amarelosDetalhadosA:cartA.filter(c=>c.tipo==="amarelo"),
+amarelosDetalhadosB:cartB.filter(c=>c.tipo==="amarelo"),
+vermelhosDetalhadosA:cartA.filter(c=>c.tipo==="vermelho"),
+vermelhosDetalhadosB:cartB.filter(c=>c.tipo==="vermelho"),
+campeonatoId:jogo.campeonatoId,
+categoria:jogo.categoria,
 status:"finalizada"
 });
 
@@ -264,20 +264,14 @@ golsA:golsA.length,
 golsB:golsB.length
 });
 
-alert("Súmula finalizada");
 location.href=`sumula-publica.html?id=${id}`;
-}
+};
 
-onAuthStateChanged(auth,async user=>{
+/* 🔥 AUTH */
+onAuthStateChanged(auth,user=>{
 if(!user)return bloqueado.style.display="block";
-
-await iniciar();
-
-if(jogo.arbitroId!==user.uid){
-bloqueado.style.display="block";
-}else{
 app.style.display="block";
-}
+iniciar();
 });
 </script>
 
