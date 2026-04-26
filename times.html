@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Times - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Súmulas - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -19,346 +19,127 @@
   --muted:#cbd6ea;
   --line:rgba(255,255,255,.12);
   --gold-line:rgba(247,198,0,.45);
-  --green:#1b5e20;
-  --yellow:#7a5a00;
-  --shadow:0 14px 34px rgba(0,0,0,.38);
-  --max:1240px;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-  font-family:Arial, sans-serif;
+  font-family:Arial;
   background:
-    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
-    url("fundo.png") center/cover fixed no-repeat;
-  color:var(--white);
-  min-height:100vh;
-  overflow-x:hidden;
+    linear-gradient(rgba(2,8,20,.9), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed;
+  color:#fff;
 }
 
-a{
-  text-decoration:none;
-  color:inherit;
-}
-
-button{
-  font-family:inherit;
-  cursor:pointer;
-  border:none;
-}
-
-input,
-select{
-  font-family:inherit;
-}
-
-img{
-  display:block;
-  max-width:100%;
-}
-
-.wrap{
-  width:min(100% - 28px, var(--max));
-  margin:0 auto;
-}
-
-/* HEADER PADRÃO */
+/* HEADER IGUAL AO TIMES */
 .site-header{
   background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
   border-bottom:3px solid var(--gold);
-  box-shadow:var(--shadow);
 }
 
 .header-top{
-  min-height:92px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px 0;
-}
-
-.header-title{
   text-align:center;
+  padding:18px 0;
   font-size:26px;
   font-weight:900;
-  letter-spacing:.8px;
-  text-transform:uppercase;
-  line-height:1.15;
 }
 
-/* MENU RESPONSIVO */
+/* MENU */
 .nav-bar{
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
-  border-top:1px solid rgba(255,255,255,.06);
-  overflow:hidden;
 }
 
 .menu{
   display:flex;
   justify-content:center;
-  align-items:center;
-  gap:clamp(4px, .55vw, 10px);
-  padding:14px 6px;
-  flex-wrap:nowrap;
-  overflow:hidden;
+  gap:8px;
+  padding:14px;
+  overflow-x:auto;
 }
 
 .menu a{
-  color:#fff;
+  background:#0c2140;
+  padding:10px 14px;
+  border-radius:12px;
   font-weight:900;
-  font-size:clamp(11px, .92vw, 15px);
-  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
-  padding:clamp(8px, .75vw, 12px) clamp(9px, 1vw, 18px);
-  border-radius:clamp(10px, .9vw, 15px);
-  border:1px solid rgba(255,255,255,.07);
   white-space:nowrap;
-  flex:0 1 auto;
-  box-shadow:0 10px 22px rgba(0,0,0,.24);
-  transition:.25s ease;
-}
-
-.menu a:hover{
-  color:var(--gold);
-  border-color:var(--gold-line);
 }
 
 .menu a.ativo{
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
   color:#111;
 }
 
-/* PÁGINA */
-.container{
-  padding:22px 0 34px;
-}
-
-.hero{
-  background:
-    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
-    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
-  border:1px solid var(--gold-line);
-  border-radius:20px;
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
   padding:20px;
-  margin-bottom:14px;
-  box-shadow:var(--shadow);
 }
 
-.hero h2{
-  color:var(--gold);
-  font-size:28px;
-  font-weight:900;
-  margin-bottom:6px;
-}
-
-.hero p{
-  color:var(--muted);
-  line-height:1.5;
-  font-size:14px;
-}
-
-.filtros{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:10px;
-  margin-bottom:14px;
-}
-
-input,
-select{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:12px;
-  font-size:14px;
-  background:#f5f7fb;
-  color:#111;
-  outline:none;
-  box-shadow:0 8px 18px rgba(0,0,0,.22);
-}
-
-input:focus,
-select:focus{
-  outline:2px solid rgba(247,198,0,.65);
-}
-
-.lista-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
-  gap:10px;
-}
-
+/* CARD */
 .card{
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border:1px solid rgba(247,198,0,.22);
-  border-radius:15px;
-  padding:12px;
-  box-shadow:0 8px 20px rgba(0,0,0,.25);
-  transition:.25s ease;
+  border-radius:16px;
+  padding:14px;
+  border:1px solid rgba(247,198,0,.2);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.top{
+  font-size:12px;
+  color:var(--muted);
   text-align:center;
 }
 
-.card:hover{
-  transform:translateY(-2px);
-  border-color:var(--gold);
-}
-
-.card-top{
-  display:flex;
+.times{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
   align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  margin-bottom:10px;
 }
 
-.card-icon{
-  width:34px;
-  height:34px;
-  border-radius:10px;
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
-  color:#111;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:16px;
-  flex-shrink:0;
-}
-
-.status-tag{
-  color:#fff;
-  padding:5px 8px;
-  border-radius:999px;
-  font-size:11px;
+.time{
+  text-align:center;
   font-weight:900;
-}
-
-.status-ativo{
-  background:var(--green);
-}
-
-.status-pendente{
-  background:var(--yellow);
-}
-
-.preview{
-  width:68px;
-  height:68px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid var(--gold);
-  background:#fff;
-  margin:0 auto 10px;
-}
-
-.nome-time{
-  font-size:17px;
-  font-weight:900;
-  line-height:1.25;
-  color:#fff;
-  margin-bottom:8px;
-}
-
-.info-time{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.45;
-  margin-bottom:8px;
-}
-
-.time-colors{
-  display:flex;
-  justify-content:center;
-  gap:5px;
-  flex-wrap:wrap;
-  margin-bottom:8px;
-}
-
-.time-color{
-  width:15px;
-  height:15px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.45);
-}
-
-.tags{
-  display:flex;
-  justify-content:center;
-  gap:5px;
-  flex-wrap:wrap;
-  margin-bottom:10px;
-}
-
-.tag{
-  background:rgba(26,63,115,.9);
-  padding:5px 8px;
-  border-radius:999px;
-  font-size:11px;
-  border:1px solid rgba(255,255,255,.08);
-  font-weight:800;
-}
-
-.btn-ver{
-  width:100%;
-  padding:9px 12px;
-  border-radius:11px;
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
-  color:#111;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
   font-size:13px;
 }
 
-.vazio{
-  color:var(--muted);
+.placar{
+  font-size:22px;
+  font-weight:900;
+  color:var(--gold);
   text-align:center;
-  padding:18px;
-  background:rgba(7,29,55,.9);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  grid-column:1/-1;
 }
 
-/* CELULAR */
-@media(max-width:900px){
-  .header-title{
-    font-size:20px;
-  }
+.btn{
+  display:block;
+  text-align:center;
+  padding:10px;
+  border-radius:10px;
+  font-weight:900;
+  font-size:13px;
+}
 
-  .menu{
-    justify-content:flex-start;
-    overflow-x:auto;
-    overflow-y:hidden;
-    padding:14px;
-    gap:10px;
-    scrollbar-width:none;
-    -ms-overflow-style:none;
-  }
+.btn-ver{
+  background:var(--gold);
+  color:#111;
+}
 
-  .menu::-webkit-scrollbar{
-    display:none;
-  }
+.btn-edit{
+  background:#fff;
+  color:#111;
+}
 
-  .menu a{
-    flex:0 0 auto;
-    font-size:15px;
-    padding:12px 18px;
-    border-radius:15px;
-  }
+/* RESPONSIVO */
+@media(max-width:1100px){
+  .grid{grid-template-columns:repeat(2,1fr);}
+}
 
-  .filtros{
-    grid-template-columns:1fr;
-  }
-
-  .lista-grid{
-    grid-template-columns:1fr;
-  }
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -366,502 +147,113 @@ select:focus{
 <body>
 
 <header class="site-header">
-  <div class="wrap header-top">
-    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
+  <div class="header-top">
+    LIGA GOIANA DE FUTEBOL DE BASE
   </div>
 
   <div class="nav-bar">
-    <div class="wrap">
-      <nav class="menu">
-        <a href="index.html">Início</a>
-        <a href="campeonatos.html">Campeonatos</a>
-        <a href="tabela.html">Tabela</a>
-        <a href="jogos.html">Jogos</a>
-        <a href="times.html" class="ativo">Times</a>
-        <a href="tecnicos.html">Técnicos</a>
-        <a href="jogadores.html">Jogadores</a>
-        <a href="arbitros.html">Árbitros</a>
-        <a href="assistentes.html">Assistente</a>
-        <a href="sumula-publica.html">Súmula</a>
-        <a href="noticias.html">Notícias</a>
-      </nav>
-    </div>
+    <nav class="menu">
+      <a href="index.html">Início</a>
+      <a href="campeonatos.html">Campeonatos</a>
+      <a href="tabela.html">Tabela</a>
+      <a href="jogos.html">Jogos</a>
+      <a href="times.html">Times</a>
+      <a href="tecnicos.html">Técnicos</a>
+      <a href="jogadores.html">Jogadores</a>
+      <a href="arbitros.html">Árbitros</a>
+      <a href="assistentes.html">Assistente</a>
+      <a href="sumula.html" class="ativo">Súmula</a>
+      <a href="noticias.html">Notícias</a>
+    </nav>
   </div>
 </header>
 
-<main class="wrap container">
-
-  <section class="hero">
-    <h2>Times Participantes</h2>
-    <p>Veja as equipes cadastradas, suas categorias e acesse a página pública de cada time.</p>
-  </section>
-
-  <section class="filtros">
-    <input id="buscaTime" placeholder="Pesquisar time...">
-
-    <select id="filtroCampeonato">
-      <option value="">Selecione o campeonato</option>
-    </select>
-
-    <select id="filtroCategoria">
-      <option value="">Selecione a categoria</option>
-    </select>
-  </section>
-
-  <section class="lista-grid" id="listaTimes">
-    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando times...</div>
-  </section>
-
-</main>
+<section class="grid" id="grid"></section>
 
 <script type="module">
-import { db } from "./firebase.js";
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-let timesCache = [];
-let jogosCache = [];
-let campeonatosCache = [];
-
-const timesExemplo = [
-  {
-    id:"time-exemplo-1",
-    nome:"Atlético GO",
-    escudo:"logo-liga.jfif",
-    tecnico:"Carlos Silva",
-    status:"ativo",
-    cores:["#ff0000", "#000000", "#ffffff"],
-    categorias:["Sub-15", "Sub-17"],
-    jogadores:22
-  },
-  {
-    id:"time-exemplo-2",
-    nome:"Vila Nova",
-    escudo:"logo-liga.jfif",
-    tecnico:"Marcos Pereira",
-    status:"ativo",
-    cores:["#ff0000", "#ffffff"],
-    categorias:["Sub-13", "Sub-15"],
-    jogadores:20
-  },
-  {
-    id:"time-exemplo-3",
-    nome:"Goiás",
-    escudo:"logo-liga.jfif",
-    tecnico:"Roberto Lima",
-    status:"ativo",
-    cores:["#008000", "#ffffff"],
-    categorias:["Sub-11", "Sub-13", "Sub-17"],
-    jogadores:26
-  },
-  {
-    id:"time-exemplo-4",
-    nome:"Aparecidense",
-    escudo:"logo-liga.jfif",
-    tecnico:"João Batista",
-    status:"pendente",
-    cores:["#003cff", "#ffffff"],
-    categorias:["Sub-11", "Sub-15"],
-    jogadores:18
-  },
-  {
-    id:"time-exemplo-5",
-    nome:"Anápolis",
-    escudo:"logo-liga.jfif",
-    tecnico:"Ricardo Souza",
-    status:"ativo",
-    cores:["#ff0000", "#ffffff"],
-    categorias:["Sub-13"],
-    jogadores:19
-  }
-];
-
-const campeonatosExemplo = [
-  {
-    id:"camp-exemplo-1",
-    nome:"Copa União de Base",
-    categorias:["Sub-11", "Sub-13", "Sub-15", "Sub-17"]
-  },
-  {
-    id:"camp-exemplo-2",
-    nome:"Liga Goiana Elite",
-    categorias:["Sub-11", "Sub-13", "Sub-15", "Sub-17"]
-  }
-];
-
-const jogosExemplo = [
-  {
-    campeonatoId:"camp-exemplo-1",
-    campeonato:"Copa União de Base",
-    categoria:"Sub-15",
-    timeA:"Atlético GO",
-    timeB:"Vila Nova"
-  },
-  {
-    campeonatoId:"camp-exemplo-1",
-    campeonato:"Copa União de Base",
-    categoria:"Sub-17",
-    timeA:"Atlético GO",
-    timeB:"Goiás"
-  },
-  {
-    campeonatoId:"camp-exemplo-2",
-    campeonato:"Liga Goiana Elite",
-    categoria:"Sub-13",
-    timeA:"Goiás",
-    timeB:"Anápolis"
-  },
-  {
-    campeonatoId:"camp-exemplo-2",
-    campeonato:"Liga Goiana Elite",
-    categoria:"Sub-11",
-    timeA:"Aparecidense",
-    timeB:"Goiás"
-  }
-];
-
-function normalizarTexto(texto){
-  return String(texto || "")
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-}
-
-function valorCampo(obj, chaves, fallback = ""){
-  for(const chave of chaves){
-    if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
-      return obj[chave];
-    }
-  }
-  return fallback;
-}
-
-function obterIdCampeonato(doc){
-  return valorCampo(doc, ["id", "campeonatoId"], "");
-}
-
-function obterNomeCampeonato(doc){
-  return valorCampo(doc, ["nome", "campeonato", "titulo"], "");
-}
-
-async function carregarDados(){
-  try{
-    const [snapTimes, snapJogos, snapCampeonatos] = await Promise.all([
-      getDocs(collection(db, "times")),
-      getDocs(collection(db, "jogos")),
-      getDocs(collection(db, "campeonatos"))
-    ]);
-
-    timesCache = [];
-    jogosCache = [];
-    campeonatosCache = [];
-
-    snapTimes.forEach(docSnap => {
-      timesCache.push({ id:docSnap.id, ...docSnap.data() });
-    });
-
-    snapJogos.forEach(docSnap => {
-      jogosCache.push({ id:docSnap.id, ...docSnap.data() });
-    });
-
-    snapCampeonatos.forEach(docSnap => {
-      campeonatosCache.push({ id:docSnap.id, ...docSnap.data() });
-    });
-
-    if(!timesCache.length){
-      timesCache = timesExemplo;
-    }
-
-    if(!campeonatosCache.length){
-      campeonatosCache = campeonatosExemplo;
-    }
-
-    if(!jogosCache.length){
-      jogosCache = jogosExemplo;
-    }
-  }catch(erro){
-    console.error(erro);
-    timesCache = timesExemplo;
-    campeonatosCache = campeonatosExemplo;
-    jogosCache = jogosExemplo;
-  }
-}
-
-function preencherFiltroCampeonato(){
-  const select = document.getElementById("filtroCampeonato");
-
-  select.innerHTML = `<option value="">Todos os campeonatos</option>`;
-
-  campeonatosCache
-    .sort((a,b)=>obterNomeCampeonato(a).localeCompare(obterNomeCampeonato(b), "pt-BR"))
-    .forEach(c => {
-      const option = document.createElement("option");
-      option.value = obterIdCampeonato(c);
-      option.textContent = obterNomeCampeonato(c);
-      select.appendChild(option);
-    });
-}
-
-function preencherFiltroCategoria(){
-  const select = document.getElementById("filtroCategoria");
-  const campeonatoId = document.getElementById("filtroCampeonato").value;
-
-  select.innerHTML = `<option value="">Todas categorias</option>`;
-
-  const categorias = new Set();
-
-  if(campeonatoId){
-    const camp = campeonatosCache.find(c => obterIdCampeonato(c) === campeonatoId);
-    const categoriasCadastro = valorCampo(camp, ["categorias"], []);
-
-    if(Array.isArray(categoriasCadastro)){
-      categoriasCadastro.forEach(cat => {
-        const nome = typeof cat === "string" ? cat : (cat.nome || cat.categoria || "");
-        if(nome) categorias.add(nome);
-      });
-    }
-
-    jogosCache.forEach(j => {
-      const jogoCampId = valorCampo(j, ["campeonatoId"], "");
-      const categoria = valorCampo(j, ["categoria"], "");
-
-      if(jogoCampId === campeonatoId && categoria){
-        categorias.add(categoria);
-      }
-    });
-  }else{
-    timesCache.forEach(t => {
-      const cats = valorCampo(t, ["categorias"], []);
-      if(Array.isArray(cats)){
-        cats.forEach(cat => {
-          const nome = typeof cat === "string" ? cat : (cat.nome || cat.categoria || "");
-          if(nome) categorias.add(nome);
-        });
-      }
-    });
-  }
-
-  Array.from(categorias)
-    .sort((a,b)=>String(a).localeCompare(String(b), "pt-BR"))
-    .forEach(cat => {
-      const option = document.createElement("option");
-      option.value = cat;
-      option.textContent = cat;
-      select.appendChild(option);
-    });
-}
-
-function montarMapaTimesParticipantes(campeonatoId, categoria){
-  const mapa = new Map();
-
-  if(!campeonatoId){
-    timesCache.forEach(t => {
-      const nome = valorCampo(t, ["nome"], "");
-      if(!nome) return;
-
-      mapa.set(normalizarTexto(nome), {
-        nome,
-        categorias:new Set(valorCampo(t, ["categorias"], [])),
-        campeonatos:new Set()
-      });
-    });
-
-    return mapa;
-  }
-
-  const campeonato = campeonatosCache.find(c => obterIdCampeonato(c) === campeonatoId) || null;
-  const nomeCampeonato = campeonato ? obterNomeCampeonato(campeonato) : "";
-
-  jogosCache.forEach(j => {
-    const jogoCampId = valorCampo(j, ["campeonatoId"], "");
-    const jogoCampNome = valorCampo(j, ["campeonato", "nomeCampeonato"], "");
-    const jogoCategoria = valorCampo(j, ["categoria"], "");
-    const timeA = valorCampo(j, ["timeA"], "");
-    const timeB = valorCampo(j, ["timeB"], "");
-
-    const mesmoCampeonato =
-      jogoCampId === campeonatoId ||
-      normalizarTexto(jogoCampNome) === normalizarTexto(nomeCampeonato);
-
-    if(!mesmoCampeonato) return;
-    if(categoria && jogoCategoria !== categoria) return;
-
-    [timeA, timeB].forEach(nomeTime => {
-      if(!nomeTime) return;
-
-      const chave = normalizarTexto(nomeTime);
-
-      if(!mapa.has(chave)){
-        mapa.set(chave, {
-          nome:nomeTime,
-          categorias:new Set(),
-          campeonatos:new Set()
-        });
-      }
-
-      if(jogoCategoria) mapa.get(chave).categorias.add(jogoCategoria);
-      if(nomeCampeonato) mapa.get(chave).campeonatos.add(nomeCampeonato);
-    });
-  });
-
-  return mapa;
-}
-
-function classeStatus(status){
-  const s = normalizarTexto(status);
-
-  if(s === "pendente" || s === "em análise" || s === "em analise"){
-    return "status-pendente";
-  }
-
-  return "status-ativo";
-}
-
-function textoStatus(status){
-  return status || "ativo";
-}
-
-window.carregarTimes = function(){
-  const lista = document.getElementById("listaTimes");
-  const busca = normalizarTexto(document.getElementById("buscaTime").value || "");
-  const campeonatoId = document.getElementById("filtroCampeonato").value;
-  const categoria = document.getElementById("filtroCategoria").value;
-
-  const mapaParticipantes = montarMapaTimesParticipantes(campeonatoId, categoria);
-
-  let times = timesCache.filter(t => {
-    const nome = valorCampo(t, ["nome"], "");
-    if(!nome) return false;
-
-    if(campeonatoId && !mapaParticipantes.has(normalizarTexto(nome))) return false;
-
-    if(busca && !normalizarTexto(nome).includes(busca)) return false;
-
-    if(categoria && !campeonatoId){
-      const categoriasTime = valorCampo(t, ["categorias"], []);
-      if(!Array.isArray(categoriasTime)) return false;
-
-      const temCategoria = categoriasTime.some(cat => {
-        const nomeCat = typeof cat === "string" ? cat : (cat.nome || cat.categoria || "");
-        return normalizarTexto(nomeCat) === normalizarTexto(categoria);
-      });
-
-      if(!temCategoria) return false;
-    }
-
-    return true;
-  });
-
-  times.sort((a,b) =>
-    valorCampo(a, ["nome"], "").localeCompare(valorCampo(b, ["nome"], ""), "pt-BR")
-  );
-
-  if(!times.length){
-    lista.innerHTML = `<div class="vazio">Nenhum time encontrado.</div>`;
-    return;
-  }
-
-  lista.innerHTML = "";
-
-  times.forEach(t => {
-    const nome = valorCampo(t, ["nome"], "-");
-    const participante = mapaParticipantes.get(normalizarTexto(nome));
-
-    let categorias = [];
-
-    if(participante && participante.categorias.size){
-      categorias = Array.from(participante.categorias);
-    }else if(Array.isArray(valorCampo(t, ["categorias"], []))){
-      categorias = valorCampo(t, ["categorias"], []).map(cat =>
-        typeof cat === "string" ? cat : (cat.nome || cat.categoria || "")
-      ).filter(Boolean);
-    }
-
-    const cores = Array.isArray(valorCampo(t, ["cores"], []))
-      ? valorCampo(t, ["cores"], [])
-      : [];
-
-    const qtdJogadores =
-      valorCampo(t, ["jogadores"], "") ||
-      valorCampo(t, ["totalJogadores"], "") ||
-      "-";
-
-    const tecnico =
-      valorCampo(t, ["tecnico", "tecnicoPrincipal", "nomeTecnico"], "Não informado");
-
-    const status = textoStatus(valorCampo(t, ["status"], "ativo"));
-
-    lista.innerHTML += `
-      <article class="card">
-        <div class="card-top">
-          <div class="card-icon">
-            <i class="fa-solid fa-shield-halved"></i>
-          </div>
-
-          <div class="status-tag ${classeStatus(status)}">
-            ${status}
-          </div>
-        </div>
-
-        <img
-          src="${valorCampo(t, ["escudo", "logo", "imagem"], "logo-liga.jfif")}"
-          class="preview"
-          alt="${nome}"
-          onerror="this.src='logo-liga.jfif'"
-        >
-
-        <div class="nome-time">${nome}</div>
-
-        <div class="info-time">
-          Técnico: ${tecnico}<br>
-          Jogadores: ${qtdJogadores}
-        </div>
-
-        <div class="time-colors">
-          ${
-            cores.length
-              ? cores.map(c => `<span class="time-color" style="background:${c}"></span>`).join("")
-              : `<span class="tag">Sem cores</span>`
-          }
-        </div>
-
-        <div class="tags">
-          ${
-            categorias.length
-              ? categorias.map(c => `<span class="tag">${c}</span>`).join("")
-              : `<span class="tag">Sem categoria</span>`
-          }
-        </div>
-
-        <a class="btn-ver" href="time-publico.html?id=${t.id}">
-          <i class="fa-solid fa-eye"></i> Ver Time
-        </a>
-      </article>
-    `;
-  });
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+/* CONFIG FIREBASE */
+const firebaseConfig = {
+  apiKey: "SUA_KEY",
+  authDomain: "SEU_DOMINIO",
+  projectId: "SEU_PROJECT_ID"
 };
 
-document.getElementById("buscaTime").addEventListener("input", carregarTimes);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-document.getElementById("filtroCampeonato").addEventListener("change", () => {
-  preencherFiltroCategoria();
-  document.getElementById("filtroCategoria").value = "";
-  carregarTimes();
-});
+let lista = [];
 
-document.getElementById("filtroCategoria").addEventListener("change", carregarTimes);
+/* 🔥 SIMULAÇÃO (2 RODADAS BRASILEIRÃO) */
+const simulacao = [
+  {id:"1",camp:"Brasileirão",data:"20/04",A:"Flamengo",B:"Palmeiras",pA:2,pB:1},
+  {id:"2",camp:"Brasileirão",data:"20/04",A:"São Paulo",B:"Santos",pA:3,pB:0},
+  {id:"3",camp:"Brasileirão",data:"21/04",A:"Corinthians",B:"Grêmio",pA:1,pB:1},
+  {id:"4",camp:"Brasileirão",data:"21/04",A:"Cruzeiro",B:"Inter",pA:0,pB:2}
+];
 
-async function iniciarPagina(){
-  const lista = document.getElementById("listaTimes");
-  lista.innerHTML = `<div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando times...</div>`;
+async function carregar(){
+  try{
+    const snap = await getDocs(collection(db,"jogos"));
 
-  await carregarDados();
-  preencherFiltroCampeonato();
-  preencherFiltroCategoria();
-  carregarTimes();
+    snap.forEach(doc=>{
+      const d = doc.data();
+
+      lista.push({
+        id:doc.id,
+        camp:d.campeonato || "",
+        data:d.data || "",
+        A:d.mandanteNome,
+        B:d.visitanteNome,
+        pA:d.placarMandante || 0,
+        pB:d.placarVisitante || 0
+      });
+    });
+
+    if(lista.length === 0){
+      lista = simulacao;
+    }
+
+  }catch{
+    lista = simulacao;
+  }
+
+  render();
 }
 
-iniciarPagina();
+function render(){
+  const grid = document.getElementById("grid");
+
+  grid.innerHTML = lista.map(j=>`
+    <div class="card">
+
+      <div class="top">${j.camp} - ${j.data}</div>
+
+      <div class="times">
+        <div class="time">${j.A}</div>
+
+        <div class="placar">${j.pA} x ${j.pB}</div>
+
+        <div class="time">${j.B}</div>
+      </div>
+
+      <a class="btn btn-ver"
+         href="sumula-publica.html?id=${j.id}">
+         Ver Súmula
+      </a>
+
+      <a class="btn btn-edit"
+         href="sumula-adm.html?id=${j.id}">
+         Preencher
+      </a>
+
+    </div>
+  `).join("");
+}
+
+carregar();
 </script>
 
 </body>
