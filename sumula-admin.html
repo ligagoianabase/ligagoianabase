@@ -8,160 +8,141 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-body{
-  font-family:Arial;
-  background:#061427;
-  color:#fff;
-  margin:0;
-  padding:0;
+:root{
+  --bg:#061427;
+  --card:#0d2a52;
+  --gold:#f7c600;
+  --line:rgba(255,255,255,.1);
 }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial;background:var(--bg);color:#fff}
 
-.wrap{
-  max-width:1100px;
-  margin:auto;
-  padding:15px;
-}
+.wrap{max-width:1200px;margin:auto;padding:15px}
 
-.topo{
-  text-align:center;
-  margin-bottom:15px;
-}
-
+.topo{text-align:center;margin-bottom:15px}
 .placar{
-  font-size:26px;
-  font-weight:900;
-  color:#f7c600;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-weight:900;color:var(--gold);font-size:22px
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
+.escudo{
+  width:45px;height:45px;border-radius:50%;
+  background:#fff;border:2px solid var(--gold);object-fit:cover
 }
 
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .box{
-  background:#0d2a52;
+  background:var(--card);
   padding:12px;
   border-radius:10px;
+  border:1px solid var(--line)
 }
 
-h3{
-  color:#f7c600;
-  margin-bottom:8px;
-}
+h3{color:var(--gold);margin-bottom:6px}
 
 input,select{
-  width:100%;
-  padding:8px;
-  border-radius:6px;
-  border:none;
-  margin-top:5px;
+  width:100%;padding:10px;border-radius:8px;border:none;margin-top:5px
 }
 
 .btn{
-  background:#f7c600;
-  color:#000;
-  padding:10px;
-  border-radius:8px;
-  font-weight:900;
-  margin-top:6px;
-  cursor:pointer;
+  width:100%;padding:10px;border-radius:10px;border:none;
+  font-weight:900;margin-top:6px;cursor:pointer
 }
 
-.lista{
-  margin-top:8px;
-}
+.btn-gold{background:var(--gold);color:#111}
+.btn-green{background:#25d366;color:#fff}
 
+.lista{margin-top:8px}
 .item{
-  background:#081c3a;
-  padding:6px;
-  border-radius:6px;
-  margin-bottom:4px;
-  font-size:13px;
+  background:#081c3a;border:1px solid var(--line);
+  padding:6px;border-radius:6px;margin-bottom:4px;font-size:13px
 }
 
-.finalizar{
-  background:#25d366;
-  color:#fff;
-  margin-top:15px;
+.jog{
+  background:#081c3a;border:1px solid var(--line);
+  border-radius:6px;padding:6px;margin-bottom:4px;
+  display:grid;grid-template-columns:1fr 80px;gap:5px;font-size:13px
 }
 
-img{
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  object-fit:cover;
-  background:#fff;
+small{color:#cbd6ea}
+
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
 
-<div id="bloqueado" style="display:none;text-align:center;margin-top:100px;">
+<div id="bloqueado" style="display:none;text-align:center;margin-top:100px">
 <h2>❌ Acesso negado</h2>
 </div>
 
-<div id="app" class="wrap" style="display:none;">
+<div id="app" class="wrap" style="display:none">
 
 <div class="topo">
-<img id="logoCampeonato">
+<img id="logoCampeonato" class="escudo">
 <h2>SÚMULA ADM</h2>
+
 <div class="placar">
-<img id="escudoA"> 
+<img id="escudoA" class="escudo">
 <span id="timeA"></span>
 <span id="golsA">0</span> x
 <span id="golsB">0</span>
 <span id="timeB"></span>
-<img id="escudoB">
+<img id="escudoB" class="escudo">
 </div>
 </div>
 
 <div class="grid">
 
 <div class="box">
-<h3 id="nomeTimeA">Time A</h3>
+<h3 id="nomeTimeA"></h3>
 
-<input id="golNumeroA" placeholder="Nº camisa">
-<input id="golMinutoA" placeholder="Minuto">
-<button class="btn" onclick="addGol('A')">Gol</button>
+<input id="numeroA" placeholder="Nº camisa">
+<input id="minutoA" placeholder="Minuto">
+<button class="btn btn-gold" onclick="gol('A')">Gol</button>
 
 <div id="listaGolsA" class="lista"></div>
 
-<input id="cartaoNumeroA" placeholder="Nº camisa">
-<select id="cartaoTipoA">
+<input id="numeroCartaoA" placeholder="Nº camisa">
+<select id="tipoCartaoA">
 <option value="amarelo">Amarelo</option>
 <option value="vermelho">Vermelho</option>
 </select>
-<input id="cartaoMinutoA" placeholder="Minuto">
-<button class="btn" onclick="addCartao('A')">Cartão</button>
+<input id="minutoCartaoA" placeholder="Minuto">
+<button class="btn btn-gold" onclick="cartao('A')">Cartão</button>
 
 <div id="listaCartoesA" class="lista"></div>
+
+<div id="jogadoresA"></div>
 </div>
 
 <div class="box">
-<h3 id="nomeTimeB">Time B</h3>
+<h3 id="nomeTimeB"></h3>
 
-<input id="golNumeroB" placeholder="Nº camisa">
-<input id="golMinutoB" placeholder="Minuto">
-<button class="btn" onclick="addGol('B')">Gol</button>
+<input id="numeroB" placeholder="Nº camisa">
+<input id="minutoB" placeholder="Minuto">
+<button class="btn btn-gold" onclick="gol('B')">Gol</button>
 
 <div id="listaGolsB" class="lista"></div>
 
-<input id="cartaoNumeroB" placeholder="Nº camisa">
-<select id="cartaoTipoB">
+<input id="numeroCartaoB" placeholder="Nº camisa">
+<select id="tipoCartaoB">
 <option value="amarelo">Amarelo</option>
 <option value="vermelho">Vermelho</option>
 </select>
-<input id="cartaoMinutoB" placeholder="Minuto">
-<button class="btn" onclick="addCartao('B')">Cartão</button>
+<input id="minutoCartaoB" placeholder="Minuto">
+<button class="btn btn-gold" onclick="cartao('B')">Cartão</button>
 
 <div id="listaCartoesB" class="lista"></div>
+
+<div id="jogadoresB"></div>
 </div>
 
 </div>
 
-<button class="btn finalizar" onclick="finalizar()">FINALIZAR SÚMULA</button>
+<button class="btn btn-green" onclick="finalizar()">FINALIZAR SÚMULA</button>
 
 </div>
 
@@ -172,141 +153,132 @@ collection,getDocs,doc,getDoc,setDoc,updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-let jogadores=[], jogo=null;
-let golsA=[],golsB=[],cartoesA=[],cartoesB=[];
-let mapaNumerosA={}, mapaNumerosB={};
+let jogo,jogadores=[],mapaA={},mapaB={},golsA=[],golsB=[],cartoesA=[],cartoesB=[];
 
 const id=new URLSearchParams(location.search).get("id");
 
-async function carregarJogadores(){
-const snap=await getDocs(collection(db,"jogadores"));
-snap.forEach(d=>jogadores.push({id:d.id,...d.data()}));
-}
-
-function buscarPorNumero(numero,lado){
-return lado==="A"?mapaNumerosA[numero]:mapaNumerosB[numero];
-}
-
-window.addGol=(lado)=>{
-const numero=document.getElementById(`golNumero${lado}`).value;
-const minuto=document.getElementById(`golMinuto${lado}`).value;
-
-const j=buscarPorNumero(numero,lado);
-if(!j)return alert("Número não definido na súmula");
-
-const obj={numero,nome:j.nome,minuto};
-
-lado==="A"?golsA.push(obj):golsB.push(obj);
-render(lado);
-placar();
-}
-
-window.addCartao=(lado)=>{
-const numero=document.getElementById(`cartaoNumero${lado}`).value;
-const tipo=document.getElementById(`cartaoTipo${lado}`).value;
-const minuto=document.getElementById(`cartaoMinuto${lado}`).value;
-
-const j=buscarPorNumero(numero,lado);
-if(!j)return alert("Número não definido");
-
-const obj={numero,nome:j.nome,minuto,tipo};
-
-lado==="A"?cartoesA.push(obj):cartoesB.push(obj);
-render(lado);
-}
-
-function render(l){
-document.getElementById(`listaGols${l}`).innerHTML=(l==="A"?golsA:golsB).map(g=>`<div class="item">${g.nome} ${g.minuto}'</div>`).join("");
-document.getElementById(`listaCartoes${l}`).innerHTML=(l==="A"?cartoesA:cartoesB).map(c=>`<div class="item">${c.nome} ${c.tipo}</div>`).join("");
-}
-
-function placar(){
-document.getElementById("golsA").textContent=golsA.length;
-document.getElementById("golsB").textContent=golsB.length;
-}
-
-async function carregarJogo(){
+async function iniciar(){
 
 const snap=await getDoc(doc(db,"jogos",id));
 jogo={id:snap.id,...snap.data()};
 
-document.getElementById("timeA").textContent=jogo.timeA;
-document.getElementById("timeB").textContent=jogo.timeB;
-document.getElementById("nomeTimeA").textContent=jogo.timeA;
-document.getElementById("nomeTimeB").textContent=jogo.timeB;
+timeA.textContent=jogo.timeA;
+timeB.textContent=jogo.timeB;
+nomeTimeA.textContent=jogo.timeA;
+nomeTimeB.textContent=jogo.timeB;
 
-// logos
-const timeA=await getDoc(doc(db,"times",jogo.timeAId));
-const timeB=await getDoc(doc(db,"times",jogo.timeBId));
+const tA=await getDoc(doc(db,"times",jogo.timeAId));
+const tB=await getDoc(doc(db,"times",jogo.timeBId));
 const camp=await getDoc(doc(db,"campeonatos",jogo.campeonatoId));
 
-document.getElementById("escudoA").src=timeA.data().escudo||"logo-liga.jfif";
-document.getElementById("escudoB").src=timeB.data().escudo||"logo-liga.jfif";
-document.getElementById("logoCampeonato").src=camp.data().logo||"logo-liga.jfif";
+escudoA.src=tA.data().escudo||"logo-liga.jfif";
+escudoB.src=tB.data().escudo||"logo-liga.jfif";
+logoCampeonato.src=camp.data().logo||"logo-liga.jfif";
 
-// jogadores do time
+const snapJog=await getDocs(collection(db,"jogadores"));
+snapJog.forEach(d=>jogadores.push({id:d.id,...d.data()}));
+
+renderJogadores();
+}
+
+function renderJogadores(){
+
 const listaA=jogadores.filter(j=>j.timeId===jogo.timeAId);
 const listaB=jogadores.filter(j=>j.timeId===jogo.timeBId);
 
-// definir números
-listaA.forEach(j=>{
-const numero=prompt(`Número camisa: ${j.nome}`);
-mapaNumerosA[numero]=j;
-});
+jogadoresA.innerHTML=listaA.map(j=>`
+<div class="jog">
+<div>
+<b>${j.nome}</b>
+<small>${j.cpf} | ${j.nascimento}</small>
+</div>
+<input placeholder="Nº" oninput="definir('A','${j.id}',this.value)">
+</div>
+`).join("");
 
-listaB.forEach(j=>{
-const numero=prompt(`Número camisa: ${j.nome}`);
-mapaNumerosB[numero]=j;
-});
-
+jogadoresB.innerHTML=listaB.map(j=>`
+<div class="jog">
+<div>
+<b>${j.nome}</b>
+<small>${j.cpf} | ${j.nascimento}</small>
+</div>
+<input placeholder="Nº" oninput="definir('B','${j.id}',this.value)">
+</div>
+`).join("");
 }
 
-async function atualizarEstatisticas(){
+window.definir=(lado,idJog,numero)=>{
+const j=jogadores.find(x=>x.id===idJog);
+if(!j)return;
 
-for(const g of [...golsA,...golsB]){
-const j=jogadores.find(x=>x.nome===g.nome);
-await updateDoc(doc(db,"jogadores",j.id),{
-gols:(j.gols||0)+1,
-jogos:(j.jogos||0)+1
-});
+if(lado==="A")mapaA[numero]=j;
+else mapaB[numero]=j;
 }
 
+window.gol=(l)=>{
+const n=document.getElementById(`numero${l}`).value;
+const m=document.getElementById(`minuto${l}`).value;
+const j=l==="A"?mapaA[n]:mapaB[n];
+if(!j)return alert("Número inválido");
+
+(l==="A"?golsA:golsB).push({n,j:j.nome,m});
+render();
+}
+
+window.cartao=(l)=>{
+const n=document.getElementById(`numeroCartao${l}`).value;
+const tipo=document.getElementById(`tipoCartao${l}`).value;
+const m=document.getElementById(`minutoCartao${l}`).value;
+const j=l==="A"?mapaA[n]:mapaB[n];
+if(!j)return alert("Número inválido");
+
+(l==="A"?cartoesA:cartoesB).push({n,j:j.nome,tipo,m});
+render();
+}
+
+function render(){
+listaGolsA.innerHTML=golsA.map(g=>`<div class="item">${g.j} ${g.m}'</div>`).join("");
+listaGolsB.innerHTML=golsB.map(g=>`<div class="item">${g.j} ${g.m}'</div>`).join("");
+
+listaCartoesA.innerHTML=cartoesA.map(c=>`<div class="item">${c.j} ${c.tipo}</div>`).join("");
+listaCartoesB.innerHTML=cartoesB.map(c=>`<div class="item">${c.j} ${c.tipo}</div>`).join("");
+
+golsAEl.textContent=golsA.length;
+golsBEl.textContent=golsB.length;
 }
 
 window.finalizar=async()=>{
 
 await setDoc(doc(db,"sumulas",id),{
+jogoId:id,
 golsDetalhadosA:golsA,
 golsDetalhadosB:golsB,
-amarelosDetalhadosA:cartoesA,
-amarelosDetalhadosB:cartoesB,
-status:"Finalizada"
+cartoesA,
+cartoesB,
+status:"finalizada"
 });
 
-await updateDoc(doc(db,"jogos",id),{status:"finalizado"});
+await updateDoc(doc(db,"jogos",id),{
+status:"finalizado",
+golsA:golsA.length,
+golsB:golsB.length
+});
 
-await atualizarEstatisticas();
-
+alert("Súmula finalizada");
 location.href=`sumula-publica.html?id=${id}`;
 }
 
-// segurança
-onAuthStateChanged(auth, async user=>{
-if(!user)return bloquear();
+onAuthStateChanged(auth,async user=>{
+if(!user)return bloqueado.style.display="block";
 
-await carregarJogadores();
-await carregarJogo();
+await iniciar();
 
 if(jogo.arbitroId!==user.uid){
-bloquear();
+bloqueado.style.display="block";
 }else{
-document.getElementById("app").style.display="block";
+app.style.display="block";
 }
 });
-
-function bloquear(){
-document.getElementById("bloqueado").style.display="block";
-}
 </script>
 
 </body>
