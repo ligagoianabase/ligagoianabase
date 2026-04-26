@@ -14,17 +14,10 @@
   --card:#071d37;
   --card2:#0d2a52;
   --gold:#f7c600;
-  --gold2:#ffe45c;
-  --white:#ffffff;
+  --white:#fff;
   --muted:#cbd6ea;
   --line:rgba(255,255,255,.12);
-  --gold-line:rgba(247,198,0,.45);
-  --green:#1b5e20;
-  --yellow:#7a5a00;
-  --red:#b42323;
-  --blue:#1a3f73;
-  --shadow:0 14px 34px rgba(0,0,0,.38);
-  --max:1240px;
+  --shadow:0 10px 30px rgba(0,0,0,.3);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -32,43 +25,38 @@
 body{
   font-family:Arial;
   background:
-    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    linear-gradient(rgba(2,8,20,.9), rgba(2,8,20,.96)),
     url("fundo.png") center/cover fixed no-repeat;
   color:#fff;
 }
 
 .wrap{
-  width:min(100% - 28px, var(--max));
-  margin:0 auto;
+  width:min(100% - 28px, 1240px);
+  margin:auto;
 }
 
-/* HEADER IGUAL AO SITE */
+/* HEADER PADRÃO */
 .site-header{
-  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
+  background:#08172c;
   border-bottom:3px solid var(--gold);
 }
 
 .header-top{
-  min-height:92px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px 0;
-}
-
-.header-title{
-  font-size:26px;
+  padding:18px;
+  text-align:center;
   font-weight:900;
+  font-size:22px;
 }
 
-/* MENU IGUAL */
+/* MENU PADRÃO */
 .nav-bar{background:#0d2a52}
 
 .menu{
   display:flex;
   justify-content:center;
   gap:10px;
-  padding:14px;
+  padding:12px;
+  flex-wrap:wrap;
 }
 
 .menu a{
@@ -76,26 +64,25 @@ body{
   font-weight:900;
 }
 
-.menu a.ativo{
+.menu .ativo{
   background:var(--gold);
   color:#111;
   padding:6px 10px;
   border-radius:6px;
 }
 
-/* PÁGINA */
-.container{padding:22px 0}
+/* CONTEUDO */
+.container{padding:20px}
 
-.hero{
-  background:#0d2a52;
-  padding:20px;
-  border-radius:12px;
-  margin-bottom:14px;
+.titulo{
+  font-size:26px;
+  color:var(--gold);
+  margin-bottom:15px;
+  font-weight:900;
 }
 
-.hero h2{color:var(--gold)}
-
-.lista-grid{
+/* CARDS */
+.grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:12px;
@@ -103,38 +90,40 @@ body{
 
 .card{
   background:var(--card2);
-  padding:14px;
+  border:1px solid var(--line);
   border-radius:12px;
+  padding:15px;
   text-align:center;
-  border:1px solid var(--gold-line);
+  box-shadow:var(--shadow);
 }
 
 .placar{
-  color:var(--gold);
-  font-size:18px;
+  font-size:20px;
   font-weight:900;
+  color:var(--gold);
   margin:6px 0;
 }
 
 .info{
-  font-size:12px;
+  font-size:13px;
   color:var(--muted);
+  line-height:1.5;
 }
 
 .btn{
+  display:block;
+  margin-top:10px;
+  padding:10px;
   background:var(--gold);
   color:#111;
-  padding:10px;
   border-radius:8px;
-  margin-top:8px;
-  display:block;
   font-weight:900;
 }
 
 .vazio{
   text-align:center;
-  color:var(--muted);
   padding:20px;
+  color:var(--muted);
 }
 </style>
 </head>
@@ -142,55 +131,54 @@ body{
 <body>
 
 <header class="site-header">
-  <div class="wrap header-top">
-    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
+  <div class="header-top">
+    LIGA GOIANA DE FUTEBOL DE BASE
   </div>
 
   <div class="nav-bar">
-    <div class="wrap">
-      <nav class="menu">
-        <a href="index.html">Início</a>
-        <a href="campeonatos.html">Campeonatos</a>
-        <a href="tabela.html">Tabela</a>
-        <a href="jogos.html">Jogos</a>
-        <a href="times.html">Times</a>
-        <a href="tecnicos.html">Técnicos</a>
-        <a href="jogadores.html">Jogadores</a>
-        <a href="arbitros.html">Árbitros</a>
-        <a href="assistentes.html">Assistente</a>
-        <a class="ativo">Súmula</a>
-        <a href="noticias.html">Notícias</a>
-      </nav>
-    </div>
+    <nav class="menu">
+      <a href="index.html">Início</a>
+      <a href="campeonatos.html">Campeonatos</a>
+      <a href="tabela.html">Tabela</a>
+      <a href="jogos.html">Jogos</a>
+      <a href="times.html">Times</a>
+      <a href="tecnicos.html">Técnicos</a>
+      <a href="jogadores.html">Jogadores</a>
+      <a href="arbitros.html">Árbitros</a>
+      <a href="assistentes.html">Assistente</a>
+      <a class="ativo">Súmula</a>
+      <a href="noticias.html">Notícias</a>
+      <a href="login.html">Login</a>
+    </nav>
   </div>
 </header>
 
 <main class="wrap container">
 
-<section class="hero">
-<h2>Súmulas</h2>
-<p>Veja todas as súmulas finalizadas automaticamente pelo sistema.</p>
-</section>
+<h2 class="titulo">Súmulas dos Jogos</h2>
 
-<section id="lista" class="lista-grid"></section>
+<div id="lista" class="grid"></div>
 
 </main>
 
 <script type="module">
 import { db } from "./firebase.js";
-import { collection,getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+collection,
+getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 let jogos=[];
 
-/* 🔥 EXEMPLOS COPA */
-const exemplo=[
+/* 🔥 DADOS AUTOMÁTICOS DE EXEMPLO */
+const exemplos=[
 {
 id:"semi1-2002",
 campeonato:"Copa do Mundo FIFA 2002",
 categoria:"Seleção Principal",
 fase:"Semifinal",
 data:"2002-06-26",
-local:"Saitama",
+local:"Japão",
 timeA:"Brasil",
 timeB:"Turquia",
 golsA:1,golsB:0,
@@ -202,14 +190,14 @@ campeonato:"Copa do Mundo FIFA 2002",
 categoria:"Seleção Principal",
 fase:"Semifinal",
 data:"2002-06-25",
-local:"Seoul",
+local:"Coreia",
 timeA:"Alemanha",
 timeB:"Coreia do Sul",
 golsA:1,golsB:0,
 status:"finalizado"
 },
 {
-id:"final-copa-2002",
+id:"final-2002",
 campeonato:"Copa do Mundo FIFA 2002",
 categoria:"Seleção Principal",
 fase:"Final",
@@ -222,31 +210,39 @@ status:"finalizado"
 }
 ];
 
-function campo(v,f="-"){
-  return v||f;
-}
+function campo(v){return v||"-"}
 
 function dataBR(d){
-  if(!d) return "-";
-  const dt=new Date(d);
-  return dt.toLocaleDateString("pt-BR");
+if(!d)return"-";
+const dt=new Date(d);
+return dt.toLocaleDateString("pt-BR");
 }
 
+/* 🔥 CARREGAMENTO TOTAL AUTOMÁTICO */
 async function carregar(){
 
 try{
 const snap=await getDocs(collection(db,"jogos"));
 snap.forEach(d=>jogos.push({id:d.id,...d.data()}));
-}catch{}
+}catch(e){
+console.warn("Firebase não carregou, usando exemplo");
+}
 
-jogos=[...exemplo,...jogos];
+/* junta com exemplos */
+jogos=[...exemplos,...jogos];
 
-/* 🔥 SÓ FINALIZADO */
-jogos=jogos.filter(j=>j.status==="finalizado");
+/* 🔥 só jogos finalizados */
+jogos=jogos.filter(j=>j.status==="finalizado" || j.status==="finalizada");
+
+/* 🔥 ordena por data */
+jogos.sort((a,b)=>{
+return new Date(b.data||0)-new Date(a.data||0);
+});
 
 render();
 }
 
+/* 🔥 RENDERIZAÇÃO */
 function render(){
 
 if(!jogos.length){
