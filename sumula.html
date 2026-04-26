@@ -31,7 +31,7 @@ body{
   color:#fff;
 }
 
-/* HEADER PADRÃO */
+/* HEADER IGUAL AO TIMES */
 .site-header{
   background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
   border-bottom:3px solid var(--gold);
@@ -44,7 +44,7 @@ body{
   font-weight:900;
 }
 
-/* MENU */
+/* MENU PADRÃO */
 .nav-bar{
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
 }
@@ -52,25 +52,33 @@ body{
 .menu{
   display:flex;
   justify-content:center;
-  gap:8px;
-  padding:14px;
-  overflow-x:auto;
+  align-items:center;
+  gap:clamp(4px, .55vw, 10px);
+  padding:14px 6px;
+  flex-wrap:nowrap;
+  overflow:hidden;
 }
 
-.menu a, .menu span{
-  background:#0c2140;
-  padding:10px 14px;
-  border-radius:12px;
+.menu a{
+  color:#fff;
   font-weight:900;
+  font-size:clamp(11px, .92vw, 15px);
+  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
+  padding:clamp(8px, .75vw, 12px) clamp(9px, 1vw, 18px);
+  border-radius:clamp(10px, .9vw, 15px);
+  border:1px solid rgba(255,255,255,.07);
   white-space:nowrap;
+  flex:0 1 auto;
+  transition:.25s ease;
 }
 
 .menu a:hover{
   color:var(--gold);
+  border-color:var(--gold-line);
 }
 
-.menu .ativo{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
+.menu a.ativo{
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
   color:#111;
 }
 
@@ -166,10 +174,7 @@ body{
       <a href="jogadores.html">Jogadores</a>
       <a href="arbitros.html">Árbitros</a>
       <a href="assistentes.html">Assistente</a>
-
-      <!-- CORREÇÃO AQUI -->
-      <span class="ativo">Súmula</span>
-
+      <a href="sumula.html" class="ativo">Súmula</a>
       <a href="noticias.html">Notícias</a>
     </nav>
   </div>
@@ -193,7 +198,7 @@ const db = getFirestore(app);
 
 let lista = [];
 
-/* 🔥 3 RODADAS BRASILEIRÃO */
+/* SIMULAÇÃO */
 const simulacao = [
   {id:"1",camp:"Brasileirão",data:"Rodada 36",A:"Flamengo",B:"Palmeiras",pA:2,pB:1},
   {id:"2",camp:"Brasileirão",data:"Rodada 36",A:"São Paulo",B:"Santos",pA:3,pB:0},
@@ -242,14 +247,13 @@ function render(){
 
       <div class="times">
         <div class="time">${j.A}</div>
-
         <div class="placar">${j.pA} x ${j.pB}</div>
-
         <div class="time">${j.B}</div>
       </div>
 
+      <!-- 🔥 CORREÇÃO PRINCIPAL -->
       <a class="btn btn-ver"
-         href="sumula-publica.html?id=${j.id}">
+         href="sumula.html?id=${j.id}">
          Ver Súmula
       </a>
 
