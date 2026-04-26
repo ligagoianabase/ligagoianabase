@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Súmulas - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -11,130 +10,42 @@
 <style>
 :root{
   --bg:#061427;
-  --card:#071d37;
-  --card2:#0d2a52;
+  --card:#0d2a52;
   --gold:#f7c600;
-  --white:#fff;
+  --gold2:#ffe45c;
   --muted:#cbd6ea;
   --line:rgba(255,255,255,.12);
-  --shadow:0 10px 30px rgba(0,0,0,.3);
 }
-
 *{margin:0;padding:0;box-sizing:border-box}
-
 body{
   font-family:Arial;
-  background:
-    linear-gradient(rgba(2,8,20,.9), rgba(2,8,20,.96)),
-    url("fundo.png") center/cover fixed no-repeat;
+  background:linear-gradient(rgba(2,8,20,.9), rgba(2,8,20,.96)), url("fundo.png") center/cover fixed;
   color:#fff;
 }
-
-.wrap{
-  width:min(100% - 28px, 1240px);
-  margin:auto;
-}
-
-/* HEADER PADRÃO */
-.site-header{
-  background:#08172c;
-  border-bottom:3px solid var(--gold);
-}
-
-.header-top{
-  padding:18px;
-  text-align:center;
-  font-weight:900;
-  font-size:22px;
-}
-
-/* MENU PADRÃO */
+.site-header{background:#08172c;border-bottom:3px solid var(--gold)}
+.header-top{text-align:center;padding:18px;font-weight:900;font-size:22px}
 .nav-bar{background:#0d2a52}
-
-.menu{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  padding:12px;
-  flex-wrap:wrap;
-}
-
-.menu a{
-  color:#fff;
-  font-weight:900;
-}
-
-.menu .ativo{
-  background:var(--gold);
-  color:#111;
-  padding:6px 10px;
-  border-radius:6px;
-}
-
-/* CONTEUDO */
+.menu{display:flex;justify-content:center;gap:10px;padding:12px;flex-wrap:wrap}
+.menu a{background:#102a52;padding:10px 14px;border-radius:10px;font-weight:900}
+.menu a.ativo{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
+.wrap{width:min(100% - 28px,1200px);margin:auto}
 .container{padding:20px}
-
-.titulo{
-  font-size:26px;
-  color:var(--gold);
-  margin-bottom:15px;
-  font-weight:900;
-}
-
-/* CARDS */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:12px;
-}
-
-.card{
-  background:var(--card2);
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:15px;
-  text-align:center;
-  box-shadow:var(--shadow);
-}
-
-.placar{
-  font-size:20px;
-  font-weight:900;
-  color:var(--gold);
-  margin:6px 0;
-}
-
-.info{
-  font-size:13px;
-  color:var(--muted);
-  line-height:1.5;
-}
-
-.btn{
-  display:block;
-  margin-top:10px;
-  padding:10px;
-  background:var(--gold);
-  color:#111;
-  border-radius:8px;
-  font-weight:900;
-}
-
-.vazio{
-  text-align:center;
-  padding:20px;
-  color:var(--muted);
-}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{background:var(--card);padding:14px;border-radius:14px;border:1px solid var(--line);text-align:center}
+.escudos{display:flex;justify-content:center;align-items:center;gap:10px}
+.escudo{width:40px;height:40px;border-radius:50%;background:#fff}
+.placar{color:var(--gold);font-size:20px;font-weight:900;margin:8px 0}
+.info{font-size:13px;color:var(--muted)}
+.btn{display:block;padding:10px;border-radius:10px;font-weight:900;margin-top:10px}
+.btn-ver{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
+.vazio{text-align:center;padding:20px;color:var(--muted)}
 </style>
 </head>
 
 <body>
 
 <header class="site-header">
-  <div class="header-top">
-    LIGA GOIANA DE FUTEBOL DE BASE
-  </div>
-
+  <div class="header-top">LIGA GOIANA DE FUTEBOL DE BASE</div>
   <div class="nav-bar">
     <nav class="menu">
       <a href="index.html">Início</a>
@@ -146,7 +57,7 @@ body{
       <a href="jogadores.html">Jogadores</a>
       <a href="arbitros.html">Árbitros</a>
       <a href="assistentes.html">Assistente</a>
-      <a class="ativo">Súmula</a>
+      <a href="sumula.html" class="ativo">Súmula</a>
       <a href="noticias.html">Notícias</a>
       <a href="login.html">Login</a>
     </nav>
@@ -154,125 +65,144 @@ body{
 </header>
 
 <main class="wrap container">
-
-<h2 class="titulo">Súmulas dos Jogos</h2>
-
+<h2 style="color:var(--gold);margin-bottom:10px">Súmulas</h2>
 <div id="lista" class="grid"></div>
-
 </main>
 
 <script type="module">
 import { db } from "./firebase.js";
-import {
-collection,
-getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-let jogos=[];
+let jogos=[], times={}, campeonatos={};
 
-/* 🔥 DADOS AUTOMÁTICOS DE EXEMPLO */
-const exemplos=[
+/* 🔥 COPA 2022 COMPLETA */
+const copa2022 = [
 {
-id:"semi1-2002",
-campeonato:"Copa do Mundo FIFA 2002",
-categoria:"Seleção Principal",
-fase:"Semifinal",
-data:"2002-06-26",
-local:"Japão",
-timeA:"Brasil",
-timeB:"Turquia",
-golsA:1,golsB:0,
+id:"final-copa-2022",
+timeA:"Argentina",
+timeB:"França",
+golsA:3,golsB:3,
+timeAId:"arg",timeBId:"fra",
+campeonatoId:"copa2022",
+categoria:"Principal",
+data:"2022-12-18",
 status:"finalizado"
 },
 {
-id:"semi2-2002",
-campeonato:"Copa do Mundo FIFA 2002",
-categoria:"Seleção Principal",
-fase:"Semifinal",
-data:"2002-06-25",
-local:"Coreia",
-timeA:"Alemanha",
-timeB:"Coreia do Sul",
-golsA:1,golsB:0,
+id:"terceiro-copa-2022",
+timeA:"Croácia",
+timeB:"Marrocos",
+golsA:2,golsB:1,
+timeAId:"cro",timeBId:"mar",
+campeonatoId:"copa2022",
+categoria:"Principal",
+data:"2022-12-17",
 status:"finalizado"
 },
 {
-id:"final-2002",
-campeonato:"Copa do Mundo FIFA 2002",
-categoria:"Seleção Principal",
-fase:"Final",
-data:"2002-06-30",
-local:"Yokohama",
-timeA:"Brasil",
-timeB:"Alemanha",
+id:"semi1-copa-2022",
+timeA:"Argentina",
+timeB:"Croácia",
+golsA:3,golsB:0,
+timeAId:"arg",timeBId:"cro",
+campeonatoId:"copa2022",
+categoria:"Principal",
+data:"2022-12-13",
+status:"finalizado"
+},
+{
+id:"semi2-copa-2022",
+timeA:"França",
+timeB:"Marrocos",
 golsA:2,golsB:0,
+timeAId:"fra",timeBId:"mar",
+campeonatoId:"copa2022",
+categoria:"Principal",
+data:"2022-12-14",
 status:"finalizado"
 }
 ];
 
-function campo(v){return v||"-"}
+const timesCopa={
+arg:{escudo:"logo-liga.jfif"},
+fra:{escudo:"logo-liga.jfif"},
+cro:{escudo:"logo-liga.jfif"},
+mar:{escudo:"logo-liga.jfif"}
+};
 
-function dataBR(d){
-if(!d)return"-";
-const dt=new Date(d);
-return dt.toLocaleDateString("pt-BR");
-}
+const campCopa={
+copa2022:{nome:"Copa do Mundo 2022"}
+};
 
-/* 🔥 CARREGAMENTO TOTAL AUTOMÁTICO */
+/* 🔥 CARREGAR TUDO */
 async function carregar(){
 
 try{
-const snap=await getDocs(collection(db,"jogos"));
-snap.forEach(d=>jogos.push({id:d.id,...d.data()}));
-}catch(e){
-console.warn("Firebase não carregou, usando exemplo");
+const t=await getDocs(collection(db,"times"));
+t.forEach(d=>times[d.id]=d.data());
+
+const c=await getDocs(collection(db,"campeonatos"));
+c.forEach(d=>campeonatos[d.id]=d.data());
+
+const j=await getDocs(collection(db,"jogos"));
+j.forEach(d=>{
+const jogo=d.data();
+if(jogo.status==="finalizado"){
+jogos.push({id:d.id,...jogo});
 }
-
-/* junta com exemplos */
-jogos=[...exemplos,...jogos];
-
-/* 🔥 só jogos finalizados */
-jogos=jogos.filter(j=>j.status==="finalizado" || j.status==="finalizada");
-
-/* 🔥 ordena por data */
-jogos.sort((a,b)=>{
-return new Date(b.data||0)-new Date(a.data||0);
 });
+}catch(e){}
+
+/* 🔥 JUNTA TUDO */
+jogos=[...copa2022,...jogos];
+times={...timesCopa,...times};
+campeonatos={...campCopa,...campeonatos};
 
 render();
 }
 
-/* 🔥 RENDERIZAÇÃO */
+/* HELPERS */
+function escudo(id){
+return (times[id]&&times[id].escudo)||"logo-liga.jfif";
+}
+function camp(id){
+return (campeonatos[id]&&campeonatos[id].nome)||"";
+}
+
+/* RENDER */
 function render(){
 
 if(!jogos.length){
-lista.innerHTML=`<div class="vazio">Nenhuma súmula disponível</div>`;
+lista.innerHTML=`<div class="vazio">Nenhuma súmula encontrada</div>`;
 return;
 }
 
 lista.innerHTML=jogos.map(j=>`
-
 <div class="card">
 
-<strong>${campo(j.timeA)} x ${campo(j.timeB)}</strong>
+<div class="escudos">
+<img src="${escudo(j.timeAId)}" class="escudo">
+<strong>${j.timeA}</strong>
+</div>
 
-<div class="placar">
-${j.golsA||0} x ${j.golsB||0}
+<div class="placar">${j.golsA||0} x ${j.golsB||0}</div>
+
+<div class="escudos">
+<strong>${j.timeB}</strong>
+<img src="${escudo(j.timeBId)}" class="escudo">
 </div>
 
 <div class="info">
-${campo(j.campeonato)}<br>
-${campo(j.categoria)}<br>
-${dataBR(j.data)} - ${campo(j.local)}<br>
-${campo(j.fase)}
+${camp(j.campeonatoId)}<br>
+${j.categoria||""}<br>
+${j.data||""}
 </div>
 
-<a class="btn" href="sumula-publica.html?id=${j.id}">
+<a class="btn btn-ver" href="sumula-publica.html?id=${j.id}">
 Ver Súmula
 </a>
 
 </div>
-
 `).join("");
 }
 
