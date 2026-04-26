@@ -4,1187 +4,265 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Súmulas - Liga Goiana de Futebol de Base</title>
+<title>Súmulas - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 :root{
-  --blue:#0A1F3D;
-  --blue2:#0F2A52;
-  --gold:#F7C600;
-  --gold2:#FFD84D;
-  --bg:#F4F7FB;
-  --card:#FFFFFF;
-  --text:#172033;
-  --muted:#667085;
-  --line:#D8DEE9;
-  --success:#039855;
-  --warning:#F79009;
-  --danger:#D92D20;
-  --shadow:0 14px 38px rgba(10,31,61,.14);
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-  font-family:Arial, Helvetica, sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-}
-
-a{
-  text-decoration:none;
-  color:inherit;
-}
-
-button,
-input,
-select{
-  font-family:inherit;
-}
-
-.topbar{
-  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  font-family:Arial;
+  background:
+    linear-gradient(rgba(2,8,20,.9), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed;
   color:#fff;
-  border-bottom:4px solid var(--gold);
-  box-shadow:0 8px 22px rgba(0,0,0,.24);
 }
 
-.topbar-inner{
-  max-width:1280px;
-  margin:auto;
-  padding:18px 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  flex-wrap:wrap;
+/* HEADER PADRÃO */
+.site-header{
+  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
+  border-bottom:3px solid var(--gold);
 }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
-
-.brand-icon{
-  width:54px;
-  height:54px;
-  border-radius:50%;
-  background:var(--gold);
-  color:var(--blue);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:25px;
-  box-shadow:0 0 0 4px rgba(247,198,0,.18);
-}
-
-.brand h1{
-  font-size:21px;
+.header-top{
+  text-align:center;
+  padding:18px 0;
+  font-size:26px;
   font-weight:900;
-  letter-spacing:.4px;
 }
 
-brand p,
-.brand p{
-  color:#d9e6ff;
-  font-size:13px;
-  margin-top:3px;
+/* MENU */
+.nav-bar{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
 }
 
 .menu{
   display:flex;
+  justify-content:center;
   gap:8px;
-  flex-wrap:wrap;
+  padding:14px;
+  overflow-x:auto;
 }
 
-.menu a,
-.menu button{
-  border:none;
-  background:rgba(255,255,255,.08);
-  color:#fff;
-  padding:10px 12px;
+.menu a, .menu span{
+  background:#0c2140;
+  padding:10px 14px;
   border-radius:12px;
-  font-size:13px;
-  font-weight:800;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.menu a:hover,
-.menu button:hover{
-  background:var(--gold);
-  color:var(--blue);
-}
-
-.page{
-  max-width:1280px;
-  margin:auto;
-  padding:24px 20px 60px;
-}
-
-.hero{
-  background:linear-gradient(135deg,var(--blue),#07182F);
-  color:#fff;
-  border-radius:28px;
-  padding:28px;
-  box-shadow:var(--shadow);
-  position:relative;
-  overflow:hidden;
-  margin-bottom:22px;
-}
-
-.hero::after{
-  content:"";
-  position:absolute;
-  width:260px;
-  height:260px;
-  right:-90px;
-  top:-90px;
-  border-radius:50%;
-  background:rgba(247,198,0,.16);
-}
-
-.hero-content{
-  position:relative;
-  z-index:1;
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-between;
-  gap:20px;
-  flex-wrap:wrap;
-}
-
-.eyebrow{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  background:rgba(247,198,0,.14);
-  border:1px solid rgba(247,198,0,.28);
-  color:var(--gold);
-  border-radius:999px;
-  padding:8px 13px;
-  font-size:13px;
-  font-weight:900;
-  margin-bottom:12px;
-}
-
-.hero h2{
-  font-size:34px;
-  color:var(--gold);
-  font-weight:900;
-  margin-bottom:8px;
-}
-
-.hero p{
-  color:#d9e6ff;
-  line-height:1.55;
-  max-width:760px;
-}
-
-.hero-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.btn{
-  border:none;
-  border-radius:14px;
-  padding:11px 14px;
-  cursor:pointer;
-  font-weight:900;
-  font-size:13px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  transition:.2s;
-}
-
-.btn-primary{
-  background:var(--blue);
-  color:#fff;
-}
-
-.btn-primary:hover{
-  background:#143B70;
-}
-
-.btn-gold{
-  background:var(--gold);
-  color:var(--blue);
-}
-
-.btn-gold:hover{
-  background:var(--gold2);
-}
-
-.btn-light{
-  background:#EEF2F7;
-  color:var(--blue);
-}
-
-.btn-light:hover{
-  background:#E1E7F0;
-}
-
-.filters{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:22px;
-  box-shadow:var(--shadow);
-  padding:16px;
-  margin-bottom:20px;
-}
-
-.filters-grid{
-  display:grid;
-  grid-template-columns:1.3fr 1fr 1fr 1fr auto;
-  gap:12px;
-  align-items:end;
-}
-
-.field{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-
-.field label{
-  color:var(--blue);
-  font-size:13px;
-  font-weight:900;
-}
-
-.field input,
-.field select{
-  width:100%;
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:12px;
-  outline:none;
-  background:#fff;
-  color:var(--text);
-  font-size:14px;
-}
-
-.field input:focus,
-.field select:focus{
-  border-color:var(--gold);
-  box-shadow:0 0 0 4px rgba(247,198,0,.14);
-}
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-  margin-bottom:20px;
-}
-
-.stat-card{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:16px;
-  box-shadow:var(--shadow);
-}
-
-.stat-card span{
-  display:block;
-  color:var(--muted);
-  font-size:12px;
-  font-weight:800;
-  margin-bottom:6px;
-}
-
-.stat-card strong{
-  color:var(--blue);
-  font-size:24px;
-  font-weight:900;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px;
-}
-
-.sumula-card{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:24px;
-  box-shadow:var(--shadow);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-}
-
-.card-top{
-  background:linear-gradient(135deg,var(--blue),#07182F);
-  color:#fff;
-  padding:16px;
-  border-bottom:4px solid var(--gold);
-}
-
-.card-status{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:12px;
-}
-
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  border-radius:999px;
-  padding:7px 10px;
-  font-size:11px;
-  font-weight:900;
-  text-transform:uppercase;
-}
-
-.badge.finalizada{
-  background:rgba(3,152,85,.16);
-  color:#D1FADF;
-  border:1px solid rgba(3,152,85,.35);
-}
-
-.badge.rascunho{
-  background:rgba(247,144,9,.16);
-  color:#FEF0C7;
-  border:1px solid rgba(247,144,9,.35);
-}
-
-.badge.aberta{
-  background:rgba(255,255,255,.12);
-  color:#fff;
-  border:1px solid rgba(255,255,255,.22);
-}
-
-.card-code{
-  color:#d9e6ff;
-  font-size:12px;
-  font-weight:800;
-}
-
-.teams{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  gap:10px;
-  align-items:center;
-}
-
-.team{
-  text-align:center;
-}
-
-.team-logo{
-  width:58px;
-  height:58px;
-  border-radius:50%;
-  background:#fff;
-  border:2px solid var(--gold);
-  margin:0 auto 8px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:var(--blue);
-  font-size:23px;
-  overflow:hidden;
-}
-
-.team-logo img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.team-name{
-  font-size:14px;
-  font-weight:900;
-  line-height:1.25;
-}
-
-.score{
-  text-align:center;
-  min-width:76px;
-}
-
-.score-main{
-  font-size:24px;
-  color:var(--gold);
   font-weight:900;
   white-space:nowrap;
 }
 
-.score-label{
-  color:#d9e6ff;
-  font-size:11px;
-  margin-top:3px;
-}
-
-.card-body{
-  padding:16px;
-  flex:1;
-}
-
-.info-list{
-  display:grid;
-  gap:9px;
-  margin-bottom:14px;
-}
-
-.info-item{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  color:var(--muted);
-  font-size:13px;
-}
-
-.info-item i{
+.menu a:hover{
   color:var(--gold);
-  width:18px;
-  text-align:center;
 }
 
-.card-actions{
+.menu .ativo{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+/* GRID */
+.grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  padding:0 16px 16px;
-}
-
-.empty{
-  background:#fff;
-  border:1px dashed var(--line);
-  border-radius:22px;
-  padding:26px;
-  text-align:center;
-  color:var(--muted);
-  grid-column:1/-1;
-}
-
-.empty i{
-  font-size:34px;
-  color:var(--gold);
-  margin-bottom:10px;
-}
-
-.loading{
-  min-height:260px;
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:22px;
-  box-shadow:var(--shadow);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
+  grid-template-columns:repeat(4,1fr);
   gap:14px;
-  color:var(--blue);
-  font-weight:900;
+  padding:20px;
 }
 
-.spinner{
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  border:4px solid #E5EAF2;
-  border-top-color:var(--gold);
-  animation:spin 1s linear infinite;
-}
-
-@keyframes spin{
-  to{transform:rotate(360deg);}
-}
-
-.alert{
+/* CARD */
+.card{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
   border-radius:16px;
-  padding:14px 15px;
+  padding:14px;
+  border:1px solid rgba(247,198,0,.2);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.top{
+  font-size:12px;
+  color:var(--muted);
+  text-align:center;
+}
+
+.times{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+}
+
+.time{
+  text-align:center;
+  font-weight:900;
   font-size:13px;
-  font-weight:800;
-  margin-bottom:16px;
-  display:none;
-  border:1px solid transparent;
-  background:#fff;
 }
 
-.alert.show{
+.placar{
+  font-size:22px;
+  font-weight:900;
+  color:var(--gold);
+  text-align:center;
+}
+
+.btn{
   display:block;
+  text-align:center;
+  padding:10px;
+  border-radius:10px;
+  font-weight:900;
+  font-size:13px;
 }
 
-.alert.warning{
-  color:#B54708;
-  border-color:rgba(247,144,9,.28);
-  background:rgba(247,144,9,.12);
+.btn-ver{
+  background:var(--gold);
+  color:#111;
 }
 
-.alert.success{
-  color:#027A48;
-  border-color:rgba(3,152,85,.24);
-  background:rgba(3,152,85,.10);
+.btn-edit{
+  background:#fff;
+  color:#111;
 }
 
-.hidden{
-  display:none !important;
+/* RESPONSIVO */
+@media(max-width:1100px){
+  .grid{grid-template-columns:repeat(2,1fr);}
 }
 
-@media(max-width:1050px){
-  .grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .filters-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-  }
-}
-
-@media(max-width:650px){
-  .topbar-inner{
-    align-items:flex-start;
-  }
-
-  .brand-icon{
-    width:46px;
-    height:46px;
-    font-size:21px;
-  }
-
-  .brand h1{
-    font-size:16px;
-  }
-
-  .menu{
-    width:100%;
-  }
-
-  .menu a,
-  .menu button{
-    flex:1;
-    text-align:center;
-    justify-content:center;
-    font-size:12px;
-  }
-
-  .page{
-    padding:16px 12px 40px;
-  }
-
-  .hero{
-    border-radius:20px;
-    padding:18px;
-  }
-
-  .hero h2{
-    font-size:25px;
-  }
-
-  .filters-grid,
-  .stats,
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .card-actions{
-    grid-template-columns:1fr;
-  }
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
 
 <body>
 
-<header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">
-      <div class="brand-icon">
-        <i class="fa-solid fa-file-signature"></i>
-      </div>
+<header class="site-header">
+  <div class="header-top">
+    LIGA GOIANA DE FUTEBOL DE BASE
+  </div>
 
-      <div>
-        <h1>LIGA GOIANA DE FUTEBOL DE BASE</h1>
-        <p>Súmulas oficiais das partidas</p>
-      </div>
-    </div>
-
+  <div class="nav-bar">
     <nav class="menu">
-      <a href="index.html"><i class="fa-solid fa-house"></i> Início</a>
-      <a href="campeonatos.html"><i class="fa-solid fa-trophy"></i> Campeonatos</a>
-      <a href="jogos.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
-      <a href="times.html"><i class="fa-solid fa-shield-halved"></i> Times</a>
-      <button type="button" onclick="voltarPagina()">
-        <i class="fa-solid fa-arrow-left"></i> Voltar
-      </button>
+      <a href="index.html">Início</a>
+      <a href="campeonatos.html">Campeonatos</a>
+      <a href="tabela.html">Tabela</a>
+      <a href="jogos.html">Jogos</a>
+      <a href="times.html">Times</a>
+      <a href="tecnicos.html">Técnicos</a>
+      <a href="jogadores.html">Jogadores</a>
+      <a href="arbitros.html">Árbitros</a>
+      <a href="assistentes.html">Assistente</a>
+
+      <!-- CORREÇÃO AQUI -->
+      <span class="ativo">Súmula</span>
+
+      <a href="noticias.html">Notícias</a>
     </nav>
   </div>
 </header>
 
-<main class="page">
-
-  <section class="hero">
-    <div class="hero-content">
-      <div>
-        <div class="eyebrow">
-          <i class="fa-solid fa-clipboard-check"></i>
-          Central de Súmulas
-        </div>
-
-        <h2>Súmulas das Partidas</h2>
-
-        <p>
-          Consulte as súmulas oficiais finalizadas, veja placares, atletas relacionados,
-          gols, cartões, arbitragem e observações da partida.
-        </p>
-      </div>
-
-      <div class="hero-actions">
-        <a class="btn btn-gold" href="jogos.html">
-          <i class="fa-solid fa-calendar-days"></i> Ver Jogos
-        </a>
-
-        <button class="btn btn-light" type="button" onclick="carregarTudo()">
-          <i class="fa-solid fa-rotate"></i> Atualizar
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <div id="alertBox" class="alert"></div>
-<!-- FILTROS -->
-  <section class="filters">
-
-    <div class="filters-grid">
-
-      <div class="field">
-        <label>Buscar</label>
-        <input id="filtroBusca" placeholder="Time, campeonato...">
-      </div>
-
-      <div class="field">
-        <label>Categoria</label>
-        <select id="filtroCategoria">
-          <option value="">Todas</option>
-          <option>Sub-11</option>
-          <option>Sub-13</option>
-          <option>Sub-15</option>
-          <option>Sub-17</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Status</label>
-        <select id="filtroStatus">
-          <option value="">Todos</option>
-          <option value="finalizada">Finalizada</option>
-          <option value="rascunho">Rascunho</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Campeonato</label>
-        <select id="filtroCampeonato">
-          <option value="">Todos</option>
-          <option>Copa União</option>
-          <option>Liga Elite</option>
-          <option>Brasileirão (Simulação)</option>
-        </select>
-      </div>
-
-      <button class="btn btn-primary" onclick="aplicarFiltros()">
-        Filtrar
-      </button>
-
-    </div>
-
-  </section>
-
-  <!-- ESTATÍSTICAS -->
-  <section class="stats">
-
-    <div class="stat-card">
-      <span>Total</span>
-      <strong id="statTotal">0</strong>
-    </div>
-
-    <div class="stat-card">
-      <span>Finalizadas</span>
-      <strong id="statFinalizadas">0</strong>
-    </div>
-
-    <div class="stat-card">
-      <span>Rascunho</span>
-      <strong id="statRascunho">0</strong>
-    </div>
-
-    <div class="stat-card">
-      <span>Hoje</span>
-      <strong id="statHoje">0</strong>
-    </div>
-
-  </section>
-
-  <!-- GRID -->
-  <section id="gridSumulas" class="grid">
-
-    <div class="loading" id="loadingBox">
-      <div class="spinner"></div>
-      Carregando súmulas...
-    </div>
-
-  </section>
-</main>
+<section class="grid" id="grid"></section>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  query,
-  orderBy,
-  limit
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-/*
-  TROQUE PELOS DADOS REAIS DO SEU FIREBASE.
-  Se o Firebase falhar ou estiver vazio, entra a simulação Brasileirão.
-*/
+/* CONFIG FIREBASE */
 const firebaseConfig = {
-  apiKey: "COLE_SUA_API_KEY_AQUI",
-  authDomain: "COLE_SEU_AUTH_DOMAIN_AQUI",
-  projectId: "COLE_SEU_PROJECT_ID_AQUI",
-  storageBucket: "COLE_SEU_STORAGE_BUCKET_AQUI",
-  messagingSenderId: "COLE_SEU_MESSAGING_SENDER_ID_AQUI",
-  appId: "COLE_SEU_APP_ID_AQUI"
+  apiKey: "SUA_KEY",
+  authDomain: "SEU_DOMINIO",
+  projectId: "SEU_PROJECT_ID"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const $ = (id) => document.getElementById(id);
+let lista = [];
 
-let todasSumulas = [];
-let sumulasFiltradas = [];
-
-const simulacaoBrasileirao = [
-  {
-    id:"br1",
-    campeonato:"Brasileirão (Simulação)",
-    categoria:"Sub-15",
-    data:"2026-04-20",
-    hora:"10:00",
-    local:"Campo 1",
-    status:"finalizada",
-    finalizada:true,
-    mandante:{nome:"Flamengo", escudo:""},
-    visitante:{nome:"Palmeiras", escudo:""},
-    placar:{mandante:2, visitante:1}
-  },
-  {
-    id:"br2",
-    campeonato:"Brasileirão (Simulação)",
-    categoria:"Sub-15",
-    data:"2026-04-20",
-    hora:"11:30",
-    local:"Campo 2",
-    status:"finalizada",
-    finalizada:true,
-    mandante:{nome:"São Paulo", escudo:""},
-    visitante:{nome:"Santos", escudo:""},
-    placar:{mandante:3, visitante:0}
-  },
-  {
-    id:"br3",
-    campeonato:"Brasileirão (Simulação)",
-    categoria:"Sub-15",
-    data:"2026-04-21",
-    hora:"09:00",
-    local:"Campo 3",
-    status:"rascunho",
-    finalizada:false,
-    mandante:{nome:"Corinthians", escudo:""},
-    visitante:{nome:"Grêmio", escudo:""},
-    placar:{mandante:1, visitante:1}
-  },
-  {
-    id:"br4",
-    campeonato:"Brasileirão (Simulação)",
-    categoria:"Sub-17",
-    data:"2026-04-21",
-    hora:"15:00",
-    local:"Arena Base",
-    status:"finalizada",
-    finalizada:true,
-    mandante:{nome:"Cruzeiro", escudo:""},
-    visitante:{nome:"Internacional", escudo:""},
-    placar:{mandante:0, visitante:2}
-  },
-  {
-    id:"br5",
-    campeonato:"Brasileirão (Simulação)",
-    categoria:"Sub-13",
-    data:"2026-04-22",
-    hora:"08:30",
-    local:"CT Goiânia",
-    status:"aberta",
-    finalizada:false,
-    mandante:{nome:"Atlético Mineiro", escudo:""},
-    visitante:{nome:"Bahia", escudo:""},
-    placar:{mandante:0, visitante:0}
-  }
+/* 🔥 3 RODADAS BRASILEIRÃO */
+const simulacao = [
+  {id:"1",camp:"Brasileirão",data:"Rodada 36",A:"Flamengo",B:"Palmeiras",pA:2,pB:1},
+  {id:"2",camp:"Brasileirão",data:"Rodada 36",A:"São Paulo",B:"Santos",pA:3,pB:0},
+  {id:"3",camp:"Brasileirão",data:"Rodada 37",A:"Corinthians",B:"Grêmio",pA:1,pB:1},
+  {id:"4",camp:"Brasileirão",data:"Rodada 37",A:"Cruzeiro",B:"Inter",pA:0,pB:2},
+  {id:"5",camp:"Brasileirão",data:"Rodada 38",A:"Bahia",B:"Atlético-MG",pA:2,pB:2},
+  {id:"6",camp:"Brasileirão",data:"Rodada 38",A:"Fortaleza",B:"Botafogo",pA:1,pB:0}
 ];
 
-async function carregarTudo(){
-  mostrarLoading();
-
+async function carregar(){
   try{
-    const firebaseData = await buscarFirebase();
+    const snap = await getDocs(collection(db,"jogos"));
 
-    if(firebaseData.length === 0){
-      todasSumulas = simulacaoBrasileirao;
-      mostrarAlerta("warning", "Firebase vazio. Simulação Brasileirão ativada.");
-    }else{
-      todasSumulas = firebaseData;
-      mostrarAlerta("success", "Súmulas carregadas do Firebase.");
-    }
-  }catch(error){
-    console.error(error);
-    todasSumulas = simulacaoBrasileirao;
-    mostrarAlerta("warning", "Não foi possível carregar o Firebase. Simulação Brasileirão ativada.");
-  }
+    snap.forEach(doc=>{
+      const d = doc.data();
 
-  sumulasFiltradas = [...todasSumulas];
-  aplicarFiltros();
-}
-
-async function buscarFirebase(){
-  const lista = [];
-
-  try{
-    const qSumulas = query(collection(db, "sumulas"), orderBy("atualizadoEm", "desc"), limit(80));
-    const snapSumulas = await getDocs(qSumulas);
-
-    snapSumulas.forEach(docSnap => {
-      lista.push(normalizarSumula({
-        id:docSnap.id,
-        ...docSnap.data()
-      }));
+      lista.push({
+        id:doc.id,
+        camp:d.campeonato || "",
+        data:d.data || "",
+        A:d.mandanteNome,
+        B:d.visitanteNome,
+        pA:d.placarMandante || 0,
+        pB:d.placarVisitante || 0
+      });
     });
-  }catch(error){
-    console.warn("Falha ao buscar coleção sumulas:", error);
-  }
 
-  if(lista.length > 0){
-    return lista;
-  }
-
-  try{
-    const qJogos = query(collection(db, "jogos"), limit(80));
-    const snapJogos = await getDocs(qJogos);
-
-    snapJogos.forEach(docSnap => {
-      lista.push(normalizarJogo({
-        id:docSnap.id,
-        ...docSnap.data()
-      }));
-    });
-  }catch(error){
-    console.warn("Falha ao buscar coleção jogos:", error);
-  }
-
-  return lista;
-}
-
-function normalizarSumula(item){
-  return {
-    id:item.id,
-    campeonato:item.campeonato || item.campeonatoNome || "",
-    categoria:item.categoria || "",
-    data:item.data || "",
-    hora:item.hora || "",
-    local:item.local || item.campo || "",
-    status:item.status || item.sumulaStatus || "rascunho",
-    finalizada:item.finalizada === true || item.status === "finalizada",
-    mandante:{
-      nome:item.mandante?.nome || item.mandanteNome || "Mandante",
-      escudo:item.mandante?.escudo || item.mandanteEscudo || ""
-    },
-    visitante:{
-      nome:item.visitante?.nome || item.visitanteNome || "Visitante",
-      escudo:item.visitante?.escudo || item.visitanteEscudo || ""
-    },
-    placar:{
-      mandante:item.placar?.mandante ?? item.placarMandante ?? 0,
-      visitante:item.placar?.visitante ?? item.placarVisitante ?? 0
+    if(lista.length === 0){
+      lista = simulacao;
     }
-  };
+
+  }catch{
+    lista = simulacao;
+  }
+
+  render();
 }
 
-function normalizarJogo(item){
-  return {
-    id:item.id,
-    campeonato:item.campeonato || item.campeonatoNome || "",
-    categoria:item.categoria || "",
-    data:item.data || "",
-    hora:item.hora || "",
-    local:item.local || item.campo || "",
-    status:item.sumulaStatus || item.status || "aberta",
-    finalizada:item.sumulaFinalizada === true || item.sumulaStatus === "finalizada",
-    mandante:{
-      nome:item.mandante?.nome || item.mandanteNome || "Mandante",
-      escudo:item.mandante?.escudo || item.mandanteEscudo || ""
-    },
-    visitante:{
-      nome:item.visitante?.nome || item.visitanteNome || "Visitante",
-      escudo:item.visitante?.escudo || item.visitanteEscudo || ""
-    },
-    placar:{
-      mandante:item.placar?.mandante ?? item.placarMandante ?? 0,
-      visitante:item.placar?.visitante ?? item.placarVisitante ?? 0
-    }
-  };
-}
-function aplicarFiltros(){
-  const busca = normalizarTexto($("filtroBusca").value);
-  const categoria = $("filtroCategoria").value;
-  const status = $("filtroStatus").value;
-  const campeonato = $("filtroCampeonato").value;
+function render(){
+  const grid = document.getElementById("grid");
 
-  sumulasFiltradas = todasSumulas.filter(item => {
-    const texto = normalizarTexto(`
-      ${item.campeonato}
-      ${item.categoria}
-      ${item.mandante?.nome}
-      ${item.visitante?.nome}
-      ${item.local}
-      ${item.status}
-    `);
+  grid.innerHTML = lista.map(j=>`
+    <div class="card">
 
-    const okBusca = !busca || texto.includes(busca);
-    const okCategoria = !categoria || item.categoria === categoria;
-    const okStatus = !status || item.status === status || (status === "finalizada" && item.finalizada);
-    const okCampeonato = !campeonato || item.campeonato === campeonato;
+      <div class="top">${j.camp} - ${j.data}</div>
 
-    return okBusca && okCategoria && okStatus && okCampeonato;
-  });
+      <div class="times">
+        <div class="time">${j.A}</div>
 
-  renderizarCards();
-  atualizarStats();
-}
+        <div class="placar">${j.pA} x ${j.pB}</div>
 
-function renderizarCards(){
-  const grid = $("gridSumulas");
-
-  if(sumulasFiltradas.length === 0){
-    grid.innerHTML = `
-      <div class="empty">
-        <i class="fa-solid fa-file-circle-xmark"></i>
-        <h3>Nenhuma súmula encontrada</h3>
-        <p>Altere os filtros ou aguarde a finalização das partidas.</p>
+        <div class="time">${j.B}</div>
       </div>
-    `;
-    return;
-  }
 
-  grid.innerHTML = sumulasFiltradas.map(item => {
-    const statusClasse = item.finalizada ? "finalizada" : (item.status === "rascunho" ? "rascunho" : "aberta");
-    const statusTexto = item.finalizada ? "Finalizada" : (item.status === "rascunho" ? "Rascunho" : "Aberta");
+      <a class="btn btn-ver"
+         href="sumula-publica.html?id=${j.id}">
+         Ver Súmula
+      </a>
 
-    return `
-      <article class="sumula-card">
-        <div class="card-top">
-          <div class="card-status">
-            <span class="badge ${statusClasse}">
-              <i class="fa-solid ${item.finalizada ? "fa-circle-check" : "fa-clock"}"></i>
-              ${statusTexto}
-            </span>
+      <a class="btn btn-edit"
+         href="sumula-adm.html?id=${j.id}">
+         Preencher
+      </a>
 
-            <span class="card-code">ID: ${escapeHtml(item.id)}</span>
-          </div>
-
-          <div class="teams">
-            <div class="team">
-              <div class="team-logo">
-                ${renderLogo(item.mandante?.escudo)}
-              </div>
-              <div class="team-name">${escapeHtml(item.mandante?.nome || "Mandante")}</div>
-            </div>
-
-            <div class="score">
-              <div class="score-main">
-                ${item.placar?.mandante ?? 0} x ${item.placar?.visitante ?? 0}
-              </div>
-              <div class="score-label">Placar</div>
-            </div>
-
-            <div class="team">
-              <div class="team-logo">
-                ${renderLogo(item.visitante?.escudo)}
-              </div>
-              <div class="team-name">${escapeHtml(item.visitante?.nome || "Visitante")}</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <div class="info-list">
-            <div class="info-item">
-              <i class="fa-solid fa-trophy"></i>
-              <span>${escapeHtml(item.campeonato || "-")}</span>
-            </div>
-
-            <div class="info-item">
-              <i class="fa-solid fa-layer-group"></i>
-              <span>${escapeHtml(item.categoria || "-")}</span>
-            </div>
-
-            <div class="info-item">
-              <i class="fa-solid fa-calendar-days"></i>
-              <span>${escapeHtml(formatarDataHora(item.data, item.hora))}</span>
-            </div>
-
-            <div class="info-item">
-              <i class="fa-solid fa-location-dot"></i>
-              <span>${escapeHtml(item.local || "-")}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-actions">
-          <a class="btn btn-primary" href="sumula-publica.html?id=${encodeURIComponent(item.id)}">
-            <i class="fa-solid fa-eye"></i> Ver Súmula
-          </a>
-
-          <a class="btn btn-gold" href="sumula-adm.html?id=${encodeURIComponent(item.id)}">
-            <i class="fa-solid fa-pen-to-square"></i> Preencher
-          </a>
-        </div>
-      </article>
-    `;
-  }).join("");
-}
-
-function renderLogo(url){
-  if(url){
-    return `<img src="${escapeHtml(url)}" alt="Escudo">`;
-  }
-
-  return `<i class="fa-solid fa-shield-halved"></i>`;
-}
-
-function atualizarStats(){
-  const total = todasSumulas.length;
-  const finalizadas = todasSumulas.filter(s => s.finalizada || s.status === "finalizada").length;
-  const rascunho = todasSumulas.filter(s => s.status === "rascunho").length;
-  const hoje = todasSumulas.filter(s => ehHoje(s.data)).length;
-
-  $("statTotal").textContent = total;
-  $("statFinalizadas").textContent = finalizadas;
-  $("statRascunho").textContent = rascunho;
-  $("statHoje").textContent = hoje;
-}
-
-function mostrarLoading(){
-  $("gridSumulas").innerHTML = `
-    <div class="loading" id="loadingBox">
-      <div class="spinner"></div>
-      Carregando súmulas...
     </div>
-  `;
+  `).join("");
 }
 
-function mostrarAlerta(tipo, mensagem){
-  const box = $("alertBox");
-  box.className = `alert ${tipo} show`;
-  box.textContent = mensagem;
-
-  setTimeout(() => {
-    box.classList.remove("show");
-  }, 5000);
-}
-
-function voltarPagina(){
-  if(document.referrer){
-    history.back();
-  }else{
-    window.location.href = "index.html";
-  }
-}
-
-function formatarDataHora(data, hora){
-  if(!data && !hora) return "-";
-
-  let dataFormatada = data || "";
-
-  try{
-    if(data && typeof data === "object" && data.seconds){
-      dataFormatada = new Date(data.seconds * 1000).toLocaleDateString("pt-BR");
-    }else if(data && String(data).includes("-")){
-      const [ano, mes, dia] = String(data).split("-");
-      dataFormatada = `${dia}/${mes}/${ano}`;
-    }
-  }catch(e){}
-
-  return `${dataFormatada}${hora ? " às " + hora : ""}`;
-}
-
-function ehHoje(data){
-  if(!data) return false;
-
-  try{
-    const hoje = new Date();
-    const hojeStr = hoje.toISOString().slice(0,10);
-
-    if(typeof data === "object" && data.seconds){
-      return new Date(data.seconds * 1000).toISOString().slice(0,10) === hojeStr;
-    }
-
-    return String(data).slice(0,10) === hojeStr;
-  }catch(e){
-    return false;
-  }
-}
-
-function normalizarTexto(texto){
-  return String(texto || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-}
-
-function escapeHtml(valor){
-  return String(valor ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-window.aplicarFiltros = aplicarFiltros;
-window.carregarTudo = carregarTudo;
-window.voltarPagina = voltarPagina;
-
-$("filtroBusca").addEventListener("input", aplicarFiltros);
-$("filtroCategoria").addEventListener("change", aplicarFiltros);
-$("filtroStatus").addEventListener("change", aplicarFiltros);
-$("filtroCampeonato").addEventListener("change", aplicarFiltros);
-
-carregarTudo();
+carregar();
 </script>
 
 </body>
