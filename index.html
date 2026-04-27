@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Liga Goiana de Futebol de Base</title>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
@@ -22,15 +20,8 @@
       --max:1280px;
     }
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
-
-    html{
-      scroll-behavior:smooth;
-    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
 
     body{
       font-family:Arial, Helvetica, sans-serif;
@@ -39,31 +30,12 @@
         url("fundo.png") center/cover fixed no-repeat;
       color:var(--white);
       overflow-x:hidden;
-      min-height:100vh;
     }
 
-    a{
-      text-decoration:none;
-      color:inherit;
-      transition:var(--transition);
-    }
-
-    button{
-      font-family:inherit;
-      transition:var(--transition);
-      cursor:pointer;
-      border:none;
-      background:none;
-    }
-
-    ul{
-      list-style:none;
-    }
-
-    img{
-      max-width:100%;
-      display:block;
-    }
+    a{text-decoration:none;color:inherit;transition:var(--transition);}
+    button{font-family:inherit;transition:var(--transition);cursor:pointer;border:none;background:none;}
+    ul{list-style:none;}
+    img{max-width:100%;display:block;}
 
     .wrap{
       width:min(100% - 32px, var(--max));
@@ -84,1607 +56,1558 @@
       opacity:1;
       visibility:visible;
     }
-.sidebar-overlay.show{
-  opacity:1;
-  visibility:visible;
-}
 
-.sidebar{
-  position:fixed;
-  top:0;
-  left:0;
-  width:320px;
-  max-width:88%;
-  height:100vh;
-  background:linear-gradient(180deg, #04132d 0%, #021022 100%);
-  border-right:1px solid var(--yellow-line);
-  box-shadow:var(--shadow);
-  padding:22px 18px 28px;
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch; /* suaviza scroll no celular */
-  transform:translateX(-105%);
-  transition:var(--transition);
-  z-index:999;
-}
+    .sidebar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:320px;
+      max-width:88%;
+      height:100vh;
+      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
+      border-right:1px solid var(--yellow-line);
+      box-shadow:var(--shadow);
+      padding:22px 18px 28px;
+      overflow-y:auto;
+      transform:translateX(-105%);
+      transition:var(--transition);
+      z-index:999;
+    }
 
-.sidebar.open{
-  transform:translateX(0);
-}
+    .sidebar.open{
+      transform:translateX(0);
+    }
 
-.sidebar-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:12px;
-  margin-bottom:20px;
-  padding-bottom:16px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
+    .sidebar-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:20px;
+      padding-bottom:16px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
 
-.sidebar-brand{
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
+    .sidebar-brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
 
-.sidebar-brand img{
-  width:54px;
-  height:54px;
-  object-fit:cover;
-  border-radius:14px;
-  border:2px solid var(--yellow);
-  background:#fff;
-  flex-shrink:0; /* evita deformar no mobile */
-}
+    .sidebar-brand img{
+      width:54px;
+      height:54px;
+      object-fit:cover;
+      border-radius:14px;
+      border:2px solid var(--yellow);
+      background:#fff;
+    }
 
-.sidebar-brand-text strong{
-  display:block;
-  font-size:16px;
-  color:var(--yellow);
-  line-height:1.25;
-  word-break:break-word; /* evita quebrar layout com nomes grandes */
-}
-.sidebar-brand-text span{
-  display:block;
-  margin-top:4px;
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.35;
-  word-break:break-word; /* evita quebrar layout */
-}
+    .sidebar-brand-text strong{
+      display:block;
+      font-size:16px;
+      color:var(--yellow);
+      line-height:1.25;
+    }
 
-.sidebar-close{
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  background:rgba(255,255,255,.08);
-  color:#fff;
-  font-size:24px;
-  display:flex; /* centraliza o X */
-  align-items:center;
-  justify-content:center;
-}
+    .sidebar-brand-text span{
+      display:block;
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
 
-.sidebar-close:hover{
-  background:var(--yellow);
-  color:#08172c;
-}
+    .sidebar-close{
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      font-size:24px;
+    }
 
-.sidebar-block{
-  margin-bottom:22px;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:16px;
-  padding:14px;
-}
+    .sidebar-close:hover{
+      background:var(--yellow);
+      color:#08172c;
+    }
 
-.sidebar-title{
-  font-size:14px;
-  font-weight:700;
-  color:var(--yellow);
-  margin-bottom:12px;
-  letter-spacing:.4px;
-}
+    .sidebar-block{
+      margin-bottom:22px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:14px;
+    }
 
-.side-menu{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
+    .sidebar-title{
+      font-size:14px;
+      font-weight:700;
+      color:var(--yellow);
+      margin-bottom:12px;
+      letter-spacing:.4px;
+    }
 
-.side-menu a{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:11px 12px;
-  border-radius:12px;
-  color:var(--muted);
-  border:1px solid transparent;
-  transition:var(--transition); /* garante suavidade */
-}
+    .side-menu{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
 
-.side-menu a:hover{
-  background:var(--yellow-soft);
-  color:var(--yellow);
-  border-color:var(--yellow-line);
-  transform:translateX(3px);
-}
+    .side-menu a{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:11px 12px;
+      border-radius:12px;
+      color:var(--muted);
+      border:1px solid transparent;
+    }
 
-.side-icon{
-  width:20px;
-  text-align:center;
-  color:var(--yellow);
-  flex-shrink:0;
-}
+    .side-menu a:hover{
+      background:var(--yellow-soft);
+      color:var(--yellow);
+      border-color:var(--yellow-line);
+      transform:translateX(3px);
+    }
 
-.topbar{
-  position:relative;
-  z-index:100;
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px); /* suporte iOS */
-  background:rgba(1,9,24,.88);
-  border-bottom:1px solid rgba(255,255,255,.08);
-  overflow:visible;
-}
+    .side-icon{
+      width:20px;
+      text-align:center;
+      color:var(--yellow);
+      flex-shrink:0;
+    }
 
-.topbar-inner{
-  min-height:84px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  padding:14px 0;
-  flex-wrap:wrap;
-  overflow:visible;
-  position:relative;
-}
+    .topbar{
+      position:relative;
+      z-index:100;
+      backdrop-filter:blur(12px);
+      background:rgba(1,9,24,.88);
+      border-bottom:1px solid rgba(255,255,255,.08);
+      overflow:visible;
+    }
 
-.topbar-left{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  flex:0 0 auto;
-  min-width:0;
-  order:1;
-}
+    .topbar-inner{
+      min-height:84px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:14px 0;
+      flex-wrap:wrap;
+      overflow:visible;
+      position:relative;
+    }
 
-.menu-toggle{
-  width:46px;
-  height:46px;
-  border-radius:14px;
-  border:1px solid var(--yellow-line);
-  background:var(--yellow-soft);
-  color:var(--yellow);
-  font-size:20px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-shrink:0;
-  transition:var(--transition);
-}
-.menu-toggle:hover{
-  transform:translateY(-2px);
-  background:var(--yellow);
-  color:#08172c;
-}
+    .topbar-left{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      flex:0 0 auto;
+      min-width:0;
+      order:1;
+    }
 
-.topbar-logo{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  min-width:0;
-  flex:1 1 auto;
-  order:2;
-}
+    .menu-toggle{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      border:1px solid var(--yellow-line);
+      background:var(--yellow-soft);
+      color:var(--yellow);
+      font-size:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
 
-.topbar-logo img{
-  width:58px;
-  height:58px;
-  border-radius:14px;
-  object-fit:cover;
-  border:2px solid var(--yellow);
-  background:#fff;
-  flex-shrink:0;
-}
+    .menu-toggle:hover{
+      transform:translateY(-2px);
+      background:var(--yellow);
+      color:#08172c;
+    }
 
-.logo-text{
-  min-width:0;
-}
+    .topbar-logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+      flex:1 1 auto;
+      order:2;
+    }
 
-.logo-text strong{
-  display:block;
-  font-size:17px;
-  color:#fff;
-  line-height:1.2;
-  white-space:nowrap; /* evita quebrar layout */
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
+    .topbar-logo img{
+      width:58px;
+      height:58px;
+      border-radius:14px;
+      object-fit:cover;
+      border:2px solid var(--yellow);
+      background:#fff;
+      flex-shrink:0;
+    }
 
-.logo-text span{
-  display:block;
-  margin-top:4px;
-  color:var(--yellow);
-  font-size:13px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
+    .logo-text{
+      min-width:0;
+    }
 
-.top-actions{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex:0 0 auto;
-  position:relative;
-  z-index:180;
-  order:3;
-  margin-left:auto;
-}
+    .logo-text strong{
+      display:block;
+      font-size:17px;
+      color:#fff;
+      line-height:1.2;
+    }
 
-.top-nav{
-  width:100%;
-  display:flex;
-  justify-content:center;
-  order:4;
-  overflow:visible;
-  position:relative;
-  z-index:150;
-}
+    .logo-text span{
+      display:block;
+      margin-top:4px;
+      color:var(--yellow);
+      font-size:13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
 
-.top-nav ul{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  flex-wrap:wrap;
-  justify-content:center;
-  width:100%;
-  padding-bottom:2px;
-  overflow:visible;
-}
+    .top-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex:0 0 auto;
+      position:relative;
+      z-index:180;
+      order:3;
+      margin-left:auto;
+    }
 
-.top-nav li{
-  position:relative;
-  flex:0 0 auto;
-}
+    .top-nav{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      order:4;
+      overflow:visible;
+      position:relative;
+      z-index:150;
+    }
 
-.top-nav a,
-.dropdown-toggle{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:10px 14px;
-  border-radius:12px;
-  color:var(--muted);
-  font-weight:600;
-  border:1px solid transparent;
-  background:transparent;
-  white-space:nowrap;
-  transition:var(--transition); /* padronização */
-}
+    .top-nav ul{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      flex-wrap:wrap;
+      justify-content:center;
+      width:100%;
+      padding-bottom:2px;
+      overflow:visible;
+    }
 
-.top-nav a:hover,
-.dropdown-toggle:hover,
-.top-nav li:hover > a{
-  color:var(--yellow);
-  background:var(--yellow-soft);
-  border-color:var(--yellow-line);
-}
+    .top-nav li{
+      position:relative;
+      flex:0 0 auto;
+    }
 
-.dropdown-toggle .fa-chevron-down{
-  transition:transform .2s ease;
-}
+    .top-nav a,
+    .dropdown-toggle{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:12px;
+      color:var(--muted);
+      font-weight:600;
+      border:1px solid transparent;
+      background:transparent;
+      white-space:nowrap;
+    }
 
-.dropdown.open .dropdown-toggle{
-  color:var(--yellow);
-  background:var(--yellow-soft);
-  border-color:var(--yellow-line);
-}
+    .top-nav a:hover,
+    .dropdown-toggle:hover,
+    .top-nav li:hover > a{
+      color:var(--yellow);
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+    }
 
-.dropdown.open .dropdown-toggle .fa-chevron-down{
-  transform:rotate(180deg);
-}
+    .dropdown-toggle .fa-chevron-down{
+      transition:transform .2s ease;
+    }
 
-.dropdown-menu{
-  position:absolute;
-  top:calc(100% + 8px);
-  left:50%;
-  transform:translateX(-50%);
-  min-width:240px;
-  background:linear-gradient(180deg, #04132d 0%, #021022 100%);
-  border:1px solid var(--yellow-line);
-  border-radius:16px;
-  box-shadow:var(--shadow);
-  padding:8px;
-  display:none;
-  z-index:9999;
-}
+    .dropdown.open .dropdown-toggle{
+      color:var(--yellow);
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+    }
 
-.dropdown.open .dropdown-menu{
-  display:block;
-}
+    .dropdown.open .dropdown-toggle .fa-chevron-down{
+      transform:rotate(180deg);
+    }
 
-.dropdown.mobile-fixed .dropdown-menu{
-  position:fixed;
-  left:10px !important;
-  right:10px !important;
-  top:120px;
-  transform:none !important;
-  width:auto;
-  min-width:0;
-  max-width:calc(100vw - 20px);
-  max-height:60vh;
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch; /* melhora scroll mobile */
-}
+    .dropdown-menu{
+      position:absolute;
+      top:calc(100% + 8px);
+      left:50%;
+      transform:translateX(-50%);
+      min-width:240px;
+      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
+      border:1px solid var(--yellow-line);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      padding:8px;
+      display:none;
+      z-index:9999;
+    }
 
-.dropdown-menu a{
-  display:flex;
-  width:100%;
-  padding:12px 14px;
-  border-radius:12px;
-  color:var(--muted);
-  border:1px solid transparent;
-  transition:var(--transition);
-}
+    .dropdown.open .dropdown-menu{
+      display:block;
+    }
 
-.dropdown-menu a:hover{
-  color:var(--yellow);
-  background:var(--yellow-soft);
-  border-color:var(--yellow-line);
-}
+    .dropdown.mobile-fixed .dropdown-menu{
+      position:fixed;
+      left:10px !important;
+      right:10px !important;
+      top:120px;
+      transform:none !important;
+      width:auto;
+      min-width:0;
+      max-width:calc(100vw - 20px);
+      max-height:60vh;
+      overflow-y:auto;
+    }
 
-.btn-primary,
-.btn-secondary,
-.btn-login-chip{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  border-radius:14px;
-  transition:var(--transition);
-  font-weight:700;
-  cursor:pointer;
-  border:1px solid transparent;
-}
+    .dropdown-menu a{
+      display:flex;
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      color:var(--muted);
+      border:1px solid transparent;
+    }
 
-.btn-primary{
-  background:linear-gradient(135deg, var(--yellow), #ffe600);
-  color:#08172c;
-  padding:14px 18px;
-  box-shadow:0 10px 22px rgba(255,212,0,.22);
-}
+    .dropdown-menu a:hover{
+      color:var(--yellow);
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+    }
 
-.btn-primary:hover{
-  transform:translateY(-2px);
-  filter:brightness(1.04);
-  box-shadow:0 12px 24px rgba(255,212,0,.3);
-}
+    .btn-primary,
+    .btn-secondary,
+    .btn-login-chip{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      border-radius:14px;
+      transition:var(--transition);
+      font-weight:700;
+      cursor:pointer;
+      border:1px solid transparent;
+    }
 
-.btn-login-chip{
-  padding:10px 16px;
-  border:1px solid var(--yellow-line);
-  background:rgba(255,212,0,.08);
-  color:var(--yellow);
-  white-space:nowrap;
-}
+    .btn-primary{
+      background:linear-gradient(135deg, var(--yellow), #ffe600);
+      color:#08172c;
+      padding:14px 18px;
+      box-shadow:0 10px 22px rgba(255,212,0,.22);
+    }
 
-.btn-login-chip:hover{
-  background:var(--yellow);
-  color:#08172c;
-}
+    .btn-primary:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.04);
+      box-shadow:0 12px 24px rgba(255,212,0,.3);
+    }
 
-.login-avatar{
-  width:28px;
-  height:28px;
-  border-radius:50%;
-  background:rgba(255,255,255,.12);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:inherit;
-  overflow:hidden;
-  flex-shrink:0;
-}
+    .btn-login-chip{
+      padding:10px 16px;
+      border:1px solid var(--yellow-line);
+      background:rgba(255,212,0,.08);
+      color:var(--yellow);
+      white-space:nowrap;
+    }
 
-.login-avatar img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:50%;
-}
+    .btn-login-chip:hover{
+      background:var(--yellow);
+      color:#08172c;
+    }
 
-.user-chip{
-  display:none;
-  align-items:center;
-  gap:10px;
-  padding:8px 12px;
-  border-radius:16px;
-  border:1px solid var(--yellow-line);
-  background:rgba(255,212,0,.08);
-  color:var(--yellow);
-  min-height:48px;
-  max-width:250px;
-  transition:var(--transition);
-}
+    .login-avatar{
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:rgba(255,255,255,.12);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:inherit;
+      overflow:hidden;
+      flex-shrink:0;
+    }
 
-.user-chip:hover{
-  background:var(--yellow);
-  color:#08172c;
-}
-.user-chip-text{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  min-width:0;
-}
+    .login-avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:50%;
+    }
 
-.user-chip-text strong,
-.user-chip-text span{
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  max-width:150px;
-}
+    .user-chip{
+      display:none;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:16px;
+      border:1px solid var(--yellow-line);
+      background:rgba(255,212,0,.08);
+      color:var(--yellow);
+      min-height:48px;
+      max-width:250px;
+    }
 
-.user-chip-text strong{
-  font-size:13px;
-  line-height:1.2;
-}
+    .user-chip:hover{
+      background:var(--yellow);
+      color:#08172c;
+    }
 
-.user-chip-text span{
-  font-size:11px;
-  opacity:.9;
-}
+    .user-chip-text{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      min-width:0;
+    }
 
-.apito-badge{
-  color:inherit;
-  font-size:13px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:18px;
-  flex-shrink:0;
-}
+    .user-chip-text strong,
+    .user-chip-text span{
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:150px;
+    }
 
+    .user-chip-text strong{
+      font-size:13px;
+      line-height:1.2;
+    }
+
+    .user-chip-text span{
+      font-size:11px;
+      opacity:.9;
+    }
+
+    .apito-badge{
+      color:inherit;
+      font-size:13px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:18px;
+      flex-shrink:0;
+    }
 .user-dropdown{
-  position:absolute;
-  top:calc(100% + 10px);
-  right:0;
-  width:320px;
-  max-width:calc(100vw - 24px);
-  background:linear-gradient(180deg, #04132d 0%, #021022 100%);
-  border:1px solid var(--yellow-line);
-  border-radius:20px;
-  box-shadow:var(--shadow);
-  padding:14px;
-  display:none;
-  z-index:9999;
-}
-
-.user-dropdown.open{
-  display:block;
-}
-
-.user-card-top{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding-bottom:14px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  margin-bottom:14px;
-}
-
-.user-card-avatar{
-  width:58px;
-  height:58px;
-  border-radius:50%;
-  background:rgba(255,255,255,.08);
-  border:2px solid var(--yellow);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  color:var(--yellow);
-  font-size:22px;
-  flex-shrink:0;
-}
-
-.user-card-avatar img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:50%;
-}
-
-.user-card-info{
-  min-width:0;
-}
-
-.user-card-info strong{
-  display:block;
-  color:#fff;
-  font-size:16px;
-  line-height:1.2;
-  margin-bottom:4px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.user-card-info span{
-  display:block;
-  color:var(--muted);
-  font-size:13px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  margin-bottom:4px;
-}
-
-.user-role{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:5px 10px;
-  border-radius:999px;
-  background:var(--yellow-soft);
-  color:var(--yellow);
-  border:1px solid var(--yellow-line);
-  font-size:12px;
-  font-weight:700;
-}
-
-.user-details{
-  display:grid;
-  gap:10px;
-  margin-bottom:14px;
-}
-
-.user-detail-row{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  color:var(--muted);
-  font-size:13px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-  padding-bottom:8px;
-}
-
-.user-detail-row strong{
-  color:#fff;
-  font-size:13px;
-  font-weight:600;
-}
-
-.user-menu-actions{
-  display:grid;
-  gap:10px;
-}
-
-.user-menu-actions a,
-.user-menu-actions button{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  width:100%;
-  padding:11px 12px;
-  border-radius:12px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.06);
-  color:var(--muted);
-  font-weight:700;
-  text-align:left;
-  transition:var(--transition);
-}
-
-.user-menu-actions a:hover,
-.user-menu-actions button:hover{
-  background:var(--yellow-soft);
-  border-color:var(--yellow-line);
-  color:var(--yellow);
-}
-
-.hero{
-  padding:34px 0 20px;
-  position:relative;
-  z-index:1;
-}
-
-.hero-card{
-  background:linear-gradient(135deg, rgba(7,28,68,.9), rgba(3,17,45,.92));
-  border:1px solid var(--yellow-line);
-  border-radius:30px;
-  box-shadow:var(--shadow);
-  overflow:hidden;
-}
-
-.hero-grid{
-  display:grid;
-  grid-template-columns:1.15fr .85fr;
-  gap:26px;
-  align-items:center;
-  padding:34px;
-}
-
-.eyebrow{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 14px;
-  border-radius:999px;
-  background:rgba(255,212,0,.12);
-  border:1px solid var(--yellow-line);
-  color:var(--yellow);
-  font-size:13px;
-  font-weight:700;
-  margin-bottom:16px;
-}
-.hero h1{
-  font-size:46px;
-  line-height:1.08;
-  margin-bottom:12px;
-  color:var(--yellow);
-}
-
-.hero p{
-  color:var(--muted);
-  font-size:18px;
-  line-height:1.7;
-  max-width:700px;
-}
-
-.hero-actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:14px;
-  margin-top:26px;
-}
-
-.btn-secondary{
-  padding:14px 18px;
-  border:1px solid var(--yellow-line);
-  color:#fff;
-  background:rgba(255,255,255,.06);
-}
-
-.btn-secondary:hover{
-  transform:translateY(-2px);
-  background:var(--yellow);
-  color:#08172c;
-}
-
-.hero-art img{
-  width:100%;
-  height:100%;
-  min-height:360px;
-  object-fit:cover;
-  border-radius:24px;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:var(--shadow);
-}
-
-.cards-pilares{
-  display:grid;
-  grid-template-columns:repeat(4, 1fr);
-  gap:18px;
-  margin:28px 0 10px;
-}
-
-.pillar{
-  background:linear-gradient(180deg, rgba(7,24,59,.94), rgba(3,17,45,.96));
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:20px;
-  padding:22px 18px;
-  display:flex;
-  gap:14px;
-  align-items:flex-start;
-  box-shadow:var(--shadow);
-  transition:var(--transition);
-}
-
-.pillar:hover{
-  border-color:var(--yellow-line);
-  transform:translateY(-2px);
-}
-
-.pillar-icon{
-  width:52px;
-  height:52px;
-  border-radius:16px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--yellow-soft);
-  color:var(--yellow);
-  font-size:22px;
-  flex-shrink:0;
-}
-
-.pillar-text h3{
-  font-size:18px;
-  margin-bottom:8px;
-  color:#fff;
-}
-
-.pillar-text p{
-  font-size:14px;
-  line-height:1.6;
-  color:var(--muted);
-}
-
-.content-grid{
-  display:grid;
-  grid-template-columns:1.3fr .9fr;
-  gap:22px;
-  margin:28px 0;
-}
-
-.panel{
-  background:linear-gradient(180deg, rgba(7,24,59,.94), rgba(3,17,45,.96));
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:24px;
-  box-shadow:var(--shadow);
-  padding:22px;
-}
-
-.panel-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin-bottom:18px;
-  flex-wrap:wrap;
-}
-
-.panel-head-title{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.panel-head-icon{
-  width:46px;
-  height:46px;
-  border-radius:14px;
-  background:var(--yellow-soft);
-  color:var(--yellow);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:20px;
-  flex-shrink:0;
-}
-
-.panel-head h2{
-  font-size:28px;
-  color:#fff;
-}
-
-.panel-head a{
-  color:var(--yellow);
-  font-weight:700;
-  transition:var(--transition);
-}
-
-.panel-head a:hover{
-  color:#fff176;
-}
-
-.match-table{
-  width:100%;
-  border-collapse:collapse;
-  overflow:hidden;
-  border-radius:16px;
-}
-
-.match-table thead th{
-  background:rgba(255,212,0,.12);
-  color:var(--yellow);
-  text-align:left;
-  padding:14px 12px;
-  font-size:14px;
-}
-
-.match-table tbody td{
-  padding:14px 12px;
-  border-top:1px solid rgba(255,255,255,.08);
-  color:var(--muted);
-  font-size:14px;
-}
-
-.match-table tbody tr:hover{
-  background:rgba(255,212,0,.08);
-}
-
-.news-list{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-
-.news-item{
-  padding:16px;
-  border-radius:18px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.06);
-  transition:var(--transition);
-}
-
-.news-item:hover{
-  transform:translateY(-2px);
-  background:rgba(255,212,0,.08);
-  border-color:var(--yellow-line);
-}
-
-.news-item h3{
-  font-size:17px;
-  color:#fff;
-  margin-bottom:8px;
-}
-
-.news-item p{
-  color:var(--muted);
-  line-height:1.6;
-  font-size:14px;
-}
-
-.cta-banner{
-  margin:10px 0 34px;
-}
-
-.cta-banner-inner{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:20px;
-  flex-wrap:wrap;
-  background:linear-gradient(135deg, rgba(255,212,0,.16), rgba(255,255,255,.05));
-  border:1px solid var(--yellow-line);
-  border-radius:24px;
-  padding:26px;
-  box-shadow:var(--shadow);
-}
-
-.cta-banner-inner h3{
-  font-size:30px;
-  color:#fff;
-  margin-bottom:8px;
-}
-
-.cta-banner-inner p{
-  color:var(--muted);
-  line-height:1.6;
-}
-
-.status-user{
-  display:none;
-}
-
-footer{
-  background:linear-gradient(180deg, rgba(2,10,24,.96), rgba(1,9,24,1));
-  border-top:1px solid rgba(255,255,255,.08);
-  padding:40px 0 18px;
-}
-
-.footer-grid{
-  display:grid;
-  grid-template-columns:1.2fr .8fr .8fr .8fr;
-  gap:20px;
-}
-
-.footer-card{
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:22px;
-  padding:22px;
-}
-
-.footer-card h4{
-  color:var(--yellow);
-  margin-bottom:14px;
-  font-size:18px;
-}
-
-.footer-brand{
-  display:flex;
-  gap:14px;
-  align-items:center;
-  margin-bottom:14px;
-}
-
-.footer-brand img{
-  width:62px;
-  height:62px;
-  border-radius:16px;
-  border:2px solid var(--yellow);
-  object-fit:cover;
-  background:#fff;
-  flex-shrink:0;
-}
-
-.footer-brand-text h3{
-  font-size:20px;
-  margin-bottom:6px;
-  color:#fff;
-}
-
-.footer-brand-text p{
-  color:var(--muted);
-  line-height:1.5;
-  font-size:14px;
-}
-
-.footer-card a{
-  display:block;
-  color:var(--muted);
-  margin-bottom:10px;
-  transition:var(--transition);
-}
-
-.footer-card a:hover{
-  color:var(--yellow);
-}
-
-.footer-contact-line{
-  display:flex !important;
-  align-items:center;
-  gap:10px;
-  margin-bottom:12px !important;
-}
-
-.footer-social{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:12px;
-}
-
-.footer-social a{
-  width:42px;
-  height:42px;
-  border-radius:12px;
-  background:rgba(255,255,255,.07);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:var(--yellow);
-  margin-bottom:0;
-}
-
-.footer-social a:hover{
-  background:var(--yellow);
-  color:#08172c;
-}
-
-.copyright{
-  margin-top:18px;
-  padding-top:18px;
-  border-top:1px solid rgba(255,255,255,.08);
-  text-align:center;
-  color:var(--text-soft);
-  font-size:14px;
-}
-
-#menuAdmin{
-  display:none;
-}
-
-@media (max-width:1180px){
-  .hero-grid,
-  .content-grid,
-  .footer-grid,
-  .cards-pilares{
-    grid-template-columns:1fr 1fr;
-  }
-}
-
-@media (max-width:900px){
-  .hero-grid,
-  .content-grid,
-  .footer-grid,
-  .cards-pilares{
-    grid-template-columns:1fr;
-  }
-
-  .hero h1{
-    font-size:36px;
-  }
-
-  .panel-head h2{
-    font-size:24px;
-  }
-
-  .topbar-inner{
-    flex-wrap:wrap;
-    padding:14px 0;
-  }
-
-  .top-nav{
-    overflow:visible;
-  }
-
-  .top-nav ul{
-    flex-wrap:wrap;
-    justify-content:center;
-  }
-
-  .top-nav a,
-  .dropdown-toggle{
-    padding:9px 12px;
-    font-size:13px;
-  }
-}
-
-@media (max-width:600px){
-  .wrap{
-    width:min(100% - 20px, var(--max));
-  }
-
-  .topbar{
-    overflow:visible;
-  }
-
-  .topbar-inner{
-    min-height:auto;
-    display:grid;
-    grid-template-columns:auto 1fr auto;
-    grid-template-areas:
-      "menu logo login"
-      "nav nav nav";
-    gap:8px;
-    align-items:center;
-    padding:10px 0;
-  }
-
-  .topbar-left{
-    grid-area:menu;
-    width:auto;
-    min-width:0;
-    order:initial;
-  }
-
-  .menu-toggle{
-    width:42px;
-    height:42px;
-    border-radius:12px;
-    font-size:19px;
-  }
-
-  .topbar-logo{
-    grid-area:logo;
-    width:auto;
-    justify-content:flex-start;
-    gap:7px;
-    min-width:0;
-    order:initial;
-  }
-
-  .topbar-logo img{
-    width:42px;
-    height:42px;
-    border-radius:11px;
-  }
-
-  .logo-text strong{
-    font-size:12px;
-    line-height:1.12;
-    white-space:normal;
-  }
-
-  .logo-text span{
-    font-size:10px;
-    margin-top:2px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-
-  .top-actions{
-    grid-area:login;
-    width:auto;
-    min-width:0;
-    margin-left:0;
-    justify-content:flex-end;
-    order:initial;
-  }
-
-  .btn-login-chip{
-    min-height:42px;
-    padding:7px 9px;
-    border-radius:12px;
-  }
-
-  .btn-login-chip > span:last-child{
-    display:none;
-  }
-
-  .login-avatar{
-    width:26px;
-    height:26px;
-  }
-
-  .user-chip{
-    min-height:42px;
-    padding:7px 9px;
-    border-radius:12px;
-    max-width:48px;
-  }
-
-  .user-chip-text,
-  .apito-badge{
-    display:none !important;
-  }
-
-  .top-nav{
-    grid-area:nav;
-    order:initial;
-    justify-content:flex-start;
-    overflow-x:auto;
-    overflow-y:visible;
-    width:100%;
-    margin-top:4px;
-    scrollbar-width:none;
-    -ms-overflow-style:none;
-  }
-
-  .top-nav::-webkit-scrollbar{
-    display:none;
-  }
-.top-nav ul{
-        width:max-content;
-        min-width:max-content;
-        justify-content:flex-start;
-        flex-wrap:nowrap;
-        gap:6px;
+      position:absolute;
+      top:calc(100% + 10px);
+      right:0;
+      width:320px;
+      max-width:calc(100vw - 24px);
+      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
+      border:1px solid var(--yellow-line);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      padding:14px;
+      display:none;
+      z-index:9999;
+    }
+
+    .user-dropdown.open{
+      display:block;
+    }
+
+    .user-card-top{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding-bottom:14px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      margin-bottom:14px;
+    }
+
+    .user-card-avatar{
+      width:58px;
+      height:58px;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+      border:2px solid var(--yellow);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      color:var(--yellow);
+      font-size:22px;
+      flex-shrink:0;
+    }
+
+    .user-card-avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:50%;
+    }
+
+    .user-card-info{
+      min-width:0;
+    }
+
+    .user-card-info strong{
+      display:block;
+      color:#fff;
+      font-size:16px;
+      line-height:1.2;
+      margin-bottom:4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .user-card-info span{
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      margin-bottom:4px;
+    }
+
+    .user-role{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:5px 10px;
+      border-radius:999px;
+      background:var(--yellow-soft);
+      color:var(--yellow);
+      border:1px solid var(--yellow-line);
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .user-details{
+      display:grid;
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .user-detail-row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      color:var(--muted);
+      font-size:13px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      padding-bottom:8px;
+    }
+
+    .user-detail-row strong{
+      color:#fff;
+      font-size:13px;
+      font-weight:600;
+    }
+
+    .user-menu-actions{
+      display:grid;
+      gap:10px;
+    }
+
+    .user-menu-actions a,
+    .user-menu-actions button{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      width:100%;
+      padding:11px 12px;
+      border-radius:12px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color:var(--muted);
+      font-weight:700;
+      text-align:left;
+    }
+
+    .user-menu-actions a:hover,
+    .user-menu-actions button:hover{
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+      color:var(--yellow);
+    }
+
+    .hero{
+      padding:34px 0 20px;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero-card{
+      background:linear-gradient(135deg, rgba(7,28,68,.9), rgba(3,17,45,.92));
+      border:1px solid var(--yellow-line);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:26px;
+      align-items:center;
+      padding:34px;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(255,212,0,.12);
+      border:1px solid var(--yellow-line);
+      color:var(--yellow);
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:16px;
+    }
+
+    .hero h1{
+      font-size:46px;
+      line-height:1.08;
+      margin-bottom:12px;
+      color:var(--yellow);
+    }
+
+    .hero p{
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.7;
+      max-width:700px;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-top:26px;
+    }
+
+    .btn-secondary{
+      padding:14px 18px;
+      border:1px solid var(--yellow-line);
+      color:#fff;
+      background:rgba(255,255,255,.06);
+    }
+
+    .btn-secondary:hover{
+      transform:translateY(-2px);
+      background:var(--yellow);
+      color:#08172c;
+    }
+
+    .hero-art img{
+      width:100%;
+      height:100%;
+      min-height:360px;
+      object-fit:cover;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:var(--shadow);
+    }
+
+    .cards-pilares{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:18px;
+      margin:28px 0 10px;
+    }
+
+    .pillar{
+      background:linear-gradient(180deg, rgba(7,24,59,.94), rgba(3,17,45,.96));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:20px;
+      padding:22px 18px;
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      box-shadow:var(--shadow);
+      transition:var(--transition);
+    }
+
+    .pillar:hover{
+      border-color:var(--yellow-line);
+      transform:translateY(-2px);
+    }
+
+    .pillar-icon{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:var(--yellow-soft);
+      color:var(--yellow);
+      font-size:22px;
+      flex-shrink:0;
+    }
+
+    .pillar-text h3{
+      font-size:18px;
+      margin-bottom:8px;
+      color:#fff;
+    }
+
+    .pillar-text p{
+      font-size:14px;
+      line-height:1.6;
+      color:var(--muted);
+    }
+
+    .content-grid{
+      display:grid;
+      grid-template-columns:1.3fr .9fr;
+      gap:22px;
+      margin:28px 0;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, rgba(7,24,59,.94), rgba(3,17,45,.96));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .panel-head-title{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .panel-head-icon{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      background:var(--yellow-soft);
+      color:var(--yellow);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
+    }
+
+    .panel-head h2{
+      font-size:28px;
+      color:#fff;
+    }
+
+    .panel-head a{
+      color:var(--yellow);
+      font-weight:700;
+      transition:var(--transition);
+    }
+
+    .panel-head a:hover{
+      color:#fff176;
+    }
+
+    .match-table{
+      width:100%;
+      border-collapse:collapse;
+      overflow:hidden;
+      border-radius:16px;
+    }
+
+    .match-table thead th{
+      background:rgba(255,212,0,.12);
+      color:var(--yellow);
+      text-align:left;
+      padding:14px 12px;
+      font-size:14px;
+    }
+
+    .match-table tbody td{
+      padding:14px 12px;
+      border-top:1px solid rgba(255,255,255,.08);
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .match-table tbody tr:hover{
+      background:rgba(255,212,0,.08);
+    }
+
+    .news-list{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .news-item{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      transition:var(--transition);
+    }
+
+    .news-item:hover{
+      transform:translateY(-2px);
+      background:rgba(255,212,0,.08);
+      border-color:var(--yellow-line);
+    }
+
+    .news-item h3{
+      font-size:17px;
+      color:#fff;
+      margin-bottom:8px;
+    }
+
+    .news-item p{
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px;
+    }
+
+    .cta-banner{
+      margin:10px 0 34px;
+    }
+
+    .cta-banner-inner{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      flex-wrap:wrap;
+      background:linear-gradient(135deg, rgba(255,212,0,.16), rgba(255,255,255,.05));
+      border:1px solid var(--yellow-line);
+      border-radius:24px;
+      padding:26px;
+      box-shadow:var(--shadow);
+    }
+
+    .cta-banner-inner h3{
+      font-size:30px;
+      color:#fff;
+      margin-bottom:8px;
+    }
+
+    .cta-banner-inner p{
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .status-user{
+      display:none;
+    }
+
+    footer{
+      background:linear-gradient(180deg, rgba(2,10,24,.96), rgba(1,9,24,1));
+      border-top:1px solid rgba(255,255,255,.08);
+      padding:40px 0 18px;
+    }
+
+    .footer-grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr .8fr .8fr;
+      gap:20px;
+    }
+
+    .footer-card{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:22px;
+      padding:22px;
+    }
+
+    .footer-card h4{
+      color:var(--yellow);
+      margin-bottom:14px;
+      font-size:18px;
+    }
+
+    .footer-brand{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      margin-bottom:14px;
+    }
+
+    .footer-brand img{
+      width:62px;
+      height:62px;
+      border-radius:16px;
+      border:2px solid var(--yellow);
+      object-fit:cover;
+      background:#fff;
+    }
+
+    .footer-brand-text h3{
+      font-size:20px;
+      margin-bottom:6px;
+      color:#fff;
+    }
+
+    .footer-brand-text p{
+      color:var(--muted);
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .footer-card a{
+      display:block;
+      color:var(--muted);
+      margin-bottom:10px;
+      transition:var(--transition);
+    }
+
+    .footer-card a:hover{
+      color:var(--yellow);
+    }
+
+    .footer-contact-line{
+      display:flex !important;
+      align-items:center;
+      gap:10px;
+      margin-bottom:12px !important;
+    }
+
+    .footer-social{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .footer-social a{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      background:rgba(255,255,255,.07);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--yellow);
+      margin-bottom:0;
+    }
+
+    .footer-social a:hover{
+      background:var(--yellow);
+      color:#08172c;
+    }
+
+    .copyright{
+      margin-top:18px;
+      padding-top:18px;
+      border-top:1px solid rgba(255,255,255,.08);
+      text-align:center;
+      color:var(--text-soft);
+      font-size:14px;
+    }
+
+    #menuAdmin{
+      display:none;
+    }
+
+    @media (max-width:1180px){
+      .hero-grid,
+      .content-grid,
+      .footer-grid,
+      .cards-pilares{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media (max-width:900px){
+      .hero-grid,
+      .content-grid,
+      .footer-grid,
+      .cards-pilares{
+        grid-template-columns:1fr;
+      }
+
+      .hero h1{
+        font-size:36px;
+      }
+
+      .panel-head h2{
+        font-size:24px;
+      }
+
+      .topbar-inner{
+        flex-wrap:wrap;
+        padding:14px 0;
+      }
+
+      .top-nav{
+        overflow:visible;
+      }
+
+      .top-nav ul{
+        flex-wrap:wrap;
+        justify-content:center;
       }
 
       .top-nav a,
       .dropdown-toggle{
-        padding:8px 10px;
-        font-size:12px;
-        border-radius:10px;
-      }
-
-      .dropdown-menu{
-        min-width:220px;
-        max-width:92vw;
-        z-index:9999;
-      }
-
-      .user-dropdown{
-        right:0;
-        width:300px;
-        max-width:calc(100vw - 20px);
-      }
-
-      .hero{
-        padding-top:24px;
-      }
-
-      .hero-grid{
-        padding:20px;
-      }
-
-      .hero h1{
-        font-size:30px;
-      }
-
-      .btn-primary,
-      .btn-secondary{
-        width:100%;
-      }
-
-      .match-table{
-        display:block;
-        overflow-x:auto;
+        padding:9px 12px;
+        font-size:13px;
       }
     }
+
+    @media (max-width:600px){
+      .wrap{
+        width:min(100% - 20px, var(--max));
+      }
+
+      .topbar{
+        overflow:visible;
+      }
+.topbar-inner{  
+        min-height:auto;  
+        display:grid;  
+        grid-template-columns:auto 1fr auto;  
+        grid-template-areas:  
+          "menu logo login"  
+          "nav nav nav";  
+        gap:8px;  
+        align-items:center;  
+        padding:10px 0;  
+      }  
+  
+      .topbar-left{  
+        grid-area:menu;  
+        width:auto;  
+        min-width:0;  
+        order:initial;  
+      }  
+  
+      .menu-toggle{  
+        width:42px;  
+        height:42px;  
+        border-radius:12px;  
+        font-size:19px;  
+      }  
+  
+      .topbar-logo{  
+        grid-area:logo;  
+        width:auto;  
+        justify-content:flex-start;  
+        gap:7px;  
+        min-width:0;  
+        order:initial;  
+      }  
+  
+      .topbar-logo img{  
+        width:42px;  
+        height:42px;  
+        border-radius:11px;  
+      }  
+  
+      .logo-text strong{  
+        font-size:12px;  
+        line-height:1.12;  
+        white-space:normal;  
+      }  
+  
+      .logo-text span{  
+        font-size:10px;  
+        margin-top:2px;  
+        white-space:nowrap;  
+        overflow:hidden;  
+        text-overflow:ellipsis;  
+      }  
+  
+      .top-actions{  
+        grid-area:login;  
+        width:auto;  
+        min-width:0;  
+        margin-left:0;  
+        justify-content:flex-end;  
+        order:initial;  
+      }  
+  
+      .btn-login-chip{  
+        min-height:42px;  
+        padding:7px 9px;  
+        border-radius:12px;  
+      }  
+  
+      .btn-login-chip > span:last-child{  
+        display:none;  
+      }  
+  
+      .login-avatar{  
+        width:26px;  
+        height:26px;  
+      }  
+  
+      .user-chip{  
+        min-height:42px;  
+        padding:7px 9px;  
+        border-radius:12px;  
+        max-width:48px;  
+      }  
+  
+      .user-chip-text,  
+      .apito-badge{  
+        display:none !important;  
+      }  
+  
+      .top-nav{  
+        grid-area:nav;  
+        order:initial;  
+        justify-content:flex-start;  
+        overflow-x:auto;  
+        overflow-y:visible;  
+        width:100%;  
+        margin-top:4px;  
+        scrollbar-width:none;  
+        -ms-overflow-style:none;  
+      }  
+  
+      .top-nav::-webkit-scrollbar{  
+        display:none;  
+      }  
+  
+      .top-nav ul{  
+        width:max-content;  
+        min-width:max-content;  
+        justify-content:flex-start;  
+        flex-wrap:nowrap;  
+        gap:6px;  
+      }  
+  
+      .top-nav a,  
+      .dropdown-toggle{  
+        padding:8px 10px;  
+        font-size:12px;  
+        border-radius:10px;  
+      }  
+  
+      .dropdown-menu{  
+        min-width:220px;  
+        max-width:92vw;  
+        z-index:9999;  
+      }  
+  
+      .user-dropdown{  
+        right:0;  
+        width:300px;  
+        max-width:calc(100vw - 20px);  
+      }  
+  
+      .hero{  
+        padding-top:24px;  
+      }  
+  
+      .hero-grid{  
+        padding:20px;  
+      }  
+  
+      .hero h1{  
+        font-size:30px;  
+      }  
+  
+      .btn-primary,  
+      .btn-secondary{  
+        width:100%;  
+      }  
+  
+      .match-table{  
+        display:block;  
+        overflow-x:auto;  
+      }  
+    }  
   </style>
 </head>
 
-<body>
-
+<body>  
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-brand">
-        <img src="logo-liga.jfif" alt="Logo Liga Goiana">
-        <div class="sidebar-brand-text">
-          <strong>Liga Goiana de Futebol de Base</strong>
-          <span>Onde o talento encontra o futuro</span>
-        </div>
-      </div>
-
-      <button class="sidebar-close" id="sidebarClose" type="button">×</button>
+  <aside class="sidebar" id="sidebar">  
+    <div class="sidebar-header">  
+      <div class="sidebar-brand">  
+        <img src="logo-liga.jfif" alt="Logo Liga Goiana">  
+        <div class="sidebar-brand-text">  
+          <strong>Liga Goiana de Futebol de Base</strong>  
+          <span>Onde o talento encontra o futuro</span>  
+        </div>  
+      </div>  
+      <button class="sidebar-close" id="sidebarClose" type="button">×</button>  
     </div>
 
-    <div class="sidebar-block">
-      <div class="sidebar-title">NAVEGAÇÃO PÚBLICA</div>
+    <div class="sidebar-block">  
+      <div class="sidebar-title">NAVEGAÇÃO PÚBLICA</div>  
+      <div class="side-menu">  
+        <a href="classificacao.html"><span class="side-icon"><i class="fa-solid fa-ranking-star"></i></span>Classificação</a>  
+        <a href="jogos.html"><span class="side-icon"><i class="fa-solid fa-calendar-days"></i></span>Tabela de Jogos</a>  
+        <a href="sumulas.html"><span class="side-icon"><i class="fa-solid fa-file-signature"></i></span>Súmula</a>  
+        <a href="artilharia.html"><span class="side-icon"><i class="fa-solid fa-futbol"></i></span>Artilharia</a>  
+        <a href="cartoes.html"><span class="side-icon"><i class="fa-solid fa-id-card"></i></span>Cartões</a>  
+        <a href="suspensos.html"><span class="side-icon"><i class="fa-solid fa-ban"></i></span>Suspensos</a>  
+        <a href="tecnicos.html"><span class="side-icon"><i class="fa-solid fa-user-tie"></i></span>Técnicos</a>  
+        <a href="jogadores.html"><span class="side-icon"><i class="fa-solid fa-users"></i></span>Jogadores</a>  
+        <a href="arbitros.html"><span class="side-icon"><i class="fa-solid fa-whistle"></i></span>Árbitros</a>  
+        <a href="assistentes.html"><span class="side-icon"><i class="fa-solid fa-user-group"></i></span>Assistentes</a>  
+      </div>  
+    </div>  
 
-      <div class="side-menu">
-        <a href="campeonatos.html"><span class="side-icon"><i class="fa-solid fa-trophy"></i></span>Campeonatos</a>
-        <a href="tabela.html"><span class="side-icon"><i class="fa-solid fa-table"></i></span>Tabela</a>
-        <a href="jogos.html"><span class="side-icon"><i class="fa-solid fa-calendar-days"></i></span>Jogos</a>
-        <a href="times.html"><span class="side-icon"><i class="fa-solid fa-shield-halved"></i></span>Times</a>
-        <a href="tecnicos.html"><span class="side-icon"><i class="fa-solid fa-user-tie"></i></span>Técnicos</a>
-        <a href="jogadores.html"><span class="side-icon"><i class="fa-solid fa-users"></i></span>Jogadores</a>
-        <a href="arbitros.html"><span class="side-icon"><i class="fa-solid fa-whistle"></i></span>Árbitros</a>
-        <a href="assistentes.html"><span class="side-icon"><i class="fa-solid fa-user-group"></i></span>Assistentes</a>
-        <a href="sumula.html"><span class="side-icon"><i class="fa-solid fa-file-signature"></i></span>Súmula</a>
-        <a href="noticias.html"><span class="side-icon"><i class="fa-solid fa-newspaper"></i></span>Notícias</a>
-      </div>
-    </div>
+    <div class="sidebar-block">  
+      <div class="sidebar-title">INFORMAÇÕES</div>  
+      <div class="side-menu">  
+        <a href="categorias.html"><span class="side-icon"><i class="fa-solid fa-layer-group"></i></span>Categorias</a>  
+        <a href="times.html"><span class="side-icon"><i class="fa-solid fa-shield-halved"></i></span>Clubes</a>  
+        <a href="regulamento.html"><span class="side-icon"><i class="fa-solid fa-book"></i></span>Regulamento</a>  
+        <a href="noticias.html"><span class="side-icon"><i class="fa-solid fa-newspaper"></i></span>Notícias</a>  
+        <a href="galeria.html"><span class="side-icon"><i class="fa-solid fa-images"></i></span>Galeria</a>  
+        <a href="fotografos.html"><span class="side-icon"><i class="fa-solid fa-camera-retro"></i></span>Fotógrafos</a>  
+        <a href="#contato"><span class="side-icon"><i class="fa-solid fa-phone"></i></span>Contato</a>  
+      </div>  
+    </div>  
 
-    <div class="sidebar-block">
-      <div class="sidebar-title">INFORMAÇÕES</div>
-
-      <div class="side-menu">
-        <a href="artilharia.html"><span class="side-icon"><i class="fa-solid fa-futbol"></i></span>Artilharia</a>
-        <a href="cartoes.html"><span class="side-icon"><i class="fa-solid fa-id-card"></i></span>Cartões</a>
-        <a href="suspensos.html"><span class="side-icon"><i class="fa-solid fa-ban"></i></span>Suspensos</a>
-        <a href="categorias.html"><span class="side-icon"><i class="fa-solid fa-layer-group"></i></span>Categorias</a>
-        <a href="regulamento.html"><span class="side-icon"><i class="fa-solid fa-book"></i></span>Regulamento</a>
-        <a href="galeria.html"><span class="side-icon"><i class="fa-solid fa-images"></i></span>Galeria</a>
-        <a href="fotografos.html"><span class="side-icon"><i class="fa-solid fa-camera-retro"></i></span>Fotógrafos</a>
-        <a href="#contato"><span class="side-icon"><i class="fa-solid fa-phone"></i></span>Contato</a>
-      </div>
-    </div>
-
-    <div class="sidebar-block">
-      <div class="sidebar-title">ÁREA DO SISTEMA</div>
-
-      <div class="side-menu">
-        <a href="login.html" id="sidebarLoginLink"><span class="side-icon"><i class="fa-solid fa-user"></i></span>Login / Cadastro</a>
-        <a href="perfil.html" id="sidebarPerfilLink" style="display:none;"><span class="side-icon"><i class="fa-solid fa-id-badge"></i></span>Meu Perfil</a>
-        <a href="admin.html" id="menuAdmin"><span class="side-icon"><i class="fa-solid fa-gears"></i></span>Painel ADM</a>
-      </div>
+    <div class="sidebar-block">  
+      <div class="sidebar-title">ÁREA DO SISTEMA</div>  
+      <div class="side-menu">  
+        <a href="login.html" id="sidebarLoginLink"><span class="side-icon"><i class="fa-solid fa-user"></i></span>Login / Cadastro</a>  
+        <a href="perfil.html" id="sidebarPerfilLink" style="display:none;"><span class="side-icon"><i class="fa-solid fa-id-badge"></i></span>Meu Perfil</a>  
+        <a href="admin.html" id="menuAdmin"><span class="side-icon"><i class="fa-solid fa-gears"></i></span>Painel ADM</a>  
+      </div>  
     </div>
   </aside>
 
-  <header class="topbar">
-    <div class="wrap topbar-inner">
-
-      <div class="topbar-left">
-        <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+  <header class="topbar">  
+    <div class="wrap topbar-inner">  
+      <div class="topbar-left">  
+        <button class="menu-toggle" id="menuToggle" type="button">☰</button>  
       </div>
 
-      <a href="index.html" class="topbar-logo">
-        <img src="logo-liga.jfif" alt="Logo Liga Goiana">
+      <a href="index.html" class="topbar-logo">  
+        <img src="logo-liga.jfif" alt="Logo Liga Goiana">  
+        <div class="logo-text">  
+          <strong>Liga Goiana de Futebol de Base</strong>  
+          <span>Onde o talento encontra o futuro</span>  
+        </div>  
+      </a>  
 
-        <div class="logo-text">
-          <strong>Liga Goiana de Futebol de Base</strong>
-          <span>Onde o talento encontra o futuro</span>
-        </div>
-      </a>
+      <div class="top-actions">  
+        <a href="login.html" class="btn-login-chip" id="loginChip">  
+          <span class="login-avatar"><i class="fa-solid fa-user"></i></span>  
+          <span>Login</span>  
+        </a>  
 
-      <div class="top-actions">
-        <a href="login.html" class="btn-login-chip" id="loginChip">
-          <span class="login-avatar"><i class="fa-solid fa-user"></i></span>
-          <span>Login</span>
-        </a>
+        <button type="button" class="user-chip" id="userChip">  
+          <span class="login-avatar" id="userChipAvatar">  
+            <i class="fa-solid fa-user"></i>  
+          </span>  
+          <span class="user-chip-text">  
+            <strong id="userChipName">Usuário</strong>  
+            <span id="userChipRole">Perfil</span>  
+          </span>  
+          <span class="apito-badge" id="userChipWhistle" style="display:none;">  
+            <i class="fa-solid fa-whistle"></i>  
+          </span>  
+        </button>  
 
-        <button type="button" class="user-chip" id="userChip">
-          <span class="login-avatar" id="userChipAvatar">
-            <i class="fa-solid fa-user"></i>
-          </span>
+        <div class="user-dropdown" id="userDropdown">  
+          <div class="user-card-top">  
+            <div class="user-card-avatar" id="userCardAvatar">  
+              <i class="fa-solid fa-user"></i>  
+            </div>  
+            <div class="user-card-info">  
+              <strong id="userCardName">Usuário</strong>  
+              <span id="userCardEmail">email@site.com</span>  
+              <div class="user-role" id="userCardRole">  
+                <i class="fa-solid fa-user"></i>  
+                <span>Perfil</span>  
+              </div>  
+            </div>  
+          </div>  
 
-          <span class="user-chip-text">
-            <strong id="userChipName">Usuário</strong>
-            <span id="userChipRole">Perfil</span>
-          </span>
+          <div class="user-details">  
+            <div class="user-detail-row">  
+              <strong>Status</strong>  
+              <span id="userCardStatus">-</span>  
+            </div>  
+            <div class="user-detail-row">  
+              <strong>Time</strong>  
+              <span id="userCardTime">-</span>  
+            </div>  
+            <div class="user-detail-row">  
+              <strong>Categoria</strong>  
+              <span id="userCardCategoria">-</span>  
+            </div>  
+          </div>  
 
-          <span class="apito-badge" id="userChipWhistle" style="display:none;">
-            <i class="fa-solid fa-whistle"></i>
-          </span>
-        </button>
+          <div class="user-menu-actions">  
+            <a href="perfil.html">  
+              <i class="fa-solid fa-user-pen"></i>  
+              <span>Editar perfil</span>  
+            </a>  
+            <a href="admin.html" id="userAdminLink" style="display:none;">  
+              <i class="fa-solid fa-gears"></i>  
+              <span>Painel ADM</span>  
+            </a>  
+            <button type="button" id="logoutBtn">  
+              <i class="fa-solid fa-right-from-bracket"></i>  
+              <span>Sair</span>  
+            </button>  
+          </div>  
+        </div>  
+      </div>  
 
-        <div class="user-dropdown" id="userDropdown">
-          <div class="user-card-top">
-            <div class="user-card-avatar" id="userCardAvatar">
-              <i class="fa-solid fa-user"></i>
-            </div>
+      <nav class="top-nav">  
+        <ul>  
+          <li><a href="index.html">Início</a></li>  
 
-            <div class="user-card-info">
-              <strong id="userCardName">Usuário</strong>
-              <span id="userCardEmail">email@site.com</span>
+          <li class="dropdown" id="campeonatosDropdown">  
+            <button class="dropdown-toggle" id="campeonatosToggle" type="button">  
+              Campeonatos <i class="fa-solid fa-chevron-down"></i>  
+            </button>  
+            <div class="dropdown-menu">  
+              <a href="campeonatos.html">Todos os campeonatos</a>  
+              <a href="classificacao.html">Classificação</a>  
+              <a href="artilharia.html">Artilharia</a>  
+              <a href="categorias.html">Categoria</a>  
+              <a href="cartoes.html">Cartões</a>  
+              <a href="suspensos.html">Suspensos</a>  
+              <a href="regulamento.html">Regulamentos</a>  
+            </div>  
+          </li>  
 
-              <div class="user-role" id="userCardRole">
-                <i class="fa-solid fa-user"></i>
-                <span>Perfil</span>
-              </div>
-            </div>
-          </div>
+          <li><a href="jogadores.html">Jogadores</a></li>  
 
-          <div class="user-details">
-            <div class="user-detail-row">
-              <strong>Status</strong>
-              <span id="userCardStatus">-</span>
-            </div>
-
-            <div class="user-detail-row">
-              <strong>Time</strong>
-              <span id="userCardTime">-</span>
-            </div>
-
-            <div class="user-detail-row">
-              <strong>Categoria</strong>
-              <span id="userCardCategoria">-</span>
-            </div>
-          </div>
-
-          <div class="user-menu-actions">
-            <a href="perfil.html">
-              <i class="fa-solid fa-user-pen"></i>
-              <span>Editar perfil</span>
-            </a>
-
-            <a href="admin.html" id="userAdminLink" style="display:none;">
-              <i class="fa-solid fa-gears"></i>
-              <span>Painel ADM</span>
-            </a>
-
-            <button type="button" id="logoutBtn">
-              <i class="fa-solid fa-right-from-bracket"></i>
-              <span>Sair</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <nav class="top-nav">
-        <ul>
-          <li><a href="index.html">Início</a></li>
-
-          <li class="dropdown" id="campeonatosDropdown">
-            <button class="dropdown-toggle" id="campeonatosToggle" type="button">
-              Campeonatos <i class="fa-solid fa-chevron-down"></i>
-            </button>
-
-            <div class="dropdown-menu">
-              <a href="campeonatos.html">Todos os campeonatos</a>
-              <a href="tabela.html">Tabela</a>
-              <a href="jogos.html">Jogos</a>
-              <a href="artilharia.html">Artilharia</a>
-              <a href="cartoes.html">Cartões</a>
-              <a href="suspensos.html">Suspensos</a>
-              <a href="categorias.html">Categorias</a>
-              <a href="regulamento.html">Regulamentos</a>
-            </div>
-          </li>
-
-          <li><a href="jogadores.html">Jogadores</a></li>
-
-          <li class="dropdown" id="participantesDropdown">
-            <button class="dropdown-toggle" id="participantesToggle" type="button">
-              Participantes <i class="fa-solid fa-chevron-down"></i>
-            </button>
-
-            <div class="dropdown-menu">
-              <a href="times.html">Times</a>
-              <a href="tecnicos.html">Técnicos</a>
-              <a href="arbitros.html">Árbitros</a>
-              <a href="assistentes.html">Assistentes</a>
-              <a href="fotografos.html">Fotógrafos</a>
-            </div>
-          </li>
+          <li class="dropdown" id="participantesDropdown">  
+            <button class="dropdown-toggle" id="participantesToggle" type="button">  
+              Participantes <i class="fa-solid fa-chevron-down"></i>  
+            </button>  
+            <div class="dropdown-menu">  
+              <a href="times.html">Equipes</a>  
+              <a href="tecnicos.html">Técnicos</a>  
+              <a href="arbitros.html">Árbitro</a>  
+              <a href="assistentes.html">Assistente</a>  
+              <a href="fotografos.html">Fotógrafos</a>  
+            </div>  
+          </li>  
 
           <li><a href="galeria.html">Galeria</a></li>
-          <li><a href="sumula.html">Súmula</a></li>
-        </ul>
-      </nav>
+          <li><a href="sumulas.html">Súmula</a></li> 
+        </ul>  
+      </nav>  
     </div>
   </header>
 
-  <main>
-    <section class="hero">
-      <div class="wrap">
-        <div class="hero-card">
-          <div class="hero-grid">
-
-            <div class="hero-content">
-              <div class="eyebrow">
-                <i class="fa-solid fa-trophy"></i>
-                Liga Oficial
+  <main>  
+    <section class="hero">  
+      <div class="wrap">  
+        <div class="hero-card">  
+          <div class="hero-grid">  
+            <div class="hero-content">  
+              <div class="eyebrow">  
+                <i class="fa-solid fa-trophy"></i>  
+                Liga Oficial  
               </div>
 
-              <h1>Bem-vindo à Liga Goiana de Base</h1>
+              <h1>Bem-vindo à Liga Goiana de Base</h1>  
 
-              <p>Onde o talento encontra o futuro!</p>
+              <p>Onde o talento encontra o futuro!</p>  
 
-              <p>
-                Competição, formação e desenvolvimento para revelar talentos
-                e fortalecer o futebol de base em Goiás.
-              </p>
+              <p>  
+                Competição, formação e desenvolvimento para revelar talentos  
+                e fortalecer o futebol de base em Goiás.  
+              </p>  
 
-              <div class="hero-actions">
-                <a href="campeonatos.html" class="btn-primary">
-                  <i class="fa-solid fa-trophy"></i> Ver Campeonatos
-                </a>
+              <div class="hero-actions">  
+                <a href="campeonatos.html" class="btn-primary">  
+                  <i class="fa-solid fa-trophy"></i> Ver Campeonatos  
+                </a>  
+                <a href="times.html" class="btn-secondary">  
+                  <i class="fa-solid fa-users"></i> Conhecer Equipes  
+                </a>  
+              </div>  
 
-                <a href="times.html" class="btn-secondary">
-                  <i class="fa-solid fa-users"></i> Conhecer Equipes
-                </a>
-              </div>
+              <div class="status-user" id="statusUser"></div>  
+            </div>  
 
-              <div class="status-user" id="statusUser"></div>
-            </div>
-
-            <div class="hero-art">
-              <img src="hero-liga.jpeg" alt="Liga Goiana Elite de Base" onerror="this.src='fundo.png'">
-            </div>
-
+            <div class="hero-art">  
+              <img src="hero-liga.jpeg" alt="Liga Goiana Elite de Base" onerror="this.src='fundo.png'">  
+            </div>  
           </div>
-        </div>
+        </div>  
 
-        <div class="cards-pilares">
-          <div class="pillar">
-            <div class="pillar-icon"><i class="fa-solid fa-trophy"></i></div>
-            <div class="pillar-text">
-              <h3>Competição de alto nível</h3>
-              <p>Jogos organizados e arbitragem qualificada.</p>
-            </div>
-          </div>
+        <div class="cards-pilares">  
+          <div class="pillar">  
+            <div class="pillar-icon"><i class="fa-solid fa-trophy"></i></div>  
+            <div class="pillar-text">  
+              <h3>Competição de alto nível</h3>  
+              <p>Jogos organizados e arbitragem qualificada.</p>  
+            </div>  
+          </div>  
 
-          <div class="pillar">
-            <div class="pillar-icon"><i class="fa-solid fa-shield-halved"></i></div>
-            <div class="pillar-text">
-              <h3>Formação de atletas</h3>
-              <p>Desenvolvimento dentro e fora de campo.</p>
-            </div>
-          </div>
+          <div class="pillar">  
+            <div class="pillar-icon"><i class="fa-solid fa-shield-halved"></i></div>  
+            <div class="pillar-text">  
+              <h3>Formação de atletas</h3>  
+              <p>Desenvolvimento dentro e fora de campo.</p>  
+            </div>  
+          </div>  
 
-          <div class="pillar">
-            <div class="pillar-icon"><i class="fa-solid fa-chart-line"></i></div>
-            <div class="pillar-text">
-              <h3>Desenvolvimento que transforma</h3>
-              <p>Estrutura que impulsiona sonhos e resultados.</p>
-            </div>
-          </div>
+          <div class="pillar">  
+            <div class="pillar-icon"><i class="fa-solid fa-chart-line"></i></div>  
+            <div class="pillar-text">  
+              <h3>Desenvolvimento que transforma</h3>  
+              <p>Estrutura que impulsiona sonhos e resultados.</p>  
+            </div>  
+          </div>  
 
-          <div class="pillar">
-            <div class="pillar-icon"><i class="fa-solid fa-handshake"></i></div>
-            <div class="pillar-text">
-              <h3>Respeito, união e propósito</h3>
-              <p>Valores que constroem campeões para a vida.</p>
-            </div>
-          </div>
-        </div>
+          <div class="pillar">  
+            <div class="pillar-icon"><i class="fa-solid fa-handshake"></i></div>  
+            <div class="pillar-text">  
+              <h3>Respeito, união e propósito</h3>  
+              <p>Valores que constroem campeões para a vida.</p>  
+            </div>  
+          </div>  
+        </div>  
 
-        <div class="content-grid">
-          <section class="panel">
-            <div class="panel-head">
-              <div class="panel-head-title">
-                <div class="panel-head-icon"><i class="fa-solid fa-calendar-days"></i></div>
-                <h2>Próximos Jogos</h2>
-              </div>
+        <div class="content-grid">  
+          <section class="panel">  
+            <div class="panel-head">  
+              <div class="panel-head-title">  
+                <div class="panel-head-icon"><i class="fa-solid fa-calendar-days"></i></div>  
+                <h2>Próximos Jogos</h2>  
+              </div>  
+              <a href="jogos.html">Ver todos <i class="fa-solid fa-arrow-right"></i></a>  
+            </div>  
 
-              <a href="jogos.html">Ver todos <i class="fa-solid fa-arrow-right"></i></a>
-            </div>
+            <table class="match-table">  
+              <thead>  
+                <tr>  
+                  <th>Data e Hora</th>  
+                  <th>Confronto</th>  
+                  <th>Categoria</th>  
+                  <th>Local</th>  
+                </tr>  
+              </thead>  
+              <tbody id="gamesTableBody"></tbody>  
+            </table>  
+          </section>  
 
-            <table class="match-table">
-              <thead>
-                <tr>
-                  <th>Data e Hora</th>
-                  <th>Confronto</th>
-                  <th>Categoria</th>
-                  <th>Local</th>
-                </tr>
-              </thead>
+          <aside class="panel">  
+            <div class="panel-head">  
+              <div class="panel-head-title">  
+                <div class="panel-head-icon"><i class="fa-solid fa-newspaper"></i></div>  
+                <h2>Últimas Notícias</h2>  
+              </div>  
+              <a href="noticias.html">Ver notícias <i class="fa-solid fa-arrow-right"></i></a>  
+            </div>  
 
-              <tbody id="gamesTableBody"></tbody>
-            </table>
-          </section>
+            <div class="news-list" id="newsList"></div>  
+          </aside>  
+        </div>  
 
-          <aside class="panel">
-            <div class="panel-head">
-              <div class="panel-head-title">
-                <div class="panel-head-icon"><i class="fa-solid fa-newspaper"></i></div>
-                <h2>Últimas Notícias</h2>
-              </div>
+        <section class="cta-banner">  
+          <div class="cta-banner-inner">  
+            <div>  
+              <h3>Faça parte dessa história!</h3>  
+              <p>Inscreva sua equipe e viva o futebol de base no mais alto nível.</p>  
+            </div>  
 
-              <a href="noticias.html">Ver notícias <i class="fa-solid fa-arrow-right"></i></a>
-            </div>
-
-            <div class="news-list" id="newsList"></div>
-          </aside>
-        </div>
-
-        <section class="cta-banner">
-          <div class="cta-banner-inner">
-            <div>
-              <h3>Faça parte dessa história!</h3>
-              <p>Inscreva sua equipe e viva o futebol de base no mais alto nível.</p>
-            </div>
-
-            <a
-              href="https://wa.me/5562981916316?text=Ol%C3%A1%2C%20quero%20participar%20da%20Liga%20Goiana%20de%20Futebol%20de%20Base."
-              class="btn-primary"
-              target="_blank"
-            >
-              <i class="fa-solid fa-trophy"></i> Quero Participar!
-            </a>
-          </div>
-        </section>
+            <a  
+              href="https://wa.me/5562981916316?text=Ol%C3%A1%2C%20quero%20participar%20da%20Liga%20Goiana%20de%20Futebol%20de%20Base."  
+              class="btn-primary"  
+              target="_blank"  
+            >  
+              <i class="fa-solid fa-trophy"></i> Quero Participar!  
+            </a>  
+          </div>  
+        </section>  
       </div>
     </section>
   </main>
 
-  <footer id="contato">
-    <div class="wrap">
-      <div class="footer-grid">
-
-        <div class="footer-card">
-          <div class="footer-brand">
-            <img src="logo-liga.jfif" alt="Logo da Liga">
-
-            <div class="footer-brand-text">
-              <h3>Liga Goiana de Futebol de Base</h3>
-              <p>Onde o talento encontra o futuro!</p>
-            </div>
+  <footer id="contato">  
+    <div class="wrap">  
+      <div class="footer-grid">  
+        <div class="footer-card">  
+          <div class="footer-brand">  
+            <img src="logo-liga.jfif" alt="Logo da Liga">  
+            <div class="footer-brand-text">  
+              <h3>Liga Goiana de Futebol de Base</h3>  
+              <p>Onde o talento encontra o futuro!</p>  
+            </div>  
           </div>
 
-          <div class="footer-social">
-            <a href="https://www.instagram.com/" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://www.facebook.com/" target="_blank" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-            <a href="https://www.youtube.com/" target="_blank" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          </div>
-        </div>
+          <div class="footer-social">  
+            <a href="https://www.instagram.com/" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>  
+            <a href="https://www.facebook.com/" target="_blank" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>  
+            <a href="https://www.youtube.com/" target="_blank" title="YouTube"><i class="fa-brands fa-youtube"></i></a>  
+          </div>  
+        </div>  
 
-        <div class="footer-card">
-          <h4>Acesso Rápido</h4>
-          <a href="index.html">Início</a>
-          <a href="campeonatos.html">Campeonatos</a>
-          <a href="times.html">Equipes</a>
-          <a href="jogos.html">Resultados</a>
-          <a href="arbitros.html">Árbitros</a>
-          <a href="#contato">Contato</a>
-        </div>
+        <div class="footer-card">  
+          <h4>Acesso Rápido</h4>  
+          <a href="index.html">Início</a>  
+          <a href="campeonatos.html">Campeonatos</a>  
+          <a href="times.html">Equipes</a>  
+          <a href="jogos.html">Resultados</a>  
+          <a href="arbitros.html">Árbitros</a>  
+          <a href="#contato">Contato</a>  
+        </div>  
 
-        <div class="footer-card">
+        <div class="footer-card">  
           <h4>Contato</h4>
+<a href="https://wa.me/5562984284785" target="_blank" class="footer-contact-line">  
+            <i class="fa-brands fa-whatsapp"></i>  
+            <span>(62) 98428-4785</span>  
+          </a>  
 
-          <a href="https://wa.me/5562984284785" target="_blank" class="footer-contact-line">
-            <i class="fa-brands fa-whatsapp"></i>
-            <span>(62) 98428-4785</span>
-          </a>
+          <a href="mailto:Ligagoianaoficial@gmail.com" class="footer-contact-line">  
+            <i class="fa-solid fa-envelope"></i>  
+            <span>Ligagoianaoficial@gmail.com</span>  
+          </a>  
 
-          <a href="mailto:Ligagoianaoficial@gmail.com" class="footer-contact-line">
-            <i class="fa-solid fa-envelope"></i>
-            <span>Ligagoianaoficial@gmail.com</span>
-          </a>
+          <div class="footer-contact-line">  
+            <i class="fa-solid fa-location-dot"></i>  
+            <span>Goiânia - GO</span>  
+          </div>  
+        </div>  
 
-          <div class="footer-contact-line">
-            <i class="fa-solid fa-location-dot"></i>
-            <span>Goiânia - GO</span>
-          </div>
-        </div>
+        <div class="footer-card">  
+          <h4>Siga a Liga</h4>  
+          <p style="color: var(--muted); line-height:1.6; margin-bottom:12px;">Acompanhe nossas redes sociais</p>  
 
-        <div class="footer-card">
-          <h4>Siga a Liga</h4>
+          <div class="footer-social">  
+            <a href="https://www.instagram.com/" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>  
+            <a href="https://www.facebook.com/" target="_blank" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>  
+            <a href="https://www.youtube.com/" target="_blank" title="YouTube"><i class="fa-brands fa-youtube"></i></a>  
+          </div>  
+        </div>  
+      </div>  
 
-          <p style="color:var(--muted); line-height:1.6; margin-bottom:12px;">
-            Acompanhe nossas redes sociais
-          </p>
-
-          <div class="footer-social">
-            <a href="https://www.instagram.com/" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://www.facebook.com/" target="_blank" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-            <a href="https://www.youtube.com/" target="_blank" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="copyright">
-        © 2026 Liga Goiana de Futebol de Base. Todos os direitos reservados.
-      </div>
+      <div class="copyright">  
+        © 2026 Liga Goiana de Futebol de Base. Todos os direitos reservados.  
+      </div>  
     </div>
   </footer>
 
-  <script>
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import { doc, getDoc, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
     const sidebar = document.getElementById("sidebar");
     const sidebarOverlay = document.getElementById("sidebarOverlay");
     const menuToggle = document.getElementById("menuToggle");
@@ -1697,6 +1620,26 @@ footer{
     const newsList = document.getElementById("newsList");
     const userChip = document.getElementById("userChip");
     const userDropdown = document.getElementById("userDropdown");
+
+    const loginChip = document.getElementById("loginChip");
+    const sidebarLoginLink = document.getElementById("sidebarLoginLink");
+    const sidebarPerfilLink = document.getElementById("sidebarPerfilLink");
+    const menuAdmin = document.getElementById("menuAdmin");
+    const userChipEl = document.getElementById("userChip");
+    const userDropdownEl = document.getElementById("userDropdown");
+    const userChipName = document.getElementById("userChipName");
+    const userChipRole = document.getElementById("userChipRole");
+    const userChipWhistle = document.getElementById("userChipWhistle");
+    const userChipAvatar = document.getElementById("userChipAvatar");
+    const userCardAvatar = document.getElementById("userCardAvatar");
+    const userCardName = document.getElementById("userCardName");
+    const userCardEmail = document.getElementById("userCardEmail");
+    const userCardRole = document.getElementById("userCardRole");
+    const userCardStatus = document.getElementById("userCardStatus");
+    const userCardTime = document.getElementById("userCardTime");
+    const userCardCategoria = document.getElementById("userCardCategoria");
+    const userAdminLink = document.getElementById("userAdminLink");
+    const logoutBtn = document.getElementById("logoutBtn");
 
     function isMobile(){
       return window.innerWidth <= 700;
@@ -1718,7 +1661,6 @@ footer{
 
     function resetDropdown(dropdown){
       if(!dropdown) return;
-
       dropdown.classList.remove("open");
       dropdown.classList.remove("mobile-fixed");
 
@@ -1731,10 +1673,7 @@ footer{
     function closeAllDropdowns(){
       resetDropdown(campeonatosDropdown);
       resetDropdown(participantesDropdown);
-
-      if(userDropdown){
-        userDropdown.classList.remove("open");
-      }
+      if(userDropdown) userDropdown.classList.remove("open");
     }
 
     function openMenuDropdown(dropdown, toggle){
@@ -1749,7 +1688,6 @@ footer{
 
       if(isMobile()){
         dropdown.classList.add("mobile-fixed");
-
         const menu = dropdown.querySelector(".dropdown-menu");
         const rect = toggle.getBoundingClientRect();
 
@@ -1789,15 +1727,16 @@ footer{
         openMenuDropdown(participantesDropdown, participantesToggle);
       });
     }
-if(userChip && userDropdown){
+
+    if(userChip){
       userChip.addEventListener("click", function(event){
         event.preventDefault();
         event.stopPropagation();
 
-        const vaiAbrir = !userDropdown.classList.contains("open");
+        const vaiAbrir = userDropdown && !userDropdown.classList.contains("open");
         closeAllDropdowns();
 
-        if(vaiAbrir){
+        if(vaiAbrir && userDropdown){
           userDropdown.classList.add("open");
         }
       });
@@ -1829,99 +1768,24 @@ if(userChip && userDropdown){
       }
     });
 
-    const games = [
-      { dataHora:"20/04/2026 - 08:00", confronto:"Atlético GO x Vila Nova", categoria:"Sub-15", local:"Campo 1" },
-      { dataHora:"20/04/2026 - 10:00", confronto:"Campinas x Hidrolândia", categoria:"Sub-13", local:"Campo 2" },
-      { dataHora:"21/04/2026 - 09:30", confronto:"Goiás x Bela Vista", categoria:"Sub-17", local:"Arena Central" },
-      { dataHora:"21/04/2026 - 14:00", confronto:"Trindade x Aparecida", categoria:"Sub-11", local:"Campo Municipal" }
-    ];
-
-    const news = [
-      { titulo:"Liga Goiana inicia nova temporada com grandes expectativas", texto:"A abertura da competição promete movimentar o futebol de base com organização, talento e muita emoção." },
-      { titulo:"Categorias de base seguem em expansão em Goiás", texto:"A Liga Goiana fortalece o desenvolvimento esportivo e amplia oportunidades para atletas de várias idades." },
-      { titulo:"Inscrições abertas para equipes interessadas", texto:"Clubes e projetos já podem entrar em contato para participar da próxima edição da Liga Goiana de Futebol de Base." }
-    ];
-
-    if(gamesTableBody){
-      gamesTableBody.innerHTML = "";
-
-      games.forEach(jogo => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${jogo.dataHora}</td>
-          <td>${jogo.confronto}</td>
-          <td>${jogo.categoria}</td>
-          <td>${jogo.local}</td>
-        `;
-        gamesTableBody.appendChild(tr);
-      });
-    }
-
-    if(newsList){
-      newsList.innerHTML = "";
-
-      news.forEach(item => {
-        const article = document.createElement("div");
-        article.className = "news-item";
-        article.innerHTML = `
-          <h3>${item.titulo}</h3>
-          <p>${item.texto}</p>
-        `;
-        newsList.appendChild(article);
-      });
-    }
-  </script>
-
-  <script type="module">
-    import { auth, db } from "./firebase.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-
-    const loginChip = document.getElementById("loginChip");
-    const sidebarLoginLink = document.getElementById("sidebarLoginLink");
-    const sidebarPerfilLink = document.getElementById("sidebarPerfilLink");
-    const menuAdmin = document.getElementById("menuAdmin");
-    const userChipEl = document.getElementById("userChip");
-    const userDropdownEl = document.getElementById("userDropdown");
-    const userChipName = document.getElementById("userChipName");
-    const userChipRole = document.getElementById("userChipRole");
-    const userChipWhistle = document.getElementById("userChipWhistle");
-    const userChipAvatar = document.getElementById("userChipAvatar");
-    const userCardAvatar = document.getElementById("userCardAvatar");
-    const userCardName = document.getElementById("userCardName");
-    const userCardEmail = document.getElementById("userCardEmail");
-    const userCardRole = document.getElementById("userCardRole");
-    const userCardStatus = document.getElementById("userCardStatus");
-    const userCardTime = document.getElementById("userCardTime");
-    const userCardCategoria = document.getElementById("userCardCategoria");
-    const userAdminLink = document.getElementById("userAdminLink");
-    const logoutBtn = document.getElementById("logoutBtn");
-
     function normalizarTexto(texto){
-      return String(texto || "")
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
+      return String(texto || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
 
     function normalizarTipo(tipo){
       const valor = normalizarTexto(tipo);
-
       if(valor === "admin" || valor === "administrador") return "admin";
-      if(valor === "arbitro" || valor === "árbitro") return "arbitro";
+      if(valor === "arbitro") return "arbitro";
       if(valor === "assistente") return "assistente";
-      if(valor === "tecnico" || valor === "técnico") return "tecnico";
+      if(valor === "tecnico") return "tecnico";
       if(valor === "jogador") return "jogador";
       if(valor === "pai_atleta") return "pai_atleta";
-      if(valor === "fotografo" || valor === "fotógrafo") return "fotografo";
-
+      if(valor === "fotografo") return "fotografo";
       return "torcedor";
     }
 
     function tipoLabel(tipo){
       const valor = normalizarTipo(tipo);
-
       if(valor === "admin") return "Administrador";
       if(valor === "arbitro") return "Árbitro";
       if(valor === "assistente") return "Assistente";
@@ -1929,16 +1793,12 @@ if(userChip && userDropdown){
       if(valor === "jogador") return "Jogador";
       if(valor === "pai_atleta") return "Pai de Atleta";
       if(valor === "fotografo") return "Fotógrafo";
-
       return "Torcedor";
     }
 
     function preencherAvatar(elemento, foto){
       if(!elemento) return;
-
-      elemento.innerHTML = foto
-        ? `<img src="${foto}" alt="Foto do usuário">`
-        : `<i class="fa-solid fa-user"></i>`;
+      elemento.innerHTML = foto ? `<img src="${foto}" alt="Foto do usuário">` : `<i class="fa-solid fa-user"></i>`;
     }
 
     function mostrarUsuarioDeslogado(){
@@ -1953,14 +1813,12 @@ if(userChip && userDropdown){
 
     function mostrarUsuarioLogado(dados, user){
       const tipo = normalizarTipo(dados.tipoUsuario || dados.tipousuario || dados.tipo || "");
-      const nome = dados.nomeExibicao || dados.nome || user.email || "Usuário";
-      const foto = dados.fotoPerfil || "";
+      const nome = dados.nomeExibicao || dados.nome || dados.nomeCompleto || user.email || "Usuário";
+      const foto = dados.fotoPerfil || dados.foto || "";
       const aprovado = dados.aprovado === true;
       const autorizado = dados.autorizado === true;
       const ehArbitro = tipo === "arbitro";
-      const podePainel =
-        (tipo === "admin" && aprovado && autorizado) ||
-        (tipo === "arbitro" && aprovado && autorizado);
+      const podePainel = (tipo === "admin" && aprovado && autorizado) || (tipo === "arbitro" && aprovado && autorizado);
 
       if(loginChip) loginChip.style.display = "none";
       if(userChipEl) userChipEl.style.display = "inline-flex";
@@ -1973,20 +1831,15 @@ if(userChip && userDropdown){
       if(userChipRole) userChipRole.textContent = tipoLabel(tipo);
       if(userCardName) userCardName.textContent = nome;
       if(userCardEmail) userCardEmail.textContent = dados.email || user.email || "-";
-      if(userCardStatus) userCardStatus.textContent = dados.status || "-";
-      if(userCardTime) userCardTime.textContent = dados.time || "-";
+      if(userCardStatus) userCardStatus.textContent = aprovado && autorizado ? "Aprovado / Autorizado" : "Pendente";
+      if(userCardTime) userCardTime.textContent = dados.time || dados.timeNome || "-";
       if(userCardCategoria) userCardCategoria.textContent = dados.categoria || "-";
 
       if(userCardRole){
-        userCardRole.innerHTML = `
-          <i class="${ehArbitro ? "fa-solid fa-whistle" : "fa-solid fa-user"}"></i>
-          <span>${tipoLabel(tipo)}</span>
-        `;
+        userCardRole.innerHTML = `<i class="${ehArbitro ? "fa-solid fa-whistle" : "fa-solid fa-user"}"></i><span>${tipoLabel(tipo)}</span>`;
       }
 
-      if(userChipWhistle){
-        userChipWhistle.style.display = ehArbitro ? "inline-flex" : "none";
-      }
+      if(userChipWhistle) userChipWhistle.style.display = ehArbitro ? "inline-flex" : "none";
 
       preencherAvatar(userChipAvatar, foto);
       preencherAvatar(userCardAvatar, foto);
@@ -2024,7 +1877,128 @@ if(userChip && userDropdown){
         }
       });
     }
-  </script>
 
+    function formatarDataJogo(dados){
+      const data = dados.data || dados.dataJogo || "";
+      const hora = dados.hora || dados.horario || "";
+
+      if(dados.dataHora && typeof dados.dataHora.toDate === "function"){
+        const d = dados.dataHora.toDate();
+        return d.toLocaleDateString("pt-BR") + " - " + d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
+      }
+
+      if(data && hora) return `${data} - ${hora}`;
+      if(data) return data;
+      return "-";
+    }
+
+    function montarConfronto(dados){
+      const mandante = dados.timeMandanteNome || dados.mandanteNome || dados.mandante || dados.timeA || "Mandante";
+      const visitante = dados.timeVisitanteNome || dados.visitanteNome || dados.visitante || dados.timeB || "Visitante";
+      return `${mandante} x ${visitante}`;
+    }
+
+    function renderizarJogosExemplo(){
+      const jogos = [
+        { dataHora:"20/04/2026 - 08:00", confronto:"Atlético GO x Vila Nova", categoria:"Sub-15", local:"Campo 1" },
+        { dataHora:"20/04/2026 - 10:00", confronto:"Campinas x Hidrolândia", categoria:"Sub-13", local:"Campo 2" },
+        { dataHora:"21/04/2026 - 09:30", confronto:"Goiás x Bela Vista", categoria:"Sub-17", local:"Arena Central" },
+        { dataHora:"21/04/2026 - 14:00", confronto:"Trindade x Aparecida", categoria:"Sub-11", local:"Campo Municipal" }
+      ];
+
+      gamesTableBody.innerHTML = "";
+
+      jogos.forEach(jogo => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${jogo.dataHora}</td><td>${jogo.confronto}</td><td>${jogo.categoria}</td><td>${jogo.local}</td>`;
+        gamesTableBody.appendChild(tr);
+      });
+    }
+
+    async function carregarJogosFirebase(){
+      if(!gamesTableBody) return;
+
+      try{
+        const q = query(collection(db, "jogos"), orderBy("dataHora", "asc"), limit(4));
+        const snap = await getDocs(q);
+
+        if(snap.empty){
+          renderizarJogosExemplo();
+          return;
+        }
+
+        gamesTableBody.innerHTML = "";
+
+        snap.forEach(docJogo => {
+          const dados = docJogo.data();
+          const tr = document.createElement("tr");
+
+          tr.innerHTML = `
+            <td>${formatarDataJogo(dados)}</td>
+            <td>${montarConfronto(dados)}</td>
+            <td>${dados.categoria || "-"}</td>
+            <td>${dados.local || dados.campo || "-"}</td>
+          `;
+
+          gamesTableBody.appendChild(tr);
+        });
+      }catch(error){
+        console.error("Erro ao carregar jogos do Firebase:", error);
+        renderizarJogosExemplo();
+      }
+    }
+
+    function renderizarNoticiasExemplo(){
+      const noticias = [
+        { titulo:"Liga Goiana inicia nova temporada com grandes expectativas", texto:"A abertura da competição promete movimentar o futebol de base com organização, talento e muita emoção." },
+        { titulo:"Categorias de base seguem em expansão em Goiás", texto:"A Liga Goiana fortalece o desenvolvimento esportivo e amplia oportunidades para atletas de várias idades." },
+        { titulo:"Inscrições abertas para equipes interessadas", texto:"Clubes e projetos já podem entrar em contato para participar da próxima edição da Liga Goiana de Futebol de Base." }
+      ];
+
+      newsList.innerHTML = "";
+
+      noticias.forEach(item => {
+        const article = document.createElement("div");
+        article.className = "news-item";
+        article.innerHTML = `<h3>${item.titulo}</h3><p>${item.texto}</p>`;
+        newsList.appendChild(article);
+      });
+    }
+
+    async function carregarNoticiasFirebase(){
+      if(!newsList) return;
+
+      try{
+        const q = query(collection(db, "noticias"), orderBy("criadoEm", "desc"), limit(3));
+        const snap = await getDocs(q);
+
+        if(snap.empty){
+          renderizarNoticiasExemplo();
+          return;
+        }
+
+        newsList.innerHTML = "";
+
+        snap.forEach(docNoticia => {
+          const dados = docNoticia.data();
+          const article = document.createElement("div");
+
+          article.className = "news-item";
+          article.innerHTML = `
+            <h3>${dados.titulo || "Notícia da Liga"}</h3>
+            <p>${dados.resumo || dados.texto || dados.descricao || ""}</p>
+          `;
+
+          newsList.appendChild(article);
+        });
+      }catch(error){
+        console.error("Erro ao carregar notícias do Firebase:", error);
+        renderizarNoticiasExemplo();
+      }
+    }
+
+    carregarJogosFirebase();
+    carregarNoticiasFirebase();
+  </script>
 </body>
 </html>
