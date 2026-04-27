@@ -1,12 +1,18 @@
-export function renderMenu(paginaAtual = ""){
+import { auth, db } from "./firebase.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+export function renderMenu(paginaAtual = "") {
   document.body.insertAdjacentHTML("afterbegin", `
-    
     <header class="site-header">
 
       <div class="header-top">
         <div class="header-title">
           LIGA GOIANA DE FUTEBOL DE BASE
+        </div>
+
+        <div class="user-area" id="userArea">
+          <a href="login.html" class="login-topo">Login</a>
         </div>
       </div>
 
@@ -14,9 +20,34 @@ export function renderMenu(paginaAtual = ""){
         <nav class="menu">
 
           <a href="index.html" class="${paginaAtual === 'inicio' ? 'ativo' : ''}">Início</a>
-          <a href="campeonatos.html" class="${paginaAtual === 'campeonatos' ? 'ativo' : ''}">Campeonatos</a>
+
+          <div class="menu-dropdown">
+            <a href="campeonatos.html" class="${paginaAtual === 'campeonatos' ? 'ativo' : ''}">Campeonatos</a>
+            <div class="submenu">
+              <a href="campeonatos.html">Todos os campeonatos</a>
+              <a href="classificacao.html">Classificação</a>
+              <a href="artilharia.html">Artilharia</a>
+              <a href="categorias.html">Categoria</a>
+              <a href="cartoes.html">Cartões</a>
+              <a href="suspensos.html">Suspensos</a>
+              <a href="regulamentos.html">Regulamentos</a>
+            </div>
+          </div>
+
           <a href="tabela.html" class="${paginaAtual === 'tabela' ? 'ativo' : ''}">Tabela</a>
           <a href="jogos.html" class="${paginaAtual === 'jogos' ? 'ativo' : ''}">Jogos</a>
+
+          <div class="menu-dropdown">
+            <a href="times.html" class="${paginaAtual === 'participantes' ? 'ativo' : ''}">Participantes</a>
+            <div class="submenu">
+              <a href="times.html">Equipes/Times</a>
+              <a href="tecnicos.html">Técnicos</a>
+              <a href="arbitros.html">Árbitro</a>
+              <a href="assistentes.html">Assistente</a>
+              <a href="fotografos.html">Fotógrafos</a>
+            </div>
+          </div>
+
           <a href="times.html" class="${paginaAtual === 'times' ? 'ativo' : ''}">Times</a>
           <a href="tecnicos.html" class="${paginaAtual === 'tecnicos' ? 'ativo' : ''}">Técnicos</a>
           <a href="jogadores.html" class="${paginaAtual === 'jogadores' ? 'ativo' : ''}">Jogadores</a>
@@ -24,13 +55,79 @@ export function renderMenu(paginaAtual = ""){
           <a href="assistentes.html" class="${paginaAtual === 'assistentes' ? 'ativo' : ''}">Assistente</a>
           <a href="sumula-publica.html" class="${paginaAtual === 'sumula' ? 'ativo' : ''}">Súmula</a>
           <a href="noticias.html" class="${paginaAtual === 'noticias' ? 'ativo' : ''}">Notícias</a>
-          <a href="login.html" class="${paginaAtual === 'login' ? 'ativo' : ''}">Login</a>
+
+          <a href="admin.html" id="btnAdminMenu" class="admin-menu-link" style="display:none;">Painel ADM</a>
 
         </nav>
       </div>
 
     </header>
-
   `);
 
+  controlarUsuarioMenu();
+}
+
+async function controlarUsuarioMenu() {
+  const userArea = document.getElementById("userArea");
+  const btnAdminMenu = document.getElementById("btnAdminMenu");
+
+  if (!userArea) return;
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      userArea.innerHTML = `<a href="login.html" class="login-topo">Login</a>`;
+
+      if (btnAdminMenu) {
+        btnAdminMenu.style.display = "none";
+      }
+
+      return;
+    }
+
+    let nomeUsuario = user.displayName || user.email || "Usuário";
+    let podeVerAdmin = false;
+
+    try {
+      const refUsuario = doc(db, "usuarios", user.uid);
+      const snapUsuario = await getDoc(refUsuario);
+
+      if (snapUsuario.exists()) {
+        const dados = snapUsuario.data();
+
+        nomeUsuario = dados.nome || dados.nomeCompleto || nomeUsuario;
+
+        const tipo = (dados.tipo || dados.perfil || "").toLowerCase();
+        const aprovado = dados.aprovado === true;
+        const autorizado = dados.autorizado === true;
+
+        if (tipo === "admin") {
+          podeVerAdmin = aprovado && autorizado;
+        }
+
+        if (tipo === "arbitro" || tipo === "árbitro") {
+          podeVerAdmin = aprovado && autorizado;
+        }
+      }
+    } catch (erro) {
+      console.error("Erro ao verificar permissões do usuário:", erro);
+    }
+
+    userArea.innerHTML = `
+      <span class="usuario-logado">${nomeUsuario}</span>
+      <button type="button" class="btn-sair" id="btnSairMenu">Sair</button>
+    `;
+
+    const btnSairMenu = document.getElementById("btnSairMenu");
+
+    if (btnSairMenu) {
+      btnSairMenu.addEventListener("click", async () => {
+        await signOut(auth);
+        window.location.href = "login.html";
+      });
+    }
+
+    if (btnAdminMenu) {
+      btnAdminMenu.style.display = podeVerAdmin ? "inline-flex" : "none";
+    }
+  });
 }
