@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Súmulas - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --yellow:#7a5a00;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1240px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+}
+
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
+
+/* HEADER */
+.site-header{
+  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
+  border-bottom:3px solid var(--gold);
+}
+
+.header-top{
+  min-height:92px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.header-title{
+  font-size:26px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+/* MENU */
+.nav-bar{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
+}
+
+.menu{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  padding:14px;
+  flex-wrap:nowrap;
+}
+
+.menu a{
+  color:#fff;
+  font-weight:900;
+  font-size:13px;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.07);
+}
+
+.menu a:hover{color:var(--gold);}
+.menu a.ativo{
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+}
+
+/* CONTEÚDO */
+.container{padding:20px 0;}
+
+.hero{
+  background:linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid var(--gold-line);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:14px;
+}
+
+.hero h2{
+  color:var(--gold);
+  font-size:26px;
+  margin-bottom:5px;
+}
+
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:12px;
+}
+
+/* CARD SÚMULA */
+.card{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:14px;
+  padding:12px;
+  text-align:center;
+  transition:.25s;
+}
+
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold);
+}
+
+.times{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:8px;
+  margin:10px 0;
+}
+
+.escudo{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  border:1px solid var(--gold);
+  background:#fff;
+}
+
+.placar{
+  color:var(--gold);
+  font-weight:900;
+}
+
+.info{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+.btn{
+  margin-top:10px;
+  padding:8px;
+  border-radius:10px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  font-weight:900;
+  display:block;
+}
+</style>
+</head>
+
+<body>
+
+<header class="site-header">
+  <div class="wrap header-top">
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="wrap">
+      <nav class="menu">
+        <a href="index.html">Início</a>
+        <a href="campeonatos.html">Campeonatos</a>
+        <a href="tabela.html">Tabela</a>
+        <a href="jogos.html">Jogos</a>
+        <a href="times.html">Times</a>
+        <a href="tecnicos.html">Técnicos</a>
+        <a href="jogadores.html">Jogadores</a>
+        <a href="arbitros.html">Árbitros</a>
+        <a href="assistentes.html">Assistente</a>
+        <a href="sumulas.html" class="ativo">Súmula</a>
+        <a href="noticias.html">Notícias</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="wrap container">
+
+<section class="hero">
+  <h2>Súmulas</h2>
+  <p>Visualize todas as súmulas publicadas automaticamente.</p>
+</section>
+
+<section class="lista-grid" id="listaSumulas">
+  <div style="text-align:center;padding:20px;">
+    <i class="fa-solid fa-spinner fa-spin"></i> Carregando súmulas...
+  </div>
+</section>
+
+</main>
+<script type="module">
+import { db } from "./firebase.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let jogos = [];
+
+/* =========================
+   EXEMPLOS (BRASILEIRÃO)
+========================= */
+
+const exemplos = [
+  {
+    id:"br36-1",
+    campeonato:"Brasileirão 2025",
+    categoria:"Profissional",
+    rodada:"36",
+    data:"2025-11-30T16:00:00",
+    local:"Maracanã",
+    timeA:"Flamengo",
+    timeB:"Palmeiras",
+    golsA:2,
+    golsB:1,
+    logoTimeA:"logo-liga.jfif",
+    logoTimeB:"logo-liga.jfif",
+    status:"finalizado"
+  },
+  {
+    id:"br37-1",
+    campeonato:"Brasileirão 2025",
+    categoria:"Profissional",
+    rodada:"37",
+    data:"2025-12-03T21:00:00",
+    local:"Mineirão",
+    timeA:"Cruzeiro",
+    timeB:"Grêmio",
+    golsA:1,
+    golsB:1,
+    logoTimeA:"logo-liga.jfif",
+    logoTimeB:"logo-liga.jfif",
+    status:"finalizado"
+  },
+  {
+    id:"br38-1",
+    campeonato:"Brasileirão 2025",
+    categoria:"Profissional",
+    rodada:"38",
+    data:"2025-12-08T16:00:00",
+    local:"Morumbi",
+    timeA:"São Paulo",
+    timeB:"Santos",
+    golsA:3,
+    golsB:0,
+    logoTimeA:"logo-liga.jfif",
+    logoTimeB:"logo-liga.jfif",
+    status:"finalizado"
+  }
+];
+
+function formatarData(data){
+  if(!data) return "-";
+  return new Date(data).toLocaleString("pt-BR");
+}
+/* =========================
+   CARREGAR FIREBASE
+========================= */
+
+async function carregar(){
+  try{
+    const snap = await getDocs(collection(db,"jogos"));
+
+    jogos = [];
+
+    snap.forEach(doc=>{
+      const j = { id:doc.id, ...doc.data() };
+
+      if(j.status === "finalizado" || j.status === "sumula_enviada"){
+        jogos.push(j);
+      }
+    });
+
+  }catch(e){
+    console.error("Erro Firebase:", e);
+  }
+
+  jogos = [...exemplos, ...jogos];
+
+  render();
+}
+
+/* =========================
+   RENDER
+========================= */
+
+function render(){
+  const lista = document.getElementById("listaSumulas");
+
+  if(!jogos.length){
+    lista.innerHTML = `<div>Nenhuma súmula encontrada</div>`;
+    return;
+  }
+
+  lista.innerHTML = jogos.map(j=>{
+
+    return `
+      <div class="card">
+
+        <div class="times">
+          <div>
+            <img src="${j.logoTimeA || 'logo-liga.jfif'}" class="escudo">
+            <div>${j.timeA}</div>
+          </div>
+
+          <div class="placar">
+            ${j.golsA ?? "-"} x ${j.golsB ?? "-"}
+          </div>
+
+          <div>
+            <img src="${j.logoTimeB || 'logo-liga.jfif'}" class="escudo">
+            <div>${j.timeB}</div>
+          </div>
+        </div>
+
+        <div class="info">
+          <strong>${j.campeonato}</strong><br>
+          ${j.categoria}<br>
+          ${formatarData(j.data)}<br>
+          ${j.local}
+        </div>
+
+        <a class="btn" href="sumula-publica.html?id=${j.id}">
+          <i class="fa-solid fa-file-lines"></i> Ver Súmula
+        </a>
+
+      </div>
+    `;
+
+  }).join("");
+}
+
+carregar();
+</script>
+
+</body>
+</html>
