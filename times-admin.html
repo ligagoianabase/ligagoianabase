@@ -3,115 +3,435 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Times - Admin</title>
+
+<title>Times ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 :root{
   --bg:#0b1f3a;
+  --bg-dark:#08172c;
   --card:#102a52;
+  --card-hover:#153766;
   --gold:#f7c600;
-  --white:#fff;
+  --gold-soft:rgba(247,198,0,.12);
+  --gold-line:rgba(247,198,0,.24);
+  --white:#ffffff;
+  --muted:#d8e1ef;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --transition:.25s ease;
+  --max:1240px;
 }
 
+*{margin:0;padding:0;box-sizing:border-box}
+
 body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+}
+
+a{text-decoration:none;color:inherit;transition:var(--transition)}
+button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
+input,select{font-family:inherit}
+
+.wrap{width:min(100% - 28px, var(--max));margin:0 auto}
+
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.header-top{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
+
+.header-left,.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:700;
+  color:var(--white);
+}
+
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.btn-light{background:#fff4cf;color:#111}
+.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
+.btn-gold{background:var(--gold);color:#111}
+.btn-gold:hover{filter:brightness(1.04);transform:translateY(-2px)}
+
+.nav-bar{
+  background:rgba(16,42,82,.95);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.menu{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:12px 0;
+  flex-wrap:wrap;
+}
+
+.menu a{
+  color:white;
+  font-weight:700;
+  font-size:14px;
+  background:#0d2346;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+
+.menu a:hover{
+  color:var(--gold);
+  background:var(--gold-soft);
+  border-color:var(--gold-line);
+}
+
+.menu a.ativo{background:var(--gold);color:black}
+
+.container{padding:24px 0 34px}
+
+.hero,.form-panel,.list-panel{
+  background:linear-gradient(135deg,#102a52,#0d2346);
+  border:1px solid var(--gold-line);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:var(--shadow);
+}
+
+.hero h2,.form-panel h2,.list-panel h2{
+  margin:0 0 8px;
+  color:var(--gold);
+  font-size:28px;
+}
+
+.hero p,.form-panel p{
   margin:0;
-  font-family:Arial;
-  background:var(--bg);
+  color:var(--muted);
+  line-height:1.6;
+  font-size:15px;
+  max-width:850px;
+}
+
+.form-title{
+  color:var(--gold);
+  font-size:20px;
+  margin-bottom:14px;
+  font-weight:900;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.full{grid-column:1/-1}
+
+label{
+  display:block;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:6px;
   color:#fff;
 }
 
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:20px;
+input,select{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  box-sizing:border-box;
+  background:#f5f7fb;
+  color:#111;
 }
 
-h2{
-  text-align:center;
-  color:var(--gold);
-}
+input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
 
-.form{
-  display:grid;
+.form-actions{
+  display:flex;
   gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
   margin-bottom:20px;
 }
 
-input{
-  padding:12px;
-  border-radius:8px;
-  border:none;
-}
-
-button{
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  font-weight:900;
-  cursor:pointer;
-}
-
-.salvar{
-  background:var(--gold);
-  color:#000;
-}
-
-.lista{
+.lista-grid{
   display:grid;
-  gap:10px;
+  grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+  gap:14px;
 }
 
 .card{
-  background:var(--card);
-  padding:15px;
-  border-radius:10px;
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+  padding:16px;
+  border-radius:16px;
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:14px;
+  border:1px solid rgba(255,230,0,.10);
+  box-shadow:var(--shadow);
+  transition:var(--transition);
 }
 
-.card strong{
-  color:var(--gold);
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold-line);
 }
 
-.acoes{
+.player{
   display:flex;
-  gap:10px;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+  flex:1;
 }
 
-.btn{
-  padding:8px 10px;
-  border-radius:6px;
+.photo{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  object-fit:contain;
+  border:2px solid rgba(255,255,255,.15);
+  background:#fff;
+  flex-shrink:0;
+}
+
+.player-info{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  min-width:0;
+}
+
+.nome-jogador{
+  font-weight:700;
+  font-size:18px;
+  color:#ffffff;
+  line-height:1.35;
+}
+
+.player-info small{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:4px;
+}
+
+.tag{
+  background:#1a3f73;
+  padding:5px 9px;
+  border-radius:999px;
   font-size:12px;
+  border:1px solid rgba(255,255,255,.08);
 }
 
-.ver{
-  background:var(--gold);
-  color:#000;
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
 }
 
-.excluir{
-  background:red;
-  color:#fff;
+.btn-acao{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:11px 14px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:700;
+  font-size:13px;
+  border:none;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.btn-ver{background:var(--gold);color:black}
+.btn-ver:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.btn-danger{background:#d94141;color:#fff}
+.btn-danger:hover{background:#b82f2f}
+
+.vazio{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+  padding:30px;
+  border-radius:14px;
+  text-align:center;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:var(--shadow);
+  grid-column:1/-1;
+}
+
+@media (max-width:900px){
+  .header-title{order:3;width:100%;text-align:center}
+  .header-left,.header-right{width:100%;justify-content:center}
+  .filtros,.form-grid{grid-template-columns:1fr}
+  .card{flex-direction:column;align-items:flex-start}
+  .actions{width:100%;justify-content:flex-start}
+}
+
+@media (max-width:600px){
+  .top-btn,.btn-acao{width:100%;justify-content:center}
+  .header-left,.header-right{flex-direction:column;align-items:stretch}
+  .hero h2{font-size:24px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<header>
+  <div class="wrap header-top">
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
 
-<h2>Cadastro de Times</h2>
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
 
-<div class="form">
-<input id="nome" placeholder="Nome do time">
-<input id="logo" placeholder="URL do logo">
-<button class="salvar" onclick="salvar()">Salvar Time</button>
-</div>
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
+    </div>
 
-<div class="lista" id="lista"></div>
+    <div class="header-title">
+      LIGA GOIANA DE FUTEBOL DE BASE
+    </div>
+
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarTime()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Time
+      </button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="wrap">
+      <div class="menu">
+        <a href="admin.html">Painel</a>
+        <a href="campeonatos-admin.html">Campeonatos</a>
+        <a href="jogos-admin.html">Jogos</a>
+        <a href="times-admin.html" class="ativo">Times</a>
+        <a href="tecnicos-admin.html">Técnicos</a>
+        <a href="jogadores-admin.html">Jogadores</a>
+        <a href="arbitros-admin.html">Árbitros</a>
+        <a href="assistentes-admin.html">Assistentes</a>
+        <a href="sumulas-admin.html">Súmulas</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+  <div class="hero">
+    <h2>Times ADM</h2>
+    <p>Cadastre times, escudos, cidade e categorias. Esses dados serão usados automaticamente em jogadores, jogos, súmulas, tabelas e estatísticas.</p>
+  </div>
+
+  <section class="form-panel">
+    <div class="form-title" id="tituloFormulario">Novo Time</div>
+
+    <input type="hidden" id="timeId">
+
+    <div class="form-grid">
+      <div>
+        <label>Nome do time</label>
+        <input id="nome" placeholder="Ex: Atlético GO">
+      </div>
+
+      <div>
+        <label>Cidade</label>
+        <input id="cidade" placeholder="Ex: Goiânia - GO">
+      </div>
+
+      <div>
+        <label>Escudo / Logo URL</label>
+        <input id="logo" placeholder="logo-time.png ou URL">
+      </div>
+
+      <div>
+        <label>Status</label>
+        <select id="status">
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
+        </select>
+      </div>
+
+      <div class="full">
+        <label>Categorias</label>
+        <input id="categorias" placeholder="Ex: Sub-11, Sub-13, Sub-15, Sub-17">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-acao btn-ver" type="button" onclick="salvarTime()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Time
+      </button>
+
+      <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
+        <i class="fa-solid fa-broom"></i> Limpar
+      </button>
+    </div>
+  </section>
+
+  <div class="filtros">
+    <input id="buscaTime" placeholder="Pesquisar time...">
+
+    <select id="filtroStatus">
+      <option value="">Todos os status</option>
+      <option value="ativo">Ativo</option>
+      <option value="inativo">Inativo</option>
+    </select>
+  </div>
+
+  <div class="lista-grid" id="listaTimes"></div>
 
 </div>
 
@@ -122,68 +442,220 @@ import {
   addDoc,
   getDocs,
   doc,
-  deleteDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-window.salvar = async function(){
+let timesCache = [];
 
-  const nome = document.getElementById("nome").value.trim();
-  const logo = document.getElementById("logo").value.trim();
+window.voltarPagina = function(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = "admin.html";
+  }
+};
 
-  if(!nome) return alert("Digite o nome do time");
-
-  await addDoc(collection(db,"times"),{
-    nome,
-    logo,
-    jogos:0,
-    vitorias:0,
-    empates:0,
-    derrotas:0,
-    golsPro:0,
-    golsContra:0,
-    criadoEm:new Date().toISOString()
-  });
-
-  alert("Time criado!");
-  location.reload();
+function txt(v){
+  return String(v || "").trim();
 }
 
-window.excluir = async function(id){
+function normalizarTexto(texto){
+  return String(texto || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function listaCategorias(valor){
+  return String(valor || "")
+    .split(",")
+    .map(c => c.trim())
+    .filter(Boolean);
+}
+
+window.limparFormulario = function(){
+  document.getElementById("timeId").value = "";
+  document.getElementById("nome").value = "";
+  document.getElementById("cidade").value = "";
+  document.getElementById("logo").value = "";
+  document.getElementById("status").value = "ativo";
+  document.getElementById("categorias").value = "";
+  document.getElementById("tituloFormulario").textContent = "Novo Time";
+};
+
+window.salvarTime = async function(){
+  const id = document.getElementById("timeId").value;
+
+  const nome = txt(document.getElementById("nome").value);
+  const cidade = txt(document.getElementById("cidade").value);
+  const logo = txt(document.getElementById("logo").value) || "logo-liga.jfif";
+  const status = document.getElementById("status").value;
+  const categorias = listaCategorias(document.getElementById("categorias").value);
+
+  if(!nome) return alert("Digite o nome do time.");
+  if(!cidade) return alert("Digite a cidade do time.");
+  if(!categorias.length) return alert("Digite pelo menos uma categoria.");
+
+  const dados = {
+    nome,
+    cidade,
+    logo,
+    escudo:logo,
+    status,
+    categorias,
+    atualizadoEm:serverTimestamp()
+  };
+
+  if(id){
+    await updateDoc(doc(db,"times",id),dados);
+    alert("Time atualizado!");
+  }else{
+    await addDoc(collection(db,"times"),{
+      ...dados,
+      jogos:0,
+      pontos:0,
+      vitorias:0,
+      empates:0,
+      derrotas:0,
+      golsPro:0,
+      golsContra:0,
+      saldo:0,
+      criadoEm:serverTimestamp()
+    });
+    alert("Time cadastrado!");
+  }
+
+  limparFormulario();
+  await carregarTimes();
+};
+
+window.editarTime = function(id){
+  const t = timesCache.find(x => x.id === id);
+  if(!t) return;
+
+  document.getElementById("timeId").value = t.id;
+  document.getElementById("nome").value = t.nome || "";
+  document.getElementById("cidade").value = t.cidade || "";
+  document.getElementById("logo").value = t.logo || t.escudo || "";
+  document.getElementById("status").value = t.status || "ativo";
+  document.getElementById("categorias").value = Array.isArray(t.categorias) ? t.categorias.join(", ") : "";
+
+  document.getElementById("tituloFormulario").textContent = "Editar Time";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.excluirTime = async function(id){
   if(!confirm("Excluir time?")) return;
   await deleteDoc(doc(db,"times",id));
-  carregar();
-}
+  await carregarTimes();
+};
 
-async function carregar(){
-
-  const lista = document.getElementById("lista");
-  lista.innerHTML = "Carregando...";
+async function carregarTimes(){
+  const lista = document.getElementById("listaTimes");
+  lista.innerHTML = `<div class="vazio">Carregando times...</div>`;
 
   const snap = await getDocs(collection(db,"times"));
 
-  let html="";
+  timesCache = [];
+  snap.forEach(d => timesCache.push({id:d.id,...d.data()}));
 
-  snap.forEach(d=>{
-    const t=d.data();
+  timesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
 
-    html+=`
-    <div class="card">
-      <div>
-        <strong>${t.nome}</strong><br>
-        Jogos: ${t.jogos||0}
-      </div>
-
-      <div class="acoes">
-        <button class="btn excluir" onclick="excluir('${d.id}')">Excluir</button>
-      </div>
-    </div>
-    `;
-  });
-
-  lista.innerHTML = html || "Nenhum time cadastrado";
+  renderizarTimes();
 }
 
-carregar();
+function renderizarTimes(){
+  const lista = document.getElementById("listaTimes");
+  const busca = normalizarTexto(document.getElementById("buscaTime").value);
+  const filtroStatus = document.getElementById("filtroStatus").value;
+
+  let times = timesCache.filter(t=>{
+    if(filtroStatus && t.status !== filtroStatus) return false;
+
+    if(busca){
+      const texto = normalizarTexto(`
+        ${t.nome || ""}
+        ${t.cidade || ""}
+        ${Array.isArray(t.categorias) ? t.categorias.join(" ") : ""}
+      `);
+
+      if(!texto.includes(busca)) return false;
+    }
+
+    return true;
+  });
+
+  if(!times.length){
+    lista.innerHTML = `<div class="vazio">Nenhum time encontrado.</div>`;
+    return;
+  }
+
+  lista.innerHTML = times.map(t=>{
+    const categorias = Array.isArray(t.categorias) && t.categorias.length ? t.categorias : ["Sem categoria"];
+
+    return `
+      <div class="card">
+        <div class="player">
+          <img
+            src="${t.logo || t.escudo || "logo-liga.jfif"}"
+            class="photo"
+            alt="${t.nome || "Time"}"
+            onerror="this.src='logo-liga.jfif'"
+          >
+
+          <div class="player-info">
+            <div class="nome-jogador">
+              ${t.nome || "-"}
+            </div>
+
+            <small>Cidade: ${t.cidade || "-"}</small>
+
+            <small>
+              Jogos: ${Number(t.jogos || 0)} |
+              Pontos: ${Number(t.pontos || 0)}
+            </small>
+
+            <small>
+              Vitórias: ${Number(t.vitorias || 0)} |
+              Empates: ${Number(t.empates || 0)} |
+              Derrotas: ${Number(t.derrotas || 0)}
+            </small>
+
+            <small>
+              GP: ${Number(t.golsPro || 0)} |
+              GC: ${Number(t.golsContra || 0)} |
+              Saldo: ${Number(t.saldo || 0)}
+            </small>
+
+            <div class="tags">
+              <span class="tag">${t.status || "ativo"}</span>
+              ${categorias.map(c => `<span class="tag">${c}</span>`).join("")}
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-acao btn-ver" onclick="editarTime('${t.id}')">
+            <i class="fa-solid fa-pen"></i> Editar
+          </button>
+
+          <button class="btn-acao btn-danger" onclick="excluirTime('${t.id}')">
+            <i class="fa-solid fa-trash"></i> Excluir
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+document.getElementById("buscaTime").addEventListener("input", renderizarTimes);
+document.getElementById("filtroStatus").addEventListener("change", renderizarTimes);
+
+carregarTimes();
 </script>
 
 </body>
