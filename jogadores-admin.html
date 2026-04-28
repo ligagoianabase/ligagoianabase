@@ -1,842 +1,894 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jogadores ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<title>Jogadores ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
-  <style>
-    :root{
-      --bg:#0b1f3a;
-      --card:#102a52;
-      --card-hover:#153766;
-      --gold:#f7c600;
-      --gold-line:rgba(247,198,0,.30);
-      --white:#ffffff;
-      --muted:#d6def0;
-      --danger:#c62828;
-      --success:#1f8b4c;
-      --shadow:0 8px 22px rgba(0,0,0,.28);
-      --transition:.25s ease;
-      --max:1280px;
-    }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
+<style>
+:root{
+  --bg:#0b1f3a;
+  --bg-dark:#08172c;
+  --card:#102a52;
+  --card-hover:#153766;
+  --gold:#f7c600;
+  --gold-soft:rgba(247,198,0,.12);
+  --gold-line:rgba(247,198,0,.24);
+  --white:#ffffff;
+  --muted:#d8e1ef;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --transition:.25s ease;
+  --max:1240px;
+}
 
-    body{
-      font-family:Arial, sans-serif;
-      background:
-        linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
-        url("fundo.png") center/cover fixed no-repeat;
-      color:var(--white);
-      min-height:100vh;
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-    a{ text-decoration:none; color:inherit; }
-    button,input,select{ font-family:inherit; }
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+}
 
-    .wrap{
-      width:min(100% - 30px, var(--max));
-      margin:0 auto;
-    }
+a{
+  text-decoration:none;
+  color:inherit;
+  transition:var(--transition);
+}
 
-    header{
-      background:rgba(8,23,44,.96);
-      border-bottom:3px solid var(--gold);
-      box-shadow:var(--shadow);
-      margin-bottom:20px;
-    }
+button{
+  font-family:inherit;
+  cursor:pointer;
+  transition:var(--transition);
+  border:none;
+  background:none;
+}
 
-    .header-inner{
-      min-height:82px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-      padding:14px 0;
-    }
+input, select{
+  font-family:inherit;
+}
 
-    .header-left,.header-right{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
 
-    .header-title{
-      flex:1;
-      text-align:center;
-      font-size:22px;
-      font-weight:700;
-    }
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
 
-    .top-btn{
-      border:none;
-      padding:10px 16px;
-      border-radius:10px;
-      font-weight:bold;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      cursor:pointer;
-      transition:var(--transition);
-    }
+.header-top{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
 
-    .btn-light{
-      background:#fff4cf;
-      color:#111;
-    }
+.header-left,
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
 
-    .btn-light:hover{
-      background:var(--gold);
-      transform:translateY(-2px);
-    }
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:700;
+  color:var(--white);
+}
 
-    .btn-gold{
-      background:var(--gold);
-      color:#111;
-    }
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
+  white-space:nowrap;
+}
 
-    .btn-gold:hover{
-      filter:brightness(1.05);
-      transform:translateY(-2px);
-    }
+.btn-light{
+  background:#fff4cf;
+  color:#111;
+}
 
-    .container{
-      padding-bottom:30px;
-    }
+.btn-light:hover{
+  background:var(--gold);
+  transform:translateY(-2px);
+}
 
-    .panel{
-      background:linear-gradient(180deg, rgba(16,42,82,.95), rgba(10,28,56,.96));
-      border:1px solid var(--gold-line);
-      border-radius:20px;
-      padding:22px;
-      box-shadow:var(--shadow);
-      margin-bottom:20px;
-    }
+.btn-gold{
+  background:var(--gold);
+  color:#111;
+}
 
-    .panel h2,
-    .panel h3{
-      color:var(--gold);
-      margin-bottom:10px;
-    }
+.btn-gold:hover{
+  filter:brightness(1.04);
+  transform:translateY(-2px);
+}
 
-    .panel p{
-      color:var(--muted);
-      line-height:1.6;
-    }
+.nav-bar{
+  background:rgba(16,42,82,.95);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
 
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(4, 1fr);
-      gap:12px;
-      margin-top:16px;
-    }
+.menu{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:12px 0;
+  flex-wrap:wrap;
+}
 
-    .field label{
-      display:block;
-      margin-bottom:6px;
-      font-size:14px;
-      font-weight:700;
-    }
+.menu a{
+  color:white;
+  font-weight:700;
+  font-size:14px;
+  background:#0d2346;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
 
-    .field input,
-    .field select{
-      width:100%;
-      padding:12px;
-      border:none;
-      border-radius:10px;
-      background:#f4f7fb;
-      color:#111;
-      font-size:14px;
-    }
+.menu a:hover{
+  color:var(--gold);
+  background:var(--gold-soft);
+  border-color:var(--gold-line);
+}
 
-    .field.full{
-      grid-column:1 / -1;
-    }
+.menu a.ativo{
+  background:var(--gold);
+  color:black;
+}
 
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
+.container{
+  padding:24px 0 34px;
+}
 
-    .btn-action{
-      border:none;
-      padding:12px 16px;
-      border-radius:10px;
-      font-weight:700;
-      cursor:pointer;
-      transition:var(--transition);
-    }
+.hero,
+.form-panel,
+.list-panel{
+  background:linear-gradient(135deg,#102a52,#0d2346);
+  border:1px solid var(--gold-line);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:var(--shadow);
+}
 
-    .btn-save{
-      background:var(--gold);
-      color:#111;
-    }
+.hero h2,
+.form-panel h2,
+.list-panel h2{
+  margin:0 0 8px;
+  color:var(--gold);
+  font-size:28px;
+}
 
-    .btn-save:hover,
-    .btn-clear:hover{
-      transform:translateY(-2px);
-    }
+.hero p,
+.form-panel p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
+  font-size:15px;
+  max-width:850px;
+}
 
-    .btn-clear{
-      background:#d9e2f2;
-      color:#111;
-    }
+.form-title{
+  color:var(--gold);
+  font-size:20px;
+  margin-bottom:14px;
+  font-weight:900;
+}
 
-    .msg{
-      margin-top:14px;
-      padding:12px;
-      border-radius:12px;
-      font-weight:700;
-      display:none;
-    }
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
 
-    .msg.error{
-      background:rgba(198,40,40,.18);
-      color:#ffb7b7;
-      border:1px solid rgba(198,40,40,.35);
-    }
+.full{
+  grid-column:1/-1;
+}
 
-    .msg.success{
-      background:rgba(31,139,76,.18);
-      color:#a8ffd0;
-      border:1px solid rgba(31,139,76,.35);
-    }
+label{
+  display:block;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:6px;
+  color:#fff;
+}
 
-    .filtros{
-      display:grid;
-      grid-template-columns:1.2fr .8fr .8fr .8fr;
-      gap:12px;
-      margin-top:14px;
-    }
+input, select{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  box-sizing:border-box;
+  background:#f5f7fb;
+  color:#111;
+}
 
-    .lista{
-      display:grid;
-      gap:14px;
-      margin-top:18px;
-    }
+input:focus, select:focus{
+  outline:2px solid rgba(247,198,0,.5);
+}
 
-    .card{
-      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:16px;
-      padding:16px;
-      box-shadow:var(--shadow);
-    }
+.form-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
 
-    .card-top{
-      display:flex;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-    }
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  margin-bottom:20px;
+}
 
-    .card-info h3{
-      font-size:20px;
-      margin-bottom:6px;
-    }
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+  gap:14px;
+}
 
-    .card-info p{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.55;
-    }
+.card{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+  padding:16px;
+  border-radius:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  border:1px solid rgba(255,230,0,.10);
+  box-shadow:var(--shadow);
+  transition:var(--transition);
+}
 
-    .tags{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:10px;
-    }
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold-line);
+}
 
-    .tag{
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:700;
-      border:1px solid rgba(255,255,255,.08);
-      background:#14335f;
-      color:#fff;
-    }
+.player{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+  flex:1;
+}
 
-    .tag.success{
-      background:rgba(31,139,76,.18);
-      color:#a8ffd0;
-      border-color:rgba(31,139,76,.35);
-    }
+.photo{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid rgba(255,255,255,.15);
+  background:#1a3f73;
+  flex-shrink:0;
+}
 
-    .card-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
+.player-info{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  min-width:0;
+}
 
-    .mini-btn{
-      border:none;
-      padding:10px 14px;
-      border-radius:10px;
-      font-weight:700;
-      cursor:pointer;
-      transition:var(--transition);
-      color:#fff;
-    }
+.nome-jogador{
+  font-weight:700;
+  font-size:18px;
+  color:#ffffff;
+  line-height:1.35;
+}
 
-    .mini-btn:hover{
-      transform:translateY(-2px);
-    }
+.player-info small{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
 
-    .mini-edit{ background:var(--gold); color:#111; }
-    .mini-delete{ background:var(--danger); }
+.tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:4px;
+}
 
-    .vazio{
-      text-align:center;
-      color:var(--muted);
-      padding:24px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.06);
-      background:rgba(255,255,255,.03);
-    }
+.tag{
+  background:#1a3f73;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid rgba(255,255,255,.08);
+}
 
-    @media (max-width: 980px){
-      .grid,
-      .filtros{
-        grid-template-columns:1fr;
-      }
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
 
-      .header-title{
-        order:3;
-        width:100%;
-      }
+.btn-acao{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:11px 14px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:700;
+  font-size:13px;
+  border:none;
+  cursor:pointer;
+  white-space:nowrap;
+}
 
-      .header-left,.header-right{
-        width:100%;
-        justify-content:center;
-      }
-    }
+.btn-ver{
+  background:var(--gold);
+  color:black;
+}
 
-    @media (max-width: 600px){
-      .top-btn,
-      .btn-action,
-      .mini-btn{
-        width:100%;
-        justify-content:center;
-      }
+.btn-ver:hover{
+  filter:brightness(1.04);
+  transform:translateY(-1px);
+}
 
-      .header-left,.header-right,
-      .actions,.card-actions{
-        flex-direction:column;
-        align-items:stretch;
-      }
-    }
-  </style>
+.btn-danger{
+  background:#d94141;
+  color:#fff;
+}
+
+.btn-danger:hover{
+  background:#b82f2f;
+}
+
+.vazio{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+  padding:30px;
+  border-radius:14px;
+  text-align:center;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:var(--shadow);
+  grid-column:1/-1;
+}
+
+@media (max-width:900px){
+  .header-title{
+    order:3;
+    width:100%;
+    text-align:center;
+  }
+
+  .header-left,
+  .header-right{
+    width:100%;
+    justify-content:center;
+  }
+
+  .filtros,
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .card{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .actions{
+    width:100%;
+    justify-content:flex-start;
+  }
+}
+
+@media (max-width:600px){
+  .top-btn,
+  .btn-acao{
+    width:100%;
+    justify-content:center;
+  }
+
+  .header-left,
+  .header-right{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .hero h2{
+    font-size:24px;
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <header>
-    <div class="wrap header-inner">
-      <div class="header-left">
-        <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
-          <i class="fa-solid fa-arrow-left"></i> Voltar
-        </button>
+<header>
+  <div class="wrap header-top">
 
-        <a href="admin.html" class="top-btn btn-light">
-          <i class="fa-solid fa-house"></i> Painel ADM
-        </a>
-      </div>
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
 
-      <div class="header-title">Jogadores ADM</div>
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
 
-      <div class="header-right">
-        <button class="top-btn btn-gold" type="button" onclick="limparFormulario()">
-          <i class="fa-solid fa-user-plus"></i> Novo Jogador
-        </button>
-      </div>
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
     </div>
-  </header>
 
-  <div class="wrap container">
+    <div class="header-title">
+      LIGA GOIANA DE FUTEBOL DE BASE
+    </div>
 
-    <section class="panel">
-      <h2>Cadastro e edição de jogadores</h2>
-      <p>
-        Aqui o sistema usa o CPF para evitar duplicação e puxar informações já cadastradas na base de usuários.
-      </p>
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarJogador()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Jogador
+      </button>
+    </div>
 
-      <div id="msgErro" class="msg error"></div>
-      <div id="msgSucesso" class="msg success"></div>
-
-      <div class="grid">
-        <div class="field">
-          <label for="nome">Nome</label>
-          <input type="text" id="nome" placeholder="Nome do jogador">
-        </div>
-
-        <div class="field">
-          <label for="cpf">CPF</label>
-          <input type="text" id="cpf" placeholder="CPF do jogador" onblur="buscarPorCpf()">
-        </div>
-
-        <div class="field">
-          <label for="dataNascimento">Data de nascimento</label>
-          <input type="date" id="dataNascimento">
-        </div>
-
-        <div class="field">
-          <label for="numero">Número</label>
-          <input type="text" id="numero" placeholder="Número da camisa">
-        </div>
-
-        <div class="field">
-          <label for="time">Time</label>
-          <input type="text" id="time" placeholder="Nome do time">
-        </div>
-
-        <div class="field">
-          <label for="categoria">Categoria</label>
-          <select id="categoria">
-            <option value="">Selecione</option>
-            <option value="Sub-11">Sub-11</option>
-            <option value="Sub-12">Sub-12</option>
-            <option value="Sub-13">Sub-13</option>
-            <option value="Sub-14">Sub-14</option>
-            <option value="Sub-15">Sub-15</option>
-            <option value="Sub-16">Sub-16</option>
-            <option value="Sub-17">Sub-17</option>
-            <option value="Sub-18">Sub-18</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="posicao">Posição</label>
-          <input type="text" id="posicao" placeholder="Ex.: Atacante">
-        </div>
-
-        <div class="field">
-          <label for="status">Status</label>
-          <select id="status">
-            <option value="ativo">Ativo</option>
-            <option value="pendente">Pendente</option>
-            <option value="bloqueado">Bloqueado</option>
-          </select>
-        </div>
-
-        <div class="field full">
-          <label for="observacoes">Observações</label>
-          <input type="text" id="observacoes" placeholder="Observações do jogador">
-        </div>
-      </div>
-
-      <div class="actions">
-        <button class="btn-action btn-save" onclick="salvarJogador()">
-          <i class="fa-solid fa-floppy-disk"></i> Salvar jogador
-        </button>
-
-        <button class="btn-action btn-clear" onclick="limparFormulario()">
-          <i class="fa-solid fa-eraser"></i> Limpar
-        </button>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h3>Filtros</h3>
-
-      <div class="filtros">
-        <div class="field">
-          <label for="busca">Buscar</label>
-          <input type="text" id="busca" placeholder="Nome, CPF ou time" oninput="renderJogadores()">
-        </div>
-
-        <div class="field">
-          <label for="filtroCategoria">Categoria</label>
-          <select id="filtroCategoria" onchange="renderJogadores()">
-            <option value="">Todas</option>
-            <option value="Sub-11">Sub-11</option>
-            <option value="Sub-12">Sub-12</option>
-            <option value="Sub-13">Sub-13</option>
-            <option value="Sub-14">Sub-14</option>
-            <option value="Sub-15">Sub-15</option>
-            <option value="Sub-16">Sub-16</option>
-            <option value="Sub-17">Sub-17</option>
-            <option value="Sub-18">Sub-18</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="filtroTime">Time</label>
-          <input type="text" id="filtroTime" placeholder="Filtrar por time" oninput="renderJogadores()">
-        </div>
-
-        <div class="field">
-          <label for="filtroStatus">Status</label>
-          <select id="filtroStatus" onchange="renderJogadores()">
-            <option value="">Todos</option>
-            <option value="ativo">Ativo</option>
-            <option value="pendente">Pendente</option>
-            <option value="bloqueado">Bloqueado</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="lista" id="listaJogadores">
-        <div class="vazio">Carregando jogadores...</div>
-      </div>
-    </section>
   </div>
 
-  <script type="module">
-    import { auth, db } from "./firebase.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import {
-      collection,
-      getDocs,
-      doc,
-      getDoc,
-      setDoc,
-      updateDoc,
-      deleteDoc
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  <div class="nav-bar">
+    <div class="wrap">
+      <div class="menu">
+        <a href="admin.html">Painel</a>
+        <a href="campeonatos-admin.html">Campeonatos</a>
+        <a href="jogos-admin.html">Jogos</a>
+        <a href="times-admin.html">Times</a>
+        <a href="tecnicos-admin.html">Técnicos</a>
+        <a href="jogadores-admin.html" class="ativo">Jogadores</a>
+        <a href="arbitros-admin.html">Árbitros</a>
+        <a href="assistentes-admin.html">Assistentes</a>
+        <a href="sumulas-admin.html">Súmulas</a>
+      </div>
+    </div>
+  </div>
+</header>
 
-    let jogadorEditandoId = "";
-    let jogadoresCache = [];
-    let usuariosCache = [];
+<div class="wrap container">
 
-    const msgErro = document.getElementById("msgErro");
-    const msgSucesso = document.getElementById("msgSucesso");
+  <div class="hero">
+    <h2>Jogadores ADM</h2>
+    <p>Cadastre jogadores, vincule ao time e categoria, e deixe tudo pronto para jogos, súmulas, artilharia, cartões e estatísticas automáticas.</p>
+  </div>
 
-    function mostrarErro(texto){
-      msgSucesso.style.display = "none";
-      msgErro.style.display = "block";
-      msgErro.innerText = texto;
+  <section class="form-panel">
+    <div class="form-title" id="tituloFormulario">Novo Jogador</div>
+
+    <input type="hidden" id="jogadorId">
+
+    <div class="form-grid">
+      <div>
+        <label>Nome completo</label>
+        <input id="nome" placeholder="Nome do jogador">
+      </div>
+
+      <div>
+        <label>CPF</label>
+        <input id="cpf" placeholder="CPF do jogador">
+      </div>
+
+      <div>
+        <label>Data de nascimento</label>
+        <input id="nascimento" type="date">
+      </div>
+
+      <div>
+        <label>Número da camisa</label>
+        <input id="numero" type="number" placeholder="Ex: 10">
+      </div>
+
+      <div>
+        <label>Posição</label>
+        <select id="posicao">
+          <option value="">Selecione</option>
+          <option value="Goleiro">Goleiro</option>
+          <option value="Zagueiro">Zagueiro</option>
+          <option value="Lateral">Lateral</option>
+          <option value="Volante">Volante</option>
+          <option value="Meia">Meia</option>
+          <option value="Atacante">Atacante</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Capitão?</label>
+        <select id="capitao">
+          <option value="nao">Não</option>
+          <option value="sim">Sim</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Time</label>
+        <select id="time">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Categoria</label>
+        <select id="categoria">
+          <option value="">Selecione</option>
+          <option value="Sub-11">Sub-11</option>
+          <option value="Sub-12">Sub-12</option>
+          <option value="Sub-13">Sub-13</option>
+          <option value="Sub-14">Sub-14</option>
+          <option value="Sub-15">Sub-15</option>
+          <option value="Sub-16">Sub-16</option>
+          <option value="Sub-17">Sub-17</option>
+          <option value="Sub-18">Sub-18</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Foto URL</label>
+        <input id="foto" placeholder="foto-jogador.png ou URL">
+      </div>
+
+      <div>
+        <label>Status</label>
+        <select id="status">
+          <option value="ativo">Ativo</option>
+          <option value="suspenso">Suspenso</option>
+          <option value="inativo">Inativo</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-acao btn-ver" type="button" onclick="salvarJogador()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Jogador
+      </button>
+
+      <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
+        <i class="fa-solid fa-broom"></i> Limpar
+      </button>
+    </div>
+  </section>
+
+  <div class="filtros">
+    <input id="buscaJogador" placeholder="Pesquisar jogador...">
+
+    <select id="filtroTime">
+      <option value="">Todos os times</option>
+    </select>
+
+    <select id="filtroCategoria">
+      <option value="">Todas categorias</option>
+      <option value="Sub-11">Sub-11</option>
+      <option value="Sub-12">Sub-12</option>
+      <option value="Sub-13">Sub-13</option>
+      <option value="Sub-14">Sub-14</option>
+      <option value="Sub-15">Sub-15</option>
+      <option value="Sub-16">Sub-16</option>
+      <option value="Sub-17">Sub-17</option>
+      <option value="Sub-18">Sub-18</option>
+    </select>
+  </div>
+
+  <div class="lista-grid" id="listaJogadores"></div>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let jogadoresCache = [];
+let timesCache = [];
+
+window.voltarPagina = function(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = "admin.html";
+  }
+};
+
+function txt(v){
+  return String(v || "").trim();
+}
+
+function normalizarTexto(texto){
+  return String(texto || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function boolSimNao(v){
+  return v === "sim";
+}
+
+function buscarTime(id){
+  return timesCache.find(t => t.id === id) || null;
+}
+
+window.limparFormulario = function(){
+  document.getElementById("jogadorId").value = "";
+  document.getElementById("nome").value = "";
+  document.getElementById("cpf").value = "";
+  document.getElementById("nascimento").value = "";
+  document.getElementById("numero").value = "";
+  document.getElementById("posicao").value = "";
+  document.getElementById("capitao").value = "nao";
+  document.getElementById("time").value = "";
+  document.getElementById("categoria").value = "";
+  document.getElementById("foto").value = "";
+  document.getElementById("status").value = "ativo";
+  document.getElementById("tituloFormulario").textContent = "Novo Jogador";
+};
+
+window.salvarJogador = async function(){
+  const id = document.getElementById("jogadorId").value;
+
+  const nome = txt(document.getElementById("nome").value);
+  const cpf = txt(document.getElementById("cpf").value);
+  const nascimento = document.getElementById("nascimento").value;
+  const numero = Number(document.getElementById("numero").value || 0);
+  const posicao = document.getElementById("posicao").value;
+  const capitao = boolSimNao(document.getElementById("capitao").value);
+  const timeId = document.getElementById("time").value;
+  const categoria = document.getElementById("categoria").value;
+  const foto = txt(document.getElementById("foto").value) || "logo-liga.jfif";
+  const status = document.getElementById("status").value;
+
+  if(!nome) return alert("Digite o nome.");
+  if(!cpf) return alert("Digite o CPF.");
+  if(!timeId) return alert("Selecione o time.");
+  if(!categoria) return alert("Selecione a categoria.");
+
+  const time = buscarTime(timeId);
+
+  const dados = {
+    nome,
+    cpf,
+    nascimento,
+    numero,
+    posicao,
+    capitao,
+    goleiro:normalizarTexto(posicao) === "goleiro",
+    timeId,
+    timeNome:time?.nome || "",
+    time:time?.nome || "",
+    categoria,
+    categorias:[categoria],
+    foto,
+    status,
+    atualizadoEm:serverTimestamp()
+  };
+
+  if(id){
+    await updateDoc(doc(db,"jogadores",id),dados);
+    alert("Jogador atualizado!");
+  }else{
+    await addDoc(collection(db,"jogadores"),{
+      ...dados,
+      jogos:0,
+      gols:0,
+      assistencias:0,
+      cartoesAmarelos:0,
+      cartoesVermelhos:0,
+      amarelos:0,
+      vermelhos:0,
+      criadoEm:serverTimestamp()
+    });
+    alert("Jogador cadastrado!");
+  }
+
+  limparFormulario();
+  await carregarJogadores();
+};
+
+window.editarJogador = function(id){
+  const j = jogadoresCache.find(x => x.id === id);
+  if(!j) return;
+
+  document.getElementById("jogadorId").value = j.id;
+  document.getElementById("nome").value = j.nome || "";
+  document.getElementById("cpf").value = j.cpf || "";
+  document.getElementById("nascimento").value = j.nascimento || "";
+  document.getElementById("numero").value = j.numero || "";
+  document.getElementById("posicao").value = j.posicao || "";
+  document.getElementById("capitao").value = j.capitao ? "sim" : "nao";
+  document.getElementById("time").value = j.timeId || "";
+  document.getElementById("categoria").value = j.categoria || "";
+  document.getElementById("foto").value = j.foto || "";
+  document.getElementById("status").value = j.status || "ativo";
+
+  document.getElementById("tituloFormulario").textContent = "Editar Jogador";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.excluirJogador = async function(id){
+  if(!confirm("Excluir jogador?")) return;
+  await deleteDoc(doc(db,"jogadores",id));
+  await carregarJogadores();
+};
+
+async function carregarTimes(){
+  const select = document.getElementById("time");
+  const filtro = document.getElementById("filtroTime");
+
+  select.innerHTML = `<option value="">Selecione</option>`;
+  filtro.innerHTML = `<option value="">Todos os times</option>`;
+
+  const snap = await getDocs(collection(db,"times"));
+  timesCache = [];
+
+  snap.forEach(d => timesCache.push({id:d.id,...d.data()}));
+
+  timesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+
+  timesCache.forEach(t=>{
+    const op1 = document.createElement("option");
+    op1.value = t.id;
+    op1.textContent = t.nome || "Time";
+    select.appendChild(op1);
+
+    const op2 = document.createElement("option");
+    op2.value = t.id;
+    op2.textContent = t.nome || "Time";
+    filtro.appendChild(op2);
+  });
+}
+
+async function carregarJogadores(){
+  const lista = document.getElementById("listaJogadores");
+  lista.innerHTML = `<div class="vazio">Carregando jogadores...</div>`;
+
+  const snap = await getDocs(collection(db,"jogadores"));
+
+  jogadoresCache = [];
+  snap.forEach(d => jogadoresCache.push({id:d.id,...d.data()}));
+
+  jogadoresCache.sort((a,b)=>{
+    const ta = (a.timeNome || a.time || "").localeCompare(b.timeNome || b.time || "","pt-BR");
+    if(ta !== 0) return ta;
+    const na = Number(a.numero || 999);
+    const nb = Number(b.numero || 999);
+    if(na !== nb) return na - nb;
+    return (a.nome || "").localeCompare(b.nome || "","pt-BR");
+  });
+
+  renderizarJogadores();
+}
+
+function renderizarJogadores(){
+  const lista = document.getElementById("listaJogadores");
+  const busca = normalizarTexto(document.getElementById("buscaJogador").value);
+  const filtroTime = document.getElementById("filtroTime").value;
+  const filtroCategoria = document.getElementById("filtroCategoria").value;
+
+  let jogadores = jogadoresCache.filter(j=>{
+    if(filtroTime && j.timeId !== filtroTime) return false;
+    if(filtroCategoria && j.categoria !== filtroCategoria) return false;
+
+    if(busca){
+      const texto = normalizarTexto(`
+        ${j.nome || ""}
+        ${j.timeNome || j.time || ""}
+        ${j.posicao || ""}
+        ${j.categoria || ""}
+        ${j.numero || ""}
+      `);
+      if(!texto.includes(busca)) return false;
     }
 
-    function mostrarSucesso(texto){
-      msgErro.style.display = "none";
-      msgSucesso.style.display = "block";
-      msgSucesso.innerText = texto;
-    }
+    return true;
+  });
 
-    function limparMensagens(){
-      msgErro.style.display = "none";
-      msgSucesso.style.display = "none";
-      msgErro.innerText = "";
-      msgSucesso.innerText = "";
-    }
+  if(!jogadores.length){
+    lista.innerHTML = `<div class="vazio">Nenhum jogador encontrado.</div>`;
+    return;
+  }
 
-    function normalizarTexto(texto){
-      return String(texto || "")
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-    }
+  lista.innerHTML = jogadores.map(j=>{
+    const categorias = Array.isArray(j.categorias) && j.categorias.length ? j.categorias : [j.categoria || "Sem categoria"];
 
-    function limparCpf(cpf){
-      return String(cpf || "").replace(/\D/g, "");
-    }
+    return `
+      <div class="card">
+        <div class="player">
+          <img
+            src="${j.foto || "logo-liga.jfif"}"
+            class="photo"
+            alt="${j.nome || "Jogador"}"
+            onerror="this.src='logo-liga.jfif'"
+          >
 
-    function voltarPagina(){
-      if(window.history.length > 1){
-        window.history.back();
-      }else{
-        window.location.href = "admin.html";
-      }
-    }
+          <div class="player-info">
+            <div class="nome-jogador">
+              ${j.numero || "-"} - ${j.nome || "-"}
+            </div>
 
-    window.voltarPagina = voltarPagina;
+            <small>Time: ${j.timeNome || j.time || "-"}</small>
+            <small>Posição: ${j.posicao || "-"}</small>
+            <small>CPF: ${j.cpf || "-"}</small>
 
-    async function validarAcessoAdmin(user){
-      if(!user) return false;
+            <small>
+              Jogos: ${Number(j.jogos || 0)} |
+              Gols: ${Number(j.gols || 0)} |
+              Assistências: ${Number(j.assistencias || 0)}
+            </small>
 
-      const usuarioRef = doc(db, "usuarios", user.uid);
-      const usuarioSnap = await getDoc(usuarioRef);
+            <small>
+              Amarelos: ${Number(j.cartoesAmarelos || j.amarelos || 0)} |
+              Vermelhos: ${Number(j.cartoesVermelhos || j.vermelhos || 0)}
+            </small>
 
-      if(!usuarioSnap.exists()) return false;
-
-      const dados = usuarioSnap.data();
-      return normalizarTexto(dados.tipoUsuario || dados.tipo || "") === "admin";
-    }
-
-    function obterFormulario(){
-      return {
-        nome: document.getElementById("nome").value.trim(),
-        cpf: limparCpf(document.getElementById("cpf").value),
-        dataNascimento: document.getElementById("dataNascimento").value,
-        numero: document.getElementById("numero").value.trim(),
-        time: document.getElementById("time").value.trim(),
-        categoria: document.getElementById("categoria").value,
-        posicao: document.getElementById("posicao").value.trim(),
-        status: document.getElementById("status").value,
-        observacoes: document.getElementById("observacoes").value.trim()
-      };
-    }
-
-    window.limparFormulario = function(){
-      jogadorEditandoId = "";
-      document.getElementById("nome").value = "";
-      document.getElementById("cpf").value = "";
-      document.getElementById("dataNascimento").value = "";
-      document.getElementById("numero").value = "";
-      document.getElementById("time").value = "";
-      document.getElementById("categoria").value = "";
-      document.getElementById("posicao").value = "";
-      document.getElementById("status").value = "ativo";
-      document.getElementById("observacoes").value = "";
-      limparMensagens();
-    };
-
-    window.buscarPorCpf = function(){
-      const cpf = limparCpf(document.getElementById("cpf").value);
-      if(!cpf) return;
-
-      const usuario = usuariosCache.find(u => limparCpf(u.cpf) === cpf);
-      if(!usuario) return;
-
-      if(!document.getElementById("nome").value.trim()){
-        document.getElementById("nome").value = usuario.nome || "";
-      }
-
-      if(!document.getElementById("time").value.trim()){
-        document.getElementById("time").value = usuario.time || "";
-      }
-
-      if((usuario.dataNascimento || usuario.nascimento) && !document.getElementById("dataNascimento").value){
-        document.getElementById("dataNascimento").value = usuario.dataNascimento || usuario.nascimento || "";
-      }
-
-      mostrarSucesso("Dados vinculados ao CPF encontrados na base de usuários.");
-    };
-
-    window.salvarJogador = async function(){
-      limparMensagens();
-
-      const dados = obterFormulario();
-
-      if(!dados.nome){
-        mostrarErro("Digite o nome do jogador.");
-        return;
-      }
-
-      if(!dados.cpf){
-        mostrarErro("Digite o CPF do jogador.");
-        return;
-      }
-
-      if(!dados.categoria){
-        mostrarErro("Selecione a categoria.");
-        return;
-      }
-
-      if(!jogadorEditandoId){
-        const duplicado = jogadoresCache.find(j => limparCpf(j.cpf) === dados.cpf);
-        if(duplicado){
-          mostrarErro("Já existe um jogador cadastrado com este CPF.");
-          return;
-        }
-      }else{
-        const duplicado = jogadoresCache.find(j => limparCpf(j.cpf) === dados.cpf && j.id !== jogadorEditandoId);
-        if(duplicado){
-          mostrarErro("Já existe outro jogador cadastrado com este CPF.");
-          return;
-        }
-      }
-
-      const usuarioVinculado = usuariosCache.find(u => limparCpf(u.cpf) === dados.cpf);
-
-      const payload = {
-        nome: dados.nome,
-        cpf: dados.cpf,
-        dataNascimento: dados.dataNascimento,
-        numero: dados.numero,
-        time: dados.time,
-        categoria: dados.categoria,
-        categorias: dados.categoria ? [dados.categoria] : [],
-        posicao: dados.posicao,
-        status: dados.status,
-        observacoes: dados.observacoes,
-        usuarioId: usuarioVinculado ? usuarioVinculado.id : "",
-        email: usuarioVinculado ? (usuarioVinculado.email || "") : "",
-        atualizadoEm: new Date().toISOString()
-      };
-
-      try{
-        if(jogadorEditandoId){
-          await updateDoc(doc(db, "jogadores", jogadorEditandoId), payload);
-          mostrarSucesso("Jogador atualizado com sucesso.");
-        }else{
-          const id = crypto.randomUUID();
-          await setDoc(doc(db, "jogadores", id), {
-            ...payload,
-            criadoEm: new Date().toISOString()
-          });
-          mostrarSucesso("Jogador cadastrado com sucesso.");
-        }
-
-        await carregarTudo();
-        limparFormulario();
-      }catch(erro){
-        console.error(erro);
-        mostrarErro("Erro ao salvar jogador.");
-      }
-    };
-
-    window.editarJogador = function(id){
-      const jogador = jogadoresCache.find(j => j.id === id);
-      if(!jogador) return;
-
-      jogadorEditandoId = id;
-      document.getElementById("nome").value = jogador.nome || "";
-      document.getElementById("cpf").value = jogador.cpf || "";
-      document.getElementById("dataNascimento").value = jogador.dataNascimento || "";
-      document.getElementById("numero").value = jogador.numero || "";
-      document.getElementById("time").value = jogador.time || "";
-      document.getElementById("categoria").value = jogador.categoria || "";
-      document.getElementById("posicao").value = jogador.posicao || "";
-      document.getElementById("status").value = jogador.status || "ativo";
-      document.getElementById("observacoes").value = jogador.observacoes || "";
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      mostrarSucesso("Jogador carregado para edição.");
-    };
-
-    window.excluirJogador = async function(id){
-      const confirmar = confirm("Deseja realmente excluir este jogador?");
-      if(!confirmar) return;
-
-      try{
-        await deleteDoc(doc(db, "jogadores", id));
-        await carregarTudo();
-        mostrarSucesso("Jogador excluído com sucesso.");
-      }catch(erro){
-        console.error(erro);
-        mostrarErro("Erro ao excluir jogador.");
-      }
-    };
-
-    window.renderJogadores = function(){
-      const lista = document.getElementById("listaJogadores");
-      const busca = normalizarTexto(document.getElementById("busca").value);
-      const filtroCategoria = document.getElementById("filtroCategoria").value;
-      const filtroTime = normalizarTexto(document.getElementById("filtroTime").value);
-      const filtroStatus = normalizarTexto(document.getElementById("filtroStatus").value);
-
-      let jogadores = [...jogadoresCache];
-
-      if(busca){
-        jogadores = jogadores.filter(j =>
-          normalizarTexto(j.nome).includes(busca) ||
-          normalizarTexto(j.cpf).includes(busca) ||
-          normalizarTexto(j.time).includes(busca)
-        );
-      }
-
-      if(filtroCategoria){
-        jogadores = jogadores.filter(j => j.categoria === filtroCategoria);
-      }
-
-      if(filtroTime){
-        jogadores = jogadores.filter(j => normalizarTexto(j.time).includes(filtroTime));
-      }
-
-      if(filtroStatus){
-        jogadores = jogadores.filter(j => normalizarTexto(j.status) === filtroStatus);
-      }
-
-      jogadores.sort((a,b) => String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR"));
-
-      if(!jogadores.length){
-        lista.innerHTML = `<div class="vazio">Nenhum jogador encontrado.</div>`;
-        return;
-      }
-
-      lista.innerHTML = jogadores.map(jogador => `
-        <div class="card">
-          <div class="card-top">
-            <div class="card-info">
-              <h3>${jogador.nome || "Sem nome"}</h3>
-              <p><strong>CPF:</strong> ${jogador.cpf || "-"}</p>
-              <p><strong>Data de nascimento:</strong> ${jogador.dataNascimento || "-"}</p>
-              <p><strong>Time:</strong> ${jogador.time || "-"}</p>
-              <p><strong>Categoria:</strong> ${jogador.categoria || "-"}</p>
-              <p><strong>Número:</strong> ${jogador.numero || "-"}</p>
-              <p><strong>Posição:</strong> ${jogador.posicao || "-"}</p>
+            <div class="tags">
+              ${j.capitao ? '<span class="tag">Capitão</span>' : ""}
+              ${j.goleiro ? '<span class="tag">Goleiro</span>' : ""}
+              <span class="tag">${j.status || "ativo"}</span>
+              ${categorias.map(c => `<span class="tag">${c}</span>`).join("")}
             </div>
           </div>
-
-          <div class="tags">
-            <span class="tag">${jogador.categoria || "Sem categoria"}</span>
-            <span class="tag success">${jogador.status || "ativo"}</span>
-            ${jogador.usuarioId ? '<span class="tag success">Vinculado ao usuário</span>' : '<span class="tag">Sem vínculo</span>'}
-          </div>
-
-          <div class="card-actions">
-            <button class="mini-btn mini-edit" onclick="editarJogador('${jogador.id}')">
-              <i class="fa-solid fa-pen"></i> Editar
-            </button>
-
-            <button class="mini-btn mini-delete" onclick="excluirJogador('${jogador.id}')">
-              <i class="fa-solid fa-trash"></i> Excluir
-            </button>
-          </div>
         </div>
-      `).join("");
-    };
 
-    async function carregarTudo(){
-      const lista = document.getElementById("listaJogadores");
-      lista.innerHTML = `<div class="vazio">Carregando jogadores...</div>`;
+        <div class="actions">
+          <button class="btn-acao btn-ver" onclick="editarJogador('${j.id}')">
+            <i class="fa-solid fa-pen"></i> Editar
+          </button>
 
-      try{
-        const [snapJogadores, snapUsuarios] = await Promise.all([
-          getDocs(collection(db, "jogadores")),
-          getDocs(collection(db, "usuarios"))
-        ]);
+          <button class="btn-acao btn-danger" onclick="excluirJogador('${j.id}')">
+            <i class="fa-solid fa-trash"></i> Excluir
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
 
-        jogadoresCache = [];
-        usuariosCache = [];
+document.getElementById("buscaJogador").addEventListener("input", renderizarJogadores);
+document.getElementById("filtroTime").addEventListener("change", renderizarJogadores);
+document.getElementById("filtroCategoria").addEventListener("change", renderizarJogadores);
 
-        snapJogadores.forEach(docSnap => {
-          jogadoresCache.push({ id: docSnap.id, ...docSnap.data() });
-        });
+async function iniciarPagina(){
+  await carregarTimes();
+  await carregarJogadores();
+}
 
-        snapUsuarios.forEach(docSnap => {
-          usuariosCache.push({ id: docSnap.id, ...docSnap.data() });
-        });
-
-        window.renderJogadores();
-      }catch(erro){
-        console.error(erro);
-        lista.innerHTML = `<div class="vazio">Erro ao carregar jogadores.</div>`;
-      }
-    }
-
-    onAuthStateChanged(auth, async (user) => {
-      if(!user){
-        window.location.href = "login.html";
-        return;
-      }
-
-      const acessoLiberado = await validarAcessoAdmin(user);
-
-      if(!acessoLiberado){
-        alert("Acesso restrito ao administrador.");
-        window.location.href = "index.html";
-        return;
-      }
-
-      await carregarTudo();
-    });
-  </script>
+iniciarPagina();
+</script>
 
 </body>
 </html>
