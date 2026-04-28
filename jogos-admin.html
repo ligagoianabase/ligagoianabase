@@ -1,844 +1,1142 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jogos - Admin</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<title>Jogos ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
-  <style>
-    :root{
-      --bg:#0b1f3a;
-      --bg-dark:#08172c;
-      --card:#102a52;
-      --card-hover:#153766;
-      --gold:#f7c600;
-      --gold-soft:rgba(247,198,0,.12);
-      --gold-line:rgba(247,198,0,.28);
-      --white:#ffffff;
-      --muted:#d9e3f2;
-      --shadow:0 8px 22px rgba(0,0,0,.28);
-      --radius:14px;
-      --transition:.25s ease;
-      --max:1180px;
-    }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    *{margin:0;padding:0;box-sizing:border-box;}
+<style>
+:root{
+  --bg:#0b1f3a;
+  --bg-dark:#08172c;
+  --card:#102a52;
+  --card-hover:#153766;
+  --gold:#f7c600;
+  --gold-soft:rgba(247,198,0,.12);
+  --gold-line:rgba(247,198,0,.24);
+  --white:#ffffff;
+  --muted:#d8e1ef;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --transition:.25s ease;
+  --max:1240px;
+}
 
-    body{
-      font-family:Arial, sans-serif;
-      background:
-        linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
-        url("fundo.png") center/cover fixed no-repeat;
-      color:var(--white);
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-    a{text-decoration:none;color:inherit;}
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+}
 
-    button{
-      font-family:inherit;
-      cursor:pointer;
-      transition:var(--transition);
-      border:none;
-    }
+a{
+  text-decoration:none;
+  color:inherit;
+  transition:var(--transition);
+}
 
-    .wrap{
-      width:min(100% - 28px, var(--max));
-      margin:0 auto;
-    }
+button{
+  font-family:inherit;
+  cursor:pointer;
+  transition:var(--transition);
+  border:none;
+  background:none;
+}
 
-    header{
-      background:rgba(8,23,44,.96);
-      border-bottom:3px solid var(--gold);
-      box-shadow:var(--shadow);
-    }
+input,
+select,
+textarea{
+  font-family:inherit;
+}
 
-    .header-inner{
-      min-height:84px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-      padding:14px 0;
-    }
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
 
-    .header-left,
-    .header-right{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
 
-    .header-title{
-      flex:1;
-      text-align:center;
-      font-size:24px;
-      font-weight:700;
-      color:var(--white);
-    }
+.header-top{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
 
-    .top-btn{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 16px;
-      border-radius:10px;
-      font-weight:700;
-    }
+.header-left,
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
 
-    .btn-light{
-      background:#fff4cf;
-      color:#111;
-    }
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:700;
+}
 
-    .btn-light:hover{
-      background:var(--gold);
-      transform:translateY(-2px);
-    }
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
+  white-space:nowrap;
+}
 
-    .btn-gold{
-      background:var(--gold);
-      color:#111;
-    }
+.btn-light{
+  background:#fff4cf;
+  color:#111;
+}
 
-    .btn-gold:hover{
-      filter:brightness(1.04);
-      transform:translateY(-2px);
-    }
+.btn-light:hover{
+  background:var(--gold);
+  transform:translateY(-2px);
+}
 
-    .container{
-      padding:24px 0 34px;
-    }
+.btn-gold{
+  background:var(--gold);
+  color:#111;
+}
 
-    .hero-panel{
-      background:linear-gradient(180deg, rgba(16,42,82,.95), rgba(10,28,56,.96));
-      border:1px solid var(--gold-line);
-      border-radius:20px;
-      padding:22px;
-      box-shadow:var(--shadow);
-      margin-bottom:22px;
-    }
+.btn-gold:hover{
+  filter:brightness(1.04);
+  transform:translateY(-2px);
+}
 
-    .hero-panel h2{
-      font-size:28px;
-      color:#fff;
-      margin-bottom:8px;
-    }
+.nav-bar{
+  background:rgba(16,42,82,.95);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
 
-    .hero-panel p{
-      color:var(--muted);
-      line-height:1.6;
-    }
+.menu{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:12px 0;
+  flex-wrap:wrap;
+}
 
-    .form-panel,
-    .list-panel{
-      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:18px;
-      padding:20px;
-      box-shadow:var(--shadow);
-      margin-bottom:20px;
-    }
+.menu a{
+  color:white;
+  font-weight:700;
+  font-size:14px;
+  background:#0d2346;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
 
-    .bloco-titulo{
-      margin:0 0 12px;
-      color:var(--gold);
-      font-size:18px;
-      font-weight:700;
-    }
+.menu a:hover{
+  color:var(--gold);
+  background:var(--gold-soft);
+  border-color:var(--gold-line);
+}
 
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-    }
+.menu a.ativo{
+  background:var(--gold);
+  color:black;
+}
 
-    .full{
-      grid-column:1 / -1;
-    }
+.container{
+  padding:24px 0 34px;
+}
 
-    label{
-      display:block;
-      margin:0 0 6px;
-      font-weight:700;
-      color:#eef4ff;
-      font-size:14px;
-    }
+.hero,
+.form-panel,
+.list-panel{
+  background:linear-gradient(135deg,#102a52,#0d2346);
+  border:1px solid var(--gold-line);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:var(--shadow);
+}
 
-    input, select{
-      width:100%;
-      padding:12px;
-      border:none;
-      border-radius:10px;
-      box-sizing:border-box;
-      font-size:14px;
-      background:#f5f7fb;
-      color:#111;
-    }
+.hero h2{
+  margin:0 0 8px;
+  color:var(--gold);
+  font-size:28px;
+}
 
-    input:focus, select:focus{
-      outline:2px solid rgba(247,198,0,.55);
-    }
+.hero p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
+  font-size:15px;
+}
 
-    .top-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
+.form-title{
+  color:var(--gold);
+  font-size:20px;
+  margin-bottom:14px;
+  font-weight:900;
+}
 
-    .link-btn,
-    .action-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      background:var(--gold);
-      color:#111;
-      padding:10px 14px;
-      border-radius:10px;
-      font-weight:700;
-    }
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
 
-    .link-btn:hover,
-    .action-btn:hover{
-      filter:brightness(1.04);
-      transform:translateY(-2px);
-    }
+.full{
+  grid-column:1/-1;
+}
 
-    .btn-danger{
-      background:#d94141;
-      color:#fff;
-    }
+label{
+  display:block;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:6px;
+  color:#fff;
+}
 
-    .btn-danger:hover{
-      background:#b82f2f;
-    }
+input,
+select,
+textarea{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+}
 
-    .lista-jogos{
-      display:grid;
-      gap:14px;
-    }
+input:focus,
+select:focus,
+textarea:focus{
+  outline:2px solid rgba(247,198,0,.5);
+}
 
-    .card{
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.06);
-      padding:16px;
-      border-radius:14px;
-      transition:var(--transition);
-    }
+.form-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
 
-    .card:hover{
-      border-color:var(--gold-line);
-      transform:translateY(-2px);
-    }
+.btn-acao{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:11px 14px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:13px;
+  border:none;
+  cursor:pointer;
+  white-space:nowrap;
+}
 
-    .card strong{
-      color:var(--gold);
-      font-size:18px;
-    }
+.btn-ver{
+  background:var(--gold);
+  color:black;
+}
 
-    .card-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px 16px;
-      margin-top:12px;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.5;
-    }
+.btn-danger{
+  background:#d94141;
+  color:#fff;
+}
 
-    .card-grid div{
-      background:rgba(255,255,255,.03);
-      padding:10px;
-      border-radius:10px;
-    }
+.btn-blue{
+  background:#1a3f73;
+  color:#fff;
+}
 
-    .card-grid span{
-      display:block;
-      color:#fff;
-      font-weight:700;
-      margin-bottom:4px;
-    }
+.btn-green{
+  background:#1b5e20;
+  color:#fff;
+}
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  margin-bottom:20px;
+}
 
-    .card-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
+.lista-grid{
+  display:grid;
+  gap:14px;
+}
 
-    .mensagem-vazia{
-      color:var(--muted);
-      text-align:center;
-      padding:16px 0;
-    }
+.card{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:16px;
+  border-radius:16px;
+  border:1px solid rgba(255,230,0,.10);
+  box-shadow:var(--shadow);
+}
 
-    @media (max-width: 900px){
-      .header-title{
-        order:3;
-        width:100%;
-        text-align:center;
-      }
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold-line);
+}
 
-      .header-left,
-      .header-right{
-        width:100%;
-        justify-content:center;
-      }
+.card strong{
+  color:var(--gold);
+  font-size:18px;
+}
 
-      .grid,
-      .card-grid{
-        grid-template-columns:1fr;
-      }
-    }
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:12px;
+}
 
-    @media (max-width: 600px){
-      .top-btn,
-      .action-btn,
-      .link-btn{
-        width:100%;
-      }
+.card-grid div{
+  background:rgba(255,255,255,.04);
+  border-radius:10px;
+  padding:10px;
+  color:var(--muted);
+  font-size:13px;
+}
 
-      .header-left,
-      .header-right{
-        flex-direction:column;
-        align-items:stretch;
-      }
-    }
-  </style>
+.card-grid span{
+  display:block;
+  color:#fff;
+  font-weight:900;
+  margin-bottom:4px;
+}
+
+.card-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+.vazio{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:30px;
+  border-radius:14px;
+  text-align:center;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:var(--shadow);
+}
+
+.preview-times{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:14px;
+}
+
+.preview-box{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:14px;
+}
+
+.preview-box h4{
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
+.preview-box small{
+  color:var(--muted);
+  display:block;
+  line-height:1.5;
+}
+
+@media(max-width:900px){
+  .header-title{
+    order:3;
+    width:100%;
+    text-align:center;
+  }
+
+  .header-left,
+  .header-right{
+    width:100%;
+    justify-content:center;
+  }
+
+  .form-grid,
+  .filtros,
+  .card-grid,
+  .preview-times{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:600px){
+  .top-btn,
+  .btn-acao{
+    width:100%;
+    justify-content:center;
+  }
+
+  .header-left,
+  .header-right{
+    flex-direction:row;
+    flex-wrap:nowrap;
+  }
+
+  .header-left .top-btn{
+    width:auto;
+    flex:1;
+    font-size:13px;
+    padding:10px 8px;
+  }
+
+  .menu{
+    justify-content:flex-start;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:14px;
+  }
+
+  .menu a{
+    flex:0 0 auto;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <div class="wrap header-inner">
-      <div class="header-left">
-        <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
-          <i class="fa-solid fa-arrow-left"></i> Voltar
-        </button>
+<header>
+  <div class="wrap header-top">
+    <div class="header-left">
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
 
-        <a href="index.html" class="top-btn btn-light">
-          <i class="fa-solid fa-house"></i> Página Inicial
-        </a>
-
-        <a href="admin.html" class="top-btn btn-light">
-          <i class="fa-solid fa-gears"></i> Painel ADM
-        </a>
-      </div>
-
-      <div class="header-title">Cadastro de Jogos</div>
-
-      <div class="header-right">
-        <button class="top-btn btn-gold" type="button" onclick="salvarJogo()">
-          <i class="fa-solid fa-floppy-disk"></i> Salvar Jogo
-        </button>
-      </div>
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
     </div>
-  </header>
 
-  <div class="wrap container">
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
-    <section class="hero-panel">
-      <h2>Gestão de Jogos</h2>
-      <p>
-        Cadastre partidas, vincule campeonato, categoria, times, jogadores, técnicos e arbitragem.
-        O jogo já será salvo pronto para abrir a súmula automaticamente.
-      </p>
-    </section>
-
-    <section class="form-panel">
-      <h3 class="bloco-titulo">Informações do Jogo</h3>
-      <div class="grid">
-        <div>
-          <label for="dataJogo">Data e hora</label>
-          <input id="dataJogo" type="datetime-local">
-        </div>
-
-        <div>
-          <label for="localJogo">Local</label>
-          <input id="localJogo" placeholder="Ex: Campo 1">
-        </div>
-
-        <div>
-          <label for="campeonato">Campeonato</label>
-          <input id="campeonato" placeholder="Ex: Copa União de Base">
-        </div>
-
-        <div>
-          <label for="logoCampeonato">Logo do campeonato</label>
-          <input id="logoCampeonato" placeholder="Ex: logo-campeonato.png">
-        </div>
-
-        <div>
-          <label for="rodada">Rodada</label>
-          <input id="rodada" placeholder="Ex: 1ª Rodada">
-        </div>
-
-        <div>
-          <label for="categoria">Categoria</label>
-          <select id="categoria">
-            <option value="">Selecione</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="timeA">Time mandante</label>
-          <select id="timeA">
-            <option value="">Selecione</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="timeB">Time visitante</label>
-          <select id="timeB">
-            <option value="">Selecione</option>
-          </select>
-        </div>
-      </div>
-    </section>
-
-    <section class="form-panel">
-      <h3 class="bloco-titulo">Arbitragem</h3>
-      <div class="grid">
-        <div>
-          <label for="arbitro">Árbitro</label>
-          <select id="arbitro">
-            <option value="">Selecione</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="assistente1">Árbitro Assistente 1</label>
-          <select id="assistente1">
-            <option value="">Selecione</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="assistente2">Árbitro Assistente 2</label>
-          <select id="assistente2">
-            <option value="">Selecione</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="arbitroAuxiliar">4º Árbitro</label>
-          <select id="arbitroAuxiliar">
-            <option value="">Selecione</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="top-actions">
-        <button class="action-btn" type="button" onclick="salvarJogo()">
-          <i class="fa-solid fa-floppy-disk"></i> Salvar Jogo
-        </button>
-      </div>
-    </section>
-
-    <section class="list-panel">
-      <h3 class="bloco-titulo">Jogos Cadastrados</h3>
-      <div id="listaJogos" class="lista-jogos">
-        <div class="mensagem-vazia">Carregando jogos...</div>
-      </div>
-    </section>
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarJogo()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Jogo
+      </button>
+    </div>
   </div>
 
-  <script type="module">
-    import { db } from "./firebase.js";
-    import {
-      collection,
-      addDoc,
-      getDocs,
-      doc,
-      deleteDoc,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-
-    let timesCache = [];
-    let jogadoresCache = [];
-    let tecnicosCache = [];
-    let categoriasCache = [];
-    let arbitrosCache = [];
-    let assistentesCache = [];
-
-    window.voltarPagina = function(){
-      if(window.history.length > 1){
-        window.history.back();
-      }else{
-        window.location.href = "admin.html";
-      }
-    };
-
-    function normalizar(texto){
-      return String(texto || "")
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-    }
-
-    function buscarTime(id){
-      return timesCache.find(t => t.id === id) || null;
-    }
-
-    function buscarArbitro(id){
-      return arbitrosCache.find(a => a.id === id) || null;
-    }
-
-    function buscarAssistente(id){
-      return assistentesCache.find(a => a.id === id) || null;
-    }
-
-    function formatarJogador(j){
-      return {
-        id:j.id,
-        numero:j.numero || "",
-        nome:j.nome || "",
-        posicao:j.posicao || "",
-        capitao:j.capitao === true,
-        goleiro:j.goleiro === true || normalizar(j.posicao) === "goleiro",
-        cpf:j.cpf || "",
-        nascimento:j.nascimento || j.dataNascimento || "",
-        categoria:j.categoria || "",
-        timeId:j.timeId || "",
-        timeNome:j.timeNome || j.time || ""
-      };
-    }
-
-    function jogadoresDoTime(timeId, categoria){
-      const time = buscarTime(timeId);
-
-      return jogadoresCache
-        .filter(j => {
-          const mesmoTime =
-            j.timeId === timeId ||
-            j.timeID === timeId ||
-            j.timeNome === time?.nome ||
-            j.time === time?.nome;
-
-          const mesmaCategoria =
-            !categoria ||
-            normalizar(j.categoria) === normalizar(categoria) ||
-            (Array.isArray(j.categorias) && j.categorias.some(c => normalizar(c) === normalizar(categoria)));
-
-          return mesmoTime && mesmaCategoria && (j.status || "ativo") !== "inativo";
-        })
-        .sort((a,b) => Number(a.numero || 999) - Number(b.numero || 999))
-        .map(formatarJogador);
-    }
-
-    function comissaoDoTime(timeId, categoria){
-      const time = buscarTime(timeId);
-
-      return tecnicosCache
-        .filter(t => {
-          const mesmoTime =
-            t.timeId === timeId ||
-            t.timeID === timeId ||
-            t.timeNome === time?.nome ||
-            t.time === time?.nome;
-
-          const mesmaCategoria =
-            !categoria ||
-            !t.categoria ||
-            normalizar(t.categoria) === normalizar(categoria);
-
-          return mesmoTime && mesmaCategoria;
-        })
-        .map(t => ({
-          id:t.id,
-          nome:t.nome || "",
-          funcao:t.funcao || "Técnico",
-          categoria:t.categoria || "",
-          timeId:timeId,
-          timeNome:time?.nome || ""
-        }));
-    }
-
-    async function carregarTimes(){
-      const selectA = document.getElementById("timeA");
-      const selectB = document.getElementById("timeB");
-
-      selectA.innerHTML = '<option value="">Selecione</option>';
-      selectB.innerHTML = '<option value="">Selecione</option>';
-
-      const snap = await getDocs(collection(db,"times"));
-      timesCache = [];
-
-      snap.forEach(d => timesCache.push({id:d.id,...d.data()}));
-
-      timesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
-
-      timesCache.forEach(t => {
-        selectA.innerHTML += `<option value="${t.id}">${t.nome}</option>`;
-        selectB.innerHTML += `<option value="${t.id}">${t.nome}</option>`;
-      });
-    }
-
-    async function carregarCategorias(){
-      const select = document.getElementById("categoria");
-      select.innerHTML = '<option value="">Selecione</option>';
-
-      const snap = await getDocs(collection(db,"categorias"));
-      categoriasCache = [];
-
-      snap.forEach(d => categoriasCache.push({id:d.id,...d.data()}));
-
-      const nomes = new Set();
-
-      categoriasCache.forEach(c => {
-        if(c.nome) nomes.add(c.nome);
-      });
-
-      if(!nomes.size){
-        ["Sub-11","Sub-12","Sub-13","Sub-14","Sub-15","Sub-16","Sub-17","Sub-18"].forEach(c => nomes.add(c));
-      }
-
-      Array.from(nomes).sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(nome => {
-        select.innerHTML += `<option value="${nome}">${nome}</option>`;
-      });
-    }
-
-    async function carregarJogadores(){
-      const snap = await getDocs(collection(db,"jogadores"));
-      jogadoresCache = [];
-      snap.forEach(d => jogadoresCache.push({id:d.id,...d.data()}));
-    }
-
-    async function carregarTecnicos(){
-      const snap = await getDocs(collection(db,"tecnicos"));
-      tecnicosCache = [];
-      snap.forEach(d => tecnicosCache.push({id:d.id,...d.data()}));
-    }
-
-    async function carregarArbitragem(){
-      const arbitro = document.getElementById("arbitro");
-      const assistente1 = document.getElementById("assistente1");
-      const assistente2 = document.getElementById("assistente2");
-      const arbitroAuxiliar = document.getElementById("arbitroAuxiliar");
-
-      arbitro.innerHTML = '<option value="">Selecione</option>';
-      assistente1.innerHTML = '<option value="">Selecione</option>';
-      assistente2.innerHTML = '<option value="">Selecione</option>';
-      arbitroAuxiliar.innerHTML = '<option value="">Selecione</option>';
-
-      const snapArbitros = await getDocs(collection(db,"arbitros"));
-      arbitrosCache = [];
-      snapArbitros.forEach(d => arbitrosCache.push({id:d.id,...d.data()}));
-
-      const snapAssistentes = await getDocs(collection(db,"assistentes"));
-      assistentesCache = [];
-      snapAssistentes.forEach(d => assistentesCache.push({id:d.id,...d.data()}));
-
-      arbitrosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
-      assistentesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
-
-      arbitrosCache.forEach(a => {
-        arbitro.innerHTML += `<option value="${a.id}">${a.nome}</option>`;
-        arbitroAuxiliar.innerHTML += `<option value="${a.id}">${a.nome}</option>`;
-      });
-
-      assistentesCache.forEach(a => {
-        assistente1.innerHTML += `<option value="${a.id}">${a.nome}</option>`;
-        assistente2.innerHTML += `<option value="${a.id}">${a.nome}</option>`;
-      });
-    }
-
-    window.salvarJogo = async function(){
-      const data = document.getElementById("dataJogo").value;
-      const local = document.getElementById("localJogo").value.trim();
-      const campeonato = document.getElementById("campeonato").value.trim();
-      const logoCampeonato = document.getElementById("logoCampeonato").value.trim() || "logo-liga.jfif";
-      const rodada = document.getElementById("rodada").value.trim();
-      const categoria = document.getElementById("categoria").value;
-
-      const timeAId = document.getElementById("timeA").value;
-      const timeBId = document.getElementById("timeB").value;
-
-      const arbitroId = document.getElementById("arbitro").value;
-      const assistente1Id = document.getElementById("assistente1").value;
-      const assistente2Id = document.getElementById("assistente2").value;
-      const arbitroAuxiliarId = document.getElementById("arbitroAuxiliar").value;
-
-      if(!data) return alert("Escolha a data e hora.");
-      if(!local) return alert("Digite o local.");
-      if(!rodada) return alert("Digite a rodada.");
-      if(!campeonato) return alert("Digite o campeonato.");
-      if(!categoria) return alert("Selecione a categoria.");
-      if(!timeAId || !timeBId) return alert("Selecione os times.");
-      if(timeAId === timeBId) return alert("Os times não podem ser iguais.");
-
-      const timeAObj = buscarTime(timeAId);
-      const timeBObj = buscarTime(timeBId);
-
-      const arbitroObj = buscarArbitro(arbitroId);
-      const assistente1Obj = buscarAssistente(assistente1Id);
-      const assistente2Obj = buscarAssistente(assistente2Id);
-      const arbitroAuxiliarObj = buscarArbitro(arbitroAuxiliarId);
-
-      const titularesA = jogadoresDoTime(timeAId,categoria);
-      const titularesB = jogadoresDoTime(timeBId,categoria);
-
-      const comissaoA = comissaoDoTime(timeAId,categoria);
-      const comissaoB = comissaoDoTime(timeBId,categoria);
-
-      const jogo = {
-        data,
-        dataHora:data,
-        hora:data.includes("T") ? data.split("T")[1] : "",
-        local,
-        campo:local,
-
-        campeonato,
-        logoCampeonato,
-        rodada,
-        categoria,
-        fase:"Primeira fase",
-
-        timeA:{
-          id:timeAObj.id,
-          nome:timeAObj.nome || "",
-          logo:timeAObj.logo || timeAObj.escudo || "logo-liga.jfif",
-          escudo:timeAObj.logo || timeAObj.escudo || "logo-liga.jfif",
-          cidade:timeAObj.cidade || ""
-        },
-
-        timeB:{
-          id:timeBObj.id,
-          nome:timeBObj.nome || "",
-          logo:timeBObj.logo || timeBObj.escudo || "logo-liga.jfif",
-          escudo:timeBObj.logo || timeBObj.escudo || "logo-liga.jfif",
-          cidade:timeBObj.cidade || ""
-        },
-
-        titularesA,
-        titularesB,
-        escalacaoA:titularesA,
-        escalacaoB:titularesB,
-        reservasA:[],
-        reservasB:[],
-
-        comissaoA,
-        comissaoB,
-
-        tecnicoA:comissaoA.find(t => normalizar(t.funcao).includes("tecnico"))?.nome || "",
-        tecnicoB:comissaoB.find(t => normalizar(t.funcao).includes("tecnico"))?.nome || "",
-
-        arbitroId:arbitroId || "",
-        arbitro:arbitroObj?.nome || "",
-
-        assistente1Id:assistente1Id || "",
-        assistente1:assistente1Obj?.nome || "",
-
-        assistente2Id:assistente2Id || "",
-        assistente2:assistente2Obj?.nome || "",
-
-        arbitroAuxiliarId:arbitroAuxiliarId || "",
-        arbitroAuxiliar:arbitroAuxiliarObj?.nome || "",
-        quartoArbitro:arbitroAuxiliarObj?.nome || "",
-
-        placar:{A:0,B:0},
-        golsA:0,
-        golsB:0,
-        gols:[],
-        cartoes:[],
-        substituicoes:[],
-        observacoes:"",
-        observacoesArbitro:"",
-        melhorJogador:"",
-
-        status:"agendado",
-        sumulaFinalizada:false,
-
-        criadoEm:new Date().toISOString(),
-        criadoEmServidor:serverTimestamp()
-      };
-
-      const ref = await addDoc(collection(db,"jogos"),jogo);
-
-      alert(
-        "Jogo criado com sucesso!\\n\\n" +
-        "Súmula ADM: sumula-admin.html?id=" + ref.id + "\\n" +
-        "Súmula pública: sumula-publica.html?id=" + ref.id
-      );
-
-      location.reload();
-    };
-
-    window.excluirJogo = async function(id){
-      if(!confirm("Deseja excluir este jogo?")) return;
-      await deleteDoc(doc(db,"jogos",id));
-      carregarJogos();
-    };
-
-    async function carregarJogos(){
-      const lista = document.getElementById("listaJogos");
-      lista.innerHTML = "";
-
-      const snap = await getDocs(collection(db,"jogos"));
-      let jogos = [];
-      snap.forEach(d => jogos.push({id:d.id, ...d.data()}));
-
-      jogos.sort((a,b)=>(a.data || "").localeCompare(b.data || ""));
-
-      if(!jogos.length){
-        lista.innerHTML = `<div class="mensagem-vazia">Nenhum jogo cadastrado ainda.</div>`;
-        return;
-      }
-
-      jogos.forEach(j => {
-        const nomeA = j.timeA?.nome || j.timeA || "Time A";
-        const nomeB = j.timeB?.nome || j.timeB || "Time B";
-
-        lista.innerHTML += `
-          <div class="card">
-            <strong>${nomeA} x ${nomeB}</strong>
-
-            <div class="card-grid">
-              <div><span>Rodada</span>${j.rodada || "-"}</div>
-              <div><span>Categoria</span>${j.categoria || "-"}</div>
-              <div><span>Campeonato</span>${j.campeonato || "-"}</div>
-              <div><span>Data</span>${j.data || "-"}</div>
-              <div><span>Local</span>${j.local || "-"}</div>
-              <div><span>Status</span>${j.status || "agendado"}</div>
-              <div><span>Jogadores Mandante</span>${(j.titularesA || []).length}</div>
-              <div><span>Jogadores Visitante</span>${(j.titularesB || []).length}</div>
-              <div><span>Árbitro</span>${j.arbitro || "-"}</div>
-              <div><span>Assistente 1</span>${j.assistente1 || "-"}</div>
-              <div><span>Assistente 2</span>${j.assistente2 || "-"}</div>
-              <div><span>Súmula</span>${j.sumulaFinalizada ? "Finalizada" : "Aberta"}</div>
-            </div>
-
-            <div class="card-actions">
-              <a class="link-btn" href="sumula-admin.html?id=${j.id}">
-                <i class="fa-solid fa-file-signature"></i> Súmula ADM
-              </a>
-
-              <a class="link-btn" href="sumula-publica.html?id=${j.id}">
-                <i class="fa-solid fa-eye"></i> Súmula Pública
-              </a>
-
-              <button class="action-btn btn-danger" onclick="excluirJogo('${j.id}')">
-                <i class="fa-solid fa-trash"></i> Excluir
-              </button>
-            </div>
+  <div class="nav-bar">
+    <div class="wrap">
+      <div class="menu">
+        <a href="admin.html">Painel</a>
+        <a href="campeonatos-admin.html">Campeonatos</a>
+        <a href="jogos-admin.html" class="ativo">Jogos</a>
+        <a href="times-admin.html">Times</a>
+        <a href="tecnicos-admin.html">Técnicos</a>
+        <a href="jogadores-admin.html">Jogadores</a>
+        <a href="arbitros-admin.html">Árbitros</a>
+        <a href="assistentes-admin.html">Assistentes</a>
+        <a href="sumulas-admin.html">Súmulas</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+  <div class="hero">
+    <h2>Jogos ADM</h2>
+    <p>
+      Crie jogos vinculando campeonato, categoria, times, jogadores, técnicos e arbitragem.
+      A súmula será criada automaticamente com tudo pronto para finalizar e atualizar estatísticas no Firebase.
+    </p>
+  </div>
+
+  <section class="form-panel">
+    <div class="form-title">Novo Jogo</div>
+
+    <div class="form-grid">
+      <div>
+        <label>Campeonato</label>
+        <select id="campeonato" onchange="aoSelecionarCampeonato()">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Categoria</label>
+        <select id="categoria" onchange="filtrarTimesPorCategoria()">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Rodada</label>
+        <input id="rodada" placeholder="Ex: 1ª Rodada">
+      </div>
+
+      <div>
+        <label>Data e hora</label>
+        <input id="dataJogo" type="datetime-local">
+      </div>
+
+      <div>
+        <label>Local</label>
+        <input id="localJogo" placeholder="Ex: Campo 1">
+      </div>
+
+      <div>
+        <label>Status inicial</label>
+        <select id="statusInicial">
+          <option value="agendado">Agendado</option>
+          <option value="aberto">Aberto</option>
+        </select>
+      </div>
+<div>
+        <label>Time mandante</label>
+        <select id="timeA" onchange="atualizarPreviewTimes()">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Time visitante</label>
+        <select id="timeB" onchange="atualizarPreviewTimes()">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Árbitro principal</label>
+        <select id="arbitro">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Assistente 1</label>
+        <select id="assistente1">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Assistente 2</label>
+        <select id="assistente2">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label>4º Árbitro</label>
+        <select id="arbitroAuxiliar">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div class="full">
+        <div class="preview-times">
+          <div class="preview-box">
+            <h4>Mandante</h4>
+            <small id="previewA">Selecione o time mandante.</small>
           </div>
-        `;
-      });
+
+          <div class="preview-box">
+            <h4>Visitante</h4>
+            <small id="previewB">Selecione o time visitante.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-acao btn-ver" type="button" onclick="salvarJogo()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Jogo
+      </button>
+
+      <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
+        <i class="fa-solid fa-broom"></i> Limpar
+      </button>
+    </div>
+  </section>
+
+  <div class="filtros">
+    <input id="buscaJogo" placeholder="Pesquisar jogo...">
+
+    <select id="filtroCampeonato">
+      <option value="">Todos os campeonatos</option>
+    </select>
+
+    <select id="filtroCategoria">
+      <option value="">Todas categorias</option>
+    </select>
+  </div>
+
+  <section class="list-panel">
+    <div class="form-title">Jogos Cadastrados</div>
+    <div id="listaJogos" class="lista-grid">
+      <div class="vazio">Carregando jogos...</div>
+    </div>
+  </section>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  deleteDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let campeonatosCache = [];
+let timesCache = [];
+let jogadoresCache = [];
+let tecnicosCache = [];
+let arbitrosCache = [];
+let assistentesCache = [];
+let jogosCache = [];
+
+const categoriasFixas = [
+  "Sub-11","Sub-12","Sub-13","Sub-14","Sub-15","Sub-16",
+  "Sub-17","Sub-18","Sub-19","Sub-20","Sub-21"
+];
+
+function el(id){
+  return document.getElementById(id);
+}
+
+function txt(v){
+  return String(v || "").trim();
+}
+
+function normalizar(texto){
+  return String(texto || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function buscarCampeonato(id){
+  return campeonatosCache.find(c => c.id === id) || null;
+}
+
+function buscarTime(id){
+  return timesCache.find(t => t.id === id) || null;
+}
+
+function buscarArbitro(id){
+  return arbitrosCache.find(a => a.id === id) || null;
+}
+
+function buscarAssistente(id){
+  return assistentesCache.find(a => a.id === id) || null;
+}
+
+function formatarJogador(j){
+  return {
+    id:j.id || "",
+    numero:j.numero || "",
+    nome:j.nome || "",
+    posicao:j.posicao || "",
+    capitao:j.capitao === true,
+    goleiro:j.goleiro === true || normalizar(j.posicao) === "goleiro",
+    cpf:j.cpf || "",
+    nascimento:j.nascimento || j.dataNascimento || "",
+    categoria:j.categoria || "",
+    timeId:j.timeId || "",
+    timeNome:j.timeNome || j.time || "",
+    status:j.status || "ativo"
+  };
+}
+
+function jogadoresDoTime(timeId,categoria){
+  const time = buscarTime(timeId);
+
+  return jogadoresCache
+    .filter(j=>{
+      const mesmoTime =
+        j.timeId === timeId ||
+        j.timeID === timeId ||
+        normalizar(j.timeNome) === normalizar(time?.nome) ||
+        normalizar(j.time) === normalizar(time?.nome);
+
+      const mesmaCategoria =
+        normalizar(j.categoria) === normalizar(categoria) ||
+        (Array.isArray(j.categorias) && j.categorias.some(c => normalizar(c) === normalizar(categoria)));
+
+      const ativo = (j.status || "ativo") !== "inativo";
+
+      return mesmoTime && mesmaCategoria && ativo;
+    })
+    .sort((a,b)=>{
+      const na = Number(a.numero || 999);
+      const nb = Number(b.numero || 999);
+      if(na !== nb) return na - nb;
+      return (a.nome || "").localeCompare(b.nome || "","pt-BR");
+    })
+    .map(formatarJogador);
+}
+function comissaoDoTime(timeId,categoria){
+  const time = buscarTime(timeId);
+
+  return tecnicosCache
+    .filter(t=>{
+      const mesmoTime =
+        t.timeId === timeId ||
+        t.timeID === timeId ||
+        normalizar(t.timeNome) === normalizar(time?.nome) ||
+        normalizar(t.time) === normalizar(time?.nome);
+
+      const mesmaCategoria =
+        !t.categoria ||
+        normalizar(t.categoria) === normalizar(categoria) ||
+        (Array.isArray(t.categorias) && t.categorias.some(c => normalizar(c) === normalizar(categoria)));
+
+      const ativo = (t.status || "ativo") !== "inativo";
+
+      return mesmoTime && mesmaCategoria && ativo;
+    })
+    .map(t=>({
+      id:t.id || "",
+      nome:t.nome || "",
+      funcao:t.funcao || "Técnico",
+      categoria:t.categoria || "",
+      timeId,
+      timeNome:time?.nome || ""
+    }));
+}
+
+function categoriasDoCampeonato(campeonato){
+  if(campeonato && Array.isArray(campeonato.categorias) && campeonato.categorias.length){
+    return campeonato.categorias;
+  }
+  return categoriasFixas;
+}
+
+function preencherSelect(select,lista,valor,texto){
+  select.innerHTML = `<option value="">Selecione</option>`;
+  lista.forEach(item=>{
+    const option = document.createElement("option");
+    option.value = valor(item);
+    option.textContent = texto(item);
+    select.appendChild(option);
+  });
+}
+
+async function carregarCampeonatos(){
+  const snap = await getDocs(collection(db,"campeonatos"));
+  campeonatosCache = [];
+  snap.forEach(d=>campeonatosCache.push({id:d.id,...d.data()}));
+
+  campeonatosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+
+  preencherSelect(
+    el("campeonato"),
+    campeonatosCache,
+    c=>c.id,
+    c=>`${c.nome || "Campeonato"} ${c.temporada ? "- "+c.temporada : ""}`
+  );
+
+  const filtro = el("filtroCampeonato");
+  filtro.innerHTML = `<option value="">Todos os campeonatos</option>`;
+  campeonatosCache.forEach(c=>{
+    filtro.innerHTML += `<option value="${c.id}">${c.nome || "Campeonato"}</option>`;
+  });
+}
+
+async function carregarTimes(){
+  const snap = await getDocs(collection(db,"times"));
+  timesCache = [];
+  snap.forEach(d=>timesCache.push({id:d.id,...d.data()}));
+  timesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+}
+
+async function carregarJogadores(){
+  const snap = await getDocs(collection(db,"jogadores"));
+  jogadoresCache = [];
+  snap.forEach(d=>jogadoresCache.push({id:d.id,...d.data()}));
+}
+
+async function carregarTecnicos(){
+  const snap = await getDocs(collection(db,"tecnicos"));
+  tecnicosCache = [];
+  snap.forEach(d=>tecnicosCache.push({id:d.id,...d.data()}));
+}
+
+async function carregarArbitragem(){
+  const snapArbitros = await getDocs(collection(db,"arbitros"));
+  arbitrosCache = [];
+  snapArbitros.forEach(d=>arbitrosCache.push({id:d.id,...d.data()}));
+
+  const snapAssistentes = await getDocs(collection(db,"assistentes"));
+  assistentesCache = [];
+  snapAssistentes.forEach(d=>assistentesCache.push({id:d.id,...d.data()}));
+
+  arbitrosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+  assistentesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+
+  preencherSelect(el("arbitro"),arbitrosCache,a=>a.id,a=>a.nome || "Árbitro");
+  preencherSelect(el("arbitroAuxiliar"),arbitrosCache,a=>a.id,a=>a.nome || "Árbitro");
+  preencherSelect(el("assistente1"),assistentesCache,a=>a.id,a=>a.nome || "Assistente");
+  preencherSelect(el("assistente2"),assistentesCache,a=>a.id,a=>a.nome || "Assistente");
+}
+
+window.aoSelecionarCampeonato = function(){
+  const campeonato = buscarCampeonato(el("campeonato").value);
+  const categorias = categoriasDoCampeonato(campeonato);
+
+  el("categoria").innerHTML = `<option value="">Selecione</option>`;
+  categorias.forEach(c=>{
+    el("categoria").innerHTML += `<option value="${c}">${c}</option>`;
+  });
+
+  filtrarTimesPorCategoria();
+};
+
+window.filtrarTimesPorCategoria = function(){
+  const categoria = el("categoria").value;
+
+  const timesFiltrados = timesCache.filter(t=>{
+    if(!categoria) return true;
+    if(!Array.isArray(t.categorias)) return true;
+    return t.categorias.some(c=>normalizar(c) === normalizar(categoria));
+  });
+
+  preencherSelect(el("timeA"),timesFiltrados,t=>t.id,t=>t.nome || "Time");
+  preencherSelect(el("timeB"),timesFiltrados,t=>t.id,t=>t.nome || "Time");
+
+  atualizarPreviewTimes();
+};
+
+window.atualizarPreviewTimes = function(){
+  const categoria = el("categoria").value;
+  const timeA = buscarTime(el("timeA").value);
+  const timeB = buscarTime(el("timeB").value);
+
+  if(timeA){
+    const jogadoresA = jogadoresDoTime(timeA.id,categoria);
+    const comissaoA = comissaoDoTime(timeA.id,categoria);
+
+    el("previewA").innerHTML = `
+      <strong>${timeA.nome || "-"}</strong><br>
+      Jogadores encontrados: ${jogadoresA.length}<br>
+      Comissão técnica: ${comissaoA.length}<br>
+      Categorias: ${Array.isArray(timeA.categorias) ? timeA.categorias.join(", ") : "-"}
+    `;
+  }else{
+    el("previewA").innerHTML = "Selecione o time mandante.";
+  }
+
+  if(timeB){
+    const jogadoresB = jogadoresDoTime(timeB.id,categoria);
+    const comissaoB = comissaoDoTime(timeB.id,categoria);
+
+    el("previewB").innerHTML = `
+      <strong>${timeB.nome || "-"}</strong><br>
+      Jogadores encontrados: ${jogadoresB.length}<br>
+      Comissão técnica: ${comissaoB.length}<br>
+      Categorias: ${Array.isArray(timeB.categorias) ? timeB.categorias.join(", ") : "-"}
+    `;
+  }else{
+    el("previewB").innerHTML = "Selecione o time visitante.";
+  }
+};
+
+window.limparFormulario = function(){
+  el("campeonato").value = "";
+  el("categoria").innerHTML = `<option value="">Selecione</option>`;
+  el("rodada").value = "";
+  el("dataJogo").value = "";
+  el("localJogo").value = "";
+  el("statusInicial").value = "agendado";
+  el("timeA").innerHTML = `<option value="">Selecione</option>`;
+  el("timeB").innerHTML = `<option value="">Selecione</option>`;
+  el("arbitro").value = "";
+  el("assistente1").value = "";
+  el("assistente2").value = "";
+  el("arbitroAuxiliar").value = "";
+  el("previewA").innerHTML = "Selecione o time mandante.";
+  el("previewB").innerHTML = "Selecione o time visitante.";
+};
+window.salvarJogo = async function(){
+  const campeonatoId = el("campeonato").value;
+  const campeonatoObj = buscarCampeonato(campeonatoId);
+
+  const categoria = el("categoria").value;
+  const rodada = txt(el("rodada").value);
+  const data = el("dataJogo").value;
+  const local = txt(el("localJogo").value);
+  const statusInicial = el("statusInicial").value;
+
+  const timeAId = el("timeA").value;
+  const timeBId = el("timeB").value;
+
+  const arbitroId = el("arbitro").value;
+  const assistente1Id = el("assistente1").value;
+  const assistente2Id = el("assistente2").value;
+  const arbitroAuxiliarId = el("arbitroAuxiliar").value;
+
+  if(!campeonatoId) return alert("Selecione o campeonato.");
+  if(!categoria) return alert("Selecione a categoria.");
+  if(!rodada) return alert("Digite a rodada.");
+  if(!data) return alert("Escolha a data e hora.");
+  if(!local) return alert("Digite o local.");
+  if(!timeAId || !timeBId) return alert("Selecione os times.");
+  if(timeAId === timeBId) return alert("Os times não podem ser iguais.");
+
+  const timeAObj = buscarTime(timeAId);
+  const timeBObj = buscarTime(timeBId);
+
+  const arbitroObj = buscarArbitro(arbitroId);
+  const assistente1Obj = buscarAssistente(assistente1Id);
+  const assistente2Obj = buscarAssistente(assistente2Id);
+  const arbitroAuxiliarObj = buscarArbitro(arbitroAuxiliarId);
+
+  const titularesA = jogadoresDoTime(timeAId,categoria);
+  const titularesB = jogadoresDoTime(timeBId,categoria);
+
+  const comissaoA = comissaoDoTime(timeAId,categoria);
+  const comissaoB = comissaoDoTime(timeBId,categoria);
+
+  const jogo = {
+    campeonatoId,
+    campeonato:campeonatoObj?.nome || "",
+    campeonatoNome:campeonatoObj?.nome || "",
+    logoCampeonato:campeonatoObj?.logo || "logo-liga.jfif",
+    temporada:campeonatoObj?.temporada || "",
+    regrasCartoes:campeonatoObj?.regrasCartoes || {},
+    formatoCampeonato:campeonatoObj?.formato || "",
+    categoria,
+    rodada,
+
+    data,
+    dataHora:data,
+    hora:data.includes("T") ? data.split("T")[1] : "",
+    local,
+    campo:local,
+    fase:"Primeira fase",
+
+    timeA:{
+      id:timeAObj.id,
+      nome:timeAObj.nome || "",
+      logo:timeAObj.logo || timeAObj.escudo || "logo-liga.jfif",
+      escudo:timeAObj.logo || timeAObj.escudo || "logo-liga.jfif",
+      cidade:timeAObj.cidade || ""
+    },
+
+    timeB:{
+      id:timeBObj.id,
+      nome:timeBObj.nome || "",
+      logo:timeBObj.logo || timeBObj.escudo || "logo-liga.jfif",
+      escudo:timeBObj.logo || timeBObj.escudo || "logo-liga.jfif",
+      cidade:timeBObj.cidade || ""
+    },
+
+    titularesA,
+    titularesB,
+    escalacaoA:titularesA,
+    escalacaoB:titularesB,
+    reservasA:[],
+    reservasB:[],
+
+    comissaoA,
+    comissaoB,
+
+    tecnicoA:comissaoA.find(t => normalizar(t.funcao).includes("tecnico"))?.nome || "",
+    tecnicoB:comissaoB.find(t => normalizar(t.funcao).includes("tecnico"))?.nome || "",
+
+    arbitroId:arbitroId || "",
+    arbitro:arbitroObj?.nome || "",
+
+    assistente1Id:assistente1Id || "",
+    assistente1:assistente1Obj?.nome || "",
+
+    assistente2Id:assistente2Id || "",
+    assistente2:assistente2Obj?.nome || "",
+
+    arbitroAuxiliarId:arbitroAuxiliarId || "",
+    arbitroAuxiliar:arbitroAuxiliarObj?.nome || "",
+    quartoArbitro:arbitroAuxiliarObj?.nome || "",
+
+    placar:{A:0,B:0},
+    golsA:0,
+    golsB:0,
+    gols:[],
+    cartoes:[],
+    substituicoes:[],
+    observacoes:"",
+    observacoesArbitro:"",
+    melhorJogador:"",
+    melhorJogadorId:"",
+
+    status:statusInicial,
+    sumulaFinalizada:false,
+    publico:false,
+
+    criadoEm:new Date().toISOString(),
+    criadoEmServidor:serverTimestamp(),
+    atualizadoEm:serverTimestamp()
+  };
+
+  const ref = await addDoc(collection(db,"jogos"),jogo);
+
+  alert(
+    "Jogo criado com sucesso!\\n\\n" +
+    "Jogadores mandante: " + titularesA.length + "\\n" +
+    "Jogadores visitante: " + titularesB.length + "\\n\\n" +
+    "Súmula ADM: sumula-admin.html?id=" + ref.id
+  );
+
+  limparFormulario();
+  await carregarJogos();
+};
+
+window.excluirJogo = async function(id){
+  if(!confirm("Deseja excluir este jogo?")) return;
+  await deleteDoc(doc(db,"jogos",id));
+  await carregarJogos();
+};
+
+async function carregarJogos(){
+  const lista = el("listaJogos");
+  lista.innerHTML = `<div class="vazio">Carregando jogos...</div>`;
+
+  const snap = await getDocs(collection(db,"jogos"));
+
+  jogosCache = [];
+  snap.forEach(d=>jogosCache.push({id:d.id,...d.data()}));
+
+  jogosCache.sort((a,b)=>(a.data || "").localeCompare(b.data || ""));
+
+  renderizarJogos();
+}
+
+function renderizarJogos(){
+  const lista = el("listaJogos");
+  const busca = normalizar(el("buscaJogo").value);
+  const filtroCampeonato = el("filtroCampeonato").value;
+  const filtroCategoria = el("filtroCategoria").value;
+
+  let jogos = jogosCache.filter(j=>{
+    if(filtroCampeonato && j.campeonatoId !== filtroCampeonato) return false;
+    if(filtroCategoria && normalizar(j.categoria) !== normalizar(filtroCategoria)) return false;
+
+    if(busca){
+      const texto = normalizar(`
+        ${j.campeonato || ""}
+        ${j.categoria || ""}
+        ${j.rodada || ""}
+        ${j.timeA?.nome || ""}
+        ${j.timeB?.nome || ""}
+        ${j.local || ""}
+        ${j.arbitro || ""}
+      `);
+
+      if(!texto.includes(busca)) return false;
     }
 
-    await carregarTimes();
-    await carregarCategorias();
-    await carregarJogadores();
-    await carregarTecnicos();
-    await carregarArbitragem();
-    await carregarJogos();
-  </script>
+    return true;
+  });
+
+  if(!jogos.length){
+    lista.innerHTML = `<div class="vazio">Nenhum jogo encontrado.</div>`;
+    return;
+  }
+
+  lista.innerHTML = jogos.map(j=>{
+    const nomeA = j.timeA?.nome || "Time A";
+    const nomeB = j.timeB?.nome || "Time B";
+
+    return `
+      <div class="card">
+        <strong>${nomeA} x ${nomeB}</strong>
+
+        <div class="card-grid">
+          <div><span>Campeonato</span>${j.campeonato || "-"}</div>
+          <div><span>Categoria</span>${j.categoria || "-"}</div>
+          <div><span>Rodada</span>${j.rodada || "-"}</div>
+          <div><span>Data</span>${j.data || "-"}</div>
+          <div><span>Local</span>${j.local || "-"}</div>
+          <div><span>Status</span>${j.status || "agendado"}</div>
+          <div><span>Mandante</span>${(j.titularesA || []).length} jogadores</div>
+          <div><span>Visitante</span>${(j.titularesB || []).length} jogadores</div>
+          <div><span>Árbitro</span>${j.arbitro || "-"}</div>
+          <div><span>Assistente 1</span>${j.assistente1 || "-"}</div>
+          <div><span>Assistente 2</span>${j.assistente2 || "-"}</div>
+          <div><span>Súmula</span>${j.sumulaFinalizada ? "Finalizada" : "Aberta"}</div>
+        </div>
+
+        <div class="card-actions">
+          <a class="btn-acao btn-ver" href="sumula-admin.html?id=${j.id}">
+            <i class="fa-solid fa-file-signature"></i> Súmula ADM
+          </a>
+
+          ${j.sumulaFinalizada ? `
+            <a class="btn-acao btn-blue" href="sumula-publica.html?id=${j.id}">
+              <i class="fa-solid fa-eye"></i> Súmula Pública
+            </a>
+          ` : ""}
+
+          <button class="btn-acao btn-danger" onclick="excluirJogo('${j.id}')">
+            <i class="fa-solid fa-trash"></i> Excluir
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function preencherFiltrosCategorias(){
+  const filtro = el("filtroCategoria");
+  filtro.innerHTML = `<option value="">Todas categorias</option>`;
+
+  categoriasFixas.forEach(c=>{
+    filtro.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+}
+
+el("buscaJogo").addEventListener("input",renderizarJogos);
+el("filtroCampeonato").addEventListener("change",renderizarJogos);
+el("filtroCategoria").addEventListener("change",renderizarJogos);
+
+async function iniciarPagina(){
+  await carregarCampeonatos();
+  await carregarTimes();
+  await carregarJogadores();
+  await carregarTecnicos();
+  await carregarArbitragem();
+  preencherFiltrosCategorias();
+  await carregarJogos();
+}
+
+iniciarPagina();
+</script>
 
 </body>
 </html>
