@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Times - Admin</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#0b1f3a;
+  --bg-dark:#08172c;
+  --card:#102a52;
+  --card-hover:#153766;
+  --gold:#f7c600;
+  --gold-soft:rgba(247,198,0,.12);
+  --gold-line:rgba(247,198,0,.28);
+  --white:#ffffff;
+  --muted:#d9e3f2;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --max:1180px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.88),rgba(11,31,58,.94)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:#fff;
+}
+
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none}
+
+.wrap{
+  width:min(100% - 28px,var(--max));
+  margin:0 auto;
+}
+
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.header-inner{
+  min-height:84px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
+
+.header-left,
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:700;
+}
+
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
+}
+
+.btn-light{
+  background:#fff4cf;
+  color:#111;
+}
+
+.btn-gold{
+  background:var(--gold);
+  color:#111;
+}
+
+.container{
+  padding:24px 0 34px;
+}
+
+.hero-panel,
+.form-panel,
+.list-panel{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
+
+.hero-panel h2{
+  font-size:28px;
+  margin-bottom:8px;
+}
+
+.hero-panel p{
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.bloco-titulo{
+  margin:0 0 12px;
+  color:var(--gold);
+  font-size:18px;
+  font-weight:700;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+label{
+  display:block;
+  margin:0 0 6px;
+  font-weight:700;
+  color:#eef4ff;
+  font-size:14px;
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+}
+
+.top-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.action-btn,
+.link-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:var(--gold);
+  color:#111;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:700;
+}
+
+.btn-danger{
+  background:#d94141;
+  color:#fff;
+}
+
+.lista-times{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+  padding:16px;
+  border-radius:14px;
+  text-align:center;
+}
+
+.card img{
+  width:88px;
+  height:88px;
+  object-fit:contain;
+  background:#fff;
+  border-radius:18px;
+  border:2px solid var(--gold);
+  margin:0 auto 10px;
+}
+
+.card strong{
+  display:block;
+  color:var(--gold);
+  font-size:18px;
+  margin-bottom:8px;
+}
+
+.card p{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.5;
+  margin-bottom:8px;
+}
+
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:6px;
+  margin:10px 0;
+}
+
+.tag{
+  background:rgba(247,198,0,.12);
+  border:1px solid var(--gold-line);
+  color:var(--gold);
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.card-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:12px;
+}
+
+.mensagem-vazia{
+  color:var(--muted);
+  text-align:center;
+  padding:16px 0;
+  grid-column:1/-1;
+}
+
+@media(max-width:900px){
+  .header-title{
+    order:3;
+    width:100%;
+    text-align:center;
+  }
+
+  .header-left,
+  .header-right{
+    width:100%;
+    justify-content:center;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:600px){
+  .top-btn,
+  .action-btn,
+  .link-btn{
+    width:100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
+
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
+
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
+    </div>
+
+    <div class="header-title">Times ADM</div>
+
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarTime()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Time
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+<section class="hero-panel">
+  <h2>Cadastro de Times</h2>
+  <p>Cadastre os times da Liga. Esses dados serão usados automaticamente em jogos, súmulas, jogadores, técnicos e tabelas.</p>
+</section>
+
+<section class="form-panel">
+  <h3 class="bloco-titulo" id="tituloFormulario">Novo Time</h3>
+
+  <input type="hidden" id="timeId">
+
+  <div class="grid">
+    <div>
+      <label>Nome do time</label>
+      <input id="nome" placeholder="Ex: Atlético GO">
+    </div>
+
+    <div>
+      <label>Cidade</label>
+      <input id="cidade" placeholder="Ex: Goiânia - GO">
+    </div>
+
+    <div>
+      <label>Escudo / Logo URL</label>
+      <input id="logo" placeholder="Ex: logo-time.png ou URL">
+    </div>
+
+    <div>
+      <label>Status</label>
+      <select id="status">
+        <option value="ativo">Ativo</option>
+        <option value="inativo">Inativo</option>
+      </select>
+    </div>
+
+    <div class="full">
+      <label>Categorias do time</label>
+      <input id="categorias" placeholder="Ex: Sub-11, Sub-13, Sub-15, Sub-17">
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <button class="action-btn" type="button" onclick="salvarTime()">
+      <i class="fa-solid fa-floppy-disk"></i> Salvar Time
+    </button>
+
+    <button class="action-btn btn-danger" type="button" onclick="limparFormulario()">
+      <i class="fa-solid fa-broom"></i> Limpar
+    </button>
+  </div>
+</section>
+
+<section class="list-panel">
+  <h3 class="bloco-titulo">Times Cadastrados</h3>
+  <div id="listaTimes" class="lista-times">
+    <div class="mensagem-vazia">Carregando times...</div>
+  </div>
+</section>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let timesCache = [];
+
+window.voltarPagina = function(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = "admin.html";
+  }
+};
+
+function limparTexto(v){
+  return String(v || "").trim();
+}
+
+function listaCategorias(valor){
+  return String(valor || "")
+    .split(",")
+    .map(c => c.trim())
+    .filter(Boolean);
+}
+
+window.limparFormulario = function(){
+  document.getElementById("timeId").value = "";
+  document.getElementById("nome").value = "";
+  document.getElementById("cidade").value = "";
+  document.getElementById("logo").value = "";
+  document.getElementById("status").value = "ativo";
+  document.getElementById("categorias").value = "";
+  document.getElementById("tituloFormulario").textContent = "Novo Time";
+};
+
+window.salvarTime = async function(){
+  const id = document.getElementById("timeId").value;
+
+  const nome = limparTexto(document.getElementById("nome").value);
+  const cidade = limparTexto(document.getElementById("cidade").value);
+  const logo = limparTexto(document.getElementById("logo").value) || "logo-liga.jfif";
+  const status = document.getElementById("status").value;
+  const categorias = listaCategorias(document.getElementById("categorias").value);
+
+  if(!nome) return alert("Digite o nome do time.");
+  if(!cidade) return alert("Digite a cidade do time.");
+  if(!categorias.length) return alert("Digite pelo menos uma categoria.");
+
+  const dados = {
+    nome,
+    cidade,
+    logo,
+    escudo:logo,
+    status,
+    categorias,
+    atualizadoEm:serverTimestamp()
+  };
+
+  if(id){
+    await updateDoc(doc(db,"times",id),dados);
+    alert("Time atualizado com sucesso!");
+  }else{
+    await addDoc(collection(db,"times"),{
+      ...dados,
+      jogos:0,
+      pontos:0,
+      vitorias:0,
+      empates:0,
+      derrotas:0,
+      golsPro:0,
+      golsContra:0,
+      saldo:0,
+      criadoEm:serverTimestamp()
+    });
+    alert("Time cadastrado com sucesso!");
+  }
+
+  limparFormulario();
+  carregarTimes();
+};
+
+window.editarTime = function(id){
+  const time = timesCache.find(t => t.id === id);
+  if(!time) return;
+
+  document.getElementById("timeId").value = time.id;
+  document.getElementById("nome").value = time.nome || "";
+  document.getElementById("cidade").value = time.cidade || "";
+  document.getElementById("logo").value = time.logo || time.escudo || "";
+  document.getElementById("status").value = time.status || "ativo";
+  document.getElementById("categorias").value = Array.isArray(time.categorias) ? time.categorias.join(", ") : "";
+  document.getElementById("tituloFormulario").textContent = "Editar Time";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.excluirTime = async function(id){
+  if(!confirm("Deseja excluir este time?")) return;
+  await deleteDoc(doc(db,"times",id));
+  carregarTimes();
+};
+
+async function carregarTimes(){
+  const lista = document.getElementById("listaTimes");
+  lista.innerHTML = `<div class="mensagem-vazia">Carregando times...</div>`;
+
+  const snap = await getDocs(collection(db,"times"));
+
+  timesCache = [];
+  snap.forEach(d => timesCache.push({id:d.id,...d.data()}));
+
+  timesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+
+  if(!timesCache.length){
+    lista.innerHTML = `<div class="mensagem-vazia">Nenhum time cadastrado ainda.</div>`;
+    return;
+  }
+
+  lista.innerHTML = timesCache.map(t => {
+    const categorias = Array.isArray(t.categorias) ? t.categorias : [];
+
+    return `
+      <div class="card">
+        <img src="${t.logo || t.escudo || "logo-liga.jfif"}" onerror="this.src='logo-liga.jfif'">
+
+        <strong>${t.nome || "-"}</strong>
+
+        <p>
+          <i class="fa-solid fa-location-dot"></i> ${t.cidade || "-"}<br>
+          <i class="fa-solid fa-circle-check"></i> ${t.status || "ativo"}
+        </p>
+
+        <div class="tags">
+          ${categorias.map(c => `<span class="tag">${c}</span>`).join("")}
+        </div>
+
+        <p>
+          Jogos: ${t.jogos || 0}<br>
+          Pontos: ${t.pontos || 0}<br>
+          GP: ${t.golsPro || 0} | GC: ${t.golsContra || 0}
+        </p>
+
+        <div class="card-actions">
+          <button class="link-btn" onclick="editarTime('${t.id}')">
+            <i class="fa-solid fa-pen"></i> Editar
+          </button>
+
+          <button class="link-btn btn-danger" onclick="excluirTime('${t.id}')">
+            <i class="fa-solid fa-trash"></i> Excluir
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+carregarTimes();
+</script>
+
+</body>
+</html>
