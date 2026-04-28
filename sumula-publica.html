@@ -9,45 +9,237 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
 <style>
-body{margin:0;font-family:Arial;background:#eef2f7}
-.container{max-width:1200px;margin:auto;background:#fff;padding:20px;border-radius:10px}
+:root{
+  --azul:#0A1F3D;
+  --dourado:#F7C600;
+  --verde:#1b5e20;
+  --vermelho:#b42323;
+  --cinza:#eef2f7;
+  --linha:#d6dbe6;
+  --texto:#111;
+}
 
-.titulo{text-align:center;font-size:40px;font-weight:900}
+*{box-sizing:border-box}
 
-.card{background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.1);padding:15px;margin-top:15px}
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:var(--cinza);
+  color:var(--texto);
+}
 
-.placar{display:flex;justify-content:space-between;align-items:center;text-align:center}
-.time{width:35%}
-.time img{width:90px}
-.placar-centro{font-size:50px;font-weight:900}
+.container{
+  max-width:1200px;
+  margin:18px auto;
+  background:#fff;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 12px 30px rgba(0,0,0,.12);
+}
 
-.status{background:#1b5e20;color:#fff;padding:10px;border-radius:6px;text-align:center;font-weight:900;margin-top:10px}
+.titulo{
+  text-align:center;
+  font-size:40px;
+  font-weight:900;
+  color:var(--azul);
+}
 
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
-.item{background:#f4f6fa;padding:10px;border-radius:6px;text-align:center}
+.subtitulo{
+  text-align:center;
+  font-size:15px;
+  font-weight:800;
+  margin-top:4px;
+}
 
-.duplo{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}
+.status{
+  background:var(--verde);
+  color:#fff;
+  padding:10px;
+  border-radius:8px;
+  text-align:center;
+  font-weight:900;
+  margin-top:12px;
+}
 
-.tabela{width:100%;border-collapse:collapse}
-.tabela td{border:1px solid #ccc;padding:6px;font-size:13px}
+.card{
+  background:#fff;
+  border:1px solid var(--linha);
+  border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  padding:15px;
+  margin-top:15px;
+}
 
-.highlight{background:#f7c600;padding:10px;border-radius:8px;text-align:center;font-weight:900}
+.placar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  text-align:center;
+}
 
-.btns{display:flex;gap:10px;margin-top:15px}
-.btn{flex:1;padding:12px;border:none;border-radius:6px;color:#fff;font-weight:900;cursor:pointer}
+.time{
+  width:35%;
+}
+
+.time img{
+  width:95px;
+  height:95px;
+  object-fit:contain;
+  background:#fff;
+}
+
+.time h2{
+  margin:8px 0 0;
+  color:var(--azul);
+}
+
+.placar-centro{
+  font-size:56px;
+  font-weight:900;
+  color:var(--azul);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:10px;
+}
+
+.item{
+  background:#f4f6fa;
+  padding:10px;
+  border-radius:8px;
+  text-align:center;
+  font-size:14px;
+  font-weight:700;
+}
+
+.item i{
+  color:var(--azul);
+  margin-right:5px;
+}
+
+.duplo{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+  margin-top:15px;
+}
+
+.titulo-secao{
+  background:var(--azul);
+  color:#fff;
+  padding:8px;
+  border-radius:8px 8px 0 0;
+  font-weight:900;
+  text-align:center;
+}
+
+.tabela{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.tabela th,
+.tabela td{
+  border:1px solid var(--linha);
+  padding:7px;
+  font-size:13px;
+}
+
+.tabela th{
+  background:#f4f6fa;
+  color:var(--azul);
+  text-align:left;
+}
+
+.highlight{
+  background:var(--dourado);
+  color:#111;
+  padding:14px;
+  border-radius:10px;
+  text-align:center;
+  font-weight:900;
+  font-size:17px;
+}
+
+.resumo{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  text-align:center;
+}
+
+.resumo div{
+  background:#f4f6fa;
+  padding:12px;
+  border-radius:10px;
+  font-weight:900;
+}
+
+.obs{
+  min-height:70px;
+  line-height:1.5;
+}
+
+.qr-area{
+  text-align:center;
+  margin-top:16px;
+}
+
+.qr-area small{
+  display:block;
+  margin-top:5px;
+  color:#555;
+  font-weight:700;
+}
+
+.btns{
+  display:flex;
+  gap:10px;
+  margin-top:15px;
+}
+
+.btn{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  color:#fff;
+  font-weight:900;
+  cursor:pointer;
+}
+
 .whats{background:#25d366}
 .email{background:#007bff}
 .print{background:#000}
 
 @media(max-width:800px){
-.duplo{grid-template-columns:1fr}
-.grid{grid-template-columns:1fr}
+  .placar{
+    flex-direction:column;
+    gap:15px;
+  }
+
+  .time{
+    width:100%;
+  }
+
+  .duplo,
+  .grid,
+  .resumo{
+    grid-template-columns:1fr;
+  }
+
+  .placar-centro{
+    font-size:44px;
+  }
 }
 
 @media print{
-.btns{display:none}
-body{background:#fff}
-.container{box-shadow:none}
+  body{background:#fff}
+  .container{box-shadow:none;margin:0 auto}
+  .btns{display:none}
 }
 </style>
 </head>
@@ -56,78 +248,142 @@ body{background:#fff}
 
 <div class="container">
 
-<div class="titulo">SÚMULA OFICIAL</div>
+  <div class="titulo">SÚMULA OFICIAL</div>
+  <div class="subtitulo" id="campeonato"></div>
+  <div class="subtitulo" id="categoria"></div>
 
-<div id="status" class="status"></div>
+  <div id="status" class="status">FINALIZADO</div>
 
-<div class="card placar">
-<div class="time">
-<img id="logoA">
-<div id="timeA"></div>
-</div>
+  <div class="card placar">
+    <div class="time">
+      <img id="logoA" src="logo-liga.jfif">
+      <h2 id="timeA">Time A</h2>
+    </div>
 
-<div class="placar-centro" id="placar"></div>
+    <div class="placar-centro" id="placar">0 x 0</div>
 
-<div class="time">
-<img id="logoB">
-<div id="timeB"></div>
-</div>
-</div>
+    <div class="time">
+      <img id="logoB" src="logo-liga.jfif">
+      <h2 id="timeB">Time B</h2>
+    </div>
+  </div>
 
-<div class="grid">
-<div class="item"><i class="fa fa-calendar"></i> <span id="data"></span></div>
-<div class="item"><i class="fa fa-clock"></i> <span id="hora"></span></div>
-<div class="item"><i class="fa fa-map"></i> <span id="local"></span></div>
-<div class="item">Código: <span id="codigo"></span></div>
-</div>
+  <div class="grid">
+    <div class="item"><i class="fa fa-calendar"></i> <span id="data">-</span></div>
+    <div class="item"><i class="fa fa-clock"></i> <span id="hora">-</span></div>
+    <div class="item"><i class="fa fa-location-dot"></i> <span id="local">-</span></div>
+    <div class="item"><i class="fa fa-barcode"></i> Código: <span id="codigo">-</span></div>
+  </div>
 
-<div class="duplo">
+  <div class="duplo">
+    <div class="card">
+      <div class="titulo-secao" id="tituloEscA">ESCALAÇÃO</div>
+      <table class="tabela">
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Jogador</th>
+            <th>Posição</th>
+          </tr>
+        </thead>
+        <tbody id="escA"></tbody>
+      </table>
+    </div>
 
-<div class="card">
-<table class="tabela" id="escA"></table>
-</div>
+    <div class="card">
+      <div class="titulo-secao" id="tituloEscB">ESCALAÇÃO</div>
+      <table class="tabela">
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Jogador</th>
+            <th>Posição</th>
+          </tr>
+        </thead>
+        <tbody id="escB"></tbody>
+      </table>
+    </div>
+  </div>
 
-<div class="card">
-<table class="tabela" id="escB"></table>
-</div>
+  <div class="duplo">
+    <div class="card">
+      <div class="titulo-secao">EVENTOS - TIME A</div>
 
-</div>
+      <table class="tabela">
+        <thead>
+          <tr><th colspan="3"><i class="fa-solid fa-futbol"></i> Gols</th></tr>
+        </thead>
+        <tbody id="golsA"></tbody>
+      </table>
 
-<div class="duplo">
+      <br>
 
-<div class="card">
-<table class="tabela" id="golsA"></table>
-<table class="tabela" id="cartA"></table>
-</div>
+      <table class="tabela">
+        <thead>
+          <tr><th colspan="3">Cartões</th></tr>
+        </thead>
+        <tbody id="cartA"></tbody>
+      </table>
+    </div>
 
-<div class="card">
-<table class="tabela" id="golsB"></table>
-<table class="tabela" id="cartB"></table>
-</div>
+    <div class="card">
+      <div class="titulo-secao">EVENTOS - TIME B</div>
 
-</div>
+      <table class="tabela">
+        <thead>
+          <tr><th colspan="3"><i class="fa-solid fa-futbol"></i> Gols</th></tr>
+        </thead>
+        <tbody id="golsB"></tbody>
+      </table>
 
-<div class="duplo">
+      <br>
 
-<div class="card">
-<div id="arb"></div>
-</div>
+      <table class="tabela">
+        <thead>
+          <tr><th colspan="3">Cartões</th></tr>
+        </thead>
+        <tbody id="cartB"></tbody>
+      </table>
+    </div>
+  </div>
 
-<div class="card">
-<div class="highlight" id="melhor"></div>
-</div>
+  <div class="duplo">
+    <div class="card">
+      <div class="titulo-secao">ARBITRAGEM</div>
+      <table class="tabela">
+        <tbody id="arb"></tbody>
+      </table>
+    </div>
 
-</div>
+    <div class="card">
+      <div class="titulo-secao">RESUMO DA PARTIDA</div>
+      <div class="resumo">
+        <div><i class="fa-solid fa-futbol"></i><br><span id="totalGols">0</span> gols</div>
+        <div><i class="fa-solid fa-square" style="color:#f7c600"></i><br><span id="totalAmarelos">0</span> amarelos</div>
+        <div><i class="fa-solid fa-square" style="color:red"></i><br><span id="totalVermelhos">0</span> vermelhos</div>
+      </div>
 
-<div style="text-align:center;margin-top:15px">
-<canvas id="qr"></canvas>
-</div>
+      <br>
 
-<div class="btns">
-<button class="btn whats" onclick="wpp()">WhatsApp</button>
-<button class="btn email" onclick="mail()">Email</button>
-<button class="btn print" onclick="window.print()">PDF</button>
-</div>
+      <div class="highlight" id="melhor">⭐ Melhor em campo: Não informado</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="titulo-secao">OBSERVAÇÕES DO ÁRBITRO</div>
+    <div class="obs" id="observacoes">-</div>
+  </div>
+
+  <div class="qr-area">
+    <canvas id="qr"></canvas>
+    <small>QR Code de validação oficial da súmula</small>
+  </div>
+
+  <div class="btns">
+    <button class="btn whats" onclick="wpp()">WhatsApp</button>
+    <button class="btn email" onclick="mail()">Email</button>
+    <button class="btn print" onclick="window.print()">PDF</button>
+  </div>
 
 </div>
 
@@ -135,90 +391,144 @@ body{background:#fff}
 import { db } from "./firebase.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-const id=new URLSearchParams(location.search).get("id");
+const id = new URLSearchParams(location.search).get("id");
 
-function fil(l,t){return (l||[]).filter(x=>x.time===t)}
-
-function esc(l){
-return (l||[]).map(j=>{
-let n=j.nome||"-"
-if(j.posicao==="Goleiro")n+=" (G)"
-if(j.capitao)n+=" (C)"
-return `<tr><td>${j.numero||"-"}</td><td>${n}</td></tr>`
-}).join("") || "<tr><td>-</td><td>-</td></tr>"
+function fil(lista,time){
+  return (lista || []).filter(x => x.time === time);
 }
 
-function gols(l){
-return l.map(g=>`<tr><td>⚽ ${g.tempo||"-"}'</td><td>${g.nome||"-"}</td></tr>`).join("") || "<tr><td>Sem gols</td></tr>"
+function esc(lista){
+  if(!lista || !lista.length){
+    return `<tr><td colspan="3">Nenhum jogador informado.</td></tr>`;
+  }
+
+  return lista.map(j=>{
+    let nome = j.nome || "-";
+
+    if(j.goleiro || j.posicao === "Goleiro") nome += " (G)";
+    if(j.capitao) nome += " (C)";
+
+    return `
+      <tr>
+        <td>${j.numero || "-"}</td>
+        <td>${nome}</td>
+        <td>${j.posicao || "-"}</td>
+      </tr>
+    `;
+  }).join("");
 }
 
-function cart(l){
-return l.map(c=>{
-let cor=c.tipo==="vermelho"?"red":"gold"
-return `<tr><td><i class="fa fa-square" style="color:${cor}"></i> ${c.tempo||"-"}'</td><td>${c.nome||"-"}</td></tr>`
-}).join("") || "<tr><td>Sem cartões</td></tr>"
+function gols(lista){
+  if(!lista || !lista.length){
+    return `<tr><td colspan="3">Sem gols.</td></tr>`;
+  }
+
+  return lista.map(g=>`
+    <tr>
+      <td><i class="fa-solid fa-futbol"></i> ${g.tempo || "-"}'</td>
+      <td>${g.numero || "-"}</td>
+      <td>${g.nome || "-"}</td>
+    </tr>
+  `).join("");
+}
+
+function cartoes(lista){
+  if(!lista || !lista.length){
+    return `<tr><td colspan="3">Sem cartões.</td></tr>`;
+  }
+
+  return lista.map(c=>{
+    const vermelho = c.tipo === "vermelho";
+    const cor = vermelho ? "red" : "#f7c600";
+    const texto = vermelho ? "Vermelho" : "Amarelo";
+
+    return `
+      <tr>
+        <td><i class="fa-solid fa-square" style="color:${cor}"></i> ${c.tempo || "-"}'</td>
+        <td>${c.numero || "-"}</td>
+        <td>${c.nome || "-"} - ${texto}</td>
+      </tr>
+    `;
+  }).join("");
 }
 
 async function load(){
+  if(!id){
+    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px'>Súmula não encontrada.</h2>";
+    return;
+  }
 
-const snap=await getDoc(doc(db,"jogos",id))
+  const snap = await getDoc(doc(db,"jogos",id));
 
-if(!snap.exists()){
-document.body.innerHTML="<h2>Súmula não encontrada</h2>"
-return
+  if(!snap.exists()){
+    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px'>Súmula não encontrada.</h2>";
+    return;
+  }
+
+  const j = snap.data();
+
+  if(!j.sumulaFinalizada){
+    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px'>Súmula ainda não finalizada.</h2>";
+    return;
+  }
+
+  document.getElementById("campeonato").innerText = j.campeonato || "-";
+  document.getElementById("categoria").innerText = j.categoria || "-";
+
+  document.getElementById("timeA").innerText = j.timeA?.nome || "Time A";
+  document.getElementById("timeB").innerText = j.timeB?.nome || "Time B";
+
+  document.getElementById("logoA").src = j.timeA?.logo || "logo-liga.jfif";
+  document.getElementById("logoB").src = j.timeB?.logo || "logo-liga.jfif";
+
+  document.getElementById("placar").innerText = `${j.placar?.A || 0} x ${j.placar?.B || 0}`;
+
+  document.getElementById("data").innerText = j.data || "-";
+  document.getElementById("hora").innerText = j.hora || "-";
+  document.getElementById("local").innerText = j.local || "-";
+  document.getElementById("codigo").innerText = j.codigo || id;
+
+  document.getElementById("tituloEscA").innerText = "ESCALAÇÃO - " + (j.timeA?.nome || "TIME A");
+  document.getElementById("tituloEscB").innerText = "ESCALAÇÃO - " + (j.timeB?.nome || "TIME B");
+
+  document.getElementById("escA").innerHTML = esc(j.titularesA || j.escalacaoA);
+  document.getElementById("escB").innerHTML = esc(j.titularesB || j.escalacaoB);
+
+  document.getElementById("golsA").innerHTML = gols(fil(j.gols,"A"));
+  document.getElementById("golsB").innerHTML = gols(fil(j.gols,"B"));
+
+  document.getElementById("cartA").innerHTML = cartoes(fil(j.cartoes,"A"));
+  document.getElementById("cartB").innerHTML = cartoes(fil(j.cartoes,"B"));
+
+  document.getElementById("arb").innerHTML = `
+    <tr><td><strong>Árbitro</strong></td><td>${j.arbitro || "-"}</td></tr>
+    <tr><td><strong>Assistente 1</strong></td><td>${j.assistente1 || "-"}</td></tr>
+    <tr><td><strong>Assistente 2</strong></td><td>${j.assistente2 || "-"}</td></tr>
+    <tr><td><strong>4º Árbitro</strong></td><td>${j.quartoArbitro || j.arbitroAuxiliar || "-"}</td></tr>
+  `;
+
+  document.getElementById("totalGols").innerText = (j.gols || []).length;
+  document.getElementById("totalAmarelos").innerText = (j.cartoes || []).filter(c=>c.tipo==="amarelo").length;
+  document.getElementById("totalVermelhos").innerText = (j.cartoes || []).filter(c=>c.tipo==="vermelho").length;
+
+  document.getElementById("melhor").innerText = "⭐ Melhor em campo: " + (j.melhorJogador || "Não informado");
+  document.getElementById("observacoes").innerText = j.observacoes || j.observacoesArbitro || "-";
+
+  QRCode.toCanvas(
+    document.getElementById("qr"),
+    location.origin + "/validar.html?id=" + id
+  );
 }
 
-const j=snap.data()
+load();
 
-if(!j.sumulaFinalizada){
-document.body.innerHTML="<h2 style='text-align:center;margin-top:40px'>Súmula ainda não finalizada</h2>"
-return
+function wpp(){
+  window.open("https://wa.me/?text=" + encodeURIComponent("Súmula oficial: " + location.href));
 }
 
-status.innerText="FINALIZADO"
-
-timeA.innerText=j.timeA?.nome||"Time A"
-timeB.innerText=j.timeB?.nome||"Time B"
-
-logoA.src=j.timeA?.logo||"logo-liga.jfif"
-logoB.src=j.timeB?.logo||"logo-liga.jfif"
-
-placar.innerText=`${j.placar?.A||0} x ${j.placar?.B||0}`
-
-data.innerText=j.data||"-"
-hora.innerText=j.hora||"-"
-local.innerText=j.local||"-"
-
-codigo.innerText=j.codigo||id
-
-escA.innerHTML=esc(j.titularesA)
-escB.innerHTML=esc(j.titularesB)
-
-golsA.innerHTML=gols(fil(j.gols,"A"))
-golsB.innerHTML=gols(fil(j.gols,"B"))
-
-cartA.innerHTML=cart(fil(j.cartoes,"A"))
-cartB.innerHTML=cart(fil(j.cartoes,"B"))
-
-arb.innerHTML=`
-👨‍⚖️ Árbitro: ${j.arbitro||"-"}<br>
-Assistente 1: ${j.assistente1||"-"}<br>
-Assistente 2: ${j.assistente2||"-"}
-`
-
-melhor.innerText="⭐ "+(j.melhorJogador||"Não informado")
-
-QRCode.toCanvas(
-document.getElementById("qr"),
-location.origin + "/validar.html?id=" + id
-)
-
+function mail(){
+  location.href = "mailto:?subject=Súmula Oficial&body=" + encodeURIComponent(location.href);
 }
-
-load()
-
-function wpp(){window.open("https://wa.me/?text="+location.href)}
-function mail(){location.href="mailto:?body="+location.href}
 </script>
 
 </body>
