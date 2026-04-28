@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Assistentes ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#0b1f3a;
+  --card:#102a52;
+  --gold:#f7c600;
+  --white:#fff;
+  --muted:#d8e1ef;
+}
+
+body{
+  font-family:Arial;
+  background:
+    linear-gradient(rgba(11,31,58,.9),rgba(11,31,58,.95)),
+    url("fundo.png") center/cover fixed;
+  color:#fff;
+}
+
+.wrap{max-width:1200px;margin:auto;padding:20px}
+
+/* MENU PADRÃO */
+.menu{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  margin-bottom:20px;
+}
+
+.menu a{
+  background:#0d2346;
+  padding:10px 14px;
+  border-radius:10px;
+  white-space:nowrap;
+  font-weight:700;
+}
+
+.menu a.ativo{
+  background:var(--gold);
+  color:#000;
+}
+
+.panel{
+  background:#102a52;
+  padding:20px;
+  border-radius:16px;
+  margin-bottom:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.full{grid-column:1/-1}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  margin-top:6px;
+}
+
+.card{
+  background:#102a52;
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.info{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.info img{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#fff;
+}
+
+.btn{
+  background:var(--gold);
+  padding:8px 12px;
+  border-radius:8px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.btn-danger{
+  background:#d94141;
+  color:#fff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<!-- MENU -->
+<div class="menu">
+<a href="admin.html">Painel</a>
+<a href="campeonatos-admin.html">Campeonatos</a>
+<a href="jogos-admin.html">Jogos</a>
+<a href="times-admin.html">Times</a>
+<a href="tecnicos-admin.html">Técnicos</a>
+<a href="jogadores-admin.html">Jogadores</a>
+<a href="arbitros-admin.html">Árbitros</a>
+<a href="assistentes-admin.html" class="ativo">Assistentes</a>
+<a href="sumulas-admin.html">Súmulas</a>
+</div>
+
+<!-- FORM -->
+<div class="panel">
+
+<h2>Novo Assistente / Árbitro</h2>
+
+<div class="grid">
+
+<input id="nome" placeholder="Nome">
+<input id="cpf" placeholder="CPF">
+
+<input id="telefone" placeholder="Telefone">
+<input id="whatsapp" placeholder="WhatsApp">
+
+<input id="email" placeholder="Email">
+
+<select id="funcao">
+<option value="Assistente">Assistente</option>
+<option value="Árbitro">Árbitro</option>
+</select>
+
+<input type="file" id="fotoFile" class="full">
+
+</div>
+
+<br>
+
+<button class="btn" onclick="salvar()">Salvar</button>
+
+</div>
+
+<!-- LISTA -->
+<div id="lista"></div>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+collection, addDoc, getDocs, deleteDoc, doc
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+import {
+getStorage, ref, uploadBytes, getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
+
+const storage = getStorage();
+
+/* SALVAR */
+window.salvar = async function(){
+
+let file = document.getElementById("fotoFile").files[0];
+let foto = "logo-liga.jfif";
+
+if(file){
+let r = ref(storage,"assistentes/"+Date.now());
+await uploadBytes(r,file);
+foto = await getDownloadURL(r);
+}
+
+await addDoc(collection(db,"assistentes"),{
+nome:document.getElementById("nome").value,
+cpf:document.getElementById("cpf").value,
+telefone:document.getElementById("telefone").value,
+whatsapp:document.getElementById("whatsapp").value,
+email:document.getElementById("email").value,
+funcao:document.getElementById("funcao").value,
+foto,
+status:"ativo",
+criadoEm:new Date().toISOString()
+});
+
+alert("Salvo!");
+carregar();
+}
+
+/* LISTAR */
+async function carregar(){
+
+const lista = document.getElementById("lista");
+lista.innerHTML="";
+
+const snap = await getDocs(collection(db,"assistentes"));
+
+snap.forEach(d=>{
+let a = d.data();
+
+lista.innerHTML += `
+<div class="card">
+
+<div class="info">
+<img src="${a.foto || 'logo-liga.jfif'}">
+
+<div>
+<b>${a.nome}</b><br>
+${a.funcao}<br>
+${a.telefone || "-"}<br>
+${a.email || "-"}
+</div>
+</div>
+
+<div>
+<button class="btn" onclick="abrirWhats('${a.whatsapp || ""}')">
+WhatsApp
+</button>
+
+<button class="btn-danger" onclick="del('${d.id}')">
+Excluir
+</button>
+</div>
+
+</div>
+`;
+});
+}
+
+/* WHATS */
+window.abrirWhats = function(num){
+num = String(num || "").replace(/\D/g,"");
+if(!num) return alert("Sem WhatsApp");
+window.open("https://wa.me/"+num);
+}
+
+/* EXCLUIR */
+window.del = async function(id){
+await deleteDoc(doc(db,"assistentes",id));
+carregar();
+}
+
+carregar();
+</script>
+
+</body>
+</html>
