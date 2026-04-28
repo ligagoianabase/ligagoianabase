@@ -33,6 +33,14 @@ body{margin:0;font-family:Arial;background:#eef2f7}
 
 .duplo{display:flex;gap:20px}
 
+.highlight{
+  background:#f7c600;
+  padding:10px;
+  font-weight:900;
+  text-align:center;
+  border-radius:8px;
+}
+
 .btns{display:flex;gap:10px;margin-top:20px}
 .btn{padding:10px;border:none;border-radius:6px;font-weight:900;color:#fff;cursor:pointer}
 .whats{background:#25d366}
@@ -52,7 +60,6 @@ body{margin:0;font-family:Arial;background:#eef2f7}
 </div>
 
 <div class="placar-box">
-
 <div class="time">
 <img id="logoA">
 <div class="nome" id="timeA"></div>
@@ -64,7 +71,6 @@ body{margin:0;font-family:Arial;background:#eef2f7}
 <img id="logoB">
 <div class="nome" id="timeB"></div>
 </div>
-
 </div>
 
 <div style="text-align:center">
@@ -102,7 +108,7 @@ body{margin:0;font-family:Arial;background:#eef2f7}
 <h4>⚽ Gols</h4>
 <table class="tabela" id="golsA"></table>
 
-<h4>🟨 Cartões</h4>
+<h4>🟨🟥 Cartões</h4>
 <table class="tabela" id="cartA"></table>
 </div>
 
@@ -110,7 +116,7 @@ body{margin:0;font-family:Arial;background:#eef2f7}
 <h4>⚽ Gols</h4>
 <table class="tabela" id="golsB"></table>
 
-<h4>🟨 Cartões</h4>
+<h4>🟨🟥 Cartões</h4>
 <table class="tabela" id="cartB"></table>
 </div>
 
@@ -129,7 +135,7 @@ body{margin:0;font-family:Arial;background:#eef2f7}
 
 <div class="secao">
 <div class="titulo-secao">⭐ MELHOR EM CAMPO</div>
-<div id="melhor"></div>
+<div id="melhor" class="highlight"></div>
 </div>
 
 <div class="btns">
@@ -148,46 +154,51 @@ const id=new URLSearchParams(location.search).get("id");
 
 function esc(lista){
 return (lista||[]).map(j=>{
-let n=j.nome;
+let n=j.nome||"-";
 if(j.posicao==="Goleiro")n+=" (G)";
 if(j.capitao)n+=" (C)";
-return `<tr><td>${j.numero}</td><td>${n}</td></tr>`;
-}).join("");
+return `<tr><td>${j.numero||"-"}</td><td>${n}</td></tr>`;
+}).join("") || "<tr><td>-</td><td>-</td></tr>";
 }
 
 function fil(lista,t){return (lista||[]).filter(x=>x.time===t)}
 
 function gols(l){
-return l.map(g=>`<tr><td>⚽ ${g.tempo}'</td><td>${g.nome}</td></tr>`).join("");
+if(!l.length)return "<tr><td>-</td><td>-</td></tr>";
+return l.map(g=>`<tr><td>⚽ ${g.tempo||"-"}'</td><td>${g.nome||"-"}</td></tr>`).join("");
 }
 
 function cart(l){
+if(!l.length)return "<tr><td>-</td><td>-</td></tr>";
 return l.map(c=>{
 let i=c.tipo==="vermelho"?"🟥":"🟨";
-return `<tr><td>${i} ${c.tempo}'</td><td>${c.nome}</td></tr>`;
+return `<tr><td>${i} ${c.tempo||"-"}'</td><td>${c.nome||"-"}</td></tr>`;
 }).join("");
 }
 
 async function load(){
 
 const s=await getDoc(doc(db,"jogos",id));
-if(!s.exists())return;
+if(!s.exists()){
+document.body.innerHTML="<h2>Súmula não encontrada</h2>";
+return;
+}
 
 const j=s.data();
 
-timeA.innerText=j.timeA.nome;
-timeB.innerText=j.timeB.nome;
+timeA.innerText=j.timeA?.nome||"Time A";
+timeB.innerText=j.timeB?.nome||"Time B";
 
-logoA.src=j.timeA.logo;
-logoB.src=j.timeB.logo;
+logoA.src=j.timeA?.logo||"logo-liga.jfif";
+logoB.src=j.timeB?.logo||"logo-liga.jfif";
 
-placar.innerText=`${j.placar.A} x ${j.placar.B}`;
+placar.innerText=`${j.placar?.A||0} x ${j.placar?.B||0}`;
 
-campeonato.innerText=j.campeonato;
-categoria.innerText=j.categoria;
+campeonato.innerText=j.campeonato||"-";
+categoria.innerText=j.categoria||"-";
 
-tituloA.innerText=j.timeA.nome;
-tituloB.innerText=j.timeB.nome;
+tituloA.innerText=j.timeA?.nome||"";
+tituloB.innerText=j.timeB?.nome||"";
 
 titA.innerHTML=esc(j.titularesA);
 resA.innerHTML=esc(j.reservasA);
@@ -202,9 +213,9 @@ cartA.innerHTML=cart(fil(j.cartoes,"A"));
 cartB.innerHTML=cart(fil(j.cartoes,"B"));
 
 arb.innerHTML=`
-Árbitro: ${j.arbitro||"-"}<br>
-Assistente 1: ${j.assistente1||"-"}<br>
-Assistente 2: ${j.assistente2||"-"}
+👨‍⚖️ Árbitro: ${j.arbitro||"-"}<br>
+🏃 Assistente 1: ${j.assistente1||"-"}<br>
+🏃 Assistente 2: ${j.assistente2||"-"}
 `;
 
 resumo.innerHTML=`
@@ -213,7 +224,7 @@ resumo.innerHTML=`
 🟥 ${(j.cartoes||[]).filter(c=>c.tipo==="vermelho").length}
 `;
 
-melhor.innerText=j.melhorJogador||"-";
+melhor.innerText=j.melhorJogador||"Não informado";
 
 QRCode.toCanvas(document.getElementById("qr"),location.href);
 
