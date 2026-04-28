@@ -69,7 +69,7 @@ img{
   margin:0 auto;
 }
 
-/* HEADER IGUAL JOGOS */
+/* HEADER PADRÃO */
 .site-header{
   background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
   border-bottom:3px solid var(--gold);
@@ -93,6 +93,7 @@ img{
   line-height:1.15;
 }
 
+/* MENU PADRÃO CAMPEONATO / JOGOS / SÚMULAS */
 .nav-bar{
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
   border-top:1px solid rgba(255,255,255,.06);
@@ -162,6 +163,56 @@ img{
   font-size:14px;
 }
 
+.exemplo-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:12px;
+  margin-bottom:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+.exemplo-bar span{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+
+.exemplo-bar strong{
+  color:var(--gold);
+}
+
+.exemplo-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.btn-mini{
+  padding:9px 12px;
+  border-radius:11px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  font-size:13px;
+}
+
+.btn-gold{
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+}
+
+.btn-red{
+  background:var(--red);
+  color:#fff;
+}
 .filtros{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
@@ -194,54 +245,12 @@ select:focus{
   margin:0 0 12px;
 }
 
-.aviso-exemplo{
-  background:rgba(16,42,82,.85);
-  border:1px solid rgba(247,198,0,.18);
-  border-radius:14px;
-  padding:12px;
-  margin-bottom:14px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
-  color:var(--muted);
-  font-size:13px;
-}
-
-.aviso-exemplo strong{
-  color:var(--gold);
-}
-
-.btn-mini{
-  padding:9px 12px;
-  border-radius:10px;
-  font-weight:900;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  font-size:12px;
-}
-
-.btn-danger{
-  background:var(--red);
-  color:#fff;
-}
-
-.btn-restaurar{
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
-  color:#111;
-}
-
-/* GRID: MÁXIMO 4 POR LINHA */
 .lista-grid{
   display:grid;
   grid-template-columns:repeat(4, 1fr);
   gap:10px;
 }
 
-/* CARD SÚMULA */
 .card-sumula{
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
   border:1px solid rgba(247,198,0,.22);
@@ -366,27 +375,18 @@ select:focus{
   font-weight:800;
 }
 
-.acoes{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:7px;
-}
-
-.btn-acao{
+.btn-ver{
   width:100%;
   padding:9px 12px;
   border-radius:11px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
   font-weight:900;
   display:flex;
   align-items:center;
   justify-content:center;
   gap:7px;
   font-size:13px;
-}
-
-.btn-ver{
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
-  color:#111;
 }
 
 .vazio{
@@ -438,6 +438,14 @@ select:focus{
   .lista-grid{
     grid-template-columns:1fr;
   }
+
+  .exemplo-actions{
+    width:100%;
+  }
+
+  .btn-mini{
+    width:100%;
+  }
 }
 
 @media(min-width:901px) and (max-width:1180px){
@@ -447,6 +455,7 @@ select:focus{
 }
 </style>
 </head>
+
 <body>
 
 <header class="site-header">
@@ -468,6 +477,7 @@ select:focus{
         <a href="assistentes.html">Assistente</a>
         <a href="sumulas.html" class="ativo">Súmula</a>
         <a href="noticias.html">Notícias</a>
+        <a href="login.html">Login</a>
       </nav>
     </div>
   </div>
@@ -480,24 +490,25 @@ select:focus{
     <p>Visualize todas as súmulas publicadas automaticamente.</p>
   </section>
 
-  <div class="aviso-exemplo">
+  <section class="exemplo-bar">
     <span>
-      <strong>Dados de exemplo:</strong> últimas rodadas do Brasileirão para teste visual.
+      <strong>Dados de exemplo:</strong>
+      últimas 3 rodadas do Brasileirão para testar o visual da página.
     </span>
 
-    <div style="display:flex; gap:8px;">
-      <button class="btn-mini btn-danger" onclick="excluirExemplos()">
-        <i class="fa-solid fa-trash"></i> Excluir
+    <div class="exemplo-actions">
+      <button class="btn-mini btn-red" onclick="excluirExemplos()">
+        <i class="fa-solid fa-trash"></i> Excluir Exemplos
       </button>
 
-      <button class="btn-mini btn-restaurar" onclick="restaurarExemplos()">
-        <i class="fa-solid fa-rotate"></i> Restaurar
+      <button class="btn-mini btn-gold" onclick="restaurarExemplos()">
+        <i class="fa-solid fa-rotate-left"></i> Restaurar
       </button>
     </div>
-  </div>
+  </section>
 
   <section class="filtros">
-    <input id="busca" placeholder="Pesquisar time ou campeonato...">
+    <input id="busca" placeholder="Pesquisar time, campeonato ou local...">
 
     <select id="filtroCampeonato">
       <option value="">Todos os campeonatos</option>
@@ -511,7 +522,7 @@ select:focus{
   <h2 class="titulo-secao" id="tituloPagina">Súmulas</h2>
 
   <section class="lista-grid" id="listaSumulas">
-    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando...</div>
+    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando súmulas...</div>
   </section>
 
 </main>
@@ -520,17 +531,14 @@ import { db } from "./firebase.js";
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 let jogos = [];
-let campeonatos = [];
 let exemplosAtivos = localStorage.getItem("ocultarExemplosSumulas") !== "sim";
 
 const sumulasExemplo = [
   {
     id:"brasileirao-2025-rodada-36-flamengo-palmeiras",
     campeonato:"Brasileirão 2025",
-    campeonatoId:"brasileirao-2025",
     categoria:"Profissional",
     rodada:"36",
-    fase:"Rodada 36",
     data:"2025-11-30T16:00:00",
     local:"Maracanã",
     timeA:"Flamengo",
@@ -540,29 +548,14 @@ const sumulasExemplo = [
     logoTimeA:"logo-liga.jfif",
     logoTimeB:"logo-liga.jfif",
     status:"finalizado",
-    arbitro:"Raphael Claus",
-    tecnicoA:"Filipe Luís",
-    tecnicoB:"Abel Ferreira",
-    exemplo:true,
-    jogadoresA:["Rossi","Varela","Léo Ortiz","Léo Pereira","Alex Sandro","Pulgar","Gerson","Arrascaeta","Luiz Araújo","Bruno Henrique","Pedro"],
-    jogadoresB:["Weverton","Marcos Rocha","Gustavo Gómez","Murilo","Piquerez","Aníbal Moreno","Zé Rafael","Raphael Veiga","Estêvão","Rony","Flaco López"],
-    gols:[
-      {time:"Flamengo", atleta:"Pedro", minuto:"18"},
-      {time:"Flamengo", atleta:"Arrascaeta", minuto:"67"},
-      {time:"Palmeiras", atleta:"Raphael Veiga", minuto:"79"}
-    ],
-    cartoes:[
-      {time:"Flamengo", atleta:"Pulgar", tipo:"Amarelo", minuto:"33"},
-      {time:"Palmeiras", atleta:"Gustavo Gómez", tipo:"Amarelo", minuto:"58"}
-    ]
+    arbitro:"Árbitro Exemplo",
+    exemplo:true
   },
   {
     id:"brasileirao-2025-rodada-37-cruzeiro-gremio",
     campeonato:"Brasileirão 2025",
-    campeonatoId:"brasileirao-2025",
     categoria:"Profissional",
     rodada:"37",
-    fase:"Rodada 37",
     data:"2025-12-03T21:00:00",
     local:"Mineirão",
     timeA:"Cruzeiro",
@@ -572,28 +565,14 @@ const sumulasExemplo = [
     logoTimeA:"logo-liga.jfif",
     logoTimeB:"logo-liga.jfif",
     status:"finalizado",
-    arbitro:"Wilton Pereira Sampaio",
-    tecnicoA:"Leonardo Jardim",
-    tecnicoB:"Mano Menezes",
-    exemplo:true,
-    jogadoresA:["Cássio","William","João Marcelo","Lucas Villalba","Marlon","Lucas Romero","Matheus Henrique","Matheus Pereira","Arthur Gomes","Kaio Jorge","Lautaro Díaz"],
-    jogadoresB:["Marchesín","João Pedro","Rodrigo Ely","Kannemann","Reinaldo","Villasanti","Dodi","Cristaldo","Pavón","Soteldo","Diego Costa"],
-    gols:[
-      {time:"Cruzeiro", atleta:"Matheus Pereira", minuto:"44"},
-      {time:"Grêmio", atleta:"Cristaldo", minuto:"71"}
-    ],
-    cartoes:[
-      {time:"Cruzeiro", atleta:"Lucas Romero", tipo:"Amarelo", minuto:"27"},
-      {time:"Grêmio", atleta:"Kannemann", tipo:"Amarelo", minuto:"64"}
-    ]
+    arbitro:"Árbitro Exemplo",
+    exemplo:true
   },
   {
     id:"brasileirao-2025-rodada-38-sao-paulo-santos",
     campeonato:"Brasileirão 2025",
-    campeonatoId:"brasileirao-2025",
     categoria:"Profissional",
     rodada:"38",
-    fase:"Rodada 38",
     data:"2025-12-08T16:00:00",
     local:"Morumbi",
     timeA:"São Paulo",
@@ -603,21 +582,8 @@ const sumulasExemplo = [
     logoTimeA:"logo-liga.jfif",
     logoTimeB:"logo-liga.jfif",
     status:"finalizado",
-    arbitro:"Anderson Daronco",
-    tecnicoA:"Luis Zubeldía",
-    tecnicoB:"Fábio Carille",
-    exemplo:true,
-    jogadoresA:["Rafael","Rafinha","Arboleda","Alan Franco","Welington","Pablo Maia","Alisson","Lucas Moura","Luciano","Ferreira","Calleri"],
-    jogadoresB:["João Paulo","Aderlan","Gil","Joaquim","Felipe Jonatan","João Schmidt","Diego Pituca","Otero","Guilherme","Pedrinho","Julio Furch"],
-    gols:[
-      {time:"São Paulo", atleta:"Calleri", minuto:"21"},
-      {time:"São Paulo", atleta:"Lucas Moura", minuto:"52"},
-      {time:"São Paulo", atleta:"Luciano", minuto:"76"}
-    ],
-    cartoes:[
-      {time:"Santos", atleta:"Diego Pituca", tipo:"Amarelo", minuto:"39"},
-      {time:"São Paulo", atleta:"Pablo Maia", tipo:"Amarelo", minuto:"61"}
-    ]
+    arbitro:"Árbitro Exemplo",
+    exemplo:true
   }
 ];
 
@@ -636,6 +602,11 @@ function valorCampo(obj, chaves, fallback = ""){
     }
   }
   return fallback;
+}
+
+function jogoTemSumula(j){
+  const status = normalizarTexto(valorCampo(j, ["status"], ""));
+  return status === "finalizado" || status === "sumula_enviada" || status === "sumula-finalizada";
 }
 
 function formatarDataHora(valor){
@@ -660,11 +631,6 @@ function formatarDataHora(valor){
   });
 }
 
-function jogoTemSumula(j){
-  const status = normalizarTexto(valorCampo(j, ["status"], ""));
-  return status === "finalizado" || status === "sumula_enviada" || status === "sumula-finalizada";
-}
-
 function pegarTimeA(j){
   if(j.timeA && typeof j.timeA === "object") return j.timeA.nome || "Time A";
   return valorCampo(j, ["timeA", "mandante", "timeMandanteNome", "mandanteNome"], "Time A");
@@ -686,12 +652,18 @@ function pegarLogoB(j){
 }
 
 function pegarGolsA(j){
-  if(j.placar && typeof j.placar === "object") return j.placar.A ?? j.placar.a ?? j.placar.mandante ?? 0;
+  if(j.placar && typeof j.placar === "object"){
+    return j.placar.A ?? j.placar.a ?? j.placar.mandante ?? 0;
+  }
+
   return Number(valorCampo(j, ["golsA", "placarA", "golsMandante"], 0));
 }
 
 function pegarGolsB(j){
-  if(j.placar && typeof j.placar === "object") return j.placar.B ?? j.placar.b ?? j.placar.visitante ?? 0;
+  if(j.placar && typeof j.placar === "object"){
+    return j.placar.B ?? j.placar.b ?? j.placar.visitante ?? 0;
+  }
+
   return Number(valorCampo(j, ["golsB", "placarB", "golsVisitante"], 0));
 }
 
@@ -717,29 +689,21 @@ function obterData(j){
 
 async function carregarDados(){
   try{
-    const [snapJogos, snapCampeonatos] = await Promise.all([
-      getDocs(collection(db, "jogos")),
-      getDocs(collection(db, "campeonatos"))
-    ]);
+    const snapJogos = await getDocs(collection(db, "jogos"));
 
     jogos = [];
-    campeonatos = [];
 
     snapJogos.forEach(docSnap => {
       const dados = { id:docSnap.id, ...docSnap.data() };
+
       if(jogoTemSumula(dados)){
         jogos.push(dados);
       }
     });
 
-    snapCampeonatos.forEach(docSnap => {
-      campeonatos.push({ id:docSnap.id, ...docSnap.data() });
-    });
-
   }catch(erro){
     console.error("Erro ao carregar súmulas do Firebase:", erro);
     jogos = [];
-    campeonatos = [];
   }
 
   if(exemplosAtivos){
@@ -759,6 +723,7 @@ function preencherCampeonatos(){
 
   jogos.forEach(j => {
     const nome = obterCampeonato(j);
+
     if(nome && !nomes.has(nome)){
       nomes.add(nome);
 
@@ -781,6 +746,7 @@ function preencherCategorias(){
     if(campeonatoSelecionado && obterCampeonato(j) !== campeonatoSelecionado) return;
 
     const categoria = obterCategoria(j);
+
     if(categoria && categoria !== "-" && !categorias.has(categoria)){
       categorias.add(categoria);
 
@@ -819,7 +785,9 @@ function sumulasFiltradas(){
 window.excluirExemplos = function(){
   localStorage.setItem("ocultarExemplosSumulas", "sim");
   exemplosAtivos = false;
+
   jogos = jogos.filter(j => !j.exemplo);
+
   preencherCampeonatos();
   preencherCategorias();
   renderizarSumulas();
@@ -828,6 +796,7 @@ window.excluirExemplos = function(){
 window.restaurarExemplos = async function(){
   localStorage.removeItem("ocultarExemplosSumulas");
   exemplosAtivos = true;
+
   await carregarDados();
   preencherCampeonatos();
   preencherCategorias();
@@ -872,6 +841,7 @@ function renderizarSumulas(){
     const data = formatarDataHora(obterData(j));
     const local = obterLocal(j);
     const rodada = obterRodada(j);
+    const arbitro = valorCampo(j, ["arbitro"], "Árbitro");
 
     return `
       <article class="card-sumula" onclick="abrirSumula('${j.id}')">
@@ -909,14 +879,12 @@ function renderizarSumulas(){
         <div class="tags">
           ${j.exemplo ? `<span class="tag">Exemplo</span>` : `<span class="tag">Firebase</span>`}
           <span class="tag">${rodada}</span>
-          <span class="tag">${valorCampo(j, ["arbitro"], "Árbitro")}</span>
+          <span class="tag">${arbitro}</span>
         </div>
 
-        <div class="acoes">
-          <a class="btn-acao btn-ver" href="sumula-publica.html?id=${encodeURIComponent(j.id)}" onclick="event.stopPropagation()">
-            <i class="fa-solid fa-file-lines"></i> Ver Súmula
-          </a>
-        </div>
+        <a class="btn-ver" href="sumula-publica.html?id=${encodeURIComponent(j.id)}" onclick="event.stopPropagation()">
+          <i class="fa-solid fa-file-lines"></i> Ver Súmula
+        </a>
       </article>
     `;
   }).join("");
