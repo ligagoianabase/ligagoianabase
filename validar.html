@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Validar Súmula</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#eef2f7;
+  color:#0A1F3D;
+}
+
+.box{
+  max-width:520px;
+  margin:60px auto;
+  background:#fff;
+  padding:25px;
+  border-radius:14px;
+  text-align:center;
+  box-shadow:0 8px 25px rgba(0,0,0,.15);
+}
+
+.ok{
+  color:#1b5e20;
+  font-size:46px;
+  font-weight:900;
+}
+
+.erro{
+  color:#b42323;
+  font-size:40px;
+  font-weight:900;
+}
+
+h1{
+  margin:10px 0;
+}
+
+.info{
+  text-align:left;
+  margin-top:18px;
+  line-height:1.7;
+}
+
+.btn{
+  display:inline-block;
+  margin-top:20px;
+  background:#0A1F3D;
+  color:#fff;
+  padding:12px 18px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:900;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box" id="conteudo">
+  Carregando validação...
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const id = new URLSearchParams(location.search).get("id");
+const box = document.getElementById("conteudo");
+
+async function validar(){
+  if(!id){
+    box.innerHTML = `
+      <div class="erro">✖</div>
+      <h1>Código inválido</h1>
+    `;
+    return;
+  }
+
+  const snap = await getDoc(doc(db,"jogos",id));
+
+  if(!snap.exists()){
+    box.innerHTML = `
+      <div class="erro">✖</div>
+      <h1>Súmula não encontrada</h1>
+    `;
+    return;
+  }
+
+  const j = snap.data();
+
+  if(!j.sumulaFinalizada){
+    box.innerHTML = `
+      <div class="erro">!</div>
+      <h1>Súmula ainda não finalizada</h1>
+    `;
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="ok">✓</div>
+    <h1>Súmula Autêntica</h1>
+
+    <div class="info">
+      <strong>Código:</strong> ${j.codigo || id}<br>
+      <strong>Campeonato:</strong> ${j.campeonato || "-"}<br>
+      <strong>Categoria:</strong> ${j.categoria || "-"}<br>
+      <strong>Jogo:</strong> ${j.timeA?.nome || "Time A"} x ${j.timeB?.nome || "Time B"}<br>
+      <strong>Placar:</strong> ${j.placar?.A || 0} x ${j.placar?.B || 0}<br>
+      <strong>Status:</strong> Finalizada
+    </div>
+
+    <a class="btn" href="sumula-publica.html?id=${id}">
+      Ver Súmula Oficial
+    </a>
+  `;
+}
+
+validar();
+</script>
+
+</body>
+</html>
