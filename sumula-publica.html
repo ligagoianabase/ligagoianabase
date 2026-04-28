@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Súmula da Partida</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --azul:#0A1F3D;
+  --dourado:#F7C600;
+  --branco:#ffffff;
+  --cinza:#f4f6fa;
+}
+
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:var(--cinza);
+}
+
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:20px;
+}
+
+/* HEADER */
+.topo{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.logo{
+  width:70px;
+}
+
+.titulo{
+  text-align:center;
+  flex:1;
+  font-weight:900;
+  font-size:20px;
+  color:var(--azul);
+}
+
+/* PLACAR */
+.placar-box{
+  background:#fff;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
+  text-align:center;
+}
+
+.times{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.time{
+  width:40%;
+  text-align:center;
+}
+
+.time img{
+  width:70px;
+}
+
+.nome-time{
+  font-weight:900;
+  margin-top:8px;
+}
+
+.placar{
+  font-size:32px;
+  font-weight:900;
+  color:var(--azul);
+}
+
+/* INFO */
+.info{
+  margin-top:10px;
+  font-size:14px;
+  color:#444;
+}
+
+/* SEÇÕES */
+.secao{
+  margin-top:20px;
+  background:#fff;
+  padding:15px;
+  border-radius:14px;
+  box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.secao h3{
+  margin-bottom:10px;
+  color:var(--azul);
+}
+
+.linha{
+  font-size:14px;
+  margin-bottom:6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="topo">
+    <img src="logo-liga.jfif" class="logo">
+    <div class="titulo">SÚMULA OFICIAL</div>
+    <img src="logo-liga.jfif" class="logo" id="logoCampeonato">
+  </div>
+
+  <div class="placar-box">
+    <div class="times">
+      <div class="time">
+        <img id="logoA">
+        <div class="nome-time" id="timeA"></div>
+      </div>
+
+      <div class="placar" id="placar"></div>
+
+      <div class="time">
+        <img id="logoB">
+        <div class="nome-time" id="timeB"></div>
+      </div>
+    </div>
+
+    <div class="info" id="infoJogo"></div>
+  </div>
+<!-- ELENCOS -->
+  <div class="secao">
+    <h3>Escalação</h3>
+
+    <div style="display:flex; gap:20px;">
+      <div style="flex:1;">
+        <strong id="tituloTimeA"></strong>
+        <div id="elencoA"></div>
+      </div>
+
+      <div style="flex:1;">
+        <strong id="tituloTimeB"></strong>
+        <div id="elencoB"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOLS -->
+  <div class="secao">
+    <h3>Gols</h3>
+    <div id="gols"></div>
+  </div>
+
+  <!-- CARTÕES -->
+  <div class="secao">
+    <h3>Cartões</h3>
+    <div id="cartoes"></div>
+  </div>
+
+  <!-- ARBITRAGEM -->
+  <div class="secao">
+    <h3>Arbitragem</h3>
+    <div id="arbitragem"></div>
+  </div>
+
+</div>
+<script type="module">
+import { db } from "./firebase.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+function valor(obj, chaves, padrao = ""){
+  for(const chave of chaves){
+    if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
+      return obj[chave];
+    }
+  }
+  return padrao;
+}
+
+function formatarData(data){
+  if(!data) return "-";
+
+  if(typeof data.toDate === "function"){
+    data = data.toDate();
+  }
+
+  const d = new Date(data);
+
+  if(isNaN(d.getTime())){
+    return data;
+  }
+
+  return d.toLocaleString("pt-BR", {
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric",
+    hour:"2-digit",
+    minute:"2-digit"
+  });
+}
+
+function lista(containerId, itens){
+  const container = document.getElementById(containerId);
+
+  if(!itens || !itens.length){
+    container.innerHTML = `<div class="linha">Nenhum registro.</div>`;
+    return;
+  }
+
+  container.innerHTML = itens.map(item => {
+    if(typeof item === "string"){
+      return `<div class="linha">• ${item}</div>`;
+    }
+
+    return `<div class="linha">• ${item.numero ? item.numero + " - " : ""}${item.nome || item.atleta || item.jogador || "-"}</div>`;
+  }).join("");
+}
+
+async function carregarSumula(){
+  if(!id){
+    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px;'>Súmula não encontrada.</h2>";
+    return;
+  }
+
+  try{
+    const ref = doc(db, "jogos", id);
+    const snap = await getDoc(ref);
+
+    if(!snap.exists()){
+      document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px;'>Súmula não encontrada no Firebase.</h2>";
+      return;
+    }
+
+    const j = snap.data();
+
+    const timeA = typeof j.timeA === "object" ? j.timeA.nome : valor(j, ["timeA","mandante","timeMandanteNome"], "Time A");
+    const timeB = typeof j.timeB === "object" ? j.timeB.nome : valor(j, ["timeB","visitante","timeVisitanteNome"], "Time B");
+
+    const logoA = typeof j.timeA === "object" ? (j.timeA.logo || j.timeA.escudo) : valor(j, ["logoTimeA","escudoA","logoA"], "logo-liga.jfif");
+    const logoB = typeof j.timeB === "object" ? (j.timeB.logo || j.timeB.escudo) : valor(j, ["logoTimeB","escudoB","logoB"], "logo-liga.jfif");
+
+    const golsA = j.placar?.A ?? j.placar?.mandante ?? valor(j, ["golsA","placarA"], 0);
+    const golsB = j.placar?.B ?? j.placar?.visitante ?? valor(j, ["golsB","placarB"], 0);
+
+    document.getElementById("logoCampeonato").src = valor(j, ["logoCampeonato"], "logo-liga.jfif");
+
+    document.getElementById("logoA").src = logoA || "logo-liga.jfif";
+    document.getElementById("logoB").src = logoB || "logo-liga.jfif";
+
+    document.getElementById("timeA").textContent = timeA;
+    document.getElementById("timeB").textContent = timeB;
+    document.getElementById("tituloTimeA").textContent = timeA;
+    document.getElementById("tituloTimeB").textContent = timeB;
+
+    document.getElementById("placar").textContent = `${golsA} x ${golsB}`;
+
+    document.getElementById("infoJogo").innerHTML = `
+      <strong>${valor(j, ["campeonato","nomeCampeonato"], "Campeonato")}</strong><br>
+      ${valor(j, ["categoria"], "-")} • ${valor(j, ["fase","rodada"], "-")}<br>
+      ${formatarData(valor(j, ["data","dataHora","dataJogo"], ""))}<br>
+      ${valor(j, ["local","campo","estadio"], "-")}
+    `;
+
+    lista("elencoA", j.escalacaoA || j.jogadoresA || []);
+    lista("elencoB", j.escalacaoB || j.jogadoresB || []);
+
+    lista("gols", j.gols || []);
+    lista("cartoes", j.cartoes || []);
+
+    const arb = j.arbitragem || {};
+
+    document.getElementById("arbitragem").innerHTML = `
+      <div class="linha"><strong>Árbitro:</strong> ${arb.arbitro || j.arbitro || "-"}</div>
+      <div class="linha"><strong>Assistente 1:</strong> ${arb.assistente1 || j.assistente1 || "-"}</div>
+      <div class="linha"><strong>Assistente 2:</strong> ${arb.assistente2 || j.assistente2 || "-"}</div>
+      <div class="linha"><strong>Quarto Árbitro:</strong> ${arb.quartoArbitro || j.quartoArbitro || "-"}</div>
+    `;
+
+  }catch(error){
+    console.error(error);
+    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px;'>Erro ao carregar a súmula.</h2>";
+  }
+}
+
+carregarSumula();
+</script>
+
+</body>
+</html>
