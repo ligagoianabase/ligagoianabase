@@ -11,6 +11,7 @@
 <style>
 :root{
   --bg:#0b1f3a;
+  --bg-dark:#08172c;
   --card:#102a52;
   --gold:#f7c600;
   --white:#fff;
@@ -19,13 +20,15 @@
 
 body{
   font-family:Arial;
-  background:linear-gradient(rgba(11,31,58,.9),rgba(11,31,58,.95)),url("fundo.png") center/cover fixed;
+  background:
+    linear-gradient(rgba(11,31,58,.9),rgba(11,31,58,.95)),
+    url("fundo.png") center/cover fixed;
   color:#fff;
 }
 
 .wrap{max-width:1200px;margin:auto;padding:20px}
 
-/* MENU PADRÃO */
+/* ===== MENU IGUAL JOGADORES ===== */
 .menu{
   display:flex;
   gap:10px;
@@ -46,7 +49,7 @@ body{
   color:#000;
 }
 
-/* PAINEL */
+/* ===== PAINEL ===== */
 .panel{
   background:#102a52;
   padding:20px;
@@ -54,16 +57,6 @@ body{
   margin-bottom:20px;
 }
 
-/* INPUTS */
-input,select{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:none;
-  margin-top:6px;
-}
-
-/* GRID */
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -72,7 +65,15 @@ input,select{
 
 .full{grid-column:1/-1}
 
-/* CARD */
+input,select{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  margin-top:6px;
+}
+
+/* ===== CARD ===== */
 .card{
   background:#102a52;
   padding:15px;
@@ -116,7 +117,7 @@ input,select{
 
 <div class="wrap">
 
-<!-- MENU PADRÃO IGUAL TODOS -->
+<!-- 🔥 MENU PADRÃO (IGUAL JOGADORES) -->
 <div class="menu">
 <a href="admin.html">Painel</a>
 <a href="campeonatos-admin.html">Campeonatos</a>
@@ -136,33 +137,19 @@ input,select{
 
 <div class="grid">
 
-<div>
-<input id="nome" placeholder="Nome do técnico">
-</div>
-
-<div>
+<input id="nome" placeholder="Nome">
 <input id="cpf" placeholder="CPF">
-</div>
 
-<div>
 <select id="time"></select>
-</div>
-
-<div>
 <select id="categoria"></select>
-</div>
 
-<div>
 <select id="funcao">
 <option value="Técnico">Técnico</option>
 <option value="Auxiliar">Auxiliar</option>
 <option value="Preparador">Preparador</option>
 </select>
-</div>
 
-<div class="full">
-<input type="file" id="fotoFile">
-</div>
+<input type="file" id="fotoFile" class="full">
 
 </div>
 
@@ -191,7 +178,7 @@ const storage = getStorage();
 
 let timesCache = [];
 
-/* ===== CARREGAR TIMES ===== */
+/* ===== TIMES ===== */
 async function carregarTimes(){
 const select = document.getElementById("time");
 select.innerHTML = `<option value="">Selecione o time</option>`;
@@ -199,6 +186,7 @@ select.innerHTML = `<option value="">Selecione o time</option>`;
 const snap = await getDocs(collection(db,"times"));
 
 timesCache = [];
+
 snap.forEach(d=>{
 timesCache.push({id:d.id,...d.data()});
 });
@@ -210,7 +198,7 @@ select.innerHTML += `<option value="${t.id}">${t.nome}</option>`;
 });
 }
 
-/* ===== CATEGORIAS FIXAS ===== */
+/* ===== CATEGORIAS ===== */
 const categorias = [
 "Sub-11","Sub-12","Sub-13","Sub-14","Sub-15",
 "Sub-16","Sub-17","Sub-18","Sub-19","Sub-20","Sub-21"
