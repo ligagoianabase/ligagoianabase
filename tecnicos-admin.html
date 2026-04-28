@@ -314,6 +314,8 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
 
 .btn-ver{background:var(--gold);color:black}
 .btn-danger{background:#d94141;color:#fff}
+.btn-green{background:#25d366;color:#fff}
+.btn-blue{background:#1a3f73;color:#fff}
 
 .vazio{
   background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
@@ -394,7 +396,7 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
 
   <div class="hero">
     <h2>Técnicos ADM</h2>
-    <p>Cadastre técnicos e membros da comissão técnica com foto, time, categoria e função. Esses dados serão puxados automaticamente nos jogos e súmulas.</p>
+    <p>Cadastre técnicos e membros da comissão técnica com foto, contato, time, categoria e função. Esses dados serão puxados automaticamente nos jogos e súmulas.</p>
   </div>
 
   <section class="form-panel">
@@ -419,6 +421,21 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
           <option value="ativo">Ativo</option>
           <option value="inativo">Inativo</option>
         </select>
+      </div>
+
+      <div>
+        <label>Telefone</label>
+        <input id="telefone" placeholder="Ex: (62) 99999-9999">
+      </div>
+
+      <div>
+        <label>WhatsApp</label>
+        <input id="whatsapp" placeholder="Ex: 5562999999999">
+      </div>
+
+      <div>
+        <label>E-mail</label>
+        <input id="email" type="email" placeholder="email@exemplo.com">
       </div>
 
       <div>
@@ -524,6 +541,10 @@ const categoriasFixas = [
 
 function txt(v){return String(v || "").trim()}
 
+function limparNumero(v){
+  return String(v || "").replace(/\D/g,"");
+}
+
 function normalizarTexto(texto){
   return String(texto || "")
     .trim()
@@ -585,6 +606,9 @@ window.limparFormulario = function(){
   document.getElementById("nome").value = "";
   document.getElementById("cpf").value = "";
   document.getElementById("status").value = "ativo";
+  document.getElementById("telefone").value = "";
+  document.getElementById("whatsapp").value = "";
+  document.getElementById("email").value = "";
   document.getElementById("time").value = "";
   document.getElementById("categoria").value = "";
   document.getElementById("funcao").value = "Técnico";
@@ -603,12 +627,18 @@ window.salvarTecnico = async function(){
   const nome = txt(document.getElementById("nome").value);
   const cpf = txt(document.getElementById("cpf").value);
   const status = document.getElementById("status").value;
+  const telefone = txt(document.getElementById("telefone").value);
+  const whatsapp = limparNumero(document.getElementById("whatsapp").value);
+  const email = txt(document.getElementById("email").value);
   const timeId = document.getElementById("time").value;
   const categoria = document.getElementById("categoria").value;
   const funcao = document.getElementById("funcao").value;
 
   if(!nome) return alert("Digite o nome do técnico.");
   if(!cpf) return alert("Digite o CPF.");
+  if(!telefone) return alert("Digite o telefone.");
+  if(!whatsapp) return alert("Digite o WhatsApp.");
+  if(!email) return alert("Digite o e-mail.");
   if(!timeId) return alert("Selecione o time.");
   if(!categoria) return alert("Selecione a categoria.");
 
@@ -619,6 +649,9 @@ window.salvarTecnico = async function(){
     nome,
     cpf,
     status,
+    telefone,
+    whatsapp,
+    email,
     timeId,
     timeNome:time?.nome || "",
     time:time?.nome || "",
@@ -656,6 +689,9 @@ window.editarTecnico = function(id){
   document.getElementById("nome").value = t.nome || "";
   document.getElementById("cpf").value = t.cpf || "";
   document.getElementById("status").value = t.status || "ativo";
+  document.getElementById("telefone").value = t.telefone || "";
+  document.getElementById("whatsapp").value = t.whatsapp || "";
+  document.getElementById("email").value = t.email || "";
   document.getElementById("time").value = t.timeId || "";
   document.getElementById("categoria").value = t.categoria || "";
   document.getElementById("funcao").value = t.funcao || "Técnico";
@@ -678,6 +714,12 @@ window.excluirTecnico = async function(id){
   if(!confirm("Excluir técnico?")) return;
   await deleteDoc(doc(db,"tecnicos",id));
   await carregarTecnicos();
+};
+
+window.abrirWhatsapp = function(numero){
+  const n = limparNumero(numero);
+  if(!n) return alert("WhatsApp não informado.");
+  window.open("https://wa.me/" + n, "_blank");
 };
 
 async function carregarTimes(){
@@ -732,6 +774,9 @@ function renderizarTecnicos(){
       const texto = normalizarTexto(`
         ${t.nome || ""}
         ${t.cpf || ""}
+        ${t.telefone || ""}
+        ${t.whatsapp || ""}
+        ${t.email || ""}
         ${t.timeNome || t.time || ""}
         ${t.funcao || ""}
         ${t.categoria || ""}
@@ -764,6 +809,9 @@ function renderizarTecnicos(){
             <div class="nome-jogador">${t.nome || "-"}</div>
 
             <small>CPF: ${t.cpf || "-"}</small>
+            <small>Telefone: ${t.telefone || "-"}</small>
+            <small>WhatsApp: ${t.whatsapp || "-"}</small>
+            <small>E-mail: ${t.email || "-"}</small>
             <small>Time: ${t.timeNome || t.time || "-"}</small>
             <small>Função: ${t.funcao || "Técnico"}</small>
 
@@ -783,6 +831,14 @@ function renderizarTecnicos(){
         </div>
 
         <div class="actions">
+          <button class="btn-acao btn-green" onclick="abrirWhatsapp('${t.whatsapp || ""}')">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+          </button>
+
+          <a class="btn-acao btn-blue" href="mailto:${t.email || ""}">
+            <i class="fa-solid fa-envelope"></i> E-mail
+          </a>
+
           <button class="btn-acao btn-ver" onclick="editarTecnico('${t.id}')">
             <i class="fa-solid fa-pen"></i> Editar
           </button>
