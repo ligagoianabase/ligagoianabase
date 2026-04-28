@@ -34,7 +34,7 @@ body{margin:0;font-family:Arial;background:#eef2f7}
 .highlight{background:#f7c600;padding:10px;border-radius:8px;text-align:center;font-weight:900}
 
 .btns{display:flex;gap:10px;margin-top:15px}
-.btn{flex:1;padding:12px;border:none;border-radius:6px;color:#fff;font-weight:900}
+.btn{flex:1;padding:12px;border:none;border-radius:6px;color:#fff;font-weight:900;cursor:pointer}
 .whats{background:#25d366}
 .email{background:#007bff}
 .print{background:#000}
@@ -42,6 +42,12 @@ body{margin:0;font-family:Arial;background:#eef2f7}
 @media(max-width:800px){
 .duplo{grid-template-columns:1fr}
 .grid{grid-template-columns:1fr}
+}
+
+@media print{
+.btns{display:none}
+body{background:#fff}
+.container{box-shadow:none}
 }
 </style>
 </head>
@@ -113,7 +119,9 @@ body{margin:0;font-family:Arial;background:#eef2f7}
 
 </div>
 
+<div style="text-align:center;margin-top:15px">
 <canvas id="qr"></canvas>
+</div>
 
 <div class="btns">
 <button class="btn whats" onclick="wpp()">WhatsApp</button>
@@ -133,22 +141,22 @@ function fil(l,t){return (l||[]).filter(x=>x.time===t)}
 
 function esc(l){
 return (l||[]).map(j=>{
-let n=j.nome
+let n=j.nome||"-"
 if(j.posicao==="Goleiro")n+=" (G)"
 if(j.capitao)n+=" (C)"
-return `<tr><td>${j.numero}</td><td>${n}</td></tr>`
-}).join("")
+return `<tr><td>${j.numero||"-"}</td><td>${n}</td></tr>`
+}).join("") || "<tr><td>-</td><td>-</td></tr>"
 }
 
 function gols(l){
-return l.map(g=>`<tr><td>⚽ ${g.tempo}'</td><td>${g.nome}</td></tr>`).join("")
+return l.map(g=>`<tr><td>⚽ ${g.tempo||"-"}'</td><td>${g.nome||"-"}</td></tr>`).join("") || "<tr><td>Sem gols</td></tr>"
 }
 
 function cart(l){
 return l.map(c=>{
 let cor=c.tipo==="vermelho"?"red":"gold"
-return `<tr><td><i class="fa fa-square" style="color:${cor}"></i> ${c.tempo}'</td><td>${c.nome}</td></tr>`
-}).join("")
+return `<tr><td><i class="fa fa-square" style="color:${cor}"></i> ${c.tempo||"-"}'</td><td>${c.nome||"-"}</td></tr>`
+}).join("") || "<tr><td>Sem cartões</td></tr>"
 }
 
 async function load(){
@@ -162,29 +170,26 @@ return
 
 const j=snap.data()
 
-// 🔒 BLOQUEIO PÚBLICO
 if(!j.sumulaFinalizada){
 document.body.innerHTML="<h2 style='text-align:center;margin-top:40px'>Súmula ainda não finalizada</h2>"
 return
 }
 
-// STATUS
 status.innerText="FINALIZADO"
 
-// DADOS
-timeA.innerText=j.timeA.nome
-timeB.innerText=j.timeB.nome
+timeA.innerText=j.timeA?.nome||"Time A"
+timeB.innerText=j.timeB?.nome||"Time B"
 
-logoA.src=j.timeA.logo
-logoB.src=j.timeB.logo
+logoA.src=j.timeA?.logo||"logo-liga.jfif"
+logoB.src=j.timeB?.logo||"logo-liga.jfif"
 
-placar.innerText=`${j.placar.A} x ${j.placar.B}`
+placar.innerText=`${j.placar?.A||0} x ${j.placar?.B||0}`
 
-data.innerText=j.data
-hora.innerText=j.hora
-local.innerText=j.local
+data.innerText=j.data||"-"
+hora.innerText=j.hora||"-"
+local.innerText=j.local||"-"
 
-codigo.innerText=j.codigo || id
+codigo.innerText=j.codigo||id
 
 escA.innerHTML=esc(j.titularesA)
 escB.innerHTML=esc(j.titularesB)
@@ -195,13 +200,18 @@ golsB.innerHTML=gols(fil(j.gols,"B"))
 cartA.innerHTML=cart(fil(j.cartoes,"A"))
 cartB.innerHTML=cart(fil(j.cartoes,"B"))
 
-arb.innerHTML=`👨‍⚖️ ${j.arbitro}`
+arb.innerHTML=`
+👨‍⚖️ Árbitro: ${j.arbitro||"-"}<br>
+Assistente 1: ${j.assistente1||"-"}<br>
+Assistente 2: ${j.assistente2||"-"}
+`
 
-melhor.innerText="⭐ "+j.melhorJogador
+melhor.innerText="⭐ "+(j.melhorJogador||"Não informado")
 
-// QR COM VALIDAÇÃO
-const url=location.origin+"/validar.html?id="+id
-QRCode.toCanvas(document.getElementById("qr"),url)
+QRCode.toCanvas(
+document.getElementById("qr"),
+location.origin + "/validar.html?id=" + id
+)
 
 }
 
