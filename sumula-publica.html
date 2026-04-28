@@ -4,136 +4,303 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Súmula da Partida</title>
+<title>Súmula Oficial - Liga Goiana de Futebol de Base</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-:root{
-  --azul:#0A1F3D;
-  --dourado:#F7C600;
-  --branco:#ffffff;
-  --cinza:#f4f6fa;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
 body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:var(--cinza);
+  font-family:Arial, Helvetica, sans-serif;
+  background:#dfe3e8;
+  color:#000;
 }
 
-.container{
-  max-width:1000px;
-  margin:auto;
-  padding:20px;
-}
-
-.topo{
+.top-actions{
+  max-width:1100px;
+  margin:14px auto;
   display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
+  gap:10px;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  padding:0 10px;
 }
 
-.logo{
-  width:70px;
-  height:70px;
-  object-fit:cover;
-}
-
-.titulo{
-  text-align:center;
-  flex:1;
+.action-btn{
+  border:none;
+  padding:10px 14px;
+  border-radius:10px;
   font-weight:900;
-  font-size:20px;
-  color:var(--azul);
-}
-
-.placar-box{
-  background:#fff;
-  border-radius:16px;
-  padding:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,.1);
-  text-align:center;
-}
-
-.times{
+  cursor:pointer;
+  color:#fff;
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  gap:15px;
+  gap:8px;
 }
 
-.time{
-  width:40%;
+.btn-whats{background:#128c7e;}
+.btn-email{background:#0a1f3d;}
+.btn-print{background:#111;}
+
+.sumula{
+  max-width:1100px;
+  margin:0 auto 30px;
+  background:#fff;
+  padding:16px;
+  border:2px solid #111;
+}
+
+.header{
+  display:grid;
+  grid-template-columns:140px 1fr 140px;
+  align-items:center;
   text-align:center;
+  border-bottom:2px solid #111;
+  padding-bottom:10px;
 }
 
-.time img{
-  width:70px;
-  height:70px;
-  object-fit:cover;
+.logo-oficial{
+  width:110px;
+  height:110px;
+  object-fit:contain;
   margin:auto;
 }
 
-.nome-time{
+.titulo-principal{
+  font-size:46px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.subtitulo{
+  font-size:24px;
+  font-weight:800;
+  margin-top:6px;
+}
+
+.categoria{
+  font-size:22px;
   font-weight:900;
   margin-top:8px;
 }
 
-.placar{
-  font-size:32px;
-  font-weight:900;
-  color:var(--azul);
-}
-
-.info{
+.placar-area{
+  display:grid;
+  grid-template-columns:1fr 220px 1fr;
+  align-items:center;
+  border:1px solid #111;
   margin-top:10px;
+  padding:12px;
+}
+
+.time-box{
+  display:grid;
+  grid-template-columns:100px 1fr;
+  align-items:center;
+  gap:12px;
+}
+
+.time-box.visitante{
+  grid-template-columns:1fr 100px;
+}
+
+.escudo{
+  width:95px;
+  height:95px;
+  object-fit:contain;
+}
+
+.nome-time{
+  font-size:28px;
+  font-weight:900;
+}
+
+.cidade-time{
+  font-size:16px;
+  margin-top:6px;
+}
+
+.placar-centro{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  font-size:44px;
+  font-weight:900;
+}
+
+.gol-num{
+  border:1px solid #111;
+  width:76px;
+  height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:54px;
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  border-left:1px solid #111;
+  border-top:1px solid #111;
+}
+
+.info-item{
+  border-right:1px solid #111;
+  border-bottom:1px solid #111;
+  padding:10px;
   font-size:14px;
-  color:#444;
+  display:flex;
+  gap:8px;
+  align-items:center;
 }
 
-.secao{
-  margin-top:20px;
-  background:#fff;
-  padding:15px;
-  border-radius:14px;
-  box-shadow:0 5px 15px rgba(0,0,0,.08);
-}
-
-.secao h3{
-  margin-bottom:10px;
-  color:var(--azul);
+.info-item i{
+  font-size:18px;
 }
 
 .duas-colunas{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:20px;
+  gap:18px;
+  margin-top:10px;
 }
 
-.linha{
+.bloco{
+  border:1px solid #111;
+  margin-bottom:12px;
+}
+
+.bloco-titulo{
+  background:#000;
+  color:#fff;
+  text-align:center;
+  font-weight:900;
+  padding:6px;
+  font-size:16px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
   font-size:14px;
-  margin-bottom:6px;
 }
 
-@media(max-width:700px){
-  .duas-colunas{
+th,td{
+  border:1px solid #999;
+  padding:5px 7px;
+  text-align:left;
+}
+
+th{
+  background:#f1f1f1;
+  font-weight:900;
+  text-align:center;
+}
+
+td.numero{
+  width:45px;
+  text-align:center;
+}
+
+.bloco-full{
+  border:1px solid #111;
+  margin-top:10px;
+}
+
+.observacoes{
+  min-height:85px;
+  padding:12px;
+  line-height:1.8;
+  border-top:1px solid #111;
+}
+
+.loading{
+  max-width:1000px;
+  margin:60px auto;
+  text-align:center;
+  font-size:24px;
+  font-weight:900;
+}
+
+@media print{
+  body{
+    background:#fff;
+  }
+
+  .top-actions{
+    display:none;
+  }
+
+  .sumula{
+    margin:0;
+    max-width:100%;
+    border:0;
+  }
+}
+
+@media(max-width:850px){
+  .header{
+    grid-template-columns:80px 1fr 80px;
+  }
+
+  .logo-oficial{
+    width:70px;
+    height:70px;
+  }
+
+  .titulo-principal{
+    font-size:28px;
+  }
+
+  .subtitulo{
+    font-size:16px;
+  }
+
+  .categoria{
+    font-size:16px;
+  }
+
+  .placar-area{
+    grid-template-columns:1fr;
+    gap:15px;
+  }
+
+  .time-box,
+  .time-box.visitante{
+    grid-template-columns:70px 1fr;
+    text-align:left;
+  }
+
+  .time-box.visitante .escudo{
+    order:0;
+  }
+
+  .time-box.visitante div{
+    order:1;
+  }
+
+  .escudo{
+    width:65px;
+    height:65px;
+  }
+
+  .nome-time{
+    font-size:20px;
+  }
+
+  .info-grid{
     grid-template-columns:1fr;
   }
 
-  .times{
-    gap:8px;
-  }
-
-  .placar{
-    font-size:24px;
-  }
-
-  .time img,
-  .logo{
-    width:56px;
-    height:56px;
+  .duas-colunas{
+    grid-template-columns:1fr;
   }
 }
 </style>
@@ -141,80 +308,22 @@ body{
 
 <body>
 
-<div class="container">
+<div class="top-actions">
+  <button class="action-btn btn-whats" onclick="enviarWhatsApp()">
+    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+  </button>
 
-  <div class="topo">
-    <img src="logo-liga.jfif" class="logo">
-    <div class="titulo">SÚMULA OFICIAL</div>
-    <img src="logo-liga.jfif" class="logo" id="logoCampeonato">
-  </div>
+  <button class="action-btn btn-email" onclick="enviarEmail()">
+    <i class="fa-solid fa-envelope"></i> E-mail
+  </button>
 
-  <div class="placar-box">
-    <div class="times">
-      <div class="time">
-        <img id="logoA" src="logo-liga.jfif">
-        <div class="nome-time" id="timeA"></div>
-      </div>
+  <button class="action-btn btn-print" onclick="window.print()">
+    <i class="fa-solid fa-download"></i> Salvar / Imprimir
+  </button>
+</div>
 
-      <div class="placar" id="placar"></div>
-
-      <div class="time">
-        <img id="logoB" src="logo-liga.jfif">
-        <div class="nome-time" id="timeB"></div>
-      </div>
-    </div>
-
-    <div class="info" id="infoJogo"></div>
-  </div>
-
-  <div class="secao">
-    <h3>Times</h3>
-
-    <div class="duas-colunas">
-      <div>
-        <strong id="tituloTimeA"></strong>
-
-        <h4>Jogadores</h4>
-        <div id="elencoA"></div>
-
-        <h4>Comissão Técnica</h4>
-        <div id="comissaoA"></div>
-
-        <h4>Gols</h4>
-        <div id="golsA"></div>
-
-        <h4>Cartões</h4>
-        <div id="cartoesA"></div>
-      </div>
-
-      <div>
-        <strong id="tituloTimeB"></strong>
-
-        <h4>Jogadores</h4>
-        <div id="elencoB"></div>
-
-        <h4>Comissão Técnica</h4>
-        <div id="comissaoB"></div>
-
-        <h4>Gols</h4>
-        <div id="golsB"></div>
-
-        <h4>Cartões</h4>
-        <div id="cartoesB"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="secao">
-    <h3>Arbitragem</h3>
-    <div id="arbitragem"></div>
-  </div>
-
-  <div class="secao">
-    <h3>Observações</h3>
-    <div id="observacoes"></div>
-  </div>
-
+<div id="app">
+  <div class="loading">Carregando súmula...</div>
 </div>
 
 <script type="module">
@@ -224,111 +333,56 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
-const sumulasExemplo = [
+let sumulaAtual = null;
+
+const exemplos = [
   {
     id:"brasileirao-2025-rodada-36-flamengo-palmeiras",
+    ligaLogo:"logo-liga.jfif",
+    campeonatoLogo:"logo-liga.jfif",
     campeonato:"Brasileirão 2025",
     categoria:"Profissional",
     rodada:"36",
+    fase:"Classificatória",
+    grupo:"A",
+    jogoNumero:"36",
     data:"2025-11-30T16:00:00",
-    local:"Maracanã",
+    campo:"Maracanã",
+    local:"Rio de Janeiro - RJ",
     timeA:"Flamengo",
-    timeB:"Palmeiras",
+    cidadeA:"Rio de Janeiro - RJ",
+    logoTimeA:"logo-liga.jfif",
     golsA:2,
+    timeB:"Palmeiras",
+    cidadeB:"São Paulo - SP",
+    logoTimeB:"logo-liga.jfif",
     golsB:1,
-    logoTimeA:"logo-liga.jfif",
-    logoTimeB:"logo-liga.jfif",
-    logoCampeonato:"logo-liga.jfif",
-    status:"finalizado",
-    arbitro:"Árbitro Exemplo",
-    assistente1:"Assistente 1 Exemplo",
-    assistente2:"Assistente 2 Exemplo",
-    quartoArbitro:"Quarto Árbitro Exemplo",
-    jogadoresA:["Rossi","Varela","Léo Ortiz","Léo Pereira","Alex Sandro","Pulgar","Gerson","Arrascaeta","Luiz Araújo","Bruno Henrique","Pedro"],
-    jogadoresB:["Weverton","Marcos Rocha","Gustavo Gómez","Murilo","Piquerez","Aníbal Moreno","Zé Rafael","Raphael Veiga","Estêvão","Rony","Flaco López"],
-    comissaoA:["Técnico: Filipe Luís"],
-    comissaoB:["Técnico: Abel Ferreira"],
+    titularesA:["Rossi","Varela","Léo Ortiz","Léo Pereira","Alex Sandro","Pulgar","Gerson","Arrascaeta","Luiz Araújo","Bruno Henrique","Pedro"],
+    reservasA:["Matheus Cunha","Ayrton Lucas","Allan","Everton Cebolinha","Gabigol"],
+    titularesB:["Weverton","Marcos Rocha","Gustavo Gómez","Murilo","Piquerez","Aníbal Moreno","Zé Rafael","Raphael Veiga","Estêvão","Rony","Flaco López"],
+    reservasB:["Lomba","Mayke","Lázaro","Dudu","Endrick"],
+    comissaoA:{tecnico:"Filipe Luís", auxiliar:"Auxiliar Flamengo", preparador:"Preparador Flamengo", medico:"Médico Flamengo", massagista:"Massagista Flamengo"},
+    comissaoB:{tecnico:"Abel Ferreira", auxiliar:"Auxiliar Palmeiras", preparador:"Preparador Palmeiras", medico:"Médico Palmeiras", massagista:"Massagista Palmeiras"},
     gols:[
-      {time:"Flamengo", atleta:"Pedro", minuto:"18"},
-      {time:"Flamengo", atleta:"Arrascaeta", minuto:"67"},
-      {time:"Palmeiras", atleta:"Raphael Veiga", minuto:"79"}
+      {time:"Flamengo", tempo:"18'", numero:"9", atleta:"Pedro", tipo:"-"},
+      {time:"Flamengo", tempo:"67'", numero:"14", atleta:"Arrascaeta", tipo:"-"},
+      {time:"Palmeiras", tempo:"79'", numero:"23", atleta:"Raphael Veiga", tipo:"-"}
     ],
     cartoes:[
-      {time:"Flamengo", atleta:"Pulgar", tipo:"Amarelo", minuto:"33"},
-      {time:"Palmeiras", atleta:"Gustavo Gómez", tipo:"Amarelo", minuto:"58"}
+      {time:"Flamengo", tempo:"33'", numero:"5", atleta:"Pulgar", tipo:"Amarelo"},
+      {time:"Palmeiras", tempo:"58'", numero:"15", atleta:"Gustavo Gómez", tipo:"Amarelo"}
     ],
-    observacoes:"Súmula de exemplo apenas para visualização."
-  },
-  {
-    id:"brasileirao-2025-rodada-37-cruzeiro-gremio",
-    campeonato:"Brasileirão 2025",
-    categoria:"Profissional",
-    rodada:"37",
-    data:"2025-12-03T21:00:00",
-    local:"Mineirão",
-    timeA:"Cruzeiro",
-    timeB:"Grêmio",
-    golsA:1,
-    golsB:1,
-    logoTimeA:"logo-liga.jfif",
-    logoTimeB:"logo-liga.jfif",
-    logoCampeonato:"logo-liga.jfif",
-    status:"finalizado",
-    arbitro:"Árbitro Exemplo",
-    assistente1:"Assistente 1 Exemplo",
-    assistente2:"Assistente 2 Exemplo",
-    quartoArbitro:"Quarto Árbitro Exemplo",
-    jogadoresA:["Cássio","William","João Marcelo","Lucas Villalba","Marlon","Lucas Romero","Matheus Henrique","Matheus Pereira","Arthur Gomes","Kaio Jorge","Lautaro Díaz"],
-    jogadoresB:["Marchesín","João Pedro","Rodrigo Ely","Kannemann","Reinaldo","Villasanti","Dodi","Cristaldo","Pavón","Soteldo","Diego Costa"],
-    comissaoA:["Técnico: Leonardo Jardim"],
-    comissaoB:["Técnico: Mano Menezes"],
-    gols:[
-      {time:"Cruzeiro", atleta:"Matheus Pereira", minuto:"44"},
-      {time:"Grêmio", atleta:"Cristaldo", minuto:"71"}
-    ],
-    cartoes:[
-      {time:"Cruzeiro", atleta:"Lucas Romero", tipo:"Amarelo", minuto:"27"},
-      {time:"Grêmio", atleta:"Kannemann", tipo:"Amarelo", minuto:"64"}
-    ],
-    observacoes:"Súmula de exemplo apenas para visualização."
-  },
-  {
-    id:"brasileirao-2025-rodada-38-sao-paulo-santos",
-    campeonato:"Brasileirão 2025",
-    categoria:"Profissional",
-    rodada:"38",
-    data:"2025-12-08T16:00:00",
-    local:"Morumbi",
-    timeA:"São Paulo",
-    timeB:"Santos",
-    golsA:3,
-    golsB:0,
-    logoTimeA:"logo-liga.jfif",
-    logoTimeB:"logo-liga.jfif",
-    logoCampeonato:"logo-liga.jfif",
-    status:"finalizado",
-    arbitro:"Árbitro Exemplo",
-    assistente1:"Assistente 1 Exemplo",
-    assistente2:"Assistente 2 Exemplo",
-    quartoArbitro:"Quarto Árbitro Exemplo",
-    jogadoresA:["Rafael","Rafinha","Arboleda","Alan Franco","Welington","Pablo Maia","Alisson","Lucas Moura","Luciano","Ferreira","Calleri"],
-    jogadoresB:["João Paulo","Aderlan","Gil","Joaquim","Felipe Jonatan","João Schmidt","Diego Pituca","Otero","Guilherme","Pedrinho","Julio Furch"],
-    comissaoA:["Técnico: Luis Zubeldía"],
-    comissaoB:["Técnico: Fábio Carille"],
-    gols:[
-      {time:"São Paulo", atleta:"Calleri", minuto:"21"},
-      {time:"São Paulo", atleta:"Lucas Moura", minuto:"52"},
-      {time:"São Paulo", atleta:"Luciano", minuto:"76"}
-    ],
-    cartoes:[
-      {time:"Santos", atleta:"Diego Pituca", tipo:"Amarelo", minuto:"39"},
-      {time:"São Paulo", atleta:"Pablo Maia", tipo:"Amarelo", minuto:"61"}
-    ],
-    observacoes:"Súmula de exemplo apenas para visualização."
+    arbitragem:{
+      arbitro:"Árbitro Exemplo",
+      assistente1:"Assistente 1 Exemplo",
+      assistente2:"Assistente 2 Exemplo",
+      quartoArbitro:"Quarto Árbitro Exemplo"
+    },
+    observacoes:"Súmula de exemplo para visualização."
   }
 ];
 
-function valor(obj, chaves, padrao = ""){
+function valor(obj, chaves, padrao=""){
   for(const chave of chaves){
     if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
       return obj[chave];
@@ -337,108 +391,310 @@ function valor(obj, chaves, padrao = ""){
   return padrao;
 }
 
-function formatarData(data){
+function dataFormatada(data){
   if(!data) return "-";
 
-  if(typeof data.toDate === "function"){
-    data = data.toDate();
-  }
+  if(typeof data.toDate === "function") data = data.toDate();
 
   const d = new Date(data);
 
-  if(isNaN(d.getTime())){
-    return data;
-  }
+  if(isNaN(d.getTime())) return String(data);
 
-  return d.toLocaleString("pt-BR", {
-    day:"2-digit",
-    month:"2-digit",
-    year:"numeric",
+  return d.toLocaleDateString("pt-BR");
+}
+
+function horaFormatada(data){
+  if(!data) return "-";
+
+  if(typeof data.toDate === "function") data = data.toDate();
+
+  const d = new Date(data);
+
+  if(isNaN(d.getTime())) return "-";
+
+  return d.toLocaleTimeString("pt-BR", {
     hour:"2-digit",
     minute:"2-digit"
   });
 }
 
-function lista(containerId, itens){
-  const container = document.getElementById(containerId);
+function nomeTime(j, lado){
+  const campo = lado === "A" ? j.timeA : j.timeB;
 
-  if(!itens || !itens.length){
-    container.innerHTML = `<div class="linha">Nenhum registro.</div>`;
-    return;
+  if(campo && typeof campo === "object") return campo.nome || `Time ${lado}`;
+
+  return valor(j, lado === "A"
+    ? ["timeA","mandante","timeMandanteNome","mandanteNome"]
+    : ["timeB","visitante","timeVisitanteNome","visitanteNome"],
+    `Time ${lado}`
+  );
+}
+
+function logoTime(j, lado){
+  const campo = lado === "A" ? j.timeA : j.timeB;
+
+  if(campo && typeof campo === "object") return campo.logo || campo.escudo || "logo-liga.jfif";
+
+  return valor(j, lado === "A"
+    ? ["logoTimeA","escudoA","logoA","mandanteLogo"]
+    : ["logoTimeB","escudoB","logoB","visitanteLogo"],
+    "logo-liga.jfif"
+  );
+}
+
+function golsTime(j, lado){
+  if(j.placar && typeof j.placar === "object"){
+    if(lado === "A") return j.placar.A ?? j.placar.a ?? j.placar.mandante ?? 0;
+    return j.placar.B ?? j.placar.b ?? j.placar.visitante ?? 0;
   }
 
-  container.innerHTML = itens.map(item => {
+  return Number(valor(j, lado === "A"
+    ? ["golsA","placarA","golsMandante"]
+    : ["golsB","placarB","golsVisitante"],
+    0
+  ));
+}
+
+function listaAtletas(itens){
+  if(!Array.isArray(itens) || !itens.length){
+    return `<tr><td colspan="2">Nenhum atleta informado</td></tr>`;
+  }
+
+  return itens.map((item, index) => {
     if(typeof item === "string"){
-      return `<div class="linha">• ${item}</div>`;
+      return `<tr><td class="numero">${index + 1}</td><td>${item}</td></tr>`;
     }
 
-    return `<div class="linha">• ${item.numero ? item.numero + " - " : ""}${item.nome || item.atleta || item.jogador || "-"}${item.minuto ? " - " + item.minuto + "'" : ""}${item.tipo ? " - " + item.tipo : ""}</div>`;
+    return `
+      <tr>
+        <td class="numero">${item.numero || index + 1}</td>
+        <td>${item.nome || item.atleta || item.jogador || "-"}</td>
+      </tr>
+    `;
   }).join("");
 }
 
-function filtrarPorTime(itens, time){
-  if(!Array.isArray(itens)) return [];
-  return itens.filter(item => String(item.time || "").toLowerCase() === String(time || "").toLowerCase());
-}
-
-function renderizar(j){
-  const timeA = typeof j.timeA === "object" ? j.timeA.nome : valor(j, ["timeA","mandante","timeMandanteNome"], "Time A");
-  const timeB = typeof j.timeB === "object" ? j.timeB.nome : valor(j, ["timeB","visitante","timeVisitanteNome"], "Time B");
-
-  const logoA = typeof j.timeA === "object" ? (j.timeA.logo || j.timeA.escudo) : valor(j, ["logoTimeA","escudoA","logoA"], "logo-liga.jfif");
-  const logoB = typeof j.timeB === "object" ? (j.timeB.logo || j.timeB.escudo) : valor(j, ["logoTimeB","escudoB","logoB"], "logo-liga.jfif");
-
-  const golsA = j.placar?.A ?? j.placar?.mandante ?? valor(j, ["golsA","placarA"], 0);
-  const golsB = j.placar?.B ?? j.placar?.visitante ?? valor(j, ["golsB","placarB"], 0);
-
-  document.getElementById("logoCampeonato").src = valor(j, ["logoCampeonato"], "logo-liga.jfif");
-
-  document.getElementById("logoA").src = logoA || "logo-liga.jfif";
-  document.getElementById("logoB").src = logoB || "logo-liga.jfif";
-
-  document.getElementById("timeA").textContent = timeA;
-  document.getElementById("timeB").textContent = timeB;
-  document.getElementById("tituloTimeA").textContent = timeA;
-  document.getElementById("tituloTimeB").textContent = timeB;
-
-  document.getElementById("placar").textContent = `${golsA} x ${golsB}`;
-
-  document.getElementById("infoJogo").innerHTML = `
-    <strong>${valor(j, ["campeonato","nomeCampeonato"], "Campeonato")}</strong><br>
-    ${valor(j, ["categoria"], "-")} • ${valor(j, ["fase","rodada"], "-")}<br>
-    ${formatarData(valor(j, ["data","dataHora","dataJogo"], ""))}<br>
-    ${valor(j, ["local","campo","estadio"], "-")}
-  `;
-
-  lista("elencoA", j.escalacaoA || j.jogadoresA || []);
-  lista("elencoB", j.escalacaoB || j.jogadoresB || []);
-
-  lista("comissaoA", j.comissaoA || []);
-  lista("comissaoB", j.comissaoB || []);
-
-  lista("golsA", filtrarPorTime(j.gols || [], timeA));
-  lista("golsB", filtrarPorTime(j.gols || [], timeB));
-
-  lista("cartoesA", filtrarPorTime(j.cartoes || [], timeA));
-  lista("cartoesB", filtrarPorTime(j.cartoes || [], timeB));
-
-  const arb = j.arbitragem || {};
-
-  document.getElementById("arbitragem").innerHTML = `
-    <div class="linha"><strong>Árbitro:</strong> ${arb.arbitro || j.arbitro || "-"}</div>
-    <div class="linha"><strong>Assistente 1:</strong> ${arb.assistente1 || j.assistente1 || "-"}</div>
-    <div class="linha"><strong>Assistente 2:</strong> ${arb.assistente2 || j.assistente2 || "-"}</div>
-    <div class="linha"><strong>Quarto Árbitro:</strong> ${arb.quartoArbitro || j.quartoArbitro || "-"}</div>
-  `;
-
-  document.getElementById("observacoes").innerHTML = `
-    <div class="linha">${j.observacoes || "Sem observações."}</div>
+function tabelaAtletas(titulo, itens){
+  return `
+    <div class="bloco">
+      <div class="bloco-titulo">${titulo}</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>ATLETA</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${listaAtletas(itens)}
+        </tbody>
+      </table>
+    </div>
   `;
 }
 
-async function carregarSumula(){
+function tabelaComissao(comissao){
+  comissao = comissao || {};
+
+  return `
+    <div class="bloco">
+      <div class="bloco-titulo">COMISSÃO TÉCNICA</div>
+      <table>
+        <tbody>
+          <tr><td><strong>TÉCNICO:</strong></td><td>${comissao.tecnico || "-"}</td></tr>
+          <tr><td><strong>AUXILIAR TÉCNICO:</strong></td><td>${comissao.auxiliar || "-"}</td></tr>
+          <tr><td><strong>PREP. FÍSICO:</strong></td><td>${comissao.preparador || "-"}</td></tr>
+          <tr><td><strong>MÉDICO:</strong></td><td>${comissao.medico || "-"}</td></tr>
+          <tr><td><strong>MASSAGISTA:</strong></td><td>${comissao.massagista || "-"}</td></tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function filtrarEventos(eventos, time){
+  if(!Array.isArray(eventos)) return [];
+
+  return eventos.filter(e =>
+    String(e.time || "").toLowerCase() === String(time || "").toLowerCase()
+  );
+}
+
+function tabelaEventos(titulo, eventos){
+  if(!Array.isArray(eventos) || !eventos.length){
+    eventos = [];
+  }
+
+  const linhas = eventos.length ? eventos.map(e => `
+    <tr>
+      <td>${e.tempo || e.minuto || "-"}</td>
+      <td>${e.numero || "-"}</td>
+      <td>${e.atleta || e.nome || e.jogador || "-"}</td>
+      <td>${e.tipo || "-"}</td>
+    </tr>
+  `).join("") : `
+    <tr><td colspan="4">Nenhum registro</td></tr>
+  `;
+
+  return `
+    <div class="bloco">
+      <div class="bloco-titulo">${titulo}</div>
+      <table>
+        <thead>
+          <tr>
+            <th>TEMPO</th>
+            <th>Nº</th>
+            <th>ATLETA</th>
+            <th>TIPO</th>
+          </tr>
+        </thead>
+        <tbody>${linhas}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function normalizarJogo(j){
+  const timeA = nomeTime(j, "A");
+  const timeB = nomeTime(j, "B");
+
+  return {
+    ligaLogo: valor(j, ["ligaLogo","logoLiga"], "logo-liga.jfif"),
+    campeonatoLogo: valor(j, ["campeonatoLogo","logoCampeonato"], "logo-liga.jfif"),
+    campeonato: valor(j, ["campeonato","nomeCampeonato","campeonatoNome"], "Campeonato"),
+    categoria: valor(j, ["categoria"], "-"),
+    rodada: valor(j, ["rodada"], "-"),
+    fase: valor(j, ["fase"], "-"),
+    grupo: valor(j, ["grupo"], "-"),
+    jogoNumero: valor(j, ["jogoNumero","numeroJogo"], "-"),
+    data: valor(j, ["data","dataHora","dataJogo"], ""),
+    campo: valor(j, ["campo","local","estadio"], "-"),
+    local: valor(j, ["cidade","localidade","local"], "-"),
+    timeA,
+    timeB,
+    cidadeA: valor(j, ["cidadeA","cidadeMandante"], ""),
+    cidadeB: valor(j, ["cidadeB","cidadeVisitante"], ""),
+    logoTimeA: logoTime(j, "A"),
+    logoTimeB: logoTime(j, "B"),
+    golsA: golsTime(j, "A"),
+    golsB: golsTime(j, "B"),
+    titularesA: j.titularesA || j.escalacaoA || j.jogadoresA || [],
+    reservasA: j.reservasA || [],
+    titularesB: j.titularesB || j.escalacaoB || j.jogadoresB || [],
+    reservasB: j.reservasB || [],
+    comissaoA: j.comissaoA || {},
+    comissaoB: j.comissaoB || {},
+    gols: j.gols || [],
+    cartoes: j.cartoes || [],
+    arbitragem: j.arbitragem || {
+      arbitro:j.arbitro || "-",
+      assistente1:j.assistente1 || "-",
+      assistente2:j.assistente2 || "-",
+      quartoArbitro:j.quartoArbitro || "-"
+    },
+    observacoes:j.observacoes || j.observacoesArbitro || ""
+  };
+}
+
+function renderizar(jogoOriginal){
+  const j = normalizarJogo(jogoOriginal);
+  sumulaAtual = j;
+
+  const golsA = filtrarEventos(j.gols, j.timeA);
+  const golsB = filtrarEventos(j.gols, j.timeB);
+  const cartoesA = filtrarEventos(j.cartoes, j.timeA);
+  const cartoesB = filtrarEventos(j.cartoes, j.timeB);
+
+  document.getElementById("app").innerHTML = `
+    <div class="sumula" id="areaSumula">
+      <div class="header">
+        <img src="${j.ligaLogo}" class="logo-oficial" onerror="this.src='logo-liga.jfif'">
+
+        <div>
+          <div class="titulo-principal">SÚMULA OFICIAL</div>
+          <div class="subtitulo">${j.campeonato}</div>
+          <div class="categoria">${j.categoria}</div>
+        </div>
+
+        <img src="${j.campeonatoLogo}" class="logo-oficial" onerror="this.src='logo-liga.jfif'">
+      </div>
+
+      <div class="placar-area">
+        <div class="time-box">
+          <img src="${j.logoTimeA}" class="escudo" onerror="this.src='logo-liga.jfif'">
+          <div>
+            <div class="nome-time">${j.timeA}</div>
+            <div class="cidade-time">${j.cidadeA}</div>
+          </div>
+        </div>
+
+        <div class="placar-centro">
+          <span class="gol-num">${j.golsA}</span>
+          <span>x</span>
+          <span class="gol-num">${j.golsB}</span>
+        </div>
+
+        <div class="time-box visitante">
+          <div>
+            <div class="nome-time">${j.timeB}</div>
+            <div class="cidade-time">${j.cidadeB}</div>
+          </div>
+          <img src="${j.logoTimeB}" class="escudo" onerror="this.src='logo-liga.jfif'">
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item"><i class="fa-solid fa-calendar-days"></i><strong>DATA:</strong> ${dataFormatada(j.data)}</div>
+        <div class="info-item"><i class="fa-solid fa-clock"></i><strong>HORÁRIO:</strong> ${horaFormatada(j.data)}</div>
+        <div class="info-item"><i class="fa-solid fa-table"></i><strong>CAMPO:</strong> ${j.campo}</div>
+        <div class="info-item"><i class="fa-solid fa-location-dot"></i><strong>LOCAL:</strong> ${j.local}</div>
+        <div class="info-item"><i class="fa-solid fa-trophy"></i><strong>RODADA:</strong> ${j.rodada}</div>
+        <div class="info-item"><i class="fa-solid fa-flag"></i><strong>FASE:</strong> ${j.fase}</div>
+        <div class="info-item"><i class="fa-solid fa-shirt"></i><strong>GRUPO:</strong> ${j.grupo}</div>
+        <div class="info-item"><i class="fa-solid fa-hashtag"></i><strong>JOGO Nº:</strong> ${j.jogoNumero}</div>
+      </div>
+
+      <div class="duas-colunas">
+        <div>
+          ${tabelaAtletas("ATLETAS TITULARES", j.titularesA)}
+          ${tabelaAtletas("ATLETAS RESERVAS", j.reservasA)}
+          ${tabelaComissao(j.comissaoA)}
+          ${tabelaEventos("GOLS", golsA)}
+          ${tabelaEventos("CARTÕES", cartoesA)}
+        </div>
+
+        <div>
+          ${tabelaAtletas("ATLETAS TITULARES", j.titularesB)}
+          ${tabelaAtletas("ATLETAS RESERVAS", j.reservasB)}
+          ${tabelaComissao(j.comissaoB)}
+          ${tabelaEventos("GOLS", golsB)}
+          ${tabelaEventos("CARTÕES", cartoesB)}
+        </div>
+      </div>
+
+      <div class="bloco-full">
+        <div class="bloco-titulo">ARBITRAGEM</div>
+        <table>
+          <tbody>
+            <tr><td><strong>ÁRBITRO:</strong></td><td>${j.arbitragem.arbitro || "-"}</td></tr>
+            <tr><td><strong>ÁRBITRO ASSISTENTE 1:</strong></td><td>${j.arbitragem.assistente1 || "-"}</td></tr>
+            <tr><td><strong>ÁRBITRO ASSISTENTE 2:</strong></td><td>${j.arbitragem.assistente2 || "-"}</td></tr>
+            <tr><td><strong>QUARTO ÁRBITRO:</strong></td><td>${j.arbitragem.quartoArbitro || "-"}</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bloco-full">
+        <div class="bloco-titulo">OBSERVAÇÕES DO ÁRBITRO</div>
+        <div class="observacoes">${j.observacoes || ""}</div>
+      </div>
+    </div>
+  `;
+}
+
+async function carregar(){
   if(!id){
-    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px;'>Súmula não encontrada.</h2>";
+    document.getElementById("app").innerHTML = `<div class="loading">Súmula não encontrada.</div>`;
     return;
   }
 
@@ -447,33 +703,51 @@ async function carregarSumula(){
     const snap = await getDoc(ref);
 
     if(snap.exists()){
-      renderizar(snap.data());
+      renderizar({id:snap.id, ...snap.data()});
       return;
     }
 
-    const exemplo = sumulasExemplo.find(item => item.id === id);
+    const exemplo = exemplos.find(e => e.id === id);
 
     if(exemplo){
       renderizar(exemplo);
       return;
     }
 
-    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px;'>Súmula não encontrada.</h2>";
+    document.getElementById("app").innerHTML = `<div class="loading">Súmula não encontrada.</div>`;
   }catch(error){
     console.error(error);
 
-    const exemplo = sumulasExemplo.find(item => item.id === id);
+    const exemplo = exemplos.find(e => e.id === id);
 
     if(exemplo){
       renderizar(exemplo);
       return;
     }
 
-    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px;'>Erro ao carregar a súmula.</h2>";
+    document.getElementById("app").innerHTML = `<div class="loading">Erro ao carregar súmula.</div>`;
   }
 }
 
-carregarSumula();
+window.enviarWhatsApp = function(){
+  const texto = sumulaAtual
+    ? `Súmula Oficial: ${sumulaAtual.timeA} ${sumulaAtual.golsA} x ${sumulaAtual.golsB} ${sumulaAtual.timeB} - ${sumulaAtual.campeonato}`
+    : "Súmula Oficial";
+
+  const link = window.location.href;
+  window.open(`https://wa.me/?text=${encodeURIComponent(texto + "\\n" + link)}`, "_blank");
+};
+
+window.enviarEmail = function(){
+  const assunto = sumulaAtual
+    ? `Súmula Oficial - ${sumulaAtual.timeA} x ${sumulaAtual.timeB}`
+    : "Súmula Oficial";
+
+  const corpo = `Segue a súmula oficial:\\n\\n${window.location.href}`;
+  window.location.href = `mailto:?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+};
+
+carregar();
 </script>
 
 </body>
