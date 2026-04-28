@@ -10,34 +10,39 @@
 
 <style>
 body{margin:0;font-family:Arial;background:#eef2f7}
-.container{max-width:1100px;margin:auto;background:#fff;padding:20px;border-radius:10px}
+.container{max-width:1200px;margin:auto;background:#fff;padding:20px;border-radius:10px}
 
-.topo{text-align:center;border-bottom:4px solid #0A1F3D;padding-bottom:10px}
-.titulo{font-size:30px;font-weight:900}
+.titulo{text-align:center;font-size:40px;font-weight:900}
 
-.status{display:none;background:#1b5e20;color:#fff;padding:10px;text-align:center;font-weight:900;border-radius:6px;margin-bottom:10px}
+.card{background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.1);padding:15px;margin-top:15px}
 
-.placar-box{display:flex;justify-content:space-between;align-items:center;margin:20px 0}
-.time{text-align:center;width:40%}
-.time img{width:80px}
-.nome{font-weight:900}
-.placar{font-size:56px;font-weight:900;color:#0A1F3D}
+.placar{display:flex;justify-content:space-between;align-items:center;text-align:center}
+.time{width:35%}
+.time img{width:90px}
+.placar-centro{font-size:50px;font-weight:900}
 
-.secao{margin-top:20px}
-.titulo-secao{background:#0A1F3D;color:#fff;padding:8px;font-weight:900;border-radius:6px}
+.status{background:#1b5e20;color:#fff;padding:10px;border-radius:6px;text-align:center;font-weight:900;margin-top:10px}
+
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+.item{background:#f4f6fa;padding:10px;border-radius:6px;text-align:center}
+
+.duplo{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}
 
 .tabela{width:100%;border-collapse:collapse}
-.tabela td{border:1px solid #ccc;padding:6px}
+.tabela td{border:1px solid #ccc;padding:6px;font-size:13px}
 
-.duplo{display:flex;gap:20px}
+.highlight{background:#f7c600;padding:10px;border-radius:8px;text-align:center;font-weight:900}
 
-.highlight{background:#f7c600;padding:10px;font-weight:900;text-align:center;border-radius:8px}
-
-.btns{display:flex;gap:10px;margin-top:20px}
-.btn{padding:10px;border:none;border-radius:6px;font-weight:900;color:#fff;cursor:pointer}
+.btns{display:flex;gap:10px;margin-top:15px}
+.btn{flex:1;padding:12px;border:none;border-radius:6px;color:#fff;font-weight:900}
 .whats{background:#25d366}
 .email{background:#007bff}
 .print{background:#000}
+
+@media(max-width:800px){
+.duplo{grid-template-columns:1fr}
+.grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 
@@ -45,109 +50,128 @@ body{margin:0;font-family:Arial;background:#eef2f7}
 
 <div class="container">
 
-<div class="status" id="statusFinalizada">SÚMULA FINALIZADA</div>
-
-<div class="topo">
 <div class="titulo">SÚMULA OFICIAL</div>
-<div id="campeonato"></div>
-<div id="categoria"></div>
-</div>
 
-<div class="placar-box">
+<div id="status" class="status"></div>
+
+<div class="card placar">
 <div class="time">
 <img id="logoA">
-<div class="nome" id="timeA"></div>
+<div id="timeA"></div>
 </div>
 
-<div class="placar" id="placar"></div>
+<div class="placar-centro" id="placar"></div>
 
 <div class="time">
 <img id="logoB">
-<div class="nome" id="timeB"></div>
+<div id="timeB"></div>
 </div>
 </div>
 
-<canvas id="qr"></canvas>
-
-<div class="secao">
-<div class="titulo-secao">ESCALAÇÃO</div>
+<div class="grid">
+<div class="item"><i class="fa fa-calendar"></i> <span id="data"></span></div>
+<div class="item"><i class="fa fa-clock"></i> <span id="hora"></span></div>
+<div class="item"><i class="fa fa-map"></i> <span id="local"></span></div>
+<div class="item">Código: <span id="codigo"></span></div>
+</div>
 
 <div class="duplo">
-<div style="flex:1">
-<table class="tabela" id="titA"></table>
+
+<div class="card">
+<table class="tabela" id="escA"></table>
 </div>
 
-<div style="flex:1">
-<table class="tabela" id="titB"></table>
-</div>
-</div>
-
+<div class="card">
+<table class="tabela" id="escB"></table>
 </div>
 
-<div class="secao">
-<div class="titulo-secao">EVENTOS</div>
+</div>
 
 <div class="duplo">
-<div style="flex:1">
+
+<div class="card">
 <table class="tabela" id="golsA"></table>
 <table class="tabela" id="cartA"></table>
 </div>
 
-<div style="flex:1">
+<div class="card">
 <table class="tabela" id="golsB"></table>
 <table class="tabela" id="cartB"></table>
 </div>
+
+</div>
+
+<div class="duplo">
+
+<div class="card">
+<div id="arb"></div>
+</div>
+
+<div class="card">
+<div class="highlight" id="melhor"></div>
 </div>
 
 </div>
 
-<div class="secao">
-<div class="titulo-secao">⭐ MELHOR EM CAMPO</div>
-<div id="melhor" class="highlight"></div>
-</div>
-
-<div class="secao">
-<div class="titulo-secao">📊 ESTATÍSTICAS</div>
-<div id="stats"></div>
-</div>
+<canvas id="qr"></canvas>
 
 <div class="btns">
 <button class="btn whats" onclick="wpp()">WhatsApp</button>
 <button class="btn email" onclick="mail()">Email</button>
 <button class="btn print" onclick="window.print()">PDF</button>
-<button class="btn print" id="btnFinalizar">Finalizar Súmula</button>
 </div>
 
 </div>
 
 <script type="module">
 import { db } from "./firebase.js";
-import { doc, getDoc, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const id=new URLSearchParams(location.search).get("id");
 
-// ===== FUNÇÕES =====
-function esc(l){return (l||[]).map(j=>{
-let n=j.nome||"-"
-if(j.posicao==="Goleiro")n+=" (G)"
-if(j.capitao)n+=" (C)"
-return `<tr><td>${j.numero||"-"}</td><td>${n}</td></tr>`
-}).join("")}
-
 function fil(l,t){return (l||[]).filter(x=>x.time===t)}
 
-function gols(l){return l.map(g=>`<tr><td>⚽ ${g.tempo}'</td><td>${g.nome}</td></tr>`).join("")}
-function cart(l){return l.map(c=>{
-let i=c.tipo==="vermelho"?"🟥":"🟨"
-return `<tr><td>${i} ${c.tempo}'</td><td>${c.nome}</td></tr>`
-}).join("")}
+function esc(l){
+return (l||[]).map(j=>{
+let n=j.nome
+if(j.posicao==="Goleiro")n+=" (G)"
+if(j.capitao)n+=" (C)"
+return `<tr><td>${j.numero}</td><td>${n}</td></tr>`
+}).join("")
+}
 
-// ===== LOAD =====
+function gols(l){
+return l.map(g=>`<tr><td>⚽ ${g.tempo}'</td><td>${g.nome}</td></tr>`).join("")
+}
+
+function cart(l){
+return l.map(c=>{
+let cor=c.tipo==="vermelho"?"red":"gold"
+return `<tr><td><i class="fa fa-square" style="color:${cor}"></i> ${c.tempo}'</td><td>${c.nome}</td></tr>`
+}).join("")
+}
+
 async function load(){
 
 const snap=await getDoc(doc(db,"jogos",id))
+
+if(!snap.exists()){
+document.body.innerHTML="<h2>Súmula não encontrada</h2>"
+return
+}
+
 const j=snap.data()
 
+// 🔒 BLOQUEIO PÚBLICO
+if(!j.sumulaFinalizada){
+document.body.innerHTML="<h2 style='text-align:center;margin-top:40px'>Súmula ainda não finalizada</h2>"
+return
+}
+
+// STATUS
+status.innerText="FINALIZADO"
+
+// DADOS
 timeA.innerText=j.timeA.nome
 timeB.innerText=j.timeB.nome
 
@@ -156,11 +180,14 @@ logoB.src=j.timeB.logo
 
 placar.innerText=`${j.placar.A} x ${j.placar.B}`
 
-campeonato.innerText=j.campeonato
-categoria.innerText=j.categoria
+data.innerText=j.data
+hora.innerText=j.hora
+local.innerText=j.local
 
-titA.innerHTML=esc(j.titularesA)
-titB.innerHTML=esc(j.titularesB)
+codigo.innerText=j.codigo || id
+
+escA.innerHTML=esc(j.titularesA)
+escB.innerHTML=esc(j.titularesB)
 
 golsA.innerHTML=gols(fil(j.gols,"A"))
 golsB.innerHTML=gols(fil(j.gols,"B"))
@@ -168,123 +195,17 @@ golsB.innerHTML=gols(fil(j.gols,"B"))
 cartA.innerHTML=cart(fil(j.cartoes,"A"))
 cartB.innerHTML=cart(fil(j.cartoes,"B"))
 
-melhor.innerText=j.melhorJogador
+arb.innerHTML=`👨‍⚖️ ${j.arbitro}`
 
-QRCode.toCanvas(document.getElementById("qr"),location.href)
+melhor.innerText="⭐ "+j.melhorJogador
 
-// ===== PUXA ESTATÍSTICAS =====
-let statsHTML=""
-
-const jogadores=await getDocs(collection(db,"jogadores"))
-jogadores.forEach(d=>{
-let p=d.data()
-if(p.nome===j.melhorJogador){
-statsHTML+=`👤 ${p.nome} - ⚽ ${p.gols||0} gols | 🟨 ${p.cartoesAmarelos||0}<br>`
-}
-})
-
-const times=await getDocs(collection(db,"times"))
-times.forEach(d=>{
-let t=d.data()
-if(t.nome===j.timeA.nome||t.nome===j.timeB.nome){
-statsHTML+=`🛡️ ${t.nome} - 🏆 ${t.vitorias||0} vitórias<br>`
-}
-})
-
-stats.innerHTML=statsHTML
+// QR COM VALIDAÇÃO
+const url=location.origin+"/validar.html?id="+id
+QRCode.toCanvas(document.getElementById("qr"),url)
 
 }
 
 load()
-
-// ===== FINALIZAR =====
-btnFinalizar.onclick=async()=>{
-
-const ref=doc(db,"jogos",id)
-const snap=await getDoc(ref)
-const j=snap.data()
-
-await updateDoc(ref,{status:"finalizado",sumulaFinalizada:true})
-
-// JOGADORES
-const jogadores=await getDocs(collection(db,"jogadores"))
-
-jogadores.forEach(async(d)=>{
-let data=d.data()
-
-for(const g of j.gols||[]){
-if(data.nome===g.nome){
-await updateDoc(doc(db,"jogadores",d.id),{
-gols:(data.gols||0)+1,
-jogos:(data.jogos||0)+1
-})
-}
-}
-
-for(const c of j.cartoes||[]){
-if(data.nome===c.nome){
-if(c.tipo==="amarelo"){
-await updateDoc(doc(db,"jogadores",d.id),{
-cartoesAmarelos:(data.cartoesAmarelos||0)+1
-})
-}else{
-await updateDoc(doc(db,"jogadores",d.id),{
-cartoesVermelhos:(data.cartoesVermelhos||0)+1
-})
-}
-}
-}
-
-})
-
-// TIMES
-const times=await getDocs(collection(db,"times"))
-
-times.forEach(async(d)=>{
-let t=d.data()
-
-if(t.nome===j.timeA.nome||t.nome===j.timeB.nome){
-
-await updateDoc(doc(db,"times",d.id),{
-jogos:(t.jogos||0)+1,
-golsPro:(t.golsPro||0)+ (t.nome===j.timeA.nome?j.placar.A:j.placar.B),
-golsContra:(t.golsContra||0)+ (t.nome===j.timeA.nome?j.placar.B:j.placar.A)
-})
-
-}
-
-})
-
-// ÁRBITRO
-const arbitros=await getDocs(collection(db,"arbitros"))
-
-arbitros.forEach(async(d)=>{
-let a=d.data()
-
-if(a.nome===j.arbitro){
-await updateDoc(doc(db,"arbitros",d.id),{
-jogos:(a.jogos||0)+1
-})
-}
-})
-
-// TÉCNICO
-const tecnicos=await getDocs(collection(db,"tecnicos"))
-
-tecnicos.forEach(async(d)=>{
-let t=d.data()
-
-if(t.nome===j.tecnico){
-await updateDoc(doc(db,"tecnicos",d.id),{
-jogos:(t.jogos||0)+1
-})
-}
-})
-
-alert("Sistema completo atualizado automático")
-location.reload()
-
-}
 
 function wpp(){window.open("https://wa.me/?text="+location.href)}
 function mail(){location.href="mailto:?body="+location.href}
