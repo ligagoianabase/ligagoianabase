@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Árbitros ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#0b1f3a;
+  --bg-dark:#08172c;
+  --card:#102a52;
+  --card-hover:#153766;
+  --gold:#f7c600;
+  --gold-soft:rgba(247,198,0,.12);
+  --gold-line:rgba(247,198,0,.24);
+  --white:#ffffff;
+  --muted:#d8e1ef;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --transition:.25s ease;
+  --max:1240px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+}
+
+a{text-decoration:none;color:inherit;transition:var(--transition)}
+button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
+input,select{font-family:inherit}
+
+.wrap{width:min(100% - 28px, var(--max));margin:0 auto}
+
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.header-top{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
+
+.header-left,.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:700;
+}
+
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.btn-light{background:#fff4cf;color:#111}
+.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
+.btn-gold{background:var(--gold);color:#111}
+.btn-gold:hover{filter:brightness(1.04);transform:translateY(-2px)}
+
+.nav-bar{
+  background:rgba(16,42,82,.95);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.menu{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:12px 0;
+  flex-wrap:wrap;
+}
+
+.menu a{
+  color:white;
+  font-weight:700;
+  font-size:14px;
+  background:#0d2346;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+
+.menu a:hover{
+  color:var(--gold);
+  background:var(--gold-soft);
+  border-color:var(--gold-line);
+}
+
+.menu a.ativo{
+  background:var(--gold);
+  color:black;
+}
+
+.container{padding:24px 0 34px}
+
+.hero,.form-panel{
+  background:linear-gradient(135deg,#102a52,#0d2346);
+  border:1px solid var(--gold-line);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:var(--shadow);
+}
+
+.hero h2{
+  margin:0 0 8px;
+  color:var(--gold);
+  font-size:28px;
+}
+
+.hero p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
+  font-size:15px;
+}
+
+.form-title{
+  color:var(--gold);
+  font-size:20px;
+  margin-bottom:14px;
+  font-weight:900;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.full{grid-column:1/-1}
+
+label{
+  display:block;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:6px;
+  color:#fff;
+}
+
+input,select{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+}
+
+input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
+
+.preview-foto{
+  display:none;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.preview-foto img{
+  width:78px;
+  height:78px;
+  object-fit:cover;
+  background:#fff;
+  border-radius:50%;
+  border:2px solid var(--gold);
+}
+
+.preview-foto span{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.form-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:16px;
+  border-radius:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  border:1px solid rgba(255,230,0,.10);
+  box-shadow:var(--shadow);
+}
+
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold-line);
+}
+
+.player{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex:1;
+}
+
+.photo{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid rgba(255,255,255,.15);
+  background:#fff;
+  flex-shrink:0;
+}
+
+.player-info{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.nome-jogador{
+  font-weight:700;
+  font-size:18px;
+  color:#fff;
+}
+
+.player-info small{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:4px;
+}
+
+.tag{
+  background:#1a3f73;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.btn-acao{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:11px 14px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:13px;
+  border:none;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.btn-ver{background:var(--gold);color:black}
+.btn-danger{background:#d94141;color:#fff}
+.btn-green{background:#25d366;color:#fff}
+.btn-blue{background:#1a3f73;color:#fff}
+
+.vazio{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:30px;
+  border-radius:14px;
+  text-align:center;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:var(--shadow);
+  grid-column:1/-1;
+}
+
+@media(max-width:900px){
+  .header-title{order:3;width:100%;text-align:center}
+  .header-left,.header-right{width:100%;justify-content:center}
+  .form-grid,.filtros{grid-template-columns:1fr}
+  .card{flex-direction:column;align-items:flex-start}
+  .actions{width:100%;justify-content:flex-start}
+}
+
+@media(max-width:600px){
+  .top-btn,.btn-acao{width:100%;justify-content:center}
+  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
+  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
+  .menu{
+    justify-content:flex-start;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:14px;
+  }
+  .menu a{flex:0 0 auto}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap header-top">
+    <div class="header-left">
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
+
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
+    </div>
+
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
+
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarArbitro()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Árbitro
+      </button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="wrap">
+      <div class="menu">
+        <a href="admin.html">Painel</a>
+        <a href="campeonatos-admin.html">Campeonatos</a>
+        <a href="jogos-admin.html">Jogos</a>
+        <a href="times-admin.html">Times</a>
+        <a href="tecnicos-admin.html">Técnicos</a>
+        <a href="jogadores-admin.html">Jogadores</a>
+        <a href="arbitros-admin.html" class="ativo">Árbitros</a>
+        <a href="assistentes-admin.html">Assistentes</a>
+        <a href="sumulas-admin.html">Súmulas</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+  <div class="hero">
+    <h2>Árbitros ADM</h2>
+    <p>Cadastre árbitros com foto, telefone, WhatsApp, e-mail e função principal. Na escala, qualquer cadastrado poderá atuar como árbitro central, assistente ou 4º árbitro.</p>
+  </div>
+
+  <section class="form-panel">
+    <div class="form-title" id="tituloFormulario">Novo Árbitro</div>
+
+    <input type="hidden" id="arbitroId">
+
+    <div class="form-grid">
+      <div>
+        <label>Nome completo</label>
+        <input id="nome" placeholder="Nome do árbitro">
+      </div>
+
+      <div>
+        <label>CPF</label>
+        <input id="cpf" placeholder="CPF">
+      </div>
+
+      <div>
+        <label>Status</label>
+        <select id="status">
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
+          <option value="suspenso">Suspenso</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Telefone</label>
+        <input id="telefone" placeholder="Ex: (62) 99999-9999">
+      </div>
+
+      <div>
+        <label>WhatsApp</label>
+        <input id="whatsapp" placeholder="Ex: 5562999999999">
+      </div>
+
+      <div>
+        <label>E-mail</label>
+        <input id="email" type="email" placeholder="email@exemplo.com">
+      </div>
+
+      <div>
+        <label>Função principal</label>
+        <select id="funcaoPrincipal">
+          <option value="Árbitro Centro">Árbitro Centro</option>
+          <option value="Assistente">Assistente</option>
+          <option value="4º Árbitro">4º Árbitro</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Foto URL</label>
+        <input id="foto" placeholder="foto-arbitro.png ou URL">
+      </div>
+
+      <div>
+        <label>Enviar foto do PC/Celular</label>
+        <input type="file" id="fotoArquivo" accept="image/*" onchange="previewFotoArquivo()">
+      </div>
+
+      <div class="full">
+        <label>Prévia</label>
+        <div class="preview-foto" id="previewFotoBox">
+          <img id="previewFotoImg" src="logo-liga.jfif">
+          <span id="previewFotoTexto">Pré-visualização da foto</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-acao btn-ver" type="button" onclick="salvarArbitro()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Árbitro
+      </button>
+
+      <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
+        <i class="fa-solid fa-broom"></i> Limpar
+      </button>
+    </div>
+  </section>
+
+  <div class="filtros">
+    <input id="buscaArbitro" placeholder="Pesquisar árbitro...">
+
+    <select id="filtroFuncao">
+      <option value="">Todas as funções</option>
+      <option value="Árbitro Centro">Árbitro Centro</option>
+      <option value="Assistente">Assistente</option>
+      <option value="4º Árbitro">4º Árbitro</option>
+    </select>
+
+    <select id="filtroStatus">
+      <option value="">Todos os status</option>
+      <option value="ativo">Ativo</option>
+      <option value="inativo">Inativo</option>
+      <option value="suspenso">Suspenso</option>
+    </select>
+  </div>
+
+  <div class="lista-grid" id="listaArbitros"></div>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
+
+const storage = getStorage();
+
+let arbitrosCache = [];
+let fotoAtual = "";
+
+function txt(v){
+  return String(v || "").trim();
+}
+
+function normalizarTexto(texto){
+  return String(texto || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function limparNumero(v){
+  return String(v || "").replace(/\D/g,"");
+}
+
+window.previewFotoArquivo = function(){
+  const arquivo = document.getElementById("fotoArquivo").files[0];
+  if(!arquivo) return;
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    document.getElementById("previewFotoBox").style.display = "flex";
+    document.getElementById("previewFotoImg").src = e.target.result;
+    document.getElementById("previewFotoTexto").textContent = arquivo.name;
+  };
+
+  leitor.readAsDataURL(arquivo);
+};
+
+async function uploadFotoSeExistir(){
+  const arquivo = document.getElementById("fotoArquivo").files[0];
+  const fotoUrlManual = txt(document.getElementById("foto").value);
+
+  if(arquivo){
+    const nomeArquivo = `arbitros/${Date.now()}-${arquivo.name}`;
+    const referencia = ref(storage,nomeArquivo);
+    await uploadBytes(referencia,arquivo);
+    return await getDownloadURL(referencia);
+  }
+
+  if(fotoUrlManual) return fotoUrlManual;
+
+  return fotoAtual || "logo-liga.jfif";
+}
+
+window.limparFormulario = function(){
+  document.getElementById("arbitroId").value = "";
+  document.getElementById("nome").value = "";
+  document.getElementById("cpf").value = "";
+  document.getElementById("status").value = "ativo";
+  document.getElementById("telefone").value = "";
+  document.getElementById("whatsapp").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("funcaoPrincipal").value = "Árbitro Centro";
+  document.getElementById("foto").value = "";
+  document.getElementById("fotoArquivo").value = "";
+  document.getElementById("tituloFormulario").textContent = "Novo Árbitro";
+  document.getElementById("previewFotoBox").style.display = "none";
+  document.getElementById("previewFotoImg").src = "logo-liga.jfif";
+  document.getElementById("previewFotoTexto").textContent = "Pré-visualização da foto";
+  fotoAtual = "";
+};
+
+window.salvarArbitro = async function(){
+  const id = document.getElementById("arbitroId").value;
+
+  const nome = txt(document.getElementById("nome").value);
+  const cpf = txt(document.getElementById("cpf").value);
+  const status = document.getElementById("status").value;
+  const telefone = txt(document.getElementById("telefone").value);
+  const whatsapp = limparNumero(document.getElementById("whatsapp").value);
+  const email = txt(document.getElementById("email").value);
+  const funcaoPrincipal = document.getElementById("funcaoPrincipal").value;
+
+  if(!nome) return alert("Digite o nome do árbitro.");
+  if(!cpf) return alert("Digite o CPF.");
+  if(!telefone) return alert("Digite o telefone.");
+  if(!whatsapp) return alert("Digite o WhatsApp.");
+  if(!email) return alert("Digite o e-mail.");
+
+  const foto = await uploadFotoSeExistir();
+
+  const dados = {
+    nome,
+    cpf,
+    status,
+    telefone,
+    whatsapp,
+    email,
+    funcaoPrincipal,
+    funcao:funcaoPrincipal,
+    podeAtuarComo:["Árbitro Centro","Assistente","4º Árbitro"],
+    foto,
+    atualizadoEm:serverTimestamp()
+  };
+
+  if(id){
+    await updateDoc(doc(db,"arbitros",id),dados);
+    alert("Árbitro atualizado!");
+  }else{
+    await addDoc(collection(db,"arbitros"),{
+      ...dados,
+      jogos:0,
+      jogosComoArbitroCentro:0,
+      jogosComoAssistente:0,
+      jogosComoQuartoArbitro:0,
+      cartoesAplicados:0,
+      criadoEm:serverTimestamp()
+    });
+    alert("Árbitro cadastrado!");
+  }
+
+  limparFormulario();
+  await carregarArbitros();
+};
+
+window.editarArbitro = function(id){
+  const a = arbitrosCache.find(x=>x.id === id);
+  if(!a) return;
+
+  document.getElementById("arbitroId").value = a.id;
+  document.getElementById("nome").value = a.nome || "";
+  document.getElementById("cpf").value = a.cpf || "";
+  document.getElementById("status").value = a.status || "ativo";
+  document.getElementById("telefone").value = a.telefone || "";
+  document.getElementById("whatsapp").value = a.whatsapp || "";
+  document.getElementById("email").value = a.email || "";
+  document.getElementById("funcaoPrincipal").value = a.funcaoPrincipal || a.funcao || "Árbitro Centro";
+  document.getElementById("foto").value = a.foto || "";
+  document.getElementById("fotoArquivo").value = "";
+  document.getElementById("tituloFormulario").textContent = "Editar Árbitro";
+
+  fotoAtual = a.foto || "";
+
+  if(fotoAtual){
+    document.getElementById("previewFotoBox").style.display = "flex";
+    document.getElementById("previewFotoImg").src = fotoAtual;
+    document.getElementById("previewFotoTexto").textContent = "Foto atual";
+  }
+
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.excluirArbitro = async function(id){
+  if(!confirm("Excluir árbitro?")) return;
+  await deleteDoc(doc(db,"arbitros",id));
+  await carregarArbitros();
+};
+
+window.abrirWhatsapp = function(numero){
+  const n = limparNumero(numero);
+  if(!n) return alert("WhatsApp não informado.");
+  window.open("https://wa.me/" + n, "_blank");
+};
+
+async function carregarArbitros(){
+  const lista = document.getElementById("listaArbitros");
+  lista.innerHTML = `<div class="vazio">Carregando árbitros...</div>`;
+
+  const snap = await getDocs(collection(db,"arbitros"));
+
+  arbitrosCache = [];
+  snap.forEach(d=>arbitrosCache.push({id:d.id,...d.data()}));
+
+  arbitrosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+
+  renderizarArbitros();
+}
+
+function renderizarArbitros(){
+  const lista = document.getElementById("listaArbitros");
+  const busca = normalizarTexto(document.getElementById("buscaArbitro").value);
+  const filtroFuncao = document.getElementById("filtroFuncao").value;
+  const filtroStatus = document.getElementById("filtroStatus").value;
+
+  let arbitros = arbitrosCache.filter(a=>{
+    if(filtroFuncao && (a.funcaoPrincipal || a.funcao) !== filtroFuncao) return false;
+    if(filtroStatus && a.status !== filtroStatus) return false;
+
+    if(busca){
+      const texto = normalizarTexto(`
+        ${a.nome || ""}
+        ${a.cpf || ""}
+        ${a.telefone || ""}
+        ${a.whatsapp || ""}
+        ${a.email || ""}
+        ${a.funcaoPrincipal || a.funcao || ""}
+      `);
+
+      if(!texto.includes(busca)) return false;
+    }
+
+    return true;
+  });
+
+  if(!arbitros.length){
+    lista.innerHTML = `<div class="vazio">Nenhum árbitro encontrado.</div>`;
+    return;
+  }
+
+  lista.innerHTML = arbitros.map(a=>`
+    <div class="card">
+      <div class="player">
+        <img
+          src="${a.foto || "logo-liga.jfif"}"
+          class="photo"
+          onerror="this.src='logo-liga.jfif'"
+        >
+
+        <div class="player-info">
+          <div class="nome-jogador">${a.nome || "-"}</div>
+
+          <small>CPF: ${a.cpf || "-"}</small>
+          <small>Telefone: ${a.telefone || "-"}</small>
+          <small>WhatsApp: ${a.whatsapp || "-"}</small>
+          <small>E-mail: ${a.email || "-"}</small>
+          <small>Função principal: ${a.funcaoPrincipal || a.funcao || "-"}</small>
+
+          <small>
+            Jogos: ${Number(a.jogos || 0)} |
+            Centro: ${Number(a.jogosComoArbitroCentro || 0)} |
+            Assistente: ${Number(a.jogosComoAssistente || 0)} |
+            4º: ${Number(a.jogosComoQuartoArbitro || 0)}
+          </small>
+
+          <div class="tags">
+            <span class="tag">${a.status || "ativo"}</span>
+            <span class="tag">${a.funcaoPrincipal || a.funcao || "Árbitro Centro"}</span>
+            <span class="tag">Pode atuar em qualquer função</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-acao btn-green" onclick="abrirWhatsapp('${a.whatsapp || ""}')">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp
+        </button>
+
+        <a class="btn-acao btn-blue" href="mailto:${a.email || ""}">
+          <i class="fa-solid fa-envelope"></i> E-mail
+        </a>
+
+        <button class="btn-acao btn-ver" onclick="editarArbitro('${a.id}')">
+          <i class="fa-solid fa-pen"></i> Editar
+        </button>
+
+        <button class="btn-acao btn-danger" onclick="excluirArbitro('${a.id}')">
+          <i class="fa-solid fa-trash"></i> Excluir
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
+
+document.getElementById("buscaArbitro").addEventListener("input",renderizarArbitros);
+document.getElementById("filtroFuncao").addEventListener("change",renderizarArbitros);
+document.getElementById("filtroStatus").addEventListener("change",renderizarArbitros);
+
+await carregarArbitros();
+</script>
+
+</body>
+</html>
