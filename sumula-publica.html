@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Súmula Oficial</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -11,35 +10,28 @@
 
 <style>
 body{margin:0;font-family:Arial;background:#eef2f7}
-.container{max-width:1100px;margin:auto;background:#fff;padding:20px}
+.container{max-width:1100px;margin:auto;background:#fff;padding:20px;border-radius:10px}
 
 .topo{text-align:center;border-bottom:4px solid #0A1F3D;padding-bottom:10px}
-.titulo{font-size:28px;font-weight:900}
-.sub{font-size:14px}
+.titulo{font-size:30px;font-weight:900}
+
+.status{display:none;background:#1b5e20;color:#fff;padding:10px;text-align:center;font-weight:900;border-radius:6px;margin-bottom:10px}
 
 .placar-box{display:flex;justify-content:space-between;align-items:center;margin:20px 0}
 .time{text-align:center;width:40%}
-.time img{width:70px}
+.time img{width:80px}
 .nome{font-weight:900}
-.placar{font-size:50px;font-weight:900;color:#0A1F3D}
-
-.info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;font-size:13px}
+.placar{font-size:56px;font-weight:900;color:#0A1F3D}
 
 .secao{margin-top:20px}
-.titulo-secao{background:#0A1F3D;color:#fff;padding:8px;font-weight:900}
+.titulo-secao{background:#0A1F3D;color:#fff;padding:8px;font-weight:900;border-radius:6px}
 
 .tabela{width:100%;border-collapse:collapse}
 .tabela td{border:1px solid #ccc;padding:6px}
 
 .duplo{display:flex;gap:20px}
 
-.highlight{
-  background:#f7c600;
-  padding:10px;
-  font-weight:900;
-  text-align:center;
-  border-radius:8px;
-}
+.highlight{background:#f7c600;padding:10px;font-weight:900;text-align:center;border-radius:8px}
 
 .btns{display:flex;gap:10px;margin-top:20px}
 .btn{padding:10px;border:none;border-radius:6px;font-weight:900;color:#fff;cursor:pointer}
@@ -53,10 +45,12 @@ body{margin:0;font-family:Arial;background:#eef2f7}
 
 <div class="container">
 
+<div class="status" id="statusFinalizada">SÚMULA FINALIZADA</div>
+
 <div class="topo">
 <div class="titulo">SÚMULA OFICIAL</div>
-<div class="sub" id="campeonato"></div>
-<div class="sub" id="categoria"></div>
+<div id="campeonato"></div>
+<div id="categoria"></div>
 </div>
 
 <div class="placar-box">
@@ -73,64 +67,38 @@ body{margin:0;font-family:Arial;background:#eef2f7}
 </div>
 </div>
 
-<div style="text-align:center">
 <canvas id="qr"></canvas>
-</div>
-
-<div class="info" id="info"></div>
 
 <div class="secao">
 <div class="titulo-secao">ESCALAÇÃO</div>
 
 <div class="duplo">
-
 <div style="flex:1">
-<strong id="tituloA"></strong>
 <table class="tabela" id="titA"></table>
-<table class="tabela" id="resA"></table>
 </div>
 
 <div style="flex:1">
-<strong id="tituloB"></strong>
 <table class="tabela" id="titB"></table>
-<table class="tabela" id="resB"></table>
+</div>
 </div>
 
-</div>
 </div>
 
 <div class="secao">
 <div class="titulo-secao">EVENTOS</div>
 
 <div class="duplo">
-
 <div style="flex:1">
-<h4>⚽ Gols</h4>
 <table class="tabela" id="golsA"></table>
-
-<h4>🟨🟥 Cartões</h4>
 <table class="tabela" id="cartA"></table>
 </div>
 
 <div style="flex:1">
-<h4>⚽ Gols</h4>
 <table class="tabela" id="golsB"></table>
-
-<h4>🟨🟥 Cartões</h4>
 <table class="tabela" id="cartB"></table>
 </div>
-
-</div>
 </div>
 
-<div class="secao">
-<div class="titulo-secao">ARBITRAGEM</div>
-<div id="arb"></div>
-</div>
-
-<div class="secao">
-<div class="titulo-secao">RESUMO DA PARTIDA</div>
-<div id="resumo"></div>
 </div>
 
 <div class="secao">
@@ -138,99 +106,185 @@ body{margin:0;font-family:Arial;background:#eef2f7}
 <div id="melhor" class="highlight"></div>
 </div>
 
+<div class="secao">
+<div class="titulo-secao">📊 ESTATÍSTICAS</div>
+<div id="stats"></div>
+</div>
+
 <div class="btns">
 <button class="btn whats" onclick="wpp()">WhatsApp</button>
 <button class="btn email" onclick="mail()">Email</button>
 <button class="btn print" onclick="window.print()">PDF</button>
+<button class="btn print" id="btnFinalizar">Finalizar Súmula</button>
 </div>
 
 </div>
 
 <script type="module">
 import { db } from "./firebase.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { doc, getDoc, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const id=new URLSearchParams(location.search).get("id");
 
-function esc(lista){
-return (lista||[]).map(j=>{
-let n=j.nome||"-";
-if(j.posicao==="Goleiro")n+=" (G)";
-if(j.capitao)n+=" (C)";
-return `<tr><td>${j.numero||"-"}</td><td>${n}</td></tr>`;
-}).join("") || "<tr><td>-</td><td>-</td></tr>";
-}
+// ===== FUNÇÕES =====
+function esc(l){return (l||[]).map(j=>{
+let n=j.nome||"-"
+if(j.posicao==="Goleiro")n+=" (G)"
+if(j.capitao)n+=" (C)"
+return `<tr><td>${j.numero||"-"}</td><td>${n}</td></tr>`
+}).join("")}
 
-function fil(lista,t){return (lista||[]).filter(x=>x.time===t)}
+function fil(l,t){return (l||[]).filter(x=>x.time===t)}
 
-function gols(l){
-if(!l.length)return "<tr><td>-</td><td>-</td></tr>";
-return l.map(g=>`<tr><td>⚽ ${g.tempo||"-"}'</td><td>${g.nome||"-"}</td></tr>`).join("");
-}
+function gols(l){return l.map(g=>`<tr><td>⚽ ${g.tempo}'</td><td>${g.nome}</td></tr>`).join("")}
+function cart(l){return l.map(c=>{
+let i=c.tipo==="vermelho"?"🟥":"🟨"
+return `<tr><td>${i} ${c.tempo}'</td><td>${c.nome}</td></tr>`
+}).join("")}
 
-function cart(l){
-if(!l.length)return "<tr><td>-</td><td>-</td></tr>";
-return l.map(c=>{
-let i=c.tipo==="vermelho"?"🟥":"🟨";
-return `<tr><td>${i} ${c.tempo||"-"}'</td><td>${c.nome||"-"}</td></tr>`;
-}).join("");
-}
-
+// ===== LOAD =====
 async function load(){
 
-const s=await getDoc(doc(db,"jogos",id));
-if(!s.exists()){
-document.body.innerHTML="<h2>Súmula não encontrada</h2>";
-return;
+const snap=await getDoc(doc(db,"jogos",id))
+const j=snap.data()
+
+timeA.innerText=j.timeA.nome
+timeB.innerText=j.timeB.nome
+
+logoA.src=j.timeA.logo
+logoB.src=j.timeB.logo
+
+placar.innerText=`${j.placar.A} x ${j.placar.B}`
+
+campeonato.innerText=j.campeonato
+categoria.innerText=j.categoria
+
+titA.innerHTML=esc(j.titularesA)
+titB.innerHTML=esc(j.titularesB)
+
+golsA.innerHTML=gols(fil(j.gols,"A"))
+golsB.innerHTML=gols(fil(j.gols,"B"))
+
+cartA.innerHTML=cart(fil(j.cartoes,"A"))
+cartB.innerHTML=cart(fil(j.cartoes,"B"))
+
+melhor.innerText=j.melhorJogador
+
+QRCode.toCanvas(document.getElementById("qr"),location.href)
+
+// ===== PUXA ESTATÍSTICAS =====
+let statsHTML=""
+
+const jogadores=await getDocs(collection(db,"jogadores"))
+jogadores.forEach(d=>{
+let p=d.data()
+if(p.nome===j.melhorJogador){
+statsHTML+=`👤 ${p.nome} - ⚽ ${p.gols||0} gols | 🟨 ${p.cartoesAmarelos||0}<br>`
+}
+})
+
+const times=await getDocs(collection(db,"times"))
+times.forEach(d=>{
+let t=d.data()
+if(t.nome===j.timeA.nome||t.nome===j.timeB.nome){
+statsHTML+=`🛡️ ${t.nome} - 🏆 ${t.vitorias||0} vitórias<br>`
+}
+})
+
+stats.innerHTML=statsHTML
+
 }
 
-const j=s.data();
+load()
 
-timeA.innerText=j.timeA?.nome||"Time A";
-timeB.innerText=j.timeB?.nome||"Time B";
+// ===== FINALIZAR =====
+btnFinalizar.onclick=async()=>{
 
-logoA.src=j.timeA?.logo||"logo-liga.jfif";
-logoB.src=j.timeB?.logo||"logo-liga.jfif";
+const ref=doc(db,"jogos",id)
+const snap=await getDoc(ref)
+const j=snap.data()
 
-placar.innerText=`${j.placar?.A||0} x ${j.placar?.B||0}`;
+await updateDoc(ref,{status:"finalizado",sumulaFinalizada:true})
 
-campeonato.innerText=j.campeonato||"-";
-categoria.innerText=j.categoria||"-";
+// JOGADORES
+const jogadores=await getDocs(collection(db,"jogadores"))
 
-tituloA.innerText=j.timeA?.nome||"";
-tituloB.innerText=j.timeB?.nome||"";
+jogadores.forEach(async(d)=>{
+let data=d.data()
 
-titA.innerHTML=esc(j.titularesA);
-resA.innerHTML=esc(j.reservasA);
+for(const g of j.gols||[]){
+if(data.nome===g.nome){
+await updateDoc(doc(db,"jogadores",d.id),{
+gols:(data.gols||0)+1,
+jogos:(data.jogos||0)+1
+})
+}
+}
 
-titB.innerHTML=esc(j.titularesB);
-resB.innerHTML=esc(j.reservasB);
+for(const c of j.cartoes||[]){
+if(data.nome===c.nome){
+if(c.tipo==="amarelo"){
+await updateDoc(doc(db,"jogadores",d.id),{
+cartoesAmarelos:(data.cartoesAmarelos||0)+1
+})
+}else{
+await updateDoc(doc(db,"jogadores",d.id),{
+cartoesVermelhos:(data.cartoesVermelhos||0)+1
+})
+}
+}
+}
 
-golsA.innerHTML=gols(fil(j.gols,"A"));
-golsB.innerHTML=gols(fil(j.gols,"B"));
+})
 
-cartA.innerHTML=cart(fil(j.cartoes,"A"));
-cartB.innerHTML=cart(fil(j.cartoes,"B"));
+// TIMES
+const times=await getDocs(collection(db,"times"))
 
-arb.innerHTML=`
-👨‍⚖️ Árbitro: ${j.arbitro||"-"}<br>
-🏃 Assistente 1: ${j.assistente1||"-"}<br>
-🏃 Assistente 2: ${j.assistente2||"-"}
-`;
+times.forEach(async(d)=>{
+let t=d.data()
 
-resumo.innerHTML=`
-⚽ ${(j.gols||[]).length} gols |
-🟨 ${(j.cartoes||[]).filter(c=>c.tipo==="amarelo").length} |
-🟥 ${(j.cartoes||[]).filter(c=>c.tipo==="vermelho").length}
-`;
+if(t.nome===j.timeA.nome||t.nome===j.timeB.nome){
 
-melhor.innerText=j.melhorJogador||"Não informado";
-
-QRCode.toCanvas(document.getElementById("qr"),location.href);
+await updateDoc(doc(db,"times",d.id),{
+jogos:(t.jogos||0)+1,
+golsPro:(t.golsPro||0)+ (t.nome===j.timeA.nome?j.placar.A:j.placar.B),
+golsContra:(t.golsContra||0)+ (t.nome===j.timeA.nome?j.placar.B:j.placar.A)
+})
 
 }
 
-load();
+})
+
+// ÁRBITRO
+const arbitros=await getDocs(collection(db,"arbitros"))
+
+arbitros.forEach(async(d)=>{
+let a=d.data()
+
+if(a.nome===j.arbitro){
+await updateDoc(doc(db,"arbitros",d.id),{
+jogos:(a.jogos||0)+1
+})
+}
+})
+
+// TÉCNICO
+const tecnicos=await getDocs(collection(db,"tecnicos"))
+
+tecnicos.forEach(async(d)=>{
+let t=d.data()
+
+if(t.nome===j.tecnico){
+await updateDoc(doc(db,"tecnicos",d.id),{
+jogos:(t.jogos||0)+1
+})
+}
+})
+
+alert("Sistema completo atualizado automático")
+location.reload()
+
+}
 
 function wpp(){window.open("https://wa.me/?text="+location.href)}
 function mail(){location.href="mailto:?body="+location.href}
