@@ -57,14 +57,18 @@ header{
   padding:14px 0;
 }
 
-.header-left,.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.header-left,.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
 
 .header-title{
   flex:1;
   text-align:center;
   font-size:24px;
   font-weight:700;
-  color:var(--white);
 }
 
 .top-btn{
@@ -114,11 +118,14 @@ header{
   border-color:var(--gold-line);
 }
 
-.menu a.ativo{background:var(--gold);color:black}
+.menu a.ativo{
+  background:var(--gold);
+  color:black;
+}
 
 .container{padding:24px 0 34px}
 
-.hero,.form-panel,.list-panel{
+.hero,.form-panel{
   background:linear-gradient(135deg,#102a52,#0d2346);
   border:1px solid var(--gold-line);
   border-radius:18px;
@@ -127,18 +134,17 @@ header{
   box-shadow:var(--shadow);
 }
 
-.hero h2,.form-panel h2,.list-panel h2{
+.hero h2{
   margin:0 0 8px;
   color:var(--gold);
   font-size:28px;
 }
 
-.hero p,.form-panel p{
+.hero p{
   margin:0;
   color:var(--muted);
   line-height:1.6;
   font-size:15px;
-  max-width:850px;
 }
 
 .form-title{
@@ -170,12 +176,63 @@ input,select{
   border:none;
   border-radius:10px;
   font-size:14px;
-  box-sizing:border-box;
   background:#f5f7fb;
   color:#111;
 }
 
-input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
+input:focus,select:focus{
+  outline:2px solid rgba(247,198,0,.5);
+}
+
+.preview-logo{
+  display:none;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.preview-logo img{
+  width:78px;
+  height:78px;
+  object-fit:contain;
+  background:#fff;
+  border-radius:18px;
+  border:2px solid var(--gold);
+}
+
+.preview-logo span{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.checkbox-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(115px,1fr));
+  gap:8px;
+}
+
+.check-item{
+  background:#102a52;
+  padding:9px 10px;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:14px;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.08);
+  cursor:pointer;
+}
+
+.check-item:hover{
+  background:#153766;
+  border-color:var(--gold-line);
+}
+
+.check-item input{
+  width:auto;
+}
 
 .form-actions{
   display:flex;
@@ -193,12 +250,12 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
 
 .lista-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
   gap:14px;
 }
 
 .card{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
   padding:16px;
   border-radius:16px;
   display:flex;
@@ -207,7 +264,6 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
   gap:14px;
   border:1px solid rgba(255,230,0,.10);
   box-shadow:var(--shadow);
-  transition:var(--transition);
 }
 
 .card:hover{
@@ -219,7 +275,6 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
   display:flex;
   align-items:center;
   gap:12px;
-  min-width:0;
   flex:1;
 }
 
@@ -237,14 +292,12 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
   display:flex;
   flex-direction:column;
   gap:6px;
-  min-width:0;
 }
 
 .nome-jogador{
   font-weight:700;
   font-size:18px;
-  color:#ffffff;
-  line-height:1.35;
+  color:#fff;
 }
 
 .player-info small{
@@ -282,7 +335,6 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
   gap:8px;
   padding:11px 14px;
   border-radius:10px;
-  text-decoration:none;
   font-weight:700;
   font-size:13px;
   border:none;
@@ -291,12 +343,10 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
 }
 
 .btn-ver{background:var(--gold);color:black}
-.btn-ver:hover{filter:brightness(1.04);transform:translateY(-1px)}
 .btn-danger{background:#d94141;color:#fff}
-.btn-danger:hover{background:#b82f2f}
 
 .vazio{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
   padding:30px;
   border-radius:14px;
   text-align:center;
@@ -306,18 +356,26 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
   grid-column:1/-1;
 }
 
-@media (max-width:900px){
+@media(max-width:900px){
   .header-title{order:3;width:100%;text-align:center}
   .header-left,.header-right{width:100%;justify-content:center}
-  .filtros,.form-grid{grid-template-columns:1fr}
+  .form-grid,.filtros{grid-template-columns:1fr}
   .card{flex-direction:column;align-items:flex-start}
   .actions{width:100%;justify-content:flex-start}
 }
 
-@media (max-width:600px){
+@media(max-width:600px){
   .top-btn,.btn-acao{width:100%;justify-content:center}
-  .header-left,.header-right{flex-direction:column;align-items:stretch}
-  .hero h2{font-size:24px}
+  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
+  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
+  .menu{
+    justify-content:flex-start;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:14px;
+  }
+  .menu a{flex:0 0 auto}
 }
 </style>
 </head>
@@ -327,10 +385,6 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
 <header>
   <div class="wrap header-top">
     <div class="header-left">
-      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
-        <i class="fa-solid fa-arrow-left"></i> Voltar
-      </button>
-
       <a href="index.html" class="top-btn btn-light">
         <i class="fa-solid fa-house"></i> Página Inicial
       </a>
@@ -340,9 +394,7 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
       </a>
     </div>
 
-    <div class="header-title">
-      LIGA GOIANA DE FUTEBOL DE BASE
-    </div>
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
     <div class="header-right">
       <button class="top-btn btn-gold" type="button" onclick="salvarTime()">
@@ -372,7 +424,7 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
 
   <div class="hero">
     <h2>Times ADM</h2>
-    <p>Cadastre times, escudos, cidade e categorias. Esses dados serão usados automaticamente em jogadores, jogos, súmulas, tabelas e estatísticas.</p>
+    <p>Cadastre times, escudos, cidade e categorias. Os escudos podem ser enviados do computador ou celular e ficam salvos no Firebase Storage.</p>
   </div>
 
   <section class="form-panel">
@@ -392,11 +444,6 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
       </div>
 
       <div>
-        <label>Escudo / Logo URL</label>
-        <input id="logo" placeholder="logo-time.png ou URL">
-      </div>
-
-      <div>
         <label>Status</label>
         <select id="status">
           <option value="ativo">Ativo</option>
@@ -404,9 +451,27 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
         </select>
       </div>
 
+      <div>
+        <label>Escudo / Logo URL</label>
+        <input id="logo" placeholder="logo-time.png ou URL">
+      </div>
+
+      <div>
+        <label>Enviar escudo do PC/Celular</label>
+        <input type="file" id="logoArquivo" accept="image/*" onchange="previewLogoArquivo()">
+      </div>
+
+      <div>
+        <label>Prévia</label>
+        <div class="preview-logo" id="previewLogoBox">
+          <img id="previewLogoImg" src="logo-liga.jfif">
+          <span id="previewLogoTexto">Pré-visualização do escudo</span>
+        </div>
+      </div>
+
       <div class="full">
-        <label>Categorias</label>
-        <input id="categorias" placeholder="Ex: Sub-11, Sub-13, Sub-15, Sub-17">
+        <label>Categorias do time</label>
+        <div class="checkbox-grid" id="categoriasGrid"></div>
       </div>
     </div>
 
@@ -447,33 +512,83 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
+
+const storage = getStorage();
+
 let timesCache = [];
+let logoAtual = "";
 
-window.voltarPagina = function(){
-  if(window.history.length > 1){
-    window.history.back();
-  }else{
-    window.location.href = "admin.html";
-  }
-};
+const categoriasFixas = [
+  "Sub-11","Sub-12","Sub-13","Sub-14","Sub-15","Sub-16",
+  "Sub-17","Sub-18","Sub-19","Sub-20","Sub-21"
+];
 
-function txt(v){
-  return String(v || "").trim();
-}
+function txt(v){return String(v || "").trim()}
 
 function normalizarTexto(texto){
   return String(texto || "")
     .trim()
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+    .replace(/[\u0300-\u036f]/g,"");
 }
 
-function listaCategorias(valor){
-  return String(valor || "")
-    .split(",")
-    .map(c => c.trim())
-    .filter(Boolean);
+function montarCategorias(){
+  const grid = document.getElementById("categoriasGrid");
+  grid.innerHTML = categoriasFixas.map(c=>`
+    <label class="check-item">
+      <input type="checkbox" value="${c}">
+      <span>${c}</span>
+    </label>
+  `).join("");
+}
+
+function categoriasSelecionadas(){
+  return Array.from(document.querySelectorAll('#categoriasGrid input[type="checkbox"]:checked'))
+    .map(i=>i.value);
+}
+
+function marcarCategorias(categorias){
+  document.querySelectorAll('#categoriasGrid input[type="checkbox"]').forEach(item=>{
+    item.checked = (categorias || []).includes(item.value);
+  });
+}
+
+window.previewLogoArquivo = function(){
+  const arquivo = document.getElementById("logoArquivo").files[0];
+  if(!arquivo) return;
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    document.getElementById("previewLogoBox").style.display = "flex";
+    document.getElementById("previewLogoImg").src = e.target.result;
+    document.getElementById("previewLogoTexto").textContent = arquivo.name;
+  };
+
+  leitor.readAsDataURL(arquivo);
+};
+
+async function uploadLogoSeExistir(){
+  const arquivo = document.getElementById("logoArquivo").files[0];
+  const logoUrlManual = txt(document.getElementById("logo").value);
+
+  if(arquivo){
+    const nomeArquivo = `times/${Date.now()}-${arquivo.name}`;
+    const referencia = ref(storage,nomeArquivo);
+    await uploadBytes(referencia,arquivo);
+    return await getDownloadURL(referencia);
+  }
+
+  if(logoUrlManual) return logoUrlManual;
+
+  return logoAtual || "logo-liga.jfif";
 }
 
 window.limparFormulario = function(){
@@ -481,9 +596,14 @@ window.limparFormulario = function(){
   document.getElementById("nome").value = "";
   document.getElementById("cidade").value = "";
   document.getElementById("logo").value = "";
+  document.getElementById("logoArquivo").value = "";
   document.getElementById("status").value = "ativo";
-  document.getElementById("categorias").value = "";
   document.getElementById("tituloFormulario").textContent = "Novo Time";
+  document.getElementById("previewLogoBox").style.display = "none";
+  document.getElementById("previewLogoImg").src = "logo-liga.jfif";
+  document.getElementById("previewLogoTexto").textContent = "Pré-visualização do escudo";
+  logoAtual = "";
+  marcarCategorias([]);
 };
 
 window.salvarTime = async function(){
@@ -491,13 +611,14 @@ window.salvarTime = async function(){
 
   const nome = txt(document.getElementById("nome").value);
   const cidade = txt(document.getElementById("cidade").value);
-  const logo = txt(document.getElementById("logo").value) || "logo-liga.jfif";
   const status = document.getElementById("status").value;
-  const categorias = listaCategorias(document.getElementById("categorias").value);
+  const categorias = categoriasSelecionadas();
 
   if(!nome) return alert("Digite o nome do time.");
   if(!cidade) return alert("Digite a cidade do time.");
-  if(!categorias.length) return alert("Digite pelo menos uma categoria.");
+  if(!categorias.length) return alert("Selecione pelo menos uma categoria.");
+
+  const logo = await uploadLogoSeExistir();
 
   const dados = {
     nome,
@@ -533,18 +654,26 @@ window.salvarTime = async function(){
 };
 
 window.editarTime = function(id){
-  const t = timesCache.find(x => x.id === id);
+  const t = timesCache.find(x=>x.id === id);
   if(!t) return;
 
   document.getElementById("timeId").value = t.id;
   document.getElementById("nome").value = t.nome || "";
   document.getElementById("cidade").value = t.cidade || "";
   document.getElementById("logo").value = t.logo || t.escudo || "";
+  document.getElementById("logoArquivo").value = "";
   document.getElementById("status").value = t.status || "ativo";
-  document.getElementById("categorias").value = Array.isArray(t.categorias) ? t.categorias.join(", ") : "";
-
   document.getElementById("tituloFormulario").textContent = "Editar Time";
 
+  logoAtual = t.logo || t.escudo || "";
+
+  if(logoAtual){
+    document.getElementById("previewLogoBox").style.display = "flex";
+    document.getElementById("previewLogoImg").src = logoAtual;
+    document.getElementById("previewLogoTexto").textContent = "Escudo atual";
+  }
+
+  marcarCategorias(Array.isArray(t.categorias) ? t.categorias : []);
   window.scrollTo({top:0,behavior:"smooth"});
 };
 
@@ -561,7 +690,7 @@ async function carregarTimes(){
   const snap = await getDocs(collection(db,"times"));
 
   timesCache = [];
-  snap.forEach(d => timesCache.push({id:d.id,...d.data()}));
+  snap.forEach(d=>timesCache.push({id:d.id,...d.data()}));
 
   timesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
 
@@ -603,14 +732,11 @@ function renderizarTimes(){
           <img
             src="${t.logo || t.escudo || "logo-liga.jfif"}"
             class="photo"
-            alt="${t.nome || "Time"}"
             onerror="this.src='logo-liga.jfif'"
           >
 
           <div class="player-info">
-            <div class="nome-jogador">
-              ${t.nome || "-"}
-            </div>
+            <div class="nome-jogador">${t.nome || "-"}</div>
 
             <small>Cidade: ${t.cidade || "-"}</small>
 
@@ -633,7 +759,7 @@ function renderizarTimes(){
 
             <div class="tags">
               <span class="tag">${t.status || "ativo"}</span>
-              ${categorias.map(c => `<span class="tag">${c}</span>`).join("")}
+              ${categorias.map(c=>`<span class="tag">${c}</span>`).join("")}
             </div>
           </div>
         </div>
@@ -652,9 +778,10 @@ function renderizarTimes(){
   }).join("");
 }
 
-document.getElementById("buscaTime").addEventListener("input", renderizarTimes);
-document.getElementById("filtroStatus").addEventListener("change", renderizarTimes);
+document.getElementById("buscaTime").addEventListener("input",renderizarTimes);
+document.getElementById("filtroStatus").addEventListener("change",renderizarTimes);
 
+montarCategorias();
 carregarTimes();
 </script>
 
