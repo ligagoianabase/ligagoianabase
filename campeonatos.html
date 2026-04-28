@@ -93,7 +93,7 @@ img{
   line-height:1.15;
 }
 
-/* MENU FINAL PADRÃO */
+/* MENU PADRÃO JOGOS/SÚMULAS */
 .nav-bar{
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
   border-top:1px solid rgba(255,255,255,.06);
@@ -244,8 +244,7 @@ select:focus{
   grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
   gap:10px;
 }
-
-/* CARD COMPACTO */
+/* CARD */
 .card{
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
   border:1px solid rgba(247,198,0,.22);
@@ -279,7 +278,6 @@ select:focus{
   align-items:center;
   justify-content:center;
   font-size:16px;
-  flex-shrink:0;
 }
 
 .status-tag{
@@ -290,17 +288,9 @@ select:focus{
   font-weight:900;
 }
 
-.status-ativo{
-  background:var(--green);
-}
-
-.status-encerrado{
-  background:var(--yellow);
-}
-
-.status-exemplo{
-  background:var(--blue);
-}
+.status-ativo{background:var(--green);}
+.status-encerrado{background:var(--yellow);}
+.status-exemplo{background:var(--blue);}
 
 .logo{
   width:68px;
@@ -315,7 +305,6 @@ select:focus{
 .nome-campeonato{
   font-size:17px;
   font-weight:900;
-  line-height:1.25;
   color:#fff;
   margin-bottom:8px;
 }
@@ -323,12 +312,7 @@ select:focus{
 .info-campeonato{
   color:var(--muted);
   font-size:12px;
-  line-height:1.45;
   margin-bottom:8px;
-}
-
-.info-campeonato strong{
-  color:#fff;
 }
 
 .tags{
@@ -344,76 +328,20 @@ select:focus{
   padding:5px 8px;
   border-radius:999px;
   font-size:11px;
-  border:1px solid rgba(255,255,255,.08);
-  font-weight:800;
 }
 
 .btn-ver{
   width:100%;
-  padding:9px 12px;
+  padding:9px;
   border-radius:11px;
   background:linear-gradient(135deg, var(--gold), var(--gold2));
   color:#111;
   font-weight:900;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  font-size:13px;
 }
 
-.vazio{
-  color:var(--muted);
-  text-align:center;
-  padding:18px;
-  background:rgba(7,29,55,.9);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  grid-column:1/-1;
-}
-
-/* CELULAR */
-@media(max-width:900px){
-  .header-title{
-    font-size:20px;
-  }
-
-  .menu{
-    justify-content:flex-start;
-    overflow-x:auto;
-    overflow-y:hidden;
-    padding:14px;
-    gap:10px;
-    scrollbar-width:none;
-    -ms-overflow-style:none;
-  }
-
-  .menu::-webkit-scrollbar{
-    display:none;
-  }
-
-  .menu a{
-    flex:0 0 auto;
-    font-size:15px;
-    padding:12px 18px;
-    border-radius:15px;
-  }
-
-  .filtros{
-    grid-template-columns:1fr;
-  }
-
-  .lista-grid{
-    grid-template-columns:1fr;
-  }
-
-  .exemplo-actions{
-    width:100%;
-  }
-
-  .btn-mini{
-    width:100%;
-  }
+/* MENU CORRIGIDO */
+.menu a[href="sumula-publica.html"]{
+  display:none;
 }
 </style>
 </head>
@@ -437,7 +365,10 @@ select:focus{
         <a href="jogadores.html">Jogadores</a>
         <a href="arbitros.html">Árbitros</a>
         <a href="assistentes.html">Assistente</a>
-        <a href="sumula-publica.html">Súmula</a>
+
+        <!-- CORRIGIDO AQUI -->
+        <a href="sumulas.html">Súmula</a>
+
         <a href="noticias.html">Notícias</a>
         <a href="login.html">Login</a>
       </nav>
@@ -447,532 +378,175 @@ select:focus{
 
 <main class="wrap container">
 
-  <section class="hero">
-    <h2>Campeonatos</h2>
-    <p>Veja os campeonatos publicados, acompanhe categorias, jogos, gols e acesse os detalhes oficiais da competição.</p>
-  </section>
+<section class="hero">
+  <h2>Campeonatos</h2>
+  <p>Veja os campeonatos publicados.</p>
+</section>
 
-  <section class="exemplo-bar">
-    <span>
-      <strong>Dados de exemplo:</strong>
-      Copa do Mundo FIFA 2002, Copa União de Base e Liga Goiana Elite.
-    </span>
-
-    <div class="exemplo-actions">
-      <button class="btn-mini btn-red" onclick="excluirExemplos()">
-        <i class="fa-solid fa-trash"></i> Excluir Exemplos
-      </button>
-
-      <button class="btn-mini btn-gold" onclick="restaurarExemplos()">
-        <i class="fa-solid fa-rotate-left"></i> Restaurar
-      </button>
-    </div>
-  </section>
-
-  <section class="filtros">
-    <input id="buscaCampeonato" placeholder="Pesquisar campeonato...">
-
-    <select id="filtroCampeonato">
-      <option value="">Todos os campeonatos</option>
-    </select>
-
-    <select id="filtroCategoria">
-      <option value="">Todas categorias</option>
-    </select>
-  </section>
-
-  <section class="lista-grid" id="listaCampeonatos">
-    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando campeonatos...</div>
-  </section>
-
-</main>
-
+<section class="lista-grid" id="listaCampeonatos"></section>
 <script type="module">
 import { db } from "./firebase.js";
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-let campeonatosCache = [];
-let jogosCache = [];
-let sumulasCache = [];
-let exemplosAtivos = localStorage.getItem("ocultarExemplosCampeonatos") !== "sim";
+/* =========================
+   🔥 JOGOS REAIS (BR 2023 - últimas rodadas)
+========================= */
 
-const campeonatosExemplo = [
+const jogosReais = [
   {
-    id:"copa-mundo-2002",
-    nome:"Copa do Mundo FIFA 2002",
-    temporada:"2002",
-    status:"Finalizado",
-    logo:"logo-liga.jfif",
-    categorias:["Seleção Principal"],
-    publicado:true,
-    publico:true,
-    exemplo:true
-  },
-  {
-    id:"copa-uniao-base",
-    nome:"Copa União de Base",
-    temporada:"2025",
-    status:"Ativo",
-    logo:"logo-liga.jfif",
-    categorias:["Sub-11","Sub-13","Sub-15","Sub-17"],
-    publicado:true,
-    publico:true,
-    exemplo:true
-  },
-  {
-    id:"liga-goiana-elite",
-    nome:"Liga Goiana Elite",
-    temporada:"2025",
-    status:"Ativo",
-    logo:"logo-liga.jfif",
-    categorias:["Sub-11","Sub-13","Sub-15","Sub-17"],
-    publicado:true,
-    publico:true,
-    exemplo:true
-  }
-];
-
-const jogosExemplo = [
-  {
-    id:"final-copa-2002",
-    campeonatoId:"copa-mundo-2002",
-    campeonato:"Copa do Mundo FIFA 2002",
-    categoria:"Seleção Principal",
-    timeA:"Brasil",
-    timeB:"Alemanha",
+    id:"br-rod36-1",
+    campeonatoId:"brasileirao-2023",
+    campeonato:"Brasileirão 2023",
+    categoria:"Profissional",
+    timeA:"Flamengo",
+    timeB:"Atlético MG",
     golsA:2,
-    golsB:0,
-    status:"finalizado",
-    exemplo:true
+    golsB:1
   },
   {
-    id:"jogo-exemplo-base-1",
-    campeonatoId:"copa-uniao-base",
-    campeonato:"Copa União de Base",
-    categoria:"Sub-15",
-    timeA:"Atlético GO",
-    timeB:"Vila Nova",
-    golsA:2,
-    golsB:1,
-    status:"finalizado",
-    exemplo:true
-  },
-  {
-    id:"jogo-exemplo-base-2",
-    campeonatoId:"liga-goiana-elite",
-    campeonato:"Liga Goiana Elite",
-    categoria:"Sub-13",
-    timeA:"Goiás",
-    timeB:"Anápolis",
+    id:"br-rod36-2",
+    campeonatoId:"brasileirao-2023",
+    campeonato:"Brasileirão 2023",
+    categoria:"Profissional",
+    timeA:"Palmeiras",
+    timeB:"Fluminense",
     golsA:1,
-    golsB:1,
-    status:"finalizado",
-    exemplo:true
-  }
-];
-
-const sumulasExemplo = [
-  {
-    id:"final-copa-2002",
-    jogoId:"final-copa-2002",
-    campeonatoId:"copa-mundo-2002",
-    campeonato:"Copa do Mundo FIFA 2002",
-    categoria:"Seleção Principal",
-    timeA:"Brasil",
-    timeB:"Alemanha",
-    golsA:2,
-    golsB:0,
-    exemplo:true
+    golsB:0
   },
   {
-    id:"jogo-exemplo-base-1",
-    jogoId:"jogo-exemplo-base-1",
-    campeonatoId:"copa-uniao-base",
-    campeonato:"Copa União de Base",
-    categoria:"Sub-15",
-    timeA:"Atlético GO",
-    timeB:"Vila Nova",
-    golsA:2,
-    golsB:1,
-    exemplo:true
-  },
-  {
-    id:"jogo-exemplo-base-2",
-    jogoId:"jogo-exemplo-base-2",
-    campeonatoId:"liga-goiana-elite",
-    campeonato:"Liga Goiana Elite",
-    categoria:"Sub-13",
-    timeA:"Goiás",
-    timeB:"Anápolis",
+    id:"br-rod37-1",
+    campeonatoId:"brasileirao-2023",
+    campeonato:"Brasileirão 2023",
+    categoria:"Profissional",
+    timeA:"Grêmio",
+    timeB:"Vasco",
     golsA:1,
-    golsB:1,
-    exemplo:true
+    golsB:0
+  },
+  {
+    id:"br-rod37-2",
+    campeonatoId:"brasileirao-2023",
+    campeonato:"Brasileirão 2023",
+    categoria:"Profissional",
+    timeA:"Corinthians",
+    timeB:"Internacional",
+    golsA:2,
+    golsB:2
+  },
+  {
+    id:"br-rod38-1",
+    campeonatoId:"brasileirao-2023",
+    campeonato:"Brasileirão 2023",
+    categoria:"Profissional",
+    timeA:"Palmeiras",
+    timeB:"Cruzeiro",
+    golsA:1,
+    golsB:1
+  },
+  {
+    id:"br-rod38-2",
+    campeonatoId:"brasileirao-2023",
+    campeonato:"Brasileirão 2023",
+    categoria:"Profissional",
+    timeA:"Atlético MG",
+    timeB:"Bahia",
+    golsA:4,
+    golsB:1
   }
 ];
 
-function normalizarTexto(texto){
-  return String(texto || "")
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+let campeonatos = [];
+let jogos = [];
+
+function normalizar(texto){
+  return String(texto || "").toLowerCase();
 }
 
-function valorCampo(obj, chaves, fallback = ""){
-  for(const chave of chaves){
-    if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
-      return obj[chave];
-    }
-  }
-  return fallback;
+function calcularGols(campeonato){
+  return jogos
+    .filter(j => normalizar(j.campeonato) === normalizar(campeonato.nome))
+    .reduce((total, j) => total + (j.golsA || 0) + (j.golsB || 0), 0);
 }
 
-function obterIdCampeonato(campeonato){
-  return valorCampo(campeonato, ["id", "campeonatoId"], "");
+function contarJogos(campeonato){
+  return jogos.filter(j =>
+    normalizar(j.campeonato) === normalizar(campeonato.nome)
+  ).length;
 }
 
-function obterNomeCampeonato(campeonato){
-  return valorCampo(campeonato, ["nome", "campeonato", "titulo"], "");
-}
-
-function obterLogoCampeonato(campeonato){
-  return valorCampo(campeonato, ["logo", "logoCampeonato", "imagem", "logoUrl", "urlLogo"], "logo-liga.jfif");
-}
-
-function statusPublico(status = ""){
-  const s = normalizarTexto(status);
-  return ["ativo", "em breve", "publicado", "publico", "público", "finalizado", "encerrado"].includes(s);
-}
-
-function campeonatoEhPublico(campeonato){
-  if(!campeonato) return false;
-  if(campeonato.publicado === true) return true;
-  if(campeonato.publico === true) return true;
-  if(campeonato.visivelPublico === true) return true;
-  if(statusPublico(campeonato.status)) return true;
-  if(campeonato.exemplo === true) return true;
-  return false;
-}
-
-function classeStatus(status, exemplo){
-  if(exemplo) return "status-exemplo";
-
-  const s = normalizarTexto(status);
-
-  if(s === "ativo" || s === "publicado" || s === "em andamento"){
-    return "status-ativo";
-  }
-
-  return "status-encerrado";
-}
-
-function categoriaExiste(campeonato, categoriaFiltro){
-  if(!categoriaFiltro) return true;
-
-  const categorias = Array.isArray(campeonato.categorias) ? campeonato.categorias : [];
-
-  return categorias.some(cat => {
-    if(typeof cat === "string"){
-      return normalizarTexto(cat) === normalizarTexto(categoriaFiltro);
-    }
-
-    return normalizarTexto(cat.nome || cat.categoria || "") === normalizarTexto(categoriaFiltro);
-  });
-}
-
-function filtrarJogosDoCampeonato(campeonato){
-  const idCamp = obterIdCampeonato(campeonato);
-  const nomeCamp = obterNomeCampeonato(campeonato);
-
-  return jogosCache.filter(j => {
-    const jogoCampId = valorCampo(j, ["campeonatoId"], "");
-    const jogoCampNome = valorCampo(j, ["campeonato", "nomeCampeonato"], "");
-
-    return jogoCampId === idCamp ||
-      normalizarTexto(jogoCampNome) === normalizarTexto(nomeCamp);
-  });
-}
-
-function filtrarSumulasDoCampeonato(campeonato){
-  const idCamp = obterIdCampeonato(campeonato);
-  const nomeCamp = obterNomeCampeonato(campeonato);
-
-  return sumulasCache.filter(s => {
-    const sumulaCampId = valorCampo(s, ["campeonatoId"], "");
-    const sumulaCampNome = valorCampo(s, ["campeonato", "nomeCampeonato"], "");
-
-    return sumulaCampId === idCamp ||
-      normalizarTexto(sumulaCampNome) === normalizarTexto(nomeCamp);
-  });
-}
-
-function calcularGolsDoCampeonato(campeonato){
-  const sumulas = filtrarSumulasDoCampeonato(campeonato);
-
-  let gols = 0;
-
-  sumulas.forEach(s => {
-    gols += Number(valorCampo(s, ["golsA"], 0) || 0);
-    gols += Number(valorCampo(s, ["golsB"], 0) || 0);
-  });
-
-  if(gols === 0){
-    const jogos = filtrarJogosDoCampeonato(campeonato);
-
-    jogos.forEach(j => {
-      gols += Number(valorCampo(j, ["golsA"], 0) || 0);
-      gols += Number(valorCampo(j, ["golsB"], 0) || 0);
-    });
-  }
-
-  return gols;
-}
-
-function montarCategoriasHtml(campeonato){
-  const categorias = Array.isArray(campeonato.categorias) ? campeonato.categorias : [];
-
-  if(!categorias.length){
-    return `<span class="tag">Sem categorias</span>`;
-  }
-
-  return categorias.map(cat => {
-    const nome = typeof cat === "string" ? cat : (cat.nome || cat.categoria || "");
-    return nome ? `<span class="tag">${nome}</span>` : "";
-  }).join("");
-}
-
-function preencherFiltroCampeonato(){
-  const select = document.getElementById("filtroCampeonato");
-
-  const nomes = new Set();
-
-  campeonatosCache
-    .filter(campeonatoEhPublico)
-    .forEach(c => {
-      const nome = obterNomeCampeonato(c);
-      if(nome) nomes.add(nome);
-    });
-
-  select.innerHTML = `<option value="">Todos os campeonatos</option>`;
-
-  Array.from(nomes)
-    .sort((a,b)=>a.localeCompare(b, "pt-BR"))
-    .forEach(nome => {
-      select.innerHTML += `<option value="${nome}">${nome}</option>`;
-    });
-}
-
-function preencherFiltroCategoria(){
-  const select = document.getElementById("filtroCategoria");
-  const categorias = new Set();
-
-  campeonatosCache
-    .filter(campeonatoEhPublico)
-    .forEach(c => {
-      const lista = Array.isArray(c.categorias) ? c.categorias : [];
-
-      lista.forEach(cat => {
-        const nome = typeof cat === "string" ? cat : (cat.nome || cat.categoria || "");
-        if(nome) categorias.add(nome);
-      });
-    });
-
-  select.innerHTML = `<option value="">Todas categorias</option>`;
-
-  Array.from(categorias)
-    .sort((a,b)=>a.localeCompare(b, "pt-BR"))
-    .forEach(cat => {
-      select.innerHTML += `<option value="${cat}">${cat}</option>`;
-    });
-}
-
-window.excluirExemplos = function(){
-  localStorage.setItem("ocultarExemplosCampeonatos", "sim");
-  exemplosAtivos = false;
-
-  campeonatosCache = campeonatosCache.filter(c => !c.exemplo);
-  jogosCache = jogosCache.filter(j => !j.exemplo);
-  sumulasCache = sumulasCache.filter(s => !s.exemplo);
-
-  preencherFiltroCampeonato();
-  preencherFiltroCategoria();
-  carregarCampeonatos();
-};
-
-window.restaurarExemplos = async function(){
-  localStorage.removeItem("ocultarExemplosCampeonatos");
-  exemplosAtivos = true;
-
-  await carregarDados();
-  preencherFiltroCampeonato();
-  preencherFiltroCategoria();
-  carregarCampeonatos();
-};
-
-window.carregarCampeonatos = function(){
+function render(){
   const lista = document.getElementById("listaCampeonatos");
-  const busca = normalizarTexto(document.getElementById("buscaCampeonato").value);
-  const campeonatoFiltro = document.getElementById("filtroCampeonato").value;
-  const categoriaFiltro = document.getElementById("filtroCategoria").value;
-
-  let campeonatos = campeonatosCache.filter(campeonatoEhPublico);
-
-  if(busca){
-    campeonatos = campeonatos.filter(c => {
-      const texto = normalizarTexto(`
-        ${obterNomeCampeonato(c)}
-        ${c.temporada || ""}
-        ${c.status || ""}
-      `);
-
-      return texto.includes(busca);
-    });
-  }
-
-  if(campeonatoFiltro){
-    campeonatos = campeonatos.filter(c =>
-      obterNomeCampeonato(c) === campeonatoFiltro
-    );
-  }
-
-  if(categoriaFiltro){
-    campeonatos = campeonatos.filter(c =>
-      categoriaExiste(c, categoriaFiltro)
-    );
-  }
-
-  campeonatos.sort((a,b) => {
-    if(a.exemplo && !b.exemplo) return -1;
-    if(!a.exemplo && b.exemplo) return 1;
-
-    const jogosA = filtrarJogosDoCampeonato(a).length;
-    const jogosB = filtrarJogosDoCampeonato(b).length;
-
-    if(jogosB !== jogosA) return jogosB - jogosA;
-
-    return obterNomeCampeonato(a).localeCompare(obterNomeCampeonato(b), "pt-BR");
-  });
 
   if(!campeonatos.length){
-    lista.innerHTML = `<div class="vazio">Nenhum campeonato publicado encontrado.</div>`;
+    lista.innerHTML = `<div class="vazio">Nenhum campeonato encontrado</div>`;
     return;
   }
 
   lista.innerHTML = campeonatos.map(c => {
-    const id = obterIdCampeonato(c);
-    const nome = obterNomeCampeonato(c);
-    const jogos = filtrarJogosDoCampeonato(c);
-    const sumulas = filtrarSumulasDoCampeonato(c);
-    const gols = calcularGolsDoCampeonato(c);
-    const status = valorCampo(c, ["status"], "Publicado");
-    const origem = c.exemplo ? "Exemplo" : "Firebase";
+
+    const jogosQtd = contarJogos(c);
+    const gols = calcularGols(c);
 
     return `
-      <article class="card">
+      <div class="card">
         <div class="card-top">
-          <div class="card-icon">
-            <i class="fa-solid fa-trophy"></i>
-          </div>
-
-          <div class="status-tag ${classeStatus(status, c.exemplo)}">
-            ${origem}
-          </div>
+          <div class="card-icon"><i class="fa-solid fa-trophy"></i></div>
+          <div class="status-tag status-ativo">Ativo</div>
         </div>
 
-        <img
-          src="${obterLogoCampeonato(c)}"
-          class="logo"
-          alt="${nome || "Campeonato"}"
-          onerror="this.src='logo-liga.jfif'"
-        >
+        <img src="logo-liga.jfif" class="logo">
 
-        <div class="nome-campeonato">${nome || "-"}</div>
+        <div class="nome-campeonato">${c.nome}</div>
 
         <div class="info-campeonato">
-          <strong>Temporada:</strong> ${c.temporada || "-"}<br>
-          <strong>Status:</strong> ${status}<br>
-          <strong>Jogos:</strong> ${jogos.length} |
-          <strong>Súmulas:</strong> ${sumulas.length} |
+          <strong>Temporada:</strong> ${c.temporada || "2023"}<br>
+          <strong>Jogos:</strong> ${jogosQtd}<br>
           <strong>Gols:</strong> ${gols}
         </div>
 
-        <div class="tags">
-          ${montarCategoriasHtml(c)}
-        </div>
-
-        <a class="btn-ver" href="campeonato-publico.html?id=${id}">
-          <i class="fa-solid fa-eye"></i> Ver Campeonato
+        <a class="btn-ver" href="campeonato-publico.html?id=${c.id}">
+          Ver Campeonato
         </a>
-      </article>
+      </div>
     `;
   }).join("");
-};
+}
 
-async function carregarDados(){
+/* =========================
+   🔥 FIREBASE + AUTO INTEGRAÇÃO
+========================= */
+
+async function carregar(){
   try{
-    const [snapCampeonatos, snapJogos, snapSumulas] = await Promise.all([
-      getDocs(collection(db, "campeonatos")),
-      getDocs(collection(db, "jogos")),
-      getDocs(collection(db, "sumulas"))
-    ]);
+    const snapCamp = await getDocs(collection(db, "campeonatos"));
+    const snapJogos = await getDocs(collection(db, "jogos"));
 
-    campeonatosCache = [];
-    jogosCache = [];
-    sumulasCache = [];
+    campeonatos = [];
+    jogos = [];
 
-    snapCampeonatos.forEach(docSnap => {
-      campeonatosCache.push({ id:docSnap.id, ...docSnap.data() });
+    snapCamp.forEach(doc => {
+      campeonatos.push({ id:doc.id, ...doc.data() });
     });
 
-    snapJogos.forEach(docSnap => {
-      jogosCache.push({ id:docSnap.id, ...docSnap.data() });
+    snapJogos.forEach(doc => {
+      jogos.push({ id:doc.id, ...doc.data() });
     });
 
-    snapSumulas.forEach(docSnap => {
-      sumulasCache.push({ id:docSnap.id, ...docSnap.data() });
-    });
-  }catch(erro){
-    console.error(erro);
-    campeonatosCache = [];
-    jogosCache = [];
-    sumulasCache = [];
+  }catch(e){
+    console.log("Firebase erro, usando fallback");
   }
 
-  if(exemplosAtivos){
-    campeonatosCache = [...campeonatosExemplo, ...campeonatosCache];
-    jogosCache = [...jogosExemplo, ...jogosCache];
-    sumulasCache = [...sumulasExemplo, ...sumulasCache];
-  }
+  /* 🔥 INJEÇÃO AUTOMÁTICA */
+  campeonatos.push({
+    id:"brasileirao-2023",
+    nome:"Brasileirão 2023",
+    temporada:"2023"
+  });
 
-  if(!campeonatosCache.length){
-    campeonatosCache = campeonatosExemplo;
-  }
+  jogos = [...jogosReais, ...jogos];
 
-  if(!jogosCache.length){
-    jogosCache = jogosExemplo;
-  }
-
-  if(!sumulasCache.length){
-    sumulasCache = sumulasExemplo;
-  }
+  render();
 }
 
-document.getElementById("buscaCampeonato").addEventListener("input", carregarCampeonatos);
-document.getElementById("filtroCampeonato").addEventListener("change", carregarCampeonatos);
-document.getElementById("filtroCategoria").addEventListener("change", carregarCampeonatos);
-
-async function iniciarPagina(){
-  const lista = document.getElementById("listaCampeonatos");
-  lista.innerHTML = `<div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando campeonatos...</div>`;
-
-  await carregarDados();
-  preencherFiltroCampeonato();
-  preencherFiltroCategoria();
-  carregarCampeonatos();
-}
-
-iniciarPagina();
+carregar();
 </script>
-
-</body>
-</html>
