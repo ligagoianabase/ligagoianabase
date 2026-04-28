@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Times - Admin</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#0b1f3a;
+  --card:#102a52;
+  --gold:#f7c600;
+  --white:#fff;
+}
+
+body{
+  margin:0;
+  font-family:Arial;
+  background:var(--bg);
+  color:#fff;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+h2{
+  text-align:center;
+  color:var(--gold);
+}
+
+.form{
+  display:grid;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+input{
+  padding:12px;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.salvar{
+  background:var(--gold);
+  color:#000;
+}
+
+.lista{
+  display:grid;
+  gap:10px;
+}
+
+.card{
+  background:var(--card);
+  padding:15px;
+  border-radius:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.card strong{
+  color:var(--gold);
+}
+
+.acoes{
+  display:flex;
+  gap:10px;
+}
+
+.btn{
+  padding:8px 10px;
+  border-radius:6px;
+  font-size:12px;
+}
+
+.ver{
+  background:var(--gold);
+  color:#000;
+}
+
+.excluir{
+  background:red;
+  color:#fff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Cadastro de Times</h2>
+
+<div class="form">
+<input id="nome" placeholder="Nome do time">
+<input id="logo" placeholder="URL do logo">
+<button class="salvar" onclick="salvar()">Salvar Time</button>
+</div>
+
+<div class="lista" id="lista"></div>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  deleteDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+window.salvar = async function(){
+
+  const nome = document.getElementById("nome").value.trim();
+  const logo = document.getElementById("logo").value.trim();
+
+  if(!nome) return alert("Digite o nome do time");
+
+  await addDoc(collection(db,"times"),{
+    nome,
+    logo,
+    jogos:0,
+    vitorias:0,
+    empates:0,
+    derrotas:0,
+    golsPro:0,
+    golsContra:0,
+    criadoEm:new Date().toISOString()
+  });
+
+  alert("Time criado!");
+  location.reload();
+}
+
+window.excluir = async function(id){
+  if(!confirm("Excluir time?")) return;
+  await deleteDoc(doc(db,"times",id));
+  carregar();
+}
+
+async function carregar(){
+
+  const lista = document.getElementById("lista");
+  lista.innerHTML = "Carregando...";
+
+  const snap = await getDocs(collection(db,"times"));
+
+  let html="";
+
+  snap.forEach(d=>{
+    const t=d.data();
+
+    html+=`
+    <div class="card">
+      <div>
+        <strong>${t.nome}</strong><br>
+        Jogos: ${t.jogos||0}
+      </div>
+
+      <div class="acoes">
+        <button class="btn excluir" onclick="excluir('${d.id}')">Excluir</button>
+      </div>
+    </div>
+    `;
+  });
+
+  lista.innerHTML = html || "Nenhum time cadastrado";
+}
+
+carregar();
+</script>
+
+</body>
+</html>
