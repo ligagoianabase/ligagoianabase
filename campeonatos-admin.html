@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Campeonatos ADM - LIGA GOIANA</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#0b1f3a;
+  --card:#102a52;
+  --gold:#f7c600;
+  --white:#fff;
+  --muted:#d8e1ef;
+}
+
+body{
+  font-family:Arial;
+  background:#0b1f3a;
+  color:#fff;
+}
+
+.wrap{max-width:1200px;margin:auto;padding:20px}
+
+.menu{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+}
+
+.menu a{
+  background:#0d2346;
+  padding:10px;
+  border-radius:10px;
+  white-space:nowrap;
+}
+
+.menu a.ativo{
+  background:var(--gold);
+  color:#000;
+}
+
+.panel{
+  background:#102a52;
+  padding:20px;
+  border-radius:16px;
+  margin-bottom:20px;
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  margin-top:6px;
+}
+
+.checkbox-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:6px;
+}
+
+.card{
+  background:#102a52;
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div class="menu">
+<a href="admin.html">Painel</a>
+<a href="campeonatos-admin.html" class="ativo">Campeonatos</a>
+<a href="jogos-admin.html">Jogos</a>
+<a href="times-admin.html">Times</a>
+</div>
+
+<div class="panel">
+
+<h2>Novo Campeonato</h2>
+
+<input id="nome" placeholder="Nome">
+<input id="temporada" placeholder="Temporada">
+
+<input type="file" id="logoFile">
+
+<select id="formato">
+<option value="">Formato</option>
+<option>Pontos corridos</option>
+<option>Mata-mata</option>
+</select>
+
+<select id="status">
+<option value="rascunho">Rascunho</option>
+<option value="publicado">Publicado</option>
+</select>
+
+<h3>Categorias</h3>
+<div class="checkbox-grid" id="cats"></div>
+
+<button onclick="salvar()">Salvar</button>
+
+</div>
+
+<div id="lista"></div>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+collection, addDoc, getDocs, deleteDoc, doc, updateDoc
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+import {
+getStorage, ref, uploadBytes, getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
+
+const storage = getStorage();
+
+const categorias = [
+"Sub-11","Sub-12","Sub-13","Sub-14","Sub-15",
+"Sub-16","Sub-17","Sub-18","Sub-19","Sub-20","Sub-21"
+];
+
+const catDiv = document.getElementById("cats");
+
+categorias.forEach(c=>{
+catDiv.innerHTML += `
+<label>
+<input type="checkbox" value="${c}"> ${c}
+</label>`;
+});
+
+function getCategorias(){
+return [...document.querySelectorAll("#cats input:checked")]
+.map(i=>i.value);
+}
+
+window.salvar = async function(){
+
+let file = document.getElementById("logoFile").files[0];
+
+let logo = "";
+
+if(file){
+let r = ref(storage,"campeonatos/"+Date.now());
+await uploadBytes(r,file);
+logo = await getDownloadURL(r);
+}
+
+await addDoc(collection(db,"campeonatos"),{
+nome:document.getElementById("nome").value,
+temporada:document.getElementById("temporada").value,
+formato:document.getElementById("formato").value,
+status:document.getElementById("status").value,
+categorias:getCategorias(),
+logo
+});
+
+alert("Salvo");
+carregar();
+}
+
+async function carregar(){
+
+const lista = document.getElementById("lista");
+lista.innerHTML="";
+
+const snap = await getDocs(collection(db,"campeonatos"));
+
+snap.forEach(d=>{
+let c = d.data();
+
+lista.innerHTML += `
+<div class="card">
+<b>${c.nome}</b><br>
+${c.temporada}<br>
+${c.formato}<br>
+${(c.categorias||[]).join(", ")}<br>
+
+<button onclick="del('${d.id}')">Excluir</button>
+</div>
+`;
+});
+}
+
+window.del = async function(id){
+await deleteDoc(doc(db,"campeonatos",id));
+carregar();
+}
+
+carregar();
+</script>
+
+</body>
+</html>
