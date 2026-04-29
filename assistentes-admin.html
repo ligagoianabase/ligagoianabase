@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-/* ===== MESMO CSS DO ÁRBITRO ===== */
 :root{
   --bg:#0b1f3a;
   --bg-dark:#08172c;
@@ -33,11 +32,15 @@ body{
     linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
     url("fundo.png") center/cover fixed no-repeat;
   color:var(--white);
+  min-height:100vh;
 }
+
+a{text-decoration:none;color:inherit;transition:var(--transition)}
+button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
+input,select{font-family:inherit}
 
 .wrap{width:min(100% - 28px, var(--max));margin:0 auto}
 
-/* HEADER */
 header{
   background:rgba(8,23,44,.96);
   border-bottom:3px solid var(--gold);
@@ -45,15 +48,20 @@ header{
 }
 
 .header-top{
+  min-height:82px;
   display:flex;
   align-items:center;
   justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
   padding:14px 0;
 }
 
 .header-left,.header-right{
   display:flex;
+  align-items:center;
   gap:10px;
+  flex-wrap:wrap;
 }
 
 .header-title{
@@ -64,17 +72,25 @@ header{
 }
 
 .top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
   padding:10px 16px;
   border-radius:10px;
   font-weight:700;
+  white-space:nowrap;
 }
 
 .btn-light{background:#fff4cf;color:#111}
+.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
 .btn-gold{background:var(--gold);color:#111}
+.btn-gold:hover{filter:brightness(1.04);transform:translateY(-2px)}
 
-/* MENU */
 .nav-bar{
   background:rgba(16,42,82,.95);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
 
 .menu{
@@ -86,25 +102,56 @@ header{
 }
 
 .menu a{
+  color:white;
+  font-weight:700;
+  font-size:14px;
   background:#0d2346;
   padding:10px 14px;
   border-radius:10px;
-  font-weight:700;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+
+.menu a:hover{
+  color:var(--gold);
+  background:var(--gold-soft);
+  border-color:var(--gold-line);
 }
 
 .menu a.ativo{
   background:var(--gold);
-  color:#000;
+  color:black;
 }
 
-/* PANEL */
-.container{padding:24px 0}
+.container{padding:24px 0 34px}
 
 .hero,.form-panel{
-  background:#102a52;
-  padding:20px;
-  border-radius:16px;
+  background:linear-gradient(135deg,#102a52,#0d2346);
+  border:1px solid var(--gold-line);
+  border-radius:18px;
+  padding:22px;
   margin-bottom:20px;
+  box-shadow:var(--shadow);
+}
+
+.hero h2{
+  margin:0 0 8px;
+  color:var(--gold);
+  font-size:28px;
+}
+
+.hero p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
+  font-size:15px;
+}
+
+.form-title{
+  color:var(--gold);
+  font-size:20px;
+  margin-bottom:14px;
+  font-weight:900;
 }
 
 .form-grid{
@@ -113,43 +160,194 @@ header{
   gap:12px;
 }
 
-input,select{
-  padding:12px;
-  border-radius:10px;
-  border:none;
-}
-
 .full{grid-column:1/-1}
 
-/* CARD */
+label{
+  display:block;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:6px;
+  color:#fff;
+}
+
+input,select{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+}
+
+input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
+
+.preview-foto{
+  display:none;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.preview-foto img{
+  width:78px;
+  height:78px;
+  object-fit:cover;
+  background:#fff;
+  border-radius:50%;
+  border:2px solid var(--gold);
+}
+
+.preview-foto span{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.form-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  margin-bottom:20px;
+}
+
 .lista-grid{
   display:grid;
-  gap:12px;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:14px;
 }
 
 .card{
-  background:#102a52;
-  padding:15px;
-  border-radius:14px;
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:16px;
+  border-radius:16px;
   display:flex;
   justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  border:1px solid rgba(255,230,0,.10);
+  box-shadow:var(--shadow);
 }
 
-.btn{
-  padding:8px 12px;
-  border-radius:8px;
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold-line);
+}
+
+.player{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex:1;
+}
+
+.photo{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid rgba(255,255,255,.15);
+  background:#fff;
+  flex-shrink:0;
+}
+
+.player-info{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.nome-jogador{
   font-weight:700;
-  cursor:pointer;
+  font-size:18px;
+  color:#fff;
 }
 
+.player-info small{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:4px;
+}
+
+.tag{
+  background:#1a3f73;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.btn-acao{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:11px 14px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:13px;
+  border:none;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.btn-ver{background:var(--gold);color:black}
 .btn-danger{background:#d94141;color:#fff}
-.btn-ver{background:var(--gold);color:#000}
+.btn-green{background:#25d366;color:#fff}
+.btn-blue{background:#1a3f73;color:#fff}
+
+.vazio{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:30px;
+  border-radius:14px;
+  text-align:center;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:var(--shadow);
+  grid-column:1/-1;
+}
+
+@media(max-width:900px){
+  .header-title{order:3;width:100%;text-align:center}
+  .header-left,.header-right{width:100%;justify-content:center}
+  .form-grid,.filtros{grid-template-columns:1fr}
+  .card{flex-direction:column;align-items:flex-start}
+  .actions{width:100%;justify-content:flex-start}
+}
 
 @media(max-width:600px){
+  .top-btn,.btn-acao{width:100%;justify-content:center}
+  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
+  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
   .menu{
-    overflow-x:auto;
+    justify-content:flex-start;
     flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:14px;
   }
+  .menu a{flex:0 0 auto}
 }
 </style>
 </head>
@@ -159,18 +357,24 @@ input,select{
 <header>
   <div class="wrap header-top">
     <div class="header-left">
-      <a href="index.html" class="top-btn btn-light">Início</a>
-      <a href="admin.html" class="top-btn btn-light">Painel</a>
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
+
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
     </div>
 
     <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
     <div class="header-right">
-      <button class="top-btn btn-gold" onclick="salvar()">Salvar Assistente</button>
+      <button class="top-btn btn-gold" type="button" onclick="salvarAssistente()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Assistente
+      </button>
     </div>
   </div>
 
-  <!-- 🔥 MENU IDÊNTICO -->
   <div class="nav-bar">
     <div class="wrap">
       <div class="menu">
@@ -192,112 +396,395 @@ input,select{
 
   <div class="hero">
     <h2>Assistentes ADM</h2>
-    <p>Cadastro idêntico ao árbitro. Pode atuar em qualquer função na escala.</p>
+    <p>Cadastre assistentes com foto, telefone, WhatsApp, e-mail e função principal. Na escala, qualquer cadastrado poderá atuar como árbitro central, assistente ou 4º árbitro.</p>
   </div>
 
-  <div class="form-panel">
+  <section class="form-panel">
+    <div class="form-title" id="tituloFormulario">Novo Assistente</div>
+
+    <input type="hidden" id="assistenteId">
 
     <div class="form-grid">
+      <div>
+        <label>Nome completo</label>
+        <input id="nome" placeholder="Nome do assistente">
+      </div>
 
-      <input id="nome" placeholder="Nome">
-      <input id="cpf" placeholder="CPF">
+      <div>
+        <label>CPF</label>
+        <input id="cpf" placeholder="CPF">
+      </div>
 
-      <select id="status">
-        <option value="ativo">Ativo</option>
-        <option value="inativo">Inativo</option>
-      </select>
+      <div>
+        <label>Status</label>
+        <select id="status">
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
+          <option value="suspenso">Suspenso</option>
+        </select>
+      </div>
 
-      <input id="telefone" placeholder="Telefone">
-      <input id="whatsapp" placeholder="WhatsApp">
-      <input id="email" placeholder="Email">
+      <div>
+        <label>Telefone</label>
+        <input id="telefone" placeholder="Ex: (62) 99999-9999">
+      </div>
 
-      <select id="funcao">
-        <option>Assistente</option>
-        <option>Árbitro Centro</option>
-        <option>4º Árbitro</option>
-      </select>
+      <div>
+        <label>WhatsApp</label>
+        <input id="whatsapp" placeholder="Ex: 5562999999999">
+      </div>
 
-      <input id="foto" placeholder="Foto URL">
-      <input type="file" id="fotoFile" class="full">
+      <div>
+        <label>E-mail</label>
+        <input id="email" type="email" placeholder="email@exemplo.com">
+      </div>
 
+      <div>
+        <label>Função principal</label>
+        <select id="funcaoPrincipal">
+          <option value="Assistente">Assistente</option>
+          <option value="Árbitro Centro">Árbitro Centro</option>
+          <option value="4º Árbitro">4º Árbitro</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Foto URL</label>
+        <input id="foto" placeholder="foto-assistente.png ou URL">
+      </div>
+
+      <div>
+        <label>Enviar foto do PC/Celular</label>
+        <input type="file" id="fotoArquivo" accept="image/*" onchange="previewFotoArquivo()">
+      </div>
+
+      <div class="full">
+        <label>Prévia</label>
+        <div class="preview-foto" id="previewFotoBox">
+          <img id="previewFotoImg" src="logo-liga.jfif">
+          <span id="previewFotoTexto">Pré-visualização da foto</span>
+        </div>
+      </div>
     </div>
 
-    <br>
-    <button class="btn btn-ver" onclick="salvar()">Salvar</button>
+    <div class="form-actions">
+      <button class="btn-acao btn-ver" type="button" onclick="salvarAssistente()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Assistente
+      </button>
 
+      <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
+        <i class="fa-solid fa-broom"></i> Limpar
+      </button>
+    </div>
+  </section>
+
+  <div class="filtros">
+    <input id="buscaAssistente" placeholder="Pesquisar assistente...">
+
+    <select id="filtroFuncao">
+      <option value="">Todas as funções</option>
+      <option value="Árbitro Centro">Árbitro Centro</option>
+      <option value="Assistente">Assistente</option>
+      <option value="4º Árbitro">4º Árbitro</option>
+    </select>
+
+    <select id="filtroStatus">
+      <option value="">Todos os status</option>
+      <option value="ativo">Ativo</option>
+      <option value="inativo">Inativo</option>
+      <option value="suspenso">Suspenso</option>
+    </select>
   </div>
 
-  <div id="lista" class="lista-grid"></div>
+  <div class="lista-grid" id="listaAssistentes"></div>
 
 </div>
 
 <script type="module">
 import { db } from "./firebase.js";
 import {
-collection, addDoc, getDocs, deleteDoc, doc
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 import {
-getStorage, ref, uploadBytes, getDownloadURL
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
 
 const storage = getStorage();
 
-window.salvar = async function(){
+let assistentesCache = [];
+let fotoAtual = "";
 
-let file = document.getElementById("fotoFile").files[0];
-let foto = document.getElementById("foto").value || "logo-liga.jfif";
-
-if(file){
-let r = ref(storage,"assistentes/"+Date.now());
-await uploadBytes(r,file);
-foto = await getDownloadURL(r);
+function txt(v){
+  return String(v || "").trim();
 }
 
-await addDoc(collection(db,"assistentes"),{
-nome:document.getElementById("nome").value,
-cpf:document.getElementById("cpf").value,
-telefone:document.getElementById("telefone").value,
-whatsapp:document.getElementById("whatsapp").value,
-email:document.getElementById("email").value,
-funcao:document.getElementById("funcao").value,
-status:document.getElementById("status").value,
-foto
-});
-
-alert("Salvo!");
-carregar();
+function normalizarTexto(texto){
+  return String(texto || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
 }
 
-async function carregar(){
-const lista = document.getElementById("lista");
-lista.innerHTML="";
-
-const snap = await getDocs(collection(db,"assistentes"));
-
-snap.forEach(d=>{
-let a = d.data();
-
-lista.innerHTML += `
-<div class="card">
-<div>
-<b>${a.nome}</b><br>
-${a.funcao}<br>
-${a.telefone}
-</div>
-
-<button class="btn btn-danger" onclick="del('${d.id}')">Excluir</button>
-</div>
-`;
-});
+function limparNumero(v){
+  return String(v || "").replace(/\D/g,"");
 }
 
-window.del = async function(id){
-await deleteDoc(doc(db,"assistentes",id));
-carregar();
+window.previewFotoArquivo = function(){
+  const arquivo = document.getElementById("fotoArquivo").files[0];
+  if(!arquivo) return;
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    document.getElementById("previewFotoBox").style.display = "flex";
+    document.getElementById("previewFotoImg").src = e.target.result;
+    document.getElementById("previewFotoTexto").textContent = arquivo.name;
+  };
+
+  leitor.readAsDataURL(arquivo);
+};
+
+async function uploadFotoSeExistir(){
+  const arquivo = document.getElementById("fotoArquivo").files[0];
+  const fotoUrlManual = txt(document.getElementById("foto").value);
+
+  if(arquivo){
+    const nomeArquivo = `assistentes/${Date.now()}-${arquivo.name}`;
+    const referencia = ref(storage,nomeArquivo);
+    await uploadBytes(referencia,arquivo);
+    return await getDownloadURL(referencia);
+  }
+
+  if(fotoUrlManual) return fotoUrlManual;
+
+  return fotoAtual || "logo-liga.jfif";
 }
 
-carregar();
+window.limparFormulario = function(){
+  document.getElementById("assistenteId").value = "";
+  document.getElementById("nome").value = "";
+  document.getElementById("cpf").value = "";
+  document.getElementById("status").value = "ativo";
+  document.getElementById("telefone").value = "";
+  document.getElementById("whatsapp").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("funcaoPrincipal").value = "Assistente";
+  document.getElementById("foto").value = "";
+  document.getElementById("fotoArquivo").value = "";
+  document.getElementById("tituloFormulario").textContent = "Novo Assistente";
+  document.getElementById("previewFotoBox").style.display = "none";
+  document.getElementById("previewFotoImg").src = "logo-liga.jfif";
+  document.getElementById("previewFotoTexto").textContent = "Pré-visualização da foto";
+  fotoAtual = "";
+};
+
+window.salvarAssistente = async function(){
+  const id = document.getElementById("assistenteId").value;
+
+  const nome = txt(document.getElementById("nome").value);
+  const cpf = txt(document.getElementById("cpf").value);
+  const status = document.getElementById("status").value;
+  const telefone = txt(document.getElementById("telefone").value);
+  const whatsapp = limparNumero(document.getElementById("whatsapp").value);
+  const email = txt(document.getElementById("email").value);
+  const funcaoPrincipal = document.getElementById("funcaoPrincipal").value;
+
+  if(!nome) return alert("Digite o nome do assistente.");
+  if(!cpf) return alert("Digite o CPF.");
+  if(!telefone) return alert("Digite o telefone.");
+  if(!whatsapp) return alert("Digite o WhatsApp.");
+  if(!email) return alert("Digite o e-mail.");
+
+  const foto = await uploadFotoSeExistir();
+
+  const dados = {
+    nome,
+    cpf,
+    status,
+    telefone,
+    whatsapp,
+    email,
+    funcaoPrincipal,
+    funcao:funcaoPrincipal,
+    podeAtuarComo:["Árbitro Centro","Assistente","4º Árbitro"],
+    foto,
+    atualizadoEm:serverTimestamp()
+  };
+
+  if(id){
+    await updateDoc(doc(db,"assistentes",id),dados);
+    alert("Assistente atualizado!");
+  }else{
+    await addDoc(collection(db,"assistentes"),{
+      ...dados,
+      jogos:0,
+      jogosComoArbitroCentro:0,
+      jogosComoAssistente:0,
+      jogosComoQuartoArbitro:0,
+      cartoesAplicados:0,
+      criadoEm:serverTimestamp()
+    });
+    alert("Assistente cadastrado!");
+  }
+
+  limparFormulario();
+  await carregarAssistentes();
+};
+
+window.editarAssistente = function(id){
+  const a = assistentesCache.find(x=>x.id === id);
+  if(!a) return;
+
+  document.getElementById("assistenteId").value = a.id;
+  document.getElementById("nome").value = a.nome || "";
+  document.getElementById("cpf").value = a.cpf || "";
+  document.getElementById("status").value = a.status || "ativo";
+  document.getElementById("telefone").value = a.telefone || "";
+  document.getElementById("whatsapp").value = a.whatsapp || "";
+  document.getElementById("email").value = a.email || "";
+  document.getElementById("funcaoPrincipal").value = a.funcaoPrincipal || a.funcao || "Assistente";
+  document.getElementById("foto").value = a.foto || "";
+  document.getElementById("fotoArquivo").value = "";
+  document.getElementById("tituloFormulario").textContent = "Editar Assistente";
+
+  fotoAtual = a.foto || "";
+
+  if(fotoAtual){
+    document.getElementById("previewFotoBox").style.display = "flex";
+    document.getElementById("previewFotoImg").src = fotoAtual;
+    document.getElementById("previewFotoTexto").textContent = "Foto atual";
+  }
+
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.excluirAssistente = async function(id){
+  if(!confirm("Excluir assistente?")) return;
+  await deleteDoc(doc(db,"assistentes",id));
+  await carregarAssistentes();
+};
+
+window.abrirWhatsapp = function(numero){
+  const n = limparNumero(numero);
+  if(!n) return alert("WhatsApp não informado.");
+  window.open("https://wa.me/" + n, "_blank");
+};
+
+async function carregarAssistentes(){
+  const lista = document.getElementById("listaAssistentes");
+  lista.innerHTML = `<div class="vazio">Carregando assistentes...</div>`;
+
+  const snap = await getDocs(collection(db,"assistentes"));
+
+  assistentesCache = [];
+  snap.forEach(d=>assistentesCache.push({id:d.id,...d.data()}));
+
+  assistentesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+
+  renderizarAssistentes();
+}
+
+function renderizarAssistentes(){
+  const lista = document.getElementById("listaAssistentes");
+  const busca = normalizarTexto(document.getElementById("buscaAssistente").value);
+  const filtroFuncao = document.getElementById("filtroFuncao").value;
+  const filtroStatus = document.getElementById("filtroStatus").value;
+
+  let assistentes = assistentesCache.filter(a=>{
+    if(filtroFuncao && (a.funcaoPrincipal || a.funcao) !== filtroFuncao) return false;
+    if(filtroStatus && a.status !== filtroStatus) return false;
+
+    if(busca){
+      const texto = normalizarTexto(`
+        ${a.nome || ""}
+        ${a.cpf || ""}
+        ${a.telefone || ""}
+        ${a.whatsapp || ""}
+        ${a.email || ""}
+        ${a.funcaoPrincipal || a.funcao || ""}
+      `);
+
+      if(!texto.includes(busca)) return false;
+    }
+
+    return true;
+  });
+
+  if(!assistentes.length){
+    lista.innerHTML = `<div class="vazio">Nenhum assistente encontrado.</div>`;
+    return;
+  }
+
+  lista.innerHTML = assistentes.map(a=>`
+    <div class="card">
+      <div class="player">
+        <img
+          src="${a.foto || "logo-liga.jfif"}"
+          class="photo"
+          onerror="this.src='logo-liga.jfif'"
+        >
+
+        <div class="player-info">
+          <div class="nome-jogador">${a.nome || "-"}</div>
+
+          <small>CPF: ${a.cpf || "-"}</small>
+          <small>Telefone: ${a.telefone || "-"}</small>
+          <small>WhatsApp: ${a.whatsapp || "-"}</small>
+          <small>E-mail: ${a.email || "-"}</small>
+          <small>Função principal: ${a.funcaoPrincipal || a.funcao || "-"}</small>
+
+          <small>
+            Jogos: ${Number(a.jogos || 0)} |
+            Centro: ${Number(a.jogosComoArbitroCentro || 0)} |
+            Assistente: ${Number(a.jogosComoAssistente || 0)} |
+            4º: ${Number(a.jogosComoQuartoArbitro || 0)}
+          </small>
+
+          <div class="tags">
+            <span class="tag">${a.status || "ativo"}</span>
+            <span class="tag">${a.funcaoPrincipal || a.funcao || "Assistente"}</span>
+            <span class="tag">Pode atuar em qualquer função</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-acao btn-green" onclick="abrirWhatsapp('${a.whatsapp || ""}')">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp
+        </button>
+
+        <a class="btn-acao btn-blue" href="mailto:${a.email || ""}">
+          <i class="fa-solid fa-envelope"></i> E-mail
+        </a>
+
+        <button class="btn-acao btn-ver" onclick="editarAssistente('${a.id}')">
+          <i class="fa-solid fa-pen"></i> Editar
+        </button>
+
+        <button class="btn-acao btn-danger" onclick="excluirAssistente('${a.id}')">
+          <i class="fa-solid fa-trash"></i> Excluir
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
+
+document.getElementById("buscaAssistente").addEventListener("input",renderizarAssistentes);
+document.getElementById("filtroFuncao").addEventListener("change",renderizarAssistentes);
+document.getElementById("filtroStatus").addEventListener("change",renderizarAssistentes);
+
+await carregarAssistentes();
 </script>
 
 </body>
