@@ -121,6 +121,10 @@ header{
   background:rgba(27,94,32,.85);
 }
 
+.status.negado{
+  background:rgba(180,35,35,.85);
+}
+
 .placar-box{
   display:grid;
   grid-template-columns:1fr 230px 1fr;
@@ -448,7 +452,8 @@ th{
 </main>
 
 <script type="module">
-import { db } from "./firebase.js";
+import { auth, db } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 import {
   doc,
   getDoc,
@@ -461,14 +466,26 @@ import {
 const id = new URLSearchParams(location.search).get("id");
 
 let jogo = {};
+let sumula = {};
+let usuarioAtual = null;
+let perfilAtual = null;
 let gols = [];
 let cartoes = [];
 let finalizada = false;
+let acessoLiberado = false;
 
 function el(id){return document.getElementById(id)}
 
 function safe(v){
   return v || "";
+}
+
+function normalizar(txt){
+  return String(txt || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
 }
 
 function normalizarId(texto){
@@ -481,19 +498,45 @@ function normalizarId(texto){
 
 function todosJogadores(){
   return [
-    ...(jogo.titularesA || jogo.escalacaoA || []),
-    ...(jogo.titularesB || jogo.escalacaoB || [])
+    ...(sumula.titularesA || sumula.escalacaoA || jogo.titularesA || jogo.escalacaoA || []),
+    ...(sumula.titularesB || sumula.escalacaoB || jogo.titularesB || jogo.escalacaoB || [])
   ];
 }
 
 function jogadoresDoLado(lado){
   return lado === "A"
-    ? (jogo.titularesA || jogo.escalacaoA || [])
-    : (jogo.titularesB || jogo.escalacaoB || []);
+    ? (sumula.titularesA || sumula.escalacaoA || jogo.titularesA || jogo.escalacaoA || [])
+    : (sumula.titularesB || sumula.escalacaoB || jogo.titularesB || jogo.escalacaoB || []);
 }
 
 function jogadorPorIdOuNome(idOuNome){
   return todosJogadores().find(j => j.id === idOuNome || j.nome === idOuNome) || {};
+}
+
+function usuarioEhAdmin(){
+  const tipo = normalizar(perfilAtual?.tipo || perfilAtual?.perfil || perfilAtual?.funcao || perfilAtual?.cargo || "");
+  const nivel = normalizar(perfilAtual?.nivel || perfilAtual?.role || "");
+  return tipo.includes("admin") || nivel.includes("admin") || perfilAtual?.admin === true;
+}
+
+function usuarioEhArbitroDesignado(){
+  if(!usuarioAtual) return false;
+
+  const uid = usuarioAtual.uid;
+  const email = normalizar(usuarioAtual.email);
+
+  const arbitroUid = sumula.arbitroUid || jogo.arbitroUid || "";
+  const arbitroId = sumula.arbitroId || jogo.arbitroId || "";
+  const arbitroEmail = normalizar(sumula.arbitroEmail || jogo.arbitroEmail || perfilAtual?.email || "");
+
+  if(uid && arbitroUid && uid === arbitroUid) return true;
+  if(uid && arbitroId && uid === arbitroId) return true;
+  if(email && arbitroEmail && email === arbitroEmail) return true;
+
+  if(perfilAtual?.arbitroId && arbitroId && perfilAtual.arbitroId === arbitroId) return true;
+  if(perfilAtual?.id && arbitroId && perfilAtual.id === arbitroId) return true;
+
+  return false;
 }
 
 function renderJogadores(lista){
@@ -563,61 +606,117 @@ function bloquearTela(){
   });
 }
 
+function bloquearPorAcesso(){
+  acessoLiberado = false;
+  document.querySelectorAll("input,select,textarea,button").forEach(c=>{
+    if(c.textContent.includes("Ver Pública")) return;
+    c.disabled = true;
+  });
+  el("statusJogo").innerText = "ACESSO NEGADO: somente o ADM ou o árbitro designado pode preencher esta súmula.";
+  el("statusJogo").classList.add("negado");
+}
+
+async function carregarPerfilUsuario(uid){
+  const caminhos = [
+    ["usuarios",uid],
+    ["users",uid],
+    ["admins",uid],
+    ["arbitros",uid]
+  ];
+
+  for(const caminho of caminhos){
+    const snap = await getDoc(doc(db,caminho[0],caminho[1]));
+    if(snap.exists()){
+      return {id:snap.id,...snap.data()};
+    }
+  }
+
+  return null;
+}
+
 async function carregar(){
   if(!id){
     document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px'>Jogo não informado.</h2>";
     return;
   }
 
-  const snap = await getDoc(doc(db,"jogos",id));
+  const jogoSnap = await getDoc(doc(db,"jogos",id));
 
-  if(!snap.exists()){
+  if(!jogoSnap.exists()){
     document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px'>Jogo não encontrado.</h2>";
     return;
   }
 
-  jogo = snap.data();
-  gols = jogo.gols || [];
-  cartoes = jogo.cartoes || [];
-  finalizada = jogo.sumulaFinalizada === true;
+  jogo = {id:jogoSnap.id,...jogoSnap.data()};
+
+  const sumulaSnap = await getDoc(doc(db,"sumulas",id));
+
+  if(sumulaSnap.exists()){
+    sumula = {id:sumulaSnap.id,...sumulaSnap.data()};
+  }else{
+    sumula = {
+      id,
+      jogoId:id,
+      ...jogo,
+      status:"pendente",
+      sumulaFinalizada:false,
+      publica:false,
+      finalizadaEm:null
+    };
+
+    await setDoc(doc(db,"sumulas",id),sumula,{merge:true});
+  }
+
+  gols = sumula.gols || jogo.gols || [];
+  cartoes = sumula.cartoes || jogo.cartoes || [];
+  finalizada = sumula.sumulaFinalizada === true || jogo.sumulaFinalizada === true;
 
   el("infoJogo").innerHTML = `
-    <strong>${safe(jogo.campeonato)}</strong> - ${safe(jogo.categoria)}<br>
-    ${safe(jogo.rodada)} | ${safe(jogo.data)} | ${safe(jogo.local)}
+    <strong>${safe(sumula.campeonato || jogo.campeonato)}</strong> - ${safe(sumula.categoria || jogo.categoria)}<br>
+    ${safe(sumula.rodada || jogo.rodada)} | ${safe(sumula.data || jogo.data)} | ${safe(sumula.local || jogo.local)}
+    <br>Árbitro: <strong>${safe(sumula.arbitro || jogo.arbitro || "-")}</strong>
   `;
 
-  el("statusJogo").innerText = finalizada ? "SÚMULA FINALIZADA" : (jogo.status || "aberta");
+  el("statusJogo").innerText = finalizada ? "SÚMULA FINALIZADA" : (sumula.status || jogo.status || "aberta");
   if(finalizada) el("statusJogo").classList.add("finalizado");
 
-  el("timeA").innerText = jogo.timeA?.nome || "Time A";
-  el("timeB").innerText = jogo.timeB?.nome || "Time B";
+  el("timeA").innerText = sumula.timeA?.nome || jogo.timeA?.nome || "Time A";
+  el("timeB").innerText = sumula.timeB?.nome || jogo.timeB?.nome || "Time B";
 
-  el("logoA").src = jogo.timeA?.logo || jogo.timeA?.escudo || "logo-liga.jfif";
-  el("logoB").src = jogo.timeB?.logo || jogo.timeB?.escudo || "logo-liga.jfif";
+  el("logoA").src = sumula.timeA?.logo || sumula.timeA?.escudo || jogo.timeA?.logo || jogo.timeA?.escudo || "logo-liga.jfif";
+  el("logoB").src = sumula.timeB?.logo || sumula.timeB?.escudo || jogo.timeB?.logo || jogo.timeB?.escudo || "logo-liga.jfif";
 
-  el("placarA").value = jogo.placar?.A ?? jogo.golsA ?? 0;
-  el("placarB").value = jogo.placar?.B ?? jogo.golsB ?? 0;
+  el("placarA").value = sumula.placar?.A ?? jogo.placar?.A ?? sumula.golsA ?? jogo.golsA ?? 0;
+  el("placarB").value = sumula.placar?.B ?? jogo.placar?.B ?? sumula.golsB ?? jogo.golsB ?? 0;
 
-  el("tituloEscA").innerText = "Escalação - " + (jogo.timeA?.nome || "Time A");
-  el("tituloEscB").innerText = "Escalação - " + (jogo.timeB?.nome || "Time B");
+  el("tituloEscA").innerText = "Escalação - " + (sumula.timeA?.nome || jogo.timeA?.nome || "Time A");
+  el("tituloEscB").innerText = "Escalação - " + (sumula.timeB?.nome || jogo.timeB?.nome || "Time B");
 
-  el("elencoA").innerHTML = renderJogadores(jogo.titularesA || jogo.escalacaoA);
-  el("elencoB").innerHTML = renderJogadores(jogo.titularesB || jogo.escalacaoB);
+  el("elencoA").innerHTML = renderJogadores(sumula.titularesA || sumula.escalacaoA || jogo.titularesA || jogo.escalacaoA);
+  el("elencoB").innerHTML = renderJogadores(sumula.titularesB || sumula.escalacaoB || jogo.titularesB || jogo.escalacaoB);
 
-  el("observacoes").value = jogo.observacoes || jogo.observacoesArbitro || "";
+  el("observacoes").value = sumula.observacoes || sumula.observacoesArbitro || jogo.observacoes || jogo.observacoesArbitro || "";
 
   atualizarSelectsPorTime();
   atualizarMelhorJogador();
 
-  if(jogo.melhorJogadorId){
-    el("melhorJogador").value = jogo.melhorJogadorId;
-  }else if(jogo.melhorJogador){
-    const mj = todosJogadores().find(j => j.nome === jogo.melhorJogador);
+  const melhorId = sumula.melhorJogadorId || jogo.melhorJogadorId;
+  const melhorNome = sumula.melhorJogador || jogo.melhorJogador;
+
+  if(melhorId){
+    el("melhorJogador").value = melhorId;
+  }else if(melhorNome){
+    const mj = todosJogadores().find(j => j.nome === melhorNome);
     if(mj) el("melhorJogador").value = mj.id || mj.nome;
   }
 
   atualizarListaGols();
   atualizarListaCartoes();
+
+  if(!acessoLiberado){
+    bloquearPorAcesso();
+    return;
+  }
 
   if(finalizada){
     bloquearTela();
@@ -625,6 +724,8 @@ async function carregar(){
 }
 
 window.adicionarGol = function(){
+  if(!acessoLiberado || finalizada) return;
+
   const jogador = jogadorPorIdOuNome(el("golJogador").value);
 
   if(!jogador.nome) return alert("Selecione o jogador.");
@@ -644,11 +745,14 @@ window.adicionarGol = function(){
 };
 
 window.removerGol = function(i){
+  if(!acessoLiberado || finalizada) return;
   gols.splice(i,1);
   atualizarListaGols();
 };
 
 window.adicionarCartao = function(){
+  if(!acessoLiberado || finalizada) return;
+
   const jogador = jogadorPorIdOuNome(el("cartaoJogador").value);
 
   if(!jogador.nome) return alert("Selecione o jogador.");
@@ -668,36 +772,46 @@ window.adicionarCartao = function(){
 };
 
 window.removerCartao = function(i){
+  if(!acessoLiberado || finalizada) return;
   cartoes.splice(i,1);
   atualizarListaCartoes();
 };
 
 function dadosBaseSalvar(finalizar=false){
   const melhor = jogadorPorIdOuNome(el("melhorJogador").value);
+  const placarA = Number(el("placarA").value || 0);
+  const placarB = Number(el("placarB").value || 0);
 
   return {
     gols,
     cartoes,
     placar:{
-      A:Number(el("placarA").value || 0),
-      B:Number(el("placarB").value || 0)
+      A:placarA,
+      B:placarB
     },
-    golsA:Number(el("placarA").value || 0),
-    golsB:Number(el("placarB").value || 0),
+    golsA:placarA,
+    golsB:placarB,
     observacoes:el("observacoes").value,
     observacoesArbitro:el("observacoes").value,
     melhorJogadorId:melhor.id || "",
     melhorJogador:melhor.nome || "",
     status:finalizar ? "finalizado" : "rascunho",
     sumulaFinalizada:finalizar,
+    publica:finalizar,
+    publico:finalizar,
     atualizadoEm:serverTimestamp()
   };
 }
 
 window.salvarRascunho = async function(){
+  if(!acessoLiberado) return alert("Acesso negado.");
   if(finalizada) return alert("Súmula já finalizada.");
 
-  await updateDoc(doc(db,"jogos",id),dadosBaseSalvar(false));
+  const dados = dadosBaseSalvar(false);
+
+  await updateDoc(doc(db,"jogos",id),dados);
+  await setDoc(doc(db,"sumulas",id),dados,{merge:true});
+
   alert("Rascunho salvo!");
 };
 
@@ -706,7 +820,7 @@ async function atualizarTime(timeObj, golsPro, golsContra, resultado, campeonato
 
   const pontos = resultado === "vitoria" ? 3 : resultado === "empate" ? 1 : 0;
 
-  await updateDoc(doc(db,"times",timeObj.id),{
+  await setDoc(doc(db,"times",timeObj.id),{
     jogos:increment(1),
     pontos:increment(pontos),
     vitorias:increment(resultado === "vitoria" ? 1 : 0),
@@ -716,7 +830,7 @@ async function atualizarTime(timeObj, golsPro, golsContra, resultado, campeonato
     golsContra:increment(golsContra),
     saldo:increment(golsPro - golsContra),
     atualizadoEm:serverTimestamp()
-  });
+  },{merge:true});
 
   const classificacaoId = normalizarId(`${campeonatoId || campeonato}_${categoria}_${timeObj.id}`);
 
@@ -745,72 +859,96 @@ async function atualizarJogadores(){
   for(const p of participantes){
     if(!p.id) continue;
 
-    await updateDoc(doc(db,"jogadores",p.id),{
+    await setDoc(doc(db,"jogadores",p.id),{
       jogos:increment(1),
+      partidas:increment(1),
       atualizadoEm:serverTimestamp()
-    });
+    },{merge:true});
   }
 
   for(const g of gols){
     if(!g.jogadorId) continue;
 
-    await updateDoc(doc(db,"jogadores",g.jogadorId),{
+    await setDoc(doc(db,"jogadores",g.jogadorId),{
       gols:increment(1),
       atualizadoEm:serverTimestamp()
-    });
+    },{merge:true});
   }
 
   for(const c of cartoes){
     if(!c.jogadorId) continue;
 
-    await updateDoc(doc(db,"jogadores",c.jogadorId),{
+    await setDoc(doc(db,"jogadores",c.jogadorId),{
       cartoesAmarelos:increment(c.tipo === "amarelo" ? 1 : 0),
       amarelos:increment(c.tipo === "amarelo" ? 1 : 0),
       cartoesVermelhos:increment(c.tipo === "vermelho" ? 1 : 0),
       vermelhos:increment(c.tipo === "vermelho" ? 1 : 0),
       suspenso:increment(c.tipo === "vermelho" ? 1 : 0),
       atualizadoEm:serverTimestamp()
-    });
+    },{merge:true});
   }
 }
 
 async function atualizarArbitragem(){
-  if(jogo.arbitroId){
-    await updateDoc(doc(db,"arbitros",jogo.arbitroId),{
+  if((sumula.arbitroId || jogo.arbitroId)){
+    await setDoc(doc(db,"arbitros",sumula.arbitroId || jogo.arbitroId),{
       jogos:increment(1),
+      partidas:increment(1),
       cartoesAplicados:increment(cartoes.length),
       atualizadoEm:serverTimestamp()
-    });
+    },{merge:true});
   }
 
-  if(jogo.assistente1Id){
-    await updateDoc(doc(db,"assistentes",jogo.assistente1Id),{
+  if((sumula.assistente1Id || jogo.assistente1Id)){
+    await setDoc(doc(db,"assistentes",sumula.assistente1Id || jogo.assistente1Id),{
       jogos:increment(1),
+      partidas:increment(1),
       atualizadoEm:serverTimestamp()
-    });
+    },{merge:true});
   }
 
-  if(jogo.assistente2Id){
-    await updateDoc(doc(db,"assistentes",jogo.assistente2Id),{
+  if((sumula.assistente2Id || jogo.assistente2Id)){
+    await setDoc(doc(db,"assistentes",sumula.assistente2Id || jogo.assistente2Id),{
       jogos:increment(1),
+      partidas:increment(1),
       atualizadoEm:serverTimestamp()
-    });
+    },{merge:true});
   }
 }
 
 async function atualizarTecnicos(){
-  const comissao = [
-    ...(jogo.comissaoA || []),
-    ...(jogo.comissaoB || [])
-  ];
+  const comissaoA = sumula.comissaoA || jogo.comissaoA || [];
+  const comissaoB = sumula.comissaoB || jogo.comissaoB || [];
+  const comissao = [...comissaoA,...comissaoB];
+
+  const placarA = Number(el("placarA").value || 0);
+  const placarB = Number(el("placarB").value || 0);
 
   for(const t of comissao){
     if(!t.id) continue;
 
-    await updateDoc(doc(db,"tecnicos",t.id),{
+    let resultado = "empate";
+
+    const timeId = t.timeId || "";
+    const ehA = timeId && (sumula.timeA?.id === timeId || jogo.timeA?.id === timeId);
+    const ehB = timeId && (sumula.timeB?.id === timeId || jogo.timeB?.id === timeId);
+
+    if(ehA){
+      resultado = placarA > placarB ? "vitoria" : placarA < placarB ? "derrota" : "empate";
+    }
+
+    if(ehB){
+      resultado = placarB > placarA ? "vitoria" : placarB < placarA ? "derrota" : "empate";
+    }
+
+    await setDoc(doc(db,"tecnicos",t.id),{
       jogos:increment(1),
+      partidas:increment(1),
+      vitorias:increment(resultado === "vitoria" ? 1 : 0),
+      empates:increment(resultado === "empate" ? 1 : 0),
+      derrotas:increment(resultado === "derrota" ? 1 : 0),
       atualizadoEm:serverTimestamp()
-    });
+    },{merge:true});
   }
 }
 
@@ -832,23 +970,23 @@ async function atualizarTudoAutomatico(){
   }
 
   await atualizarTime(
-    jogo.timeA,
+    sumula.timeA || jogo.timeA,
     placarA,
     placarB,
     resultadoA,
-    jogo.campeonatoId,
-    jogo.campeonato,
-    jogo.categoria
+    sumula.campeonatoId || jogo.campeonatoId,
+    sumula.campeonato || jogo.campeonato,
+    sumula.categoria || jogo.categoria
   );
 
   await atualizarTime(
-    jogo.timeB,
+    sumula.timeB || jogo.timeB,
     placarB,
     placarA,
     resultadoB,
-    jogo.campeonatoId,
-    jogo.campeonato,
-    jogo.categoria
+    sumula.campeonatoId || jogo.campeonatoId,
+    sumula.campeonato || jogo.campeonato,
+    sumula.categoria || jogo.categoria
   );
 
   await atualizarJogadores();
@@ -857,14 +995,19 @@ async function atualizarTudoAutomatico(){
 }
 
 window.finalizarSumula = async function(){
+  if(!acessoLiberado) return alert("Acesso negado.");
   if(finalizada) return alert("Essa súmula já foi finalizada.");
 
   if(!confirm("Finalizar súmula? Depois disso ela ficará pública e travada.")) return;
 
-  await updateDoc(doc(db,"jogos",id),{
+  const dados = {
     ...dadosBaseSalvar(true),
-    dataFinalizacao:serverTimestamp()
-  });
+    dataFinalizacao:serverTimestamp(),
+    finalizadaEm:serverTimestamp()
+  };
+
+  await updateDoc(doc(db,"jogos",id),dados);
+  await setDoc(doc(db,"sumulas",id),dados,{merge:true});
 
   await atualizarTudoAutomatico();
 
@@ -877,7 +1020,30 @@ window.abrirPublica = function(){
   window.location.href = "sumula-publica.html?id="+id;
 };
 
-carregar();
+onAuthStateChanged(auth,async(user)=>{
+  usuarioAtual = user;
+
+  if(!user){
+    acessoLiberado = false;
+    await carregar();
+    return;
+  }
+
+  perfilAtual = await carregarPerfilUsuario(user.uid);
+
+  await carregar();
+
+  acessoLiberado = usuarioEhAdmin() || usuarioEhArbitroDesignado();
+
+  if(!acessoLiberado){
+    bloquearPorAcesso();
+    return;
+  }
+
+  if(finalizada){
+    bloquearTela();
+  }
+});
 </script>
 
 </body>
