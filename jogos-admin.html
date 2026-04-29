@@ -513,7 +513,8 @@ textarea:focus{
           <option value="aberto">Aberto</option>
         </select>
       </div>
-<div>
+
+      <div>
         <label>Time mandante</label>
         <select id="timeA" onchange="atualizarPreviewTimes()">
           <option value="">Selecione</option>
@@ -610,6 +611,7 @@ import {
   getDocs,
   doc,
   deleteDoc,
+  setDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
@@ -702,6 +704,7 @@ function jogadoresDoTime(timeId,categoria){
     })
     .map(formatarJogador);
 }
+
 function comissaoDoTime(timeId,categoria){
   const time = buscarTime(timeId);
 
@@ -884,6 +887,7 @@ window.limparFormulario = function(){
   el("previewA").innerHTML = "Selecione o time mandante.";
   el("previewB").innerHTML = "Selecione o time visitante.";
 };
+
 window.salvarJogo = async function(){
   const campeonatoId = el("campeonato").value;
   const campeonatoObj = buscarCampeonato(campeonatoId);
@@ -1006,8 +1010,79 @@ window.salvarJogo = async function(){
 
   const ref = await addDoc(collection(db,"jogos"),jogo);
 
+  const sumula = {
+    id:ref.id,
+    jogoId:ref.id,
+
+    campeonatoId:jogo.campeonatoId,
+    campeonato:jogo.campeonato,
+    campeonatoNome:jogo.campeonatoNome,
+    logoCampeonato:jogo.logoCampeonato,
+    temporada:jogo.temporada,
+    regrasCartoes:jogo.regrasCartoes,
+    formatoCampeonato:jogo.formatoCampeonato,
+    categoria:jogo.categoria,
+    rodada:jogo.rodada,
+    fase:jogo.fase,
+
+    data:jogo.data,
+    dataHora:jogo.dataHora,
+    hora:jogo.hora,
+    local:jogo.local,
+    campo:jogo.campo,
+
+    timeA:jogo.timeA,
+    timeB:jogo.timeB,
+
+    titularesA:jogo.titularesA,
+    titularesB:jogo.titularesB,
+    escalacaoA:jogo.escalacaoA,
+    escalacaoB:jogo.escalacaoB,
+    reservasA:[],
+    reservasB:[],
+
+    comissaoA:jogo.comissaoA,
+    comissaoB:jogo.comissaoB,
+    tecnicoA:jogo.tecnicoA,
+    tecnicoB:jogo.tecnicoB,
+
+    arbitroId:jogo.arbitroId,
+    arbitro:jogo.arbitro,
+    assistente1Id:jogo.assistente1Id,
+    assistente1:jogo.assistente1,
+    assistente2Id:jogo.assistente2Id,
+    assistente2:jogo.assistente2,
+    arbitroAuxiliarId:jogo.arbitroAuxiliarId,
+    arbitroAuxiliar:jogo.arbitroAuxiliar,
+    quartoArbitro:jogo.quartoArbitro,
+
+    placar:{A:0,B:0},
+    golsA:0,
+    golsB:0,
+    gols:[],
+    cartoes:[],
+    substituicoes:[],
+    ocorrencias:[],
+
+    observacoes:"",
+    observacoesArbitro:"",
+    melhorJogador:"",
+    melhorJogadorId:"",
+
+    status:"pendente",
+    sumulaFinalizada:false,
+    publica:false,
+    finalizadaEm:null,
+
+    criadoEm:new Date().toISOString(),
+    criadoEmServidor:serverTimestamp(),
+    atualizadoEm:serverTimestamp()
+  };
+
+  await setDoc(doc(db,"sumulas",ref.id),sumula);
+
   alert(
-    "Jogo criado com sucesso!\\n\\n" +
+    "Jogo e súmula criados com sucesso!\\n\\n" +
     "Jogadores mandante: " + titularesA.length + "\\n" +
     "Jogadores visitante: " + titularesB.length + "\\n\\n" +
     "Súmula ADM: sumula-admin.html?id=" + ref.id
@@ -1020,6 +1095,7 @@ window.salvarJogo = async function(){
 window.excluirJogo = async function(id){
   if(!confirm("Deseja excluir este jogo?")) return;
   await deleteDoc(doc(db,"jogos",id));
+  await deleteDoc(doc(db,"sumulas",id));
   await carregarJogos();
 };
 
