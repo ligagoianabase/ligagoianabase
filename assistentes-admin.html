@@ -9,35 +9,86 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-/* ===== MESMO CSS DO ÁRBITRO (100% IGUAL) ===== */
+/* ===== MESMO CSS DO ÁRBITRO ===== */
 :root{
   --bg:#0b1f3a;
+  --bg-dark:#08172c;
   --card:#102a52;
+  --card-hover:#153766;
   --gold:#f7c600;
+  --gold-soft:rgba(247,198,0,.12);
+  --gold-line:rgba(247,198,0,.24);
   --white:#ffffff;
   --muted:#d8e1ef;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --transition:.25s ease;
+  --max:1240px;
 }
+
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
-  font-family:Arial;
-  background:#0b1f3a;
-  color:#fff;
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
 }
 
-.wrap{max-width:1200px;margin:auto;padding:20px}
+.wrap{width:min(100% - 28px, var(--max));margin:0 auto}
+
+/* HEADER */
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.header-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 0;
+}
+
+.header-left,.header-right{
+  display:flex;
+  gap:10px;
+}
+
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:700;
+}
+
+.top-btn{
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
+}
+
+.btn-light{background:#fff4cf;color:#111}
+.btn-gold{background:var(--gold);color:#111}
+
+/* MENU */
+.nav-bar{
+  background:rgba(16,42,82,.95);
+}
 
 .menu{
   display:flex;
+  justify-content:center;
   gap:10px;
-  overflow-x:auto;
-  margin-bottom:20px;
+  padding:12px 0;
+  flex-wrap:wrap;
 }
 
 .menu a{
   background:#0d2346;
   padding:10px 14px;
   border-radius:10px;
-  white-space:nowrap;
   font-weight:700;
 }
 
@@ -46,124 +97,137 @@ body{
   color:#000;
 }
 
-.panel{
+/* PANEL */
+.container{padding:24px 0}
+
+.hero,.form-panel{
   background:#102a52;
   padding:20px;
   border-radius:16px;
   margin-bottom:20px;
 }
 
-.grid{
+.form-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(3,1fr);
   gap:12px;
+}
+
+input,select{
+  padding:12px;
+  border-radius:10px;
+  border:none;
 }
 
 .full{grid-column:1/-1}
 
-input,select{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:none;
-  margin-top:6px;
+/* CARD */
+.lista-grid{
+  display:grid;
+  gap:12px;
 }
 
 .card{
   background:#102a52;
   padding:15px;
   border-radius:14px;
-  margin-bottom:10px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
-}
-
-.info{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.info img{
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  object-fit:cover;
-  background:#fff;
 }
 
 .btn{
-  background:var(--gold);
   padding:8px 12px;
   border-radius:8px;
   font-weight:700;
   cursor:pointer;
 }
 
-.btn-danger{
-  background:#d94141;
-  color:#fff;
-}
+.btn-danger{background:#d94141;color:#fff}
+.btn-ver{background:var(--gold);color:#000}
 
-.btn-green{
-  background:#25d366;
-  color:#fff;
+@media(max-width:600px){
+  .menu{
+    overflow-x:auto;
+    flex-wrap:nowrap;
+  }
 }
-
 </style>
 </head>
 
 <body>
 
-<div class="wrap">
+<header>
+  <div class="wrap header-top">
+    <div class="header-left">
+      <a href="index.html" class="top-btn btn-light">Início</a>
+      <a href="admin.html" class="top-btn btn-light">Painel</a>
+    </div>
 
-<!-- MENU PADRÃO -->
-<div class="menu">
-<a href="admin.html">Painel</a>
-<a href="campeonatos-admin.html">Campeonatos</a>
-<a href="jogos-admin.html">Jogos</a>
-<a href="times-admin.html">Times</a>
-<a href="tecnicos-admin.html">Técnicos</a>
-<a href="jogadores-admin.html">Jogadores</a>
-<a href="arbitros-admin.html">Árbitros</a>
-<a href="assistentes-admin.html" class="ativo">Assistentes</a>
-<a href="sumulas-admin.html">Súmulas</a>
-</div>
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
-<!-- FORM -->
-<div class="panel">
+    <div class="header-right">
+      <button class="top-btn btn-gold" onclick="salvar()">Salvar Assistente</button>
+    </div>
+  </div>
 
-<h2>Novo Assistente</h2>
+  <!-- 🔥 MENU IDÊNTICO -->
+  <div class="nav-bar">
+    <div class="wrap">
+      <div class="menu">
+        <a href="admin.html">Painel</a>
+        <a href="campeonatos-admin.html">Campeonatos</a>
+        <a href="jogos-admin.html">Jogos</a>
+        <a href="times-admin.html">Times</a>
+        <a href="tecnicos-admin.html">Técnicos</a>
+        <a href="jogadores-admin.html">Jogadores</a>
+        <a href="arbitros-admin.html">Árbitros</a>
+        <a href="assistentes-admin.html" class="ativo">Assistentes</a>
+        <a href="sumulas-admin.html">Súmulas</a>
+      </div>
+    </div>
+  </div>
+</header>
 
-<div class="grid">
+<div class="wrap container">
 
-<input id="nome" placeholder="Nome">
-<input id="cpf" placeholder="CPF">
+  <div class="hero">
+    <h2>Assistentes ADM</h2>
+    <p>Cadastro idêntico ao árbitro. Pode atuar em qualquer função na escala.</p>
+  </div>
 
-<input id="telefone" placeholder="Telefone">
-<input id="whatsapp" placeholder="WhatsApp">
+  <div class="form-panel">
 
-<input id="email" placeholder="Email">
+    <div class="form-grid">
 
-<select id="funcao">
-<option>Assistente</option>
-<option>Árbitro Centro</option>
-<option>4º Árbitro</option>
-</select>
+      <input id="nome" placeholder="Nome">
+      <input id="cpf" placeholder="CPF">
 
-<input type="file" id="fotoFile" class="full">
+      <select id="status">
+        <option value="ativo">Ativo</option>
+        <option value="inativo">Inativo</option>
+      </select>
 
-</div>
+      <input id="telefone" placeholder="Telefone">
+      <input id="whatsapp" placeholder="WhatsApp">
+      <input id="email" placeholder="Email">
 
-<br>
+      <select id="funcao">
+        <option>Assistente</option>
+        <option>Árbitro Centro</option>
+        <option>4º Árbitro</option>
+      </select>
 
-<button class="btn" onclick="salvar()">Salvar Assistente</button>
+      <input id="foto" placeholder="Foto URL">
+      <input type="file" id="fotoFile" class="full">
 
-</div>
+    </div>
 
-<!-- LISTA -->
-<div id="lista"></div>
+    <br>
+    <button class="btn btn-ver" onclick="salvar()">Salvar</button>
+
+  </div>
+
+  <div id="lista" class="lista-grid"></div>
 
 </div>
 
@@ -179,16 +243,10 @@ getStorage, ref, uploadBytes, getDownloadURL
 
 const storage = getStorage();
 
-function limparNumero(v){
-return String(v || "").replace(/\D/g,"");
-}
-
-/* ===== SALVAR ===== */
 window.salvar = async function(){
 
 let file = document.getElementById("fotoFile").files[0];
-
-let foto = "logo-liga.jfif";
+let foto = document.getElementById("foto").value || "logo-liga.jfif";
 
 if(file){
 let r = ref(storage,"assistentes/"+Date.now());
@@ -200,29 +258,18 @@ await addDoc(collection(db,"assistentes"),{
 nome:document.getElementById("nome").value,
 cpf:document.getElementById("cpf").value,
 telefone:document.getElementById("telefone").value,
-whatsapp:limparNumero(document.getElementById("whatsapp").value),
+whatsapp:document.getElementById("whatsapp").value,
 email:document.getElementById("email").value,
 funcao:document.getElementById("funcao").value,
-
-podeAtuarComo:["Árbitro Centro","Assistente","4º Árbitro"],
-
-foto,
-status:"ativo",
-criadoEm:new Date().toISOString(),
-
-jogos:0,
-jogosComoArbitroCentro:0,
-jogosComoAssistente:0,
-jogosComoQuartoArbitro:0
+status:document.getElementById("status").value,
+foto
 });
 
-alert("Assistente salvo!");
+alert("Salvo!");
 carregar();
-};
+}
 
-/* ===== LISTAR ===== */
 async function carregar(){
-
 const lista = document.getElementById("lista");
 lista.innerHTML="";
 
@@ -233,40 +280,22 @@ let a = d.data();
 
 lista.innerHTML += `
 <div class="card">
-
-<div class="info">
-<img src="${a.foto || 'logo-liga.jfif'}">
-
 <div>
 <b>${a.nome}</b><br>
 ${a.funcao}<br>
-${a.telefone || "-"}<br>
-${a.email || "-"}
-</div>
+${a.telefone}
 </div>
 
-<div>
-<button class="btn-green" onclick="abrirWhatsapp('${a.whatsapp || ""}')">WhatsApp</button>
-<br><br>
-<button class="btn-danger" onclick="del('${d.id}')">Excluir</button>
-</div>
-
+<button class="btn btn-danger" onclick="del('${d.id}')">Excluir</button>
 </div>
 `;
 });
 }
 
-/* ===== WHATSAPP ===== */
-window.abrirWhatsapp = function(numero){
-if(!numero) return alert("Sem WhatsApp");
-window.open("https://wa.me/"+numero,"_blank");
-}
-
-/* ===== EXCLUIR ===== */
 window.del = async function(id){
 await deleteDoc(doc(db,"assistentes",id));
 carregar();
-};
+}
 
 carregar();
 </script>
