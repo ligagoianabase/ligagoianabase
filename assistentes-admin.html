@@ -9,25 +9,23 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
+/* ===== MESMO CSS DO ÁRBITRO (100% IGUAL) ===== */
 :root{
   --bg:#0b1f3a;
   --card:#102a52;
   --gold:#f7c600;
-  --white:#fff;
+  --white:#ffffff;
   --muted:#d8e1ef;
 }
 
 body{
   font-family:Arial;
-  background:
-    linear-gradient(rgba(11,31,58,.9),rgba(11,31,58,.95)),
-    url("fundo.png") center/cover fixed;
+  background:#0b1f3a;
   color:#fff;
 }
 
 .wrap{max-width:1200px;margin:auto;padding:20px}
 
-/* MENU PADRÃO */
 .menu{
   display:flex;
   gap:10px;
@@ -107,6 +105,12 @@ input,select{
   background:#d94141;
   color:#fff;
 }
+
+.btn-green{
+  background:#25d366;
+  color:#fff;
+}
+
 </style>
 </head>
 
@@ -114,7 +118,7 @@ input,select{
 
 <div class="wrap">
 
-<!-- MENU -->
+<!-- MENU PADRÃO -->
 <div class="menu">
 <a href="admin.html">Painel</a>
 <a href="campeonatos-admin.html">Campeonatos</a>
@@ -130,7 +134,7 @@ input,select{
 <!-- FORM -->
 <div class="panel">
 
-<h2>Novo Assistente / Árbitro</h2>
+<h2>Novo Assistente</h2>
 
 <div class="grid">
 
@@ -143,8 +147,9 @@ input,select{
 <input id="email" placeholder="Email">
 
 <select id="funcao">
-<option value="Assistente">Assistente</option>
-<option value="Árbitro">Árbitro</option>
+<option>Assistente</option>
+<option>Árbitro Centro</option>
+<option>4º Árbitro</option>
 </select>
 
 <input type="file" id="fotoFile" class="full">
@@ -153,7 +158,7 @@ input,select{
 
 <br>
 
-<button class="btn" onclick="salvar()">Salvar</button>
+<button class="btn" onclick="salvar()">Salvar Assistente</button>
 
 </div>
 
@@ -174,10 +179,15 @@ getStorage, ref, uploadBytes, getDownloadURL
 
 const storage = getStorage();
 
-/* SALVAR */
+function limparNumero(v){
+return String(v || "").replace(/\D/g,"");
+}
+
+/* ===== SALVAR ===== */
 window.salvar = async function(){
 
 let file = document.getElementById("fotoFile").files[0];
+
 let foto = "logo-liga.jfif";
 
 if(file){
@@ -190,19 +200,27 @@ await addDoc(collection(db,"assistentes"),{
 nome:document.getElementById("nome").value,
 cpf:document.getElementById("cpf").value,
 telefone:document.getElementById("telefone").value,
-whatsapp:document.getElementById("whatsapp").value,
+whatsapp:limparNumero(document.getElementById("whatsapp").value),
 email:document.getElementById("email").value,
 funcao:document.getElementById("funcao").value,
+
+podeAtuarComo:["Árbitro Centro","Assistente","4º Árbitro"],
+
 foto,
 status:"ativo",
-criadoEm:new Date().toISOString()
+criadoEm:new Date().toISOString(),
+
+jogos:0,
+jogosComoArbitroCentro:0,
+jogosComoAssistente:0,
+jogosComoQuartoArbitro:0
 });
 
-alert("Salvo!");
+alert("Assistente salvo!");
 carregar();
-}
+};
 
-/* LISTAR */
+/* ===== LISTAR ===== */
 async function carregar(){
 
 const lista = document.getElementById("lista");
@@ -228,13 +246,9 @@ ${a.email || "-"}
 </div>
 
 <div>
-<button class="btn" onclick="abrirWhats('${a.whatsapp || ""}')">
-WhatsApp
-</button>
-
-<button class="btn-danger" onclick="del('${d.id}')">
-Excluir
-</button>
+<button class="btn-green" onclick="abrirWhatsapp('${a.whatsapp || ""}')">WhatsApp</button>
+<br><br>
+<button class="btn-danger" onclick="del('${d.id}')">Excluir</button>
 </div>
 
 </div>
@@ -242,18 +256,17 @@ Excluir
 });
 }
 
-/* WHATS */
-window.abrirWhats = function(num){
-num = String(num || "").replace(/\D/g,"");
-if(!num) return alert("Sem WhatsApp");
-window.open("https://wa.me/"+num);
+/* ===== WHATSAPP ===== */
+window.abrirWhatsapp = function(numero){
+if(!numero) return alert("Sem WhatsApp");
+window.open("https://wa.me/"+numero,"_blank");
 }
 
-/* EXCLUIR */
+/* ===== EXCLUIR ===== */
 window.del = async function(id){
 await deleteDoc(doc(db,"assistentes",id));
 carregar();
-}
+};
 
 carregar();
 </script>
