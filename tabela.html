@@ -6,7 +6,6 @@
 <title>Tabela - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 :root{
@@ -108,11 +107,6 @@ select,input{width:100%;padding:12px;border:none;border-radius:12px;font-size:14
 .chart-card canvas{max-height:330px}
 .vazio{color:var(--muted);text-align:center;padding:18px;background:rgba(7,29,55,.9);border:1px solid rgba(255,255,255,.08);border-radius:16px}
 
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:16px;z-index:99}
-.modal.open{display:flex}
-.modal-box{width:min(560px,100%);background:linear-gradient(180deg,rgba(16,42,82,.98),rgba(8,23,44,.98));border:1px solid var(--gold-line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
-.modal-close{float:right;background:var(--red);color:#fff;border-radius:8px;padding:7px 10px;font-weight:900}
-
 @media(max-width:900px){
   .header-title{font-size:20px}
   .menu{justify-content:flex-start;overflow-x:auto;padding:14px;gap:10px}
@@ -184,22 +178,11 @@ select,input{width:100%;padding:12px;border:none;border-radius:12px;font-size:14
     <button class="aba" onclick="trocarAba('cartoes',this)">Cartões</button>
     <button class="aba" onclick="trocarAba('suspensos',this)">Suspensos</button>
     <button class="aba" onclick="trocarAba('arbitros',this)">Árbitros</button>
-    <button class="aba" onclick="trocarAba('posicoes',this)">Ranking por Posição</button>
-    <button class="aba" onclick="trocarAba('comparar',this)">Comparar Times</button>
     <button class="aba" onclick="trocarAba('historico',this)">Histórico</button>
-    <button class="aba" onclick="trocarAba('graficos',this)">Gráficos</button>
-    <button class="aba" onclick="trocarAba('jogadores',this)">Perfil Jogadores</button>
   </div>
 
   <div id="areaTabela"><div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando...</div></div>
 </main>
-
-<div class="modal" id="modalJogador">
-  <div class="modal-box">
-    <button class="modal-close" onclick="fecharModal()">X</button>
-    <div id="modalConteudo"></div>
-  </div>
-</div>
 
 <script type="module" src="tabela.js"></script>
 </body>
