@@ -59,20 +59,26 @@ export function renderMenu(paginaAtual = "") {
             Jogos
           </a>
 
-          <div class="menu-dropdown">
-            <a href="times.html" class="${paginaAtual === "participantes" ? "ativo" : ""}">
-              Participantes
-            </a>
+          ${
+            paginaAtual === "inicio"
+              ? `
+                <div class="menu-dropdown">
+                  <a href="times.html">
+                    Participantes
+                  </a>
 
-            <div class="submenu">
-              <a href="times.html">Equipes/Times</a>
-              <a href="tecnicos.html">Técnicos</a>
-              <a href="jogadores.html">Jogadores</a>
-              <a href="arbitros.html">Árbitros</a>
-              <a href="assistente.html">Assistente</a>
-              <a href="fotografos.html">Fotógrafos</a>
-            </div>
-          </div>
+                  <div class="submenu">
+                    <a href="times.html">Equipes/Times</a>
+                    <a href="tecnicos.html">Técnicos</a>
+                    <a href="jogadores.html">Jogadores</a>
+                    <a href="arbitros.html">Árbitros</a>
+                    <a href="assistente.html">Assistente</a>
+                    <a href="fotografos.html">Fotógrafos</a>
+                  </div>
+                </div>
+              `
+              : ""
+          }
 
           <a href="times.html" class="${paginaAtual === "times" ? "ativo" : ""}">
             Times
