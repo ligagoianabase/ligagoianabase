@@ -1,978 +1,1147 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Usuários ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<title>Usuários ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
-  <style>
-    :root{
-      --bg:#0b1f3a;
-      --bg-dark:#08172c;
-      --card:#102a52;
-      --card-hover:#153766;
-      --gold:#f7c600;
-      --gold-soft:rgba(247,198,0,.12);
-      --gold-line:rgba(247,198,0,.30);
-      --white:#ffffff;
-      --muted:#d6def0;
-      --danger:#c62828;
-      --success:#1f8b4c;
-      --warning:#9a6700;
-      --shadow:0 8px 22px rgba(0,0,0,.28);
-      --transition:.25s ease;
-      --max:1280px;
-    }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --yellow:#7a5a00;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --purple:#5d3fd3;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1280px;
+}
 
-    body{
-      font-family:Arial, sans-serif;
-      background:
-        linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
-        url("fundo.png") center/cover fixed no-repeat;
-      color:var(--white);
-      min-height:100vh;
-    }
+*{margin:0;padding:0;box-sizing:border-box}
 
-    a{
-      text-decoration:none;
-      color:inherit;
-    }
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
 
-    button,input,select{
-      font-family:inherit;
-    }
+a{text-decoration:none;color:inherit}
+button,input,select{font-family:inherit}
+button{cursor:pointer;border:none}
 
-    .wrap{
-      width:min(100% - 30px, var(--max));
-      margin:0 auto;
-    }
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
 
-    header{
-      background:rgba(8,23,44,.96);
-      border-bottom:3px solid var(--gold);
-      box-shadow:var(--shadow);
-      margin-bottom:20px;
-    }
+header{
+  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
 
-    .header-inner{
-      min-height:82px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-      padding:14px 0;
-    }
+.header-inner{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
 
-    .header-left,
-    .header-right{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
+.header-left,
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
 
-    .header-title{
-      flex:1;
-      text-align:center;
-      font-size:22px;
-      font-weight:700;
-      color:var(--white);
-    }
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:22px;
+  font-weight:900;
+  color:var(--white);
+  text-transform:uppercase;
+}
 
-    .top-btn{
-      border:none;
-      padding:10px 16px;
-      border-radius:10px;
-      font-weight:bold;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      cursor:pointer;
-      transition:var(--transition);
-    }
+.top-btn{
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:900;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
 
-    .btn-light{
-      background:#fff4cf;
-      color:#111;
-    }
+.btn-light{
+  background:#fff4cf;
+  color:#111;
+}
 
-    .btn-light:hover{
-      background:var(--gold);
-      transform:translateY(-2px);
-    }
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
 
-    .btn-gold{
-      background:var(--gold);
-      color:#111;
-    }
+.container{
+  padding-bottom:30px;
+}
 
-    .btn-gold:hover{
-      filter:brightness(1.05);
-      transform:translateY(-2px);
-    }
+.hero-panel,
+.admin-block{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.12), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:22px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
 
-    .container{
-      padding-bottom:30px;
-    }
+.hero-panel h2,
+.section-title{
+  font-size:24px;
+  color:var(--gold);
+  margin-bottom:10px;
+  font-weight:900;
+}
 
-    .hero-panel,
-    .admin-block{
-      background:linear-gradient(180deg, rgba(16,42,82,.95), rgba(10,28,56,.96));
-      border:1px solid var(--gold-line);
-      border-radius:20px;
-      padding:22px;
-      box-shadow:var(--shadow);
-      margin-bottom:20px;
-    }
+.hero-panel p{
+  color:var(--muted);
+  line-height:1.6;
+}
 
-    .hero-panel h2,
-    .section-title{
-      font-size:24px;
-      color:var(--gold);
-      margin-bottom:10px;
-      font-weight:700;
-    }
+.filtros{
+  display:grid;
+  grid-template-columns:1.2fr .8fr .8fr .8fr;
+  gap:12px;
+  margin-top:16px;
+}
 
-    .hero-panel p{
-      color:var(--muted);
-      line-height:1.6;
-    }
+.field label{
+  display:block;
+  margin-bottom:6px;
+  color:#fff;
+  font-weight:900;
+  font-size:14px;
+}
 
-    .filtros{
-      display:grid;
-      grid-template-columns:1.2fr .8fr .8fr .8fr;
-      gap:12px;
-      margin-top:16px;
-    }
+.field input,
+.field select{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:#f4f7fb;
+  color:#111;
+  font-size:14px;
+  outline:none;
+}
 
-    .field label{
-      display:block;
-      margin-bottom:6px;
-      color:#fff;
-      font-weight:700;
-      font-size:14px;
-    }
+.field input:focus,
+.field select:focus{
+  outline:2px solid rgba(247,198,0,.65);
+}
 
-    .field input,
-    .field select{
-      width:100%;
-      padding:12px;
-      border:none;
-      border-radius:10px;
-      background:#f4f7fb;
-      color:#111;
-      font-size:14px;
-    }
+.msg{
+  margin-top:14px;
+  padding:12px;
+  border-radius:12px;
+  font-weight:900;
+  display:none;
+  font-size:13px;
+  line-height:1.45;
+}
 
-    .msg{
-      margin-top:14px;
-      padding:12px;
-      border-radius:12px;
-      font-weight:700;
-      display:none;
-    }
+.msg.error{
+  background:rgba(180,35,35,.22);
+  color:#ffb0b0;
+  border:1px solid rgba(255,120,120,.25);
+}
 
-    .msg.error{
-      background:rgba(198,40,40,.18);
-      color:#ffb7b7;
-      border:1px solid rgba(198,40,40,.35);
-    }
+.msg.success{
+  background:rgba(27,94,32,.22);
+  color:#b8ffd1;
+  border:1px solid rgba(120,255,170,.25);
+}
 
-    .msg.success{
-      background:rgba(31,139,76,.18);
-      color:#a8ffd0;
-      border:1px solid rgba(31,139,76,.35);
-    }
+.lista{
+  display:grid;
+  gap:14px;
+  margin-top:18px;
+}
 
-    .lista{
-      display:grid;
-      gap:14px;
-      margin-top:18px;
-    }
+.user-card{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid rgba(247,198,0,.20);
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
 
-    .user-card{
-      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:16px;
-      padding:16px;
-      box-shadow:var(--shadow);
-    }
+.user-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+  flex-wrap:wrap;
+}
 
-    .user-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:14px;
-      flex-wrap:wrap;
-    }
+.user-info h3{
+  color:#fff;
+  font-size:20px;
+  margin-bottom:6px;
+  font-weight:900;
+}
 
-    .user-info h3{
-      color:#fff;
-      font-size:20px;
-      margin-bottom:6px;
-    }
+.user-info p{
+  color:var(--muted);
+  line-height:1.55;
+  font-size:14px;
+}
 
-    .user-info p{
-      color:var(--muted);
-      line-height:1.55;
-      font-size:14px;
-    }
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
 
-    .tags{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:10px;
-    }
+.tag{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  border:1px solid rgba(255,255,255,.08);
+  background:#14335f;
+  color:#fff;
+}
 
-    .tag{
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:700;
-      border:1px solid rgba(255,255,255,.08);
-      background:#14335f;
-      color:#fff;
-    }
+.tag.success{
+  background:rgba(27,94,32,.28);
+  color:#b8ffd1;
+  border-color:rgba(120,255,170,.25);
+}
 
-    .tag.success{
-      background:rgba(31,139,76,.18);
-      color:#a8ffd0;
-      border-color:rgba(31,139,76,.35);
-    }
+.tag.danger{
+  background:rgba(180,35,35,.28);
+  color:#ffb0b0;
+  border-color:rgba(255,120,120,.25);
+}
 
-    .tag.danger{
-      background:rgba(198,40,40,.18);
-      color:#ffb7b7;
-      border-color:rgba(198,40,40,.35);
-    }
+.tag.warning{
+  background:rgba(122,90,0,.28);
+  color:#ffd78a;
+  border-color:rgba(247,198,0,.25);
+}
 
-    .tag.warning{
-      background:rgba(154,103,0,.18);
-      color:#ffd78a;
-      border-color:rgba(154,103,0,.35);
-    }
+.tag.gold{
+  background:rgba(247,198,0,.14);
+  color:#ffe479;
+  border-color:rgba(247,198,0,.35);
+}
 
-    .tag.gold{
-      background:rgba(247,198,0,.14);
-      color:#ffe479;
-      border-color:rgba(247,198,0,.35);
-    }
+.user-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
 
-    .user-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
+.mini-btn{
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:900;
+  color:#fff;
+  font-size:13px;
+}
 
-    .mini-btn{
-      border:none;
-      padding:10px 14px;
-      border-radius:10px;
-      font-weight:700;
-      cursor:pointer;
-      transition:var(--transition);
-      color:#fff;
-    }
+.mini-approve{background:var(--green)}
+.mini-block{background:var(--yellow)}
+.mini-delete{background:var(--red)}
+.mini-edit{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
+.mini-admin{background:var(--purple)}
 
-    .mini-btn:hover{
-      transform:translateY(-2px);
-    }
+.form-edicao{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-top:16px;
+}
 
-    .mini-approve{ background:var(--success); }
-    .mini-block{ background:var(--warning); }
-    .mini-delete{ background:var(--danger); }
-    .mini-edit{ background:var(--gold); color:#111; }
-    .mini-admin{ background:#5d3fd3; }
+.form-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
 
-    .form-edicao{
-      display:grid;
-      grid-template-columns:repeat(4, 1fr);
-      gap:12px;
-      margin-top:16px;
-    }
+.vazio{
+  text-align:center;
+  color:var(--muted);
+  padding:24px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.03);
+}
 
-    .form-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
+@media(max-width:980px){
+  .filtros,
+  .form-edicao{
+    grid-template-columns:1fr;
+  }
 
-    .vazio{
-      text-align:center;
-      color:var(--muted);
-      padding:24px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.06);
-      background:rgba(255,255,255,.03);
-    }
+  .header-title{
+    order:3;
+    width:100%;
+  }
 
-    @media (max-width: 980px){
-      .filtros,
-      .form-edicao{
-        grid-template-columns:1fr;
-      }
+  .header-left,
+  .header-right{
+    width:100%;
+    justify-content:center;
+  }
+}
 
-      .header-title{
-        order:3;
-        width:100%;
-      }
+@media(max-width:600px){
+  .top-btn{
+    width:100%;
+    justify-content:center;
+  }
 
-      .header-left,
-      .header-right{
-        width:100%;
-        justify-content:center;
-      }
-    }
+  .header-left,
+  .header-right{
+    flex-direction:column;
+    align-items:stretch;
+  }
 
-    @media (max-width: 600px){
-      .top-btn{
-        width:100%;
-        justify-content:center;
-      }
+  .user-actions,
+  .form-actions{
+    flex-direction:column;
+  }
 
-      .header-left,
-      .header-right{
-        flex-direction:column;
-        align-items:stretch;
-      }
-
-      .user-actions,
-      .form-actions{
-        flex-direction:column;
-      }
-
-      .mini-btn{
-        width:100%;
-      }
-    }
-  </style>
+  .mini-btn{
+    width:100%;
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <header>
-    <div class="wrap header-inner">
-      <div class="header-left">
-        <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
-          <i class="fa-solid fa-arrow-left"></i> Voltar
-        </button>
+<header>
+  <div class="wrap header-inner">
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
 
-        <a href="admin.html" class="top-btn btn-light">
-          <i class="fa-solid fa-house"></i> Painel ADM
-        </a>
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Painel ADM
+      </a>
+    </div>
+
+    <div class="header-title">Usuários e Permissões</div>
+
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="limparEdicao()">
+        <i class="fa-solid fa-eraser"></i> Limpar edição
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+  <section class="hero-panel">
+    <h2>Controle de Usuários</h2>
+    <p>
+      Aqui o administrador aprova, autoriza, bloqueia, edita e sincroniza usuários com as coleções públicas do sistema.
+    </p>
+
+    <div id="msgErro" class="msg error"></div>
+    <div id="msgSucesso" class="msg success"></div>
+
+    <div class="filtros">
+      <div class="field">
+        <label for="buscaUsuario">Buscar</label>
+        <input type="text" id="buscaUsuario" placeholder="Nome, email, CPF ou time" oninput="renderUsuarios()">
       </div>
 
-      <div class="header-title">Usuários e Permissões</div>
+      <div class="field">
+        <label for="filtroTipo">Tipo</label>
+        <select id="filtroTipo" onchange="renderUsuarios()">
+          <option value="">Todos</option>
+          <option value="admin">Administrador</option>
+          <option value="arbitro">Árbitro</option>
+          <option value="assistente">Assistente</option>
+          <option value="tecnico">Técnico</option>
+          <option value="jogador">Jogador</option>
+          <option value="pai_atleta">Pai de Atleta</option>
+          <option value="torcedor">Torcedor</option>
+        </select>
+      </div>
 
-      <div class="header-right">
-        <button class="top-btn btn-gold" type="button" onclick="limparEdicao()">
-          <i class="fa-solid fa-eraser"></i> Limpar edição
-        </button>
+      <div class="field">
+        <label for="filtroStatus">Status</label>
+        <select id="filtroStatus" onchange="renderUsuarios()">
+          <option value="">Todos</option>
+          <option value="ativo">Ativo</option>
+          <option value="pendente">Pendente</option>
+          <option value="bloqueado">Bloqueado</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="filtroAutorizado">Autorização</label>
+        <select id="filtroAutorizado" onchange="renderUsuarios()">
+          <option value="">Todos</option>
+          <option value="sim">Autorizados</option>
+          <option value="nao">Não autorizados</option>
+        </select>
       </div>
     </div>
-  </header>
+  </section>
 
-  <div class="wrap container">
+  <section class="admin-block">
+    <h3 class="section-title">Editar usuário selecionado</h3>
 
-    <section class="hero-panel">
-      <h2>Controle de Usuários</h2>
-      <p>
-        Aqui o administrador aprova, autoriza, bloqueia, edita e organiza os usuários do sistema.
-      </p>
-
-      <div id="msgErro" class="msg error"></div>
-      <div id="msgSucesso" class="msg success"></div>
-
-      <div class="filtros">
-        <div class="field">
-          <label for="buscaUsuario">Buscar</label>
-          <input type="text" id="buscaUsuario" placeholder="Nome, email, CPF ou time" oninput="renderUsuarios()">
-        </div>
-
-        <div class="field">
-          <label for="filtroTipo">Tipo</label>
-          <select id="filtroTipo" onchange="renderUsuarios()">
-            <option value="">Todos</option>
-            <option value="admin">Administrador</option>
-            <option value="arbitro">Árbitro</option>
-            <option value="assistente">Assistente</option>
-            <option value="tecnico">Técnico</option>
-            <option value="jogador">Jogador</option>
-            <option value="pai_atleta">Pai de Atleta</option>
-            <option value="torcedor">Torcedor</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="filtroStatus">Status</label>
-          <select id="filtroStatus" onchange="renderUsuarios()">
-            <option value="">Todos</option>
-            <option value="ativo">Ativo</option>
-            <option value="pendente">Pendente</option>
-            <option value="bloqueado">Bloqueado</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="filtroAutorizado">Autorização</label>
-          <select id="filtroAutorizado" onchange="renderUsuarios()">
-            <option value="">Todos</option>
-            <option value="sim">Autorizados</option>
-            <option value="nao">Não autorizados</option>
-          </select>
-        </div>
-      </div>
-    </section>
-
-    <section class="admin-block">
-      <h3 class="section-title">Editar usuário selecionado</h3>
-
-      <div class="form-edicao">
-        <div class="field">
-          <label for="editNome">Nome</label>
-          <input type="text" id="editNome" placeholder="Nome do usuário">
-        </div>
-
-        <div class="field">
-          <label for="editEmail">Email</label>
-          <input type="email" id="editEmail" placeholder="Email">
-        </div>
-
-        <div class="field">
-          <label for="editCpf">CPF</label>
-          <input type="text" id="editCpf" placeholder="CPF">
-        </div>
-
-        <div class="field">
-          <label for="editTime">Time</label>
-          <input type="text" id="editTime" placeholder="Time">
-        </div>
-
-        <div class="field">
-          <label for="editTipo">Tipo</label>
-          <select id="editTipo">
-            <option value="torcedor">Torcedor</option>
-            <option value="pai_atleta">Pai de Atleta</option>
-            <option value="jogador">Jogador</option>
-            <option value="tecnico">Técnico</option>
-            <option value="assistente">Assistente</option>
-            <option value="arbitro">Árbitro</option>
-            <option value="admin">Administrador</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="editStatus">Status</label>
-          <select id="editStatus">
-            <option value="ativo">Ativo</option>
-            <option value="pendente">Pendente</option>
-            <option value="bloqueado">Bloqueado</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="editAprovado">Aprovado</label>
-          <select id="editAprovado">
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="editAutorizado">Autorizado</label>
-          <select id="editAutorizado">
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
-          </select>
-        </div>
+    <div class="form-edicao">
+      <div class="field">
+        <label for="editNome">Nome</label>
+        <input type="text" id="editNome" placeholder="Nome do usuário">
       </div>
 
-      <div class="form-actions">
-        <button class="mini-btn mini-edit" onclick="salvarEdicao()">
-          <i class="fa-solid fa-floppy-disk"></i> Salvar edição
-        </button>
+      <div class="field">
+        <label for="editEmail">Email</label>
+        <input type="email" id="editEmail" placeholder="Email">
       </div>
-    </section>
 
-    <section class="admin-block">
-      <h3 class="section-title">Lista de usuários</h3>
-      <div class="lista" id="listaUsuarios">
-        <div class="vazio">Carregando usuários...</div>
+      <div class="field">
+        <label for="editCpf">CPF</label>
+        <input type="text" id="editCpf" placeholder="CPF">
       </div>
-    </section>
-  </div>
 
-  <script type="module">
-    import { auth, db } from "./firebase.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import {
-      collection,
-      getDocs,
-      doc,
-      getDoc,
-      updateDoc,
-      deleteDoc
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      <div class="field">
+        <label for="editTime">Time</label>
+        <input type="text" id="editTime" placeholder="Time">
+      </div>
 
-    let usuariosCache = [];
-    let usuarioSelecionadoId = "";
+      <div class="field">
+        <label for="editTipo">Tipo</label>
+        <select id="editTipo">
+          <option value="torcedor">Torcedor</option>
+          <option value="pai_atleta">Pai de Atleta</option>
+          <option value="jogador">Jogador</option>
+          <option value="tecnico">Técnico</option>
+          <option value="assistente">Assistente</option>
+          <option value="arbitro">Árbitro</option>
+          <option value="admin">Administrador</option>
+        </select>
+      </div>
 
-    const msgErro = document.getElementById("msgErro");
-    const msgSucesso = document.getElementById("msgSucesso");
+      <div class="field">
+        <label for="editStatus">Status</label>
+        <select id="editStatus">
+          <option value="ativo">Ativo</option>
+          <option value="pendente">Pendente</option>
+          <option value="bloqueado">Bloqueado</option>
+        </select>
+      </div>
 
-    function mostrarErro(texto){
-      msgSucesso.style.display = "none";
-      msgErro.style.display = "block";
-      msgErro.innerText = texto;
-    }
+      <div class="field">
+        <label for="editAprovado">Aprovado</label>
+        <select id="editAprovado">
+          <option value="true">Sim</option>
+          <option value="false">Não</option>
+        </select>
+      </div>
 
-    function mostrarSucesso(texto){
-      msgErro.style.display = "none";
-      msgSucesso.style.display = "block";
-      msgSucesso.innerText = texto;
-    }
+      <div class="field">
+        <label for="editAutorizado">Autorizado</label>
+        <select id="editAutorizado">
+          <option value="true">Sim</option>
+          <option value="false">Não</option>
+        </select>
+      </div>
+    </div>
 
-    function limparMensagens(){
-      msgErro.style.display = "none";
-      msgSucesso.style.display = "none";
-      msgErro.innerText = "";
-      msgSucesso.innerText = "";
-    }
+    <div class="form-actions">
+      <button class="mini-btn mini-edit" onclick="salvarEdicao()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar edição
+      </button>
+    </div>
+  </section>
 
-    function normalizarTexto(texto){
-      return String(texto || "")
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-    }
+  <section class="admin-block">
+    <h3 class="section-title">Lista de usuários</h3>
 
-    function normalizarTipo(tipo){
-      const valor = normalizarTexto(tipo);
-      if(valor === "publico" || valor === "publico_geral" || valor === "torcedor") return "torcedor";
-      if(valor === "pai_atleta") return "pai_atleta";
-      if(valor === "jogador") return "jogador";
-      if(valor === "tecnico") return "tecnico";
-      if(valor === "assistente") return "assistente";
-      if(valor === "arbitro") return "arbitro";
-      if(valor === "admin" || valor === "administrador") return "admin";
-      return valor;
-    }
+    <div class="lista" id="listaUsuarios">
+      <div class="vazio">Carregando usuários...</div>
+    </div>
+  </section>
 
-    function tipoLabel(tipo){
-      const valor = normalizarTipo(tipo);
-      if(valor === "admin") return "Administrador";
-      if(valor === "arbitro") return "Árbitro";
-      if(valor === "assistente") return "Assistente";
-      if(valor === "tecnico") return "Técnico";
-      if(valor === "jogador") return "Jogador";
-      if(valor === "pai_atleta") return "Pai de Atleta";
-      return "Torcedor";
-    }
+</div>
+<script type="module">
+import { auth, db } from "./firebase.js";
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
-    function voltarPagina(){
-      if(window.history.length > 1){
-        window.history.back();
-      }else{
-        window.location.href = "admin.html";
-      }
-    }
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-    window.voltarPagina = voltarPagina;
+let usuariosCache = [];
+let usuarioSelecionadoId = "";
 
-    async function validarAcessoAdmin(user){
-      if(!user) return false;
+const msgErro = document.getElementById("msgErro");
+const msgSucesso = document.getElementById("msgSucesso");
 
-      const usuarioRef = doc(db, "usuarios", user.uid);
-      const usuarioSnap = await getDoc(usuarioRef);
+function mostrarErro(texto){
+  msgSucesso.style.display = "none";
+  msgErro.style.display = "block";
+  msgErro.innerText = texto;
+}
 
-      if(!usuarioSnap.exists()) return false;
+function mostrarSucesso(texto){
+  msgErro.style.display = "none";
+  msgSucesso.style.display = "block";
+  msgSucesso.innerText = texto;
+}
 
-      const dados = usuarioSnap.data();
-      return normalizarTipo(dados.tipoUsuario || dados.tipo || "") === "admin";
-    }
+function limparMensagens(){
+  msgErro.style.display = "none";
+  msgSucesso.style.display = "none";
+  msgErro.innerText = "";
+  msgSucesso.innerText = "";
+}
 
-    function aplicarRegrasPorTipo(tipo){
-      const valor = normalizarTipo(tipo);
+function normalizarTexto(texto){
+  return String(texto || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
 
-      if(valor === "admin"){
-        return { aprovado: true, autorizado: true, status: "ativo" };
-      }
+function limparCPF(cpf){
+  return String(cpf || "").replace(/\D/g,"");
+}
 
-      if(valor === "arbitro"){
-        return { aprovado: false, autorizado: false, status: "pendente" };
-      }
+function normalizarTipo(tipo){
+  const valor = normalizarTexto(tipo).replace(/\s+/g,"_");
 
-      if(valor === "assistente"){
-        return { aprovado: false, autorizado: false, status: "pendente" };
-      }
+  if(valor === "publico" || valor === "publico_geral" || valor === "torcedor") return "torcedor";
+  if(valor === "pai_atleta") return "pai_atleta";
+  if(valor === "jogador") return "jogador";
+  if(valor === "tecnico") return "tecnico";
+  if(valor === "assistente") return "assistente";
+  if(valor === "arbitro") return "arbitro";
+  if(valor === "admin" || valor === "administrador") return "admin";
 
-      if(valor === "tecnico"){
-        return { aprovado: false, autorizado: false, status: "pendente" };
-      }
+  return valor || "torcedor";
+}
 
-      if(valor === "jogador"){
-        return { aprovado: false, autorizado: false, status: "pendente" };
-      }
+function tipoLabel(tipo){
+  const valor = normalizarTipo(tipo);
 
-      if(valor === "pai_atleta"){
-        return { aprovado: true, autorizado: false, status: "ativo" };
-      }
+  if(valor === "admin") return "Administrador";
+  if(valor === "arbitro") return "Árbitro";
+  if(valor === "assistente") return "Assistente";
+  if(valor === "tecnico") return "Técnico";
+  if(valor === "jogador") return "Jogador";
+  if(valor === "pai_atleta") return "Pai de Atleta";
 
-      return { aprovado: true, autorizado: false, status: "ativo" };
-    }
+  return "Torcedor";
+}
 
-    window.limparEdicao = function(){
-      usuarioSelecionadoId = "";
-      document.getElementById("editNome").value = "";
-      document.getElementById("editEmail").value = "";
-      document.getElementById("editCpf").value = "";
-      document.getElementById("editTime").value = "";
-      document.getElementById("editTipo").value = "torcedor";
-      document.getElementById("editStatus").value = "ativo";
-      document.getElementById("editAprovado").value = "true";
-      document.getElementById("editAutorizado").value = "false";
-      limparMensagens();
+window.voltarPagina = function(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = "admin.html";
+  }
+};
+
+async function validarAcessoAdmin(user){
+  if(!user) return false;
+
+  const usuarioSnap = await getDoc(doc(db,"usuarios",user.uid));
+
+  if(!usuarioSnap.exists()) return false;
+
+  const dados = usuarioSnap.data();
+  const tipo = normalizarTipo(dados.tipoUsuario || dados.tipo || dados.perfil || "");
+  const aprovado = dados.aprovado === true;
+  const autorizado = dados.autorizado === true;
+  const status = normalizarTexto(dados.status || "ativo");
+
+  return tipo === "admin" && aprovado && autorizado && status !== "bloqueado";
+}
+
+function aplicarRegrasPorTipo(tipo){
+  const valor = normalizarTipo(tipo);
+
+  if(valor === "admin"){
+    return { aprovado:true, autorizado:true, status:"ativo" };
+  }
+
+  if(valor === "arbitro"){
+    return { aprovado:false, autorizado:false, status:"pendente" };
+  }
+
+  if(valor === "assistente"){
+    return { aprovado:false, autorizado:false, status:"pendente" };
+  }
+
+  if(valor === "tecnico"){
+    return { aprovado:false, autorizado:false, status:"pendente" };
+  }
+
+  if(valor === "jogador"){
+    return { aprovado:false, autorizado:false, status:"pendente" };
+  }
+
+  if(valor === "pai_atleta"){
+    return { aprovado:true, autorizado:false, status:"ativo" };
+  }
+
+  return { aprovado:true, autorizado:false, status:"ativo" };
+}
+
+function regraAprovacao(tipo){
+  const valor = normalizarTipo(tipo);
+
+  if(valor === "admin"){
+    return { aprovado:true, autorizado:true, status:"ativo" };
+  }
+
+  if(valor === "arbitro"){
+    return { aprovado:true, autorizado:true, status:"ativo" };
+  }
+
+  if(valor === "assistente"){
+    return { aprovado:true, autorizado:false, status:"ativo" };
+  }
+
+  if(valor === "tecnico"){
+    return { aprovado:true, autorizado:false, status:"ativo" };
+  }
+
+  if(valor === "jogador"){
+    return { aprovado:true, autorizado:false, status:"ativo" };
+  }
+
+  return { aprovado:true, autorizado:false, status:"ativo" };
+}
+
+async function sincronizarColecaoPublica(id, usuario){
+  const tipo = normalizarTipo(usuario.tipoUsuario || usuario.tipo || usuario.perfil || "");
+  const nome = usuario.nome || usuario.nomeCompleto || "";
+  const email = usuario.email || "";
+  const cpf = limparCPF(usuario.cpf || "");
+  const time = usuario.time || usuario.timeNome || "";
+  const categoria = usuario.categoria || usuario.categoriaFuncao || "";
+  const cidade = usuario.cidade || "";
+
+  const base = {
+    usuarioId:id,
+    nome,
+    nomeCompleto:nome,
+    email,
+    cpf,
+    time,
+    timeNome:time,
+    categoria,
+    categorias:categoria ? [categoria] : [],
+    aprovado:usuario.aprovado === true,
+    autorizado:usuario.autorizado === true,
+    status:usuario.status || "ativo",
+    atualizadoEm:serverTimestamp()
+  };
+
+  if(tipo === "jogador"){
+    await setDoc(doc(db,"jogadores",id),{
+      ...base,
+      numero:usuario.numero || usuario.camisa || "",
+      camisa:usuario.numero || usuario.camisa || "",
+      posicao:usuario.posicao || "",
+      instagram:usuario.instagram || "",
+      facebook:usuario.facebook || "",
+      foto:usuario.foto || "logo-liga.jfif",
+      jogos:usuario.jogos || 0,
+      gols:usuario.gols || 0,
+      assistencias:usuario.assistencias || 0,
+      amarelos:usuario.amarelos || 0,
+      vermelhos:usuario.vermelhos || 0,
+      criadoEm:usuario.criadoEm || serverTimestamp()
+    },{merge:true});
+  }
+
+  if(tipo === "tecnico"){
+    await setDoc(doc(db,"tecnicos",id),{
+      ...base,
+      cidade,
+      foto:usuario.foto || "logo-liga.jfif",
+      criadoEm:usuario.criadoEm || serverTimestamp()
+    },{merge:true});
+  }
+
+  if(tipo === "arbitro"){
+    await setDoc(doc(db,"arbitros",id),{
+      ...base,
+      cidade,
+      foto:usuario.foto || "logo-liga.jfif",
+      jogos:usuario.jogos || 0,
+      amarelos:usuario.amarelos || 0,
+      vermelhos:usuario.vermelhos || 0,
+      criadoEm:usuario.criadoEm || serverTimestamp()
+    },{merge:true});
+  }
+
+  if(tipo === "assistente"){
+    await setDoc(doc(db,"assistentes",id),{
+      ...base,
+      cidade,
+      foto:usuario.foto || "logo-liga.jfif",
+      jogos:usuario.jogos || 0,
+      criadoEm:usuario.criadoEm || serverTimestamp()
+    },{merge:true});
+  }
+}
+
+window.limparEdicao = function(){
+  usuarioSelecionadoId = "";
+
+  document.getElementById("editNome").value = "";
+  document.getElementById("editEmail").value = "";
+  document.getElementById("editCpf").value = "";
+  document.getElementById("editTime").value = "";
+  document.getElementById("editTipo").value = "torcedor";
+  document.getElementById("editStatus").value = "ativo";
+  document.getElementById("editAprovado").value = "true";
+  document.getElementById("editAutorizado").value = "false";
+
+  limparMensagens();
+};
+
+window.selecionarUsuario = function(id){
+  const usuario = usuariosCache.find(u => u.id === id);
+  if(!usuario) return;
+
+  usuarioSelecionadoId = id;
+
+  document.getElementById("editNome").value = usuario.nome || usuario.nomeCompleto || "";
+  document.getElementById("editEmail").value = usuario.email || "";
+  document.getElementById("editCpf").value = usuario.cpf || "";
+  document.getElementById("editTime").value = usuario.time || usuario.timeNome || "";
+  document.getElementById("editTipo").value = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "torcedor");
+  document.getElementById("editStatus").value = usuario.status || "ativo";
+  document.getElementById("editAprovado").value = usuario.aprovado === true ? "true" : "false";
+  document.getElementById("editAutorizado").value = usuario.autorizado === true ? "true" : "false";
+
+  mostrarSucesso("Usuário carregado para edição.");
+  window.scrollTo({ top:0, behavior:"smooth" });
+};
+
+window.salvarEdicao = async function(){
+  limparMensagens();
+
+  if(!usuarioSelecionadoId){
+    mostrarErro("Selecione um usuário da lista para editar.");
+    return;
+  }
+
+  const tipo = normalizarTipo(document.getElementById("editTipo").value);
+
+  const dados = {
+    nome:document.getElementById("editNome").value.trim(),
+    nomeCompleto:document.getElementById("editNome").value.trim(),
+    email:document.getElementById("editEmail").value.trim().toLowerCase(),
+    cpf:limparCPF(document.getElementById("editCpf").value),
+    time:document.getElementById("editTime").value.trim(),
+    timeNome:document.getElementById("editTime").value.trim(),
+    tipoUsuario:tipo,
+    tipo,
+    perfil:tipo,
+    status:document.getElementById("editStatus").value,
+    aprovado:document.getElementById("editAprovado").value === "true",
+    autorizado:document.getElementById("editAutorizado").value === "true",
+    atualizadoEm:serverTimestamp()
+  };
+
+  if(!dados.nome){
+    mostrarErro("Digite o nome do usuário.");
+    return;
+  }
+
+  if(!dados.email){
+    mostrarErro("Digite o email do usuário.");
+    return;
+  }
+
+  try{
+    await updateDoc(doc(db,"usuarios",usuarioSelecionadoId),dados);
+
+    const usuarioAtualizado = {
+      id:usuarioSelecionadoId,
+      ...usuariosCache.find(u => u.id === usuarioSelecionadoId),
+      ...dados
     };
 
-    window.selecionarUsuario = function(id){
-      const usuario = usuariosCache.find(u => u.id === id);
-      if(!usuario) return;
+    await sincronizarColecaoPublica(usuarioSelecionadoId,usuarioAtualizado);
 
-      usuarioSelecionadoId = id;
-      document.getElementById("editNome").value = usuario.nome || "";
-      document.getElementById("editEmail").value = usuario.email || "";
-      document.getElementById("editCpf").value = usuario.cpf || "";
-      document.getElementById("editTime").value = usuario.time || "";
-      document.getElementById("editTipo").value = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "torcedor");
-      document.getElementById("editStatus").value = usuario.status || "ativo";
-      document.getElementById("editAprovado").value = usuario.aprovado === true ? "true" : "false";
-      document.getElementById("editAutorizado").value = usuario.autorizado === true ? "true" : "false";
+    await carregarUsuarios();
+    mostrarSucesso("Usuário atualizado e sincronizado com sucesso.");
+  }catch(erro){
+    console.error(erro);
+    mostrarErro("Erro ao atualizar usuário.");
+  }
+};
 
-      mostrarSucesso("Usuário carregado para edição.");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+window.aplicarRegraPadrao = async function(id){
+  limparMensagens();
+
+  try{
+    const usuario = usuariosCache.find(u => u.id === id);
+    if(!usuario) return;
+
+    const regra = aplicarRegrasPorTipo(usuario.tipoUsuario || usuario.tipo || "");
+
+    const dados = {
+      aprovado:regra.aprovado,
+      autorizado:regra.autorizado,
+      status:regra.status,
+      atualizadoEm:serverTimestamp()
     };
 
-    window.salvarEdicao = async function(){
-      limparMensagens();
+    await updateDoc(doc(db,"usuarios",id),dados);
 
-      if(!usuarioSelecionadoId){
-        mostrarErro("Selecione um usuário da lista para editar.");
-        return;
-      }
-
-      const tipo = normalizarTipo(document.getElementById("editTipo").value);
-
-      const dados = {
-        nome: document.getElementById("editNome").value.trim(),
-        email: document.getElementById("editEmail").value.trim().toLowerCase(),
-        cpf: document.getElementById("editCpf").value.trim(),
-        time: document.getElementById("editTime").value.trim(),
-        tipoUsuario: tipo,
-        status: document.getElementById("editStatus").value,
-        aprovado: document.getElementById("editAprovado").value === "true",
-        autorizado: document.getElementById("editAutorizado").value === "true",
-        atualizadoEm: new Date().toISOString()
-      };
-
-      if(!dados.nome){
-        mostrarErro("Digite o nome do usuário.");
-        return;
-      }
-
-      if(!dados.email){
-        mostrarErro("Digite o email do usuário.");
-        return;
-      }
-
-      try{
-        await updateDoc(doc(db, "usuarios", usuarioSelecionadoId), dados);
-        await carregarUsuarios();
-        mostrarSucesso("Usuário atualizado com sucesso.");
-      }catch(erro){
-        console.error(erro);
-        mostrarErro("Erro ao atualizar usuário.");
-      }
-    };
-
-    window.aplicarRegraPadrao = async function(id){
-      try{
-        const usuario = usuariosCache.find(u => u.id === id);
-        if(!usuario) return;
-
-        const regra = aplicarRegrasPorTipo(usuario.tipoUsuario || usuario.tipo || "");
-
-        await updateDoc(doc(db, "usuarios", id), {
-          aprovado: regra.aprovado,
-          autorizado: regra.autorizado,
-          status: regra.status,
-          atualizadoEm: new Date().toISOString()
-        });
-
-        await carregarUsuarios();
-        mostrarSucesso("Regra padrão aplicada com sucesso.");
-      }catch(erro){
-        console.error(erro);
-        mostrarErro("Erro ao aplicar regra padrão.");
-      }
-    };
-
-    window.aprovarUsuario = async function(id){
-      try{
-        const usuario = usuariosCache.find(u => u.id === id);
-        if(!usuario) return;
-
-        const tipo = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "");
-        let aprovado = true;
-        let autorizado = false;
-        let status = "ativo";
-
-        if(tipo === "admin"){
-          aprovado = true;
-          autorizado = true;
-        }else if(tipo === "arbitro"){
-          aprovado = true;
-          autorizado = true;
-        }else if(tipo === "assistente"){
-          aprovado = true;
-          autorizado = false;
-        }else if(tipo === "tecnico" || tipo === "jogador"){
-          aprovado = true;
-          autorizado = false;
-        }else if(tipo === "pai_atleta" || tipo === "torcedor"){
-          aprovado = true;
-          autorizado = false;
-        }
-
-        await updateDoc(doc(db, "usuarios", id), {
-          aprovado,
-          autorizado,
-          status,
-          atualizadoEm: new Date().toISOString()
-        });
-
-        await carregarUsuarios();
-        mostrarSucesso("Usuário aprovado com sucesso.");
-      }catch(erro){
-        console.error(erro);
-        mostrarErro("Erro ao aprovar usuário.");
-      }
-    };
-
-    window.reprovarUsuario = async function(id){
-      try{
-        const usuario = usuariosCache.find(u => u.id === id);
-        if(!usuario) return;
-
-        const tipo = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "");
-        const regra = aplicarRegrasPorTipo(tipo);
-
-        await updateDoc(doc(db, "usuarios", id), {
-          aprovado: false,
-          autorizado: false,
-          status: regra.status === "ativo" ? "pendente" : regra.status,
-          atualizadoEm: new Date().toISOString()
-        });
-
-        await carregarUsuarios();
-        mostrarSucesso("Usuário voltou para pendente.");
-      }catch(erro){
-        console.error(erro);
-        mostrarErro("Erro ao reprovar usuário.");
-      }
-    };
-
-    window.bloquearUsuario = async function(id){
-      try{
-        await updateDoc(doc(db, "usuarios", id), {
-          status: "bloqueado",
-          atualizadoEm: new Date().toISOString()
-        });
-
-        await carregarUsuarios();
-        mostrarSucesso("Usuário bloqueado com sucesso.");
-      }catch(erro){
-        console.error(erro);
-        mostrarErro("Erro ao bloquear usuário.");
-      }
-    };
-
-    window.ativarUsuario = async function(id){
-      try{
-        await updateDoc(doc(db, "usuarios", id), {
-          status: "ativo",
-          atualizadoEm: new Date().toISOString()
-        });
-
-        await carregarUsuarios();
-        mostrarSucesso("Usuário ativado com sucesso.");
-      }catch(erro){
-        console.error(erro);
-        mostrarErro("Erro ao ativar usuário.");
-      }
-    };
-
-    window.excluirUsuario = async function(id){
-      const confirmar = confirm("Deseja realmente excluir este usuário?");
-      if(!confirmar) return;
-
-      try{
-        await deleteDoc(doc(db, "usuarios", id));
-        await carregarUsuarios();
-        mostrarSucesso("Usuário excluído com sucesso.");
-      }catch(erro){
-        console.error(erro);
-        mostrarErro("Erro ao excluir usuário.");
-      }
-    };
-
-    window.renderUsuarios = function(){
-      const lista = document.getElementById("listaUsuarios");
-      const busca = normalizarTexto(document.getElementById("buscaUsuario").value);
-      const filtroTipo = normalizarTipo(document.getElementById("filtroTipo").value);
-      const filtroStatus = normalizarTexto(document.getElementById("filtroStatus").value);
-      const filtroAutorizado = document.getElementById("filtroAutorizado").value;
-
-      let usuarios = [...usuariosCache];
-
-      if(busca){
-        usuarios = usuarios.filter(u =>
-          normalizarTexto(u.nome).includes(busca) ||
-          normalizarTexto(u.email).includes(busca) ||
-          normalizarTexto(u.cpf).includes(busca) ||
-          normalizarTexto(u.time).includes(busca)
-        );
-      }
-
-      if(filtroTipo){
-        usuarios = usuarios.filter(u => normalizarTipo(u.tipoUsuario || u.tipo) === filtroTipo);
-      }
-
-      if(filtroStatus){
-        usuarios = usuarios.filter(u => normalizarTexto(u.status) === filtroStatus);
-      }
-
-      if(filtroAutorizado === "sim"){
-        usuarios = usuarios.filter(u => u.autorizado === true);
-      }
-
-      if(filtroAutorizado === "nao"){
-        usuarios = usuarios.filter(u => u.autorizado !== true);
-      }
-
-      usuarios.sort((a,b) => String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR"));
-
-      if(!usuarios.length){
-        lista.innerHTML = `<div class="vazio">Nenhum usuário encontrado.</div>`;
-        return;
-      }
-
-      lista.innerHTML = usuarios.map(usuario => {
-        const tipo = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "");
-        const autorizado = usuario.autorizado === true;
-        const aprovado = usuario.aprovado === true;
-        const status = usuario.status || "ativo";
-
-        return `
-          <div class="user-card">
-            <div class="user-top">
-              <div class="user-info">
-                <h3>${usuario.nome || "Sem nome"}</h3>
-                <p><strong>Email:</strong> ${usuario.email || "-"}</p>
-                <p><strong>CPF:</strong> ${usuario.cpf || "-"}</p>
-                <p><strong>Time:</strong> ${usuario.time || "-"}</p>
-                <p><strong>ID:</strong> ${usuario.id}</p>
-              </div>
-            </div>
-
-            <div class="tags">
-              <span class="tag gold">${tipoLabel(tipo)}</span>
-              <span class="tag ${aprovado ? "success" : "warning"}">${aprovado ? "Aprovado" : "Pendente"}</span>
-              <span class="tag ${autorizado ? "success" : "danger"}">${autorizado ? "Autorizado" : "Não autorizado"}</span>
-              <span class="tag ${status === "ativo" ? "success" : status === "bloqueado" ? "danger" : "warning"}">${status}</span>
-            </div>
-
-            <div class="user-actions">
-              <button class="mini-btn mini-edit" onclick="selecionarUsuario('${usuario.id}')">
-                <i class="fa-solid fa-pen"></i> Editar
-              </button>
-
-              <button class="mini-btn mini-approve" onclick="aprovarUsuario('${usuario.id}')">
-                <i class="fa-solid fa-user-check"></i> Aprovar
-              </button>
-
-              <button class="mini-btn mini-block" onclick="reprovarUsuario('${usuario.id}')">
-                <i class="fa-solid fa-user-clock"></i> Pendente
-              </button>
-
-              <button class="mini-btn mini-admin" onclick="aplicarRegraPadrao('${usuario.id}')">
-                <i class="fa-solid fa-repeat"></i> Regra padrão
-              </button>
-
-              <button class="mini-btn mini-block" onclick="bloquearUsuario('${usuario.id}')">
-                <i class="fa-solid fa-ban"></i> Bloquear
-              </button>
-
-              <button class="mini-btn mini-approve" onclick="ativarUsuario('${usuario.id}')">
-                <i class="fa-solid fa-check"></i> Ativar
-              </button>
-
-              <button class="mini-btn mini-delete" onclick="excluirUsuario('${usuario.id}')">
-                <i class="fa-solid fa-trash"></i> Excluir
-              </button>
-            </div>
-          </div>
-        `;
-      }).join("");
-    };
-
-    async function carregarUsuarios(){
-      const lista = document.getElementById("listaUsuarios");
-      lista.innerHTML = `<div class="vazio">Carregando usuários...</div>`;
-
-      try{
-        const snap = await getDocs(collection(db, "usuarios"));
-        usuariosCache = [];
-
-        snap.forEach(docSnap => {
-          usuariosCache.push({ id: docSnap.id, ...docSnap.data() });
-        });
-
-        window.renderUsuarios();
-      }catch(erro){
-        console.error(erro);
-        lista.innerHTML = `<div class="vazio">Erro ao carregar usuários.</div>`;
-      }
-    }
-
-    onAuthStateChanged(auth, async (user) => {
-      if(!user){
-        window.location.href = "login.html";
-        return;
-      }
-
-      const acessoLiberado = await validarAcessoAdmin(user);
-
-      if(!acessoLiberado){
-        alert("Acesso restrito ao administrador.");
-        window.location.href = "index.html";
-        return;
-      }
-
-      await carregarUsuarios();
+    await sincronizarColecaoPublica(id,{
+      ...usuario,
+      ...dados
     });
-  </script>
+
+    await carregarUsuarios();
+    mostrarSucesso("Regra padrão aplicada e sincronizada.");
+  }catch(erro){
+    console.error(erro);
+    mostrarErro("Erro ao aplicar regra padrão.");
+  }
+};
+
+window.aprovarUsuario = async function(id){
+  limparMensagens();
+
+  try{
+    const usuario = usuariosCache.find(u => u.id === id);
+    if(!usuario) return;
+
+    const regra = regraAprovacao(usuario.tipoUsuario || usuario.tipo || "");
+
+    const dados = {
+      aprovado:regra.aprovado,
+      autorizado:regra.autorizado,
+      status:regra.status,
+      atualizadoEm:serverTimestamp()
+    };
+
+    await updateDoc(doc(db,"usuarios",id),dados);
+
+    await sincronizarColecaoPublica(id,{
+      ...usuario,
+      ...dados
+    });
+
+    await carregarUsuarios();
+    mostrarSucesso("Usuário aprovado e sincronizado com sucesso.");
+  }catch(erro){
+    console.error(erro);
+    mostrarErro("Erro ao aprovar usuário.");
+  }
+};
+
+window.reprovarUsuario = async function(id){
+  limparMensagens();
+
+  try{
+    const usuario = usuariosCache.find(u => u.id === id);
+    if(!usuario) return;
+
+    const tipo = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "");
+    const regra = aplicarRegrasPorTipo(tipo);
+
+    const dados = {
+      aprovado:false,
+      autorizado:false,
+      status:regra.status === "ativo" ? "pendente" : regra.status,
+      atualizadoEm:serverTimestamp()
+    };
+
+    await updateDoc(doc(db,"usuarios",id),dados);
+
+    await sincronizarColecaoPublica(id,{
+      ...usuario,
+      ...dados
+    });
+
+    await carregarUsuarios();
+    mostrarSucesso("Usuário voltou para pendente.");
+  }catch(erro){
+    console.error(erro);
+    mostrarErro("Erro ao colocar usuário como pendente.");
+  }
+};
+
+window.bloquearUsuario = async function(id){
+  limparMensagens();
+
+  try{
+    const usuario = usuariosCache.find(u => u.id === id);
+    if(!usuario) return;
+
+    const dados = {
+      status:"bloqueado",
+      aprovado:false,
+      autorizado:false,
+      atualizadoEm:serverTimestamp()
+    };
+
+    await updateDoc(doc(db,"usuarios",id),dados);
+
+    await sincronizarColecaoPublica(id,{
+      ...usuario,
+      ...dados
+    });
+
+    await carregarUsuarios();
+    mostrarSucesso("Usuário bloqueado com sucesso.");
+  }catch(erro){
+    console.error(erro);
+    mostrarErro("Erro ao bloquear usuário.");
+  }
+};
+
+window.ativarUsuario = async function(id){
+  limparMensagens();
+
+  try{
+    const usuario = usuariosCache.find(u => u.id === id);
+    if(!usuario) return;
+
+    const dados = {
+      status:"ativo",
+      aprovado:true,
+      atualizadoEm:serverTimestamp()
+    };
+
+    if(normalizarTipo(usuario.tipoUsuario || usuario.tipo || "") === "admin"){
+      dados.autorizado = true;
+    }
+
+    if(normalizarTipo(usuario.tipoUsuario || usuario.tipo || "") === "arbitro"){
+      dados.autorizado = true;
+    }
+
+    await updateDoc(doc(db,"usuarios",id),dados);
+
+    await sincronizarColecaoPublica(id,{
+      ...usuario,
+      ...dados
+    });
+
+    await carregarUsuarios();
+    mostrarSucesso("Usuário ativado com sucesso.");
+  }catch(erro){
+    console.error(erro);
+    mostrarErro("Erro ao ativar usuário.");
+  }
+};
+
+window.excluirUsuario = async function(id){
+  limparMensagens();
+
+  const confirmar = prompt("Digite EXCLUIR para confirmar:");
+
+  if(confirmar !== "EXCLUIR") return;
+
+  try{
+    await deleteDoc(doc(db,"usuarios",id));
+    await carregarUsuarios();
+    mostrarSucesso("Usuário excluído da coleção usuarios.");
+  }catch(erro){
+    console.error(erro);
+    mostrarErro("Erro ao excluir usuário.");
+  }
+};
+
+window.renderUsuarios = function(){
+  const lista = document.getElementById("listaUsuarios");
+  const busca = normalizarTexto(document.getElementById("buscaUsuario").value);
+  const filtroTipo = normalizarTipo(document.getElementById("filtroTipo").value);
+  const filtroStatus = normalizarTexto(document.getElementById("filtroStatus").value);
+  const filtroAutorizado = document.getElementById("filtroAutorizado").value;
+
+  let usuarios = [...usuariosCache];
+
+  if(busca){
+    usuarios = usuarios.filter(u =>
+      normalizarTexto(u.nome || u.nomeCompleto).includes(busca) ||
+      normalizarTexto(u.email).includes(busca) ||
+      normalizarTexto(u.cpf).includes(busca) ||
+      normalizarTexto(u.time || u.timeNome).includes(busca)
+    );
+  }
+
+  if(filtroTipo){
+    usuarios = usuarios.filter(u => normalizarTipo(u.tipoUsuario || u.tipo || u.perfil) === filtroTipo);
+  }
+
+  if(filtroStatus){
+    usuarios = usuarios.filter(u => normalizarTexto(u.status) === filtroStatus);
+  }
+
+  if(filtroAutorizado === "sim"){
+    usuarios = usuarios.filter(u => u.autorizado === true);
+  }
+
+  if(filtroAutorizado === "nao"){
+    usuarios = usuarios.filter(u => u.autorizado !== true);
+  }
+
+  usuarios.sort((a,b)=>String(a.nome || a.nomeCompleto || "").localeCompare(String(b.nome || b.nomeCompleto || ""),"pt-BR"));
+
+  if(!usuarios.length){
+    lista.innerHTML = `<div class="vazio">Nenhum usuário encontrado.</div>`;
+    return;
+  }
+
+  lista.innerHTML = usuarios.map(usuario=>{
+    const tipo = normalizarTipo(usuario.tipoUsuario || usuario.tipo || usuario.perfil || "");
+    const autorizado = usuario.autorizado === true;
+    const aprovado = usuario.aprovado === true;
+    const status = usuario.status || "ativo";
+
+    return `
+      <div class="user-card">
+        <div class="user-top">
+          <div class="user-info">
+            <h3>${usuario.nome || usuario.nomeCompleto || "Sem nome"}</h3>
+            <p><strong>Email:</strong> ${usuario.email || "-"}</p>
+            <p><strong>CPF:</strong> ${usuario.cpf || "-"}</p>
+            <p><strong>Time:</strong> ${usuario.time || usuario.timeNome || "-"}</p>
+            <p><strong>ID:</strong> ${usuario.id}</p>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag gold">${tipoLabel(tipo)}</span>
+          <span class="tag ${aprovado ? "success" : "warning"}">${aprovado ? "Aprovado" : "Pendente"}</span>
+          <span class="tag ${autorizado ? "success" : "danger"}">${autorizado ? "Autorizado" : "Não autorizado"}</span>
+          <span class="tag ${status === "ativo" ? "success" : status === "bloqueado" ? "danger" : "warning"}">${status}</span>
+        </div>
+
+        <div class="user-actions">
+          <button class="mini-btn mini-edit" onclick="selecionarUsuario('${usuario.id}')">
+            <i class="fa-solid fa-pen"></i> Editar
+          </button>
+
+          <button class="mini-btn mini-approve" onclick="aprovarUsuario('${usuario.id}')">
+            <i class="fa-solid fa-user-check"></i> Aprovar
+          </button>
+
+          <button class="mini-btn mini-block" onclick="reprovarUsuario('${usuario.id}')">
+            <i class="fa-solid fa-user-clock"></i> Pendente
+          </button>
+
+          <button class="mini-btn mini-admin" onclick="aplicarRegraPadrao('${usuario.id}')">
+            <i class="fa-solid fa-repeat"></i> Regra padrão
+          </button>
+
+          <button class="mini-btn mini-block" onclick="bloquearUsuario('${usuario.id}')">
+            <i class="fa-solid fa-ban"></i> Bloquear
+          </button>
+
+          <button class="mini-btn mini-approve" onclick="ativarUsuario('${usuario.id}')">
+            <i class="fa-solid fa-check"></i> Ativar
+          </button>
+
+          <button class="mini-btn mini-delete" onclick="excluirUsuario('${usuario.id}')">
+            <i class="fa-solid fa-trash"></i> Excluir
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+};
+
+async function carregarUsuarios(){
+  const lista = document.getElementById("listaUsuarios");
+  lista.innerHTML = `<div class="vazio">Carregando usuários...</div>`;
+
+  try{
+    const snap = await getDocs(collection(db,"usuarios"));
+    usuariosCache = [];
+
+    snap.forEach(docSnap=>{
+      usuariosCache.push({
+        id:docSnap.id,
+        ...docSnap.data()
+      });
+    });
+
+    window.renderUsuarios();
+  }catch(erro){
+    console.error(erro);
+    lista.innerHTML = `<div class="vazio">Erro ao carregar usuários.</div>`;
+  }
+}
+
+onAuthStateChanged(auth, async(user)=>{
+  if(!user){
+    window.location.href = "login.html";
+    return;
+  }
+
+  const acessoLiberado = await validarAcessoAdmin(user);
+
+  if(!acessoLiberado){
+    alert("Acesso restrito ao administrador.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  await carregarUsuarios();
+});
+</script>
 
 </body>
 </html>
