@@ -10,236 +10,653 @@
 
 <style>
 :root{
-  --azul:#0A1F3D;
-  --dourado:#F7C600;
-  --verde:#1b5e20;
-  --vermelho:#b42323;
+  --azul:#061d3d;
+  --azul2:#001b3f;
+  --dourado:#f7c600;
+  --verde:#009640;
+  --vermelho:#e30613;
   --cinza:#eef2f7;
-  --linha:#d6dbe6;
-  --texto:#111;
+  --linha:#cfd5df;
+  --texto:#07152b;
 }
 
-*{box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:var(--cinza);
+  font-family:Arial, Helvetica, sans-serif;
+  background:#eef2f7;
   color:var(--texto);
 }
 
 .container{
-  max-width:1200px;
-  margin:18px auto;
+  width:1180px;
+  max-width:calc(100% - 12px);
+  margin:6px auto;
   background:#fff;
-  padding:20px;
-  border-radius:14px;
-  box-shadow:0 12px 30px rgba(0,0,0,.12);
+  border:1px solid #bfc6d2;
+  border-radius:6px;
+  padding:14px 16px 0;
+  box-shadow:0 8px 24px rgba(0,0,0,.14);
+  overflow:hidden;
 }
 
+.topo{
+  display:grid;
+  grid-template-columns:130px 1fr 180px;
+  align-items:center;
+  height:118px;
+}
+
+.logo-liga{
+  width:96px;
+  height:96px;
+  object-fit:contain;
+}
+
+.titulo-wrap{text-align:center}
+
 .titulo{
-  text-align:center;
-  font-size:40px;
-  font-weight:900;
   color:var(--azul);
+  font-size:52px;
+  line-height:.95;
+  font-weight:900;
+  letter-spacing:1px;
 }
 
 .subtitulo{
+  color:var(--azul);
+  font-size:22px;
+  font-weight:900;
+  margin-top:9px;
+  text-transform:uppercase;
+}
+
+.slogan{
   text-align:center;
-  font-size:15px;
-  font-weight:800;
+  color:var(--azul);
+  font-size:20px;
+  font-weight:900;
+  line-height:1.05;
+}
+
+.stars{
+  color:var(--dourado);
+  font-size:13px;
+  margin-top:3px;
+}
+
+.bola{
+  width:82px;
+  height:82px;
+  margin:2px auto 0;
+  border-radius:50%;
+  background:#f3f6fb;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+}
+
+.info-top{
+  display:grid;
+  grid-template-columns:1.05fr 1.55fr .9fr .8fr 1.1fr;
+  border:1px solid var(--linha);
+  border-radius:6px;
+  overflow:hidden;
+  margin-top:4px;
+  height:76px;
+}
+
+.info-box{
+  padding:8px;
+  border-right:1px solid var(--linha);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  text-align:center;
+}
+
+.info-box:last-child{border-right:none}
+
+.info-box i{
+  color:var(--azul);
+  font-size:29px;
+}
+
+.label{
+  color:var(--azul);
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.valor{
+  font-size:17px;
+  font-weight:900;
   margin-top:4px;
 }
 
-.status{
+.status-ok{
   background:var(--verde);
   color:#fff;
-  padding:10px;
+  padding:9px 18px;
   border-radius:8px;
-  text-align:center;
+  font-size:16px;
   font-weight:900;
-  margin-top:12px;
-}
-
-.card{
-  background:#fff;
-  border:1px solid var(--linha);
-  border-radius:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,.08);
-  padding:15px;
-  margin-top:15px;
-}
-
-.placar{
-  display:flex;
-  justify-content:space-between;
+  display:inline-flex;
   align-items:center;
-  text-align:center;
+  gap:8px;
+}
+
+.placar-card{
+  border:1px solid var(--linha);
+  border-radius:6px;
+  overflow:hidden;
+  margin-top:14px;
+}
+
+.placar-area{
+  display:grid;
+  grid-template-columns:1fr 260px 1fr;
+  align-items:center;
+  height:140px;
 }
 
 .time{
-  width:35%;
+  height:140px;
+  display:grid;
+  grid-template-columns:125px 1fr;
+  align-items:center;
+  gap:16px;
+  padding:10px 16px;
+}
+
+.time.visitante{
+  grid-template-columns:1fr 125px;
+  text-align:right;
 }
 
 .time img{
-  width:95px;
-  height:95px;
+  width:110px;
+  height:110px;
   object-fit:contain;
   background:#fff;
 }
 
 .time h2{
-  margin:8px 0 0;
   color:var(--azul);
-}
-
-.placar-centro{
-  font-size:56px;
+  font-size:31px;
   font-weight:900;
-  color:var(--azul);
+  text-transform:uppercase;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  margin-top:10px;
-}
-
-.item{
-  background:#f4f6fa;
-  padding:10px;
-  border-radius:8px;
-  text-align:center;
-  font-size:14px;
+.time small{
+  display:block;
+  margin-top:7px;
+  font-size:15px;
   font-weight:700;
 }
 
-.item i{
-  color:var(--azul);
-  margin-right:5px;
+.placar-centro{
+  width:260px;
+  height:140px;
+  background:linear-gradient(180deg,var(--azul),#02142e);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border-radius:4px;
 }
 
-.duplo{
+.placar-num{
+  font-size:74px;
+  line-height:.92;
+  font-weight:900;
+}
+
+.placar-final{
+  margin-top:8px;
+  font-size:15px;
+  font-weight:900;
+}
+
+.dados-jogo{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-  margin-top:15px;
+  grid-template-columns:repeat(4,1fr);
+  height:72px;
+  border-top:1px solid var(--linha);
 }
 
-.titulo-secao{
+.dado{
+  padding:9px 11px;
+  border-right:1px solid var(--linha);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+
+.dado:last-child{border-right:none}
+
+.dado i{
+  color:var(--azul);
+  font-size:28px;
+}
+
+.secao{
   background:var(--azul);
   color:#fff;
-  padding:8px;
-  border-radius:8px 8px 0 0;
-  font-weight:900;
+  padding:8px 12px;
   text-align:center;
+  font-size:19px;
+  font-weight:900;
+  text-transform:uppercase;
+  border-radius:6px 6px 0 0;
 }
 
-.tabela{
+.secao-geral{
+  margin-top:13px;
+  border-radius:6px 6px 0 0;
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.grid2.mt{margin-top:14px}
+
+.bloco{
+  border:1px solid var(--linha);
+  border-radius:6px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.subtime{
+  height:43px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  color:var(--azul);
+  font-size:20px;
+  font-weight:900;
+  border-bottom:1px solid var(--linha);
+  text-transform:uppercase;
+}
+
+.subtime img{
+  width:28px;
+  height:28px;
+  object-fit:contain;
+}
+
+table{
   width:100%;
   border-collapse:collapse;
 }
 
-.tabela th,
-.tabela td{
-  border:1px solid var(--linha);
-  padding:7px;
-  font-size:13px;
+th,td{
+  border-bottom:1px solid var(--linha);
+  padding:5px 8px;
+  font-size:14px;
+  height:28px;
 }
 
-.tabela th{
-  background:#f4f6fa;
+th{
+  background:#f6f8fb;
   color:var(--azul);
+  font-size:12px;
+  text-transform:uppercase;
   text-align:left;
 }
 
-.highlight{
-  background:var(--dourado);
-  color:#111;
-  padding:14px;
-  border-radius:10px;
+th:first-child,td:first-child{
   text-align:center;
-  font-weight:900;
-  font-size:17px;
+  width:52px;
 }
 
-.resumo{
+.suplentes{
+  background:#f6f8fb;
+  color:var(--azul);
+  text-align:center!important;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.legenda{
+  text-align:center;
+  font-size:14px;
+  font-weight:700;
+  margin:9px 0 4px;
+}
+
+.eventos .secao{border-radius:6px 6px 0 0}
+.eventos.b .secao{background:var(--vermelho)}
+
+.event-grid{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  text-align:center;
+  grid-template-columns:1fr 1fr;
+  min-height:170px;
 }
 
-.resumo div{
-  background:#f4f6fa;
-  padding:12px;
-  border-radius:10px;
+.event-col{
+  padding:11px 12px;
+}
+
+.event-col + .event-col{
+  border-left:1px solid var(--linha);
+}
+
+.event-title{
+  text-align:center;
+  color:var(--azul);
+  font-size:16px;
   font-weight:900;
+  text-transform:uppercase;
+  margin-bottom:8px;
 }
 
-.obs{
-  min-height:70px;
-  line-height:1.5;
-}
-
-.qr-area{
-  text-align:center;
-  margin-top:16px;
-}
-
-.qr-area small{
-  display:block;
-  margin-top:5px;
-  color:#555;
+.event-item{
+  display:grid;
+  grid-template-columns:36px 46px 1fr;
+  align-items:center;
+  gap:6px;
+  padding:6px 0;
+  font-size:14px;
   font-weight:700;
 }
 
-.btns{
+.event-icon{
+  text-align:center;
+  font-size:19px;
+}
+
+.amarelo{color:#f7c600}
+.vermelho-card{color:red}
+
+.arb-resumo{
+  display:grid;
+  grid-template-columns:420px 1fr;
+  gap:16px;
+  margin-top:16px;
+}
+
+.arb-table td{
+  padding:9px 10px;
+  height:38px;
+}
+
+.arb-table td:first-child{
+  width:170px;
+  color:var(--azul);
+  font-weight:900;
+  text-transform:uppercase;
+  text-align:left;
+}
+
+.resumo-box{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  height:104px;
+  border-bottom:1px solid var(--linha);
+}
+
+.resumo-item{
+  text-align:center;
+  padding:13px;
+  border-right:1px solid var(--linha);
+}
+
+.resumo-item:last-child{border-right:none}
+
+.resumo-item i{
+  font-size:25px;
+  margin-bottom:4px;
+}
+
+.resumo-item strong{
+  display:block;
+  color:var(--azul);
+  font-size:31px;
+  line-height:1;
+}
+
+.resumo-item span{
+  display:block;
+  color:var(--azul);
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  margin-top:5px;
+}
+
+.melhor{
+  display:grid;
+  grid-template-columns:90px 1fr 90px;
+  align-items:center;
+  gap:12px;
+  height:94px;
+  padding:10px 12px;
+}
+
+.melhor-star{
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  margin:auto;
+  background:#f8f8f8;
   display:flex;
-  gap:10px;
-  margin-top:15px;
+  align-items:center;
+  justify-content:center;
+  color:var(--dourado);
+  font-size:34px;
+}
+
+.melhor-info small{
+  color:var(--azul);
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.melhor-info strong{
+  display:block;
+  color:var(--azul);
+  font-size:17px;
+  margin:5px 0;
+  text-transform:uppercase;
+}
+
+.trofeu{
+  color:#d99900;
+  font-size:54px;
+  text-align:center;
+}
+
+.obs{
+  border:1px solid var(--linha);
+  border-radius:6px;
+  margin-top:16px;
+  overflow:hidden;
+}
+
+.obs-text{
+  min-height:52px;
+  padding:10px 12px;
+  font-size:14px;
+  line-height:1.45;
+}
+
+.rodape-grid{
+  display:grid;
+  grid-template-columns:420px 1fr;
+  gap:16px;
+  margin-top:16px;
+}
+
+.autenticacao{
+  height:132px;
+  display:grid;
+  grid-template-columns:115px 1fr;
+  gap:12px;
+  align-items:center;
+  border:1px solid var(--linha);
+  border-radius:6px;
+  padding:10px 12px;
+}
+
+.autenticacao canvas{
+  width:105px!important;
+  height:105px!important;
+}
+
+.autenticacao strong{
+  color:var(--azul);
+  font-size:14px;
+}
+
+.autenticacao p{
+  font-size:13px;
+  line-height:1.32;
+  font-weight:700;
+}
+
+.compartilhar{
+  height:132px;
+  border:1px solid var(--linha);
+  border-radius:6px;
+  padding:12px;
+}
+
+.compartilhar h3{
+  color:var(--azul);
+  text-align:center;
+  font-size:15px;
+  margin-bottom:12px;
+  text-transform:uppercase;
+}
+
+.btns{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
 }
 
 .btn{
-  flex:1;
-  padding:12px;
+  height:58px;
   border:none;
   border-radius:8px;
+  padding:10px;
   color:#fff;
   font-weight:900;
   cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  font-size:13px;
 }
 
-.whats{background:#25d366}
-.email{background:#007bff}
-.print{background:#000}
+.whats{background:#06a84f}
+.email{background:#1f63d5}
+.copy{background:#4b5563}
+.pdf{background:#e51b23}
 
-@media(max-width:800px){
-  .placar{
-    flex-direction:column;
-    gap:15px;
+.footer{
+  margin:14px -16px 0;
+  height:34px;
+  background:var(--azul);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+  font-weight:700;
+}
+
+@media(max-width:900px){
+  .container{
+    width:100%;
+    max-width:100%;
+    margin:0;
+    border-radius:0;
+    padding:10px;
   }
 
-  .time{
+  .topo,
+  .info-top,
+  .placar-area,
+  .dados-jogo,
+  .grid2,
+  .arb-resumo,
+  .rodape-grid,
+  .btns{
+    grid-template-columns:1fr;
+    height:auto;
+  }
+
+  .topo{text-align:center}
+
+  .logo-liga{margin:auto}
+
+  .titulo{font-size:35px}
+
+  .subtitulo{font-size:16px}
+
+  .time,
+  .time.visitante{
+    grid-template-columns:1fr;
+    text-align:center;
+    height:auto;
+  }
+
+  .time img{margin:auto}
+
+  .placar-centro{
     width:100%;
   }
 
-  .duplo,
-  .grid,
-  .resumo{
-    grid-template-columns:1fr;
+  .placar-num{font-size:58px}
+
+  .info-box,
+  .dado,
+  .resumo-item{
+    border-right:none;
+    border-bottom:1px solid var(--linha);
   }
 
-  .placar-centro{
-    font-size:44px;
+  .event-grid,
+  .melhor{
+    grid-template-columns:1fr;
+    height:auto;
   }
+
+  .event-col + .event-col{
+    border-left:none;
+    border-top:1px solid var(--linha);
+  }
+
+  .autenticacao,
+  .compartilhar{
+    height:auto;
+  }
+
+  .autenticacao{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+
+  .autenticacao canvas{margin:auto}
 }
 
 @media print{
   body{background:#fff}
-  .container{box-shadow:none;margin:0 auto}
-  .btns{display:none}
+  .container{box-shadow:none;margin:0 auto;border:none}
+  .compartilhar{display:none}
 }
 </style>
 </head>
@@ -248,37 +665,135 @@ body{
 
 <div class="container">
 
-  <div class="titulo">SÚMULA OFICIAL</div>
-  <div class="subtitulo" id="campeonato"></div>
-  <div class="subtitulo" id="categoria"></div>
-
-  <div id="status" class="status">FINALIZADO</div>
-
-  <div class="card placar">
-    <div class="time">
-      <img id="logoA" src="logo-liga.jfif">
-      <h2 id="timeA">Time A</h2>
+  <div class="topo">
+    <div>
+      <img class="logo-liga" src="logo-liga.jfif" alt="Liga Goiana">
     </div>
 
-    <div class="placar-centro" id="placar">0 x 0</div>
+    <div class="titulo-wrap">
+      <div class="titulo">SÚMULA OFICIAL</div>
+      <div class="subtitulo" id="subtituloCampeonato">CAMPEONATO</div>
+    </div>
 
-    <div class="time">
-      <img id="logoB" src="logo-liga.jfif">
-      <h2 id="timeB">Time B</h2>
+    <div class="slogan">
+      FUTEBOL<br>É PAIXÃO!
+      <div class="stars">
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+      </div>
+      <div class="bola">⚽</div>
     </div>
   </div>
 
-  <div class="grid">
-    <div class="item"><i class="fa fa-calendar"></i> <span id="data">-</span></div>
-    <div class="item"><i class="fa fa-clock"></i> <span id="hora">-</span></div>
-    <div class="item"><i class="fa fa-location-dot"></i> <span id="local">-</span></div>
-    <div class="item"><i class="fa fa-barcode"></i> Código: <span id="codigo">-</span></div>
+  <div class="info-top">
+    <div class="info-box">
+      <i class="fa-regular fa-file-lines"></i>
+      <div>
+        <div class="label">Súmula Nº</div>
+        <div class="valor" id="numeroSumula">-</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <i class="fa-solid fa-barcode"></i>
+      <div>
+        <div class="label">Código da Partida</div>
+        <div class="valor" id="codigoPartida">-</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <i class="fa-solid fa-trophy"></i>
+      <div>
+        <div class="label">Fase</div>
+        <div class="valor" id="fase">-</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div>
+        <div class="label">Rodada</div>
+        <div class="valor" id="rodada">-</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div>
+        <div class="label">Status</div>
+        <div class="status-ok"><i class="fa-solid fa-check"></i> FINALIZADO</div>
+      </div>
+    </div>
   </div>
 
-  <div class="duplo">
-    <div class="card">
-      <div class="titulo-secao" id="tituloEscA">ESCALAÇÃO</div>
-      <table class="tabela">
+  <div class="placar-card">
+    <div class="placar-area">
+      <div class="time">
+        <img id="logoA" src="logo-liga.jfif">
+        <div>
+          <h2 id="timeA">TIME A</h2>
+          <small id="cidadeA">Goiânia - GO</small>
+        </div>
+      </div>
+
+      <div class="placar-centro">
+        <div class="placar-num" id="placar">0 x 0</div>
+        <div class="placar-final">PLACAR FINAL</div>
+      </div>
+
+      <div class="time visitante">
+        <div>
+          <h2 id="timeB">TIME B</h2>
+          <small id="cidadeB">Goiânia - GO</small>
+        </div>
+        <img id="logoB" src="logo-liga.jfif">
+      </div>
+    </div>
+
+    <div class="dados-jogo">
+      <div class="dado">
+        <i class="fa-regular fa-calendar-days"></i>
+        <div>
+          <div class="label">Data</div>
+          <div class="valor" id="data">-</div>
+        </div>
+      </div>
+
+      <div class="dado">
+        <i class="fa-regular fa-clock"></i>
+        <div>
+          <div class="label">Horário</div>
+          <div class="valor" id="hora">-</div>
+        </div>
+      </div>
+
+      <div class="dado">
+        <i class="fa-solid fa-location-dot"></i>
+        <div>
+          <div class="label">Campo</div>
+          <div class="valor" id="campo">-</div>
+        </div>
+      </div>
+
+      <div class="dado">
+        <i class="fa-solid fa-user-shield"></i>
+        <div>
+          <div class="label">Árbitro</div>
+          <div class="valor" id="arbitroTopo">-</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="secao secao-geral">ESCALAÇÕES</div>
+
+  <div class="grid2">
+    <div class="bloco">
+      <div class="subtime">
+        <span id="tituloEscA">TIME A</span>
+        <img id="miniLogoA" src="logo-liga.jfif">
+      </div>
+      <table>
         <thead>
           <tr>
             <th>Nº</th>
@@ -290,9 +805,12 @@ body{
       </table>
     </div>
 
-    <div class="card">
-      <div class="titulo-secao" id="tituloEscB">ESCALAÇÃO</div>
-      <table class="tabela">
+    <div class="bloco">
+      <div class="subtime">
+        <img id="miniLogoB" src="logo-liga.jfif">
+        <span id="tituloEscB">TIME B</span>
+      </div>
+      <table>
         <thead>
           <tr>
             <th>Nº</th>
@@ -305,88 +823,128 @@ body{
     </div>
   </div>
 
-  <div class="duplo">
-    <div class="card">
-      <div class="titulo-secao">EVENTOS - TIME A</div>
+  <div class="legenda">(G) Goleiro &nbsp;&nbsp;&nbsp; (C) Capitão</div>
 
-      <table class="tabela">
-        <thead>
-          <tr><th colspan="3"><i class="fa-solid fa-futbol"></i> Gols</th></tr>
-        </thead>
-        <tbody id="golsA"></tbody>
-      </table>
-
-      <br>
-
-      <table class="tabela">
-        <thead>
-          <tr><th colspan="3">Cartões</th></tr>
-        </thead>
-        <tbody id="cartA"></tbody>
-      </table>
+  <div class="grid2 mt">
+    <div class="bloco eventos">
+      <div class="secao" id="eventoTituloA">TIME A</div>
+      <div class="event-grid">
+        <div class="event-col">
+          <div class="event-title">Gols</div>
+          <div id="golsA"></div>
+        </div>
+        <div class="event-col">
+          <div class="event-title">Cartões</div>
+          <div id="cartA"></div>
+        </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="titulo-secao">EVENTOS - TIME B</div>
-
-      <table class="tabela">
-        <thead>
-          <tr><th colspan="3"><i class="fa-solid fa-futbol"></i> Gols</th></tr>
-        </thead>
-        <tbody id="golsB"></tbody>
-      </table>
-
-      <br>
-
-      <table class="tabela">
-        <thead>
-          <tr><th colspan="3">Cartões</th></tr>
-        </thead>
-        <tbody id="cartB"></tbody>
-      </table>
+    <div class="bloco eventos b">
+      <div class="secao" id="eventoTituloB">TIME B</div>
+      <div class="event-grid">
+        <div class="event-col">
+          <div class="event-title">Gols</div>
+          <div id="golsB"></div>
+        </div>
+        <div class="event-col">
+          <div class="event-title">Cartões</div>
+          <div id="cartB"></div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="duplo">
-    <div class="card">
-      <div class="titulo-secao">ARBITRAGEM</div>
-      <table class="tabela">
+  <div class="arb-resumo">
+    <div class="bloco">
+      <div class="secao">ARBITRAGEM</div>
+      <table class="arb-table">
         <tbody id="arb"></tbody>
       </table>
     </div>
 
-    <div class="card">
-      <div class="titulo-secao">RESUMO DA PARTIDA</div>
-      <div class="resumo">
-        <div><i class="fa-solid fa-futbol"></i><br><span id="totalGols">0</span> gols</div>
-        <div><i class="fa-solid fa-square" style="color:#f7c600"></i><br><span id="totalAmarelos">0</span> amarelos</div>
-        <div><i class="fa-solid fa-square" style="color:red"></i><br><span id="totalVermelhos">0</span> vermelhos</div>
+    <div class="bloco">
+      <div class="secao">RESUMO DA PARTIDA</div>
+
+      <div class="resumo-box">
+        <div class="resumo-item">
+          <i class="fa-solid fa-futbol"></i>
+          <strong id="totalGols">0</strong>
+          <span>Gols</span>
+        </div>
+
+        <div class="resumo-item">
+          <i class="fa-solid fa-square amarelo"></i>
+          <strong id="totalAmarelos">0</strong>
+          <span>Cartões Amarelos</span>
+        </div>
+
+        <div class="resumo-item">
+          <i class="fa-solid fa-square vermelho-card"></i>
+          <strong id="totalVermelhos">0</strong>
+          <span>Cartões Vermelhos</span>
+        </div>
       </div>
 
-      <br>
-
-      <div class="highlight" id="melhor">⭐ Melhor em campo: Não informado</div>
+      <div class="melhor">
+        <div class="melhor-star"><i class="fa-solid fa-star"></i></div>
+        <div class="melhor-info">
+          <small>Melhor jogador da partida</small>
+          <strong id="melhor">Não informado</strong>
+          <div id="melhorTime">-</div>
+        </div>
+        <div class="trofeu"><i class="fa-solid fa-trophy"></i></div>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="titulo-secao">OBSERVAÇÕES DO ÁRBITRO</div>
-    <div class="obs" id="observacoes">-</div>
+  <div class="obs">
+    <div class="secao">OBSERVAÇÕES DO ÁRBITRO</div>
+    <div class="obs-text" id="observacoes">-</div>
   </div>
 
-  <div class="qr-area">
-    <canvas id="qr"></canvas>
-    <small>QR Code de validação oficial da súmula</small>
+  <div class="rodape-grid">
+    <div class="autenticacao">
+      <canvas id="qr"></canvas>
+      <div>
+        <strong>AUTENTICAÇÃO</strong>
+        <p>
+          Súmula publicada em<br>
+          <span id="publicadaEm">-</span><br>
+          Código de verificação<br>
+          <strong id="codigoVerificacao">-</strong><br>
+          Escaneie o QR Code para verificar a autenticidade.
+        </p>
+      </div>
+    </div>
+
+    <div class="compartilhar">
+      <h3>Compartilhar</h3>
+      <div class="btns">
+        <button class="btn whats" onclick="wpp()">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp
+        </button>
+
+        <button class="btn email" onclick="mail()">
+          <i class="fa-solid fa-envelope"></i> E-mail
+        </button>
+
+        <button class="btn copy" onclick="copiarLink()">
+          <i class="fa-solid fa-link"></i> Copiar Link
+        </button>
+
+        <button class="btn pdf" onclick="window.print()">
+          <i class="fa-solid fa-file-pdf"></i> Baixar PDF
+        </button>
+      </div>
+    </div>
   </div>
 
-  <div class="btns">
-    <button class="btn whats" onclick="wpp()">WhatsApp</button>
-    <button class="btn email" onclick="mail()">Email</button>
-    <button class="btn print" onclick="window.print()">PDF</button>
+  <div class="footer">
+    Documento oficial gerado pelo sistema Liga Goiana • Todos os direitos reservados © 2025
   </div>
 
 </div>
-
 <script type="module">
 import { db } from "./firebase.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
@@ -420,60 +978,71 @@ function esc(lista){
 
 function gols(lista){
   if(!lista || !lista.length){
-    return `<tr><td colspan="3">Sem gols.</td></tr>`;
+    return `<div style="text-align:center">Sem gols.</div>`;
   }
 
   return lista.map(g=>`
-    <tr>
-      <td><i class="fa-solid fa-futbol"></i> ${g.tempo || "-"}'</td>
-      <td>${g.numero || "-"}</td>
-      <td>${g.nome || "-"}</td>
-    </tr>
+    <div class="event-item">
+      <div class="event-icon">⚽</div>
+      <div>${g.numero || "-"}</div>
+      <div>${g.nome || "-"} • ${g.tempo || "-"}'</div>
+    </div>
   `).join("");
 }
 
 function cartoes(lista){
   if(!lista || !lista.length){
-    return `<tr><td colspan="3">Sem cartões.</td></tr>`;
+    return `<div style="text-align:center">Sem cartões.</div>`;
   }
 
   return lista.map(c=>{
     const vermelho = c.tipo === "vermelho";
-    const cor = vermelho ? "red" : "#f7c600";
-    const texto = vermelho ? "Vermelho" : "Amarelo";
+    const icone = vermelho ? "🟥" : "🟨";
 
     return `
-      <tr>
-        <td><i class="fa-solid fa-square" style="color:${cor}"></i> ${c.tempo || "-"}'</td>
-        <td>${c.numero || "-"}</td>
-        <td>${c.nome || "-"} - ${texto}</td>
-      </tr>
+      <div class="event-item">
+        <div class="event-icon">${icone}</div>
+        <div>${c.numero || "-"}</div>
+        <div>${c.nome || "-"} • ${c.tempo || "-"}'</div>
+      </div>
     `;
   }).join("");
 }
 
 async function load(){
+
+  // 🔥 fallback VISUAL (pra não ficar vazio)
   if(!id){
-    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px'>Súmula não encontrada.</h2>";
+    preencherDemo();
     return;
   }
 
   const snap = await getDoc(doc(db,"jogos",id));
 
   if(!snap.exists()){
-    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px'>Súmula não encontrada.</h2>";
+    preencherDemo();
     return;
   }
 
   const j = snap.data();
 
   if(!j.sumulaFinalizada){
-    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px'>Súmula ainda não finalizada.</h2>";
+    preencherDemo();
     return;
   }
 
-  document.getElementById("campeonato").innerText = j.campeonato || "-";
-  document.getElementById("categoria").innerText = j.categoria || "-";
+  preencher(j);
+}
+
+function preencher(j){
+
+  document.getElementById("subtituloCampeonato").innerText =
+    `${j.campeonato || "-"} • ${j.categoria || "-"}`;
+
+  document.getElementById("numeroSumula").innerText = j.numero || "001";
+  document.getElementById("codigoPartida").innerText = j.codigo || id;
+  document.getElementById("fase").innerText = j.fase || "Fase única";
+  document.getElementById("rodada").innerText = j.rodada || "1";
 
   document.getElementById("timeA").innerText = j.timeA?.nome || "Time A";
   document.getElementById("timeB").innerText = j.timeB?.nome || "Time B";
@@ -481,15 +1050,22 @@ async function load(){
   document.getElementById("logoA").src = j.timeA?.logo || "logo-liga.jfif";
   document.getElementById("logoB").src = j.timeB?.logo || "logo-liga.jfif";
 
-  document.getElementById("placar").innerText = `${j.placar?.A || 0} x ${j.placar?.B || 0}`;
+  document.getElementById("miniLogoA").src = j.timeA?.logo || "logo-liga.jfif";
+  document.getElementById("miniLogoB").src = j.timeB?.logo || "logo-liga.jfif";
+
+  document.getElementById("placar").innerText =
+    `${j.placar?.A || 0} x ${j.placar?.B || 0}`;
 
   document.getElementById("data").innerText = j.data || "-";
   document.getElementById("hora").innerText = j.hora || "-";
-  document.getElementById("local").innerText = j.local || "-";
-  document.getElementById("codigo").innerText = j.codigo || id;
+  document.getElementById("campo").innerText = j.local || "-";
+  document.getElementById("arbitroTopo").innerText = j.arbitro || "-";
 
-  document.getElementById("tituloEscA").innerText = "ESCALAÇÃO - " + (j.timeA?.nome || "TIME A");
-  document.getElementById("tituloEscB").innerText = "ESCALAÇÃO - " + (j.timeB?.nome || "TIME B");
+  document.getElementById("tituloEscA").innerText = j.timeA?.nome || "TIME A";
+  document.getElementById("tituloEscB").innerText = j.timeB?.nome || "TIME B";
+
+  document.getElementById("eventoTituloA").innerText = j.timeA?.nome || "TIME A";
+  document.getElementById("eventoTituloB").innerText = j.timeB?.nome || "TIME B";
 
   document.getElementById("escA").innerHTML = esc(j.titularesA || j.escalacaoA);
   document.getElementById("escB").innerHTML = esc(j.titularesB || j.escalacaoB);
@@ -501,18 +1077,31 @@ async function load(){
   document.getElementById("cartB").innerHTML = cartoes(fil(j.cartoes,"B"));
 
   document.getElementById("arb").innerHTML = `
-    <tr><td><strong>Árbitro</strong></td><td>${j.arbitro || "-"}</td></tr>
-    <tr><td><strong>Assistente 1</strong></td><td>${j.assistente1 || "-"}</td></tr>
-    <tr><td><strong>Assistente 2</strong></td><td>${j.assistente2 || "-"}</td></tr>
-    <tr><td><strong>4º Árbitro</strong></td><td>${j.quartoArbitro || j.arbitroAuxiliar || "-"}</td></tr>
+    <tr><td>Árbitro</td><td>${j.arbitro || "-"}</td></tr>
+    <tr><td>Assistente 1</td><td>${j.assistente1 || "-"}</td></tr>
+    <tr><td>Assistente 2</td><td>${j.assistente2 || "-"}</td></tr>
+    <tr><td>4º Árbitro</td><td>${j.quartoArbitro || "-"}</td></tr>
   `;
 
   document.getElementById("totalGols").innerText = (j.gols || []).length;
-  document.getElementById("totalAmarelos").innerText = (j.cartoes || []).filter(c=>c.tipo==="amarelo").length;
-  document.getElementById("totalVermelhos").innerText = (j.cartoes || []).filter(c=>c.tipo==="vermelho").length;
+  document.getElementById("totalAmarelos").innerText =
+    (j.cartoes || []).filter(c=>c.tipo==="amarelo").length;
+  document.getElementById("totalVermelhos").innerText =
+    (j.cartoes || []).filter(c=>c.tipo==="vermelho").length;
 
-  document.getElementById("melhor").innerText = "⭐ Melhor em campo: " + (j.melhorJogador || "Não informado");
-  document.getElementById("observacoes").innerText = j.observacoes || j.observacoesArbitro || "-";
+  document.getElementById("melhor").innerText =
+    j.melhorJogador || "Não informado";
+
+  document.getElementById("melhorTime").innerText =
+    j.timeMelhor || "";
+
+  document.getElementById("observacoes").innerText =
+    j.observacoes || "-";
+
+  document.getElementById("publicadaEm").innerText =
+    new Date().toLocaleString("pt-BR");
+
+  document.getElementById("codigoVerificacao").innerText = id;
 
   QRCode.toCanvas(
     document.getElementById("qr"),
@@ -520,15 +1109,52 @@ async function load(){
   );
 }
 
-load();
+// 🔥 DEMO VISUAL (pra você ver igual a imagem)
+function preencherDemo(){
+  preencher({
+    campeonato:"Campeonato Goiano de Base",
+    categoria:"Sub-15",
+    numero:"001",
+    codigo:"ABC123",
+    fase:"Final",
+    rodada:"10",
+    timeA:{nome:"Atlético GO", logo:"logo-liga.jfif"},
+    timeB:{nome:"Vila Nova", logo:"logo-liga.jfif"},
+    placar:{A:2,B:1},
+    data:"20/06/2025",
+    hora:"15:30",
+    local:"Serra Dourada",
+    arbitro:"Árbitro Exemplo",
+    titularesA:[{numero:1,nome:"João",posicao:"Goleiro"}],
+    titularesB:[{numero:1,nome:"Carlos",posicao:"Goleiro"}],
+    gols:[
+      {time:"A",numero:9,nome:"Pedro",tempo:"12"},
+      {time:"A",numero:10,nome:"Lucas",tempo:"55"},
+      {time:"B",numero:7,nome:"Rafael",tempo:"70"}
+    ],
+    cartoes:[
+      {time:"A",tipo:"amarelo",numero:5,nome:"Mateus",tempo:"33"},
+      {time:"B",tipo:"vermelho",numero:4,nome:"Bruno",tempo:"80"}
+    ],
+    melhorJogador:"Pedro",
+    observacoes:"Partida tranquila."
+  });
+}
 
 function wpp(){
-  window.open("https://wa.me/?text=" + encodeURIComponent("Súmula oficial: " + location.href));
+  window.open("https://wa.me/?text=" + encodeURIComponent(location.href));
 }
 
 function mail(){
-  location.href = "mailto:?subject=Súmula Oficial&body=" + encodeURIComponent(location.href);
+  location.href = "mailto:?subject=Súmula&body=" + location.href;
 }
+
+function copiarLink(){
+  navigator.clipboard.writeText(location.href);
+  alert("Link copiado!");
+}
+
+load();
 </script>
 
 </body>
