@@ -99,12 +99,38 @@ img{
   font-size:14px;
 }
 
+/* GRID PADRÃO — MÁXIMO 5 POR LINHA */
 .lista-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
-  gap:10px;
+  grid-template-columns:repeat(5, 1fr);
+  gap:12px;
 }
 
+@media(max-width:1100px){
+  .lista-grid{
+    grid-template-columns:repeat(4, 1fr);
+  }
+}
+
+@media(max-width:900px){
+  .lista-grid{
+    grid-template-columns:repeat(3, 1fr);
+  }
+}
+
+@media(max-width:650px){
+  .lista-grid{
+    grid-template-columns:repeat(2, 1fr);
+  }
+}
+
+@media(max-width:430px){
+  .lista-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+/* CARD */
 .card{
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
   border:1px solid rgba(247,198,0,.22);
@@ -113,6 +139,10 @@ img{
   box-shadow:0 8px 20px rgba(0,0,0,.25);
   transition:.25s ease;
   text-align:center;
+  min-height:285px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
 }
 
 .card:hover{
@@ -138,6 +168,7 @@ img{
   align-items:center;
   justify-content:center;
   font-size:16px;
+  flex-shrink:0;
 }
 
 .status-tag{
@@ -148,9 +179,21 @@ img{
   font-weight:900;
 }
 
-.status-ativo{background:var(--green);}
-.status-encerrado{background:var(--yellow);}
-.status-exemplo{background:var(--blue);}
+.status-ativo{
+  background:var(--green);
+}
+
+.status-encerrado{
+  background:var(--yellow);
+}
+
+.status-pendente{
+  background:var(--blue);
+}
+
+.status-cancelado{
+  background:var(--red);
+}
 
 .logo{
   width:68px;
@@ -163,16 +206,34 @@ img{
 }
 
 .nome-campeonato{
-  font-size:17px;
+  font-size:16px;
   font-weight:900;
   color:#fff;
   margin-bottom:8px;
+  line-height:1.25;
 }
 
 .info-campeonato{
   color:var(--muted);
   font-size:12px;
   margin-bottom:8px;
+  line-height:1.5;
+}
+
+.tags{
+  display:flex;
+  justify-content:center;
+  gap:5px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+
+.tag{
+  background:rgba(26,63,115,.9);
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  color:#fff;
 }
 
 .btn-ver{
@@ -183,16 +244,17 @@ img{
   color:#111;
   font-weight:900;
   display:block;
+  font-size:13px;
 }
 
 .vazio{
+  grid-column:1/-1;
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
   padding:22px;
   border-radius:14px;
   text-align:center;
   color:var(--muted);
   border:1px solid rgba(255,255,255,.08);
-  grid-column:1/-1;
 }
 
 @media(max-width:600px){
@@ -202,10 +264,6 @@ img{
 
   .hero h2{
     font-size:22px;
-  }
-
-  .lista-grid{
-    grid-template-columns:1fr;
   }
 }
 </style>
@@ -234,130 +292,184 @@ import {
 
 renderMenu("campeonatos");
 
-const jogosReais = [
-  {
-    id:"br-rod36-1",
-    campeonatoId:"brasileirao-2023",
-    campeonato:"Brasileirão 2023",
-    categoria:"Profissional",
-    timeA:"Flamengo",
-    timeB:"Atlético MG",
-    golsA:2,
-    golsB:1
-  },
-  {
-    id:"br-rod36-2",
-    campeonatoId:"brasileirao-2023",
-    campeonato:"Brasileirão 2023",
-    categoria:"Profissional",
-    timeA:"Palmeiras",
-    timeB:"Fluminense",
-    golsA:1,
-    golsB:0
-  },
-  {
-    id:"br-rod37-1",
-    campeonatoId:"brasileirao-2023",
-    campeonato:"Brasileirão 2023",
-    categoria:"Profissional",
-    timeA:"Grêmio",
-    timeB:"Vasco",
-    golsA:1,
-    golsB:0
-  },
-  {
-    id:"br-rod37-2",
-    campeonatoId:"brasileirao-2023",
-    campeonato:"Brasileirão 2023",
-    categoria:"Profissional",
-    timeA:"Corinthians",
-    timeB:"Internacional",
-    golsA:2,
-    golsB:2
-  },
-  {
-    id:"br-rod38-1",
-    campeonatoId:"brasileirao-2023",
-    campeonato:"Brasileirão 2023",
-    categoria:"Profissional",
-    timeA:"Palmeiras",
-    timeB:"Cruzeiro",
-    golsA:1,
-    golsB:1
-  },
-  {
-    id:"br-rod38-2",
-    campeonatoId:"brasileirao-2023",
-    campeonato:"Brasileirão 2023",
-    categoria:"Profissional",
-    timeA:"Atlético MG",
-    timeB:"Bahia",
-    golsA:4,
-    golsB:1
-  }
-];
-
 let campeonatos = [];
 let jogos = [];
 
 function normalizar(texto){
-  return String(texto || "").toLowerCase();
+  return String(texto || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .trim();
 }
 
-function calcularGols(campeonato){
-  return jogos
-    .filter(j =>
-      normalizar(j.campeonato) === normalizar(campeonato.nome) ||
-      j.campeonatoId === campeonato.id
-    )
-    .reduce((total, j) => total + Number(j.golsA || 0) + Number(j.golsB || 0), 0);
+function valor(obj, campos, padrao = ""){
+  for(const campo of campos){
+    if(obj && obj[campo] !== undefined && obj[campo] !== null && obj[campo] !== ""){
+      return obj[campo];
+    }
+  }
+  return padrao;
+}
+
+function nomeCampeonato(c){
+  return valor(c, ["nome", "titulo", "campeonato", "nomeCampeonato"], "Sem nome");
+}
+
+function temporadaCampeonato(c){
+  return valor(c, ["temporada", "ano", "edicao", "edição"], "-");
+}
+
+function categoriaCampeonato(c){
+  const categoria = valor(c, ["categoria"], "");
+  const categorias = valor(c, ["categorias"], []);
+
+  if(categoria) return categoria;
+
+  if(Array.isArray(categorias) && categorias.length){
+    return categorias.join(", ");
+  }
+
+  return "Geral";
+}
+
+function statusCampeonato(c){
+  const status = normalizar(valor(c, ["status", "situacao", "situação"], "ativo"));
+
+  if(status.includes("encerrado") || status.includes("finalizado")){
+    return {
+      texto:"Encerrado",
+      classe:"status-encerrado"
+    };
+  }
+
+  if(status.includes("pendente") || status.includes("rascunho")){
+    return {
+      texto:"Pendente",
+      classe:"status-pendente"
+    };
+  }
+
+  if(status.includes("cancelado")){
+    return {
+      texto:"Cancelado",
+      classe:"status-cancelado"
+    };
+  }
+
+  return {
+    texto:"Ativo",
+    classe:"status-ativo"
+  };
+}
+
+function jogosDoCampeonato(campeonato){
+  const id = campeonato.id;
+  const nome = normalizar(nomeCampeonato(campeonato));
+
+  return jogos.filter(j => {
+    const jogoCampId = valor(j, ["campeonatoId", "idCampeonato"], "");
+    const jogoCampNome = normalizar(valor(j, ["campeonato", "nomeCampeonato"], ""));
+
+    return jogoCampId === id || jogoCampNome === nome;
+  });
 }
 
 function contarJogos(campeonato){
-  return jogos.filter(j =>
-    normalizar(j.campeonato) === normalizar(campeonato.nome) ||
-    j.campeonatoId === campeonato.id
-  ).length;
+  return jogosDoCampeonato(campeonato).length;
+}
+
+function calcularGols(campeonato){
+  return jogosDoCampeonato(campeonato).reduce((total, j) => {
+    const golsA = Number(valor(j, ["golsA", "placarA", "golsMandante", "mandanteGols"], 0));
+    const golsB = Number(valor(j, ["golsB", "placarB", "golsVisitante", "visitanteGols"], 0));
+
+    return total + golsA + golsB;
+  }, 0);
+}
+
+function contarTimes(campeonato){
+  const times = new Set();
+
+  jogosDoCampeonato(campeonato).forEach(j => {
+    const timeA = valor(j, ["timeA", "mandante", "timeMandante", "nomeTimeA"], "");
+    const timeB = valor(j, ["timeB", "visitante", "timeVisitante", "nomeTimeB"], "");
+
+    if(timeA) times.add(normalizar(timeA));
+    if(timeB) times.add(normalizar(timeB));
+  });
+
+  return times.size;
 }
 
 function render(){
   const lista = document.getElementById("listaCampeonatos");
 
   if(!campeonatos.length){
-    lista.innerHTML = `<div class="vazio">Nenhum campeonato encontrado.</div>`;
+    lista.innerHTML = `<div class="vazio">Nenhum campeonato cadastrado no Firebase.</div>`;
     return;
   }
 
+  campeonatos.sort((a,b) => {
+    return nomeCampeonato(a).localeCompare(nomeCampeonato(b), "pt-BR");
+  });
+
   lista.innerHTML = campeonatos.map(c => {
+    const status = statusCampeonato(c);
     const jogosQtd = contarJogos(c);
-    const gols = calcularGols(c);
+    const golsQtd = calcularGols(c);
+    const timesQtd = contarTimes(c);
+    const categoria = categoriaCampeonato(c);
+    const temporada = temporadaCampeonato(c);
+    const logo = valor(c, ["logo", "imagem", "foto", "escudo"], "logo-liga.jfif");
 
     return `
       <div class="card">
-        <div class="card-top">
-          <div class="card-icon"><i class="fa-solid fa-trophy"></i></div>
-          <div class="status-tag status-ativo">Ativo</div>
-        </div>
 
-        <img src="${c.logo || c.imagem || "logo-liga.jfif"}" class="logo" onerror="this.src='logo-liga.jfif'">
+        <div>
+          <div class="card-top">
+            <div class="card-icon">
+              <i class="fa-solid fa-trophy"></i>
+            </div>
 
-        <div class="nome-campeonato">${c.nome || c.titulo || "Sem nome"}</div>
+            <div class="status-tag ${status.classe}">
+              ${status.texto}
+            </div>
+          </div>
 
-        <div class="info-campeonato">
-          <strong>Temporada:</strong> ${c.temporada || c.ano || "-"}<br>
-          <strong>Jogos:</strong> ${jogosQtd}<br>
-          <strong>Gols:</strong> ${gols}
+          <img src="${logo}" class="logo" onerror="this.src='logo-liga.jfif'">
+
+          <div class="nome-campeonato">
+            ${nomeCampeonato(c)}
+          </div>
+
+          <div class="info-campeonato">
+            <strong>Temporada:</strong> ${temporada}<br>
+            <strong>Categoria:</strong> ${categoria}<br>
+            <strong>Times:</strong> ${timesQtd}<br>
+            <strong>Jogos:</strong> ${jogosQtd}<br>
+            <strong>Gols:</strong> ${golsQtd}
+          </div>
+
+          <div class="tags">
+            <span class="tag">${categoria}</span>
+            <span class="tag">${temporada}</span>
+          </div>
         </div>
 
         <a class="btn-ver" href="campeonato-publico.html?id=${c.id}">
           Ver Campeonato
         </a>
+
       </div>
     `;
   }).join("");
 }
 
 async function carregar(){
+  const lista = document.getElementById("listaCampeonatos");
+  lista.innerHTML = `<div class="vazio">Carregando campeonatos...</div>`;
+
   try{
     const snapCamp = await getDocs(collection(db, "campeonatos"));
     const snapJogos = await getDocs(collection(db, "jogos"));
@@ -379,21 +491,12 @@ async function carregar(){
       });
     });
 
-  }catch(e){
-    console.error("Erro ao carregar campeonatos:", e);
+    render();
+
+  }catch(erro){
+    console.error("Erro ao carregar campeonatos:", erro);
+    lista.innerHTML = `<div class="vazio">Erro ao carregar campeonatos.</div>`;
   }
-
-  if(!campeonatos.some(c => c.id === "brasileirao-2023")){
-    campeonatos.push({
-      id:"brasileirao-2023",
-      nome:"Brasileirão 2023",
-      temporada:"2023"
-    });
-  }
-
-  jogos = [...jogosReais, ...jogos];
-
-  render();
 }
 
 carregar();
