@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Súmulas - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Times - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -19,127 +19,343 @@
   --muted:#cbd6ea;
   --line:rgba(255,255,255,.12);
   --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --yellow:#7a5a00;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1240px;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
-  font-family:Arial;
+  font-family:Arial, sans-serif;
   background:
-    linear-gradient(rgba(2,8,20,.9), rgba(2,8,20,.96)),
-    url("fundo.png") center/cover fixed;
-  color:#fff;
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
 }
 
-/* HEADER IGUAL AO TIMES */
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none}
+input,select{font-family:inherit}
+
+img{
+  display:block;
+  max-width:100%;
+}
+
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
+
+/* HEADER PADRÃO */
 .site-header{
   background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
   border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
 }
 
 .header-top{
-  text-align:center;
+  min-height:92px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   padding:18px 0;
-  font-size:26px;
-  font-weight:900;
 }
 
-/* MENU */
+.header-title{
+  text-align:center;
+  font-size:26px;
+  font-weight:900;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  line-height:1.15;
+}
+
+/* MENU PADRÃO */
 .nav-bar{
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
+  border-top:1px solid rgba(255,255,255,.06);
+  overflow:hidden;
 }
 
 .menu{
   display:flex;
   justify-content:center;
-  gap:8px;
-  padding:14px;
-  overflow-x:auto;
+  align-items:center;
+  gap:clamp(4px, .55vw, 10px);
+  padding:14px 6px;
+  flex-wrap:nowrap;
+  overflow:hidden;
 }
 
 .menu a{
-  background:#0c2140;
-  padding:10px 14px;
-  border-radius:12px;
+  color:#fff;
   font-weight:900;
+  font-size:clamp(11px, .92vw, 15px);
+  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
+  padding:clamp(8px, .75vw, 12px) clamp(9px, 1vw, 18px);
+  border-radius:clamp(10px, .9vw, 15px);
+  border:1px solid rgba(255,255,255,.07);
   white-space:nowrap;
+  flex:0 1 auto;
+  box-shadow:0 10px 22px rgba(0,0,0,.24);
+  transition:.25s ease;
+}
+
+.menu a:hover{
+  color:var(--gold);
+  border-color:var(--gold-line);
 }
 
 .menu a.ativo{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
   color:#111;
 }
 
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-  padding:20px;
+/* PÁGINA */
+.container{
+  padding:22px 0 34px;
 }
 
-/* CARD */
-.card{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border-radius:16px;
-  padding:14px;
-  border:1px solid rgba(247,198,0,.2);
+.hero{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+
+.hero h2{
+  color:var(--gold);
+  font-size:28px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+
+.hero p{
+  color:var(--muted);
+  line-height:1.5;
+  font-size:14px;
+}
+
+.hero-tags{
   display:flex;
-  flex-direction:column;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.hero-tag{
+  background:rgba(26,63,115,.9);
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+input,
+select{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
+}
+
+input:focus,
+select:focus{
+  outline:2px solid rgba(247,198,0,.65);
+}
+
+.titulo-secao{
+  color:var(--gold);
+  font-size:22px;
+  font-weight:900;
+  margin:0 0 12px;
+}
+
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
   gap:10px;
 }
 
-.top{
-  font-size:12px;
-  color:var(--muted);
+.card-time{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  transition:.25s ease;
   text-align:center;
+  min-height:250px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
 }
 
-.times{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
+.card-time:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold);
+}
+
+.card-top{
+  display:flex;
   align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:10px;
 }
 
-.time{
-  text-align:center;
-  font-weight:900;
-  font-size:13px;
-}
-
-.placar{
-  font-size:22px;
-  font-weight:900;
-  color:var(--gold);
-  text-align:center;
-}
-
-.btn{
-  display:block;
-  text-align:center;
-  padding:10px;
+.card-icon{
+  width:34px;
+  height:34px;
   border-radius:10px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  flex-shrink:0;
+}
+
+.status-tag{
+  color:#fff;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
   font-weight:900;
+  background:var(--green);
+}
+
+.logo-time{
+  width:86px;
+  height:86px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#fff;
+  border:2px solid var(--gold);
+  margin:0 auto 10px;
+  box-shadow:0 10px 20px rgba(0,0,0,.22);
+}
+
+.nome-time{
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+  text-transform:uppercase;
+  margin-bottom:5px;
+  line-height:1.2;
+}
+
+.sub-time{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  min-height:34px;
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin:12px 0;
+}
+
+.info-box{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:11px;
+  padding:9px 8px;
+}
+
+.info-box strong{
+  display:block;
+  color:var(--gold);
   font-size:13px;
+  margin-bottom:2px;
+}
+
+.info-box span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
 }
 
 .btn-ver{
-  background:var(--gold);
+  width:100%;
+  padding:10px 12px;
+  border-radius:11px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
   color:#111;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  font-size:13px;
 }
 
-.btn-edit{
-  background:#fff;
-  color:#111;
+.vazio{
+  color:var(--muted);
+  text-align:center;
+  padding:18px;
+  background:rgba(7,29,55,.9);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  grid-column:1/-1;
 }
 
-/* RESPONSIVO */
-@media(max-width:1100px){
-  .grid{grid-template-columns:repeat(2,1fr);}
-}
+/* CELULAR */
+@media(max-width:900px){
+  .header-title{font-size:20px}
 
-@media(max-width:600px){
-  .grid{grid-template-columns:1fr;}
+  .menu{
+    justify-content:flex-start;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:14px;
+    gap:10px;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+  }
+
+  .menu::-webkit-scrollbar{display:none}
+
+  .menu a{
+    flex:0 0 auto;
+    font-size:15px;
+    padding:12px 18px;
+    border-radius:15px;
+  }
+
+  .filtros{grid-template-columns:1fr}
+  .lista-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -147,113 +363,239 @@ body{
 <body>
 
 <header class="site-header">
-  <div class="header-top">
-    LIGA GOIANA DE FUTEBOL DE BASE
+  <div class="wrap header-top">
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
   </div>
 
   <div class="nav-bar">
-    <nav class="menu">
-      <a href="index.html">Início</a>
-      <a href="campeonatos.html">Campeonatos</a>
-      <a href="tabela.html">Tabela</a>
-      <a href="jogos.html">Jogos</a>
-      <a href="times.html">Times</a>
-      <a href="tecnicos.html">Técnicos</a>
-      <a href="jogadores.html">Jogadores</a>
-      <a href="arbitros.html">Árbitros</a>
-      <a href="assistentes.html">Assistente</a>
-      <a href="sumula.html" class="ativo">Súmula</a>
-      <a href="noticias.html">Notícias</a>
-    </nav>
+    <div class="wrap">
+      <nav class="menu">
+        <a href="index.html">Início</a>
+        <a href="campeonatos.html">Campeonatos</a>
+        <a href="tabela.html">Tabela</a>
+        <a href="jogos.html">Jogos</a>
+        <a href="times.html" class="ativo">Times</a>
+        <a href="tecnicos.html">Técnicos</a>
+        <a href="jogadores.html">Jogadores</a>
+        <a href="arbitros.html">Árbitros</a>
+        <a href="assistentes.html">Assistente</a>
+        <a href="sumulas.html">Súmula</a>
+        <a href="noticias.html">Notícias</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </div>
   </div>
 </header>
 
-<section class="grid" id="grid"></section>
+<main class="wrap container">
+
+  <section class="hero">
+    <h2>Times</h2>
+    <p>Consulte os times cadastrados na Liga Goiana de Futebol de Base.</p>
+
+    <div class="hero-tags">
+      <div class="hero-tag" id="tagTotal">Times: 0</div>
+      <div class="hero-tag" id="tagCategorias">Categorias: 0</div>
+      <div class="hero-tag" id="tagAtivos">Ativos: 0</div>
+    </div>
+  </section>
+
+  <section class="filtros">
+    <input id="buscaTime" placeholder="Pesquisar time, cidade, categoria ou técnico...">
+
+    <select id="filtroCategoria">
+      <option value="">Todas categorias</option>
+    </select>
+  </section>
+
+  <h2 class="titulo-secao" id="tituloPagina">Times</h2>
+
+  <section class="lista-grid" id="listaTimes">
+    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando times...</div>
+  </section>
+
+</main>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { db } from "./firebase.js";
+import {
+  collection,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-/* CONFIG FIREBASE */
-const firebaseConfig = {
-  apiKey: "SUA_KEY",
-  authDomain: "SEU_DOMINIO",
-  projectId: "SEU_PROJECT_ID"
-};
+let times = [];
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+function normalizarTexto(texto){
+  return String(texto || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
 
-let lista = [];
+function valorCampo(obj, chaves, fallback = ""){
+  for(const chave of chaves){
+    if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
+      return obj[chave];
+    }
+  }
+  return fallback;
+}
 
-/* 🔥 SIMULAÇÃO (2 RODADAS BRASILEIRÃO) */
-const simulacao = [
-  {id:"1",camp:"Brasileirão",data:"20/04",A:"Flamengo",B:"Palmeiras",pA:2,pB:1},
-  {id:"2",camp:"Brasileirão",data:"20/04",A:"São Paulo",B:"Santos",pA:3,pB:0},
-  {id:"3",camp:"Brasileirão",data:"21/04",A:"Corinthians",B:"Grêmio",pA:1,pB:1},
-  {id:"4",camp:"Brasileirão",data:"21/04",A:"Cruzeiro",B:"Inter",pA:0,pB:2}
-];
+function nomeTime(t){
+  return valorCampo(t, ["nome", "timeNome", "nomeTime", "equipe"], "Time sem nome");
+}
 
-async function carregar(){
-  try{
-    const snap = await getDocs(collection(db,"jogos"));
+function logoTime(t){
+  return valorCampo(t, ["logo", "escudo", "imagem", "foto"], "logo-liga.jfif");
+}
 
-    snap.forEach(doc=>{
-      const d = doc.data();
+function categoriaTime(t){
+  return valorCampo(t, ["categoria", "categoriaNome"], "-");
+}
 
-      lista.push({
-        id:doc.id,
-        camp:d.campeonato || "",
-        data:d.data || "",
-        A:d.mandanteNome,
-        B:d.visitanteNome,
-        pA:d.placarMandante || 0,
-        pB:d.placarVisitante || 0
-      });
-    });
+function cidadeTime(t){
+  return valorCampo(t, ["cidade", "municipio", "local"], "-");
+}
 
-    if(lista.length === 0){
-      lista = simulacao;
+function tecnicoTime(t){
+  return valorCampo(t, ["tecnico", "tecnicoNome", "treinador"], "-");
+}
+
+function statusTime(t){
+  return valorCampo(t, ["status"], "ativo");
+}
+
+function preencherFiltros(){
+  const select = document.getElementById("filtroCategoria");
+  const atual = select.value;
+
+  const categorias = new Set();
+
+  times.forEach(t=>{
+    const cat = categoriaTime(t);
+    if(cat && cat !== "-") categorias.add(cat);
+  });
+
+  select.innerHTML = `<option value="">Todas categorias</option>`;
+
+  [...categorias].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(cat=>{
+    select.innerHTML += `<option value="${cat}">${cat}</option>`;
+  });
+
+  if([...categorias].includes(atual)){
+    select.value = atual;
+  }
+}
+
+function timesFiltrados(){
+  const busca = normalizarTexto(document.getElementById("buscaTime").value);
+  const categoria = document.getElementById("filtroCategoria").value;
+
+  return times.filter(t=>{
+    const nome = nomeTime(t);
+    const cat = categoriaTime(t);
+    const cidade = cidadeTime(t);
+    const tecnico = tecnicoTime(t);
+
+    if(categoria && cat !== categoria) return false;
+
+    if(busca){
+      const texto = normalizarTexto(`${nome} ${cat} ${cidade} ${tecnico}`);
+      if(!texto.includes(busca)) return false;
     }
 
-  }catch{
-    lista = simulacao;
+    return true;
+  });
+}
+
+function atualizarTopo(){
+  const lista = timesFiltrados();
+  const categorias = new Set(times.map(categoriaTime).filter(c=>c && c !== "-"));
+  const ativos = lista.filter(t => normalizarTexto(statusTime(t)) !== "inativo");
+
+  const categoria = document.getElementById("filtroCategoria").value;
+
+  document.getElementById("tagTotal").innerText = `Times: ${lista.length}`;
+  document.getElementById("tagCategorias").innerText = `Categorias: ${categorias.size}`;
+  document.getElementById("tagAtivos").innerText = `Ativos: ${ativos.length}`;
+
+  document.getElementById("tituloPagina").innerText =
+    `Times${categoria ? " - " + categoria : ""}`;
+}
+
+function renderizarTimes(){
+  const container = document.getElementById("listaTimes");
+  const lista = timesFiltrados();
+
+  atualizarTopo();
+
+  if(!lista.length){
+    container.innerHTML = `<div class="vazio">Nenhum time encontrado.</div>`;
+    return;
   }
 
-  render();
+  const ordenados = [...lista].sort((a,b)=>nomeTime(a).localeCompare(nomeTime(b),"pt-BR"));
+
+  container.innerHTML = ordenados.map(t=>{
+    const id = t.id;
+    const nome = nomeTime(t);
+    const logo = logoTime(t);
+    const categoria = categoriaTime(t);
+    const cidade = cidadeTime(t);
+    const tecnico = tecnicoTime(t);
+    const status = statusTime(t);
+
+    return `
+      <article class="card-time">
+        <div>
+          <div class="card-top">
+            <div class="card-icon">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div class="status-tag">${status}</div>
+          </div>
+
+          <img class="logo-time" src="${logo}" onerror="this.src='logo-liga.jfif'" alt="${nome}">
+
+          <div class="nome-time">${nome}</div>
+
+          <div class="sub-time">
+            ${cidade}<br>
+            ${categoria}
+          </div>
+
+          <div class="info-grid">
+            <div class="info-box">
+              <strong>${categoria}</strong>
+              <span>Categoria</span>
+            </div>
+
+            <div class="info-box">
+              <strong>${tecnico}</strong>
+              <span>Técnico</span>
+            </div>
+          </div>
+        </div>
+
+        <a class="btn-ver" href="time-detalhe.html?id=${encodeURIComponent(id)}">
+          <i class="fa-solid fa-eye"></i> Ver Time
+        </a>
+      </article>
+    `;
+  }).join("");
 }
 
-function render(){
-  const grid = document.getElementById("grid");
+document.getElementById("buscaTime").addEventListener("input", renderizarTimes);
 
-  grid.innerHTML = lista.map(j=>`
-    <div class="card">
+document.getElementById("filtroCategoria").addEventListener("change", renderizarTimes);
 
-      <div class="top">${j.camp} - ${j.data}</div>
-
-      <div class="times">
-        <div class="time">${j.A}</div>
-
-        <div class="placar">${j.pA} x ${j.pB}</div>
-
-        <div class="time">${j.B}</div>
-      </div>
-
-      <a class="btn btn-ver"
-         href="sumula-publica.html?id=${j.id}">
-         Ver Súmula
-      </a>
-
-      <a class="btn btn-edit"
-         href="sumula-adm.html?id=${j.id}">
-         Preencher
-      </a>
-
-    </div>
-  `).join("");
-}
-
-carregar();
+onSnapshot(collection(db,"times"),snap=>{
+  times = snap.docs.map(d=>({id:d.id,...d.data()}));
+  preencherFiltros();
+  renderizarTimes();
+});
 </script>
 
 </body>
