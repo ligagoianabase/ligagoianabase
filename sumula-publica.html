@@ -7,6 +7,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
 :root{
@@ -258,7 +259,6 @@ body{
 
 .secao-geral{
   margin-top:13px;
-  border-radius:6px 6px 0 0;
 }
 
 .grid2{
@@ -600,11 +600,8 @@ th:first-child,td:first-child{
   }
 
   .topo{text-align:center}
-
   .logo-liga{margin:auto}
-
   .titulo{font-size:35px}
-
   .subtitulo{font-size:16px}
 
   .time,
@@ -615,11 +612,7 @@ th:first-child,td:first-child{
   }
 
   .time img{margin:auto}
-
-  .placar-centro{
-    width:100%;
-  }
-
+  .placar-centro{width:100%}
   .placar-num{font-size:58px}
 
   .info-box,
@@ -655,7 +648,11 @@ th:first-child,td:first-child{
 
 @media print{
   body{background:#fff}
-  .container{box-shadow:none;margin:0 auto;border:none}
+  .container{
+    box-shadow:none;
+    margin:0 auto;
+    border:none;
+  }
   .compartilhar{display:none}
 }
 </style>
@@ -663,7 +660,7 @@ th:first-child,td:first-child{
 
 <body>
 
-<div class="container">
+<div class="container" id="areaPDF">
 
   <div class="topo">
     <div>
@@ -725,14 +722,13 @@ th:first-child,td:first-child{
       </div>
     </div>
   </div>
-
-  <div class="placar-card">
+<div class="placar-card">
     <div class="placar-area">
       <div class="time">
         <img id="logoA" src="logo-liga.jfif">
         <div>
           <h2 id="timeA">TIME A</h2>
-          <small id="cidadeA">Goiânia - GO</small>
+          <small id="cidadeA">-</small>
         </div>
       </div>
 
@@ -744,7 +740,7 @@ th:first-child,td:first-child{
       <div class="time visitante">
         <div>
           <h2 id="timeB">TIME B</h2>
-          <small id="cidadeB">Goiânia - GO</small>
+          <small id="cidadeB">-</small>
         </div>
         <img id="logoB" src="logo-liga.jfif">
       </div>
@@ -795,11 +791,7 @@ th:first-child,td:first-child{
       </div>
       <table>
         <thead>
-          <tr>
-            <th>Nº</th>
-            <th>Jogador</th>
-            <th>Posição</th>
-          </tr>
+          <tr><th>Nº</th><th>Jogador</th><th>Posição</th></tr>
         </thead>
         <tbody id="escA"></tbody>
       </table>
@@ -812,11 +804,7 @@ th:first-child,td:first-child{
       </div>
       <table>
         <thead>
-          <tr>
-            <th>Nº</th>
-            <th>Jogador</th>
-            <th>Posição</th>
-          </tr>
+          <tr><th>Nº</th><th>Jogador</th><th>Posição</th></tr>
         </thead>
         <tbody id="escB"></tbody>
       </table>
@@ -855,65 +843,16 @@ th:first-child,td:first-child{
     </div>
   </div>
 
-  <div class="arb-resumo">
-    <div class="bloco">
-      <div class="secao">ARBITRAGEM</div>
-      <table class="arb-table">
-        <tbody id="arb"></tbody>
-      </table>
-    </div>
-
-    <div class="bloco">
-      <div class="secao">RESUMO DA PARTIDA</div>
-
-      <div class="resumo-box">
-        <div class="resumo-item">
-          <i class="fa-solid fa-futbol"></i>
-          <strong id="totalGols">0</strong>
-          <span>Gols</span>
-        </div>
-
-        <div class="resumo-item">
-          <i class="fa-solid fa-square amarelo"></i>
-          <strong id="totalAmarelos">0</strong>
-          <span>Cartões Amarelos</span>
-        </div>
-
-        <div class="resumo-item">
-          <i class="fa-solid fa-square vermelho-card"></i>
-          <strong id="totalVermelhos">0</strong>
-          <span>Cartões Vermelhos</span>
-        </div>
-      </div>
-
-      <div class="melhor">
-        <div class="melhor-star"><i class="fa-solid fa-star"></i></div>
-        <div class="melhor-info">
-          <small>Melhor jogador da partida</small>
-          <strong id="melhor">Não informado</strong>
-          <div id="melhorTime">-</div>
-        </div>
-        <div class="trofeu"><i class="fa-solid fa-trophy"></i></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="obs">
-    <div class="secao">OBSERVAÇÕES DO ÁRBITRO</div>
-    <div class="obs-text" id="observacoes">-</div>
-  </div>
-
   <div class="rodape-grid">
     <div class="autenticacao">
       <canvas id="qr"></canvas>
       <div>
         <strong>AUTENTICAÇÃO</strong>
         <p>
-          Súmula publicada em<br>
+          Publicado em<br>
           <span id="publicadaEm">-</span><br>
-          Código de verificação<br>
-          <strong id="codigoVerificacao">-</strong><br>
-          Escaneie o QR Code para verificar a autenticidade.
+          Código<br>
+          <strong id="codigoVerificacao">-</strong>
         </p>
       </div>
     </div>
@@ -930,122 +869,68 @@ th:first-child,td:first-child{
         </button>
 
         <button class="btn copy" onclick="copiarLink()">
-          <i class="fa-solid fa-link"></i> Copiar Link
+          <i class="fa-solid fa-link"></i> Copiar
         </button>
 
-        <button class="btn pdf" onclick="window.print()">
-          <i class="fa-solid fa-file-pdf"></i> Baixar PDF
+        <button class="btn pdf" onclick="baixarPDF()">
+          <i class="fa-solid fa-file-pdf"></i> PDF
         </button>
       </div>
     </div>
   </div>
 
   <div class="footer">
-    Documento oficial gerado pelo sistema Liga Goiana • Todos os direitos reservados © 2025
+    Documento oficial Liga Goiana © 2025
   </div>
 
 </div>
+
 <script type="module">
 import { db } from "./firebase.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const id = new URLSearchParams(location.search).get("id");
 
-function fil(lista,time){
-  return (lista || []).filter(x => x.time === time);
-}
+function fil(lista,t){ return (lista||[]).filter(x=>x.time===t); }
 
 function esc(lista){
-  if(!lista || !lista.length){
-    return `<tr><td colspan="3">Nenhum jogador informado.</td></tr>`;
-  }
-
-  return lista.map(j=>{
-    let nome = j.nome || "-";
-
-    if(j.goleiro || j.posicao === "Goleiro") nome += " (G)";
-    if(j.capitao) nome += " (C)";
-
-    return `
-      <tr>
-        <td>${j.numero || "-"}</td>
-        <td>${nome}</td>
-        <td>${j.posicao || "-"}</td>
-      </tr>
-    `;
-  }).join("");
+  if(!lista?.length) return `<tr><td colspan="3">Sem dados</td></tr>`;
+  return lista.map(j=>`
+    <tr>
+      <td>${j.numero||"-"}</td>
+      <td>${j.nome||"-"}</td>
+      <td>${j.posicao||"-"}</td>
+    </tr>
+  `).join("");
 }
 
-function gols(lista){
-  if(!lista || !lista.length){
-    return `<div style="text-align:center">Sem gols.</div>`;
-  }
-
-  return lista.map(g=>`
+function eventos(lista,icone){
+  if(!lista?.length) return `<div style="text-align:center">Nenhum</div>`;
+  return lista.map(e=>`
     <div class="event-item">
-      <div class="event-icon">⚽</div>
-      <div>${g.numero || "-"}</div>
-      <div>${g.nome || "-"} • ${g.tempo || "-"}'</div>
+      <div class="event-icon">${icone}</div>
+      <div>${e.numero||"-"}</div>
+      <div>${e.nome||"-"} • ${e.tempo||"-"}'</div>
     </div>
   `).join("");
 }
 
-function cartoes(lista){
-  if(!lista || !lista.length){
-    return `<div style="text-align:center">Sem cartões.</div>`;
-  }
-
-  return lista.map(c=>{
-    const vermelho = c.tipo === "vermelho";
-    const icone = vermelho ? "🟥" : "🟨";
-
-    return `
-      <div class="event-item">
-        <div class="event-icon">${icone}</div>
-        <div>${c.numero || "-"}</div>
-        <div>${c.nome || "-"} • ${c.tempo || "-"}'</div>
-      </div>
-    `;
-  }).join("");
-}
-
 async function load(){
-
-  // 🔥 fallback VISUAL (pra não ficar vazio)
-  if(!id){
-    preencherDemo();
-    return;
-  }
-
   const snap = await getDoc(doc(db,"jogos",id));
 
-  if(!snap.exists()){
-    preencherDemo();
-    return;
-  }
+  if(!snap.exists()) return;
 
   const j = snap.data();
 
-  if(!j.sumulaFinalizada){
-    preencherDemo();
-    return;
-  }
-
-  preencher(j);
-}
-
-function preencher(j){
-
   document.getElementById("subtituloCampeonato").innerText =
-    `${j.campeonato || "-"} • ${j.categoria || "-"}`;
+    `${j.campeonato} • ${j.categoria}`;
 
-  document.getElementById("numeroSumula").innerText = j.numero || "001";
-  document.getElementById("codigoPartida").innerText = j.codigo || id;
-  document.getElementById("fase").innerText = j.fase || "Fase única";
-  document.getElementById("rodada").innerText = j.rodada || "1";
+  document.getElementById("codigoPartida").innerText = id;
+  document.getElementById("fase").innerText = j.fase || "-";
+  document.getElementById("rodada").innerText = j.rodada || "-";
 
-  document.getElementById("timeA").innerText = j.timeA?.nome || "Time A";
-  document.getElementById("timeB").innerText = j.timeB?.nome || "Time B";
+  document.getElementById("timeA").innerText = j.timeA?.nome;
+  document.getElementById("timeB").innerText = j.timeB?.nome;
 
   document.getElementById("logoA").src = j.timeA?.logo || "logo-liga.jfif";
   document.getElementById("logoB").src = j.timeB?.logo || "logo-liga.jfif";
@@ -1054,105 +939,54 @@ function preencher(j){
   document.getElementById("miniLogoB").src = j.timeB?.logo || "logo-liga.jfif";
 
   document.getElementById("placar").innerText =
-    `${j.placar?.A || 0} x ${j.placar?.B || 0}`;
+    `${j.placar?.A||0} x ${j.placar?.B||0}`;
 
-  document.getElementById("data").innerText = j.data || "-";
-  document.getElementById("hora").innerText = j.hora || "-";
-  document.getElementById("campo").innerText = j.local || "-";
-  document.getElementById("arbitroTopo").innerText = j.arbitro || "-";
+  document.getElementById("data").innerText = j.data;
+  document.getElementById("hora").innerText = j.hora;
+  document.getElementById("campo").innerText = j.local;
+  document.getElementById("arbitroTopo").innerText = j.arbitro;
 
-  document.getElementById("tituloEscA").innerText = j.timeA?.nome || "TIME A";
-  document.getElementById("tituloEscB").innerText = j.timeB?.nome || "TIME B";
+  document.getElementById("escA").innerHTML = esc(j.titularesA);
+  document.getElementById("escB").innerHTML = esc(j.titularesB);
 
-  document.getElementById("eventoTituloA").innerText = j.timeA?.nome || "TIME A";
-  document.getElementById("eventoTituloB").innerText = j.timeB?.nome || "TIME B";
+  document.getElementById("golsA").innerHTML = eventos(fil(j.gols,"A"),"⚽");
+  document.getElementById("golsB").innerHTML = eventos(fil(j.gols,"B"),"⚽");
 
-  document.getElementById("escA").innerHTML = esc(j.titularesA || j.escalacaoA);
-  document.getElementById("escB").innerHTML = esc(j.titularesB || j.escalacaoB);
+  document.getElementById("cartA").innerHTML = eventos(fil(j.cartoes,"A"),"🟨");
+  document.getElementById("cartB").innerHTML = eventos(fil(j.cartoes,"B"),"🟥");
 
-  document.getElementById("golsA").innerHTML = gols(fil(j.gols,"A"));
-  document.getElementById("golsB").innerHTML = gols(fil(j.gols,"B"));
-
-  document.getElementById("cartA").innerHTML = cartoes(fil(j.cartoes,"A"));
-  document.getElementById("cartB").innerHTML = cartoes(fil(j.cartoes,"B"));
-
-  document.getElementById("arb").innerHTML = `
-    <tr><td>Árbitro</td><td>${j.arbitro || "-"}</td></tr>
-    <tr><td>Assistente 1</td><td>${j.assistente1 || "-"}</td></tr>
-    <tr><td>Assistente 2</td><td>${j.assistente2 || "-"}</td></tr>
-    <tr><td>4º Árbitro</td><td>${j.quartoArbitro || "-"}</td></tr>
-  `;
-
-  document.getElementById("totalGols").innerText = (j.gols || []).length;
-  document.getElementById("totalAmarelos").innerText =
-    (j.cartoes || []).filter(c=>c.tipo==="amarelo").length;
-  document.getElementById("totalVermelhos").innerText =
-    (j.cartoes || []).filter(c=>c.tipo==="vermelho").length;
-
-  document.getElementById("melhor").innerText =
-    j.melhorJogador || "Não informado";
-
-  document.getElementById("melhorTime").innerText =
-    j.timeMelhor || "";
-
-  document.getElementById("observacoes").innerText =
-    j.observacoes || "-";
-
+  document.getElementById("codigoVerificacao").innerText = id;
   document.getElementById("publicadaEm").innerText =
     new Date().toLocaleString("pt-BR");
 
-  document.getElementById("codigoVerificacao").innerText = id;
-
-  QRCode.toCanvas(
-    document.getElementById("qr"),
-    location.origin + "/validar.html?id=" + id
+  QRCode.toCanvas(document.getElementById("qr"),
+    location.href
   );
 }
 
-// 🔥 DEMO VISUAL (pra você ver igual a imagem)
-function preencherDemo(){
-  preencher({
-    campeonato:"Campeonato Goiano de Base",
-    categoria:"Sub-15",
-    numero:"001",
-    codigo:"ABC123",
-    fase:"Final",
-    rodada:"10",
-    timeA:{nome:"Atlético GO", logo:"logo-liga.jfif"},
-    timeB:{nome:"Vila Nova", logo:"logo-liga.jfif"},
-    placar:{A:2,B:1},
-    data:"20/06/2025",
-    hora:"15:30",
-    local:"Serra Dourada",
-    arbitro:"Árbitro Exemplo",
-    titularesA:[{numero:1,nome:"João",posicao:"Goleiro"}],
-    titularesB:[{numero:1,nome:"Carlos",posicao:"Goleiro"}],
-    gols:[
-      {time:"A",numero:9,nome:"Pedro",tempo:"12"},
-      {time:"A",numero:10,nome:"Lucas",tempo:"55"},
-      {time:"B",numero:7,nome:"Rafael",tempo:"70"}
-    ],
-    cartoes:[
-      {time:"A",tipo:"amarelo",numero:5,nome:"Mateus",tempo:"33"},
-      {time:"B",tipo:"vermelho",numero:4,nome:"Bruno",tempo:"80"}
-    ],
-    melhorJogador:"Pedro",
-    observacoes:"Partida tranquila."
-  });
-}
+/* 🔥 PDF PROFISSIONAL */
+window.baixarPDF = function(){
+  const elemento = document.getElementById("areaPDF");
 
-function wpp(){
-  window.open("https://wa.me/?text=" + encodeURIComponent(location.href));
-}
+  html2pdf()
+    .set({
+      margin:5,
+      filename:"sumula-oficial.pdf",
+      image:{ type:"jpeg", quality:1 },
+      html2canvas:{ scale:2 },
+      jsPDF:{ unit:"mm", format:"a4", orientation:"portrait" }
+    })
+    .from(elemento)
+    .save();
+};
 
-function mail(){
-  location.href = "mailto:?subject=Súmula&body=" + location.href;
-}
-
-function copiarLink(){
+/* 🔥 COMPARTILHAR */
+window.wpp = ()=> window.open("https://wa.me/?text="+encodeURIComponent(location.href));
+window.mail = ()=> location.href="mailto:?subject=Súmula&body="+location.href;
+window.copiarLink = ()=>{
   navigator.clipboard.writeText(location.href);
-  alert("Link copiado!");
-}
+  alert("Link copiado");
+};
 
 load();
 </script>
