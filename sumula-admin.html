@@ -25,7 +25,11 @@
   --max:1240px;
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
 body{
   font-family:Arial,sans-serif;
@@ -35,9 +39,22 @@ body{
   color:#fff;
 }
 
-a{text-decoration:none;color:inherit}
-button{font-family:inherit;cursor:pointer;border:none}
-input,select,textarea{font-family:inherit}
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
+  border:none;
+}
+
+input,
+select,
+textarea{
+  font-family:inherit;
+}
 
 .wrap{
   width:min(100% - 28px,var(--max));
@@ -60,7 +77,8 @@ header{
   padding:14px 0;
 }
 
-.header-left,.header-right{
+.header-left,
+.header-right{
   display:flex;
   align-items:center;
   gap:10px;
@@ -84,12 +102,29 @@ header{
   font-weight:900;
 }
 
-.btn-light{background:#fff4cf;color:#111}
-.btn-gold{background:var(--gold);color:#111}
-.btn-green{background:var(--green);color:#fff}
-.btn-red{background:var(--red);color:#fff}
+.btn-light{
+  background:#fff4cf;
+  color:#111;
+}
 
-.container{padding:24px 0 34px}
+.btn-gold{
+  background:var(--gold);
+  color:#111;
+}
+
+.btn-green{
+  background:var(--green);
+  color:#fff;
+}
+
+.btn-red{
+  background:var(--red);
+  color:#fff;
+}
+
+.container{
+  padding:24px 0 34px;
+}
 
 .panel{
   background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
@@ -187,7 +222,9 @@ header{
   gap:12px;
 }
 
-.full{grid-column:1/-1}
+.full{
+  grid-column:1/-1;
+}
 
 label{
   display:block;
@@ -196,7 +233,9 @@ label{
   font-size:14px;
 }
 
-input,select,textarea{
+input,
+select,
+textarea{
   width:100%;
   padding:12px;
   border:none;
@@ -206,7 +245,10 @@ input,select,textarea{
   font-size:14px;
 }
 
-textarea{min-height:110px;resize:vertical}
+textarea{
+  min-height:110px;
+  resize:vertical;
+}
 
 table{
   width:100%;
@@ -214,7 +256,8 @@ table{
   background:rgba(255,255,255,.04);
 }
 
-th,td{
+th,
+td{
   border:1px solid rgba(255,255,255,.12);
   padding:8px;
   font-size:13px;
@@ -247,11 +290,29 @@ th{
 }
 
 @media(max-width:900px){
-  .header-title{order:3;width:100%}
-  .header-left,.header-right{width:100%;justify-content:center}
-  .placar-box{grid-template-columns:1fr}
-  .grid,.form-grid{grid-template-columns:1fr}
-  .top-btn{width:100%}
+  .header-title{
+    order:3;
+    width:100%;
+  }
+
+  .header-left,
+  .header-right{
+    width:100%;
+    justify-content:center;
+  }
+
+  .placar-box{
+    grid-template-columns:1fr;
+  }
+
+  .grid,
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .top-btn{
+    width:100%;
+  }
 }
 </style>
 </head>
@@ -524,6 +585,7 @@ function jogadorPorIdOuNome(idOuNome){
 function usuarioEhAdmin(){
   const tipo = normalizar(perfilAtual?.tipo || perfilAtual?.perfil || perfilAtual?.funcao || perfilAtual?.cargo || "");
   const nivel = normalizar(perfilAtual?.nivel || perfilAtual?.role || "");
+
   return tipo.includes("admin") || nivel.includes("admin") || perfilAtual?.admin === true;
 }
 
@@ -616,6 +678,12 @@ function bloquearTela(){
   });
 }
 
+function liberarTela(){
+  document.querySelectorAll("input,select,textarea,button").forEach(c=>{
+    c.disabled = false;
+  });
+}
+
 function bloquearPorAcesso(){
   acessoLiberado = false;
 
@@ -638,6 +706,7 @@ async function carregarPerfilUsuario(uid){
 
   for(const caminho of caminhos){
     const snap = await getDoc(doc(db,caminho[0],caminho[1]));
+
     if(snap.exists()){
       return {id:snap.id,...snap.data()};
     }
@@ -692,7 +761,10 @@ async function carregar(){
   `;
 
   el("statusJogo").innerText = finalizada ? "SÚMULA FINALIZADA" : (sumula.status || jogo.status || "aberta");
-  if(finalizada) el("statusJogo").classList.add("finalizado");
+
+  if(finalizada){
+    el("statusJogo").classList.add("finalizado");
+  }
 
   el("timeA").innerText = sumula.timeA?.nome || jogo.timeA?.nome || "Time A";
   el("timeB").innerText = sumula.timeB?.nome || jogo.timeB?.nome || "Time B";
@@ -731,6 +803,8 @@ async function carregar(){
     bloquearPorAcesso();
     return;
   }
+
+  liberarTela();
 
   if(finalizada){
     bloquearTela();
@@ -820,6 +894,7 @@ function dadosBaseSalvar(finalizar=false){
     titularesB:pegarArray(sumula.titularesB, sumula.escalacaoB, jogo.titularesB, jogo.escalacaoB),
     escalacaoA:pegarArray(sumula.titularesA, sumula.escalacaoA, jogo.titularesA, jogo.escalacaoA),
     escalacaoB:pegarArray(sumula.titularesB, sumula.escalacaoB, jogo.titularesB, jogo.escalacaoB),
+
     reservasA:sumula.reservasA || jogo.reservasA || [],
     reservasB:sumula.reservasB || jogo.reservasB || [],
 
@@ -848,6 +923,7 @@ function dadosBaseSalvar(finalizar=false){
       A:placarA,
       B:placarB
     },
+
     golsA:placarA,
     golsB:placarB,
 
@@ -957,7 +1033,7 @@ async function atualizarJogadores(){
 }
 
 async function atualizarArbitragem(){
-  if((sumula.arbitroId || jogo.arbitroId)){
+  if(sumula.arbitroId || jogo.arbitroId){
     await setDoc(doc(db,"arbitros",sumula.arbitroId || jogo.arbitroId),{
       jogos:increment(1),
       partidas:increment(1),
@@ -966,7 +1042,7 @@ async function atualizarArbitragem(){
     },{merge:true});
   }
 
-  if((sumula.assistente1Id || jogo.assistente1Id)){
+  if(sumula.assistente1Id || jogo.assistente1Id){
     await setDoc(doc(db,"assistentes",sumula.assistente1Id || jogo.assistente1Id),{
       jogos:increment(1),
       partidas:increment(1),
@@ -974,7 +1050,7 @@ async function atualizarArbitragem(){
     },{merge:true});
   }
 
-  if((sumula.assistente2Id || jogo.assistente2Id)){
+  if(sumula.assistente2Id || jogo.assistente2Id){
     await setDoc(doc(db,"assistentes",sumula.assistente2Id || jogo.assistente2Id),{
       jogos:increment(1),
       partidas:increment(1),
@@ -1065,7 +1141,7 @@ window.finalizarSumula = async function(){
   if(!acessoLiberado) return alert("Acesso negado.");
   if(finalizada) return alert("Essa súmula já foi finalizada.");
 
-  if(!confirm("Finalizar súmula? Depois disso ela ficará pública e travada.")) return;
+  if(!confirm("Finalizar súmula? Depois disso ela ficará pública, travada e atualizará tudo automaticamente.")) return;
 
   const dados = {
     ...dadosBaseSalvar(true),
@@ -1107,6 +1183,8 @@ onAuthStateChanged(auth,async(user)=>{
     bloquearPorAcesso();
     return;
   }
+
+  liberarTela();
 
   if(finalizada){
     bloquearTela();
