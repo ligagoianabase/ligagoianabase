@@ -7,6 +7,7 @@
 <title>Técnicos - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="menu.css">
 
 <style>
 :root{
@@ -47,69 +48,6 @@ img{display:block;max-width:100%}
 .wrap{
   width:min(100% - 28px, var(--max));
   margin:0 auto;
-}
-
-.site-header{
-  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
-  border-bottom:3px solid var(--gold);
-  box-shadow:var(--shadow);
-}
-
-.header-top{
-  min-height:92px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px 0;
-}
-
-.header-title{
-  text-align:center;
-  font-size:26px;
-  font-weight:900;
-  letter-spacing:.8px;
-  text-transform:uppercase;
-  line-height:1.15;
-}
-
-.nav-bar{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
-  border-top:1px solid rgba(255,255,255,.06);
-  overflow:hidden;
-}
-
-.menu{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:clamp(4px, .55vw, 10px);
-  padding:14px 6px;
-  flex-wrap:nowrap;
-  overflow:hidden;
-}
-
-.menu a{
-  color:#fff;
-  font-weight:900;
-  font-size:clamp(11px, .92vw, 15px);
-  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
-  padding:clamp(8px, .75vw, 12px) clamp(9px, 1vw, 18px);
-  border-radius:clamp(10px, .9vw, 15px);
-  border:1px solid rgba(255,255,255,.07);
-  white-space:nowrap;
-  flex:0 1 auto;
-  box-shadow:0 10px 22px rgba(0,0,0,.24);
-  transition:.25s ease;
-}
-
-.menu a:hover{
-  color:var(--gold);
-  border-color:var(--gold-line);
-}
-
-.menu a.ativo{
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
-  color:#111;
 }
 
 .container{
@@ -188,10 +126,35 @@ select:focus{
   margin:0 0 12px;
 }
 
+/* GRID PADRÃO — MÁXIMO 5 POR LINHA */
 .lista-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(270px, 1fr));
-  gap:10px;
+  grid-template-columns:repeat(5, 1fr);
+  gap:12px;
+}
+
+@media(max-width:1100px){
+  .lista-grid{
+    grid-template-columns:repeat(4, 1fr);
+  }
+}
+
+@media(max-width:900px){
+  .lista-grid{
+    grid-template-columns:repeat(3, 1fr);
+  }
+}
+
+@media(max-width:650px){
+  .lista-grid{
+    grid-template-columns:repeat(2, 1fr);
+  }
+}
+
+@media(max-width:430px){
+  .lista-grid{
+    grid-template-columns:1fr;
+  }
 }
 
 .card-tecnico{
@@ -203,7 +166,7 @@ select:focus{
   padding:14px;
   box-shadow:0 8px 20px rgba(0,0,0,.25);
   transition:.25s ease;
-  min-height:240px;
+  min-height:255px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
@@ -246,9 +209,10 @@ select:focus{
 
 .user-box{
   display:flex;
+  flex-direction:column;
   align-items:center;
-  gap:12px;
-  text-align:left;
+  gap:8px;
+  text-align:center;
   margin-bottom:12px;
 }
 
@@ -268,7 +232,7 @@ select:focus{
 
 .nome{
   color:#fff;
-  font-size:18px;
+  font-size:16px;
   font-weight:900;
   line-height:1.25;
   margin-bottom:4px;
@@ -282,6 +246,7 @@ select:focus{
 
 .tags{
   display:flex;
+  justify-content:center;
   gap:5px;
   flex-wrap:wrap;
   margin:8px 0 12px;
@@ -314,8 +279,11 @@ select:focus{
 .info-box strong{
   display:block;
   color:var(--gold);
-  font-size:13px;
+  font-size:12px;
   margin-bottom:2px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 .info-box span{
@@ -357,7 +325,7 @@ select:focus{
   justify-content:center;
   align-items:center;
   padding:15px;
-  z-index:999;
+  z-index:9999;
 }
 
 .modal-content{
@@ -410,33 +378,8 @@ select:focus{
 }
 
 @media(max-width:900px){
-  .header-title{font-size:20px}
-
-  .menu{
-    justify-content:flex-start;
-    overflow-x:auto;
-    overflow-y:hidden;
-    padding:14px;
-    gap:10px;
-    scrollbar-width:none;
-    -ms-overflow-style:none;
-  }
-
-  .menu::-webkit-scrollbar{display:none}
-
-  .menu a{
-    flex:0 0 auto;
-    font-size:15px;
-    padding:12px 18px;
-    border-radius:15px;
-  }
-
   .filtros,
   .modal-grid{
-    grid-template-columns:1fr;
-  }
-
-  .lista-grid{
     grid-template-columns:1fr;
   }
 }
@@ -444,31 +387,6 @@ select:focus{
 </head>
 
 <body>
-
-<header class="site-header">
-  <div class="wrap header-top">
-    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
-  </div>
-
-  <div class="nav-bar">
-    <div class="wrap">
-      <nav class="menu">
-        <a href="index.html">Início</a>
-        <a href="campeonatos.html">Campeonatos</a>
-        <a href="tabela.html">Tabela</a>
-        <a href="jogos.html">Jogos</a>
-        <a href="times.html">Times</a>
-        <a href="tecnicos.html" class="ativo">Técnicos</a>
-        <a href="jogadores.html">Jogadores</a>
-        <a href="arbitros.html">Árbitros</a>
-        <a href="assistentes.html">Assistente</a>
-        <a href="sumulas.html">Súmula</a>
-        <a href="noticias.html">Notícias</a>
-        <a href="login.html">Login</a>
-      </nav>
-    </div>
-  </div>
-</header>
 
 <main class="wrap container">
 
@@ -506,13 +424,15 @@ select:focus{
 <div class="modal" id="modal">
   <div class="modal-content" id="modalContent"></div>
 </div>
-
 <script type="module">
+import { renderMenu } from "./menu.js";
 import { db } from "./firebase.js";
 import {
   collection,
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+renderMenu("tecnicos");
 
 let tecnicos = [];
 let times = [];
@@ -607,7 +527,9 @@ function preencherFiltros(){
     const cats = valorCampo(t, ["categorias"], []);
 
     if(Array.isArray(cats)){
-      cats.forEach(c=>{ if(c) categorias.add(c); });
+      cats.forEach(c=>{
+        if(c) categorias.add(c);
+      });
     }
 
     const cat = valorCampo(t, ["categoria", "categoriaNome"], "");
@@ -668,7 +590,9 @@ function atualizarTopo(){
     const cats = valorCampo(t, ["categorias"], []);
 
     if(Array.isArray(cats)){
-      cats.forEach(c=>{ if(c) categoriasSet.add(c); });
+      cats.forEach(c=>{
+        if(c) categoriasSet.add(c);
+      });
     }
 
     const cat = valorCampo(t, ["categoria", "categoriaNome"], "");
