@@ -1,593 +1,870 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Admin - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<title>Painel Admin - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
-  <style>
-    :root{
-      --bg:#0b1f3a;
-      --bg-dark:#08172c;
-      --card:#102a52;
-      --card-hover:#153766;
-      --gold:#f7c600;
-      --gold-soft:rgba(247,198,0,.12);
-      --gold-line:rgba(247,198,0,.30);
-      --white:#ffffff;
-      --muted:#d6def0;
-      --shadow:0 8px 22px rgba(0,0,0,.28);
-      --max:1280px;
-    }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    *{margin:0;padding:0;box-sizing:border-box;}
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --yellow:#7a5a00;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1280px;
+}
 
-    body{
-      font-family:Arial, sans-serif;
-      background:
-        linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
-        url("fundo.png") center/cover fixed no-repeat;
-      color:var(--white);
-      min-height:100vh;
-      overflow-x:hidden;
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-    a{text-decoration:none;color:inherit;}
-    button{font-family:inherit;cursor:pointer;border:none;}
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
 
-    .wrap{
-      width:min(100% - 30px, var(--max));
-      margin:0 auto;
-    }
+a{
+  text-decoration:none;
+  color:inherit;
+}
 
-    .sidebar-overlay{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.55);
-      opacity:0;
-      visibility:hidden;
-      transition:.25s ease;
-      z-index:998;
-    }
+button,
+input,
+select,
+textarea{
+  font-family:inherit;
+}
 
-    .sidebar-overlay.show{
-      opacity:1;
-      visibility:visible;
-    }
+button{
+  cursor:pointer;
+  border:none;
+}
 
-    .sidebar{
-      position:fixed;
-      top:0;
-      left:0;
-      width:320px;
-      max-width:88%;
-      height:100vh;
-      background:linear-gradient(180deg,#04132d,#021022);
-      border-right:1px solid var(--gold-line);
-      box-shadow:var(--shadow);
-      padding:22px 18px;
-      transform:translateX(-105%);
-      transition:.25s ease;
-      z-index:999;
-      overflow-y:auto;
-    }
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
 
-    .sidebar.open{
-      transform:translateX(0);
-    }
+/* SIDEBAR */
+.sidebar-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  opacity:0;
+  visibility:hidden;
+  transition:.25s ease;
+  z-index:998;
+}
 
-    .sidebar-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      color:var(--gold);
-      font-size:18px;
-      font-weight:bold;
-      padding-bottom:16px;
-      margin-bottom:16px;
-      border-bottom:1px solid rgba(255,255,255,.08);
-    }
+.sidebar-overlay.show{
+  opacity:1;
+  visibility:visible;
+}
 
-    .sidebar-close{
-      width:36px;
-      height:36px;
-      border-radius:50%;
-      background:rgba(255,255,255,.08);
-      color:#fff;
-      font-size:24px;
-    }
+.sidebar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:320px;
+  max-width:88%;
+  height:100vh;
+  background:linear-gradient(180deg,#04132d,#021022);
+  border-right:1px solid var(--gold-line);
+  box-shadow:var(--shadow);
+  padding:22px 18px;
+  transform:translateX(-105%);
+  transition:.25s ease;
+  z-index:999;
+  overflow-y:auto;
+}
 
-    .side-menu{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
+.sidebar.open{
+  transform:translateX(0);
+}
 
-    .side-menu a{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:12px;
-      border-radius:12px;
-      color:var(--muted);
-      font-weight:bold;
-    }
+.sidebar-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:var(--gold);
+  font-size:18px;
+  font-weight:900;
+  padding-bottom:16px;
+  margin-bottom:16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
 
-    .side-menu a i{
-      color:var(--gold);
-      width:20px;
-      text-align:center;
-    }
+.sidebar-close{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font-size:24px;
+}
 
-    .side-menu a:hover{
-      background:var(--gold-soft);
-      color:var(--gold);
-    }
+.side-menu{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
 
-    header{
-      background:rgba(8,23,44,.96);
-      border-bottom:3px solid var(--gold);
-      box-shadow:var(--shadow);
-    }
+.side-menu a{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  border-radius:12px;
+  color:var(--muted);
+  font-weight:900;
+  font-size:14px;
+  transition:.2s;
+}
 
-    .header-inner{
-      min-height:82px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding:14px 0;
-    }
+.side-menu a i{
+  color:var(--gold);
+  width:20px;
+  text-align:center;
+}
 
-    .menu-toggle{
-      width:46px;
-      height:46px;
-      border-radius:14px;
-      border:1px solid var(--gold-line);
-      background:var(--gold-soft);
-      color:var(--gold);
-      font-size:20px;
-      flex-shrink:0;
-    }
+.side-menu a:hover{
+  background:rgba(247,198,0,.12);
+  color:var(--gold);
+}
 
-    .header-title{
-      flex:1;
-      text-align:center;
-      font-size:22px;
-      font-weight:700;
-      color:var(--white);
-    }
+/* HEADER */
+header{
+  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
 
-    .top-btn{
-      padding:10px 16px;
-      border-radius:10px;
-      font-weight:bold;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-    }
+.header-inner{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:14px 0;
+}
 
-    .btn-gold{
-      background:var(--gold);
-      color:#111;
-    }
+.menu-toggle{
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  border:1px solid var(--gold-line);
+  background:rgba(247,198,0,.12);
+  color:var(--gold);
+  font-size:20px;
+  flex-shrink:0;
+}
 
-    .container{
-      padding:22px 0 30px;
-    }
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:22px;
+  font-weight:900;
+  color:var(--white);
+  text-transform:uppercase;
+}
 
-    .hero-panel{
-      background:linear-gradient(180deg, rgba(16,42,82,.95), rgba(10,28,56,.96));
-      border:1px solid var(--gold-line);
-      border-radius:20px;
-      padding:22px;
-      box-shadow:var(--shadow);
-      margin-bottom:22px;
-    }
+.top-btn{
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:900;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
 
-    .hero-panel h2{
-      font-size:28px;
-      margin-bottom:8px;
-    }
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
 
-    .hero-panel p{
-      color:var(--muted);
-      line-height:1.6;
-      max-width:900px;
-    }
+.btn-red{
+  background:var(--red);
+  color:#fff;
+}
 
-    .status-box{
-      margin-top:14px;
-      padding:14px;
-      border-radius:12px;
-      display:none;
-      font-weight:700;
-    }
+.btn-green{
+  background:var(--green);
+  color:#fff;
+}
 
-    .status-info{
-      background:rgba(255,255,255,.06);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.08);
-    }
+.btn-blue{
+  background:var(--blue);
+  color:#fff;
+}
 
-    .status-erro{
-      background:rgba(180,0,0,.22);
-      color:#ffb0b0;
-      border:1px solid rgba(255,120,120,.25);
-    }
+/* PAGE */
+.container{
+  padding:22px 0 30px;
+}
 
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-      gap:14px;
-      margin-bottom:24px;
-    }
+.hero-panel{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:22px;
+  box-shadow:var(--shadow);
+  margin-bottom:18px;
+}
 
-    .card{
-      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
-      border-radius:16px;
-      padding:18px;
-      text-align:center;
-      box-shadow:var(--shadow);
-      border:1px solid rgba(255,255,255,.05);
-    }
+.hero-panel h2{
+  font-size:28px;
+  color:var(--gold);
+  margin-bottom:8px;
+}
 
-    .card h3{
-      font-size:34px;
-      color:var(--gold);
-    }
+.hero-panel p{
+  color:var(--muted);
+  line-height:1.6;
+  max-width:900px;
+  font-size:14px;
+}
 
-    .card p{
-      margin-top:10px;
-      font-size:15px;
-      color:var(--muted);
-      font-weight:600;
-    }
+.status-box{
+  margin-top:14px;
+  padding:14px;
+  border-radius:12px;
+  display:none;
+  font-weight:900;
+  font-size:13px;
+  line-height:1.45;
+}
 
-    .admin-block{
-      background:rgba(16,42,82,.45);
-      border:1px solid rgba(255,255,255,.05);
-      border-radius:18px;
-      padding:18px;
-      margin-bottom:18px;
-    }
+.status-info{
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.08);
+}
 
-    .section-title{
-      font-size:20px;
-      color:var(--gold);
-      margin-bottom:14px;
-      font-weight:700;
-    }
+.status-erro{
+  background:rgba(180,35,35,.22);
+  color:#ffb0b0;
+  border:1px solid rgba(255,120,120,.25);
+}
 
-    .menu{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-      gap:14px;
-    }
+#painelConteudo{
+  display:none;
+}
 
-    .menu a{
-      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(12,33,64,.96));
-      color:white;
-      padding:15px 16px;
-      border-radius:14px;
-      font-weight:bold;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      box-shadow:var(--shadow);
-      border:1px solid rgba(255,255,255,.05);
-    }
+/* DASHBOARD */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+  margin-bottom:18px;
+}
 
-    .menu a i{
-      color:var(--gold);
-      width:20px;
-      text-align:center;
-    }
+.card{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border-radius:16px;
+  padding:16px;
+  text-align:center;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  border:1px solid rgba(247,198,0,.18);
+}
 
-    .menu a:hover{
-      background:var(--card-hover);
-      color:var(--gold);
-    }
+.card h3{
+  font-size:30px;
+  color:var(--gold);
+  font-weight:900;
+}
 
-    .footer-note{
-      margin-top:20px;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.6;
-      text-align:center;
-    }
+.card p{
+  margin-top:8px;
+  font-size:13px;
+  color:var(--muted);
+  font-weight:900;
+}
 
-    #painelConteudo{
-      display:none;
-    }
+.admin-block{
+  background:rgba(16,42,82,.45);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 8px 20px rgba(0,0,0,.18);
+}
 
-    @media (max-width:600px){
-      .header-inner{
-        flex-wrap:nowrap;
-        gap:10px;
-      }
+.section-title{
+  font-size:20px;
+  color:var(--gold);
+  margin-bottom:14px;
+  font-weight:900;
+}
 
-      .header-title{
-        font-size:17px;
-        line-height:1.2;
-      }
+.menu{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:12px;
+}
 
-      .top-btn{
-        padding:10px 12px;
-        min-width:46px;
-      }
+.menu a{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  color:white;
+  padding:15px 16px;
+  border-radius:14px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.06);
+  font-size:14px;
+}
 
-      .top-btn span{
-        display:none;
-      }
+.menu a i{
+  color:var(--gold);
+  width:20px;
+  text-align:center;
+}
 
-      .menu{
-        grid-template-columns:1fr;
-      }
+.menu a:hover{
+  border-color:var(--gold-line);
+  color:var(--gold);
+}
 
-      .grid{
-        grid-template-columns:1fr 1fr;
-      }
+.duplo{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
 
-      .hero-panel h2{
-        font-size:24px;
-      }
-    }
-  </style>
+.form-grid{
+  display:grid;
+  gap:10px;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+}
+
+textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  outline:2px solid rgba(247,198,0,.65);
+}
+
+.btn-full{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+.lista-pendentes{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  max-height:520px;
+  overflow:auto;
+  padding-right:4px;
+}
+
+.usuario-card{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid rgba(247,198,0,.18);
+  border-radius:14px;
+  padding:12px;
+}
+
+.usuario-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.usuario-nome{
+  font-weight:900;
+  color:#fff;
+  font-size:14px;
+}
+
+.usuario-info{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  margin-top:4px;
+}
+
+.tag{
+  display:inline-flex;
+  background:rgba(26,63,115,.9);
+  border:1px solid rgba(255,255,255,.08);
+  padding:4px 7px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  color:#fff;
+}
+
+.usuario-acoes{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+
+.usuario-acoes button{
+  padding:9px;
+  border-radius:10px;
+  font-weight:900;
+  font-size:12px;
+}
+
+.vazio{
+  color:var(--muted);
+  text-align:center;
+  padding:18px;
+  background:rgba(7,29,55,.9);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+}
+
+.footer-note{
+  margin-top:20px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
+  text-align:center;
+}
+
+@media(max-width:1100px){
+  .grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .duplo{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:650px){
+  .header-title{
+    font-size:16px;
+    line-height:1.2;
+  }
+
+  .top-btn span{
+    display:none;
+  }
+
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .menu{
+    grid-template-columns:1fr;
+  }
+
+  .hero-panel h2{
+    font-size:23px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <span>Painel ADM</span>
-      <button class="sidebar-close" id="sidebarClose" type="button">×</button>
-    </div>
-
-    <div class="side-menu">
-      <a href="./admin.html"><i class="fa-solid fa-house-user"></i> Painel ADM</a>
-      <a href="./index.html"><i class="fa-solid fa-house"></i> Página Inicial</a>
-      <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos</a>
-      <a href="categorias-admin.html"><i class="fa-solid fa-layer-group"></i> Categorias</a>
-      <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times</a>
-      <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores</a>
-      <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos</a>
-      <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros</a>
-      <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes</a>
-      <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários e Permissões</a>
-      <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
-      <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Criar Súmula</a>
-      <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Ver Súmulas</a>
-      <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Tabelas</a>
-      <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação</a>
-      <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas</a>
-      <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
-      <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria</a>
-      <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Configurações</a>
-      <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
-    </div>
-  </aside>
-
-  <header>
-    <div class="wrap header-inner">
-      <button class="menu-toggle" id="menuToggle" type="button">☰</button>
-
-      <div class="header-title">Painel do Administrador</div>
-
-      <button class="top-btn btn-gold" onclick="logout()">
-        <i class="fa-solid fa-right-from-bracket"></i>
-        <span>Sair</span>
-      </button>
-    </div>
-  </header>
-
-  <div class="wrap container">
-    <section class="hero-panel">
-      <h2>Gestão Geral da Liga</h2>
-      <p>
-        Aqui você administra campeonatos, categorias, equipes, jogadores, comissão técnica,
-        arbitragem, jogos, súmulas, tabelas, notícias e configurações do sistema.
-      </p>
-
-      <div id="statusInfo" class="status-box status-info">Carregando painel administrativo...</div>
-      <div id="statusErro" class="status-box status-erro"></div>
-    </section>
-
-    <div id="painelConteudo">
-      <div class="grid">
-        <div class="card"><h3 id="totalCampeonatos">0</h3><p>Campeonatos</p></div>
-        <div class="card"><h3 id="totalCategorias">0</h3><p>Categorias</p></div>
-        <div class="card"><h3 id="totalTimes">0</h3><p>Times</p></div>
-        <div class="card"><h3 id="totalJogadores">0</h3><p>Jogadores</p></div>
-        <div class="card"><h3 id="totalTecnicos">0</h3><p>Técnicos</p></div>
-        <div class="card"><h3 id="totalArbitros">0</h3><p>Árbitros</p></div>
-        <div class="card"><h3 id="totalJogos">0</h3><p>Jogos</p></div>
-        <div class="card"><h3 id="totalSumulas">0</h3><p>Súmulas</p></div>
-      </div>
-
-      <div class="admin-block">
-        <h3 class="section-title">Cadastros e Estrutura</h3>
-        <div class="menu">
-          <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos ADM</a>
-          <a href="categorias-admin.html"><i class="fa-solid fa-layer-group"></i> Categorias ADM</a>
-          <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times ADM</a>
-          <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores ADM</a>
-          <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos ADM</a>
-          <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros ADM</a>
-          <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes ADM</a>
-          <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários e Permissões</a>
-        </div>
-      </div>
-
-      <div class="admin-block">
-        <h3 class="section-title">Competições e Operação</h3>
-        <div class="menu">
-          <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos ADM</a>
-          <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Criar Súmula ADM</a>
-          <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Ver Súmulas ADM</a>
-          <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Tabelas ADM</a>
-          <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação ADM</a>
-          <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas de Arbitragem</a>
-        </div>
-      </div>
-
-      <div class="admin-block">
-        <h3 class="section-title">Comunicação e Sistema</h3>
-        <div class="menu">
-          <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias ADM</a>
-          <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria ADM</a>
-          <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Configurações</a>
-          <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
-        </div>
-      </div>
-
-      <div class="footer-note">
-        Painel administrativo da Liga Goiana de Futebol de Base.
-      </div>
-    </div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span>Painel ADM</span>
+    <button class="sidebar-close" id="sidebarClose" type="button">×</button>
   </div>
 
-  <script>
-    const sidebar = document.getElementById("sidebar");
-    const sidebarOverlay = document.getElementById("sidebarOverlay");
-    const menuToggle = document.getElementById("menuToggle");
-    const sidebarClose = document.getElementById("sidebarClose");
+  <div class="side-menu">
+    <a href="admin.html"><i class="fa-solid fa-house-user"></i> Painel ADM</a>
+    <a href="index.html"><i class="fa-solid fa-house"></i> Página Inicial</a>
+    <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos</a>
+    <a href="categorias-admin.html"><i class="fa-solid fa-layer-group"></i> Categorias</a>
+    <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times</a>
+    <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores</a>
+    <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos</a>
+    <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros</a>
+    <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes</a>
+    <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários e Permissões</a>
+    <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
+    <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Criar Súmula</a>
+    <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Ver Súmulas</a>
+    <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Tabelas</a>
+    <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação</a>
+    <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas</a>
+    <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
+    <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria</a>
+    <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Configurações</a>
+    <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
+  </div>
+</aside>
+<header>
+  <div class="wrap header-inner">
+    <button class="menu-toggle" id="menuToggle">☰</button>
 
-    function openSidebar(){
-      sidebar.classList.add("open");
-      sidebarOverlay.classList.add("show");
-      document.body.style.overflow = "hidden";
-    }
+    <div class="header-title">Painel do Administrador</div>
 
-    function closeSidebar(){
-      sidebar.classList.remove("open");
-      sidebarOverlay.classList.remove("show");
-      document.body.style.overflow = "";
-    }
+    <button class="top-btn btn-red" onclick="logout()">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      <span>Sair</span>
+    </button>
+  </div>
+</header>
 
-    menuToggle.addEventListener("click", openSidebar);
-    sidebarClose.addEventListener("click", closeSidebar);
-    sidebarOverlay.addEventListener("click", closeSidebar);
-  </script>
+<div class="wrap container">
 
-  <script type="module">
-    import { auth, db } from "./firebase.js";
-    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-    import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+  <section class="hero-panel">
+    <h2>Gestão Geral da Liga</h2>
+    <p>
+      Aqui você controla tudo: usuários, jogos, súmulas, estatísticas e notícias.
+    </p>
 
-    const statusInfo = document.getElementById("statusInfo");
-    const statusErro = document.getElementById("statusErro");
-    const painelConteudo = document.getElementById("painelConteudo");
+    <div id="statusInfo" class="status-box status-info">Carregando painel...</div>
+    <div id="statusErro" class="status-box status-erro"></div>
+  </section>
 
-    function mostrarInfo(texto){
-      statusInfo.style.display = "block";
-      statusInfo.textContent = texto;
-      statusErro.style.display = "none";
-    }
+  <div id="painelConteudo">
 
-    function mostrarErro(texto){
-      statusInfo.style.display = "none";
-      statusErro.style.display = "block";
-      statusErro.textContent = texto;
-    }
+    <!-- DASHBOARD -->
+    <div class="grid">
+      <div class="card"><h3 id="totalTimes">0</h3><p>Times</p></div>
+      <div class="card"><h3 id="totalJogadores">0</h3><p>Jogadores</p></div>
+      <div class="card"><h3 id="totalTecnicos">0</h3><p>Técnicos</p></div>
+      <div class="card"><h3 id="totalArbitros">0</h3><p>Árbitros</p></div>
+      <div class="card"><h3 id="totalJogos">0</h3><p>Jogos</p></div>
+      <div class="card"><h3 id="totalSumulas">0</h3><p>Súmulas</p></div>
+    </div>
 
-    function normalizarTexto(texto){
-      return String(texto || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    }
+    <!-- BLOCO PRINCIPAL -->
+    <div class="duplo">
 
-    function normalizarTipo(tipo){
-      const valor = normalizarTexto(tipo);
-      if(valor === "admin" || valor === "administrador") return "admin";
-      if(valor === "arbitro" || valor === "árbitro") return "arbitro";
-      return valor;
-    }
+      <!-- APROVAÇÃO DE USUÁRIOS -->
+      <div class="admin-block">
+        <h3 class="section-title">
+          <i class="fa-solid fa-user-check"></i> Usuários Pendentes
+        </h3>
 
-    async function validarAcessoPainel(user){
-      if(!user) return { liberado:false, motivo:"Usuário não autenticado." };
+        <div class="lista-pendentes" id="listaUsuarios">
+          <div class="vazio">Carregando usuários...</div>
+        </div>
+      </div>
 
-      const usuarioSnap = await getDoc(doc(db, "usuarios", user.uid));
+      <!-- POSTAR NOTÍCIA -->
+      <div class="admin-block">
+        <h3 class="section-title">
+          <i class="fa-solid fa-newspaper"></i> Nova Notícia
+        </h3>
 
-      if(!usuarioSnap.exists()){
-        return { liberado:false, motivo:"Seu cadastro não foi encontrado." };
-      }
+        <div class="form-grid">
+          <input id="tituloNoticia" placeholder="Título da notícia">
 
-      const dados = usuarioSnap.data();
-      const tipo = normalizarTipo(dados.tipoUsuario || dados.tipousuario || dados.tipo || "");
-      const aprovado = dados.aprovado === true;
-      const autorizado = dados.autorizado === true;
-      const status = normalizarTexto(dados.status || "ativo");
+          <textarea id="textoNoticia" placeholder="Conteúdo da notícia"></textarea>
 
-      if(status === "bloqueado"){
-        return { liberado:false, motivo:"Seu acesso está bloqueado." };
-      }
+          <input id="imagemNoticia" placeholder="URL da imagem (opcional)">
 
-      if((tipo === "admin" || tipo === "arbitro") && aprovado && autorizado){
-        return { liberado:true, dados };
-      }
+          <button class="btn-full btn-gold" onclick="postarNoticia()">
+            <i class="fa-solid fa-paper-plane"></i> Publicar Notícia
+          </button>
+        </div>
+      </div>
 
-      return { liberado:false, motivo:"Seu usuário não tem permissão para entrar no painel ADM." };
-    }
+    </div>
 
-    async function carregarTotaisPainel(){
-      const [campeonatos,times,jogadores,tecnicos,arbitros,jogos,sumulas] = await Promise.all([
-        getDocs(collection(db,"campeonatos")),
-        getDocs(collection(db,"times")),
-        getDocs(collection(db,"jogadores")),
-        getDocs(collection(db,"tecnicos")),
-        getDocs(collection(db,"arbitros")),
-        getDocs(collection(db,"jogos")),
-        getDocs(collection(db,"sumulas"))
-      ]);
+    <!-- MENU RÁPIDO -->
+    <div class="admin-block">
+      <h3 class="section-title">Acesso Rápido</h3>
 
-      document.getElementById("totalCampeonatos").textContent = campeonatos.size;
-      document.getElementById("totalCategorias").textContent = 0;
-      document.getElementById("totalTimes").textContent = times.size;
-      document.getElementById("totalJogadores").textContent = jogadores.size;
-      document.getElementById("totalTecnicos").textContent = tecnicos.size;
-      document.getElementById("totalArbitros").textContent = arbitros.size;
-      document.getElementById("totalJogos").textContent = jogos.size;
-      document.getElementById("totalSumulas").textContent = sumulas.size;
-    }
+      <div class="menu">
+        <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
+        <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Criar Súmula</a>
+        <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Ver Súmulas</a>
+        <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Tabelas</a>
+        <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
+      </div>
+    </div>
 
-    window.logout = function(){
-      signOut(auth).then(() => {
-        window.location.href = "login.html";
-      });
-    };
+    <div class="footer-note">
+      Painel administrativo da Liga Goiana de Futebol de Base
+    </div>
 
-    onAuthStateChanged(auth, async (user) => {
-      try{
-        mostrarInfo("Carregando painel administrativo...");
+  </div>
 
-        if(!user){
-          window.location.href = "login.html";
-          return;
-        }
+</div>
+<script>
+const sidebar = document.getElementById("sidebar");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+const menuToggle = document.getElementById("menuToggle");
+const sidebarClose = document.getElementById("sidebarClose");
 
-        const validacao = await validarAcessoPainel(user);
+menuToggle.onclick = () => {
+  sidebar.classList.add("open");
+  sidebarOverlay.classList.add("show");
+};
 
-        if(!validacao.liberado){
-          mostrarErro(validacao.motivo);
-          setTimeout(() => window.location.href = "index.html", 1800);
-          return;
-        }
+sidebarClose.onclick = fecharSidebar;
+sidebarOverlay.onclick = fecharSidebar;
 
-        await carregarTotaisPainel();
+function fecharSidebar(){
+  sidebar.classList.remove("open");
+  sidebarOverlay.classList.remove("show");
+}
+</script>
 
-        statusInfo.style.display = "none";
-        statusErro.style.display = "none";
-        painelConteudo.style.display = "block";
-      }catch(error){
-        console.error(error);
-        mostrarErro("Erro ao validar acesso.");
-      }
-    });
-  </script>
+<script type="module">
+import { auth, db } from "./firebase.js";
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const statusInfo = document.getElementById("statusInfo");
+const statusErro = document.getElementById("statusErro");
+const painel = document.getElementById("painelConteudo");
+
+function info(t){
+  statusInfo.style.display="block";
+  statusInfo.innerText=t;
+  statusErro.style.display="none";
+}
+
+function erro(t){
+  statusInfo.style.display="none";
+  statusErro.style.display="block";
+  statusErro.innerText=t;
+}
+
+function normalizar(t){
+  return String(t||"").toLowerCase().trim()
+  .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+
+/* =========================
+   VALIDAÇÃO DE ACESSO
+=========================*/
+async function validar(user){
+  const snap = await getDoc(doc(db,"usuarios",user.uid));
+
+  if(!snap.exists()) return false;
+
+  const d = snap.data();
+
+  const tipo = normalizar(d.tipoUsuario);
+  const aprovado = d.aprovado === true;
+  const autorizado = d.autorizado === true;
+
+  if(tipo === "admin" && aprovado && autorizado) return true;
+
+  return false;
+}
+
+/* =========================
+   DASHBOARD
+=========================*/
+async function carregarTotais(){
+  const [
+    times,
+    jogadores,
+    tecnicos,
+    arbitros,
+    jogos,
+    sumulas
+  ] = await Promise.all([
+    getDocs(collection(db,"times")),
+    getDocs(collection(db,"jogadores")),
+    getDocs(collection(db,"tecnicos")),
+    getDocs(collection(db,"arbitros")),
+    getDocs(collection(db,"jogos")),
+    getDocs(collection(db,"sumulas"))
+  ]);
+
+  document.getElementById("totalTimes").innerText = times.size;
+  document.getElementById("totalJogadores").innerText = jogadores.size;
+  document.getElementById("totalTecnicos").innerText = tecnicos.size;
+  document.getElementById("totalArbitros").innerText = arbitros.size;
+  document.getElementById("totalJogos").innerText = jogos.size;
+  document.getElementById("totalSumulas").innerText = sumulas.size;
+}
+
+/* =========================
+   USUÁRIOS PENDENTES
+=========================*/
+async function carregarUsuarios(){
+  const lista = document.getElementById("listaUsuarios");
+  lista.innerHTML = "Carregando...";
+
+  const snap = await getDocs(collection(db,"usuarios"));
+
+  let html = "";
+
+  snap.forEach(d=>{
+    const u = d.data();
+
+    if(u.aprovado === true) return;
+
+    html += `
+      <div class="usuario-card">
+        <div class="usuario-top">
+          <div>
+            <div class="usuario-nome">${u.nome || "-"}</div>
+            <div class="usuario-info">
+              ${u.email}<br>
+              ${u.tipoUsuario || ""}
+            </div>
+          </div>
+          <span class="tag">Pendente</span>
+        </div>
+
+        <div class="usuario-acoes">
+          <button class="btn-green" onclick="aprovar('${d.id}')">Aprovar</button>
+          <button class="btn-red" onclick="reprovar('${d.id}')">Reprovar</button>
+        </div>
+      </div>
+    `;
+  });
+
+  lista.innerHTML = html || "<div class='vazio'>Nenhum pendente</div>";
+}
+
+/* =========================
+   APROVAR / REPROVAR
+=========================*/
+window.aprovar = async function(id){
+  await updateDoc(doc(db,"usuarios",id),{
+    aprovado:true,
+    autorizado:true,
+    status:"ativo"
+  });
+
+  carregarUsuarios();
+}
+
+window.reprovar = async function(id){
+  await updateDoc(doc(db,"usuarios",id),{
+    aprovado:false,
+    autorizado:false,
+    status:"bloqueado"
+  });
+
+  carregarUsuarios();
+}
+
+/* =========================
+   POSTAR NOTÍCIA
+=========================*/
+window.postarNoticia = async function(){
+  const titulo = document.getElementById("tituloNoticia").value.trim();
+  const texto = document.getElementById("textoNoticia").value.trim();
+  const imagem = document.getElementById("imagemNoticia").value.trim();
+
+  if(!titulo){
+    alert("Digite o título");
+    return;
+  }
+
+  await addDoc(collection(db,"noticias"),{
+    titulo,
+    texto,
+    imagem,
+    data:new Date().toISOString()
+  });
+
+  alert("Notícia publicada!");
+
+  document.getElementById("tituloNoticia").value="";
+  document.getElementById("textoNoticia").value="";
+  document.getElementById("imagemNoticia").value="";
+}
+
+/* =========================
+   LOGOUT
+=========================*/
+window.logout = function(){
+  signOut(auth).then(()=>{
+    window.location.href="login.html";
+  });
+}
+
+/* =========================
+   INIT
+=========================*/
+onAuthStateChanged(auth, async user=>{
+  if(!user){
+    location.href="login.html";
+    return;
+  }
+
+  info("Validando acesso...");
+
+  const ok = await validar(user);
+
+  if(!ok){
+    erro("Sem permissão");
+    setTimeout(()=>location.href="index.html",1500);
+    return;
+  }
+
+  await carregarTotais();
+  await carregarUsuarios();
+
+  statusInfo.style.display="none";
+  painel.style.display="block";
+});
+</script>
 
 </body>
 </html>
