@@ -1,8 +1,33 @@
 import { auth, db } from "./firebase.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import {
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 export function renderMenu(paginaAtual = "") {
+  const menuAntigo = document.querySelector(".site-header");
+
+  if (menuAntigo) {
+    menuAntigo.remove();
+  }
+
+  const paginasParticipantes = [
+    "participantes",
+    "times",
+    "tecnicos",
+    "jogadores",
+    "arbitros",
+    "assistente",
+    "assistentes",
+    "fotografos"
+  ];
+
+  const participantesAtivo = paginasParticipantes.includes(paginaAtual);
+
   document.body.insertAdjacentHTML("afterbegin", `
     <header class="site-header">
 
@@ -19,10 +44,15 @@ export function renderMenu(paginaAtual = "") {
       <div class="nav-bar">
         <nav class="menu">
 
-          <a href="index.html" class="${paginaAtual === 'inicio' ? 'ativo' : ''}">Início</a>
+          <a href="index.html" class="${paginaAtual === "inicio" ? "ativo" : ""}">
+            Início
+          </a>
 
           <div class="menu-dropdown">
-            <a href="campeonatos.html" class="${paginaAtual === 'campeonatos' ? 'ativo' : ''}">Campeonatos</a>
+            <a href="campeonatos.html" class="${paginaAtual === "campeonatos" ? "ativo" : ""}">
+              Campeonatos
+            </a>
+
             <div class="submenu">
               <a href="campeonatos.html">Todos os campeonatos</a>
               <a href="classificacao.html">Classificação</a>
@@ -34,29 +64,64 @@ export function renderMenu(paginaAtual = "") {
             </div>
           </div>
 
-          <a href="tabela.html" class="${paginaAtual === 'tabela' ? 'ativo' : ''}">Tabela</a>
-          <a href="jogos.html" class="${paginaAtual === 'jogos' ? 'ativo' : ''}">Jogos</a>
+          <a href="tabela.html" class="${paginaAtual === "tabela" ? "ativo" : ""}">
+            Tabela
+          </a>
+
+          <a href="jogos.html" class="${paginaAtual === "jogos" ? "ativo" : ""}">
+            Jogos
+          </a>
 
           <div class="menu-dropdown">
-            <a href="times.html" class="${paginaAtual === 'participantes' ? 'ativo' : ''}">Participantes</a>
+            <a href="times.html" class="${participantesAtivo ? "ativo" : ""}">
+              Participantes
+            </a>
+
             <div class="submenu">
               <a href="times.html">Equipes/Times</a>
               <a href="tecnicos.html">Técnicos</a>
-              <a href="arbitros.html">Árbitro</a>
-              <a href="assistentes.html">Assistente</a>
+              <a href="jogadores.html">Jogadores</a>
+              <a href="arbitros.html">Árbitros</a>
+              <a href="assistente.html">Assistente</a>
               <a href="fotografos.html">Fotógrafos</a>
             </div>
           </div>
 
-          <a href="times.html" class="${paginaAtual === 'times' ? 'ativo' : ''}">Times</a>
-          <a href="tecnicos.html" class="${paginaAtual === 'tecnicos' ? 'ativo' : ''}">Técnicos</a>
-          <a href="jogadores.html" class="${paginaAtual === 'jogadores' ? 'ativo' : ''}">Jogadores</a>
-          <a href="arbitros.html" class="${paginaAtual === 'arbitros' ? 'ativo' : ''}">Árbitros</a>
-          <a href="assistentes.html" class="${paginaAtual === 'assistentes' ? 'ativo' : ''}">Assistente</a>
-          <a href="sumula-publica.html" class="${paginaAtual === 'sumula' ? 'ativo' : ''}">Súmula</a>
-          <a href="noticias.html" class="${paginaAtual === 'noticias' ? 'ativo' : ''}">Notícias</a>
+          <a href="times.html" class="${paginaAtual === "times" ? "ativo" : ""}">
+            Times
+          </a>
 
-          <a href="admin.html" id="btnAdminMenu" class="admin-menu-link" style="display:none;">Painel ADM</a>
+          <a href="tecnicos.html" class="${paginaAtual === "tecnicos" ? "ativo" : ""}">
+            Técnicos
+          </a>
+
+          <a href="jogadores.html" class="${paginaAtual === "jogadores" ? "ativo" : ""}">
+            Jogadores
+          </a>
+
+          <a href="arbitros.html" class="${paginaAtual === "arbitros" ? "ativo" : ""}">
+            Árbitros
+          </a>
+
+          <a href="assistente.html" class="${paginaAtual === "assistente" || paginaAtual === "assistentes" ? "ativo" : ""}">
+            Assistente
+          </a>
+
+          <a href="sumulas.html" class="${paginaAtual === "sumulas" || paginaAtual === "sumula" ? "ativo" : ""}">
+            Súmula
+          </a>
+
+          <a href="noticias.html" class="${paginaAtual === "noticias" ? "ativo" : ""}">
+            Notícias
+          </a>
+
+          <a href="login.html" class="${paginaAtual === "login" ? "ativo" : ""}">
+            Login
+          </a>
+
+          <a href="admin.html" id="btnAdminMenu" class="admin-menu-link" style="display:none;">
+            Painel ADM
+          </a>
 
         </nav>
       </div>
@@ -94,17 +159,30 @@ async function controlarUsuarioMenu() {
       if (snapUsuario.exists()) {
         const dados = snapUsuario.data();
 
-        nomeUsuario = dados.nome || dados.nomeCompleto || nomeUsuario;
+        nomeUsuario =
+          dados.nome ||
+          dados.nomeCompleto ||
+          dados.apelido ||
+          nomeUsuario;
 
-        const tipo = (dados.tipo || dados.perfil || "").toLowerCase();
-        const aprovado = dados.aprovado === true;
-        const autorizado = dados.autorizado === true;
+        const tipo = String(dados.tipo || dados.perfil || dados.funcao || "")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+
+        const aprovado =
+          dados.aprovado === true ||
+          dados.status === "aprovado";
+
+        const autorizado =
+          dados.autorizado === true ||
+          dados.liberado === true;
 
         if (tipo === "admin") {
           podeVerAdmin = aprovado && autorizado;
         }
 
-        if (tipo === "arbitro" || tipo === "árbitro") {
+        if (tipo === "arbitro") {
           podeVerAdmin = aprovado && autorizado;
         }
       }
