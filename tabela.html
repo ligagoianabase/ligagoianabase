@@ -224,57 +224,6 @@ select:focus{
   outline:2px solid rgba(247,198,0,.65);
 }
 
-.exemplo-bar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border:1px solid rgba(247,198,0,.22);
-  border-radius:15px;
-  padding:12px;
-  margin-bottom:14px;
-  box-shadow:0 8px 20px rgba(0,0,0,.25);
-}
-
-.exemplo-bar span{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.45;
-}
-
-.exemplo-bar strong{
-  color:var(--gold);
-}
-
-.exemplo-actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.btn-mini{
-  padding:9px 12px;
-  border-radius:11px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  font-size:13px;
-}
-
-.btn-gold{
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
-  color:#111;
-}
-
-.btn-red{
-  background:var(--red);
-  color:#fff;
-}
-
 .titulo-secao{
   color:var(--gold);
   font-size:22px;
@@ -386,6 +335,7 @@ select:focus{
   padding:10px 8px;
   border-bottom:1px solid rgba(255,255,255,.08);
   min-width:880px;
+  transition:.25s ease;
 }
 
 .row.header{
@@ -394,9 +344,48 @@ select:focus{
   font-weight:900;
 }
 
-.col-pos{width:45px;text-align:center;}
-.col-time{flex:1;padding:0 8px;}
-.col{width:52px;text-align:center;font-weight:800;}
+.row.top1{
+  background:linear-gradient(90deg,rgba(247,198,0,.26),rgba(16,42,82,.96));
+  border-left:5px solid var(--gold);
+}
+
+.row.top2{
+  background:linear-gradient(90deg,rgba(192,192,192,.20),rgba(16,42,82,.96));
+  border-left:5px solid #c0c0c0;
+}
+
+.row.top3{
+  background:linear-gradient(90deg,rgba(205,127,50,.20),rgba(16,42,82,.96));
+  border-left:5px solid #cd7f32;
+}
+
+.row.classificado{
+  box-shadow:inset 4px 0 0 var(--green);
+}
+
+.row.rebaixado{
+  box-shadow:inset 4px 0 0 var(--red);
+}
+
+.col-pos{
+  width:45px;
+  text-align:center;
+}
+
+.posicao-medalha{
+  font-size:18px;
+}
+
+.col-time{
+  flex:1;
+  padding:0 8px;
+}
+
+.col{
+  width:52px;
+  text-align:center;
+  font-weight:800;
+}
 
 .team{
   display:flex;
@@ -560,6 +549,13 @@ select:focus{
   box-shadow:0 8px 20px rgba(0,0,0,.25);
 }
 
+.ranking-card.lider-ranking{
+  border-color:var(--gold);
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.18), transparent 35%),
+    linear-gradient(180deg, rgba(16,42,82,.98), rgba(8,23,44,.98));
+}
+
 .ranking-top{
   display:flex;
   align-items:center;
@@ -582,8 +578,8 @@ select:focus{
 }
 
 .photo{
-  width:40px;
-  height:40px;
+  width:44px;
+  height:44px;
   border-radius:50%;
   object-fit:cover;
   background:#fff;
@@ -702,7 +698,7 @@ select:focus{
         <a href="jogadores.html">Jogadores</a>
         <a href="arbitros.html">Árbitros</a>
         <a href="assistentes.html">Assistente</a>
-        <a href="sumula-publica.html">Súmula</a>
+        <a href="sumulas.html">Súmula</a>
         <a href="noticias.html">Notícias</a>
         <a href="login.html">Login</a>
       </nav>
@@ -730,26 +726,9 @@ select:focus{
     </div>
   </section>
 
-  <section class="exemplo-bar">
-    <span>
-      <strong>Dados de exemplo:</strong>
-      Copa do Mundo FIFA 2002, Brasil 2 x 0 Alemanha, Ronaldo artilheiro.
-    </span>
-
-    <div class="exemplo-actions">
-      <button class="btn-mini btn-red" onclick="excluirExemplos()">
-        <i class="fa-solid fa-trash"></i> Excluir Exemplos
-      </button>
-
-      <button class="btn-mini btn-gold" onclick="restaurarExemplos()">
-        <i class="fa-solid fa-rotate-left"></i> Restaurar
-      </button>
-    </div>
-  </section>
-
   <section class="filtros">
     <select id="filtroCampeonato">
-      <option value="">Selecione o campeonato</option>
+      <option value="">Todos os campeonatos</option>
     </select>
 
     <select id="filtroCategoria">
@@ -770,239 +749,773 @@ select:focus{
       <button class="aba" onclick="trocarAba('suspensos', this)">Suspensos</button>
     </div>
 
-    <div id="areaTabela"></div>
+    <div id="areaTabela">
+      <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando tabela...</div>
+    </div>
   </section>
 
 </main>
 <script type="module">
 import { db } from "./firebase.js";
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-/* 🔒 CONTROLE DE ACESSO DO ÁRBITRO LOGADO */
-function getUsuarioLogado(){
-  try{
-    return JSON.parse(localStorage.getItem("usuarioLogado")) || null;
-  }catch{
-    return null;
-  }
-}
-
-function podeVerSumula(jogo){
-  const user = getUsuarioLogado();
-
-  if(!user) return false;
-
-  // admin sempre pode
-  if(user.tipo === "admin") return true;
-
-  // só árbitro do jogo
-  const arbitroJogo = (jogo.arbitro || "").toLowerCase().trim();
-  const arbitroLogado = (user.nome || "").toLowerCase().trim();
-
-  return arbitroJogo === arbitroLogado;
-}
-
-/* ================= RESTANTE DO SISTEMA ================= */
+import {
+  collection,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 let jogos = [];
 let times = [];
 let jogadores = [];
 let sumulas = [];
 let campeonatos = [];
+let classificacao = [];
+
 let abaAtual = "detalhes";
 
-function valorCampo(obj, chaves, fallback = ""){
-  for(const chave of chaves){
-    if(obj && obj[chave]) return obj[chave];
-  }
-  return fallback;
-}
-
-function normalizarTexto(texto){
-  return String(texto || "")
+function normalizar(txt){
+  return String(txt || "")
+    .trim()
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g,"");
 }
 
-function pegarSumulaDoJogo(id){
-  return sumulas.find(s => s.jogoId === id || s.id === id);
+function nomeTime(t){
+  if(t && typeof t === "object") return t.nome || "";
+  return t || "";
 }
 
-function jogoFinalizado(j){
-  return j.status === "finalizado" || !!pegarSumulaDoJogo(j.id);
+function idTime(t){
+  if(t && typeof t === "object") return t.id || "";
+  return "";
+}
+
+function logoTime(t){
+  if(t && typeof t === "object") return t.logo || t.escudo || "logo-liga.jfif";
+  return "logo-liga.jfif";
 }
 
 function pegarEscudo(nome){
-  const t = times.find(x => normalizarTexto(x.nome) === normalizarTexto(nome));
-  return t?.escudo || "logo-liga.jfif";
+  const time = times.find(t => normalizar(t.nome) === normalizar(nome));
+  return time?.logo || time?.escudo || "logo-liga.jfif";
 }
 
-/* 🔥 CARREGAR DADOS */
-async function carregarDados(){
-  const [j,t,jg,s,c] = await Promise.all([
-    getDocs(collection(db,"jogos")),
-    getDocs(collection(db,"times")),
-    getDocs(collection(db,"jogadores")),
-    getDocs(collection(db,"sumulas")),
-    getDocs(collection(db,"campeonatos"))
-  ]);
-
-  jogos = j.docs.map(d=>({id:d.id,...d.data()}));
-  times = t.docs.map(d=>({id:d.id,...d.data()}));
-  jogadores = jg.docs.map(d=>({id:d.id,...d.data()}));
-  sumulas = s.docs.map(d=>({id:d.id,...d.data()}));
-  campeonatos = c.docs.map(d=>({id:d.id,...d.data()}));
+function pegarFotoJogador(nome){
+  const jogador = jogadores.find(j => normalizar(j.nome) === normalizar(nome));
+  return jogador?.foto || jogador?.imagem || jogador?.avatar || "logo-liga.jfif";
 }
 
-/* ================= CLASSIFICAÇÃO ================= */
+function pegarSumula(jogoId){
+  return sumulas.find(s => s.id === jogoId || s.jogoId === jogoId) || null;
+}
+
+function jogoFinalizado(j){
+  const s = pegarSumula(j.id);
+  return j.sumulaFinalizada === true || j.status === "finalizado" || !!s;
+}
+
+function getCampeonatoSelecionado(){
+  return document.getElementById("filtroCampeonato").value;
+}
+
+function getCategoriaSelecionada(){
+  return document.getElementById("filtroCategoria").value;
+}
+
+function passaFiltro(item){
+  const camp = getCampeonatoSelecionado();
+  const cat = getCategoriaSelecionada();
+
+  const itemCamp =
+    item.campeonatoId ||
+    item.campeonato ||
+    item.campeonatoNome ||
+    "";
+
+  const itemCat = item.categoria || "";
+
+  if(camp && normalizar(itemCamp) !== normalizar(camp)) return false;
+  if(cat && normalizar(itemCat) !== normalizar(cat)) return false;
+
+  return true;
+}
+
+function jogosFiltrados(){
+  return jogos.filter(j => passaFiltro(j));
+}
+
+function sumulasFiltradas(){
+  return sumulas.filter(s => passaFiltro(s));
+}
+
+function classificacaoFiltrada(){
+  return classificacao.filter(c => passaFiltro(c));
+}
+
+function preencherFiltros(){
+  const campSelect = document.getElementById("filtroCampeonato");
+  const catSelect = document.getElementById("filtroCategoria");
+
+  const campAtual = campSelect.value;
+  const catAtual = catSelect.value;
+
+  const camps = new Map();
+
+  campeonatos.forEach(c=>{
+    const id = c.id || c.nome || c.campeonato;
+    const nome = c.nome || c.campeonato || c.titulo;
+    if(id && nome) camps.set(id,nome);
+  });
+
+  jogos.forEach(j=>{
+    const id = j.campeonatoId || j.campeonato || j.campeonatoNome;
+    const nome = j.campeonato || j.campeonatoNome || id;
+    if(id && nome) camps.set(id,nome);
+  });
+
+  sumulas.forEach(s=>{
+    const id = s.campeonatoId || s.campeonato || s.campeonatoNome;
+    const nome = s.campeonato || s.campeonatoNome || id;
+    if(id && nome) camps.set(id,nome);
+  });
+
+  campSelect.innerHTML = `<option value="">Todos os campeonatos</option>`;
+
+  [...camps.entries()]
+    .sort((a,b)=>a[1].localeCompare(b[1],"pt-BR"))
+    .forEach(([id,nome])=>{
+      campSelect.innerHTML += `<option value="${id}">${nome}</option>`;
+    });
+
+  if([...camps.keys()].includes(campAtual)){
+    campSelect.value = campAtual;
+  }
+
+  const cats = new Set();
+
+  jogos.forEach(j=>{
+    if(campSelect.value){
+      const camp = j.campeonatoId || j.campeonato || j.campeonatoNome || "";
+      if(normalizar(camp) !== normalizar(campSelect.value)) return;
+    }
+
+    if(j.categoria) cats.add(j.categoria);
+  });
+
+  sumulas.forEach(s=>{
+    if(campSelect.value){
+      const camp = s.campeonatoId || s.campeonato || s.campeonatoNome || "";
+      if(normalizar(camp) !== normalizar(campSelect.value)) return;
+    }
+
+    if(s.categoria) cats.add(s.categoria);
+  });
+
+  catSelect.innerHTML = `<option value="">Todas categorias</option>`;
+
+  [...cats].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(c=>{
+    catSelect.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+
+  if([...cats].includes(catAtual)){
+    catSelect.value = catAtual;
+  }
+}
+
+function atualizarTituloHero(){
+  const camp = getCampeonatoSelecionado();
+  const cat = getCategoriaSelecionada();
+
+  const finalizados = jogosFiltrados().filter(jogoFinalizado);
+  const sums = sumulasFiltradas();
+
+  const timesSet = new Set();
+
+  jogosFiltrados().forEach(j=>{
+    const a = nomeTime(j.timeA);
+    const b = nomeTime(j.timeB);
+    if(a) timesSet.add(a);
+    if(b) timesSet.add(b);
+  });
+
+  let totalGols = 0;
+
+  sums.forEach(s=>{
+    if(Array.isArray(s.gols)) totalGols += s.gols.length;
+    else totalGols += Number(s.golsA || 0) + Number(s.golsB || 0);
+  });
+
+  document.getElementById("tituloTabela").innerText =
+    `Tabela${cat ? " - " + cat : ""}${camp ? " | " + camp : ""}`;
+
+  document.getElementById("heroTitulo").innerText =
+    camp || "Tabela da Competição";
+
+  document.getElementById("heroSub").innerText =
+    cat ? `Categoria ${cat}` : "Classificação, jogos, artilharia, cartões e suspensos gerados automaticamente.";
+
+  document.getElementById("heroTagCategoria").innerText = `Categoria: ${cat || "Todas"}`;
+  document.getElementById("heroTagJogos").innerText = `Jogos finalizados: ${finalizados.length}`;
+  document.getElementById("heroTagTimes").innerText = `Times: ${timesSet.size}`;
+  document.getElementById("heroTagGols").innerText = `Gols: ${totalGols}`;
+
+  const campObj = campeonatos.find(c =>
+    c.id === camp ||
+    normalizar(c.nome) === normalizar(camp) ||
+    normalizar(c.campeonato) === normalizar(camp)
+  );
+
+  document.getElementById("heroLogo").src = campObj?.logo || campObj?.escudo || "logo-liga.jfif";
+}
+
+function renderDetalhes(){
+  const area = document.getElementById("areaTabela");
+
+  const jogosF = jogosFiltrados();
+  const finalizados = jogosF.filter(jogoFinalizado);
+  const sums = sumulasFiltradas();
+
+  const timesSet = new Set();
+
+  jogosF.forEach(j=>{
+    const a = nomeTime(j.timeA);
+    const b = nomeTime(j.timeB);
+    if(a) timesSet.add(a);
+    if(b) timesSet.add(b);
+  });
+
+  let gols = 0;
+  let amarelos = 0;
+  let vermelhos = 0;
+
+  sums.forEach(s=>{
+    if(Array.isArray(s.gols)) gols += s.gols.length;
+    else gols += Number(s.golsA || 0) + Number(s.golsB || 0);
+
+    (s.cartoes || []).forEach(c=>{
+      if(c.tipo === "amarelo") amarelos++;
+      if(c.tipo === "vermelho") vermelhos++;
+    });
+  });
+
+  area.innerHTML = `
+    <div class="cards-resumo">
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-calendar-check"></i></div>
+        <strong>Jogos finalizados</strong>
+        <span>${finalizados.length}</span>
+        <small>${jogosF.length} jogo(s) cadastrado(s)</small>
+      </div>
+
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <strong>Times</strong>
+        <span>${timesSet.size}</span>
+        <small>Participantes</small>
+      </div>
+
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-futbol"></i></div>
+        <strong>Gols</strong>
+        <span>${gols}</span>
+        <small>Total nas súmulas</small>
+      </div>
+
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-square"></i></div>
+        <strong>Cartões amarelos</strong>
+        <span>${amarelos}</span>
+        <small>Registrados</small>
+      </div>
+
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-square"></i></div>
+        <strong>Cartões vermelhos</strong>
+        <span>${vermelhos}</span>
+        <small>Registrados</small>
+      </div>
+    </div>
+  `;
+}
+
+function montarClassificacaoPorSumula(){
+  const tabela = {};
+
+  jogosFiltrados().filter(jogoFinalizado).forEach(j=>{
+    const s = pegarSumula(j.id) || j;
+
+    const nomeA = nomeTime(s.timeA || j.timeA);
+    const nomeB = nomeTime(s.timeB || j.timeB);
+
+    const idA = idTime(s.timeA || j.timeA) || nomeA;
+    const idB = idTime(s.timeB || j.timeB) || nomeB;
+
+    if(!nomeA || !nomeB) return;
+
+    const gA = Number(s.placar?.A ?? s.golsA ?? j.golsA ?? 0);
+    const gB = Number(s.placar?.B ?? s.golsB ?? j.golsB ?? 0);
+
+    if(!tabela[idA]){
+      tabela[idA] = {
+        nome:nomeA,
+        logo:logoTime(s.timeA || j.timeA),
+        pontos:0,jogos:0,vitorias:0,empates:0,derrotas:0,golsPro:0,golsContra:0,saldo:0
+      };
+    }
+
+    if(!tabela[idB]){
+      tabela[idB] = {
+        nome:nomeB,
+        logo:logoTime(s.timeB || j.timeB),
+        pontos:0,jogos:0,vitorias:0,empates:0,derrotas:0,golsPro:0,golsContra:0,saldo:0
+      };
+    }
+
+    const A = tabela[idA];
+    const B = tabela[idB];
+
+    A.jogos++;
+    B.jogos++;
+
+    A.golsPro += gA;
+    A.golsContra += gB;
+    B.golsPro += gB;
+    B.golsContra += gA;
+
+    A.saldo = A.golsPro - A.golsContra;
+    B.saldo = B.golsPro - B.golsContra;
+
+    if(gA > gB){
+      A.vitorias++;
+      A.pontos += 3;
+      B.derrotas++;
+    }else if(gB > gA){
+      B.vitorias++;
+      B.pontos += 3;
+      A.derrotas++;
+    }else{
+      A.empates++;
+      B.empates++;
+      A.pontos++;
+      B.pontos++;
+    }
+  });
+
+  return Object.values(tabela);
+}
+
+function medalha(i){
+  if(i === 0) return "🥇";
+  if(i === 1) return "🥈";
+  if(i === 2) return "🥉";
+  return i + 1;
+}
+
+function classeLinha(i,total){
+  if(i === 0) return "row top1 classificado";
+  if(i === 1) return "row top2 classificado";
+  if(i === 2) return "row top3 classificado";
+  if(i < 4) return "row classificado";
+  if(total > 5 && i >= total - 2) return "row rebaixado";
+  return "row";
+}
 
 function renderClassificacao(){
   const area = document.getElementById("areaTabela");
 
-  const tabela = {};
+  let lista = classificacaoFiltrada();
 
-  jogos.filter(jogoFinalizado).forEach(j=>{
-    const sumula = pegarSumulaDoJogo(j.id);
+  if(!lista.length){
+    lista = montarClassificacaoPorSumula();
+  }
 
-    const a = j.timeA;
-    const b = j.timeB;
+  lista = lista.sort((a,b)=>{
+    const pa = Number(a.pontos || 0);
+    const pb = Number(b.pontos || 0);
+    const va = Number(a.vitorias || 0);
+    const vb = Number(b.vitorias || 0);
+    const sa = Number(a.saldo || 0);
+    const sb = Number(b.saldo || 0);
+    const ga = Number(a.golsPro || 0);
+    const gb = Number(b.golsPro || 0);
 
-    const gA = Number(sumula?.golsA ?? j.golsA ?? 0);
-    const gB = Number(sumula?.golsB ?? j.golsB ?? 0);
-
-    if(!tabela[a]) tabela[a] = {nome:a,p:0,j:0,v:0,e:0,d:0,gp:0,gc:0,sg:0};
-    if(!tabela[b]) tabela[b] = {nome:b,p:0,j:0,v:0,e:0,d:0,gp:0,gc:0,sg:0};
-
-    const A = tabela[a];
-    const B = tabela[b];
-
-    A.j++; B.j++;
-
-    A.gp+=gA; A.gc+=gB;
-    B.gp+=gB; B.gc+=gA;
-
-    A.sg = A.gp - A.gc;
-    B.sg = B.gp - B.gc;
-
-    if(gA>gB){ A.v++; A.p+=3; B.d++; }
-    else if(gB>gA){ B.v++; B.p+=3; A.d++; }
-    else{ A.e++; B.e++; A.p++; B.p++; }
+    return pb - pa || vb - va || sb - sa || gb - ga;
   });
 
-  const lista = Object.values(tabela).sort((a,b)=>
-    b.p - a.p || b.v - a.v || b.sg - a.sg || b.gp - a.gp
-  );
+  if(!lista.length){
+    area.innerHTML = `<div class="vazio">Nenhum jogo finalizado para montar a classificação.</div>`;
+    return;
+  }
 
   area.innerHTML = `
-  <div class="table">
-    <div class="row header">
-      <div class="col-pos">#</div>
-      <div class="col-time">Time</div>
-      <div class="col">P</div>
-      <div class="col">J</div>
-      <div class="col">V</div>
-      <div class="col">E</div>
-      <div class="col">D</div>
-      <div class="col">GP</div>
-      <div class="col">GC</div>
-      <div class="col">SG</div>
-    </div>
-
-    ${lista.map((t,i)=>`
-      <div class="row">
-        <div class="col-pos">${i+1}</div>
-        <div class="col-time">
-          <div class="team">
-            <img src="${pegarEscudo(t.nome)}" class="escudo">
-            ${t.nome}
-          </div>
+    <div class="box-tabela">
+      <div class="table">
+        <div class="row header">
+          <div class="col-pos">#</div>
+          <div class="col-time">Time</div>
+          <div class="col">P</div>
+          <div class="col">J</div>
+          <div class="col">V</div>
+          <div class="col">E</div>
+          <div class="col">D</div>
+          <div class="col">GP</div>
+          <div class="col">GC</div>
+          <div class="col">SG</div>
         </div>
-        <div class="col">${t.p}</div>
-        <div class="col">${t.j}</div>
-        <div class="col">${t.v}</div>
-        <div class="col">${t.e}</div>
-        <div class="col">${t.d}</div>
-        <div class="col">${t.gp}</div>
-        <div class="col">${t.gc}</div>
-        <div class="col">${t.sg}</div>
+
+        ${lista.map((t,i)=>`
+          <div class="${classeLinha(i,lista.length)}">
+            <div class="col-pos posicao-medalha">${medalha(i)}</div>
+
+            <div class="col-time">
+              <div class="team">
+                <img src="${t.timeLogo || t.logo || pegarEscudo(t.timeNome || t.nome)}" class="escudo" onerror="this.src='logo-liga.jfif'">
+                ${t.timeNome || t.nome}
+              </div>
+            </div>
+
+            <div class="col">${t.pontos || 0}</div>
+            <div class="col">${t.jogos || 0}</div>
+            <div class="col">${t.vitorias || 0}</div>
+            <div class="col">${t.empates || 0}</div>
+            <div class="col">${t.derrotas || 0}</div>
+            <div class="col">${t.golsPro || 0}</div>
+            <div class="col">${t.golsContra || 0}</div>
+            <div class="col">${t.saldo || 0}</div>
+          </div>
+        `).join("")}
       </div>
-    `).join("")}
-  </div>
+    </div>
   `;
 }
-
-/* ================= JOGOS COM TRAVA DE ÁRBITRO ================= */
 
 function renderJogos(){
   const area = document.getElementById("areaTabela");
+  const lista = jogosFiltrados();
+
+  if(!lista.length){
+    area.innerHTML = `<div class="vazio">Nenhum jogo encontrado.</div>`;
+    return;
+  }
 
   area.innerHTML = `
-  <div class="lista-grid">
-    ${jogos.map(j=>{
-      const finalizado = jogoFinalizado(j);
+    <div class="lista-grid">
+      ${lista.map(j=>{
+        const s = pegarSumula(j.id) || j;
+        const finalizado = jogoFinalizado(j);
 
-      const podeVer = podeVerSumula(j);
+        const nomeA = nomeTime(s.timeA || j.timeA);
+        const nomeB = nomeTime(s.timeB || j.timeB);
 
-      return `
-      <article class="card-item">
-        <div class="times-linha">
-          <div class="time-box">
-            <img src="${pegarEscudo(j.timeA)}" class="escudo">
-            ${j.timeA}
-          </div>
+        const logoA = logoTime(s.timeA || j.timeA);
+        const logoB = logoTime(s.timeB || j.timeB);
 
-          <div class="placar">
-            ${finalizado ? `${j.golsA ?? 0} x ${j.golsB ?? 0}` : "x"}
-          </div>
+        const gA = Number(s.placar?.A ?? s.golsA ?? j.golsA ?? 0);
+        const gB = Number(s.placar?.B ?? s.golsB ?? j.golsB ?? 0);
 
-          <div class="time-box visitante">
-            ${j.timeB}
-            <img src="${pegarEscudo(j.timeB)}" class="escudo">
-          </div>
-        </div>
+        return `
+          <article class="card-item">
+            <div class="card-top">
+              <div class="card-icon">
+                <i class="fa-solid fa-calendar-days"></i>
+              </div>
 
-        ${
-          finalizado
-          ? (
-              podeVer
+              <div class="status-tag ${finalizado ? "status-finalizado" : "status-agendado"}">
+                ${finalizado ? "Finalizado" : "Agendado"}
+              </div>
+            </div>
+
+            <div class="times-linha">
+              <div class="time-box">
+                <img src="${logoA}" class="escudo" onerror="this.src='logo-liga.jfif'">
+                <span>${nomeA || "-"}</span>
+              </div>
+
+              <div class="placar">${finalizado ? `${gA} x ${gB}` : "x"}</div>
+
+              <div class="time-box visitante">
+                <span>${nomeB || "-"}</span>
+                <img src="${logoB}" class="escudo" onerror="this.src='logo-liga.jfif'">
+              </div>
+            </div>
+
+            <div class="info-item">
+              <strong>${j.campeonato || j.campeonatoNome || "-"}</strong><br>
+              ${j.categoria || "-"}<br>
+              ${j.data || j.dataHora || "-"}<br>
+              ${j.local || j.campo || "-"}
+            </div>
+
+            <div class="tags">
+              <span class="tag">${j.rodada || j.fase || "Jogo"}</span>
+              <span class="tag">${j.arbitro || "-"}</span>
+            </div>
+
+            ${
+              finalizado
               ? `<a class="btn-ver" href="sumula-publica.html?id=${j.id}">
                   <i class="fa-solid fa-file-lines"></i> Ver Súmula
                 </a>`
-              : `<div class="btn-ver" style="background:#555;cursor:not-allowed;">
-                  🔒 Apenas árbitro do jogo
-                </div>`
-            )
-          : ""
-        }
-      </article>
-      `;
-    }).join("")}
-  </div>
+              : ""
+            }
+          </article>
+        `;
+      }).join("")}
+    </div>
   `;
 }
 
-/* ================= CONTROLE ================= */
+function renderTimes(){
+  const area = document.getElementById("areaTabela");
+  const nomes = new Map();
 
-window.trocarAba = function(nome){
+  jogosFiltrados().forEach(j=>{
+    const a = nomeTime(j.timeA);
+    const b = nomeTime(j.timeB);
+
+    if(a) nomes.set(a, j.timeA);
+    if(b) nomes.set(b, j.timeB);
+  });
+
+  const lista = [...nomes.entries()].sort((a,b)=>a[0].localeCompare(b[0],"pt-BR"));
+
+  if(!lista.length){
+    area.innerHTML = `<div class="vazio">Nenhum time encontrado.</div>`;
+    return;
+  }
+
+  area.innerHTML = `
+    <div class="lista-grid">
+      ${lista.map(([nome,obj])=>`
+        <article class="card-item">
+          <div class="card-top">
+            <div class="card-icon">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div class="status-tag status-finalizado">Ativo</div>
+          </div>
+
+          <img src="${logoTime(obj)}" class="escudo" style="width:64px;height:64px;margin:0 auto 10px;" onerror="this.src='logo-liga.jfif'">
+
+          <div class="info-item">
+            <strong>${nome}</strong><br>
+            ${getCategoriaSelecionada() || "Categoria geral"}
+          </div>
+        </article>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderArtilharia(){
+  const area = document.getElementById("areaTabela");
+  const mapa = {};
+
+  sumulasFiltradas().forEach(s=>{
+    (s.gols || []).forEach(g=>{
+      const nome = g.nome || g.jogador || "";
+      if(!nome) return;
+
+      if(!mapa[nome]){
+        mapa[nome] = {
+          nome,
+          time:g.timeNome || g.time || "",
+          gols:0
+        };
+      }
+
+      mapa[nome].gols++;
+    });
+  });
+
+  const lista = Object.values(mapa).sort((a,b)=>b.gols - a.gols);
+
+  if(!lista.length){
+    area.innerHTML = `<div class="vazio">Nenhum gol registrado.</div>`;
+    return;
+  }
+
+  area.innerHTML = `
+    <div class="ranking-lista">
+      ${lista.map((j,i)=>`
+        <article class="ranking-card ${i === 0 ? "lider-ranking" : ""}">
+          <div class="ranking-top">
+            <div class="player-box">
+              <div class="pos">${medalha(i)}</div>
+              <img src="${pegarFotoJogador(j.nome)}" class="photo" onerror="this.src='logo-liga.jfif'">
+              <div class="player-info">
+                <strong>${j.nome}</strong>
+                <small>${j.time || "Atleta"}</small>
+              </div>
+            </div>
+
+            <div class="numero-destaque">
+              ${j.gols}
+              <small>gol(s)</small>
+            </div>
+          </div>
+        </article>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderCartoes(){
+  const area = document.getElementById("areaTabela");
+  const mapa = {};
+
+  sumulasFiltradas().forEach(s=>{
+    (s.cartoes || []).forEach(c=>{
+      const nome = c.nome || c.jogador || "";
+      if(!nome) return;
+
+      if(!mapa[nome]){
+        mapa[nome] = {
+          nome,
+          time:c.timeNome || c.time || "",
+          amarelos:0,
+          vermelhos:0
+        };
+      }
+
+      if(c.tipo === "amarelo") mapa[nome].amarelos++;
+      if(c.tipo === "vermelho") mapa[nome].vermelhos++;
+    });
+  });
+
+  const lista = Object.values(mapa).sort((a,b)=>
+    (b.vermelhos * 3 + b.amarelos) - (a.vermelhos * 3 + a.amarelos)
+  );
+
+  if(!lista.length){
+    area.innerHTML = `<div class="vazio">Nenhum cartão registrado.</div>`;
+    return;
+  }
+
+  area.innerHTML = `
+    <div class="ranking-lista">
+      ${lista.map((j,i)=>`
+        <article class="ranking-card ${i === 0 ? "lider-ranking" : ""}">
+          <div class="ranking-top">
+            <div class="player-box">
+              <div class="pos">${medalha(i)}</div>
+              <img src="${pegarFotoJogador(j.nome)}" class="photo" onerror="this.src='logo-liga.jfif'">
+              <div class="player-info">
+                <strong>${j.nome}</strong>
+                <small>${j.time || "Atleta"}</small>
+              </div>
+            </div>
+
+            <div class="numero-destaque">
+              🟨 ${j.amarelos}<br>
+              🟥 ${j.vermelhos}
+            </div>
+          </div>
+        </article>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderSuspensos(){
+  const area = document.getElementById("areaTabela");
+
+  const lista = jogadores.filter(j => Number(j.suspenso || 0) > 0);
+
+  if(!lista.length){
+    area.innerHTML = `<div class="vazio">Nenhum suspenso encontrado.</div>`;
+    return;
+  }
+
+  area.innerHTML = `
+    <div class="ranking-lista">
+      ${lista.map((j,i)=>`
+        <article class="ranking-card">
+          <div class="ranking-top">
+            <div class="player-box">
+              <div class="pos">${i + 1}</div>
+              <img src="${j.foto || "logo-liga.jfif"}" class="photo" onerror="this.src='logo-liga.jfif'">
+              <div class="player-info">
+                <strong>${j.nome || "-"}</strong>
+                <small>${j.timeNome || j.time || "-"}</small>
+              </div>
+            </div>
+
+            <div class="numero-destaque">
+              ${j.suspenso}
+              <small>jogo(s)</small>
+            </div>
+          </div>
+        </article>
+      `).join("")}
+    </div>
+  `;
+}
+
+window.trocarAba = function(nome, botao){
   abaAtual = nome;
+
+  document.querySelectorAll(".aba").forEach(b => b.classList.remove("ativa"));
+  botao.classList.add("ativa");
+
   atualizarTela();
 };
 
-function atualizarTela(){
+window.atualizarTela = function(){
+  atualizarTituloHero();
+
+  if(abaAtual === "detalhes") renderDetalhes();
   if(abaAtual === "classificacao") renderClassificacao();
   if(abaAtual === "jogos") renderJogos();
+  if(abaAtual === "times") renderTimes();
+  if(abaAtual === "artilharia") renderArtilharia();
+  if(abaAtual === "cartoes") renderCartoes();
+  if(abaAtual === "suspensos") renderSuspensos();
+};
+
+function iniciarTempoReal(){
+  onSnapshot(collection(db,"jogos"),snap=>{
+    jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
+    preencherFiltros();
+    atualizarTela();
+  });
+
+  onSnapshot(collection(db,"sumulas"),snap=>{
+    sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
+    preencherFiltros();
+    atualizarTela();
+  });
+
+  onSnapshot(collection(db,"classificacao"),snap=>{
+    classificacao = snap.docs.map(d=>({id:d.id,...d.data()}));
+    atualizarTela();
+  });
+
+  onSnapshot(collection(db,"times"),snap=>{
+    times = snap.docs.map(d=>({id:d.id,...d.data()}));
+    atualizarTela();
+  });
+
+  onSnapshot(collection(db,"jogadores"),snap=>{
+    jogadores = snap.docs.map(d=>({id:d.id,...d.data()}));
+    atualizarTela();
+  });
+
+  onSnapshot(collection(db,"campeonatos"),snap=>{
+    campeonatos = snap.docs.map(d=>({id:d.id,...d.data()}));
+    preencherFiltros();
+    atualizarTela();
+  });
 }
 
-/* ================= INIT ================= */
-
-async function iniciar(){
-  await carregarDados();
+document.getElementById("filtroCampeonato").addEventListener("change",()=>{
+  preencherFiltros();
   atualizarTela();
-}
+});
 
-iniciar();
+document.getElementById("filtroCategoria").addEventListener("change",atualizarTela);
 
+iniciarTempoReal();
 </script>
 
 </body>
