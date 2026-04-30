@@ -3,65 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Validar Súmula</title>
+
+<title>Validação de Súmula</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 body{
+  font-family:Arial;
+  background:#061d3d;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
   margin:0;
-  font-family:Arial, sans-serif;
-  background:#eef2f7;
-  color:#0A1F3D;
 }
 
-.box{
-  max-width:520px;
-  margin:60px auto;
+.card{
   background:#fff;
-  padding:25px;
-  border-radius:14px;
+  color:#111;
+  padding:30px;
+  border-radius:12px;
+  width:400px;
+  max-width:90%;
   text-align:center;
-  box-shadow:0 8px 25px rgba(0,0,0,.15);
-}
-
-.ok{
-  color:#1b5e20;
-  font-size:46px;
-  font-weight:900;
-}
-
-.erro{
-  color:#b42323;
-  font-size:40px;
-  font-weight:900;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
 }
 
 h1{
-  margin:10px 0;
+  margin-bottom:15px;
+  color:#061d3d;
+}
+
+.status{
+  font-size:20px;
+  font-weight:900;
+  margin:15px 0;
+}
+
+.ok{
+  color:#009640;
+}
+
+.erro{
+  color:#e30613;
 }
 
 .info{
-  text-align:left;
-  margin-top:18px;
-  line-height:1.7;
+  font-size:14px;
+  margin-top:10px;
 }
 
 .btn{
-  display:inline-block;
   margin-top:20px;
-  background:#0A1F3D;
-  color:#fff;
-  padding:12px 18px;
+  padding:12px;
+  width:100%;
+  border:none;
   border-radius:8px;
-  text-decoration:none;
+  background:#061d3d;
+  color:#fff;
   font-weight:900;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="box" id="conteudo">
-  Carregando validação...
+<div class="card">
+
+  <h1>Validação de Súmula</h1>
+
+  <div id="status" class="status">Verificando...</div>
+
+  <div class="info" id="info"></div>
+
+  <button class="btn" onclick="abrirSumula()">Ver Súmula</button>
+
 </div>
 
 <script type="module">
@@ -69,55 +88,54 @@ import { db } from "./firebase.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const id = new URLSearchParams(location.search).get("id");
-const box = document.getElementById("conteudo");
 
 async function validar(){
+
   if(!id){
-    box.innerHTML = `
-      <div class="erro">✖</div>
-      <h1>Código inválido</h1>
-    `;
+    erro("Código inválido");
     return;
   }
 
   const snap = await getDoc(doc(db,"jogos",id));
 
   if(!snap.exists()){
-    box.innerHTML = `
-      <div class="erro">✖</div>
-      <h1>Súmula não encontrada</h1>
-    `;
+    erro("Súmula não encontrada");
     return;
   }
 
   const j = snap.data();
 
   if(!j.sumulaFinalizada){
-    box.innerHTML = `
-      <div class="erro">!</div>
-      <h1>Súmula ainda não finalizada</h1>
-    `;
+    erro("Súmula não finalizada");
     return;
   }
 
-  box.innerHTML = `
-    <div class="ok">✓</div>
-    <h1>Súmula Autêntica</h1>
+  ok(j);
+}
 
-    <div class="info">
-      <strong>Código:</strong> ${j.codigo || id}<br>
-      <strong>Campeonato:</strong> ${j.campeonato || "-"}<br>
-      <strong>Categoria:</strong> ${j.categoria || "-"}<br>
-      <strong>Jogo:</strong> ${j.timeA?.nome || "Time A"} x ${j.timeB?.nome || "Time B"}<br>
-      <strong>Placar:</strong> ${j.placar?.A || 0} x ${j.placar?.B || 0}<br>
-      <strong>Status:</strong> Finalizada
-    </div>
+function ok(j){
+  document.getElementById("status").innerHTML =
+    `<i class="fa-solid fa-circle-check"></i> SÚMULA OFICIAL VÁLIDA`;
 
-    <a class="btn" href="sumula-publica.html?id=${id}">
-      Ver Súmula Oficial
-    </a>
+  document.getElementById("status").classList.add("ok");
+
+  document.getElementById("info").innerHTML = `
+    ${j.campeonato} <br>
+    ${j.timeA?.nome} x ${j.timeB?.nome} <br>
+    ${j.data}
   `;
 }
+
+function erro(msg){
+  document.getElementById("status").innerHTML =
+    `<i class="fa-solid fa-circle-xmark"></i> ${msg}`;
+
+  document.getElementById("status").classList.add("erro");
+}
+
+window.abrirSumula = function(){
+  window.location.href = "sumula-publica.html?id="+id;
+};
 
 validar();
 </script>
