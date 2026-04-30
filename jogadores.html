@@ -7,6 +7,7 @@
 <title>Jogadores - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="menu.css">
 
 <style>
 :root{
@@ -19,6 +20,9 @@
   --muted:#cbd6ea;
   --line:rgba(255,255,255,.12);
   --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --yellow:#7a5a00;
+  --red:#b42323;
   --blue:#1a3f73;
   --shadow:0 14px 34px rgba(0,0,0,.38);
   --max:1240px;
@@ -66,69 +70,6 @@ img{
   margin:0 auto;
 }
 
-.site-header{
-  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
-  border-bottom:3px solid var(--gold);
-  box-shadow:var(--shadow);
-}
-
-.header-top{
-  min-height:92px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px 0;
-}
-
-.header-title{
-  text-align:center;
-  font-size:26px;
-  font-weight:900;
-  letter-spacing:.8px;
-  text-transform:uppercase;
-  line-height:1.15;
-}
-
-.nav-bar{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
-  border-top:1px solid rgba(255,255,255,.06);
-  overflow:hidden;
-}
-
-.menu{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:clamp(4px, .55vw, 10px);
-  padding:14px 6px;
-  flex-wrap:nowrap;
-  overflow:hidden;
-}
-
-.menu a{
-  color:#fff;
-  font-weight:900;
-  font-size:clamp(11px, .92vw, 15px);
-  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
-  padding:clamp(8px, .75vw, 12px) clamp(9px, 1vw, 18px);
-  border-radius:clamp(10px, .9vw, 15px);
-  border:1px solid rgba(255,255,255,.07);
-  white-space:nowrap;
-  flex:0 1 auto;
-  box-shadow:0 10px 22px rgba(0,0,0,.24);
-  transition:.25s ease;
-}
-
-.menu a:hover{
-  color:var(--gold);
-  border-color:var(--gold-line);
-}
-
-.menu a.ativo{
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
-  color:#111;
-}
-
 .container{
   padding:22px 0 34px;
 }
@@ -157,6 +98,22 @@ img{
   font-size:14px;
 }
 
+.hero-tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.hero-tag{
+  background:rgba(26,63,115,.9);
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+
 .filtros{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
@@ -180,10 +137,42 @@ select:focus{
   outline:2px solid rgba(247,198,0,.55);
 }
 
+.titulo-secao{
+  color:var(--gold);
+  font-size:22px;
+  font-weight:900;
+  margin:0 0 12px;
+}
+
+/* GRID PADRÃO — MÁXIMO 5 POR LINHA */
 .lista{
   display:grid;
   grid-template-columns:repeat(5, 1fr);
   gap:12px;
+}
+
+@media(max-width:1100px){
+  .lista{
+    grid-template-columns:repeat(4, 1fr);
+  }
+}
+
+@media(max-width:900px){
+  .lista{
+    grid-template-columns:repeat(3, 1fr);
+  }
+}
+
+@media(max-width:650px){
+  .lista{
+    grid-template-columns:repeat(2, 1fr);
+  }
+}
+
+@media(max-width:430px){
+  .lista{
+    grid-template-columns:1fr;
+  }
 }
 
 .card{
@@ -192,12 +181,51 @@ select:focus{
   justify-content:space-between;
   gap:10px;
   padding:12px;
-  min-height:245px;
+  min-height:390px;
   border-radius:14px;
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
   border:1px solid rgba(247,198,0,.18);
   box-shadow:0 8px 18px rgba(0,0,0,.25);
 }
+
+.card:hover{
+  border-color:var(--gold);
+  transform:translateY(-2px);
+  transition:.25s ease;
+}
+
+.card-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.card-icon{
+  width:32px;
+  height:32px;
+  border-radius:10px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:15px;
+}
+
+.status{
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  color:#fff;
+}
+
+.status.aprovado{background:var(--green);}
+.status.pendente{background:var(--yellow);}
+.status.reprovado{background:var(--red);}
 
 .player{
   display:flex;
@@ -208,11 +236,11 @@ select:focus{
 }
 
 .photo{
-  width:62px;
-  height:62px;
+  width:70px;
+  height:70px;
   border-radius:50%;
   object-fit:cover;
-  border:2px solid rgba(255,255,255,.15);
+  border:2px solid var(--gold);
   background:#1a3f73;
 }
 
@@ -227,6 +255,7 @@ select:focus{
   font-weight:900;
   font-size:14px;
   color:#fff;
+  line-height:1.25;
 }
 
 .sub{
@@ -245,13 +274,75 @@ select:focus{
   background:#1a3f73;
   padding:4px 8px;
   border-radius:999px;
-  font-size:11px;
+  font-size:10px;
+  font-weight:800;
+  border:1px solid rgba(255,255,255,.08);
 }
 
-.stats{
-  font-size:12px;
+.tag.ok{
+  background:var(--green);
+}
+
+.tag.alerta{
+  background:var(--yellow);
+}
+
+.tag.red{
+  background:var(--red);
+}
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  margin-top:8px;
+}
+
+.stat{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:9px;
+  padding:7px 4px;
+  text-align:center;
+}
+
+.stat strong{
+  color:var(--gold);
+  display:block;
+  font-size:15px;
+  line-height:1;
+}
+
+.stat span{
   color:var(--muted);
-  line-height:1.4;
+  font-size:9px;
+  font-weight:800;
+}
+
+.redes{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+
+.rede{
+  width:31px;
+  height:31px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#1a3f73;
+  color:#fff;
+  font-size:14px;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.rede:hover{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
 }
 
 .actions{
@@ -281,44 +372,13 @@ select:focus{
   border:1px solid rgba(255,255,255,.08);
 }
 
-@media(max-width:1100px){
-  .lista{
-    grid-template-columns:repeat(4, 1fr);
-  }
-}
-
 @media(max-width:900px){
   .filtros{
-    grid-template-columns:1fr;
-  }
-
-  .lista{
-    grid-template-columns:repeat(3, 1fr);
-  }
-}
-
-@media(max-width:650px){
-  .lista{
-    grid-template-columns:repeat(2, 1fr);
-  }
-}
-
-@media(max-width:430px){
-  .lista{
     grid-template-columns:1fr;
   }
 }
 
 @media(max-width:600px){
-  .header-title{
-    font-size:16px;
-  }
-
-  .menu{
-    justify-content:flex-start;
-    overflow-x:auto;
-  }
-
   .hero{
     padding:14px;
   }
@@ -332,45 +392,25 @@ select:focus{
 
 <body>
 
-<header class="site-header">
-  <div class="wrap header-top">
-    <div class="header-title">
-      LIGA GOIANA DE FUTEBOL DE BASE
-    </div>
-  </div>
-
-  <div class="nav-bar">
-    <div class="wrap">
-      <nav class="menu">
-        <a href="index.html">Início</a>
-        <a href="campeonatos.html">Campeonatos</a>
-        <a href="tabela.html">Tabela</a>
-        <a href="jogos.html">Jogos</a>
-        <a href="times.html">Times</a>
-        <a href="tecnicos.html">Técnicos</a>
-        <a href="jogadores.html" class="ativo">Jogadores</a>
-        <a href="arbitros.html">Árbitros</a>
-        <a href="assistente.html">Assistente</a>
-        <a href="sumulas.html">Súmula</a>
-        <a href="noticias.html">Notícias</a>
-        <a href="login.html">Login</a>
-      </nav>
-    </div>
-  </div>
-</header>
-
 <main class="wrap container">
 
   <section class="hero">
     <h2>Jogadores</h2>
-    <p>Visualize atletas por campeonato, categoria, time e desempenho completo.</p>
+    <p>Atletas cadastrados com estatísticas automáticas puxadas de jogos e súmulas finalizadas. O CPF é usado apenas para vínculo interno e nunca aparece no público.</p>
+
+    <div class="hero-tags">
+      <div class="hero-tag" id="tagTotal">Jogadores: 0</div>
+      <div class="hero-tag" id="tagGols">Gols: 0</div>
+      <div class="hero-tag" id="tagAssistencias">Assistências: 0</div>
+      <div class="hero-tag" id="tagCartoes">Cartões: 0</div>
+    </div>
   </section>
 
   <div class="filtros">
-    <input id="busca" placeholder="Buscar jogador, time, CPF ou posição...">
+    <input id="busca" placeholder="Buscar jogador, time ou posição...">
 
     <select id="filtroCampeonato">
-      <option value="">Carregando campeonatos...</option>
+      <option value="">Todos os campeonatos</option>
     </select>
 
     <select id="filtroCategoria">
@@ -378,16 +418,21 @@ select:focus{
     </select>
   </div>
 
+  <h2 class="titulo-secao" id="tituloPagina">Jogadores</h2>
+
   <div class="lista" id="lista"></div>
 
 </main>
 
 <script type="module">
+import { renderMenu } from "./menu.js";
 import { db } from "./firebase.js";
 import {
   collection,
   getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+renderMenu("jogadores");
 
 let jogadores = [];
 let jogos = [];
@@ -398,7 +443,8 @@ function n(txt){
   return String(txt || "")
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"");
+    .replace(/[\\u0300-\\u036f]/g,"")
+    .trim();
 }
 
 function val(obj, chaves, f=""){
@@ -410,14 +456,19 @@ function val(obj, chaves, f=""){
   return f;
 }
 
+function numero(v){
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+}
+
 function mesmoJogador(jogador, item){
   const jogadorId = val(jogador,["id"]);
-  const jogadorCpf = val(jogador,["cpf"]);
+  const jogadorCpf = val(jogador,["cpf","cpfJogador","documento"]);
   const jogadorNome = n(val(jogador,["nome"]));
 
-  const itemId = val(item,["jogadorId","idJogador","id"]);
-  const itemCpf = val(item,["cpf"]);
-  const itemNome = n(val(item,["nome","jogador","nomeJogador"]));
+  const itemId = val(item,["jogadorId","idJogador","id","atletaId"]);
+  const itemCpf = val(item,["cpf","cpfJogador","documento"]);
+  const itemNome = n(val(item,["nome","jogador","nomeJogador","atleta"]));
 
   return (
     (jogadorId && itemId && jogadorId === itemId) ||
@@ -426,49 +477,33 @@ function mesmoJogador(jogador, item){
   );
 }
 
-function calcularStats(jogador){
-  let jogosCount = Number(val(jogador,["jogos","jogosDisputados"],0));
-  let gols = Number(val(jogador,["gols"],0));
-  let assistencias = Number(val(jogador,["assistencias"],0));
-  let amarelos = Number(val(jogador,["amarelos","cartoesAmarelos"],0));
-  let vermelhos = Number(val(jogador,["vermelhos","cartoesVermelhos"],0));
-
-  sumulas.forEach(s=>{
-    const escalacao = [
-      ...(val(s,["escalacao"],[])),
-      ...(val(s,["jogadores"],[])),
-      ...(s.timeA?.jogadores || []),
-      ...(s.timeB?.jogadores || [])
-    ];
-
-    if(escalacao.some(p=>mesmoJogador(jogador,p))){
-      jogosCount++;
-    }
-
-    const eventos = [
-      ...(val(s,["eventos"],[])),
-      ...(val(s,["gols"],[])),
-      ...(val(s,["cartoes"],[])
-    ];
-
-    eventos.forEach(ev=>{
-      if(!mesmoJogador(jogador,ev)) return;
-
-      const tipo = n(val(ev,["tipo","evento","acao"]));
-
-      if(tipo.includes("gol")) gols++;
-      if(tipo.includes("assist")) assistencias++;
-      if(tipo.includes("amarelo")) amarelos++;
-      if(tipo.includes("vermelho")) vermelhos++;
-    });
-  });
-
-  return { jogosCount, gols, assistencias, amarelos, vermelhos };
+function nomeJogador(j){
+  return val(j,["nome","nomeCompleto","jogador"],"Sem nome");
 }
 
-function getCategoriaJogador(jogador){
-  const catUnica = val(jogador,["categoria"]);
-  const cats = val(jogador,["categorias"],[]);
+function fotoJogador(j){
+  return val(j,["foto","imagem","fotoUrl","avatar"],"logo-liga.jfif");
+}
+
+function timeJogador(j){
+  return val(j,["time","timeNome","nomeTime","equipe"],"-");
+}
+
+function posicaoJogador(j){
+  return val(j,["posicao","função","funcao"],"-");
+}
+
+function numeroCamisa(j){
+  return val(j,["numero","camisa","numeroCamisa"],"-");
+}
+
+function statusJogador(j){
+  return n(val(j,["status"],"pendente"));
+}
+
+function categoriaJogador(j){
+  const catUnica = val(j,["categoria","categoriaNome"]);
+  const cats = val(j,["categorias"],[]);
 
   if(catUnica) return catUnica;
 
@@ -479,9 +514,57 @@ function getCategoriaJogador(jogador){
   return "Sem categoria";
 }
 
+function categoriasJogador(j){
+  const catUnica = val(j,["categoria","categoriaNome"]);
+  const cats = val(j,["categorias"],[]);
+
+  if(Array.isArray(cats) && cats.length) return cats;
+  if(catUnica) return [catUnica];
+
+  return ["Sem categoria"];
+}
+
+function instagramJogador(j){
+  return val(j,["instagram","insta","linkInstagram"],"");
+}
+
+function facebookJogador(j){
+  return val(j,["facebook","face","linkFacebook"],"");
+}
+
+function temDocumento(j){
+  return !!val(j,["cpf","cpfJogador","documento"],"");
+}
+
+function linkRede(valor,tipo){
+  if(!valor) return "";
+
+  let v = String(valor).trim();
+
+  if(v.startsWith("http://") || v.startsWith("https://")){
+    return v;
+  }
+
+  v = v.replace("@","");
+
+  if(tipo === "instagram"){
+    return `https://instagram.com/${v}`;
+  }
+
+  if(tipo === "facebook"){
+    return `https://facebook.com/${v}`;
+  }
+
+  return "#";
+}
+
 function getCampSelecionado(){
   const id = document.getElementById("filtroCampeonato").value;
   return campeonatos.find(c => c.id === id);
+}
+
+function nomeCampeonato(c){
+  return val(c,["nome","campeonato","titulo","nomeCampeonato"],"");
 }
 
 function jogoDoCamp(jogo, camp){
@@ -489,9 +572,156 @@ function jogoDoCamp(jogo, camp){
 
   const campIdJogo = val(jogo,["campeonatoId","idCampeonato"]);
   const campNomeJogo = val(jogo,["campeonato","nomeCampeonato"]);
-  const campNome = val(camp,["nome","campeonato","titulo"]);
+  const campNome = nomeCampeonato(camp);
 
   return campIdJogo === camp.id || n(campNomeJogo) === n(campNome);
+}
+
+function timeA(j){
+  if(j.timeA && typeof j.timeA === "object") return val(j.timeA,["nome","timeNome"],"");
+  return val(j,["timeA","mandante","timeMandante","nomeTimeA","mandanteNome"],"");
+}
+
+function timeB(j){
+  if(j.timeB && typeof j.timeB === "object") return val(j.timeB,["nome","timeNome"],"");
+  return val(j,["timeB","visitante","timeVisitante","nomeTimeB","visitanteNome"],"");
+}
+
+function placarA(j){
+  if(j.placar && typeof j.placar === "object"){
+    return numero(j.placar.A ?? j.placar.a ?? j.placar.mandante ?? 0);
+  }
+  return numero(val(j,["golsA","placarA","golsMandante","mandanteGols"],0));
+}
+
+function placarB(j){
+  if(j.placar && typeof j.placar === "object"){
+    return numero(j.placar.B ?? j.placar.b ?? j.placar.visitante ?? 0);
+  }
+  return numero(val(j,["golsB","placarB","golsVisitante","visitanteGols"],0));
+}
+
+function jogoFinalizado(j){
+  return (
+    j.status === "finalizado" ||
+    j.finalizado === true ||
+    j.sumulaFinalizada === true
+  );
+}
+
+function calcularStats(jogador){
+  let jogosCount = numero(val(jogador,["jogos","jogosDisputados"],0));
+  let participacoesSumula = 0;
+  let gols = numero(val(jogador,["gols"],0));
+  let assistencias = numero(val(jogador,["assistencias"],0));
+  let amarelos = numero(val(jogador,["amarelos","cartoesAmarelos"],0));
+  let vermelhos = numero(val(jogador,["vermelhos","cartoesVermelhos"],0));
+  let vitorias = 0;
+  let empates = 0;
+  let derrotas = 0;
+  let golsProTime = 0;
+  let golsContraTime = 0;
+
+  const nomeTime = n(timeJogador(jogador));
+
+  sumulas.forEach(s=>{
+    const escalacao = [
+      ...(val(s,["escalacao"],[])),
+      ...(val(s,["jogadores"],[])),
+      ...(s.timeA?.jogadores || []),
+      ...(s.timeB?.jogadores || []),
+      ...(s.mandante?.jogadores || []),
+      ...(s.visitante?.jogadores || [])
+    ];
+
+    const participou = escalacao.some(p=>mesmoJogador(jogador,p));
+
+    if(participou){
+      participacoesSumula++;
+    }
+
+    const eventos = [
+      ...(val(s,["eventos"],[])),
+      ...(val(s,["gols"],[])),
+      ...(val(s,["cartoes"],[])),
+      ...(val(s,["assistencias"],[]))
+    ];
+
+    eventos.forEach(ev=>{
+      if(!mesmoJogador(jogador,ev)) return;
+
+      const tipo = n(val(ev,["tipo","evento","acao","categoria"]));
+
+      if(tipo.includes("gol") && !tipo.includes("contra")) gols++;
+      if(tipo.includes("assist")) assistencias++;
+      if(tipo.includes("amarelo")) amarelos++;
+      if(tipo.includes("vermelho")) vermelhos++;
+    });
+  });
+
+  jogos.forEach(j=>{
+    const a = n(timeA(j));
+    const b = n(timeB(j));
+
+    if(nomeTime && (a === nomeTime || b === nomeTime)){
+      const finalizado = jogoFinalizado(j) || sumulas.some(s => s.jogoId === j.id && n(s.status) === "finalizado");
+
+      if(finalizado){
+        const ga = placarA(j);
+        const gb = placarB(j);
+
+        if(a === nomeTime){
+          golsProTime += ga;
+          golsContraTime += gb;
+
+          if(ga > gb) vitorias++;
+          else if(ga === gb) empates++;
+          else derrotas++;
+        }
+
+        if(b === nomeTime){
+          golsProTime += gb;
+          golsContraTime += ga;
+
+          if(gb > ga) vitorias++;
+          else if(gb === ga) empates++;
+          else derrotas++;
+        }
+      }
+    }
+  });
+
+  jogosCount = Math.max(jogosCount, participacoesSumula);
+
+  const totalResultados = vitorias + empates + derrotas;
+  const pontos = (vitorias * 3) + empates;
+  const aproveitamento = totalResultados ? Math.round((pontos / (totalResultados * 3)) * 100) : 0;
+  const mediaGols = jogosCount ? (gols / jogosCount).toFixed(2) : "0.00";
+  const saldoTime = golsProTime - golsContraTime;
+
+  const suspenso =
+    val(jogador,["suspenso"],false) === true ||
+    vermelhos > 0 ||
+    amarelos >= 3;
+
+  return {
+    jogosCount,
+    participacoesSumula,
+    gols,
+    assistencias,
+    amarelos,
+    vermelhos,
+    vitorias,
+    empates,
+    derrotas,
+    golsProTime,
+    golsContraTime,
+    saldoTime,
+    pontos,
+    aproveitamento,
+    mediaGols,
+    suspenso
+  };
 }
 
 function preencherCampeonatos(){
@@ -500,11 +730,11 @@ function preencherCampeonatos(){
   select.innerHTML = `<option value="">Todos os campeonatos</option>`;
 
   campeonatos
-    .sort((a,b)=>val(a,["nome","campeonato","titulo"]).localeCompare(val(b,["nome","campeonato","titulo"]),"pt-BR"))
+    .sort((a,b)=>nomeCampeonato(a).localeCompare(nomeCampeonato(b),"pt-BR"))
     .forEach(c=>{
       select.innerHTML += `
         <option value="${c.id}">
-          ${val(c,["nome","campeonato","titulo"],"-")}
+          ${nomeCampeonato(c) || "-"}
         </option>
       `;
     });
@@ -515,14 +745,9 @@ function preencherCategorias(){
   const categorias = new Set();
 
   jogadores.forEach(j=>{
-    const catUnica = val(j,["categoria"]);
-    const cats = val(j,["categorias"],[]);
-
-    if(catUnica) categorias.add(catUnica);
-
-    if(Array.isArray(cats)){
-      cats.forEach(c=>categorias.add(c));
-    }
+    categoriasJogador(j).forEach(c=>{
+      if(c) categorias.add(c);
+    });
   });
 
   jogos.forEach(j=>{
@@ -550,24 +775,23 @@ function filtrarJogadores(){
       if(!jogoDoCamp(j,camp)) return;
       if(categoria && j.categoria && j.categoria !== categoria) return;
 
-      const timeA = val(j,["timeA","mandante","timeMandante","nomeTimeA"]);
-      const timeB = val(j,["timeB","visitante","timeVisitante","nomeTimeB"]);
+      const a = timeA(j);
+      const b = timeB(j);
 
-      if(timeA) timesDoCampeonato.add(n(timeA));
-      if(timeB) timesDoCampeonato.add(n(timeB));
+      if(a) timesDoCampeonato.add(n(a));
+      if(b) timesDoCampeonato.add(n(b));
     });
   }
 
   return jogadores.filter(j=>{
-    const nome = val(j,["nome"]);
-    const time = val(j,["time","timeNome","nomeTime"]);
-    const posicao = val(j,["posicao"]);
-    const cpf = val(j,["cpf"]);
+    const nome = nomeJogador(j);
+    const time = timeJogador(j);
+    const posicao = posicaoJogador(j);
 
     if(camp){
       const jogadorCampId = val(j,["campeonatoId","idCampeonato"]);
       const jogadorCampNome = val(j,["campeonato","nomeCampeonato"]);
-      const campNome = val(camp,["nome","campeonato","titulo"]);
+      const campNome = nomeCampeonato(camp);
 
       const pertencePorCamp =
         jogadorCampId === camp.id ||
@@ -580,28 +804,19 @@ function filtrarJogadores(){
       if(!pertencePorCamp && !pertencePorTime) return false;
     }
 
-    if(categoria){
-      const cats = val(j,["categorias"],[]);
-      const catUnica = val(j,["categoria"]);
-
-      if(Array.isArray(cats) && cats.length){
-        if(!cats.includes(categoria)) return false;
-      }else if(catUnica && catUnica !== categoria){
-        return false;
-      }else if(!catUnica){
-        return false;
-      }
+    if(categoria && !categoriasJogador(j).includes(categoria)){
+      return false;
     }
 
     if(busca){
-      const textoBusca = n(`${nome} ${time} ${posicao} ${cpf}`);
+      const textoBusca = n(`${nome} ${time} ${posicao}`);
       if(!textoBusca.includes(busca)) return false;
     }
 
     return true;
   }).sort((a,b)=>{
-    const catA = getCategoriaJogador(a);
-    const catB = getCategoriaJogador(b);
+    const catA = categoriaJogador(a);
+    const catB = categoriaJogador(b);
 
     const comparaCategoria = String(catA).localeCompare(String(catB),"pt-BR");
 
@@ -609,13 +824,51 @@ function filtrarJogadores(){
       return comparaCategoria;
     }
 
-    return val(a,["nome"],"").localeCompare(val(b,["nome"],""),"pt-BR");
+    return nomeJogador(a).localeCompare(nomeJogador(b),"pt-BR");
   });
+}
+
+function statusClasse(status){
+  if(status === "aprovado") return "aprovado";
+  if(status === "reprovado") return "reprovado";
+  return "pendente";
+}
+
+function statusTexto(status){
+  if(status === "aprovado") return "Aprovado";
+  if(status === "reprovado") return "Reprovado";
+  return "Pendente";
+}
+
+function atualizarTopo(lista){
+  let gols = 0;
+  let assistencias = 0;
+  let cartoes = 0;
+
+  lista.forEach(j=>{
+    const s = calcularStats(j);
+    gols += s.gols;
+    assistencias += s.assistencias;
+    cartoes += s.amarelos + s.vermelhos;
+  });
+
+  document.getElementById("tagTotal").innerText = `Jogadores: ${lista.length}`;
+  document.getElementById("tagGols").innerText = `Gols: ${gols}`;
+  document.getElementById("tagAssistencias").innerText = `Assistências: ${assistencias}`;
+  document.getElementById("tagCartoes").innerText = `Cartões: ${cartoes}`;
+
+  const categoria = document.getElementById("filtroCategoria").value;
+  const camp = getCampSelecionado();
+
+  document.getElementById("tituloPagina").innerText =
+    `Jogadores${categoria ? " - " + categoria : ""}${camp ? " | " + nomeCampeonato(camp) : ""}`;
 }
 
 function render(){
   const box = document.getElementById("lista");
   const lista = filtrarJogadores();
+
+  atualizarTopo(lista);
 
   if(!jogadores.length){
     box.innerHTML = `<div class="vazio">Nenhum jogador cadastrado no Firebase.</div>`;
@@ -628,42 +881,131 @@ function render(){
   }
 
   box.innerHTML = lista.map(j=>{
-    const nome = val(j,["nome"],"-");
-    const numero = val(j,["numero","camisa"],"-");
-    const time = val(j,["time","timeNome","nomeTime"],"-");
-    const posicao = val(j,["posicao"],"-");
-    const foto = val(j,["foto","imagem","fotoUrl"],"logo-liga.jfif");
-    const cats = val(j,["categorias"],[]);
-    const catUnica = val(j,["categoria"]);
-
+    const nome = nomeJogador(j);
+    const numero = numeroCamisa(j);
+    const time = timeJogador(j);
+    const posicao = posicaoJogador(j);
+    const foto = fotoJogador(j);
+    const cats = categoriasJogador(j);
+    const status = statusJogador(j);
     const stats = calcularStats(j);
+    const instagram = instagramJogador(j);
+    const facebook = facebookJogador(j);
 
     return `
       <div class="card">
-        <div class="player">
-          <img src="${foto}" class="photo" onerror="this.src='logo-liga.jfif'">
 
-          <div class="info">
-            <div class="nome">${nome}</div>
-            <div class="sub">Nº ${numero}</div>
-            <div class="sub">Time: ${time}</div>
-            <div class="sub">Posição: ${posicao}</div>
+        <div>
+          <div class="card-top">
+            <div class="card-icon">
+              <i class="fa-solid fa-user-shield"></i>
+            </div>
 
-            <div class="stats">
-              Jogos: ${stats.jogosCount}<br>
-              Gols: ${stats.gols} |
-              Assist: ${stats.assistencias}<br>
-              Amarelos: ${stats.amarelos} |
-              Vermelhos: ${stats.vermelhos}
+            <div class="status ${statusClasse(status)}">
+              ${statusTexto(status)}
+            </div>
+          </div>
+
+          <div class="player">
+            <img src="${foto}" class="photo" onerror="this.src='logo-liga.jfif'">
+
+            <div class="info">
+              <div class="nome">${nome}</div>
+              <div class="sub">Nº ${numero} • ${posicao}</div>
+              <div class="sub">Time: ${time}</div>
             </div>
 
             <div class="tags">
               ${
-                Array.isArray(cats) && cats.length
-                ? cats.map(c=>`<span class="tag">${c}</span>`).join("")
-                : catUnica
-                  ? `<span class="tag">${catUnica}</span>`
-                  : `<span class="tag">Sem categoria</span>`
+                cats.map(c=>`<span class="tag">${c}</span>`).join("")
+              }
+
+              ${
+                temDocumento(j)
+                ? `<span class="tag ok"><i class="fa-solid fa-check"></i> Documento verificado</span>`
+                : `<span class="tag alerta">Documento pendente</span>`
+              }
+
+              ${
+                stats.suspenso
+                ? `<span class="tag red">Suspenso</span>`
+                : `<span class="tag ok">Liberado</span>`
+              }
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat">
+                <strong>${stats.jogosCount}</strong>
+                <span>JOGOS</span>
+              </div>
+
+              <div class="stat">
+                <strong>${stats.gols}</strong>
+                <span>GOLS</span>
+              </div>
+
+              <div class="stat">
+                <strong>${stats.assistencias}</strong>
+                <span>ASSIST.</span>
+              </div>
+
+              <div class="stat">
+                <strong>${stats.amarelos}</strong>
+                <span>AMAR.</span>
+              </div>
+
+              <div class="stat">
+                <strong>${stats.vermelhos}</strong>
+                <span>VERM.</span>
+              </div>
+
+              <div class="stat">
+                <strong>${stats.mediaGols}</strong>
+                <span>G/JOGO</span>
+              </div>
+
+              <div class="stat">
+                <strong>${stats.vitorias}</strong>
+                <span>VIT.</span>
+              </div>
+
+              <div class="stat">
+                <strong>${stats.empates}</strong>
+                <span>EMP.</span>
+              </div>
+
+              <div class="stat">
+                <strong>${stats.derrotas}</strong>
+                <span>DER.</span>
+              </div>
+
+              <div class="stat">
+                <strong>${stats.pontos}</strong>
+                <span>PTS TIME</span>
+              </div>
+
+              <div class="stat">
+                <strong>${stats.saldoTime}</strong>
+                <span>SALDO</span>
+              </div>
+
+              <div class="stat">
+                <strong>${stats.aproveitamento}%</strong>
+                <span>APROV.</span>
+              </div>
+            </div>
+
+            <div class="redes">
+              ${
+                instagram
+                ? `<a class="rede" href="${linkRede(instagram,"instagram")}" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>`
+                : ""
+              }
+
+              ${
+                facebook
+                ? `<a class="rede" href="${linkRede(facebook,"facebook")}" target="_blank" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>`
+                : ""
               }
             </div>
           </div>
@@ -671,7 +1013,7 @@ function render(){
 
         <div class="actions">
           <a class="btn-ver" href="jogador-publico.html?id=${j.id}">
-            <i class="fa-solid fa-eye"></i> Ver Jogador
+            <i class="fa-solid fa-eye"></i> Ver Perfil Completo
           </a>
         </div>
       </div>
