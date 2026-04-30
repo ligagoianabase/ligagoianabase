@@ -109,6 +109,7 @@ img{
   flex-wrap:nowrap;
   overflow:hidden;
 }
+
 .menu a{
   color:#fff;
   font-weight:900;
@@ -185,6 +186,7 @@ img{
 .exemplo-bar strong{
   color:var(--gold);
 }
+
 .btn-exemplo{
   padding:10px 14px;
   border-radius:10px;
@@ -210,7 +212,8 @@ img{
   margin-bottom:14px;
 }
 
-input, select{
+input,
+select{
   width:100%;
   padding:12px;
   border-radius:10px;
@@ -220,7 +223,8 @@ input, select{
   color:#111;
 }
 
-input:focus, select:focus{
+input:focus,
+select:focus{
   outline:2px solid rgba(247,198,0,.55);
 }
 
@@ -289,6 +293,7 @@ input:focus, select:focus{
   border-radius:999px;
   font-size:11px;
 }
+
 .stats{
   font-size:12px;
   color:var(--muted);
@@ -307,6 +312,7 @@ input:focus, select:focus{
   font-size:12px;
   background:linear-gradient(135deg, var(--gold), var(--gold2));
   color:#111;
+  white-space:nowrap;
 }
 
 /* VAZIO */
@@ -323,6 +329,21 @@ input:focus, select:focus{
 @media(max-width:900px){
   .filtros{
     grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:700px){
+  .card{
+    flex-direction:column;
+  }
+
+  .actions{
+    justify-content:flex-start;
+  }
+
+  .btn-ver{
+    width:100%;
+    text-align:center;
   }
 }
 
@@ -367,23 +388,22 @@ input:focus, select:focus{
         <a href="tecnicos.html">Técnicos</a>
         <a href="jogadores.html" class="ativo">Jogadores</a>
         <a href="arbitros.html">Árbitros</a>
-        <a href="assistentes.html">Assistente</a>
-        <a href="sumula-publica.html">Súmula</a>
+        <a href="assistente.html">Assistente</a>
+        <a href="sumulas.html">Súmula</a>
         <a href="noticias.html">Notícias</a>
         <a href="login.html">Login</a>
       </nav>
     </div>
   </div>
 </header>
+
 <main class="wrap container">
 
-  <!-- HERO -->
   <section class="hero">
     <h2>Jogadores</h2>
-    <p>Visualize atletas por campeonato, categoria e desempenho completo.</p>
+    <p>Visualize atletas por campeonato, categoria, time e desempenho completo.</p>
   </section>
 
-  <!-- EXEMPLO -->
   <div class="exemplo-bar">
     <span>
       <strong>Modo exemplo:</strong> Copa do Mundo 2002 (Brasil x Alemanha)
@@ -391,37 +411,69 @@ input:focus, select:focus{
 
     <div>
       <button class="btn-exemplo" onclick="ativarExemplo()">
-        Ativar exemplo
+        <i class="fa-solid fa-play"></i> Ativar exemplo
       </button>
 
       <button class="btn-exemplo danger" onclick="removerExemplo()">
-        Remover
+        <i class="fa-solid fa-trash"></i> Remover
       </button>
     </div>
   </div>
 
-  <!-- FILTROS -->
   <div class="filtros">
-    <input id="busca" placeholder="Buscar jogador...">
+    <input id="busca" placeholder="Buscar jogador, time ou posição...">
 
-    <select id="filtroCampeonato"></select>
+    <select id="filtroCampeonato">
+      <option value="">Carregando campeonatos...</option>
+    </select>
 
-    <select id="filtroCategoria"></select>
+    <select id="filtroCategoria">
+      <option value="">Todas categorias</option>
+    </select>
   </div>
 
-  <!-- LISTA -->
   <div class="lista" id="lista"></div>
 
 </main>
+
 <script type="module">
 import { db } from "./firebase.js";
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 let jogadores = [];
 let jogos = [];
 let campeonatos = [];
+let sumulas = [];
 
-/* UTIL */
+const jogadoresExemplo = [
+  { id:"jogador-exemplo-1", nome:"Ronaldo", time:"Brasil", numero:9, gols:8, posicao:"Atacante", categorias:["Seleção Principal"], jogos:1, assistencias:0, amarelos:0, vermelhos:0, foto:"logo-liga.jfif", exemplo:true },
+  { id:"jogador-exemplo-2", nome:"Rivaldo", time:"Brasil", numero:10, gols:5, posicao:"Meia", categorias:["Seleção Principal"], jogos:1, assistencias:0, amarelos:0, vermelhos:0, foto:"logo-liga.jfif", exemplo:true },
+  { id:"jogador-exemplo-3", nome:"Ronaldinho", time:"Brasil", numero:11, gols:2, posicao:"Meia", categorias:["Seleção Principal"], jogos:1, assistencias:0, amarelos:0, vermelhos:0, foto:"logo-liga.jfif", exemplo:true },
+  { id:"jogador-exemplo-4", nome:"Cafu", time:"Brasil", numero:2, gols:0, posicao:"Lateral", categorias:["Seleção Principal"], jogos:1, assistencias:0, amarelos:0, vermelhos:0, foto:"logo-liga.jfif", exemplo:true },
+  { id:"jogador-exemplo-5", nome:"Roberto Carlos", time:"Brasil", numero:6, gols:1, posicao:"Lateral", categorias:["Seleção Principal"], jogos:1, assistencias:0, amarelos:0, vermelhos:0, foto:"logo-liga.jfif", exemplo:true },
+  { id:"jogador-exemplo-6", nome:"Klose", time:"Alemanha", numero:11, gols:5, posicao:"Atacante", categorias:["Seleção Principal"], jogos:1, assistencias:0, amarelos:0, vermelhos:0, foto:"logo-liga.jfif", exemplo:true },
+  { id:"jogador-exemplo-7", nome:"Oliver Kahn", time:"Alemanha", numero:1, gols:0, posicao:"Goleiro", categorias:["Seleção Principal"], jogos:1, assistencias:0, amarelos:0, vermelhos:0, foto:"logo-liga.jfif", exemplo:true }
+];
+
+const jogoExemplo = {
+  id:"final-copa-2002",
+  campeonatoId:"copa-mundo-2002",
+  campeonato:"Copa do Mundo FIFA 2002",
+  categoria:"Seleção Principal",
+  timeA:"Brasil",
+  timeB:"Alemanha",
+  status:"finalizado"
+};
+
+const campeonatoExemplo = {
+  id:"copa-mundo-2002",
+  nome:"Copa do Mundo FIFA 2002",
+  categorias:["Seleção Principal"]
+};
+
 function n(txt){
   return String(txt || "")
     .toLowerCase()
@@ -438,255 +490,75 @@ function val(obj, chaves, f=""){
   return f;
 }
 
-/* EXEMPLO */
-const jogadoresExemplo = [
-  { nome:"Ronaldo", time:"Brasil", numero:9, gols:8, posicao:"Atacante" },
-  { nome:"Rivaldo", time:"Brasil", numero:10, gols:5, posicao:"Meia" },
-  { nome:"Ronaldinho", time:"Brasil", numero:11, gols:2, posicao:"Meia" },
-  { nome:"Cafu", time:"Brasil", numero:2, gols:0, posicao:"Lateral" },
-  { nome:"Roberto Carlos", time:"Brasil", numero:6, gols:1, posicao:"Lateral" },
-  { nome:"Klose", time:"Alemanha", numero:11, gols:5, posicao:"Atacante" },
-  { nome:"Oliver Kahn", time:"Alemanha", numero:1, gols:0, posicao:"Goleiro" }
-];
+function mesmoJogador(jogador, item){
+  const jogadorId = val(jogador,["id"]);
+  const jogadorCpf = val(jogador,["cpf"]);
+  const jogadorNome = n(val(jogador,["nome"]));
 
-let modoExemplo = false;
+  const itemId = val(item,["jogadorId","idJogador","id"]);
+  const itemCpf = val(item,["cpf"]);
+  const itemNome = n(val(item,["nome","jogador","nomeJogador"]));
 
-window.ativarExemplo = function(){
-  modoExemplo = true;
-  render();
-};
+  return (
+    (jogadorId && itemId && jogadorId === itemId) ||
+    (jogadorCpf && itemCpf && jogadorCpf === itemCpf) ||
+    (jogadorNome && itemNome && jogadorNome === itemNome)
+  );
+}
 
-window.removerExemplo = function(){
-  modoExemplo = false;
-  render();
-};
-/* FILTROS */
+function calcularStats(jogador){
+  let jogosCount = Number(val(jogador,["jogos","jogosDisputados"],0));
+  let gols = Number(val(jogador,["gols"],0));
+  let assistencias = Number(val(jogador,["assistencias"],0));
+  let amarelos = Number(val(jogador,["amarelos","cartoesAmarelos"],0));
+  let vermelhos = Number(val(jogador,["vermelhos","cartoesVermelhos"],0));
+
+  sumulas.forEach(s=>{
+    const escalacao = [
+      ...(val(s,["escalacao"],[])),
+      ...(val(s,["jogadores"],[])),
+      ...(s.timeA?.jogadores || []),
+      ...(s.timeB?.jogadores || [])
+    ];
+
+    if(escalacao.some(p=>mesmoJogador(jogador,p))){
+      jogosCount++;
+    }
+
+    const eventos = [
+      ...(val(s,["eventos"],[])),
+      ...(val(s,["gols"],[])),
+      ...(val(s,["cartoes"],[])
+    ];
+
+    eventos.forEach(ev=>{
+      if(!mesmoJogador(jogador,ev)) return;
+
+      const tipo = n(val(ev,["tipo","evento","acao"]));
+
+      if(tipo.includes("gol")) gols++;
+      if(tipo.includes("assist")) assistencias++;
+      if(tipo.includes("amarelo")) amarelos++;
+      if(tipo.includes("vermelho")) vermelhos++;
+    });
+  });
+
+  return { jogosCount, gols, assistencias, amarelos, vermelhos };
+}
+
 function getCampSelecionado(){
   const id = document.getElementById("filtroCampeonato").value;
-  return campeonatos.find(c => val(c,["id"]) === id);
+  return campeonatos.find(c => c.id === id);
 }
 
-function getFiltro(){
-  return {
-    camp:getCampSelecionado(),
-    categoria:document.getElementById("filtroCategoria").value,
-    busca:n(document.getElementById("buscaJogador").value)
-  };
-}
-
-function jogoDoCamp(j, camp){
+function jogoDoCamp(jogo, camp){
   if(!camp) return false;
 
-  const id = val(j,["campeonatoId"]);
-  const nome = val(j,["campeonato","nomeCampeonato"]);
+  const campIdJogo = val(jogo,["campeonatoId","idCampeonato"]);
+  const campNomeJogo = val(jogo,["campeonato","nomeCampeonato"]);
+  const campNome = val(camp,["nome","campeonato","titulo"]);
 
-  return id === camp.id || n(nome) === n(camp.nome);
-}
-
-/* MAPA TIMES */
-function mapaTimes(){
-  const { camp, categoria } = getFiltro();
-  const mapa = new Set();
-
-  jogos.forEach(j=>{
-    if(!jogoDoCamp(j,camp)) return;
-    if(categoria && j.categoria !== categoria) return;
-
-    if(j.timeA) mapa.add(n(j.timeA));
-    if(j.timeB) mapa.add(n(j.timeB));
-  });
-
-  return mapa;
-}
-/* FILTRAR JOGADORES */
-function filtrarJogadores(){
-  const { camp, categoria, busca } = getFiltro();
-  const mapa = mapaTimes();
-
-  if(!camp) return [];
-
-  return jogadores.filter(j=>{
-    const nome = val(j,["nome"]);
-    const time = val(j,["time"]);
-    const pos = val(j,["posicao"]);
-
-    // participa no campeonato
-    if(!mapa.has(n(time))) return false;
-
-    // categoria
-    if(categoria){
-      const cats = val(j,["categorias"],[]);
-      if(Array.isArray(cats) && cats.length){
-        if(!cats.includes(categoria)) return false;
-      }
-    }
-
-    // busca
-    if(busca){
-      if(
-        !n(nome).includes(busca) &&
-        !n(time).includes(busca) &&
-        !n(pos).includes(busca)
-      ) return false;
-    }
-
-    return true;
-  }).sort((a,b)=>{
-    const na = Number(val(a,["numero"],999));
-    const nb = Number(val(b,["numero"],999));
-    if(na !== nb) return na - nb;
-    return val(a,["nome"]).localeCompare(val(b,["nome"]),"pt-BR");
-  });
-}
-/* RENDER */
-function render(){
-  const box = document.getElementById("listaJogadores");
-  const lista = filtrarJogadores();
-
-  if(!document.getElementById("filtroCampeonato").value){
-    box.innerHTML = `<div class="vazio">Selecione um campeonato.</div>`;
-    return;
-  }
-
-  if(!lista.length){
-    box.innerHTML = `<div class="vazio">Nenhum jogador encontrado.</div>`;
-    return;
-  }
-
-  box.innerHTML = lista.map(j=>{
-    const nome = val(j,["nome"]);
-    const numero = val(j,["numero"],"-");
-    const time = val(j,["time"]);
-    const pos = val(j,["posicao"]);
-    const foto = val(j,["foto","imagem"],"logo-liga.jfif");
-
-    const jogosJ = Number(val(j,["jogos"],0));
-    const gols = Number(val(j,["gols"],0));
-    const ast = Number(val(j,["assistencias"],0));
-    const ama = Number(val(j,["amarelos"],0));
-    const ver = Number(val(j,["vermelhos"],0));
-
-    const cats = val(j,["categorias"],[]);
-
-    return `
-    <div class="card">
-      <div class="player">
-        <img src="${foto}" class="photo" onerror="this.src='logo-liga.jfif'">
-
-        <div class="player-info">
-          <div class="nome-jogador">
-            ${numero} - ${nome}
-          </div>
-
-          <small>Time: ${time || "-"}</small>
-          <small>Posição: ${pos || "-"}</small>
-
-          <small>
-            Jogos: ${jogosJ} |
-            Gols: ${gols} |
-            Assist: ${ast}
-          </small>
-
-          <small>
-            Amarelos: ${ama} |
-            Vermelhos: ${ver}
-          </small>
-
-          <div class="tags">
-            ${
-              Array.isArray(cats) && cats.length
-              ? cats.map(c=>`<span class="tag">${c}</span>`).join("")
-              : `<span class="tag">Sem categoria</span>`
-            }
-          </div>
-        </div>
-      </div>
-
-      <div class="actions">
-        <a class="btn-acao btn-ver" href="jogador-publico.html?id=${j.id}">
-          <i class="fa-solid fa-eye"></i> Ver Jogador
-        </a>
-      </div>
-    </div>
-    `;
-  }).join("");
-}
-async function carregarDados(){
-  const box = document.getElementById("lista");
-  box.innerHTML = `<div class="vazio">Carregando jogadores...</div>`;
-
-  try{
-    const [snapJogadores, snapJogos, snapCampeonatos] = await Promise.all([
-      getDocs(collection(db, "jogadores")),
-      getDocs(collection(db, "jogos")),
-      getDocs(collection(db, "campeonatos"))
-    ]);
-
-    jogadores = [];
-    jogos = [];
-    campeonatos = [];
-
-    snapJogadores.forEach(docSnap=>{
-      jogadores.push({ id:docSnap.id, ...docSnap.data() });
-    });
-
-    snapJogos.forEach(docSnap=>{
-      jogos.push({ id:docSnap.id, ...docSnap.data() });
-    });
-
-    snapCampeonatos.forEach(docSnap=>{
-      campeonatos.push({ id:docSnap.id, ...docSnap.data() });
-    });
-
-  }catch(erro){
-    console.error(erro);
-    jogadores = [];
-    jogos = [];
-    campeonatos = [];
-  }
-
-  if(!campeonatos.length){
-    campeonatos = [
-      {
-        id:"copa-mundo-2002",
-        nome:"Copa do Mundo FIFA 2002",
-        categorias:["Seleção Principal"]
-      }
-    ];
-  }
-
-  if(!jogos.length){
-    jogos = [
-      {
-        id:"final-copa-2002",
-        campeonatoId:"copa-mundo-2002",
-        campeonato:"Copa do Mundo FIFA 2002",
-        categoria:"Seleção Principal",
-        timeA:"Brasil",
-        timeB:"Alemanha",
-        status:"finalizado"
-      }
-    ];
-  }
-
-  if(!jogadores.length){
-    jogadores = jogadoresExemplo.map((j,index)=>({
-      id:`jogador-exemplo-${index + 1}`,
-      ...j,
-      categorias:["Seleção Principal"],
-      jogos:1,
-      assistencias:0,
-      amarelos:0,
-      vermelhos:0,
-      foto:"logo-liga.jfif",
-      exemplo:true
-    }));
-  }
-
-  preencherCampeonatos();
-  preencherCategorias();
-  selecionarPadrao();
-  renderFinal();
+  return campIdJogo === camp.id || n(campNomeJogo) === n(campNome);
 }
 
 function preencherCampeonatos(){
@@ -695,7 +567,7 @@ function preencherCampeonatos(){
   select.innerHTML = `<option value="">Selecione o campeonato</option>`;
 
   campeonatos
-    .sort((a,b)=>val(a,["nome"]).localeCompare(val(b,["nome"]),"pt-BR"))
+    .sort((a,b)=>val(a,["nome","campeonato","titulo"]).localeCompare(val(b,["nome","campeonato","titulo"]),"pt-BR"))
     .forEach(c=>{
       select.innerHTML += `
         <option value="${c.id}">
@@ -711,25 +583,29 @@ function preencherCategorias(){
 
   select.innerHTML = `<option value="">Todas categorias</option>`;
 
-  if(!camp) return;
-
   const categorias = new Set();
 
-  const catsCamp = val(camp,["categorias"],[]);
-  if(Array.isArray(catsCamp)){
-    catsCamp.forEach(c=>categorias.add(c));
-  }
-
-  jogos.forEach(j=>{
-    if(jogoDoCamp(j,camp) && j.categoria){
-      categorias.add(j.categoria);
+  if(camp){
+    const catsCamp = val(camp,["categorias"],[]);
+    if(Array.isArray(catsCamp)){
+      catsCamp.forEach(c=>categorias.add(c));
     }
-  });
+
+    jogos.forEach(j=>{
+      if(jogoDoCamp(j,camp) && j.categoria){
+        categorias.add(j.categoria);
+      }
+    });
+  }
 
   jogadores.forEach(j=>{
     const cats = val(j,["categorias"],[]);
     if(Array.isArray(cats)){
       cats.forEach(c=>categorias.add(c));
+    }
+
+    if(j.categoria){
+      categorias.add(j.categoria);
     }
   });
 
@@ -742,65 +618,82 @@ function preencherCategorias(){
 
 function selecionarPadrao(){
   const selectCamp = document.getElementById("filtroCampeonato");
-  const camp2002 = campeonatos.find(c=>c.id === "copa-mundo-2002");
 
-  if(camp2002){
+  if(campeonatos.some(c=>c.id === "copa-mundo-2002")){
     selectCamp.value = "copa-mundo-2002";
-    preencherCategorias();
+  }else if(campeonatos.length){
+    selectCamp.value = campeonatos[0].id;
   }
 
+  preencherCategorias();
+
   const selectCat = document.getElementById("filtroCategoria");
+
   if([...selectCat.options].some(op=>op.value === "Seleção Principal")){
     selectCat.value = "Seleção Principal";
   }
 }
 
-function getFiltroFinal(){
-  return {
-    camp:getCampSelecionado(),
-    categoria:document.getElementById("filtroCategoria").value,
-    busca:n(document.getElementById("busca").value)
-  };
-}
-
-function filtrarJogadoresFinal(){
-  const { camp, categoria, busca } = getFiltroFinal();
+function filtrarJogadores(){
+  const camp = getCampSelecionado();
+  const categoria = document.getElementById("filtroCategoria").value;
+  const busca = n(document.getElementById("busca").value);
 
   if(!camp) return [];
 
-  const mapa = new Set();
+  const timesDoCampeonato = new Set();
 
   jogos.forEach(j=>{
     if(!jogoDoCamp(j,camp)) return;
     if(categoria && j.categoria !== categoria) return;
 
-    if(j.timeA) mapa.add(n(j.timeA));
-    if(j.timeB) mapa.add(n(j.timeB));
+    const timeA = val(j,["timeA","mandante","timeMandante","nomeTimeA"]);
+    const timeB = val(j,["timeB","visitante","timeVisitante","nomeTimeB"]);
+
+    if(timeA) timesDoCampeonato.add(n(timeA));
+    if(timeB) timesDoCampeonato.add(n(timeB));
   });
 
   return jogadores.filter(j=>{
     const nome = val(j,["nome"]);
-    const time = val(j,["time"]);
-    const pos = val(j,["posicao"]);
+    const time = val(j,["time","timeNome","nomeTime"]);
+    const posicao = val(j,["posicao"]);
+    const cpf = val(j,["cpf"]);
 
-    if(!mapa.has(n(time))) return false;
+    const jogadorCampId = val(j,["campeonatoId","idCampeonato"]);
+    const jogadorCampNome = val(j,["campeonato","nomeCampeonato"]);
+    const campNome = val(camp,["nome","campeonato","titulo"]);
+
+    const pertencePorCamp =
+      jogadorCampId === camp.id ||
+      n(jogadorCampNome) === n(campNome);
+
+    const pertencePorTime = timesDoCampeonato.size
+      ? timesDoCampeonato.has(n(time))
+      : true;
+
+    if(!pertencePorCamp && !pertencePorTime) return false;
 
     if(categoria){
       const cats = val(j,["categorias"],[]);
-      if(Array.isArray(cats) && cats.length && !cats.includes(categoria)){
+      const catUnica = val(j,["categoria"]);
+
+      if(Array.isArray(cats) && cats.length){
+        if(!cats.includes(categoria)) return false;
+      }else if(catUnica && catUnica !== categoria){
         return false;
       }
     }
 
     if(busca){
-      const texto = n(`${nome} ${time} ${pos}`);
-      if(!texto.includes(busca)) return false;
+      const textoBusca = n(`${nome} ${time} ${posicao} ${cpf}`);
+      if(!textoBusca.includes(busca)) return false;
     }
 
     return true;
   }).sort((a,b)=>{
-    const na = Number(val(a,["numero"],999));
-    const nb = Number(val(b,["numero"],999));
+    const na = Number(val(a,["numero","camisa"],999));
+    const nb = Number(val(b,["numero","camisa"],999));
 
     if(na !== nb) return na - nb;
 
@@ -808,10 +701,10 @@ function filtrarJogadoresFinal(){
   });
 }
 
-function renderFinal(){
+function render(){
   const box = document.getElementById("lista");
   const campId = document.getElementById("filtroCampeonato").value;
-  const lista = filtrarJogadoresFinal();
+  const lista = filtrarJogadores();
 
   if(!campId){
     box.innerHTML = `<div class="vazio">Selecione um campeonato.</div>`;
@@ -825,18 +718,14 @@ function renderFinal(){
 
   box.innerHTML = lista.map(j=>{
     const nome = val(j,["nome"],"-");
-    const numero = val(j,["numero"],"-");
-    const time = val(j,["time"],"-");
-    const pos = val(j,["posicao"],"-");
-    const foto = val(j,["foto","imagem"],"logo-liga.jfif");
-
-    const jogosJ = Number(val(j,["jogos"],0));
-    const gols = Number(val(j,["gols"],0));
-    const ast = Number(val(j,["assistencias"],0));
-    const ama = Number(val(j,["amarelos"],0));
-    const ver = Number(val(j,["vermelhos"],0));
-
+    const numero = val(j,["numero","camisa"],"-");
+    const time = val(j,["time","timeNome","nomeTime"],"-");
+    const posicao = val(j,["posicao"],"-");
+    const foto = val(j,["foto","imagem","fotoUrl"],"logo-liga.jfif");
     const cats = val(j,["categorias"],[]);
+    const catUnica = val(j,["categoria"]);
+
+    const stats = calcularStats(j);
 
     return `
       <div class="card">
@@ -846,21 +735,23 @@ function renderFinal(){
           <div class="info">
             <div class="nome">${numero} - ${nome}</div>
             <div class="sub">Time: ${time}</div>
-            <div class="sub">Posição: ${pos}</div>
+            <div class="sub">Posição: ${posicao}</div>
 
             <div class="stats">
-              Jogos: ${jogosJ} |
-              Gols: ${gols} |
-              Assist: ${ast}<br>
-              Amarelos: ${ama} |
-              Vermelhos: ${ver}
+              Jogos: ${stats.jogosCount} |
+              Gols: ${stats.gols} |
+              Assist: ${stats.assistencias}<br>
+              Amarelos: ${stats.amarelos} |
+              Vermelhos: ${stats.vermelhos}
             </div>
 
             <div class="tags">
               ${
                 Array.isArray(cats) && cats.length
                 ? cats.map(c=>`<span class="tag">${c}</span>`).join("")
-                : `<span class="tag">Sem categoria</span>`
+                : catUnica
+                  ? `<span class="tag">${catUnica}</span>`
+                  : `<span class="tag">Sem categoria</span>`
               }
 
               ${j.exemplo ? `<span class="tag">Exemplo</span>` : `<span class="tag">Firebase</span>`}
@@ -878,69 +769,91 @@ function renderFinal(){
   }).join("");
 }
 
-window.ativarExemplo = function(){
-  const jaTem = jogadores.some(j=>j.exemplo);
+async function carregarColecao(nome){
+  try{
+    const snap = await getDocs(collection(db, nome));
+    const dados = [];
 
-  if(!jaTem){
-    jogadores = [
-      ...jogadoresExemplo.map((j,index)=>({
-        id:`jogador-exemplo-${index + 1}`,
-        ...j,
-        categorias:["Seleção Principal"],
-        jogos:1,
-        assistencias:0,
-        amarelos:0,
-        vermelhos:0,
-        foto:"logo-liga.jfif",
-        exemplo:true
-      })),
-      ...jogadores
-    ];
+    snap.forEach(docSnap=>{
+      dados.push({
+        id:docSnap.id,
+        ...docSnap.data()
+      });
+    });
+
+    return dados;
+  }catch(e){
+    console.warn("Erro ao carregar coleção:", nome, e);
+    return [];
+  }
+}
+
+async function carregarDados(){
+  const box = document.getElementById("lista");
+  box.innerHTML = `<div class="vazio">Carregando jogadores...</div>`;
+
+  jogadores = await carregarColecao("jogadores");
+  jogos = await carregarColecao("jogos");
+  campeonatos = await carregarColecao("campeonatos");
+  sumulas = await carregarColecao("sumulas");
+
+  if(!campeonatos.length){
+    campeonatos = [campeonatoExemplo];
   }
 
-  if(!campeonatos.some(c=>c.id === "copa-mundo-2002")){
-    campeonatos.unshift({
-      id:"copa-mundo-2002",
-      nome:"Copa do Mundo FIFA 2002",
-      categorias:["Seleção Principal"]
-    });
+  if(!jogos.length){
+    jogos = [jogoExemplo];
   }
 
-  if(!jogos.some(j=>j.id === "final-copa-2002")){
-    jogos.unshift({
-      id:"final-copa-2002",
-      campeonatoId:"copa-mundo-2002",
-      campeonato:"Copa do Mundo FIFA 2002",
-      categoria:"Seleção Principal",
-      timeA:"Brasil",
-      timeB:"Alemanha",
-      status:"finalizado"
-    });
+  if(!jogadores.length){
+    jogadores = [...jogadoresExemplo];
   }
 
   preencherCampeonatos();
   selecionarPadrao();
-  renderFinal();
+  render();
+}
+
+window.ativarExemplo = function(){
+  const temCamp = campeonatos.some(c=>c.id === campeonatoExemplo.id);
+  const temJogo = jogos.some(j=>j.id === jogoExemplo.id);
+  const temJogadores = jogadores.some(j=>j.exemplo);
+
+  if(!temCamp){
+    campeonatos.unshift(campeonatoExemplo);
+  }
+
+  if(!temJogo){
+    jogos.unshift(jogoExemplo);
+  }
+
+  if(!temJogadores){
+    jogadores = [...jogadoresExemplo, ...jogadores];
+  }
+
+  preencherCampeonatos();
+  selecionarPadrao();
+  render();
 };
 
 window.removerExemplo = function(){
   jogadores = jogadores.filter(j=>!j.exemplo);
-  jogos = jogos.filter(j=>j.id !== "final-copa-2002");
-  campeonatos = campeonatos.filter(c=>c.id !== "copa-mundo-2002");
+  jogos = jogos.filter(j=>j.id !== jogoExemplo.id);
+  campeonatos = campeonatos.filter(c=>c.id !== campeonatoExemplo.id);
 
   preencherCampeonatos();
-  preencherCategorias();
-  renderFinal();
+  selecionarPadrao();
+  render();
 };
 
-document.getElementById("busca").addEventListener("input", renderFinal);
+document.getElementById("busca").addEventListener("input", render);
 
 document.getElementById("filtroCampeonato").addEventListener("change", ()=>{
   preencherCategorias();
-  renderFinal();
+  render();
 });
 
-document.getElementById("filtroCategoria").addEventListener("change", renderFinal);
+document.getElementById("filtroCategoria").addEventListener("change", render);
 
 carregarDados();
 </script>
