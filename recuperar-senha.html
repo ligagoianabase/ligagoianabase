@@ -1,186 +1,106 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recuperar Senha - Liga Goiana</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body{
-      margin:0;
-      font-family:Arial, sans-serif;
-      background:linear-gradient(rgba(2,10,25,.75), rgba(2,10,25,.9)), url("fundo.png");
-      background-size:cover;
-      background-position:center;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:white;
-      padding:20px 0;
-    }
+<title>Recuperar Senha - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
-    .box{
-      width:100%;
-      max-width:420px;
-      background:rgba(3,16,34,.92);
-      border:1px solid rgba(255,230,0,.18);
-      border-radius:18px;
-      padding:28px;
-      box-shadow:0 12px 28px rgba(0,0,0,.35);
-    }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    h1{
-      margin:0 0 8px;
-      color:#ffe600;
-      text-align:center;
-      text-transform:uppercase;
-      font-size:28px;
-    }
-
-    p{
-      margin:0 0 20px;
-      text-align:center;
-      color:#dbe3ee;
-      line-height:1.5;
-    }
-
-    label{
-      display:block;
-      margin:12px 0 6px;
-      font-weight:bold;
-    }
-
-    input{
-      width:100%;
-      padding:12px;
-      border:none;
-      border-radius:10px;
-      box-sizing:border-box;
-      font-size:14px;
-    }
-
-    .btn-principal{
-      width:100%;
-      margin-top:18px;
-      padding:13px;
-      border:none;
-      border-radius:10px;
-      background:linear-gradient(to bottom, #fff04d, #ffd000);
-      color:#111;
-      font-weight:800;
-      font-size:15px;
-      cursor:pointer;
-    }
-
-    .btn-principal:hover{
-      filter:brightness(1.04);
-    }
-
-    .voltar{
-      display:block;
-      margin-top:14px;
-      text-align:center;
-      color:#ffe600;
-      font-weight:bold;
-      text-decoration:none;
-    }
-
-    .voltar:hover{
-      text-decoration:underline;
-    }
-
-    .msg{
-      margin-top:14px;
-      padding:12px;
-      border-radius:10px;
-      display:none;
-      font-weight:bold;
-      line-height:1.5;
-    }
-
-    .erro{
-      background:rgba(180,0,0,.22);
-      color:#ffb0b0;
-      border:1px solid rgba(255,120,120,.25);
-    }
-
-    .sucesso{
-      background:rgba(0,120,40,.22);
-      color:#b8ffd1;
-      border:1px solid rgba(120,255,170,.25);
-    }
-  </style>
+<style>
+/* pode manter o mesmo CSS do login.html */
+</style>
 </head>
+
 <body>
 
-  <div class="box">
-    <h1>Recuperar Senha</h1>
-    <p>Digite seu email para receber o link de redefinição de senha</p>
+<div class="box">
+  <img src="logo-liga.jfif" class="logo" onerror="this.style.display='none'">
 
-    <label for="email">Email</label>
-    <input type="email" id="email" placeholder="Digite seu email">
+  <h1>Recuperar Senha</h1>
+  <p>Digite seu email para receber o link de redefinição de senha.</p>
 
-    <button class="btn-principal" onclick="recuperarSenha()">Enviar link</button>
+  <label for="email">Email</label>
+  <input type="email" id="email" placeholder="Digite seu email">
 
-    <div id="msgErro" class="msg erro"></div>
-    <div id="msgSucesso" class="msg sucesso"></div>
+  <button class="btn-principal" id="btnRecuperar" onclick="recuperarSenha()">
+    Enviar link
+  </button>
 
-    <a href="login.html" class="voltar">← Voltar para o login</a>
-    <a href="index.html" class="voltar">← Voltar para o site</a>
+  <div id="msgErro" class="msg erro"></div>
+  <div id="msgSucesso" class="msg sucesso"></div>
+
+  <div class="links">
+    <a href="login.html">← Voltar para o login</a>
+    <a href="index.html">← Voltar para o site</a>
   </div>
+</div>
 
-  <script type="module">
-    import { auth } from "./firebase.js";
-    import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+<script type="module">
+import { auth } from "./firebase.js";
+import {
+  sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
-    const msgErro = document.getElementById("msgErro");
-    const msgSucesso = document.getElementById("msgSucesso");
+const msgErro = document.getElementById("msgErro");
+const msgSucesso = document.getElementById("msgSucesso");
+const btnRecuperar = document.getElementById("btnRecuperar");
 
-    function limparMensagens(){
-      msgErro.style.display = "none";
-      msgErro.innerText = "";
-      msgSucesso.style.display = "none";
-      msgSucesso.innerText = "";
+function limparMensagens(){
+  msgErro.style.display = "none";
+  msgErro.innerText = "";
+  msgSucesso.style.display = "none";
+  msgSucesso.innerText = "";
+}
+
+function mostrarErro(texto){
+  msgSucesso.style.display = "none";
+  msgErro.style.display = "block";
+  msgErro.innerText = texto;
+}
+
+function mostrarSucesso(texto){
+  msgErro.style.display = "none";
+  msgSucesso.style.display = "block";
+  msgSucesso.innerText = texto;
+}
+
+window.recuperarSenha = async function(){
+  limparMensagens();
+
+  const email = document.getElementById("email").value.trim().toLowerCase();
+
+  if(!email){
+    mostrarErro("Digite seu email.");
+    return;
+  }
+
+  btnRecuperar.disabled = true;
+  btnRecuperar.innerText = "Enviando...";
+
+  try{
+    await sendPasswordResetEmail(auth,email);
+
+    mostrarSucesso("Link de redefinição enviado para seu email.");
+  }catch(e){
+    if(e.code === "auth/invalid-email"){
+      mostrarErro("Email inválido.");
+    }else{
+      mostrarErro("Erro ao enviar o link. Verifique o email e tente novamente.");
     }
 
-    function mostrarErro(texto){
-      msgSucesso.style.display = "none";
-      msgErro.style.display = "block";
-      msgErro.innerText = texto;
-    }
+    btnRecuperar.disabled = false;
+    btnRecuperar.innerText = "Enviar link";
+  }
+};
 
-    function mostrarSucesso(texto){
-      msgErro.style.display = "none";
-      msgSucesso.style.display = "block";
-      msgSucesso.innerText = texto;
-    }
-
-    window.recuperarSenha = async function(){
-      limparMensagens();
-
-      const email = document.getElementById("email").value.trim().toLowerCase();
-
-      if(!email){
-        mostrarErro("Digite seu email.");
-        return;
-      }
-
-      try{
-        await sendPasswordResetEmail(auth, email);
-
-        mostrarSucesso("Link de redefinição enviado com sucesso para seu email.");
-      }catch(e){
-        if(e.code === "auth/invalid-email"){
-          mostrarErro("Email inválido.");
-        }else if(e.code === "auth/user-not-found"){
-          mostrarErro("Nenhum usuário encontrado com este email.");
-        }else{
-          mostrarErro("Erro ao enviar link: " + e.message);
-        }
-      }
-    };
-  </script>
+document.addEventListener("keydown",e=>{
+  if(e.key === "Enter"){
+    recuperarSenha();
+  }
+});
+</script>
 
 </body>
 </html>
