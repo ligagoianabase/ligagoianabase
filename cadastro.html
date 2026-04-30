@@ -1,403 +1,655 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro - Liga Goiana</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body{
-      margin:0;
-      font-family:Arial, sans-serif;
-      background:linear-gradient(rgba(2,10,25,.75), rgba(2,10,25,.9)), url("fundo.png");
-      background-size:cover;
-      background-position:center;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:white;
-      padding:20px 0;
-    }
+<title>Cadastro - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
-    .box{
-      width:100%;
-      max-width:460px;
-      background:rgba(3,16,34,.92);
-      border:1px solid rgba(255,230,0,.18);
-      border-radius:18px;
-      padding:28px;
-      box-shadow:0 12px 28px rgba(0,0,0,.35);
-    }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    h1{
-      margin:0 0 8px;
-      color:#ffe600;
-      text-align:center;
-      text-transform:uppercase;
-      font-size:28px;
-    }
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --red:#b42323;
+  --green:#1b5e20;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+}
 
-    p{
-      margin:0 0 20px;
-      text-align:center;
-      color:#dbe3ee;
-      line-height:1.5;
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-    label{
-      display:block;
-      margin:12px 0 6px;
-      font-weight:bold;
-    }
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
 
-    input, select{
-      width:100%;
-      padding:12px;
-      border:none;
-      border-radius:10px;
-      box-sizing:border-box;
-      font-size:14px;
-    }
+.box{
+  width:100%;
+  max-width:470px;
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.35);
+  border-radius:20px;
+  padding:28px;
+  box-shadow:var(--shadow);
+}
 
-    .senha-wrap{
-      position:relative;
-      width:100%;
-    }
+.logo{
+  width:82px;
+  height:82px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--gold);
+  margin:0 auto 14px;
+  background:#fff;
+}
 
-    .senha-wrap input{
-      padding-right:48px;
-    }
+h1{
+  color:var(--gold);
+  text-align:center;
+  font-size:28px;
+  font-weight:900;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
 
-    .toggle-senha{
-      position:absolute;
-      right:10px;
-      top:50%;
-      transform:translateY(-50%);
-      border:none;
-      background:none;
-      cursor:pointer;
-      color:#444;
-      font-size:18px;
-      padding:0;
-      width:auto;
-      margin:0;
-    }
+p{
+  color:var(--muted);
+  text-align:center;
+  font-size:14px;
+  line-height:1.5;
+  margin-bottom:20px;
+}
 
-    button{
-      width:100%;
-      margin-top:18px;
-      padding:13px;
-      border:none;
-      border-radius:10px;
-      background:linear-gradient(to bottom, #fff04d, #ffd000);
-      color:#111;
-      font-weight:800;
-      font-size:15px;
-      cursor:pointer;
-    }
+label{
+  display:block;
+  margin:12px 0 6px;
+  font-weight:900;
+  font-size:13px;
+  color:#fff;
+}
 
-    button:hover{
-      filter:brightness(1.04);
-    }
+input,
+select{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+}
 
-    .voltar{
-      display:block;
-      margin-top:14px;
-      text-align:center;
-      color:#ffe600;
-      font-weight:bold;
-      text-decoration:none;
-    }
+input:focus,
+select:focus{
+  outline:2px solid rgba(247,198,0,.65);
+}
 
-    .msg{
-      margin-top:14px;
-      padding:12px;
-      border-radius:10px;
-      display:none;
-      font-weight:bold;
-      line-height:1.5;
-    }
+.senha-wrap{
+  position:relative;
+}
 
-    .erro{
-      background:rgba(180,0,0,.22);
-      color:#ffb0b0;
-      border:1px solid rgba(255,120,120,.25);
-    }
+.senha-wrap input{
+  padding-right:48px;
+}
 
-    .sucesso{
-      background:rgba(0,120,40,.22);
-      color:#b8ffd1;
-      border:1px solid rgba(120,255,170,.25);
-    }
-  </style>
+.toggle-senha{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  background:transparent;
+  border:none;
+  color:#333;
+  font-size:18px;
+  cursor:pointer;
+}
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+.campos-extra{
+  display:none;
+  margin-top:8px;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);
+}
+
+.aviso{
+  margin-top:10px;
+  padding:10px;
+  border-radius:12px;
+  background:rgba(247,198,0,.12);
+  border:1px solid rgba(247,198,0,.25);
+  color:#ffe88a;
+  font-size:12px;
+  line-height:1.45;
+  font-weight:800;
+}
+
+.btn-principal{
+  width:100%;
+  margin-top:18px;
+  padding:13px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  font-weight:900;
+  font-size:15px;
+  cursor:pointer;
+}
+
+.btn-principal:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+
+.links{
+  margin-top:14px;
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  text-align:center;
+}
+
+.links a{
+  color:var(--gold);
+  font-weight:900;
+  font-size:13px;
+  text-decoration:none;
+}
+
+.links a:hover{
+  text-decoration:underline;
+}
+
+.msg{
+  margin-top:14px;
+  padding:12px;
+  border-radius:12px;
+  display:none;
+  font-weight:800;
+  font-size:13px;
+  line-height:1.45;
+  text-align:center;
+}
+
+.erro{
+  background:rgba(180,35,35,.22);
+  color:#ffb0b0;
+  border:1px solid rgba(255,120,120,.25);
+}
+
+.sucesso{
+  background:rgba(27,94,32,.22);
+  color:#b8ffd1;
+  border:1px solid rgba(120,255,170,.25);
+}
+</style>
 </head>
+
 <body>
 
-  <div class="box">
-    <h1>Cadastro</h1>
-    <p>Crie sua conta para acessar o sistema</p>
+<div class="box">
+  <img src="logo-liga.jfif" class="logo" onerror="this.style.display='none'">
 
-    <label for="nome">Nome completo</label>
-    <input type="text" id="nome" placeholder="Digite seu nome completo">
+  <h1>Cadastro</h1>
+  <p>Crie sua conta para acessar o sistema da Liga Goiana de Futebol de Base.</p>
 
-    <label for="email">Email</label>
-    <input type="email" id="email" placeholder="Digite seu email">
+  <label for="nome">Nome completo</label>
+  <input type="text" id="nome" placeholder="Digite seu nome completo">
 
-    <label for="cpf">CPF</label>
-    <input type="text" id="cpf" placeholder="Digite seu CPF">
+  <label for="email">Email</label>
+  <input type="email" id="email" placeholder="Digite seu email">
 
-    <label for="tipoUsuario">Tipo de usuário</label>
-    <select id="tipoUsuario">
-      <option value="torcedor">Torcedor</option>
-      <option value="pai_atleta">Pai de Atleta</option>
-      <option value="jogador">Jogador</option>
-      <option value="tecnico">Técnico</option>
-      <option value="assistente">Assistente</option>
-      <option value="arbitro">Árbitro</option>
-      <option value="admin">Administrador</option>
-    </select>
+  <label for="cpf">CPF</label>
+  <input type="text" id="cpf" placeholder="Digite seu CPF">
 
-    <label for="time">Time</label>
-    <input type="text" id="time" placeholder="Digite o nome do time, se tiver">
+  <label for="tipoUsuario">Tipo de usuário</label>
+  <select id="tipoUsuario" onchange="mostrarCamposExtras()">
+    <option value="torcedor">Torcedor</option>
+    <option value="pai_atleta">Pai de Atleta</option>
+    <option value="jogador">Jogador</option>
+    <option value="tecnico">Técnico</option>
+    <option value="assistente">Assistente</option>
+    <option value="arbitro">Árbitro</option>
+    <option value="admin">Administrador</option>
+  </select>
 
-    <label for="senha">Senha</label>
-    <div class="senha-wrap">
-      <input type="password" id="senha" placeholder="Digite sua senha">
-      <button type="button" class="toggle-senha" onclick="alternarSenha('senha', this)">
-        <i class="fa-solid fa-eye"></i>
-      </button>
+  <label for="time">Time</label>
+  <input type="text" id="time" placeholder="Digite o nome do time, se tiver">
+
+  <div class="campos-extra" id="camposJogador">
+    <label for="numero">Número da camisa</label>
+    <input type="text" id="numero" placeholder="Ex: 10">
+
+    <label for="posicao">Posição</label>
+    <input type="text" id="posicao" placeholder="Ex: Atacante, Goleiro, Meia...">
+
+    <label for="categoria">Categoria</label>
+    <input type="text" id="categoria" placeholder="Ex: Sub-13, Sub-15, Sub-17">
+
+    <label for="instagram">Instagram</label>
+    <input type="text" id="instagram" placeholder="@usuario ou link">
+
+    <label for="facebook">Facebook</label>
+    <input type="text" id="facebook" placeholder="Nome ou link do Facebook">
+
+    <div class="aviso">
+      CPF, telefone e e-mail não aparecem para o público. Instagram e Facebook podem aparecer no perfil público do jogador.
     </div>
-
-    <label for="confirmarSenha">Confirmar senha</label>
-    <div class="senha-wrap">
-      <input type="password" id="confirmarSenha" placeholder="Confirme sua senha">
-      <button type="button" class="toggle-senha" onclick="alternarSenha('confirmarSenha', this)">
-        <i class="fa-solid fa-eye"></i>
-      </button>
-    </div>
-
-    <button onclick="cadastrar()">Criar conta</button>
-
-    <div id="msgErro" class="msg erro"></div>
-    <div id="msgSucesso" class="msg sucesso"></div>
-
-    <a href="login.html" class="voltar">Já tenho conta</a>
-    <a href="index.html" class="voltar">← Voltar para o site</a>
   </div>
 
-  <script type="module">
-    import { auth, db } from "./firebase.js";
-    import {
-      createUserWithEmailAndPassword
-    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-    import {
-      doc,
-      setDoc
-    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+  <div class="campos-extra" id="camposFuncao">
+    <label for="cidade">Cidade</label>
+    <input type="text" id="cidade" placeholder="Digite sua cidade">
 
-    const msgErro = document.getElementById("msgErro");
-    const msgSucesso = document.getElementById("msgSucesso");
+    <label for="categoriaFuncao">Categoria de atuação</label>
+    <input type="text" id="categoriaFuncao" placeholder="Ex: Sub-13, Sub-15, Todas">
 
-    function limparMensagens(){
-      msgErro.style.display = "none";
-      msgErro.innerText = "";
-      msgSucesso.style.display = "none";
-      msgSucesso.innerText = "";
-    }
+    <div class="aviso">
+      Para técnico, árbitro e assistente, o cadastro fica pendente até aprovação/autorização.
+    </div>
+  </div>
 
-    function mostrarErro(texto){
-      msgSucesso.style.display = "none";
-      msgErro.style.display = "block";
-      msgErro.innerText = texto;
-    }
+  <label for="senha">Senha</label>
+  <div class="senha-wrap">
+    <input type="password" id="senha" placeholder="Digite sua senha">
+    <button type="button" class="toggle-senha" onclick="alternarSenha('senha', this)">
+      <i class="fa-solid fa-eye"></i>
+    </button>
+  </div>
 
-    function mostrarSucesso(texto){
-      msgErro.style.display = "none";
-      msgSucesso.style.display = "block";
-      msgSucesso.innerText = texto;
-    }
+  <label for="confirmarSenha">Confirmar senha</label>
+  <div class="senha-wrap">
+    <input type="password" id="confirmarSenha" placeholder="Confirme sua senha">
+    <button type="button" class="toggle-senha" onclick="alternarSenha('confirmarSenha', this)">
+      <i class="fa-solid fa-eye"></i>
+    </button>
+  </div>
 
-    function normalizarTipo(tipo){
-      if(!tipo) return "torcedor";
+  <button class="btn-principal" id="btnCadastrar" onclick="cadastrar()">
+    Criar conta
+  </button>
 
-      const valor = String(tipo).trim().toLowerCase();
+  <div id="msgErro" class="msg erro"></div>
+  <div id="msgSucesso" class="msg sucesso"></div>
 
-      if(valor === "publico" || valor === "público" || valor === "publico_geral" || valor === "torcedor") return "torcedor";
-      if(valor === "pai_atleta") return "pai_atleta";
-      if(valor === "jogador") return "jogador";
-      if(valor === "tecnico" || valor === "técnico") return "tecnico";
-      if(valor === "assistente") return "assistente";
-      if(valor === "arbitro" || valor === "árbitro") return "arbitro";
-      if(valor === "admin" || valor === "administrador") return "admin";
+  <div class="links">
+    <a href="login.html">Já tenho conta</a>
+    <a href="index.html">← Voltar para o site</a>
+  </div>
+</div>
+<script type="module">
+import { auth, db } from "./firebase.js";
+import {
+  createUserWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
-      return "torcedor";
-    }
+import {
+  doc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-    function regrasDePermissao(tipoUsuario){
-      if(tipoUsuario === "admin"){
-        return {
-          autorizado: true,
-          aprovado: true,
-          status: "ativo"
-        };
-      }
+const msgErro = document.getElementById("msgErro");
+const msgSucesso = document.getElementById("msgSucesso");
+const btnCadastrar = document.getElementById("btnCadastrar");
 
-      if(tipoUsuario === "arbitro"){
-        return {
-          autorizado: false,
-          aprovado: false,
-          status: "pendente"
-        };
-      }
+function limparMensagens(){
+  msgErro.style.display = "none";
+  msgErro.innerText = "";
+  msgSucesso.style.display = "none";
+  msgSucesso.innerText = "";
+}
 
-      if(tipoUsuario === "assistente"){
-        return {
-          autorizado: false,
-          aprovado: false,
-          status: "pendente"
-        };
-      }
+function mostrarErro(texto){
+  msgSucesso.style.display = "none";
+  msgErro.style.display = "block";
+  msgErro.innerText = texto;
+}
 
-      if(tipoUsuario === "tecnico"){
-        return {
-          autorizado: false,
-          aprovado: false,
-          status: "pendente"
-        };
-      }
+function mostrarSucesso(texto){
+  msgErro.style.display = "none";
+  msgSucesso.style.display = "block";
+  msgSucesso.innerText = texto;
+}
 
-      if(tipoUsuario === "jogador"){
-        return {
-          autorizado: false,
-          aprovado: false,
-          status: "pendente"
-        };
-      }
+function limparCPF(cpf){
+  return String(cpf || "").replace(/\D/g,"");
+}
 
-      if(tipoUsuario === "pai_atleta"){
-        return {
-          autorizado: false,
-          aprovado: true,
-          status: "ativo"
-        };
-      }
+function normalizarTexto(txt){
+  return String(txt || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
 
-      return {
-        autorizado: false,
-        aprovado: true,
-        status: "ativo"
-      };
-    }
+function normalizarTipo(tipo){
+  const valor = normalizarTexto(tipo).replace(/\s+/g,"_");
 
-    window.alternarSenha = function(idInput, botao){
-      const input = document.getElementById(idInput);
-      const icone = botao.querySelector("i");
+  if(valor === "publico" || valor === "publico_geral" || valor === "torcedor") return "torcedor";
+  if(valor === "pai_atleta") return "pai_atleta";
+  if(valor === "jogador") return "jogador";
+  if(valor === "tecnico") return "tecnico";
+  if(valor === "assistente") return "assistente";
+  if(valor === "arbitro") return "arbitro";
+  if(valor === "admin" || valor === "administrador") return "admin";
 
-      if(input.type === "password"){
-        input.type = "text";
-        icone.className = "fa-solid fa-eye-slash";
-      }else{
-        input.type = "password";
-        icone.className = "fa-solid fa-eye";
-      }
+  return "torcedor";
+}
+
+function regrasDePermissao(tipoUsuario){
+  if(tipoUsuario === "admin"){
+    return {
+      autorizado:true,
+      aprovado:true,
+      status:"ativo"
+    };
+  }
+
+  if(tipoUsuario === "arbitro" || tipoUsuario === "assistente" || tipoUsuario === "tecnico" || tipoUsuario === "jogador"){
+    return {
+      autorizado:false,
+      aprovado:false,
+      status:"pendente"
+    };
+  }
+
+  if(tipoUsuario === "pai_atleta"){
+    return {
+      autorizado:false,
+      aprovado:true,
+      status:"ativo"
+    };
+  }
+
+  return {
+    autorizado:false,
+    aprovado:true,
+    status:"ativo"
+  };
+}
+
+window.mostrarCamposExtras = function(){
+  const tipo = normalizarTipo(document.getElementById("tipoUsuario").value);
+
+  document.getElementById("camposJogador").style.display =
+    tipo === "jogador" ? "block" : "none";
+
+  document.getElementById("camposFuncao").style.display =
+    ["tecnico","arbitro","assistente"].includes(tipo) ? "block" : "none";
+};
+
+window.alternarSenha = function(idInput, botao){
+  const input = document.getElementById(idInput);
+  const icone = botao.querySelector("i");
+
+  if(input.type === "password"){
+    input.type = "text";
+    icone.className = "fa-solid fa-eye-slash";
+  }else{
+    input.type = "password";
+    icone.className = "fa-solid fa-eye";
+  }
+};
+
+async function criarRegistroPublico(uid,dados){
+  const tipo = dados.tipoUsuario;
+
+  if(tipo === "jogador"){
+    await setDoc(doc(db,"jogadores",uid),{
+      usuarioId:uid,
+      nome:dados.nome,
+      nomeCompleto:dados.nome,
+      cpf:dados.cpf,
+      time:dados.time,
+      timeNome:dados.time,
+      numero:dados.numero || "",
+      camisa:dados.numero || "",
+      posicao:dados.posicao || "",
+      categoria:dados.categoria || "",
+      categorias:dados.categoria ? [dados.categoria] : [],
+      instagram:dados.instagram || "",
+      facebook:dados.facebook || "",
+      foto:"logo-liga.jfif",
+      jogos:0,
+      gols:0,
+      assistencias:0,
+      amarelos:0,
+      vermelhos:0,
+      aprovado:false,
+      autorizado:false,
+      status:"pendente",
+      criadoEm:serverTimestamp(),
+      atualizadoEm:serverTimestamp()
+    },{merge:true});
+  }
+
+  if(tipo === "tecnico"){
+    await setDoc(doc(db,"tecnicos",uid),{
+      usuarioId:uid,
+      nome:dados.nome,
+      nomeCompleto:dados.nome,
+      cpf:dados.cpf,
+      time:dados.time,
+      timeNome:dados.time,
+      cidade:dados.cidade || "",
+      categoria:dados.categoriaFuncao || "",
+      categorias:dados.categoriaFuncao ? [dados.categoriaFuncao] : [],
+      foto:"logo-liga.jfif",
+      aprovado:false,
+      autorizado:false,
+      status:"pendente",
+      criadoEm:serverTimestamp(),
+      atualizadoEm:serverTimestamp()
+    },{merge:true});
+  }
+
+  if(tipo === "arbitro"){
+    await setDoc(doc(db,"arbitros",uid),{
+      usuarioId:uid,
+      nome:dados.nome,
+      nomeCompleto:dados.nome,
+      cpf:dados.cpf,
+      cidade:dados.cidade || "",
+      categoria:dados.categoriaFuncao || "",
+      categorias:dados.categoriaFuncao ? [dados.categoriaFuncao] : ["Todas as categorias"],
+      foto:"logo-liga.jfif",
+      aprovado:false,
+      autorizado:false,
+      status:"pendente",
+      jogos:0,
+      amarelos:0,
+      vermelhos:0,
+      criadoEm:serverTimestamp(),
+      atualizadoEm:serverTimestamp()
+    },{merge:true});
+  }
+
+  if(tipo === "assistente"){
+    await setDoc(doc(db,"assistentes",uid),{
+      usuarioId:uid,
+      nome:dados.nome,
+      nomeCompleto:dados.nome,
+      cpf:dados.cpf,
+      cidade:dados.cidade || "",
+      categoria:dados.categoriaFuncao || "",
+      categorias:dados.categoriaFuncao ? [dados.categoriaFuncao] : ["Todas as categorias"],
+      foto:"logo-liga.jfif",
+      aprovado:false,
+      autorizado:false,
+      status:"pendente",
+      jogos:0,
+      criadoEm:serverTimestamp(),
+      atualizadoEm:serverTimestamp()
+    },{merge:true});
+  }
+}
+
+window.cadastrar = async function(){
+  limparMensagens();
+
+  const nome = document.getElementById("nome").value.trim();
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const cpf = limparCPF(document.getElementById("cpf").value);
+  const tipoUsuario = normalizarTipo(document.getElementById("tipoUsuario").value);
+  const time = document.getElementById("time").value.trim();
+
+  const numero = document.getElementById("numero").value.trim();
+  const posicao = document.getElementById("posicao").value.trim();
+  const categoria = document.getElementById("categoria").value.trim();
+  const instagram = document.getElementById("instagram").value.trim();
+  const facebook = document.getElementById("facebook").value.trim();
+
+  const cidade = document.getElementById("cidade").value.trim();
+  const categoriaFuncao = document.getElementById("categoriaFuncao").value.trim();
+
+  const senha = document.getElementById("senha").value.trim();
+  const confirmarSenha = document.getElementById("confirmarSenha").value.trim();
+
+  if(!nome){
+    mostrarErro("Digite seu nome completo.");
+    return;
+  }
+
+  if(!email){
+    mostrarErro("Digite seu email.");
+    return;
+  }
+
+  if(!cpf){
+    mostrarErro("Digite seu CPF.");
+    return;
+  }
+
+  if(cpf.length !== 11){
+    mostrarErro("Digite um CPF válido com 11 números.");
+    return;
+  }
+
+  if(tipoUsuario === "jogador" && !time){
+    mostrarErro("Para jogador, informe o time.");
+    return;
+  }
+
+  if(tipoUsuario === "jogador" && !categoria){
+    mostrarErro("Para jogador, informe a categoria.");
+    return;
+  }
+
+  if(["tecnico","arbitro","assistente"].includes(tipoUsuario) && !cidade){
+    mostrarErro("Informe sua cidade.");
+    return;
+  }
+
+  if(!senha){
+    mostrarErro("Digite sua senha.");
+    return;
+  }
+
+  if(senha.length < 6){
+    mostrarErro("A senha precisa ter pelo menos 6 caracteres.");
+    return;
+  }
+
+  if(senha !== confirmarSenha){
+    mostrarErro("As senhas não conferem.");
+    return;
+  }
+
+  btnCadastrar.disabled = true;
+  btnCadastrar.innerText = "Criando conta...";
+
+  try{
+    const cred = await createUserWithEmailAndPassword(auth,email,senha);
+    const uid = cred.user.uid;
+
+    const regras = regrasDePermissao(tipoUsuario);
+
+    const dadosUsuario = {
+      uid,
+      nome,
+      nomeCompleto:nome,
+      email,
+      cpf,
+      tipoUsuario,
+      tipo:tipoUsuario,
+      perfil:tipoUsuario,
+      time,
+      numero,
+      posicao,
+      categoria,
+      instagram,
+      facebook,
+      cidade,
+      categoriaFuncao,
+      status:regras.status,
+      autorizado:regras.autorizado,
+      aprovado:regras.aprovado,
+      criadoEm:serverTimestamp(),
+      atualizadoEm:serverTimestamp()
     };
 
-    window.cadastrar = async function(){
-      limparMensagens();
+    await setDoc(doc(db,"usuarios",uid),dadosUsuario,{merge:true});
+    await criarRegistroPublico(uid,dadosUsuario);
 
-      const nome = document.getElementById("nome").value.trim();
-      const email = document.getElementById("email").value.trim().toLowerCase();
-      const cpf = document.getElementById("cpf").value.trim();
-      const tipoUsuario = normalizarTipo(document.getElementById("tipoUsuario").value);
-      const time = document.getElementById("time").value.trim();
-      const senha = document.getElementById("senha").value.trim();
-      const confirmarSenha = document.getElementById("confirmarSenha").value.trim();
+    if(tipoUsuario === "jogador"){
+      mostrarSucesso("Cadastro realizado. Seu acesso de jogador ficará pendente de aprovação e vinculado ao CPF.");
+    }else if(tipoUsuario === "tecnico"){
+      mostrarSucesso("Cadastro realizado. Seu acesso de técnico ficará pendente de aprovação.");
+    }else if(tipoUsuario === "arbitro"){
+      mostrarSucesso("Cadastro realizado. Seu acesso de árbitro ficará pendente de autorização do administrador.");
+    }else if(tipoUsuario === "assistente"){
+      mostrarSucesso("Cadastro realizado. Seu acesso de assistente ficará pendente de aprovação.");
+    }else{
+      mostrarSucesso("Cadastro realizado com sucesso. Redirecionando...");
+    }
 
-      if(!nome){
-        mostrarErro("Digite seu nome completo.");
-        return;
-      }
+    setTimeout(()=>{
+      window.location.href = "index.html";
+    },1600);
 
-      if(!email){
-        mostrarErro("Digite seu email.");
-        return;
-      }
+  }catch(e){
+    console.error(e);
 
-      if(!cpf){
-        mostrarErro("Digite seu CPF.");
-        return;
-      }
+    if(e.code === "auth/email-already-in-use"){
+      mostrarErro("Este email já está em uso.");
+    }else if(e.code === "auth/invalid-email"){
+      mostrarErro("Email inválido.");
+    }else if(e.code === "auth/weak-password"){
+      mostrarErro("Senha muito fraca.");
+    }else{
+      mostrarErro("Erro ao cadastrar. Tente novamente.");
+    }
 
-      if(!senha){
-        mostrarErro("Digite sua senha.");
-        return;
-      }
+    btnCadastrar.disabled = false;
+    btnCadastrar.innerText = "Criar conta";
+  }
+};
 
-      if(senha.length < 6){
-        mostrarErro("A senha precisa ter pelo menos 6 caracteres.");
-        return;
-      }
-
-      if(senha !== confirmarSenha){
-        mostrarErro("As senhas não conferem.");
-        return;
-      }
-
-      try{
-        const cred = await createUserWithEmailAndPassword(auth, email, senha);
-        const uid = cred.user.uid;
-
-        const regras = regrasDePermissao(tipoUsuario);
-
-        await setDoc(doc(db, "usuarios", uid), {
-          nome,
-          email,
-          cpf,
-          tipoUsuario,
-          time,
-          status: regras.status,
-          autorizado: regras.autorizado,
-          aprovado: regras.aprovado,
-          criadoEm: new Date().toISOString(),
-          atualizadoEm: new Date().toISOString()
-        });
-
-        if(tipoUsuario === "admin"){
-          mostrarSucesso("Conta de administrador criada com sucesso. Redirecionando...");
-        }else if(tipoUsuario === "arbitro"){
-          mostrarSucesso("Cadastro realizado. Seu acesso de árbitro ficará pendente até autorização do administrador. Redirecionando...");
-        }else if(tipoUsuario === "assistente"){
-          mostrarSucesso("Cadastro realizado. Seu acesso de assistente ficará pendente de aprovação. Redirecionando...");
-        }else if(tipoUsuario === "tecnico"){
-          mostrarSucesso("Cadastro realizado. Seu acesso de técnico ficará pendente de aprovação e será vinculado ao CPF. Redirecionando...");
-        }else if(tipoUsuario === "jogador"){
-          mostrarSucesso("Cadastro realizado. Seu acesso de jogador ficará pendente de aprovação e será vinculado ao CPF. Redirecionando...");
-        }else if(tipoUsuario === "pai_atleta"){
-          mostrarSucesso("Cadastro realizado com sucesso. Seu acesso já está aprovado. Redirecionando...");
-        }else{
-          mostrarSucesso("Cadastro realizado com sucesso. Seu acesso já está aprovado. Redirecionando...");
-        }
-
-        setTimeout(() => {
-          window.location.href = "index.html";
-        }, 1600);
-
-      }catch(e){
-        if(e.code === "auth/email-already-in-use"){
-          mostrarErro("Este email já está em uso.");
-        }else if(e.code === "auth/invalid-email"){
-          mostrarErro("Email inválido.");
-        }else if(e.code === "auth/weak-password"){
-          mostrarErro("Senha muito fraca.");
-        }else{
-          mostrarErro("Erro ao cadastrar: " + e.message);
-        }
-      }
-    };
-  </script>
+mostrarCamposExtras();
+</script>
 
 </body>
 </html>
