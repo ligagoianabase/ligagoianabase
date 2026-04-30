@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Técnicos - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --yellow:#7a5a00;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1240px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none}
+input,select{font-family:inherit}
+img{display:block;max-width:100%}
+
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
+
+.site-header{
+  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.header-top{
+  min-height:92px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px 0;
+}
+
+.header-title{
+  text-align:center;
+  font-size:26px;
+  font-weight:900;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  line-height:1.15;
+}
+
+.nav-bar{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
+  border-top:1px solid rgba(255,255,255,.06);
+  overflow:hidden;
+}
+
+.menu{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:clamp(4px, .55vw, 10px);
+  padding:14px 6px;
+  flex-wrap:nowrap;
+  overflow:hidden;
+}
+
+.menu a{
+  color:#fff;
+  font-weight:900;
+  font-size:clamp(11px, .92vw, 15px);
+  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
+  padding:clamp(8px, .75vw, 12px) clamp(9px, 1vw, 18px);
+  border-radius:clamp(10px, .9vw, 15px);
+  border:1px solid rgba(255,255,255,.07);
+  white-space:nowrap;
+  flex:0 1 auto;
+  box-shadow:0 10px 22px rgba(0,0,0,.24);
+  transition:.25s ease;
+}
+
+.menu a:hover{
+  color:var(--gold);
+  border-color:var(--gold-line);
+}
+
+.menu a.ativo{
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+}
+
+.container{
+  padding:22px 0 34px;
+}
+
+.hero{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+
+.hero h2{
+  color:var(--gold);
+  font-size:28px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+
+.hero p{
+  color:var(--muted);
+  line-height:1.5;
+  font-size:14px;
+}
+
+.hero-tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.hero-tag{
+  background:rgba(26,63,115,.9);
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+input,
+select{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
+}
+
+input:focus,
+select:focus{
+  outline:2px solid rgba(247,198,0,.65);
+}
+
+.titulo-secao{
+  color:var(--gold);
+  font-size:22px;
+  font-weight:900;
+  margin:0 0 12px;
+}
+
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(270px, 1fr));
+  gap:10px;
+}
+
+.card-tecnico{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  transition:.25s ease;
+  min-height:240px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.card-tecnico:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold);
+}
+
+.card-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:10px;
+}
+
+.card-icon{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  flex-shrink:0;
+}
+
+.status-tag{
+  color:#fff;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+  background:var(--green);
+}
+
+.user-box{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-align:left;
+  margin-bottom:12px;
+}
+
+.photo{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#fff;
+  border:2px solid var(--gold);
+  flex-shrink:0;
+}
+
+.user-info{
+  min-width:0;
+}
+
+.nome{
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+  line-height:1.25;
+  margin-bottom:4px;
+}
+
+.user-info small{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+}
+
+.tags{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  margin:8px 0 12px;
+}
+
+.tag{
+  background:rgba(26,63,115,.9);
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.info-box{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:11px;
+  padding:9px 8px;
+  text-align:center;
+}
+
+.info-box strong{
+  display:block;
+  color:var(--gold);
+  font-size:13px;
+  margin-bottom:2px;
+}
+
+.info-box span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+}
+
+.btn-ver{
+  width:100%;
+  padding:10px 12px;
+  border-radius:11px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  font-size:13px;
+}
+
+.vazio{
+  color:var(--muted);
+  text-align:center;
+  padding:18px;
+  background:rgba(7,29,55,.9);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  grid-column:1/-1;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  justify-content:center;
+  align-items:center;
+  padding:15px;
+  z-index:999;
+}
+
+.modal-content{
+  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(8,23,44,.98));
+  padding:20px;
+  border-radius:18px;
+  max-width:680px;
+  width:100%;
+  max-height:88vh;
+  overflow:auto;
+  border:1px solid var(--gold-line);
+  box-shadow:var(--shadow);
+  text-align:center;
+}
+
+.modal-content h2{
+  color:var(--gold);
+  margin:10px 0;
+}
+
+.modal-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+  text-align:left;
+}
+
+.modal-box{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:12px;
+  color:var(--muted);
+  line-height:1.6;
+  font-size:14px;
+}
+
+.modal-box strong{
+  color:#fff;
+}
+
+.modal-close{
+  margin-top:14px;
+  padding:10px 14px;
+  border-radius:11px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+  font-weight:900;
+}
+
+@media(max-width:900px){
+  .header-title{font-size:20px}
+
+  .menu{
+    justify-content:flex-start;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:14px;
+    gap:10px;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+  }
+
+  .menu::-webkit-scrollbar{display:none}
+
+  .menu a{
+    flex:0 0 auto;
+    font-size:15px;
+    padding:12px 18px;
+    border-radius:15px;
+  }
+
+  .filtros,
+  .modal-grid{
+    grid-template-columns:1fr;
+  }
+
+  .lista-grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="site-header">
+  <div class="wrap header-top">
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="wrap">
+      <nav class="menu">
+        <a href="index.html">Início</a>
+        <a href="campeonatos.html">Campeonatos</a>
+        <a href="tabela.html">Tabela</a>
+        <a href="jogos.html">Jogos</a>
+        <a href="times.html">Times</a>
+        <a href="tecnicos.html" class="ativo">Técnicos</a>
+        <a href="jogadores.html">Jogadores</a>
+        <a href="arbitros.html">Árbitros</a>
+        <a href="assistentes.html">Assistente</a>
+        <a href="sumulas.html">Súmula</a>
+        <a href="noticias.html">Notícias</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="wrap container">
+
+  <section class="hero">
+    <h2>Técnicos</h2>
+    <p>Consulte os técnicos cadastrados e vinculados aos times da Liga Goiana de Futebol de Base.</p>
+
+    <div class="hero-tags">
+      <div class="hero-tag" id="tagTotal">Técnicos: 0</div>
+      <div class="hero-tag" id="tagTimes">Times: 0</div>
+      <div class="hero-tag" id="tagCategorias">Categorias: 0</div>
+    </div>
+  </section>
+
+  <section class="filtros">
+    <input id="buscaTecnico" placeholder="Pesquisar técnico, time, categoria ou cidade...">
+
+    <select id="filtroTime">
+      <option value="">Todos os times</option>
+    </select>
+
+    <select id="filtroCategoria">
+      <option value="">Todas categorias</option>
+    </select>
+  </section>
+
+  <h2 class="titulo-secao" id="tituloPagina">Técnicos</h2>
+
+  <section class="lista-grid" id="listaTecnicos">
+    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando técnicos...</div>
+  </section>
+
+</main>
+
+<div class="modal" id="modal">
+  <div class="modal-content" id="modalContent"></div>
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let tecnicos = [];
+let times = [];
+
+function normalizarTexto(texto){
+  return String(texto || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function valorCampo(obj, chaves, fallback = ""){
+  for(const chave of chaves){
+    if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
+      return obj[chave];
+    }
+  }
+  return fallback;
+}
+
+function nomeTecnico(t){
+  return valorCampo(t, ["nome", "tecnicoNome", "nomeTecnico"], "Técnico sem nome");
+}
+
+function fotoTecnico(t){
+  return valorCampo(t, ["foto", "imagem", "avatar"], "logo-liga.jfif");
+}
+
+function timeTecnico(t){
+  return valorCampo(t, ["time", "timeNome", "equipe"], "-");
+}
+
+function categoriaTecnico(t){
+  const cats = valorCampo(t, ["categorias"], []);
+
+  if(Array.isArray(cats) && cats.length){
+    return cats.join(", ");
+  }
+
+  return valorCampo(t, ["categoria", "categoriaNome"], "-");
+}
+
+function cidadeTecnico(t){
+  return valorCampo(t, ["cidade", "cidadeNascimento", "municipio"], "-");
+}
+
+function telefoneTecnico(t){
+  return valorCampo(t, ["telefone", "whatsapp", "celular"], "-");
+}
+
+function emailTecnico(t){
+  return valorCampo(t, ["email"], "-");
+}
+
+function statusTecnico(t){
+  return valorCampo(t, ["status"], "ativo");
+}
+
+function preencherFiltros(){
+  const filtroTime = document.getElementById("filtroTime");
+  const filtroCategoria = document.getElementById("filtroCategoria");
+
+  const timeAtual = filtroTime.value;
+  const categoriaAtual = filtroCategoria.value;
+
+  const nomesTimes = new Set();
+
+  times.forEach(t=>{
+    const nome = valorCampo(t, ["nome", "timeNome", "equipe"], "");
+    if(nome) nomesTimes.add(nome);
+  });
+
+  tecnicos.forEach(t=>{
+    const nome = timeTecnico(t);
+    if(nome && nome !== "-") nomesTimes.add(nome);
+  });
+
+  filtroTime.innerHTML = `<option value="">Todos os times</option>`;
+
+  [...nomesTimes].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(nome=>{
+    filtroTime.innerHTML += `<option value="${nome}">${nome}</option>`;
+  });
+
+  if([...nomesTimes].includes(timeAtual)){
+    filtroTime.value = timeAtual;
+  }
+
+  const categorias = new Set();
+
+  tecnicos.forEach(t=>{
+    const cats = valorCampo(t, ["categorias"], []);
+
+    if(Array.isArray(cats)){
+      cats.forEach(c=>{ if(c) categorias.add(c); });
+    }
+
+    const cat = valorCampo(t, ["categoria", "categoriaNome"], "");
+    if(cat) categorias.add(cat);
+  });
+
+  filtroCategoria.innerHTML = `<option value="">Todas categorias</option>`;
+
+  [...categorias].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(cat=>{
+    filtroCategoria.innerHTML += `<option value="${cat}">${cat}</option>`;
+  });
+
+  if([...categorias].includes(categoriaAtual)){
+    filtroCategoria.value = categoriaAtual;
+  }
+}
+
+function tecnicoTemCategoria(t,categoria){
+  if(!categoria) return true;
+
+  const cats = valorCampo(t, ["categorias"], []);
+  if(Array.isArray(cats) && cats.includes(categoria)) return true;
+
+  return valorCampo(t, ["categoria", "categoriaNome"], "") === categoria;
+}
+
+function tecnicosFiltrados(){
+  const busca = normalizarTexto(document.getElementById("buscaTecnico").value);
+  const timeSelecionado = document.getElementById("filtroTime").value;
+  const categoriaSelecionada = document.getElementById("filtroCategoria").value;
+
+  return tecnicos.filter(t=>{
+    const nome = nomeTecnico(t);
+    const time = timeTecnico(t);
+    const categoria = categoriaTecnico(t);
+    const cidade = cidadeTecnico(t);
+    const email = emailTecnico(t);
+
+    if(timeSelecionado && time !== timeSelecionado) return false;
+    if(!tecnicoTemCategoria(t,categoriaSelecionada)) return false;
+
+    if(busca){
+      const texto = normalizarTexto(`${nome} ${time} ${categoria} ${cidade} ${email}`);
+      if(!texto.includes(busca)) return false;
+    }
+
+    return true;
+  });
+}
+
+function atualizarTopo(){
+  const lista = tecnicosFiltrados();
+
+  const timesSet = new Set(lista.map(timeTecnico).filter(t=>t && t !== "-"));
+  const categoriasSet = new Set();
+
+  lista.forEach(t=>{
+    const cats = valorCampo(t, ["categorias"], []);
+
+    if(Array.isArray(cats)){
+      cats.forEach(c=>{ if(c) categoriasSet.add(c); });
+    }
+
+    const cat = valorCampo(t, ["categoria", "categoriaNome"], "");
+    if(cat) categoriasSet.add(cat);
+  });
+
+  const timeSelecionado = document.getElementById("filtroTime").value;
+  const categoriaSelecionada = document.getElementById("filtroCategoria").value;
+
+  document.getElementById("tagTotal").innerText = `Técnicos: ${lista.length}`;
+  document.getElementById("tagTimes").innerText = `Times: ${timesSet.size}`;
+  document.getElementById("tagCategorias").innerText = `Categorias: ${categoriasSet.size}`;
+
+  document.getElementById("tituloPagina").innerText =
+    `Técnicos${categoriaSelecionada ? " - " + categoriaSelecionada : ""}${timeSelecionado ? " | " + timeSelecionado : ""}`;
+}
+
+function renderizarTecnicos(){
+  const container = document.getElementById("listaTecnicos");
+  const lista = tecnicosFiltrados();
+
+  atualizarTopo();
+
+  if(!lista.length){
+    container.innerHTML = `<div class="vazio">Nenhum técnico encontrado.</div>`;
+    return;
+  }
+
+  const ordenados = [...lista].sort((a,b)=>nomeTecnico(a).localeCompare(nomeTecnico(b),"pt-BR"));
+
+  container.innerHTML = ordenados.map(t=>{
+    const id = t.id;
+    const nome = nomeTecnico(t);
+    const foto = fotoTecnico(t);
+    const time = timeTecnico(t);
+    const categoria = categoriaTecnico(t);
+    const cidade = cidadeTecnico(t);
+    const status = statusTecnico(t);
+
+    return `
+      <article class="card-tecnico">
+        <div>
+          <div class="card-top">
+            <div class="card-icon">
+              <i class="fa-solid fa-user-tie"></i>
+            </div>
+
+            <div class="status-tag">${status}</div>
+          </div>
+
+          <div class="user-box">
+            <img class="photo" src="${foto}" onerror="this.src='logo-liga.jfif'" alt="${nome}">
+
+            <div class="user-info">
+              <div class="nome">${nome}</div>
+              <small>${time}<br>${cidade}</small>
+            </div>
+          </div>
+
+          <div class="tags">
+            ${
+              categoria !== "-"
+              ? categoria.split(",").map(c=>`<span class="tag">${c.trim()}</span>`).join("")
+              : `<span class="tag">Sem categoria</span>`
+            }
+          </div>
+
+          <div class="info-grid">
+            <div class="info-box">
+              <strong>${time}</strong>
+              <span>Time</span>
+            </div>
+
+            <div class="info-box">
+              <strong>${cidade}</strong>
+              <span>Cidade</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-ver" onclick="verTecnico('${id}')">
+          <i class="fa-solid fa-eye"></i> Ver Técnico
+        </button>
+      </article>
+    `;
+  }).join("");
+}
+
+window.verTecnico = function(id){
+  const t = tecnicos.find(item=>item.id === id);
+  if(!t) return;
+
+  const nome = nomeTecnico(t);
+  const foto = fotoTecnico(t);
+  const time = timeTecnico(t);
+  const categoria = categoriaTecnico(t);
+  const cidade = cidadeTecnico(t);
+  const telefone = telefoneTecnico(t);
+  const email = emailTecnico(t);
+  const status = statusTecnico(t);
+
+  document.getElementById("modalContent").innerHTML = `
+    <img class="photo" style="width:90px;height:90px;margin:0 auto;" src="${foto}" onerror="this.src='logo-liga.jfif'">
+    <h2>${nome}</h2>
+
+    <div class="tags" style="justify-content:center;">
+      ${
+        categoria !== "-"
+        ? categoria.split(",").map(c=>`<span class="tag">${c.trim()}</span>`).join("")
+        : `<span class="tag">Sem categoria</span>`
+      }
+    </div>
+
+    <div class="modal-grid">
+      <div class="modal-box">
+        <strong>Time:</strong> ${time}<br>
+        <strong>Cidade:</strong> ${cidade}<br>
+        <strong>Status:</strong> ${status}
+      </div>
+
+      <div class="modal-box">
+        <strong>Telefone:</strong> ${telefone}<br>
+        <strong>Email:</strong> ${email}<br>
+        <strong>Categoria:</strong> ${categoria}
+      </div>
+    </div>
+
+    <button class="modal-close" onclick="fecharModal()">
+      <i class="fa-solid fa-xmark"></i> Fechar
+    </button>
+  `;
+
+  document.getElementById("modal").style.display = "flex";
+};
+
+window.fecharModal = function(){
+  document.getElementById("modal").style.display = "none";
+};
+
+document.getElementById("modal").addEventListener("click",e=>{
+  if(e.target.id === "modal") fecharModal();
+});
+
+document.getElementById("buscaTecnico").addEventListener("input",renderizarTecnicos);
+document.getElementById("filtroTime").addEventListener("change",renderizarTecnicos);
+document.getElementById("filtroCategoria").addEventListener("change",renderizarTecnicos);
+
+onSnapshot(collection(db,"tecnicos"),snap=>{
+  tecnicos = snap.docs.map(d=>({id:d.id,...d.data()}));
+  preencherFiltros();
+  renderizarTecnicos();
+});
+
+onSnapshot(collection(db,"times"),snap=>{
+  times = snap.docs.map(d=>({id:d.id,...d.data()}));
+  preencherFiltros();
+  renderizarTecnicos();
+});
+</script>
+
+</body>
+</html>
