@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Notícias ADM - LIGA GOIANA</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#0b1f3a;
+  --card:#102a52;
+  --gold:#f7c600;
+  --white:#fff;
+  --muted:#cbd6ea;
+}
+
+body{
+  margin:0;
+  font-family:Arial;
+  background:#061427;
+  color:white;
+}
+
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:20px;
+}
+
+h1{
+  color:var(--gold);
+  text-align:center;
+}
+
+.form{
+  background:#102a52;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:20px;
+}
+
+input, textarea{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  border:none;
+}
+
+textarea{
+  min-height:120px;
+}
+
+button{
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.btn{
+  background:var(--gold);
+  color:#111;
+  width:100%;
+}
+
+.lista{
+  display:grid;
+  gap:10px;
+}
+
+.card{
+  background:#102a52;
+  padding:15px;
+  border-radius:10px;
+}
+
+.acoes{
+  margin-top:10px;
+  display:flex;
+  gap:10px;
+}
+
+.btn-del{
+  background:#b42323;
+  color:white;
+  flex:1;
+}
+
+.btn-edit{
+  background:#1a3f73;
+  color:white;
+  flex:1;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Gerenciar Notícias</h1>
+
+<div class="form">
+  <input id="titulo" placeholder="Título da notícia">
+  <input id="imagem" placeholder="URL da imagem">
+  <input id="categoria" placeholder="Categoria (Ex: Campeonato)">
+  <textarea id="descricao" placeholder="Resumo"></textarea>
+  <textarea id="conteudo" placeholder="Conteúdo completo"></textarea>
+
+  <button class="btn" onclick="salvar()">Publicar Notícia</button>
+</div>
+
+<div class="lista" id="lista"></div>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+  updateDoc
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let editandoId = null;
+
+async function salvar(){
+  const titulo = document.getElementById("titulo").value;
+  const imagem = document.getElementById("imagem").value;
+  const categoria = document.getElementById("categoria").value;
+  const descricao = document.getElementById("descricao").value;
+  const conteudo = document.getElementById("conteudo").value;
+
+  if(!titulo){
+    alert("Digite o título");
+    return;
+  }
+
+  const dados = {
+    titulo,
+    imagem,
+    categoria,
+    descricao,
+    conteudo,
+    publicado:true,
+    data:new Date().toISOString()
+  };
+
+  if(editandoId){
+    await updateDoc(doc(db,"noticias",editandoId), dados);
+    editandoId = null;
+  }else{
+    await addDoc(collection(db,"noticias"), dados);
+  }
+
+  limpar();
+  carregar();
+}
+
+function limpar(){
+  document.getElementById("titulo").value = "";
+  document.getElementById("imagem").value = "";
+  document.getElementById("categoria").value = "";
+  document.getElementById("descricao").value = "";
+  document.getElementById("conteudo").value = "";
+}
+
+async function carregar(){
+  const lista = document.getElementById("lista");
+  lista.innerHTML = "Carregando...";
+
+  const snap = await getDocs(collection(db,"noticias"));
+
+  let html = "";
+
+  snap.forEach(d=>{
+    const n = d.data();
+
+    html += `
+      <div class="card">
+        <strong>${n.titulo}</strong>
+        <div>${n.categoria || ""}</div>
+
+        <div class="acoes">
+          <button class="btn-edit" onclick="editar('${d.id}')">Editar</button>
+          <button class="btn-del" onclick="excluir('${d.id}')">Excluir</button>
+        </div>
+      </div>
+    `;
+  });
+
+  lista.innerHTML = html || "Nenhuma notícia";
+}
+
+window.editar = async function(id){
+  const snap = await getDocs(collection(db,"noticias"));
+
+  snap.forEach(d=>{
+    if(d.id === id){
+      const n = d.data();
+
+      document.getElementById("titulo").value = n.titulo || "";
+      document.getElementById("imagem").value = n.imagem || "";
+      document.getElementById("categoria").value = n.categoria || "";
+      document.getElementById("descricao").value = n.descricao || "";
+      document.getElementById("conteudo").value = n.conteudo || "";
+
+      editandoId = id;
+    }
+  });
+};
+
+window.excluir = async function(id){
+  if(confirm("Excluir notícia?")){
+    await deleteDoc(doc(db,"noticias",id));
+    carregar();
+  }
+};
+
+carregar();
+</script>
+
+</body>
+</html>
