@@ -15,19 +15,6 @@ export function renderMenu(paginaAtual = "") {
     menuAntigo.remove();
   }
 
-  const paginasParticipantes = [
-    "participantes",
-    "times",
-    "tecnicos",
-    "jogadores",
-    "arbitros",
-    "assistente",
-    "assistentes",
-    "fotografos"
-  ];
-
-  const participantesAtivo = paginasParticipantes.includes(paginaAtual);
-
   document.body.insertAdjacentHTML("afterbegin", `
     <header class="site-header">
 
@@ -73,7 +60,7 @@ export function renderMenu(paginaAtual = "") {
           </a>
 
           <div class="menu-dropdown">
-            <a href="times.html" class="${participantesAtivo ? "ativo" : ""}">
+            <a href="times.html" class="${paginaAtual === "participantes" ? "ativo" : ""}">
               Participantes
             </a>
 
@@ -115,7 +102,7 @@ export function renderMenu(paginaAtual = "") {
             Notícias
           </a>
 
-          <a href="login.html" class="${paginaAtual === "login" ? "ativo" : ""}">
+          <a href="login.html" id="btnLoginMenu" class="${paginaAtual === "login" ? "ativo" : ""}">
             Login
           </a>
 
@@ -135,6 +122,7 @@ export function renderMenu(paginaAtual = "") {
 async function controlarUsuarioMenu() {
   const userArea = document.getElementById("userArea");
   const btnAdminMenu = document.getElementById("btnAdminMenu");
+  const btnLoginMenu = document.getElementById("btnLoginMenu");
 
   if (!userArea) return;
 
@@ -144,6 +132,10 @@ async function controlarUsuarioMenu() {
 
       if (btnAdminMenu) {
         btnAdminMenu.style.display = "none";
+      }
+
+      if (btnLoginMenu) {
+        btnLoginMenu.style.display = "inline-flex";
       }
 
       return;
@@ -178,13 +170,10 @@ async function controlarUsuarioMenu() {
           dados.autorizado === true ||
           dados.liberado === true;
 
-        if (tipo === "admin") {
-          podeVerAdmin = aprovado && autorizado;
-        }
-
-        if (tipo === "arbitro") {
-          podeVerAdmin = aprovado && autorizado;
-        }
+        podeVerAdmin =
+          (tipo === "admin" || tipo === "arbitro") &&
+          aprovado &&
+          autorizado;
       }
     } catch (erro) {
       console.error("Erro ao verificar permissões do usuário:", erro);
@@ -202,6 +191,10 @@ async function controlarUsuarioMenu() {
         await signOut(auth);
         window.location.href = "login.html";
       });
+    }
+
+    if (btnLoginMenu) {
+      btnLoginMenu.style.display = "none";
     }
 
     if (btnAdminMenu) {
