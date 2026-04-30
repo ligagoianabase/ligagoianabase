@@ -27,11 +27,7 @@
   --max:1240px;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   font-family:Arial, sans-serif;
@@ -43,21 +39,9 @@ body{
   overflow-x:hidden;
 }
 
-a{
-  text-decoration:none;
-  color:inherit;
-}
-
-button{
-  font-family:inherit;
-  cursor:pointer;
-  border:none;
-}
-
-input,
-select{
-  font-family:inherit;
-}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none}
+input,select{font-family:inherit}
 
 img{
   display:block;
@@ -93,7 +77,7 @@ img{
   line-height:1.15;
 }
 
-/* MENU PADRÃO CAMPEONATO / JOGOS / SÚMULAS */
+/* MENU PADRÃO */
 .nav-bar{
   background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
   border-top:1px solid rgba(255,255,255,.06);
@@ -163,56 +147,22 @@ img{
   font-size:14px;
 }
 
-.exemplo-bar{
+.hero-tags{
   display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
+  gap:6px;
   flex-wrap:wrap;
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border:1px solid rgba(247,198,0,.22);
-  border-radius:15px;
-  padding:12px;
-  margin-bottom:14px;
-  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  margin-top:12px;
 }
 
-.exemplo-bar span{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.45;
+.hero-tag{
+  background:rgba(26,63,115,.9);
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
 }
 
-.exemplo-bar strong{
-  color:var(--gold);
-}
-
-.exemplo-actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.btn-mini{
-  padding:9px 12px;
-  border-radius:11px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  font-size:13px;
-}
-
-.btn-gold{
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
-  color:#111;
-}
-
-.btn-red{
-  background:var(--red);
-  color:#fff;
-}
 .filtros{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
@@ -252,7 +202,9 @@ select:focus{
 }
 
 .card-sumula{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
   border:1px solid rgba(247,198,0,.22);
   border-radius:15px;
   padding:12px;
@@ -260,6 +212,8 @@ select:focus{
   transition:.25s ease;
   text-align:center;
   cursor:pointer;
+  position:relative;
+  overflow:hidden;
 }
 
 .card-sumula:hover{
@@ -288,6 +242,13 @@ select:focus{
   flex-shrink:0;
 }
 
+.status-area{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
 .status-tag{
   color:#fff;
   padding:5px 8px;
@@ -295,6 +256,11 @@ select:focus{
   font-size:11px;
   font-weight:900;
   background:var(--green);
+}
+
+.status-nova{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
 }
 
 .times-linha{
@@ -375,18 +341,33 @@ select:focus{
   font-weight:800;
 }
 
-.btn-ver{
+.card-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.btn-ver,
+.btn-wpp{
   width:100%;
   padding:9px 12px;
   border-radius:11px;
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
-  color:#111;
   font-weight:900;
   display:flex;
   align-items:center;
   justify-content:center;
   gap:7px;
   font-size:13px;
+}
+
+.btn-ver{
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+}
+
+.btn-wpp{
+  background:#25d366;
+  color:#fff;
 }
 
 .vazio{
@@ -400,15 +381,11 @@ select:focus{
 }
 
 @media(max-width:1100px){
-  .lista-grid{
-    grid-template-columns:repeat(3, 1fr);
-  }
+  .lista-grid{grid-template-columns:repeat(3, 1fr)}
 }
 
 @media(max-width:900px){
-  .header-title{
-    font-size:20px;
-  }
+  .header-title{font-size:20px}
 
   .menu{
     justify-content:flex-start;
@@ -420,9 +397,7 @@ select:focus{
     -ms-overflow-style:none;
   }
 
-  .menu::-webkit-scrollbar{
-    display:none;
-  }
+  .menu::-webkit-scrollbar{display:none}
 
   .menu a{
     flex:0 0 auto;
@@ -431,27 +406,12 @@ select:focus{
     border-radius:15px;
   }
 
-  .filtros{
-    grid-template-columns:1fr;
-  }
-
-  .lista-grid{
-    grid-template-columns:1fr;
-  }
-
-  .exemplo-actions{
-    width:100%;
-  }
-
-  .btn-mini{
-    width:100%;
-  }
+  .filtros{grid-template-columns:1fr}
+  .lista-grid{grid-template-columns:1fr}
 }
 
 @media(min-width:901px) and (max-width:1180px){
-  .lista-grid{
-    grid-template-columns:repeat(2, 1fr);
-  }
+  .lista-grid{grid-template-columns:repeat(2, 1fr)}
 }
 </style>
 </head>
@@ -487,28 +447,17 @@ select:focus{
 
   <section class="hero">
     <h2>Súmulas</h2>
-    <p>Visualize todas as súmulas publicadas automaticamente.</p>
-  </section>
+    <p>Visualize todas as súmulas publicadas automaticamente após a finalização pelo árbitro.</p>
 
-  <section class="exemplo-bar">
-    <span>
-      <strong>Dados de exemplo:</strong>
-      últimas 3 rodadas do Brasileirão para testar o visual da página.
-    </span>
-
-    <div class="exemplo-actions">
-      <button class="btn-mini btn-red" onclick="excluirExemplos()">
-        <i class="fa-solid fa-trash"></i> Excluir Exemplos
-      </button>
-
-      <button class="btn-mini btn-gold" onclick="restaurarExemplos()">
-        <i class="fa-solid fa-rotate-left"></i> Restaurar
-      </button>
+    <div class="hero-tags">
+      <div class="hero-tag" id="tagTotal">Publicadas: 0</div>
+      <div class="hero-tag" id="tagCampeonato">Campeonato: Todos</div>
+      <div class="hero-tag" id="tagCategoria">Categoria: Todas</div>
     </div>
   </section>
 
   <section class="filtros">
-    <input id="busca" placeholder="Pesquisar time, campeonato ou local...">
+    <input id="busca" placeholder="Pesquisar time, campeonato, categoria, árbitro ou local...">
 
     <select id="filtroCampeonato">
       <option value="">Todos os campeonatos</option>
@@ -528,71 +477,20 @@ select:focus{
 </main>
 <script type="module">
 import { db } from "./firebase.js";
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import {
+  collection,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 let jogos = [];
-let exemplosAtivos = localStorage.getItem("ocultarExemplosSumulas") !== "sim";
-
-const sumulasExemplo = [
-  {
-    id:"brasileirao-2025-rodada-36-flamengo-palmeiras",
-    campeonato:"Brasileirão 2025",
-    categoria:"Profissional",
-    rodada:"36",
-    data:"2025-11-30T16:00:00",
-    local:"Maracanã",
-    timeA:"Flamengo",
-    timeB:"Palmeiras",
-    golsA:2,
-    golsB:1,
-    logoTimeA:"logo-liga.jfif",
-    logoTimeB:"logo-liga.jfif",
-    status:"finalizado",
-    arbitro:"Árbitro Exemplo",
-    exemplo:true
-  },
-  {
-    id:"brasileirao-2025-rodada-37-cruzeiro-gremio",
-    campeonato:"Brasileirão 2025",
-    categoria:"Profissional",
-    rodada:"37",
-    data:"2025-12-03T21:00:00",
-    local:"Mineirão",
-    timeA:"Cruzeiro",
-    timeB:"Grêmio",
-    golsA:1,
-    golsB:1,
-    logoTimeA:"logo-liga.jfif",
-    logoTimeB:"logo-liga.jfif",
-    status:"finalizado",
-    arbitro:"Árbitro Exemplo",
-    exemplo:true
-  },
-  {
-    id:"brasileirao-2025-rodada-38-sao-paulo-santos",
-    campeonato:"Brasileirão 2025",
-    categoria:"Profissional",
-    rodada:"38",
-    data:"2025-12-08T16:00:00",
-    local:"Morumbi",
-    timeA:"São Paulo",
-    timeB:"Santos",
-    golsA:3,
-    golsB:0,
-    logoTimeA:"logo-liga.jfif",
-    logoTimeB:"logo-liga.jfif",
-    status:"finalizado",
-    arbitro:"Árbitro Exemplo",
-    exemplo:true
-  }
-];
+let sumulas = [];
 
 function normalizarTexto(texto){
   return String(texto || "")
     .trim()
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+    .replace(/[\u0300-\u036f]/g,"");
 }
 
 function valorCampo(obj, chaves, fallback = ""){
@@ -602,11 +500,6 @@ function valorCampo(obj, chaves, fallback = ""){
     }
   }
   return fallback;
-}
-
-function jogoTemSumula(j){
-  const status = normalizarTexto(valorCampo(j, ["status"], ""));
-  return status === "finalizado" || status === "sumula_enviada" || status === "sumula-finalizada";
 }
 
 function formatarDataHora(valor){
@@ -631,6 +524,10 @@ function formatarDataHora(valor){
   });
 }
 
+function pegarJogo(id){
+  return jogos.find(j => j.id === id || j.id === String(id)) || {};
+}
+
 function pegarTimeA(j){
   if(j.timeA && typeof j.timeA === "object") return j.timeA.nome || "Time A";
   return valorCampo(j, ["timeA", "mandante", "timeMandanteNome", "mandanteNome"], "Time A");
@@ -651,111 +548,105 @@ function pegarLogoB(j){
   return valorCampo(j, ["logoTimeB", "escudoB", "logoB", "timeBLogo", "visitanteLogo"], "logo-liga.jfif");
 }
 
-function pegarGolsA(j){
+function pegarPlacarA(s,j){
+  if(s.placar && typeof s.placar === "object"){
+    return s.placar.A ?? s.placar.a ?? s.placar.mandante ?? 0;
+  }
+
   if(j.placar && typeof j.placar === "object"){
     return j.placar.A ?? j.placar.a ?? j.placar.mandante ?? 0;
   }
 
-  return Number(valorCampo(j, ["golsA", "placarA", "golsMandante"], 0));
+  return Number(valorCampo(s, ["golsA", "placarA", "golsMandante"], valorCampo(j, ["golsA", "placarA", "golsMandante"], 0)));
 }
 
-function pegarGolsB(j){
+function pegarPlacarB(s,j){
+  if(s.placar && typeof s.placar === "object"){
+    return s.placar.B ?? s.placar.b ?? s.placar.visitante ?? 0;
+  }
+
   if(j.placar && typeof j.placar === "object"){
     return j.placar.B ?? j.placar.b ?? j.placar.visitante ?? 0;
   }
 
-  return Number(valorCampo(j, ["golsB", "placarB", "golsVisitante"], 0));
+  return Number(valorCampo(s, ["golsB", "placarB", "golsVisitante"], valorCampo(j, ["golsB", "placarB", "golsVisitante"], 0)));
 }
 
-function obterCampeonato(j){
-  return valorCampo(j, ["campeonato", "nomeCampeonato", "campeonatoNome"], "Campeonato");
+function obterCampeonato(item,jogo={}){
+  return valorCampo(item, ["campeonato", "campeonatoNome", "nomeCampeonato"], valorCampo(jogo, ["campeonato", "campeonatoNome", "nomeCampeonato"], "Campeonato"));
 }
 
-function obterCategoria(j){
-  return valorCampo(j, ["categoria"], "-");
+function obterCategoria(item,jogo={}){
+  return valorCampo(item, ["categoria"], valorCampo(jogo, ["categoria"], "-"));
 }
 
-function obterRodada(j){
-  return valorCampo(j, ["rodada", "fase"], "Súmula");
+function obterRodada(item,jogo={}){
+  return valorCampo(item, ["rodada", "fase"], valorCampo(jogo, ["rodada", "fase"], "Súmula"));
 }
 
-function obterLocal(j){
-  return valorCampo(j, ["local", "campo", "estadio"], "-");
+function obterLocal(item,jogo={}){
+  return valorCampo(item, ["local", "campo", "estadio"], valorCampo(jogo, ["local", "campo", "estadio"], "-"));
 }
 
-function obterData(j){
-  return valorCampo(j, ["data", "dataHora", "dataJogo"], "");
+function obterData(item,jogo={}){
+  return valorCampo(item, ["dataFinalizacao", "finalizadaEm", "data", "dataHora", "dataJogo"], valorCampo(jogo, ["data", "dataHora", "dataJogo"], ""));
 }
 
-async function carregarDados(){
-  try{
-    const snapJogos = await getDocs(collection(db, "jogos"));
-
-    jogos = [];
-
-    snapJogos.forEach(docSnap => {
-      const dados = { id:docSnap.id, ...docSnap.data() };
-
-      if(jogoTemSumula(dados)){
-        jogos.push(dados);
-      }
-    });
-
-  }catch(erro){
-    console.error("Erro ao carregar súmulas do Firebase:", erro);
-    jogos = [];
-  }
-
-  if(exemplosAtivos){
-    jogos = [...sumulasExemplo, ...jogos];
-  }
-
-  if(!jogos.length){
-    jogos = sumulasExemplo;
-  }
+function sumulasPublicadas(){
+  return sumulas.filter(s =>
+    s.sumulaFinalizada === true ||
+    s.publica === true ||
+    s.publico === true ||
+    normalizarTexto(s.status) === "finalizado"
+  );
 }
 
-function preencherCampeonatos(){
-  const select = document.getElementById("filtroCampeonato");
-  const nomes = new Set();
+function preencherFiltros(){
+  const filtroCampeonato = document.getElementById("filtroCampeonato");
+  const filtroCategoria = document.getElementById("filtroCategoria");
 
-  select.innerHTML = `<option value="">Todos os campeonatos</option>`;
+  const campeonatoAtual = filtroCampeonato.value;
+  const categoriaAtual = filtroCategoria.value;
 
-  jogos.forEach(j => {
-    const nome = obterCampeonato(j);
+  const campeonatos = new Set();
 
-    if(nome && !nomes.has(nome)){
-      nomes.add(nome);
-
-      const option = document.createElement("option");
-      option.value = nome;
-      option.textContent = nome;
-      select.appendChild(option);
-    }
+  sumulasPublicadas().forEach(s=>{
+    const j = pegarJogo(s.jogoId || s.id);
+    const nome = obterCampeonato(s,j);
+    if(nome && nome !== "Campeonato") campeonatos.add(nome);
   });
-}
 
-function preencherCategorias(){
-  const select = document.getElementById("filtroCategoria");
+  filtroCampeonato.innerHTML = `<option value="">Todos os campeonatos</option>`;
+
+  [...campeonatos].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(nome=>{
+    filtroCampeonato.innerHTML += `<option value="${nome}">${nome}</option>`;
+  });
+
+  if([...campeonatos].includes(campeonatoAtual)){
+    filtroCampeonato.value = campeonatoAtual;
+  }
+
   const categorias = new Set();
-  const campeonatoSelecionado = document.getElementById("filtroCampeonato").value;
 
-  select.innerHTML = `<option value="">Todas categorias</option>`;
+  sumulasPublicadas().forEach(s=>{
+    const j = pegarJogo(s.jogoId || s.id);
+    const campeonato = obterCampeonato(s,j);
 
-  jogos.forEach(j => {
-    if(campeonatoSelecionado && obterCampeonato(j) !== campeonatoSelecionado) return;
+    if(filtroCampeonato.value && campeonato !== filtroCampeonato.value) return;
 
-    const categoria = obterCategoria(j);
-
-    if(categoria && categoria !== "-" && !categorias.has(categoria)){
-      categorias.add(categoria);
-
-      const option = document.createElement("option");
-      option.value = categoria;
-      option.textContent = categoria;
-      select.appendChild(option);
-    }
+    const categoria = obterCategoria(s,j);
+    if(categoria && categoria !== "-") categorias.add(categoria);
   });
+
+  filtroCategoria.innerHTML = `<option value="">Todas categorias</option>`;
+
+  [...categorias].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(nome=>{
+    filtroCategoria.innerHTML += `<option value="${nome}">${nome}</option>`;
+  });
+
+  if([...categorias].includes(categoriaAtual)){
+    filtroCategoria.value = categoriaAtual;
+  }
 }
 
 function sumulasFiltradas(){
@@ -763,18 +654,21 @@ function sumulasFiltradas(){
   const campeonatoSelecionado = document.getElementById("filtroCampeonato").value;
   const categoriaSelecionada = document.getElementById("filtroCategoria").value;
 
-  return jogos.filter(j => {
-    const timeA = pegarTimeA(j);
-    const timeB = pegarTimeB(j);
-    const campeonato = obterCampeonato(j);
-    const categoria = obterCategoria(j);
-    const local = obterLocal(j);
+  return sumulasPublicadas().filter(s=>{
+    const j = pegarJogo(s.jogoId || s.id);
+
+    const timeA = pegarTimeA(s.timeA ? s : j);
+    const timeB = pegarTimeB(s.timeB ? s : j);
+    const campeonato = obterCampeonato(s,j);
+    const categoria = obterCategoria(s,j);
+    const local = obterLocal(s,j);
+    const arbitro = valorCampo(s, ["arbitro"], valorCampo(j, ["arbitro"], ""));
 
     if(campeonatoSelecionado && campeonato !== campeonatoSelecionado) return false;
     if(categoriaSelecionada && categoria !== categoriaSelecionada) return false;
 
     if(busca){
-      const texto = normalizarTexto(`${timeA} ${timeB} ${campeonato} ${categoria} ${local}`);
+      const texto = normalizarTexto(`${timeA} ${timeB} ${campeonato} ${categoria} ${local} ${arbitro}`);
       if(!texto.includes(busca)) return false;
     }
 
@@ -782,25 +676,44 @@ function sumulasFiltradas(){
   });
 }
 
-window.excluirExemplos = function(){
-  localStorage.setItem("ocultarExemplosSumulas", "sim");
-  exemplosAtivos = false;
+function atualizarTopo(){
+  const filtradas = sumulasFiltradas();
+  const campeonatoSelecionado = document.getElementById("filtroCampeonato").value;
+  const categoriaSelecionada = document.getElementById("filtroCategoria").value;
 
-  jogos = jogos.filter(j => !j.exemplo);
+  document.getElementById("tagTotal").innerText = `Publicadas: ${filtradas.length}`;
+  document.getElementById("tagCampeonato").innerText = `Campeonato: ${campeonatoSelecionado || "Todos"}`;
+  document.getElementById("tagCategoria").innerText = `Categoria: ${categoriaSelecionada || "Todas"}`;
 
-  preencherCampeonatos();
-  preencherCategorias();
-  renderizarSumulas();
-};
+  document.getElementById("tituloPagina").innerText =
+    `Súmulas${categoriaSelecionada ? " - " + categoriaSelecionada : ""}${campeonatoSelecionado ? " | " + campeonatoSelecionado : ""}`;
+}
 
-window.restaurarExemplos = async function(){
-  localStorage.removeItem("ocultarExemplosSumulas");
-  exemplosAtivos = true;
+function ehNova(s){
+  const data = s.finalizadaEm || s.dataFinalizacao || s.atualizadoEm || s.criadoEmServidor || "";
+  if(!data) return false;
 
-  await carregarDados();
-  preencherCampeonatos();
-  preencherCategorias();
-  renderizarSumulas();
+  let d = data;
+  if(typeof d.toDate === "function") d = d.toDate();
+
+  const time = new Date(d).getTime();
+  if(isNaN(time)) return false;
+
+  const agora = Date.now();
+  const dias = (agora - time) / (1000 * 60 * 60 * 24);
+
+  return dias <= 3;
+}
+
+function abrirWhatsApp(id){
+  const url = `${location.origin}${location.pathname.replace("sumulas.html","")}sumula-publica.html?id=${encodeURIComponent(id)}`;
+  const texto = `Súmula oficial da Liga Goiana de Futebol de Base: ${url}`;
+  window.open("https://wa.me/?text=" + encodeURIComponent(texto), "_blank");
+}
+
+window.compartilharSumula = function(id,event){
+  event.stopPropagation();
+  abrirWhatsApp(id);
 };
 
 window.abrirSumula = function(id){
@@ -809,49 +722,53 @@ window.abrirSumula = function(id){
 
 function renderizarSumulas(){
   const lista = document.getElementById("listaSumulas");
-  const titulo = document.getElementById("tituloPagina");
   const filtradas = sumulasFiltradas();
 
-  const campeonatoSelecionado = document.getElementById("filtroCampeonato").value;
-  const categoriaSelecionada = document.getElementById("filtroCategoria").value;
-
-  titulo.textContent =
-    `Súmulas${categoriaSelecionada ? " - " + categoriaSelecionada : ""}${campeonatoSelecionado ? " | " + campeonatoSelecionado : ""}`;
+  atualizarTopo();
 
   if(!filtradas.length){
-    lista.innerHTML = `<div class="vazio">Nenhuma súmula encontrada.</div>`;
+    lista.innerHTML = `<div class="vazio">Nenhuma súmula publicada encontrada.</div>`;
     return;
   }
 
   const ordenadas = [...filtradas].sort((a,b)=>{
-    const dataA = String(obterData(a));
-    const dataB = String(obterData(b));
+    const dataA = String(obterData(a,pegarJogo(a.jogoId || a.id)));
+    const dataB = String(obterData(b,pegarJogo(b.jogoId || b.id)));
     return dataB.localeCompare(dataA);
   });
 
-  lista.innerHTML = ordenadas.map(j => {
-    const timeA = pegarTimeA(j);
-    const timeB = pegarTimeB(j);
-    const logoA = pegarLogoA(j);
-    const logoB = pegarLogoB(j);
-    const golsA = pegarGolsA(j);
-    const golsB = pegarGolsB(j);
-    const campeonato = obterCampeonato(j);
-    const categoria = obterCategoria(j);
-    const data = formatarDataHora(obterData(j));
-    const local = obterLocal(j);
-    const rodada = obterRodada(j);
-    const arbitro = valorCampo(j, ["arbitro"], "Árbitro");
+  lista.innerHTML = ordenadas.map(s=>{
+    const id = s.jogoId || s.id;
+    const j = pegarJogo(id);
+
+    const baseA = s.timeA ? s : j;
+    const baseB = s.timeB ? s : j;
+
+    const timeA = pegarTimeA(baseA);
+    const timeB = pegarTimeB(baseB);
+    const logoA = pegarLogoA(baseA);
+    const logoB = pegarLogoB(baseB);
+
+    const golsA = pegarPlacarA(s,j);
+    const golsB = pegarPlacarB(s,j);
+
+    const campeonato = obterCampeonato(s,j);
+    const categoria = obterCategoria(s,j);
+    const data = formatarDataHora(obterData(s,j));
+    const local = obterLocal(s,j);
+    const rodada = obterRodada(s,j);
+    const arbitro = valorCampo(s, ["arbitro"], valorCampo(j, ["arbitro"], "Árbitro"));
 
     return `
-      <article class="card-sumula" onclick="abrirSumula('${j.id}')">
+      <article class="card-sumula" onclick="abrirSumula('${id}')">
         <div class="card-top">
           <div class="card-icon">
             <i class="fa-solid fa-file-lines"></i>
           </div>
 
-          <div class="status-tag">
-            Publicada
+          <div class="status-area">
+            ${ehNova(s) ? `<div class="status-tag status-nova">Nova</div>` : ""}
+            <div class="status-tag">Publicada</div>
           </div>
         </div>
 
@@ -877,14 +794,19 @@ function renderizarSumulas(){
         </div>
 
         <div class="tags">
-          ${j.exemplo ? `<span class="tag">Exemplo</span>` : `<span class="tag">Firebase</span>`}
           <span class="tag">${rodada}</span>
           <span class="tag">${arbitro}</span>
         </div>
 
-        <a class="btn-ver" href="sumula-publica.html?id=${encodeURIComponent(j.id)}" onclick="event.stopPropagation()">
-          <i class="fa-solid fa-file-lines"></i> Ver Súmula
-        </a>
+        <div class="card-actions">
+          <a class="btn-ver" href="sumula-publica.html?id=${encodeURIComponent(id)}" onclick="event.stopPropagation()">
+            <i class="fa-solid fa-file-lines"></i> Ver
+          </a>
+
+          <button class="btn-wpp" onclick="compartilharSumula('${id}', event)">
+            <i class="fa-brands fa-whatsapp"></i> Enviar
+          </button>
+        </div>
       </article>
     `;
   }).join("");
@@ -892,25 +814,29 @@ function renderizarSumulas(){
 
 document.getElementById("busca").addEventListener("input", renderizarSumulas);
 
-document.getElementById("filtroCampeonato").addEventListener("change", () => {
-  preencherCategorias();
+document.getElementById("filtroCampeonato").addEventListener("change", ()=>{
+  preencherFiltros();
   document.getElementById("filtroCategoria").value = "";
   renderizarSumulas();
 });
 
 document.getElementById("filtroCategoria").addEventListener("change", renderizarSumulas);
 
-async function iniciar(){
-  const lista = document.getElementById("listaSumulas");
-  lista.innerHTML = `<div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando súmulas...</div>`;
+function iniciarTempoReal(){
+  onSnapshot(collection(db,"jogos"),snap=>{
+    jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
+    preencherFiltros();
+    renderizarSumulas();
+  });
 
-  await carregarDados();
-  preencherCampeonatos();
-  preencherCategorias();
-  renderizarSumulas();
+  onSnapshot(collection(db,"sumulas"),snap=>{
+    sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
+    preencherFiltros();
+    renderizarSumulas();
+  });
 }
 
-iniciar();
+iniciarTempoReal();
 </script>
 
 </body>
