@@ -722,7 +722,8 @@ th:first-child,td:first-child{
       </div>
     </div>
   </div>
-<div class="placar-card">
+
+  <div class="placar-card">
     <div class="placar-area">
       <div class="time">
         <img id="logoA" src="logo-liga.jfif">
@@ -843,6 +844,54 @@ th:first-child,td:first-child{
     </div>
   </div>
 
+  <div class="arb-resumo">
+    <div class="bloco">
+      <div class="secao">ARBITRAGEM</div>
+      <table class="arb-table">
+        <tbody id="arb"></tbody>
+      </table>
+    </div>
+
+    <div class="bloco">
+      <div class="secao">RESUMO DA PARTIDA</div>
+
+      <div class="resumo-box">
+        <div class="resumo-item">
+          <i class="fa-solid fa-futbol"></i>
+          <strong id="totalGols">0</strong>
+          <span>Gols</span>
+        </div>
+
+        <div class="resumo-item">
+          <i class="fa-solid fa-square amarelo"></i>
+          <strong id="totalAmarelos">0</strong>
+          <span>Cartões Amarelos</span>
+        </div>
+
+        <div class="resumo-item">
+          <i class="fa-solid fa-square vermelho-card"></i>
+          <strong id="totalVermelhos">0</strong>
+          <span>Cartões Vermelhos</span>
+        </div>
+      </div>
+
+      <div class="melhor">
+        <div class="melhor-star"><i class="fa-solid fa-star"></i></div>
+        <div class="melhor-info">
+          <small>Melhor jogador da partida</small>
+          <strong id="melhor">Não informado</strong>
+          <div id="melhorTime">-</div>
+        </div>
+        <div class="trofeu"><i class="fa-solid fa-trophy"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="obs">
+    <div class="secao">OBSERVAÇÕES DO ÁRBITRO</div>
+    <div class="obs-text" id="observacoes">-</div>
+  </div>
+
   <div class="rodape-grid">
     <div class="autenticacao">
       <canvas id="qr"></canvas>
@@ -891,63 +940,152 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase
 
 const id = new URLSearchParams(location.search).get("id");
 
-function fil(lista,t){ return (lista||[]).filter(x=>x.time===t); }
+function fil(lista,t){
+  return (lista || []).filter(x => x.time === t);
+}
 
 function esc(lista){
-  if(!lista?.length) return `<tr><td colspan="3">Sem dados</td></tr>`;
-  return lista.map(j=>`
-    <tr>
-      <td>${j.numero||"-"}</td>
-      <td>${j.nome||"-"}</td>
-      <td>${j.posicao||"-"}</td>
-    </tr>
-  `).join("");
+  if(!lista || !lista.length){
+    return `<tr><td colspan="3">Sem dados</td></tr>`;
+  }
+
+  return lista.map(j=>{
+    let nome = j.nome || "-";
+
+    if(j.goleiro || j.posicao === "Goleiro") nome += " (G)";
+    if(j.capitao) nome += " (C)";
+
+    return `
+      <tr>
+        <td>${j.numero || "-"}</td>
+        <td>${nome}</td>
+        <td>${j.posicao || "-"}</td>
+      </tr>
+    `;
+  }).join("");
 }
 
 function eventos(lista,icone){
-  if(!lista?.length) return `<div style="text-align:center">Nenhum</div>`;
+  if(!lista || !lista.length){
+    return `<div style="text-align:center">Nenhum</div>`;
+  }
+
   return lista.map(e=>`
     <div class="event-item">
       <div class="event-icon">${icone}</div>
-      <div>${e.numero||"-"}</div>
-      <div>${e.nome||"-"} • ${e.tempo||"-"}'</div>
+      <div>${e.numero || "-"}</div>
+      <div>${e.nome || "-"} • ${e.tempo || "-"}'</div>
     </div>
   `).join("");
 }
 
+function valor(v,fallback="-"){
+  return v === undefined || v === null || v === "" ? fallback : v;
+}
+
+function dataTexto(v){
+  if(!v) return "-";
+
+  if(typeof v.toDate === "function"){
+    v = v.toDate();
+  }
+
+  const d = new Date(v);
+
+  if(isNaN(d.getTime())){
+    return String(v);
+  }
+
+  return d.toLocaleDateString("pt-BR");
+}
+
+function horaTexto(v){
+  if(!v) return "-";
+
+  if(String(v).includes("T")){
+    return String(v).split("T")[1].slice(0,5);
+  }
+
+  return String(v);
+}
+
+async function buscarSumula(){
+  let snap = await getDoc(doc(db,"sumulas",id));
+
+  if(snap.exists()){
+    return {id:snap.id,...snap.data()};
+  }
+
+  snap = await getDoc(doc(db,"jogos",id));
+
+  if(snap.exists()){
+    return {id:snap.id,...snap.data()};
+  }
+
+  return null;
+}
+
 async function load(){
-  const snap = await getDoc(doc(db,"jogos",id));
+  if(!id){
+    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px'>Súmula não informada.</h2>";
+    return;
+  }
 
-  if(!snap.exists()) return;
+  const j = await buscarSumula();
 
-  const j = snap.data();
+  if(!j){
+    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px'>Súmula não encontrada.</h2>";
+    return;
+  }
+
+  if(j.sumulaFinalizada !== true && j.publica !== true && j.publico !== true){
+    document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px'>Súmula ainda não finalizada.</h2>";
+    return;
+  }
+
+  const timeA = j.timeA || {};
+  const timeB = j.timeB || {};
 
   document.getElementById("subtituloCampeonato").innerText =
-    `${j.campeonato} • ${j.categoria}`;
+    `${valor(j.campeonato || j.campeonatoNome)} • ${valor(j.categoria)}`;
 
-  document.getElementById("codigoPartida").innerText = id;
-  document.getElementById("fase").innerText = j.fase || "-";
-  document.getElementById("rodada").innerText = j.rodada || "-";
+  document.getElementById("numeroSumula").innerText =
+    valor(j.numeroSumula || j.numero || id.slice(0,8).toUpperCase());
 
-  document.getElementById("timeA").innerText = j.timeA?.nome;
-  document.getElementById("timeB").innerText = j.timeB?.nome;
+  document.getElementById("codigoPartida").innerText =
+    valor(j.codigoPartida || j.codigo || id);
 
-  document.getElementById("logoA").src = j.timeA?.logo || "logo-liga.jfif";
-  document.getElementById("logoB").src = j.timeB?.logo || "logo-liga.jfif";
+  document.getElementById("fase").innerText = valor(j.fase);
+  document.getElementById("rodada").innerText = valor(j.rodada);
 
-  document.getElementById("miniLogoA").src = j.timeA?.logo || "logo-liga.jfif";
-  document.getElementById("miniLogoB").src = j.timeB?.logo || "logo-liga.jfif";
+  document.getElementById("timeA").innerText = valor(timeA.nome,"TIME A");
+  document.getElementById("timeB").innerText = valor(timeB.nome,"TIME B");
+
+  document.getElementById("cidadeA").innerText = valor(timeA.cidade,"-");
+  document.getElementById("cidadeB").innerText = valor(timeB.cidade,"-");
+
+  document.getElementById("logoA").src = timeA.logo || timeA.escudo || "logo-liga.jfif";
+  document.getElementById("logoB").src = timeB.logo || timeB.escudo || "logo-liga.jfif";
+
+  document.getElementById("miniLogoA").src = timeA.logo || timeA.escudo || "logo-liga.jfif";
+  document.getElementById("miniLogoB").src = timeB.logo || timeB.escudo || "logo-liga.jfif";
 
   document.getElementById("placar").innerText =
-    `${j.placar?.A||0} x ${j.placar?.B||0}`;
+    `${j.placar?.A ?? j.golsA ?? 0} x ${j.placar?.B ?? j.golsB ?? 0}`;
 
-  document.getElementById("data").innerText = j.data;
-  document.getElementById("hora").innerText = j.hora;
-  document.getElementById("campo").innerText = j.local;
-  document.getElementById("arbitroTopo").innerText = j.arbitro;
+  document.getElementById("data").innerText = dataTexto(j.data || j.dataHora || j.dataJogo);
+  document.getElementById("hora").innerText = valor(j.hora || horaTexto(j.dataHora || j.data));
+  document.getElementById("campo").innerText = valor(j.campo || j.local);
+  document.getElementById("arbitroTopo").innerText = valor(j.arbitro);
 
-  document.getElementById("escA").innerHTML = esc(j.titularesA);
-  document.getElementById("escB").innerHTML = esc(j.titularesB);
+  document.getElementById("tituloEscA").innerText = valor(timeA.nome,"TIME A");
+  document.getElementById("tituloEscB").innerText = valor(timeB.nome,"TIME B");
+
+  document.getElementById("eventoTituloA").innerText = valor(timeA.nome,"TIME A");
+  document.getElementById("eventoTituloB").innerText = valor(timeB.nome,"TIME B");
+
+  document.getElementById("escA").innerHTML = esc(j.titularesA || j.escalacaoA || []);
+  document.getElementById("escB").innerHTML = esc(j.titularesB || j.escalacaoB || []);
 
   document.getElementById("golsA").innerHTML = eventos(fil(j.gols,"A"),"⚽");
   document.getElementById("golsB").innerHTML = eventos(fil(j.gols,"B"),"⚽");
@@ -955,35 +1093,57 @@ async function load(){
   document.getElementById("cartA").innerHTML = eventos(fil(j.cartoes,"A"),"🟨");
   document.getElementById("cartB").innerHTML = eventos(fil(j.cartoes,"B"),"🟥");
 
+  document.getElementById("arb").innerHTML = `
+    <tr><td>Árbitro</td><td>${valor(j.arbitro)}</td></tr>
+    <tr><td>Assistente 1</td><td>${valor(j.assistente1)}</td></tr>
+    <tr><td>Assistente 2</td><td>${valor(j.assistente2)}</td></tr>
+    <tr><td>4º Árbitro</td><td>${valor(j.quartoArbitro || j.arbitroAuxiliar)}</td></tr>
+  `;
+
+  document.getElementById("totalGols").innerText = (j.gols || []).length;
+  document.getElementById("totalAmarelos").innerText = (j.cartoes || []).filter(c=>c.tipo === "amarelo").length;
+  document.getElementById("totalVermelhos").innerText = (j.cartoes || []).filter(c=>c.tipo === "vermelho").length;
+
+  document.getElementById("melhor").innerText = valor(j.melhorJogador,"Não informado");
+  document.getElementById("melhorTime").innerText = valor(j.melhorJogadorTime || j.timeMelhor,"-");
+
+  document.getElementById("observacoes").innerText = valor(j.observacoes || j.observacoesArbitro,"-");
+
   document.getElementById("codigoVerificacao").innerText = id;
+
   document.getElementById("publicadaEm").innerText =
     new Date().toLocaleString("pt-BR");
 
-  QRCode.toCanvas(document.getElementById("qr"),
-    location.href
+  QRCode.toCanvas(
+    document.getElementById("qr"),
+    location.origin + "/validar.html?id=" + encodeURIComponent(id)
   );
 }
 
-/* 🔥 PDF PROFISSIONAL */
 window.baixarPDF = function(){
   const elemento = document.getElementById("areaPDF");
 
   html2pdf()
     .set({
       margin:5,
-      filename:"sumula-oficial.pdf",
+      filename:"sumula-oficial-" + id + ".pdf",
       image:{ type:"jpeg", quality:1 },
-      html2canvas:{ scale:2 },
+      html2canvas:{ scale:2, useCORS:true },
       jsPDF:{ unit:"mm", format:"a4", orientation:"portrait" }
     })
     .from(elemento)
     .save();
 };
 
-/* 🔥 COMPARTILHAR */
-window.wpp = ()=> window.open("https://wa.me/?text="+encodeURIComponent(location.href));
-window.mail = ()=> location.href="mailto:?subject=Súmula&body="+location.href;
-window.copiarLink = ()=>{
+window.wpp = function(){
+  window.open("https://wa.me/?text=" + encodeURIComponent("Súmula oficial: " + location.href), "_blank");
+};
+
+window.mail = function(){
+  location.href = "mailto:?subject=Súmula Oficial&body=" + encodeURIComponent(location.href);
+};
+
+window.copiarLink = function(){
   navigator.clipboard.writeText(location.href);
   alert("Link copiado");
 };
