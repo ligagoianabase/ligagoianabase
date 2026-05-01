@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artilharia - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#061427;--card:#071d37;--card2:#0d2a52;--gold:#f7c600;--gold2:#ffe45c;
+  --white:#fff;--muted:#cbd6ea;--line:rgba(255,255,255,.12);--gold-line:rgba(247,198,0,.45);
+  --shadow:0 14px 34px rgba(0,0,0,.38);--max:1240px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(rgba(2,8,20,.88),rgba(2,8,20,.96)),url("fundo.png") center/cover fixed no-repeat;color:#fff;min-height:100vh}
+a{text-decoration:none;color:inherit}button,input,select{font-family:inherit}
+.wrap{width:min(100% - 28px,var(--max));margin:0 auto}
+.site-header{background:linear-gradient(180deg,rgba(2,10,24,.98),rgba(8,23,44,.96));border-bottom:3px solid var(--gold);box-shadow:var(--shadow)}
+.header-top{min-height:92px;display:flex;align-items:center;justify-content:center;padding:18px 0}
+.header-title{text-align:center;font-size:26px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}
+.nav-bar{background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.98));border-top:1px solid rgba(255,255,255,.06)}
+.menu{display:flex;justify-content:center;align-items:center;gap:clamp(4px,.55vw,10px);padding:14px 6px;flex-wrap:nowrap;overflow:hidden}
+.menu a{font-weight:900;font-size:clamp(11px,.92vw,15px);background:linear-gradient(180deg,rgba(16,42,82,.98),rgba(12,33,64,.98));padding:clamp(8px,.75vw,12px) clamp(9px,1vw,18px);border-radius:15px;border:1px solid rgba(255,255,255,.07);white-space:nowrap;box-shadow:0 10px 22px rgba(0,0,0,.24)}
+.menu a:hover{color:var(--gold);border-color:var(--gold-line)}
+.menu a.ativo{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
+.container{padding:22px 0 34px}
+.hero{background:radial-gradient(circle at top left,rgba(247,198,0,.16),transparent 34%),linear-gradient(135deg,rgba(16,42,82,.96),rgba(8,23,44,.96));border:1px solid var(--gold-line);border-radius:20px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.hero h2{color:var(--gold);font-size:28px;font-weight:900;margin-bottom:6px}
+.hero p{color:var(--muted);line-height:1.5;font-size:14px}
+.hero-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.hero-tag{background:rgba(26,63,115,.9);padding:6px 10px;border-radius:999px;font-size:11px;border:1px solid rgba(255,255,255,.08);font-weight:800}
+.filtros{display:grid;grid-template-columns:1fr 220px 220px;gap:10px;margin-bottom:14px}
+input,select{width:100%;padding:12px;border:none;border-radius:12px;font-size:14px;background:#f5f7fb;color:#111;outline:none;box-shadow:0 8px 18px rgba(0,0,0,.22)}
+.tabela-box{background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.97));border:1px solid rgba(247,198,0,.22);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{background:rgba(247,198,0,.14);color:var(--gold);font-size:13px;text-transform:uppercase;text-align:left;padding:13px 10px}
+td{padding:13px 10px;border-top:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:14px}
+tbody tr:hover{background:rgba(247,198,0,.08)}
+.pos{font-weight:900;color:#fff;text-align:center}
+.jogador{font-weight:900;color:#fff}
+.gols{font-size:22px;color:var(--gold);font-weight:900;text-align:center}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(26,63,115,.9);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:5px 9px;font-size:12px;font-weight:800;color:#fff}
+.vazio{padding:22px;text-align:center;color:var(--muted)}
+@media(max-width:900px){
+  .menu{justify-content:flex-start;overflow-x:auto;padding:14px;scrollbar-width:none}
+  .menu::-webkit-scrollbar{display:none}.menu a{flex:0 0 auto;font-size:15px;padding:12px 18px}
+  .filtros{grid-template-columns:1fr}.tabela-box{overflow-x:auto}.header-title{font-size:20px}
+}
+</style>
+</head>
+
+<body>
+<header class="site-header">
+  <div class="wrap header-top"><div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div></div>
+  <div class="nav-bar"><div class="wrap"><nav class="menu">
+    <a href="index.html">Início</a>
+    <a href="campeonatos.html">Campeonatos</a>
+    <a href="classificacao.html">Classificação</a>
+    <a href="jogos.html">Jogos</a>
+    <a href="times.html">Times</a>
+    <a href="tecnicos.html">Técnicos</a>
+    <a href="jogadores.html">Jogadores</a>
+    <a href="arbitros.html">Árbitros</a>
+    <a href="assistentes.html">Assistente</a>
+    <a href="sumulas.html">Súmula</a>
+    <a href="artilharia.html" class="ativo">Artilharia</a>
+    <a href="cartoes.html">Cartões</a>
+    <a href="noticias.html">Notícias</a>
+    <a href="login.html">Login</a>
+  </nav></div></div>
+</header>
+
+<main class="wrap container">
+  <section class="hero">
+    <h2>Artilharia</h2>
+    <p>Ranking automático dos jogadores que marcaram gols nas súmulas finalizadas.</p>
+    <div class="hero-tags">
+      <div class="hero-tag" id="tagTotal">Jogadores: 0</div>
+      <div class="hero-tag" id="tagGols">Gols: 0</div>
+      <div class="hero-tag">Atualização automática</div>
+    </div>
+  </section>
+
+  <section class="filtros">
+    <input id="busca" placeholder="Pesquisar jogador, time ou categoria...">
+    <select id="filtroTime"><option value="">Todos os times</option></select>
+    <select id="filtroCategoria"><option value="">Todas categorias</option></select>
+  </section>
+
+  <section class="tabela-box">
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:center">#</th>
+          <th>Jogador</th>
+          <th>Time</th>
+          <th>Categoria</th>
+          <th style="text-align:center">Jogos</th>
+          <th style="text-align:center">Gols</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"><tr><td colspan="6" class="vazio">Carregando artilharia...</td></tr></tbody>
+    </table>
+  </section>
+</main>
+
+<script type="module">
+import { db } from "./firebase.js";
+import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let sumulas = [];
+
+const tbody = document.getElementById("tbody");
+const busca = document.getElementById("busca");
+const filtroTime = document.getElementById("filtroTime");
+const filtroCategoria = document.getElementById("filtroCategoria");
+
+function n(txt){
+  return String(txt || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+
+function val(obj,chaves,f=""){
+  for(const c of chaves){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== "") return obj[c];
+  }
+  return f;
+}
+
+function nomeTimePorLetra(s,letra){
+  if(letra === "A"){
+    if(s.timeA && typeof s.timeA === "object") return s.timeA.nome || "Time A";
+    return val(s,["timeA","mandante","timeMandanteNome","mandanteNome"],"Time A");
+  }
+  if(s.timeB && typeof s.timeB === "object") return s.timeB.nome || "Time B";
+  return val(s,["timeB","visitante","timeVisitanteNome","visitanteNome"],"Time B");
+}
+
+function publicada(s){
+  return s.sumulaFinalizada === true || s.publica === true || s.publico === true || n(s.status) === "finalizado";
+}
+
+function arrGols(s){
+  const gols = [];
+
+  if(Array.isArray(s.gols)){
+    s.gols.forEach(g=>gols.push(g));
+  }
+
+  if(Array.isArray(s.golsA)){
+    s.golsA.forEach(g=>gols.push({...g,time:g.time || "A"}));
+  }
+
+  if(Array.isArray(s.golsB)){
+    s.golsB.forEach(g=>gols.push({...g,time:g.time || "B"}));
+  }
+
+  return gols;
+}
+
+function chaveGol(g,s){
+  const nome = val(g,["nome","jogador","jogadorNome","atleta"],"Sem nome");
+  const numero = val(g,["numero","camisa","n"],"");
+  const timeLetra = val(g,["time","lado","equipe"],"");
+  const time = val(g,["timeNome","clube","equipeNome"], timeLetra === "B" ? nomeTimePorLetra(s,"B") : nomeTimePorLetra(s,"A"));
+  return `${n(nome)}|${n(time)}|${numero}`;
+}
+
+function montarRanking(){
+  const mapa = {};
+
+  sumulas.filter(publicada).forEach(s=>{
+    arrGols(s).forEach(g=>{
+      const nome = val(g,["nome","jogador","jogadorNome","atleta"],"Sem nome");
+      const numero = val(g,["numero","camisa","n"],"");
+      const timeLetra = val(g,["time","lado","equipe"],"");
+      const time = val(g,["timeNome","clube","equipeNome"], timeLetra === "B" ? nomeTimePorLetra(s,"B") : nomeTimePorLetra(s,"A"));
+      const categoria = val(g,["categoria"], val(s,["categoria"],"-"));
+      const key = chaveGol(g,s);
+
+      if(!mapa[key]){
+        mapa[key] = {
+          nome, numero, time, categoria,
+          gols:0,
+          jogosSet:new Set()
+        };
+      }
+
+      mapa[key].gols++;
+      mapa[key].jogosSet.add(s.jogoId || s.id || "");
+    });
+  });
+
+  return Object.values(mapa).map(x=>({
+    ...x,
+    jogos:x.jogosSet.size
+  })).sort((a,b)=>b.gols - a.gols || b.jogos - a.jogos || a.nome.localeCompare(b.nome,"pt-BR"));
+}
+
+function preencherFiltros(lista){
+  const atualTime = filtroTime.value;
+  const atualCategoria = filtroCategoria.value;
+  const times = new Set();
+  const categorias = new Set();
+
+  lista.forEach(i=>{
+    if(i.time) times.add(i.time);
+    if(i.categoria && i.categoria !== "-") categorias.add(i.categoria);
+  });
+
+  filtroTime.innerHTML = `<option value="">Todos os times</option>`;
+  [...times].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(t=>filtroTime.innerHTML += `<option value="${t}">${t}</option>`);
+  if([...times].includes(atualTime)) filtroTime.value = atualTime;
+
+  filtroCategoria.innerHTML = `<option value="">Todas categorias</option>`;
+  [...categorias].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(c=>filtroCategoria.innerHTML += `<option value="${c}">${c}</option>`);
+  if([...categorias].includes(atualCategoria)) filtroCategoria.value = atualCategoria;
+}
+
+function render(){
+  const ranking = montarRanking();
+  preencherFiltros(ranking);
+
+  const q = n(busca.value);
+  const ft = filtroTime.value;
+  const fc = filtroCategoria.value;
+
+  const lista = ranking.filter(i=>{
+    if(ft && i.time !== ft) return false;
+    if(fc && i.categoria !== fc) return false;
+    if(q && !n(`${i.nome} ${i.time} ${i.categoria} ${i.numero}`).includes(q)) return false;
+    return true;
+  });
+
+  document.getElementById("tagTotal").innerText = `Jogadores: ${lista.length}`;
+  document.getElementById("tagGols").innerText = `Gols: ${lista.reduce((s,i)=>s+i.gols,0)}`;
+
+  if(!lista.length){
+    tbody.innerHTML = `<tr><td colspan="6" class="vazio">Nenhum gol registrado em súmulas finalizadas.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = lista.map((i,idx)=>`
+    <tr>
+      <td class="pos">${idx+1}</td>
+      <td>
+        <div class="jogador">${i.nome}</div>
+        <span class="badge"><i class="fa-solid fa-shirt"></i> Nº ${i.numero || "-"}</span>
+      </td>
+      <td>${i.time || "-"}</td>
+      <td>${i.categoria || "-"}</td>
+      <td style="text-align:center">${i.jogos}</td>
+      <td class="gols">${i.gols}</td>
+    </tr>
+  `).join("");
+}
+
+busca.addEventListener("input",render);
+filtroTime.addEventListener("change",render);
+filtroCategoria.addEventListener("change",render);
+
+onSnapshot(collection(db,"sumulas"),snap=>{
+  sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
+  render();
+});
+</script>
+</body>
+</html>
