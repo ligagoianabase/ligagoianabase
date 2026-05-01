@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Detalhes do Time - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="menu.css">
+
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --red:#b42323;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1240px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none}
+img{display:block;max-width:100%}
+
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
+
+.container{
+  padding:22px 0 34px;
+}
+
+.hero{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+
+.topo-time{
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:18px;
+  align-items:center;
+}
+
+.logo-time{
+  width:112px;
+  height:112px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#fff;
+  border:3px solid var(--gold);
+  box-shadow:0 10px 24px rgba(0,0,0,.35);
+}
+
+.nome-time{
+  color:var(--gold);
+  font-size:34px;
+  font-weight:900;
+  text-transform:uppercase;
+  line-height:1.05;
+}
+
+.sub{
+  color:var(--muted);
+  font-size:15px;
+  margin-top:8px;
+  line-height:1.5;
+}
+
+.tags{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.tag{
+  background:rgba(26,63,115,.9);
+  padding:7px 11px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:900;
+}
+
+.grid-stats{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  gap:10px;
+  margin:14px 0;
+}
+
+.stat{
+  background:
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:13px 8px;
+  text-align:center;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+.stat strong{
+  display:block;
+  color:var(--gold);
+  font-size:25px;
+  line-height:1;
+}
+
+.stat span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+  margin-top:7px;
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.bloco{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:18px;
+  padding:16px;
+  box-shadow:var(--shadow);
+  margin-bottom:14px;
+}
+
+.bloco h2{
+  color:var(--gold);
+  font-size:22px;
+  font-weight:900;
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.info-list{
+  display:grid;
+  gap:9px;
+}
+
+.info-row{
+  display:grid;
+  grid-template-columns:150px 1fr;
+  gap:10px;
+  padding:10px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.info-row strong{
+  color:#fff;
+}
+
+.lista{
+  display:grid;
+  gap:9px;
+}
+
+.item{
+  display:grid;
+  grid-template-columns:52px 1fr auto;
+  gap:10px;
+  align-items:center;
+  padding:10px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+}
+
+.numero{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+}
+
+.item strong{
+  display:block;
+  color:#fff;
+  font-size:14px;
+}
+
+.item span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:3px;
+}
+
+.badge{
+  color:#111;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  padding:6px 9px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.jogo{
+  display:grid;
+  grid-template-columns:130px 1fr 100px;
+  gap:10px;
+  align-items:center;
+  padding:11px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.jogo strong{
+  color:#fff;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:11px 14px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  font-weight:900;
+  margin-bottom:14px;
+}
+
+.vazio{
+  color:var(--muted);
+  text-align:center;
+  padding:16px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+}
+
+@media(max-width:1000px){
+  .grid-stats{
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .grid2{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:650px){
+  .topo-time{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+
+  .logo-time{
+    margin:auto;
+  }
+
+  .nome-time{
+    font-size:26px;
+  }
+
+  .grid-stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .info-row,
+  .jogo{
+    grid-template-columns:1fr;
+  }
+
+  .item{
+    grid-template-columns:44px 1fr;
+  }
+
+  .item .badge{
+    grid-column:1/-1;
+    text-align:center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="wrap container">
+
+  <a class="btn" href="times.html">
+    <i class="fa-solid fa-arrow-left"></i> Voltar para Times
+  </a>
+
+  <section class="hero" id="topo">
+    <div class="topo-time">
+      <img class="logo-time" id="logoTime" src="logo-liga.jfif">
+
+      <div>
+        <div class="nome-time" id="nomeTime">Carregando...</div>
+        <div class="sub" id="subTime">-</div>
+
+        <div class="tags">
+          <div class="tag" id="tagCategoria">Categoria: -</div>
+          <div class="tag" id="tagCidade">Cidade: -</div>
+          <div class="tag" id="tagStatus">Status: -</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-stats">
+    <div class="stat"><strong id="pontos">0</strong><span>Pontos</span></div>
+    <div class="stat"><strong id="jogos">0</strong><span>Jogos</span></div>
+    <div class="stat"><strong id="vitorias">0</strong><span>Vitórias</span></div>
+    <div class="stat"><strong id="empates">0</strong><span>Empates</span></div>
+    <div class="stat"><strong id="derrotas">0</strong><span>Derrotas</span></div>
+    <div class="stat"><strong id="golsPro">0</strong><span>Gols Pró</span></div>
+    <div class="stat"><strong id="golsContra">0</strong><span>Gols Contra</span></div>
+    <div class="stat"><strong id="saldo">0</strong><span>Saldo</span></div>
+  </section>
+
+  <section class="grid2">
+    <div class="bloco">
+      <h2><i class="fa-solid fa-circle-info"></i> Dados do Time</h2>
+      <div class="info-list" id="dadosTime"></div>
+    </div>
+
+    <div class="bloco">
+      <h2><i class="fa-solid fa-user-tie"></i> Comissão Técnica</h2>
+      <div class="lista" id="listaTecnicos"></div>
+    </div>
+  </section>
+
+  <section class="bloco">
+    <h2><i class="fa-solid fa-users"></i> Elenco</h2>
+    <div class="lista" id="listaJogadores"></div>
+  </section>
+
+  <section class="bloco">
+    <h2><i class="fa-solid fa-calendar-days"></i> Jogos do Time</h2>
+    <div class="lista" id="listaJogos"></div>
+  </section>
+
+</main>
+
+<script type="module">
+import { renderMenu } from "./menu.js";
+import { db } from "./firebase.js";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+renderMenu("times");
+
+const id = new URLSearchParams(location.search).get("id");
+
+let timeAtual = null;
+let jogadores = [];
+let tecnicos = [];
+let jogos = [];
+let sumulas = [];
+
+function n(txt){
+  return String(txt || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function valor(obj, chaves, fallback="-"){
+  for(const chave of chaves){
+    if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
+      return obj[chave];
+    }
+  }
+  return fallback;
+}
+
+function nomeTime(t){
+  return valor(t,["nome","timeNome","nomeTime","equipe"],"Time sem nome");
+}
+
+function logoTime(t){
+  return valor(t,["logo","escudo","imagem","foto"],"logo-liga.jfif");
+}
+
+function categoriaTime(t){
+  return valor(t,["categoria","categoriaNome"],"-");
+}
+
+function cidadeTime(t){
+  return valor(t,["cidade","municipio","local"],"-");
+}
+
+function tecnicoTime(t){
+  return valor(t,["tecnico","tecnicoNome","treinador"],"-");
+}
+
+function statusTime(t){
+  return valor(t,["status"],"Ativo");
+}
+
+function mesmoTime(valorCampo){
+  if(!timeAtual) return false;
+
+  const nome = nomeTime(timeAtual);
+
+  if(valorCampo && typeof valorCampo === "object"){
+    return (
+      valorCampo.id === id ||
+      n(valorCampo.nome) === n(nome) ||
+      n(valorCampo.nomeTime) === n(nome)
+    );
+  }
+
+  return n(valorCampo) === n(id) || n(valorCampo) === n(nome);
+}
+
+function timeA(j){
+  return j.timeA || j.timeMandante || j.mandante || j.timeMandanteNome || j.mandanteNome;
+}
+
+function timeB(j){
+  return j.timeB || j.timeVisitante || j.visitante || j.timeVisitanteNome || j.visitanteNome;
+}
+
+function nomeTimeCampo(v,fallback){
+  if(v && typeof v === "object"){
+    return v.nome || v.nomeTime || fallback;
+  }
+  return v || fallback;
+}
+
+function placarA(s){
+  if(s.placar && typeof s.placar === "object"){
+    return Number(s.placar.A ?? s.placar.a ?? s.placar.mandante ?? 0);
+  }
+
+  return Number(valor(s,["golsA","placarA","golsMandante"],0));
+}
+
+function placarB(s){
+  if(s.placar && typeof s.placar === "object"){
+    return Number(s.placar.B ?? s.placar.b ?? s.placar.visitante ?? 0);
+  }
+
+  return Number(valor(s,["golsB","placarB","golsVisitante"],0));
+}
+
+function sumulaPublicada(s){
+  return (
+    s.sumulaFinalizada === true ||
+    s.publica === true ||
+    s.publico === true ||
+    n(s.status) === "finalizado"
+  );
+}
+
+function dataTexto(v){
+  if(!v) return "-";
+
+  if(typeof v.toDate === "function"){
+    v = v.toDate();
+  }
+
+  const d = new Date(v);
+
+  if(!isNaN(d.getTime())){
+    return d.toLocaleDateString("pt-BR");
+  }
+
+  return String(v);
+}
+
+function horaTexto(j){
+  return valor(j,["hora","horario"],"");
+}
+
+function estatisticas(){
+  const st = {
+    pontos:0,
+    jogos:0,
+    vitorias:0,
+    empates:0,
+    derrotas:0,
+    golsPro:0,
+    golsContra:0,
+    saldo:0
+  };
+
+  sumulas.filter(sumulaPublicada).forEach(s=>{
+    const ehA = mesmoTime(s.timeA || s.timeMandante || s.mandante || s.timeMandanteNome || s.mandanteNome);
+    const ehB = mesmoTime(s.timeB || s.timeVisitante || s.visitante || s.timeVisitanteNome || s.visitanteNome);
+
+    if(!ehA && !ehB) return;
+
+    const gA = placarA(s);
+    const gB = placarB(s);
+
+    st.jogos++;
+
+    if(ehA){
+      st.golsPro += gA;
+      st.golsContra += gB;
+
+      if(gA > gB){
+        st.vitorias++;
+        st.pontos += 3;
+      }else if(gA === gB){
+        st.empates++;
+        st.pontos += 1;
+      }else{
+        st.derrotas++;
+      }
+    }
+
+    if(ehB){
+      st.golsPro += gB;
+      st.golsContra += gA;
+
+      if(gB > gA){
+        st.vitorias++;
+        st.pontos += 3;
+      }else if(gA === gB){
+        st.empates++;
+        st.pontos += 1;
+      }else{
+        st.derrotas++;
+      }
+    }
+  });
+
+  st.saldo = st.golsPro - st.golsContra;
+  return st;
+}
+
+function jogadoresDoTime(){
+  return jogadores.filter(j=>{
+    return (
+      n(j.timeId) === n(id) ||
+      n(j.time) === n(nomeTime(timeAtual)) ||
+      n(j.timeNome) === n(nomeTime(timeAtual)) ||
+      n(j.clube) === n(nomeTime(timeAtual))
+    );
+  }).sort((a,b)=>String(a.nome || "").localeCompare(String(b.nome || ""),"pt-BR"));
+}
+
+function tecnicosDoTime(){
+  return tecnicos.filter(t=>{
+    return (
+      n(t.timeId) === n(id) ||
+      n(t.time) === n(nomeTime(timeAtual)) ||
+      n(t.timeNome) === n(nomeTime(timeAtual)) ||
+      n(t.clube) === n(nomeTime(timeAtual))
+    );
+  }).sort((a,b)=>String(a.nome || "").localeCompare(String(b.nome || ""),"pt-BR"));
+}
+
+function jogosDoTime(){
+  return jogos.filter(j=>{
+    return mesmoTime(timeA(j)) || mesmoTime(timeB(j));
+  });
+}
+
+function renderTopo(){
+  document.getElementById("logoTime").src = logoTime(timeAtual);
+  document.getElementById("nomeTime").innerText = nomeTime(timeAtual);
+
+  document.title = `${nomeTime(timeAtual)} - LIGA GOIANA DE FUTEBOL DE BASE`;
+
+  document.getElementById("subTime").innerText =
+    `${cidadeTime(timeAtual)} • ${categoriaTime(timeAtual)} • Técnico: ${tecnicoTime(timeAtual)}`;
+
+  document.getElementById("tagCategoria").innerText = `Categoria: ${categoriaTime(timeAtual)}`;
+  document.getElementById("tagCidade").innerText = `Cidade: ${cidadeTime(timeAtual)}`;
+  document.getElementById("tagStatus").innerText = `Status: ${statusTime(timeAtual)}`;
+}
+
+function renderStats(){
+  const st = estatisticas();
+
+  document.getElementById("pontos").innerText = st.pontos;
+  document.getElementById("jogos").innerText = st.jogos;
+  document.getElementById("vitorias").innerText = st.vitorias;
+  document.getElementById("empates").innerText = st.empates;
+  document.getElementById("derrotas").innerText = st.derrotas;
+  document.getElementById("golsPro").innerText = st.golsPro;
+  document.getElementById("golsContra").innerText = st.golsContra;
+  document.getElementById("saldo").innerText = st.saldo;
+}
+
+function renderDados(){
+  document.getElementById("dadosTime").innerHTML = `
+    <div class="info-row"><strong>Nome</strong><span>${nomeTime(timeAtual)}</span></div>
+    <div class="info-row"><strong>Categoria</strong><span>${categoriaTime(timeAtual)}</span></div>
+    <div class="info-row"><strong>Cidade</strong><span>${cidadeTime(timeAtual)}</span></div>
+    <div class="info-row"><strong>Técnico</strong><span>${tecnicoTime(timeAtual)}</span></div>
+    <div class="info-row"><strong>Responsável</strong><span>${valor(timeAtual,["responsavel","diretor","presidente"],"-")}</span></div>
+    <div class="info-row"><strong>Telefone</strong><span>${valor(timeAtual,["telefone","whatsapp","contato"],"-")}</span></div>
+    <div class="info-row"><strong>Email</strong><span>${valor(timeAtual,["email"],"-")}</span></div>
+    <div class="info-row"><strong>Status</strong><span>${statusTime(timeAtual)}</span></div>
+  `;
+}
+
+function renderJogadores(){
+  const lista = jogadoresDoTime();
+  const box = document.getElementById("listaJogadores");
+
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhum jogador vinculado a este time.</div>`;
+    return;
+  }
+
+  box.innerHTML = lista.map(j=>`
+    <div class="item">
+      <div class="numero">${valor(j,["numero","camisa"],"-")}</div>
+      <div>
+        <strong>${valor(j,["nome","nomeCompleto"],"Jogador")}</strong>
+        <span>${valor(j,["posicao","categoria"],"-")} • CPF: ${valor(j,["cpf"],"-")}</span>
+      </div>
+      <div class="badge">${valor(j,["status"],"Ativo")}</div>
+    </div>
+  `).join("");
+}
+
+function renderTecnicos(){
+  const lista = tecnicosDoTime();
+  const box = document.getElementById("listaTecnicos");
+
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhum técnico vinculado a este time.</div>`;
+    return;
+  }
+
+  box.innerHTML = lista.map(t=>`
+    <div class="item">
+      <div class="numero"><i class="fa-solid fa-user-tie"></i></div>
+      <div>
+        <strong>${valor(t,["nome","nomeCompleto"],"Técnico")}</strong>
+        <span>${valor(t,["funcao"],"Técnico")} • CPF: ${valor(t,["cpf"],"-")}</span>
+      </div>
+      <div class="badge">${valor(t,["status"],"Ativo")}</div>
+    </div>
+  `).join("");
+}
+
+function renderJogos(){
+  const lista = jogosDoTime();
+  const box = document.getElementById("listaJogos");
+
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhum jogo encontrado para este time.</div>`;
+    return;
+  }
+
+  box.innerHTML = lista.map(j=>{
+    const a = nomeTimeCampo(timeA(j),"Mandante");
+    const b = nomeTimeCampo(timeB(j),"Visitante");
+
+    return `
+      <div class="jogo">
+        <div>${dataTexto(j.dataHora || j.data || j.dataJogo)} ${horaTexto(j)}</div>
+        <strong>${a} x ${b}</strong>
+        <div>${valor(j,["status"],"Agendado")}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function render(){
+  if(!timeAtual) return;
+
+  renderTopo();
+  renderStats();
+  renderDados();
+  renderJogadores();
+  renderTecnicos();
+  renderJogos();
+}
+
+async function carregarTime(){
+  if(!id){
+    document.body.innerHTML = `<h2 style="text-align:center;margin:40px;color:white">Time não informado.</h2>`;
+    return;
+  }
+
+  const snap = await getDoc(doc(db,"times",id));
+
+  if(!snap.exists()){
+    document.body.innerHTML = `<h2 style="text-align:center;margin:40px;color:white">Time não encontrado.</h2>`;
+    return;
+  }
+
+  timeAtual = {id:snap.id,...snap.data()};
+  render();
+}
+
+onSnapshot(collection(db,"jogadores"),snap=>{
+  jogadores = snap.docs.map(d=>({id:d.id,...d.data()}));
+  render();
+});
+
+onSnapshot(collection(db,"tecnicos"),snap=>{
+  tecnicos = snap.docs.map(d=>({id:d.id,...d.data()}));
+  render();
+});
+
+onSnapshot(collection(db,"jogos"),snap=>{
+  jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
+  render();
+});
+
+onSnapshot(collection(db,"sumulas"),snap=>{
+  sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
+  render();
+});
+
+carregarTime();
+</script>
+
+</body>
+</html>
