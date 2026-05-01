@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classificação - Liga Goiana</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body{
+  font-family:Arial, Helvetica, sans-serif;
+  background:#061427;
+  color:#fff;
+  margin:0;
+}
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+}
+
+h1{
+  color:#ffd400;
+}
+
+.tabela{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
+
+.tabela th{
+  background:#0d2a52;
+  color:#ffd400;
+  padding:12px;
+}
+
+.tabela td{
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  text-align:center;
+}
+
+.tabela tr:hover{
+  background:rgba(255,212,0,.08);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Classificação</h1>
+
+  <table class="tabela">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Time</th>
+        <th>P</th>
+        <th>J</th>
+        <th>V</th>
+        <th>E</th>
+        <th>D</th>
+        <th>GP</th>
+        <th>GC</th>
+        <th>SG</th>
+      </tr>
+    </thead>
+
+    <tbody id="tabelaBody"></tbody>
+  </table>
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const tabelaBody = document.getElementById("tabelaBody");
+
+async function carregarClassificacao(){
+
+  const timesSnap = await getDocs(collection(db,"times"));
+  const jogosSnap = await getDocs(collection(db,"jogos"));
+  const sumulasSnap = await getDocs(collection(db,"sumulas"));
+
+  let tabela = {};
+
+  timesSnap.forEach(doc=>{
+    tabela[doc.id] = {
+      nome: doc.data().nome || "Time",
+      pontos:0,
+      jogos:0,
+      vitorias:0,
+      empates:0,
+      derrotas:0,
+      gp:0,
+      gc:0
+    }
+  });
+
+  sumulasSnap.forEach(doc=>{
+    const s = doc.data();
+
+    if(!s.timeA || !s.timeB) return;
+
+    let A = tabela[s.timeA];
+    let B = tabela[s.timeB];
+
+    if(!A || !B) return;
+
+    let gA = s.golsA || 0;
+    let gB = s.golsB || 0;
+
+    A.jogos++;
+    B.jogos++;
+
+    A.gp += gA;
+    A.gc += gB;
+
+    B.gp += gB;
+    B.gc += gA;
+
+    if(gA > gB){
+      A.vitorias++; A.pontos+=3;
+      B.derrotas++;
+    }else if(gB > gA){
+      B.vitorias++; B.pontos+=3;
+      A.derrotas++;
+    }else{
+      A.empates++; B.empates++;
+      A.pontos++; B.pontos++;
+    }
+  });
+
+  let lista = Object.values(tabela);
+
+  lista.sort((a,b)=>{
+    return b.pontos - a.pontos ||
+           (b.gp - b.gc) - (a.gp - a.gc) ||
+           b.gp - a.gp;
+  });
+
+  tabelaBody.innerHTML = "";
+
+  lista.forEach((t,i)=>{
+    tabelaBody.innerHTML += `
+      <tr>
+        <td>${i+1}</td>
+        <td>${t.nome}</td>
+        <td>${t.pontos}</td>
+        <td>${t.jogos}</td>
+        <td>${t.vitorias}</td>
+        <td>${t.empates}</td>
+        <td>${t.derrotas}</td>
+        <td>${t.gp}</td>
+        <td>${t.gc}</td>
+        <td>${t.gp - t.gc}</td>
+      </tr>
+    `;
+  });
+
+}
+
+carregarClassificacao();
+</script>
+
+</body>
+</html>
