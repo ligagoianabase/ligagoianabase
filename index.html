@@ -416,6 +416,19 @@
       box-shadow:0 12px 24px rgba(255,212,0,.3);
     }
 
+    .btn-secondary{
+      padding:14px 18px;
+      border:1px solid var(--yellow-line);
+      color:#fff;
+      background:rgba(255,255,255,.06);
+    }
+
+    .btn-secondary:hover{
+      transform:translateY(-2px);
+      background:var(--yellow);
+      color:#08172c;
+    }
+
     .btn-login-chip{
       padding:10px 16px;
       border:1px solid var(--yellow-line);
@@ -501,11 +514,8 @@
       width:18px;
       flex-shrink:0;
     }
-  </style>
-</head>
 
-<body data-pagina="inicio">
-.user-dropdown{
+    .user-dropdown{
       position:absolute;
       top:calc(100% + 10px);
       right:0;
@@ -699,19 +709,6 @@
       margin-top:26px;
     }
 
-    .btn-secondary{
-      padding:14px 18px;
-      border:1px solid var(--yellow-line);
-      color:#fff;
-      background:rgba(255,255,255,.06);
-    }
-
-    .btn-secondary:hover{
-      transform:translateY(-2px);
-      background:var(--yellow);
-      color:#08172c;
-    }
-
     .hero-art img{
       width:100%;
       height:100%;
@@ -866,6 +863,7 @@
       background:rgba(255,255,255,.04);
       border:1px solid rgba(255,255,255,.06);
       transition:var(--transition);
+      display:block;
     }
 
     .news-item:hover{
@@ -1021,7 +1019,8 @@
       color:var(--text-soft);
       font-size:14px;
     }
-#menuAdmin{
+
+    #menuAdmin{
       display:none;
     }
 
@@ -1240,6 +1239,7 @@
 </head>
 
 <body data-pagina="inicio">
+
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <aside class="sidebar" id="sidebar">
@@ -1542,7 +1542,8 @@
       </div>
     </section>
   </main>
-<footer id="contato">
+
+  <footer id="contato">
     <div class="wrap">
       <div class="footer-grid">
         <div class="footer-card">
@@ -1611,15 +1612,7 @@
   <script type="module">
     import { auth, db } from "./firebase.js";
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-    import {
-      doc,
-      getDoc,
-      collection,
-      getDocs,
-      query,
-      orderBy,
-      limit
-    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
     const sidebar = document.getElementById("sidebar");
     const sidebarOverlay = document.getElementById("sidebarOverlay");
@@ -1676,12 +1669,10 @@
 
     function resetDropdown(dropdown){
       if(!dropdown) return;
-
       dropdown.classList.remove("open");
       dropdown.classList.remove("mobile-fixed");
 
       const menu = dropdown.querySelector(".dropdown-menu");
-
       if(menu){
         menu.style.top = "";
       }
@@ -1690,17 +1681,13 @@
     function closeAllDropdowns(){
       resetDropdown(campeonatosDropdown);
       resetDropdown(participantesDropdown);
-
-      if(userDropdown){
-        userDropdown.classList.remove("open");
-      }
+      if(userDropdown) userDropdown.classList.remove("open");
     }
 
     function openMenuDropdown(dropdown, toggle){
       if(!dropdown || !toggle) return;
 
       const vaiAbrir = !dropdown.classList.contains("open");
-
       closeAllDropdowns();
 
       if(!vaiAbrir) return;
@@ -1709,7 +1696,6 @@
 
       if(isMobile()){
         dropdown.classList.add("mobile-fixed");
-
         const menu = dropdown.querySelector(".dropdown-menu");
         const rect = toggle.getBoundingClientRect();
 
@@ -1756,7 +1742,6 @@
         event.stopPropagation();
 
         const vaiAbrir = userDropdown && !userDropdown.classList.contains("open");
-
         closeAllDropdowns();
 
         if(vaiAbrir && userDropdown){
@@ -1794,16 +1779,11 @@
     });
 
     function normalizarTexto(texto){
-      return String(texto || "")
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g,"");
+      return String(texto || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
 
     function normalizarTipo(tipo){
       const valor = normalizarTexto(tipo);
-
       if(valor === "admin" || valor === "administrador") return "admin";
       if(valor === "arbitro" || valor === "árbitro") return "arbitro";
       if(valor === "assistente") return "assistente";
@@ -1811,13 +1791,11 @@
       if(valor === "jogador") return "jogador";
       if(valor === "pai_atleta") return "pai_atleta";
       if(valor === "fotografo" || valor === "fotógrafo") return "fotografo";
-
       return "torcedor";
     }
 
     function tipoLabel(tipo){
       const valor = normalizarTipo(tipo);
-
       if(valor === "admin") return "Administrador";
       if(valor === "arbitro") return "Árbitro";
       if(valor === "assistente") return "Assistente";
@@ -1825,16 +1803,12 @@
       if(valor === "jogador") return "Jogador";
       if(valor === "pai_atleta") return "Pai de Atleta";
       if(valor === "fotografo") return "Fotógrafo";
-
       return "Torcedor";
     }
 
     function preencherAvatar(elemento, foto){
       if(!elemento) return;
-
-      elemento.innerHTML = foto
-        ? `<img src="${foto}" alt="Foto do usuário">`
-        : `<i class="fa-solid fa-user"></i>`;
+      elemento.innerHTML = foto ? `<img src="${foto}" alt="Foto do usuário">` : `<i class="fa-solid fa-user"></i>`;
     }
 
     function mostrarUsuarioDeslogado(){
@@ -1875,47 +1849,19 @@
         userCardRole.innerHTML = `<i class="${ehArbitro ? "fa-solid fa-whistle" : "fa-solid fa-user"}"></i><span>${tipoLabel(tipo)}</span>`;
       }
 
-      if(userChipWhistle){
-        userChipWhistle.style.display = ehArbitro ? "inline-flex" : "none";
-      }
+      if(userChipWhistle) userChipWhistle.style.display = ehArbitro ? "inline-flex" : "none";
 
       preencherAvatar(userChipAvatar, foto);
       preencherAvatar(userCardAvatar, foto);
     }
 
-    onAuthStateChanged(auth, async(user)=>{
+    onAuthStateChanged(auth, async (user) => {
       if(!user){
         mostrarUsuarioDeslogado();
         return;
       }
 
       try{
-        const ref = doc(db,"usuarios",user.uid);
-        const snap = await getDoc(ref);
-
-        if(!snap.exists()){
-          mostrarUsuarioDeslogado();
-          return;
-        }
-
-        mostrarUsuarioLogado(snap.data(),user);
-      }catch(error){
-        console.error("Erro ao carregar usuário da página inicial:", error);
-        mostrarUsuarioDeslogado();
-      }
-    });
-
-    if(logoutBtn){
-      logoutBtn.addEventListener("click", async function(){
-        try{
-          await signOut(auth);
-          window.location.href = "index.html";
-        }catch(error){
-          console.error("Erro ao sair:", error);
-        }
-      });
-    }
-try{
         const ref = doc(db, "usuarios", user.uid);
         const snap = await getDoc(ref);
 
@@ -1948,7 +1894,6 @@ try{
           return obj[chave];
         }
       }
-
       return fallback;
     }
 
@@ -1980,29 +1925,20 @@ try{
 
       if(dataHora && typeof dataHora.toDate === "function"){
         const d = dataHora.toDate();
-
-        return d.toLocaleDateString("pt-BR") + " - " + d.toLocaleTimeString("pt-BR", {
-          hour:"2-digit",
-          minute:"2-digit"
-        });
+        return d.toLocaleDateString("pt-BR") + " - " + d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
       }
 
       const data = String(dataHora || "").trim();
 
       if(data.includes("T")){
         const d = new Date(data);
-
         if(!isNaN(d.getTime())){
-          return d.toLocaleDateString("pt-BR") + " - " + d.toLocaleTimeString("pt-BR", {
-            hour:"2-digit",
-            minute:"2-digit"
-          });
+          return d.toLocaleDateString("pt-BR") + " - " + d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
         }
       }
 
       if(data && hora) return `${data} - ${hora}`;
       if(data) return data;
-
       return "-";
     }
 
@@ -2010,7 +1946,6 @@ try{
       if(valor && typeof valor === "object"){
         return valor.nome || valor.nomeTime || valor.time || fallback;
       }
-
       return valor || fallback;
     }
 
@@ -2061,7 +1996,6 @@ try{
       }
 
       const status = valorCampo(jogo, ["status"], "Agendado");
-
       return status || "Agendado";
     }
 
@@ -2076,11 +2010,7 @@ try{
     async function carregarSumulasFirebase(){
       try{
         const snap = await getDocs(collection(db, "sumulas"));
-
-        sumulasCache = snap.docs.map(d => ({
-          id:d.id,
-          ...d.data()
-        }));
+        sumulasCache = snap.docs.map(d => ({ id:d.id, ...d.data() }));
       }catch(error){
         console.error("Erro ao carregar súmulas:", error);
         sumulasCache = [];
@@ -2100,10 +2030,7 @@ try{
           return;
         }
 
-        const jogos = snap.docs.map(d => ({
-          id:d.id,
-          ...d.data()
-        }));
+        const jogos = snap.docs.map(d => ({ id:d.id, ...d.data() }));
 
         const ordenados = jogos
           .sort((a,b)=>{
@@ -2176,10 +2103,7 @@ try{
         }
 
         const noticias = snap.docs
-          .map(d => ({
-            id:d.id,
-            ...d.data()
-          }))
+          .map(d => ({ id:d.id, ...d.data() }))
           .filter(noticiaPublicada)
           .sort((a,b)=>dataNoticia(b) - dataNoticia(a))
           .slice(0,3);
@@ -2217,5 +2141,6 @@ try{
     carregarJogosFirebase();
     carregarNoticiasFirebase();
   </script>
+
 </body>
 </html>
