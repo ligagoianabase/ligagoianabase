@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Suspensos - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="menu.css">
+
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --red:#b42323;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1240px;
+}
+
+body{
+  font-family:Arial;
+  background:
+    linear-gradient(rgba(2,8,20,.9), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:#fff;
+}
+
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:auto;
+}
+
+.container{padding:20px}
+
+.hero{
+  background:linear-gradient(135deg,#0d2a52,#08172c);
+  border:1px solid var(--gold-line);
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:14px;
+}
+
+.hero h2{
+  color:var(--gold);
+  font-size:26px;
+}
+
+.tabela{
+  background:#071d37;
+  border-radius:14px;
+  overflow:hidden;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  background:#123b7a;
+  color:var(--gold);
+  padding:12px;
+}
+
+td{
+  padding:12px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+}
+
+.badge{
+  padding:6px 10px;
+  border-radius:999px;
+  font-weight:900;
+}
+
+.amarelo{background:#7a5a00}
+.vermelho{background:#b42323}
+
+.vazio{
+  padding:20px;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<script type="module">
+import { renderMenu } from "./menu.js";
+renderMenu("suspensos");
+</script>
+
+<main class="wrap container">
+
+<section class="hero">
+<h2>Suspensos</h2>
+<p>Jogadores suspensos automaticamente por cartões.</p>
+</section>
+
+<div class="tabela">
+<table>
+<thead>
+<tr>
+<th>Jogador</th>
+<th>Time</th>
+<th>Motivo</th>
+</tr>
+</thead>
+<tbody id="lista"></tbody>
+</table>
+</div>
+
+</main>
+
+<script type="module">
+import { db } from "./firebase.js";
+import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let sumulas = [];
+
+function normalizar(t){
+  return String(t||"").toLowerCase();
+}
+
+function render(){
+  const mapa = {};
+
+  sumulas.forEach(s=>{
+    if(!s.publica && !s.finalizada) return;
+
+    (s.cartoes || []).forEach(c=>{
+      const nome = c.nome || c.jogador;
+      const time = c.time || "-";
+
+      if(!mapa[nome]){
+        mapa[nome] = {nome,time,amarelo:0,vermelho:0};
+      }
+
+      if(normalizar(c.tipo) === "amarelo") mapa[nome].amarelo++;
+      if(normalizar(c.tipo) === "vermelho") mapa[nome].vermelho++;
+    });
+  });
+
+  const suspensos = Object.values(mapa).filter(p =>
+    p.vermelho >= 1 || p.amarelo >= 3
+  );
+
+  const tbody = document.getElementById("lista");
+
+  if(!suspensos.length){
+    tbody.innerHTML = `<tr><td colspan="3" class="vazio">Nenhum suspenso</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = suspensos.map(p=>`
+    <tr>
+      <td>${p.nome}</td>
+      <td>${p.time}</td>
+      <td>
+        ${p.vermelho ? `<span class="badge vermelho">Vermelho</span>` : ""}
+        ${p.amarelo>=3 ? `<span class="badge amarelo">3 Amarelos</span>` : ""}
+      </td>
+    </tr>
+  `).join("");
+}
+
+onSnapshot(collection(db,"sumulas"),snap=>{
+  sumulas = snap.docs.map(d=>d.data());
+  render();
+});
+</script>
+
+</body>
+</html>
