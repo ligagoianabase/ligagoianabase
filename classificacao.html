@@ -3,168 +3,1093 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Classificação - Liga Goiana</title>
+
+<title>Classificação - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-body{
-  font-family:Arial, Helvetica, sans-serif;
-  background:#061427;
-  color:#fff;
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --yellow:#7a5a00;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1240px;
+}
+
+*{
   margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button,
+input,
+select{
+  font-family:inherit;
+}
+
+button{
+  cursor:pointer;
+  border:none;
+}
+
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
+
+.topo{
+  background:
+    linear-gradient(180deg, rgba(8,23,44,.98), rgba(6,20,39,.98));
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.topo-titulo{
+  min-height:78px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:#fff;
+  font-size:24px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+}
+
+.menu-principal{
+  background:
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
+  border-top:1px solid rgba(255,255,255,.06);
+}
+
+.menu-tabs{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:clamp(4px,.55vw,10px);
+  padding:14px 6px;
+  flex-wrap:nowrap;
+  overflow:hidden;
+}
+
+.menu-tabs button{
+  font-weight:900;
+  font-size:clamp(11px,.92vw,15px);
+  background:
+    linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
+  color:#fff;
+  padding:clamp(8px,.75vw,12px) clamp(9px,1vw,18px);
+  border-radius:15px;
+  border:1px solid rgba(255,255,255,.07);
+  white-space:nowrap;
+  box-shadow:0 10px 22px rgba(0,0,0,.24);
+}
+
+.menu-tabs button:hover{
+  color:var(--gold);
+  border-color:var(--gold-line);
+}
+
+.menu-tabs button.ativo{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  border-color:var(--gold);
 }
 
 .container{
-  max-width:1200px;
-  margin:auto;
+  padding:22px 0 34px;
+}
+
+.hero{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
   padding:20px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
 }
 
-h1{
-  color:#ffd400;
+.hero h2{
+  color:var(--gold);
+  font-size:28px;
+  font-weight:900;
+  margin-bottom:6px;
 }
 
-.tabela{
+.hero p{
+  color:var(--muted);
+  line-height:1.5;
+  font-size:14px;
+}
+
+.hero-tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.hero-tag{
+  background:rgba(26,63,115,.9);
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+select,
+input{
   width:100%;
-  border-collapse:collapse;
-  margin-top:20px;
-}
-
-.tabela th{
-  background:#0d2a52;
-  color:#ffd400;
   padding:12px;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
 }
 
-.tabela td{
-  padding:10px;
-  border-bottom:1px solid rgba(255,255,255,.1);
+select:focus,
+input:focus{
+  outline:2px solid rgba(247,198,0,.65);
+}
+
+.cards-resumo{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.card-resumo{
+  background:
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:15px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
   text-align:center;
 }
 
-.tabela tr:hover{
-  background:rgba(255,212,0,.08);
+.card-resumo strong{
+  display:block;
+  color:var(--gold);
+  font-size:28px;
+  line-height:1;
+}
+
+.card-resumo span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  margin-top:7px;
+  text-transform:uppercase;
+}
+
+.tabela-box{
+  background:
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  background:rgba(247,198,0,.14);
+  color:var(--gold);
+  font-size:13px;
+  text-transform:uppercase;
+  text-align:left;
+  padding:13px 10px;
+}
+
+td{
+  padding:13px 10px;
+  border-top:1px solid rgba(255,255,255,.08);
+  color:var(--muted);
+  font-size:14px;
+}
+
+tbody tr:hover{
+  background:rgba(247,198,0,.08);
+}
+
+.pos{
+  text-align:center;
+  color:#fff;
+  font-weight:900;
+}
+
+.nome{
+  color:#fff;
+  font-weight:900;
+}
+
+.numero{
+  text-align:center;
+  font-weight:900;
+  color:var(--gold);
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 9px;
+  border-radius:999px;
+  background:rgba(26,63,115,.9);
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+}
+
+.badge.gold{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.badge.red{
+  background:var(--red);
+}
+
+.badge.green{
+  background:var(--green);
+}
+
+.vazio{
+  color:var(--muted);
+  text-align:center;
+  padding:18px;
+}
+
+@media(max-width:900px){
+  .topo-titulo{
+    font-size:18px;
+    min-height:65px;
+  }
+
+  .menu-tabs{
+    justify-content:flex-start;
+    overflow-x:auto;
+    padding:14px;
+    scrollbar-width:none;
+  }
+
+  .menu-tabs::-webkit-scrollbar{
+    display:none;
+  }
+
+  .menu-tabs button{
+    flex:0 0 auto;
+    font-size:15px;
+    padding:12px 18px;
+  }
+
+  .filtros{
+    grid-template-columns:1fr;
+  }
+
+  .cards-resumo{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .tabela-box{
+    overflow-x:auto;
+  }
+}
+
+@media(max-width:430px){
+  .cards-resumo{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h1>Classificação</h1>
+<header class="topo">
+  <div class="wrap topo-titulo">
+    LIGA GOIANA DE FUTEBOL DE BASE
+  </div>
 
-  <table class="tabela">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Time</th>
-        <th>P</th>
-        <th>J</th>
-        <th>V</th>
-        <th>E</th>
-        <th>D</th>
-        <th>GP</th>
-        <th>GC</th>
-        <th>SG</th>
-      </tr>
-    </thead>
+  <div class="menu-principal">
+    <div class="wrap">
+      <nav class="menu-tabs">
+        <button class="ativo" data-aba="detalhes">Detalhes</button>
+        <button data-aba="classificacao">Classificação</button>
+        <button data-aba="casaFora">Casa / Fora</button>
+        <button data-aba="jogos">Jogos</button>
+        <button data-aba="estatisticas">Estatísticas dos Times</button>
+        <button data-aba="artilharia">Artilharia</button>
+        <button data-aba="assistencias">Assistências</button>
+        <button data-aba="cartoes">Cartões</button>
+        <button data-aba="suspensos">Suspensos</button>
+        <button data-aba="historico">Histórico</button>
+      </nav>
+    </div>
+  </div>
+</header>
 
-    <tbody id="tabelaBody"></tbody>
-  </table>
-</div>
+<main class="wrap container">
+
+  <section class="hero">
+    <h2 id="tituloAba">Detalhes</h2>
+    <p id="descricaoAba">Resumo geral da competição com dados automáticos das súmulas finalizadas.</p>
+
+    <div class="hero-tags">
+      <div class="hero-tag" id="tagTimes">Times: 0</div>
+      <div class="hero-tag" id="tagJogos">Jogos: 0</div>
+      <div class="hero-tag" id="tagGols">Gols: 0</div>
+      <div class="hero-tag" id="tagCartoes">Cartões: 0</div>
+    </div>
+  </section>
+
+  <section class="filtros">
+    <select id="filtroCampeonato">
+      <option value="">Todos campeonatos</option>
+    </select>
+
+    <select id="filtroCategoria">
+      <option value="">Todas categorias</option>
+    </select>
+  </section>
+
+  <section class="cards-resumo" id="cardsResumo"></section>
+
+  <section id="conteudo"></section>
+
+</main>
 
 <script type="module">
 import { db } from "./firebase.js";
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import {
+  collection,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-const tabelaBody = document.getElementById("tabelaBody");
+let times = [];
+let jogos = [];
+let sumulas = [];
+let abaAtual = "detalhes";
 
-async function carregarClassificacao(){
+const filtroCampeonato = document.getElementById("filtroCampeonato");
+const filtroCategoria = document.getElementById("filtroCategoria");
+const conteudo = document.getElementById("conteudo");
+const cardsResumo = document.getElementById("cardsResumo");
 
-  const timesSnap = await getDocs(collection(db,"times"));
-  const jogosSnap = await getDocs(collection(db,"jogos"));
-  const sumulasSnap = await getDocs(collection(db,"sumulas"));
-
-  let tabela = {};
-
-  timesSnap.forEach(doc=>{
-    tabela[doc.id] = {
-      nome: doc.data().nome || "Time",
-      pontos:0,
-      jogos:0,
-      vitorias:0,
-      empates:0,
-      derrotas:0,
-      gp:0,
-      gc:0
-    }
-  });
-
-  sumulasSnap.forEach(doc=>{
-    const s = doc.data();
-
-    if(!s.timeA || !s.timeB) return;
-
-    let A = tabela[s.timeA];
-    let B = tabela[s.timeB];
-
-    if(!A || !B) return;
-
-    let gA = s.golsA || 0;
-    let gB = s.golsB || 0;
-
-    A.jogos++;
-    B.jogos++;
-
-    A.gp += gA;
-    A.gc += gB;
-
-    B.gp += gB;
-    B.gc += gA;
-
-    if(gA > gB){
-      A.vitorias++; A.pontos+=3;
-      B.derrotas++;
-    }else if(gB > gA){
-      B.vitorias++; B.pontos+=3;
-      A.derrotas++;
-    }else{
-      A.empates++; B.empates++;
-      A.pontos++; B.pontos++;
-    }
-  });
-
-  let lista = Object.values(tabela);
-
-  lista.sort((a,b)=>{
-    return b.pontos - a.pontos ||
-           (b.gp - b.gc) - (a.gp - a.gc) ||
-           b.gp - a.gp;
-  });
-
-  tabelaBody.innerHTML = "";
-
-  lista.forEach((t,i)=>{
-    tabelaBody.innerHTML += `
-      <tr>
-        <td>${i+1}</td>
-        <td>${t.nome}</td>
-        <td>${t.pontos}</td>
-        <td>${t.jogos}</td>
-        <td>${t.vitorias}</td>
-        <td>${t.empates}</td>
-        <td>${t.derrotas}</td>
-        <td>${t.gp}</td>
-        <td>${t.gc}</td>
-        <td>${t.gp - t.gc}</td>
-      </tr>
-    `;
-  });
-
+function n(txt){
+  return String(txt || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
 }
 
-carregarClassificacao();
+function valor(obj,chaves,f=""){
+  for(const c of chaves){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== ""){
+      return obj[c];
+    }
+  }
+  return f;
+}
+
+function dataTexto(v){
+  if(!v) return "-";
+
+  if(typeof v.toDate === "function"){
+    v = v.toDate();
+  }
+
+  const d = new Date(v);
+
+  if(!isNaN(d.getTime())){
+    return d.toLocaleDateString("pt-BR");
+  }
+
+  return String(v);
+}
+
+function dataOrdem(v){
+  if(!v) return 0;
+
+  if(typeof v.toDate === "function"){
+    return v.toDate().getTime();
+  }
+
+  const d = new Date(v).getTime();
+  return isNaN(d) ? 0 : d;
+}
+
+function nomeTimeCampo(v,fallback="-"){
+  if(v && typeof v === "object"){
+    return v.nome || v.nomeTime || v.time || fallback;
+  }
+
+  return v || fallback;
+}
+
+function nomeMandante(s){
+  return nomeTimeCampo(
+    s.timeA || s.timeMandante || s.mandante || s.timeMandanteNome || s.mandanteNome,
+    "Mandante"
+  );
+}
+
+function nomeVisitante(s){
+  return nomeTimeCampo(
+    s.timeB || s.timeVisitante || s.visitante || s.timeVisitanteNome || s.visitanteNome,
+    "Visitante"
+  );
+}
+
+function placarA(s){
+  if(s.placar && typeof s.placar === "object"){
+    return Number(s.placar.A ?? s.placar.a ?? s.placar.mandante ?? 0);
+  }
+
+  return Number(valor(s,["golsA","placarA","golsMandante"],0));
+}
+
+function placarB(s){
+  if(s.placar && typeof s.placar === "object"){
+    return Number(s.placar.B ?? s.placar.b ?? s.placar.visitante ?? 0);
+  }
+
+  return Number(valor(s,["golsB","placarB","golsVisitante"],0));
+}
+
+function publicada(s){
+  return (
+    s.sumulaFinalizada === true ||
+    s.finalizada === true ||
+    s.publica === true ||
+    s.publico === true ||
+    n(s.status) === "finalizado"
+  );
+}
+
+function campeonatoItem(item){
+  return valor(item,["campeonato","campeonatoNome","nomeCampeonato"],"");
+}
+
+function categoriaItem(item){
+  return valor(item,["categoria","categoriaNome"],"");
+}
+
+function sumulasFiltradas(){
+  const campeonato = filtroCampeonato.value;
+  const categoria = filtroCategoria.value;
+
+  return sumulas.filter(s=>{
+    if(!publicada(s)) return false;
+    if(campeonato && campeonatoItem(s) !== campeonato) return false;
+    if(categoria && categoriaItem(s) !== categoria) return false;
+    return true;
+  });
+}
+
+function jogosFiltrados(){
+  const campeonato = filtroCampeonato.value;
+  const categoria = filtroCategoria.value;
+
+  return jogos.filter(j=>{
+    if(campeonato && campeonatoItem(j) !== campeonato) return false;
+    if(categoria && categoriaItem(j) !== categoria) return false;
+    return true;
+  });
+}
+
+function preencherFiltros(){
+  const atualCamp = filtroCampeonato.value;
+  const atualCat = filtroCategoria.value;
+
+  const camps = new Set();
+  const cats = new Set();
+
+  [...sumulas, ...jogos].forEach(item=>{
+    const c = campeonatoItem(item);
+    const cat = categoriaItem(item);
+
+    if(c) camps.add(c);
+    if(cat) cats.add(cat);
+  });
+
+  filtroCampeonato.innerHTML = `<option value="">Todos campeonatos</option>`;
+  [...camps].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(c=>{
+    filtroCampeonato.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+
+  filtroCategoria.innerHTML = `<option value="">Todas categorias</option>`;
+  [...cats].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(c=>{
+    filtroCategoria.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+
+  if([...camps].includes(atualCamp)) filtroCampeonato.value = atualCamp;
+  if([...cats].includes(atualCat)) filtroCategoria.value = atualCat;
+}
+
+function golsArray(s){
+  const gols = [];
+
+  if(Array.isArray(s.gols)) s.gols.forEach(g=>gols.push(g));
+  if(Array.isArray(s.golsA)) s.golsA.forEach(g=>gols.push({...g,time:nomeMandante(s)}));
+  if(Array.isArray(s.golsB)) s.golsB.forEach(g=>gols.push({...g,time:nomeVisitante(s)}));
+
+  return gols;
+}
+
+function assistenciasArray(s){
+  const arr = [];
+
+  if(Array.isArray(s.assistencias)) s.assistencias.forEach(a=>arr.push(a));
+  if(Array.isArray(s.assistenciasA)) s.assistenciasA.forEach(a=>arr.push({...a,time:nomeMandante(s)}));
+  if(Array.isArray(s.assistenciasB)) s.assistenciasB.forEach(a=>arr.push({...a,time:nomeVisitante(s)}));
+
+  return arr;
+}
+
+function cartoesArray(s){
+  const arr = [];
+
+  if(Array.isArray(s.cartoes)) s.cartoes.forEach(c=>arr.push(c));
+  if(Array.isArray(s.cartoesA)) s.cartoesA.forEach(c=>arr.push({...c,time:nomeMandante(s)}));
+  if(Array.isArray(s.cartoesB)) s.cartoesB.forEach(c=>arr.push({...c,time:nomeVisitante(s)}));
+
+  return arr;
+}
+
+function tipoCartao(c){
+  const t = n(valor(c,["tipo","cartao","cor"],"amarelo"));
+  return t.includes("verm") ? "vermelho" : "amarelo";
+}
+
+function tabelaClassificacao(modo="geral"){
+  const tabela = {};
+
+  sumulasFiltradas().forEach(s=>{
+    const a = nomeMandante(s);
+    const b = nomeVisitante(s);
+    const gA = placarA(s);
+    const gB = placarB(s);
+
+    if(!a || !b) return;
+
+    if(!tabela[a]) tabela[a] = {time:a,p:0,j:0,v:0,e:0,d:0,gp:0,gc:0};
+    if(!tabela[b]) tabela[b] = {time:b,p:0,j:0,v:0,e:0,d:0,gp:0,gc:0};
+
+    if(modo === "geral" || modo === "casa"){
+      tabela[a].j++;
+      tabela[a].gp += gA;
+      tabela[a].gc += gB;
+
+      if(gA > gB){ tabela[a].v++; tabela[a].p += 3; }
+      else if(gA === gB){ tabela[a].e++; tabela[a].p += 1; }
+      else{ tabela[a].d++; }
+    }
+
+    if(modo === "geral" || modo === "fora"){
+      tabela[b].j++;
+      tabela[b].gp += gB;
+      tabela[b].gc += gA;
+
+      if(gB > gA){ tabela[b].v++; tabela[b].p += 3; }
+      else if(gA === gB){ tabela[b].e++; tabela[b].p += 1; }
+      else{ tabela[b].d++; }
+    }
+  });
+
+  return Object.values(tabela).map(t=>({
+    ...t,
+    sg:t.gp - t.gc
+  })).sort((a,b)=>
+    b.p - a.p ||
+    b.v - a.v ||
+    b.sg - a.sg ||
+    b.gp - a.gp ||
+    a.time.localeCompare(b.time,"pt-BR")
+  );
+}
+
+function atualizarTopo(){
+  const s = sumulasFiltradas();
+  const timesSet = new Set();
+
+  s.forEach(item=>{
+    timesSet.add(nomeMandante(item));
+    timesSet.add(nomeVisitante(item));
+  });
+
+  const gols = s.reduce((acc,item)=>acc + golsArray(item).length,0);
+  const cartoes = s.reduce((acc,item)=>acc + cartoesArray(item).length,0);
+
+  document.getElementById("tagTimes").innerText = `Times: ${timesSet.size}`;
+  document.getElementById("tagJogos").innerText = `Jogos: ${s.length}`;
+  document.getElementById("tagGols").innerText = `Gols: ${gols}`;
+  document.getElementById("tagCartoes").innerText = `Cartões: ${cartoes}`;
+
+  cardsResumo.innerHTML = `
+    <div class="card-resumo"><strong>${timesSet.size}</strong><span>Times</span></div>
+    <div class="card-resumo"><strong>${s.length}</strong><span>Jogos Finalizados</span></div>
+    <div class="card-resumo"><strong>${gols}</strong><span>Gols</span></div>
+    <div class="card-resumo"><strong>${cartoes}</strong><span>Cartões</span></div>
+  `;
+}
+
+function tituloDescricao(titulo,desc){
+  document.getElementById("tituloAba").innerText = titulo;
+  document.getElementById("descricaoAba").innerText = desc;
+}
+
+function tabelaHtml(lista, titulo="Classificação"){
+  if(!lista.length){
+    return `<div class="tabela-box"><div class="vazio">Nenhum dado encontrado.</div></div>`;
+  }
+
+  return `
+    <div class="tabela-box">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:center">#</th>
+            <th>Time</th>
+            <th>P</th>
+            <th>J</th>
+            <th>V</th>
+            <th>E</th>
+            <th>D</th>
+            <th>GP</th>
+            <th>GC</th>
+            <th>SG</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${lista.map((t,i)=>`
+            <tr>
+              <td class="pos">${i+1}</td>
+              <td class="nome">${t.time}</td>
+              <td class="numero">${t.p}</td>
+              <td>${t.j}</td>
+              <td>${t.v}</td>
+              <td>${t.e}</td>
+              <td>${t.d}</td>
+              <td>${t.gp}</td>
+              <td>${t.gc}</td>
+              <td>${t.sg}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderDetalhes(){
+  tituloDescricao("Detalhes","Resumo geral da competição com dados automáticos das súmulas finalizadas.");
+  const lista = tabelaClassificacao("geral");
+  conteudo.innerHTML = tabelaHtml(lista);
+}
+
+function renderClassificacao(){
+  tituloDescricao("Classificação","Tabela geral calculada automaticamente pelas súmulas finalizadas.");
+  conteudo.innerHTML = tabelaHtml(tabelaClassificacao("geral"));
+}
+
+function renderCasaFora(){
+  tituloDescricao("Casa / Fora","Compare o desempenho dos times como mandante e visitante.");
+
+  conteudo.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div>
+        <h3 style="color:var(--gold);margin:0 0 10px;">Mandante</h3>
+        ${tabelaHtml(tabelaClassificacao("casa"))}
+      </div>
+      <div>
+        <h3 style="color:var(--gold);margin:0 0 10px;">Visitante</h3>
+        ${tabelaHtml(tabelaClassificacao("fora"))}
+      </div>
+    </div>
+  `;
+}
+
+function renderJogos(){
+  tituloDescricao("Jogos","Lista dos jogos encontrados para o campeonato e categoria selecionados.");
+
+  const lista = jogosFiltrados().sort((a,b)=>dataOrdem(valor(a,["dataHora","data","dataJogo"],"")) - dataOrdem(valor(b,["dataHora","data","dataJogo"],"")));
+
+  if(!lista.length){
+    conteudo.innerHTML = `<div class="tabela-box"><div class="vazio">Nenhum jogo encontrado.</div></div>`;
+    return;
+  }
+
+  conteudo.innerHTML = `
+    <div class="tabela-box">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Confronto</th>
+            <th>Categoria</th>
+            <th>Local</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${lista.map(j=>`
+            <tr>
+              <td>${dataTexto(valor(j,["dataHora","data","dataJogo"],""))}</td>
+              <td class="nome">${nomeTimeCampo(j.timeA || j.timeMandante || j.mandante || j.timeMandanteNome || j.mandanteNome,"Mandante")} x ${nomeTimeCampo(j.timeB || j.timeVisitante || j.visitante || j.timeVisitanteNome || j.visitanteNome,"Visitante")}</td>
+              <td>${categoriaItem(j) || "-"}</td>
+              <td>${valor(j,["local","campo","estadio"],"-")}</td>
+              <td><span class="badge">${valor(j,["status"],"Agendado")}</span></td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderEstatisticas(){
+  tituloDescricao("Estatísticas dos Times","Estatísticas gerais de desempenho por equipe.");
+  conteudo.innerHTML = tabelaHtml(tabelaClassificacao("geral"));
+}
+
+function rankingPorArray(tipo){
+  const mapa = {};
+
+  sumulasFiltradas().forEach(s=>{
+    const arr = tipo === "gols" ? golsArray(s) : assistenciasArray(s);
+
+    arr.forEach(item=>{
+      const nome = valor(item,["nome","jogador","jogadorNome","atleta"],"Sem nome");
+      const time = valor(item,["time","timeNome","clube","equipe"],"");
+      const key = `${n(nome)}|${n(time)}`;
+
+      if(!mapa[key]){
+        mapa[key] = {nome,time,total:0};
+      }
+
+      mapa[key].total++;
+    });
+  });
+
+  return Object.values(mapa).sort((a,b)=>b.total - a.total || a.nome.localeCompare(b.nome,"pt-BR"));
+}
+
+function renderArtilharia(){
+  tituloDescricao("Artilharia","Ranking de gols por jogador, calculado pelas súmulas finalizadas.");
+
+  const lista = rankingPorArray("gols");
+
+  if(!lista.length){
+    conteudo.innerHTML = `<div class="tabela-box"><div class="vazio">Nenhum gol registrado.</div></div>`;
+    return;
+  }
+
+  conteudo.innerHTML = `
+    <div class="tabela-box">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:center">#</th>
+            <th>Jogador</th>
+            <th>Time</th>
+            <th style="text-align:center">Gols</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${lista.map((i,idx)=>`
+            <tr>
+              <td class="pos">${idx+1}</td>
+              <td class="nome">${i.nome}</td>
+              <td>${i.time || "-"}</td>
+              <td class="numero">${i.total}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderAssistencias(){
+  tituloDescricao("Assistências","Ranking de assistências por jogador.");
+
+  const lista = rankingPorArray("assistencias");
+
+  if(!lista.length){
+    conteudo.innerHTML = `<div class="tabela-box"><div class="vazio">Nenhuma assistência registrada.</div></div>`;
+    return;
+  }
+
+  conteudo.innerHTML = `
+    <div class="tabela-box">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:center">#</th>
+            <th>Jogador</th>
+            <th>Time</th>
+            <th style="text-align:center">Assistências</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${lista.map((i,idx)=>`
+            <tr>
+              <td class="pos">${idx+1}</td>
+              <td class="nome">${i.nome}</td>
+              <td>${i.time || "-"}</td>
+              <td class="numero">${i.total}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderCartoes(){
+  tituloDescricao("Cartões","Controle de cartões amarelos e vermelhos por jogador.");
+
+  const mapa = {};
+
+  sumulasFiltradas().forEach(s=>{
+    cartoesArray(s).forEach(c=>{
+      const nome = valor(c,["nome","jogador","jogadorNome","atleta"],"Sem nome");
+      const time = valor(c,["time","timeNome","clube","equipe"],"");
+      const key = `${n(nome)}|${n(time)}`;
+
+      if(!mapa[key]){
+        mapa[key] = {nome,time,amarelos:0,vermelhos:0,total:0};
+      }
+
+      if(tipoCartao(c) === "vermelho") mapa[key].vermelhos++;
+      else mapa[key].amarelos++;
+
+      mapa[key].total++;
+    });
+  });
+
+  const lista = Object.values(mapa).sort((a,b)=>b.total - a.total || b.vermelhos - a.vermelhos);
+
+  if(!lista.length){
+    conteudo.innerHTML = `<div class="tabela-box"><div class="vazio">Nenhum cartão registrado.</div></div>`;
+    return;
+  }
+
+  conteudo.innerHTML = `
+    <div class="tabela-box">
+      <table>
+        <thead>
+          <tr>
+            <th>Jogador</th>
+            <th>Time</th>
+            <th>Amarelos</th>
+            <th>Vermelhos</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${lista.map(i=>`
+            <tr>
+              <td class="nome">${i.nome}</td>
+              <td>${i.time || "-"}</td>
+              <td><span class="badge gold">🟨 ${i.amarelos}</span></td>
+              <td><span class="badge red">🟥 ${i.vermelhos}</span></td>
+              <td class="numero">${i.total}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderSuspensos(){
+  tituloDescricao("Suspensos","Jogadores com cartão vermelho ou acúmulo de cartões amarelos.");
+
+  const mapa = {};
+
+  sumulasFiltradas().forEach(s=>{
+    cartoesArray(s).forEach(c=>{
+      const nome = valor(c,["nome","jogador","jogadorNome","atleta"],"Sem nome");
+      const time = valor(c,["time","timeNome","clube","equipe"],"");
+      const key = `${n(nome)}|${n(time)}`;
+
+      if(!mapa[key]){
+        mapa[key] = {nome,time,amarelos:0,vermelhos:0};
+      }
+
+      if(tipoCartao(c) === "vermelho") mapa[key].vermelhos++;
+      else mapa[key].amarelos++;
+    });
+  });
+
+  const lista = Object.values(mapa).filter(i=>i.vermelhos > 0 || i.amarelos >= 3);
+
+  if(!lista.length){
+    conteudo.innerHTML = `<div class="tabela-box"><div class="vazio">Nenhum jogador suspenso.</div></div>`;
+    return;
+  }
+
+  conteudo.innerHTML = `
+    <div class="tabela-box">
+      <table>
+        <thead>
+          <tr>
+            <th>Jogador</th>
+            <th>Time</th>
+            <th>Motivo</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${lista.map(i=>`
+            <tr>
+              <td class="nome">${i.nome}</td>
+              <td>${i.time || "-"}</td>
+              <td>${i.vermelhos > 0 ? "Cartão vermelho" : "Acúmulo de amarelos"}</td>
+              <td><span class="badge red">Suspenso</span></td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderHistorico(){
+  tituloDescricao("Histórico","Histórico de súmulas finalizadas da competição.");
+
+  const lista = sumulasFiltradas().sort((a,b)=>dataOrdem(valor(b,["dataHora","data","dataJogo","criadoEm"],"")) - dataOrdem(valor(a,["dataHora","data","dataJogo","criadoEm"],"")));
+
+  if(!lista.length){
+    conteudo.innerHTML = `<div class="tabela-box"><div class="vazio">Nenhuma súmula finalizada.</div></div>`;
+    return;
+  }
+
+  conteudo.innerHTML = `
+    <div class="tabela-box">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Confronto</th>
+            <th>Placar</th>
+            <th>Categoria</th>
+            <th>Súmula</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${lista.map(s=>`
+            <tr>
+              <td>${dataTexto(valor(s,["dataHora","data","dataJogo","criadoEm"],""))}</td>
+              <td class="nome">${nomeMandante(s)} x ${nomeVisitante(s)}</td>
+              <td><span class="badge gold">${placarA(s)} x ${placarB(s)}</span></td>
+              <td>${categoriaItem(s) || "-"}</td>
+              <td>
+                <a class="badge green" href="sumula-publica.html?id=${encodeURIComponent(s.jogoId || s.id)}">
+                  Ver Súmula
+                </a>
+              </td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function render(){
+  preencherFiltros();
+  atualizarTopo();
+
+  if(abaAtual === "detalhes") renderDetalhes();
+  if(abaAtual === "classificacao") renderClassificacao();
+  if(abaAtual === "casaFora") renderCasaFora();
+  if(abaAtual === "jogos") renderJogos();
+  if(abaAtual === "estatisticas") renderEstatisticas();
+  if(abaAtual === "artilharia") renderArtilharia();
+  if(abaAtual === "assistencias") renderAssistencias();
+  if(abaAtual === "cartoes") renderCartoes();
+  if(abaAtual === "suspensos") renderSuspensos();
+  if(abaAtual === "historico") renderHistorico();
+}
+
+document.querySelectorAll(".menu-tabs button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".menu-tabs button").forEach(b=>b.classList.remove("ativo"));
+    btn.classList.add("ativo");
+    abaAtual = btn.dataset.aba;
+    render();
+  });
+});
+
+filtroCampeonato.addEventListener("change",render);
+filtroCategoria.addEventListener("change",render);
+
+onSnapshot(collection(db,"times"),snap=>{
+  times = snap.docs.map(d=>({id:d.id,...d.data()}));
+  render();
+});
+
+onSnapshot(collection(db,"jogos"),snap=>{
+  jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
+  render();
+});
+
+onSnapshot(collection(db,"sumulas"),snap=>{
+  sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
+  render();
+});
 </script>
 
 </body>
