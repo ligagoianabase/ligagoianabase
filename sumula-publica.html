@@ -4,165 +4,1405 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Súmula do Árbitro</title>
+<title>Súmula Oficial - Liga Goiana</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 :root{
-  --bg:#061427;
-  --card:#0d2a52;
-  --gold:#f7c600;
-  --white:#fff;
+  --azul:#061d44;
+  --azul2:#08285c;
+  --azul3:#0c3d86;
+  --vermelho:#e30613;
+  --verde:#069447;
+  --dourado:#f7c600;
+  --cinza:#eef2f7;
+  --linha:#cfd7e3;
+  --texto:#071833;
+  --muted:#4b5563;
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
 body{
-  font-family:Arial;
-  background:var(--bg);
-  color:var(--white);
+  font-family:Arial, Helvetica, sans-serif;
+  background:#dfe6ef;
+  color:var(--texto);
+  min-height:100vh;
 }
 
-.container{
-  max-width:1100px;
-  margin:20px auto;
-  padding:20px;
-}
-
-h1{
-  color:var(--gold);
-  margin-bottom:20px;
-}
-
-.box{
-  background:var(--card);
-  padding:15px;
-  border-radius:10px;
-  margin-bottom:15px;
-}
-
-input, select{
+#app{
   width:100%;
-  padding:10px;
+}
+
+.sumula-page{
+  width:min(100% - 20px, 1180px);
+  margin:12px auto;
+  background:#fff;
+  border:1px solid #b9c4d4;
   border-radius:8px;
-  border:none;
+  overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,.16);
+}
+
+.header{
+  display:grid;
+  grid-template-columns:150px 1fr 210px;
+  align-items:center;
+  gap:10px;
+  padding:16px 18px 8px;
+}
+
+.header-logo{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.header-logo img{
+  width:94px;
+  height:94px;
+  object-fit:contain;
+}
+
+.header-title{
+  text-align:center;
+}
+
+.header-title h1{
+  color:var(--azul);
+  font-size:56px;
+  font-weight:900;
+  letter-spacing:1px;
+  line-height:.95;
+}
+
+.header-title p{
+  margin-top:8px;
+  color:var(--azul);
+  font-size:21px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.header-right{
+  text-align:center;
+  color:var(--azul);
+  font-weight:900;
+  font-size:22px;
+  line-height:1.08;
+}
+
+.header-ball{
+  font-size:58px;
+  line-height:1;
   margin-top:6px;
 }
 
-button{
-  background:var(--gold);
-  border:none;
-  padding:12px;
-  width:100%;
-  font-weight:bold;
-  border-radius:10px;
-  margin-top:10px;
-  cursor:pointer;
+.info-strip{
+  margin:8px 18px 14px;
+  display:grid;
+  grid-template-columns:1.1fr 1.35fr .85fr .85fr 1.05fr;
+  border:1px solid var(--linha);
+  border-radius:6px;
+  overflow:hidden;
 }
 
-.erro{
+.info-box{
+  min-height:70px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px 12px;
+  border-right:1px solid var(--linha);
+  background:#fff;
+}
+
+.info-box:last-child{
+  border-right:none;
+}
+
+.info-box i{
+  width:36px;
+  color:var(--azul);
+  font-size:30px;
   text-align:center;
-  margin-top:80px;
-  color:red;
+}
+
+.info-box small{
+  display:block;
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  color:#111;
+  margin-bottom:4px;
+}
+
+.info-box strong{
+  display:block;
+  color:var(--azul);
+  font-size:17px;
+  font-weight:900;
+}
+
+.status-finalizado{
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  background:var(--verde);
+  color:#fff !important;
+  padding:8px 15px;
+  border-radius:8px;
+  font-size:16px !important;
+}
+
+.score-card{
+  margin:0 18px 12px;
+  display:grid;
+  grid-template-columns:1fr 260px 1fr;
+  min-height:140px;
+  border:1px solid var(--linha);
+  border-radius:6px;
+  overflow:hidden;
+}
+
+.team-score{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+  padding:14px;
+  background:#fff;
+}
+
+.team-score.away{
+  flex-direction:row-reverse;
+}
+
+.team-score img{
+  width:108px;
+  height:108px;
+  object-fit:contain;
+}
+
+.team-name{
+  text-align:center;
+}
+
+.team-name h2{
+  color:var(--azul);
+  font-size:34px;
+  font-weight:900;
+  text-transform:uppercase;
+  line-height:1.05;
+}
+
+.team-name p{
+  margin-top:8px;
+  color:var(--azul);
+  font-size:16px;
+  font-weight:800;
+}
+
+.score-center{
+  background:var(--azul);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border-left:1px solid var(--linha);
+  border-right:1px solid var(--linha);
+}
+
+.score-number{
+  font-size:76px;
+  font-weight:900;
+  letter-spacing:5px;
+  line-height:1;
+}
+
+.score-center span{
+  margin-top:8px;
+  text-transform:uppercase;
+  font-size:14px;
+  font-weight:900;
+}
+
+.match-strip{
+  margin:0 18px 12px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1.2fr 1.1fr;
+  border:1px solid var(--linha);
+  border-radius:6px;
+  overflow:hidden;
+}
+
+.match-box{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:64px;
+  padding:10px 12px;
+  border-right:1px solid var(--linha);
+  background:#fff;
+}
+
+.match-box:last-child{
+  border-right:none;
+}
+
+.match-box i{
+  width:34px;
+  color:var(--azul);
+  font-size:30px;
+  text-align:center;
+}
+
+.match-box small{
+  display:block;
+  color:var(--azul);
+  text-transform:uppercase;
+  font-weight:900;
+  font-size:12px;
+  margin-bottom:3px;
+}
+
+.match-box strong{
+  display:block;
+  color:#111;
+  font-size:15px;
+  font-weight:900;
+}
+
+.section-title{
+  background:var(--azul);
+  color:#fff;
+  text-align:center;
+  padding:8px 10px;
   font-size:20px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.line-empty{
+  color:#777;
+  font-size:13px;
+  text-align:center;
+  padding:12px;
+}
+.lineups{
+  margin:0 18px 12px;
+  border:1px solid var(--linha);
+  border-radius:6px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.lineups-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+
+.lineup-panel{
+  border-right:1px solid var(--linha);
+}
+
+.lineup-panel:last-child{
+  border-right:none;
+}
+
+.lineup-head{
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  color:var(--azul);
+  font-size:20px;
+  font-weight:900;
+  text-transform:uppercase;
+  border-bottom:1px solid var(--linha);
+}
+
+.lineup-head img{
+  width:28px;
+  height:28px;
+  object-fit:contain;
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.table th{
+  background:#f5f7fb;
+  color:var(--azul);
+  font-size:12px;
+  text-transform:uppercase;
+  padding:7px 8px;
+  border-bottom:1px solid var(--linha);
+  text-align:left;
+}
+
+.table td{
+  color:#111;
+  font-size:13px;
+  padding:5px 8px;
+  border-bottom:1px solid #e5eaf1;
+}
+
+.table tr:last-child td{
+  border-bottom:none;
+}
+
+.table .num{
+  width:48px;
+  text-align:center;
+}
+
+.table .posicao{
+  width:170px;
+}
+
+.sub-row td{
+  background:#f8fafc;
+  color:var(--azul);
+  text-align:center;
+  font-weight:900;
+  text-transform:uppercase;
+  padding:7px;
+}
+
+.legend{
+  padding:9px;
+  text-align:center;
+  color:#111;
+  font-size:14px;
+  border-top:1px solid var(--linha);
+}
+
+.events-grid{
+  margin:0 18px 12px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+}
+
+.team-events{
+  border:1px solid var(--linha);
+  border-radius:6px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.team-events h3{
+  color:#fff;
+  background:var(--azul);
+  text-align:center;
+  padding:8px;
+  font-size:20px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.team-events.away h3{
+  background:var(--vermelho);
+}
+
+.events-columns{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+
+.event-col{
+  min-height:130px;
+  padding:12px;
+  border-right:1px solid var(--linha);
+}
+
+.event-col:last-child{
+  border-right:none;
+}
+
+.event-col h4{
+  color:var(--azul);
+  text-align:center;
+  font-size:17px;
+  font-weight:900;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+
+.event-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:10px;
+  color:#111;
+  font-size:14px;
+  line-height:1.2;
+}
+
+.event-minute{
+  color:var(--azul);
+  font-weight:900;
+  width:42px;
+  flex:0 0 auto;
+}
+
+.event-name{
+  flex:1;
+}
+
+.ball{
+  font-size:18px;
+  width:20px;
+  text-align:center;
+}
+
+.yellow-card,
+.red-card{
+  width:14px;
+  height:19px;
+  border-radius:3px;
+  display:inline-block;
+  flex:0 0 auto;
+}
+
+.yellow-card{
+  background:#f7c600;
+}
+
+.red-card{
+  background:#e30613;
+}
+
+.lower-grid{
+  margin:0 18px 12px;
+  display:grid;
+  grid-template-columns:.8fr 1.35fr;
+  gap:24px;
+}
+
+.panel{
+  border:1px solid var(--linha);
+  border-radius:6px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.panel h3{
+  background:var(--azul);
+  color:#fff;
+  text-align:center;
+  padding:8px;
+  font-size:18px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.official-row{
+  display:grid;
+  grid-template-columns:165px 1fr;
+  min-height:44px;
+  border-bottom:1px solid var(--linha);
+  align-items:center;
+}
+
+.official-row:last-child{
+  border-bottom:none;
+}
+
+.official-label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:var(--azul);
+  font-size:13px;
+  font-weight:900;
+  text-transform:uppercase;
+  padding:10px 12px;
+}
+
+.official-value{
+  color:#111;
+  font-size:14px;
+  padding:10px 12px;
+}
+
+.summary-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  border-bottom:1px solid var(--linha);
+}
+
+.summary-box{
+  text-align:center;
+  padding:15px 10px;
+  border-right:1px solid var(--linha);
+}
+
+.summary-box:last-child{
+  border-right:none;
+}
+
+.summary-box i{
+  color:var(--azul);
+  font-size:28px;
+  margin-bottom:6px;
+}
+
+.summary-box span{
+  display:block;
+  color:var(--azul);
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.summary-box strong{
+  display:block;
+  color:var(--azul);
+  font-size:31px;
+  font-weight:900;
+  margin-top:4px;
+}
+
+.summary-detail{
+  color:#111;
+  font-size:12px;
+  margin-top:2px;
+}
+
+.summary-card-icon{
+  margin:0 auto 7px;
+  width:18px;
+  height:24px;
+  border-radius:3px;
+}
+
+.best-player{
+  display:grid;
+  grid-template-columns:110px 1fr 90px;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+}
+
+.best-photo{
+  width:86px;
+  height:86px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#eef2f7;
+  border:3px solid var(--dourado);
+  margin:auto;
+}
+
+.best-player h4{
+  color:var(--azul);
+  font-size:14px;
+  font-weight:900;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+.best-player strong{
+  display:block;
+  color:#111;
+  font-size:18px;
+  font-weight:900;
+}
+
+.best-player span{
+  display:block;
+  color:var(--azul);
+  font-size:13px;
+  margin-top:4px;
+}
+
+.trophy{
+  text-align:center;
+  font-size:58px;
+}
+
+.footer-grid{
+  margin:0 18px;
+  display:grid;
+  grid-template-columns:.8fr 1.35fr;
+  gap:24px;
+}
+
+.auth-box{
+  display:grid;
+  grid-template-columns:110px 1fr;
+  gap:12px;
+  align-items:center;
+  padding:12px;
+}
+
+.auth-box img{
+  width:98px;
+  height:98px;
+}
+
+.auth-text strong{
+  display:block;
+  color:var(--azul);
+  font-size:14px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.auth-text p{
+  color:#111;
+  font-size:12px;
+  line-height:1.35;
+}
+
+.auth-code{
+  color:var(--azul);
+  font-size:17px;
+  font-weight:900;
+  margin:4px 0;
+}
+
+.share-panel{
+  padding:18px;
+}
+
+.buttons{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+
+.btn{
+  min-height:58px;
+  border-radius:8px;
+  color:#fff;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  text-align:center;
+  font-size:13px;
+  padding:10px;
+  cursor:pointer;
+  border:none;
+}
+
+.btn i{
+  font-size:24px;
+}
+
+.btn-whats{background:#0ca84a}
+.btn-email{background:#2563eb}
+.btn-link{background:#4b5563}
+.btn-pdf{background:#dc2626}
+
+.final-footer{
+  margin-top:12px;
+  background:var(--azul);
+  color:#fff;
+  text-align:center;
+  padding:9px;
+  font-size:13px;
+  line-height:1.35;
+}
+
+.error{
+  max-width:760px;
+  margin:80px auto;
+  background:#fff;
+  border:1px solid #cfd7e3;
+  color:#b42323;
+  padding:24px;
+  border-radius:10px;
+  text-align:center;
+  font-size:18px;
+  font-weight:900;
+}
+
+@media print{
+  @page{
+    size:A4 portrait;
+    margin:7mm;
+  }
+
+  body{
+    background:#fff;
+  }
+
+  .sumula-page{
+    width:100%;
+    margin:0;
+    border:none;
+    border-radius:0;
+    box-shadow:none;
+  }
+
+  .buttons{
+    display:none;
+  }
+
+  .final-footer{
+    margin-top:8px;
+  }
+}
+
+@media(max-width:900px){
+  .header,
+  .info-strip,
+  .score-card,
+  .match-strip,
+  .lineups-grid,
+  .events-grid,
+  .events-columns,
+  .lower-grid,
+  .summary-grid,
+  .best-player,
+  .footer-grid,
+  .buttons{
+    grid-template-columns:1fr;
+  }
+
+  .header-title h1{
+    font-size:36px;
+  }
+
+  .header-title p{
+    font-size:15px;
+  }
+
+  .score-number{
+    font-size:56px;
+  }
+
+  .team-score,
+  .team-score.away{
+    flex-direction:column;
+  }
+
+  .info-box,
+  .match-box,
+  .lineup-panel,
+  .event-col,
+  .summary-box{
+    border-right:none;
+  }
+
+  .official-row{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
 
 <body>
-
-<div id="app" class="container"></div>
-
+<div id="app">
+  <div class="error">
+    <i class="fa-solid fa-spinner fa-spin"></i><br>
+    Carregando súmula oficial...
+  </div>
+</div>
 <script type="module">
-import { db, auth } from "./firebase.js";
+import { db } from "./firebase.js";
 import {
   doc,
-  getDoc
+  getDoc,
+  collection,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-import {
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-
 const app = document.getElementById("app");
-const id = new URLSearchParams(location.search).get("id");
+const id = new URLSearchParams(window.location.search).get("id");
 
-if(!id){
-  app.innerHTML = "<div class='erro'>Jogo não informado</div>";
+function texto(valor, fallback = ""){
+  return valor === undefined || valor === null || valor === "" ? fallback : valor;
 }
 
-/* ================= VALIDAÇÃO ================= */
+function normalizar(valor){
+  return String(valor || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
 
-onAuthStateChanged(auth, async(user)=>{
+function campo(obj, chaves, fallback = ""){
+  for(const chave of chaves){
+    if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
+      return obj[chave];
+    }
+  }
+  return fallback;
+}
 
-  if(!user){
-    app.innerHTML = "<div class='erro'>Faça login primeiro</div>";
-    return;
+function nomeTime(valor, fallback = "TIME"){
+  if(valor && typeof valor === "object"){
+    return campo(valor, ["nome","nomeTime","time","equipe"], fallback);
   }
 
-  const jogoSnap = await getDoc(doc(db,"jogos",id));
+  return texto(valor, fallback);
+}
 
-  if(!jogoSnap.exists()){
-    app.innerHTML = "<div class='erro'>Jogo não encontrado</div>";
-    return;
+function dataBR(valor){
+  if(!valor) return "-";
+
+  if(typeof valor.toDate === "function"){
+    valor = valor.toDate();
   }
 
-  const jogo = jogoSnap.data();
+  const data = new Date(valor);
 
-  /* 🔒 BLOQUEIO DE ACESSO */
-  if(user.uid !== jogo.arbitroId && jogo.tipoUsuario !== "admin"){
-    app.innerHTML = `
-      <div class='erro'>
-        Acesso negado<br>
-        Você não é o árbitro desta partida
+  if(!isNaN(data.getTime())){
+    return data.toLocaleDateString("pt-BR");
+  }
+
+  return String(valor);
+}
+
+function placarA(sumula){
+  return Number(campo(sumula, ["placarA","golsMandante","golsA"], 0));
+}
+
+function placarB(sumula){
+  return Number(campo(sumula, ["placarB","golsVisitante","golsB"], 0));
+}
+
+async function buscarTimes(){
+  try{
+    const snap = await getDocs(collection(db,"times"));
+    return snap.docs.map(d => ({
+      id:d.id,
+      ...d.data()
+    }));
+  }catch(error){
+    console.error("Erro ao buscar times:", error);
+    return [];
+  }
+}
+
+function acharTime(times, nome, idTime){
+  if(idTime){
+    const porId = times.find(t => t.id === idTime);
+    if(porId) return porId;
+  }
+
+  const alvo = normalizar(nome);
+
+  return times.find(t =>
+    normalizar(t.nome || t.nomeTime || t.equipe) === alvo
+  ) || null;
+}
+
+function escudoTime(time){
+  return campo(time, ["logo","escudo","imagem","foto"], "logo-liga.jfif");
+}
+
+function cidadeTime(time, fallback = "-"){
+  return campo(time, ["cidade","municipio","local"], fallback);
+}
+
+function criarCodigo(id){
+  return String(id || "LG").slice(0,12).toUpperCase();
+}
+
+function qrUrl(){
+  return `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(window.location.href)}`;
+}
+
+function separarEventosPorTime(lista, timeA, timeB){
+  const a = [];
+  const b = [];
+
+  lista.forEach(item=>{
+    const time = normalizar(item.time || item.timeNome || item.equipe || item.clube || item.lado);
+
+    if(time === "a" || time === "mandante" || time === normalizar(timeA)){
+      a.push(item);
+      return;
+    }
+
+    if(time === "b" || time === "visitante" || time === normalizar(timeB)){
+      b.push(item);
+      return;
+    }
+
+    a.push(item);
+  });
+
+  return {a,b};
+}
+
+function renderJogadores(lista){
+  if(!Array.isArray(lista) || !lista.length){
+    return `<tr><td colspan="3" class="line-empty">Nenhum jogador informado.</td></tr>`;
+  }
+
+  const titulares = lista.filter(j => {
+    const tipo = normalizar(j.tipo || j.status || j.condicao || "");
+    return !tipo.includes("reserva") && !tipo.includes("suplente");
+  });
+
+  const reservas = lista.filter(j => {
+    const tipo = normalizar(j.tipo || j.status || j.condicao || "");
+    return tipo.includes("reserva") || tipo.includes("suplente");
+  });
+
+  const base = titulares.length ? titulares : lista.slice(0,11);
+  const banco = reservas.length ? reservas : (titulares.length ? [] : lista.slice(11));
+
+  const linhasTitulares = base.map(j=>`
+    <tr>
+      <td class="num">${campo(j,["numero","camisa","n"],"-")}</td>
+      <td>${campo(j,["nome","jogador","jogadorNome","atleta"],"-")}</td>
+      <td class="posicao">${campo(j,["posicao","posição","funcao"],"-")}</td>
+    </tr>
+  `).join("");
+
+  const linhasBanco = banco.length ? `
+    <tr class="sub-row"><td colspan="3">Suplentes</td></tr>
+    ${banco.map(j=>`
+      <tr>
+        <td class="num">${campo(j,["numero","camisa","n"],"-")}</td>
+        <td>${campo(j,["nome","jogador","jogadorNome","atleta"],"-")}</td>
+        <td class="posicao">${campo(j,["posicao","posição","funcao"],"-")}</td>
+      </tr>
+    `).join("")}
+  ` : "";
+
+  return linhasTitulares + linhasBanco;
+}
+
+function renderGols(lista){
+  if(!lista.length){
+    return `<div class="line-empty">Nenhum gol.</div>`;
+  }
+
+  return lista.map(g=>`
+    <div class="event-item">
+      <span class="ball">⚽</span>
+      <span class="event-minute">${campo(g,["minuto","tempo"],"-")}'</span>
+      <span class="event-name">${campo(g,["nome","jogador","jogadorNome","atleta"],"-")}</span>
+    </div>
+  `).join("");
+}
+
+function renderCartoes(lista){
+  if(!lista.length){
+    return `<div class="line-empty">Nenhum cartão.</div>`;
+  }
+
+  return lista.map(c=>{
+    const vermelho = normalizar(campo(c,["tipo","cartao","cor"],"amarelo")).includes("verm");
+
+    return `
+      <div class="event-item">
+        <span class="${vermelho ? "red-card" : "yellow-card"}"></span>
+        <span class="event-minute">${campo(c,["minuto","tempo"],"-")}'</span>
+        <span class="event-name">${campo(c,["nome","jogador","jogadorNome","atleta"],"-")}</span>
       </div>
     `;
+  }).join("");
+}
+
+function contarCartoes(lista){
+  let amarelos = 0;
+  let vermelhos = 0;
+
+  lista.forEach(c=>{
+    if(normalizar(campo(c,["tipo","cartao","cor"],"amarelo")).includes("verm")){
+      vermelhos++;
+    }else{
+      amarelos++;
+    }
+  });
+
+  return {amarelos, vermelhos};
+}
+
+function copiarLink(){
+  navigator.clipboard.writeText(window.location.href);
+  alert("Link copiado.");
+}
+
+function compartilharWhatsApp(){
+  window.open(`https://wa.me/?text=${encodeURIComponent("Súmula oficial: " + window.location.href)}`,"_blank");
+}
+
+function enviarEmail(){
+  window.location.href = `mailto:?subject=Súmula Oficial&body=${encodeURIComponent(window.location.href)}`;
+}
+
+window.copiarLink = copiarLink;
+window.compartilharWhatsApp = compartilharWhatsApp;
+window.enviarEmail = enviarEmail;
+window.baixarPDF = function(){
+  window.print();
+};
+
+async function carregar(){
+  if(!id){
+    app.innerHTML = `<div class="error">Súmula não informada.</div>`;
     return;
   }
 
-  /* ================= SE PASSOU AQUI = PODE USAR ================= */
+  try{
+    const snap = await getDoc(doc(db,"sumulas",id));
 
-  renderTela(jogo);
+    if(!snap.exists()){
+      app.innerHTML = `<div class="error">Súmula não encontrada.</div>`;
+      return;
+    }
 
-});
+    const sumula = {
+      id:snap.id,
+      ...snap.data()
+    };
 
-/* ================= TELA ================= */
+    const times = await buscarTimes();
 
-function renderTela(jogo){
+    const nomeAOriginal = nomeTime(sumula.timeA || sumula.mandante || sumula.timeMandanteNome, "MANDANTE");
+    const nomeBOriginal = nomeTime(sumula.timeB || sumula.visitante || sumula.timeVisitanteNome, "VISITANTE");
 
-  app.innerHTML = `
-    <h1>Súmula da Partida</h1>
+    const timeAId = campo(sumula, ["timeAId","timeMandanteId","mandanteId"], "");
+    const timeBId = campo(sumula, ["timeBId","timeVisitanteId","visitanteId"], "");
 
-    <div class="box">
-      <strong>${jogo.timeA?.nome || "Time A"} x ${jogo.timeB?.nome || "Time B"}</strong><br>
-      ${jogo.categoria || "-"}<br>
-      ${jogo.campeonato || "-"}
-    </div>
+    const timeA = acharTime(times, nomeAOriginal, timeAId);
+    const timeB = acharTime(times, nomeBOriginal, timeBId);
 
-    <div class="box">
-      <label>Placar Time A</label>
-      <input id="golsA" type="number">
+    const nomeA = campo(timeA, ["nome","nomeTime","equipe"], nomeAOriginal);
+    const nomeB = campo(timeB, ["nome","nomeTime","equipe"], nomeBOriginal);
 
-      <label>Placar Time B</label>
-      <input id="golsB" type="number">
-    </div>
+    const logoA = escudoTime(timeA);
+    const logoB = escudoTime(timeB);
 
-    <div class="box">
-      <label>Melhor jogador</label>
-      <input id="melhor">
-    </div>
+    const cidadeA = cidadeTime(timeA, campo(sumula,["cidadeA"],"Goiânia - GO"));
+    const cidadeB = cidadeTime(timeB, campo(sumula,["cidadeB"],"Goiânia - GO"));
 
-    <button onclick="proximaEtapa()">Continuar</button>
-  `;
+    const gols = Array.isArray(sumula.gols) ? sumula.gols : [];
+    const cartoes = Array.isArray(sumula.cartoes) ? sumula.cartoes : [];
+
+    const golsPorTime = separarEventosPorTime(gols, nomeA, nomeB);
+    const cartoesPorTime = separarEventosPorTime(cartoes, nomeA, nomeB);
+    const totalCartoes = contarCartoes(cartoes);
+
+    const jogadoresA = campo(sumula,["jogadoresA","escalacaoA","elencoA"],[]);
+    const jogadoresB = campo(sumula,["jogadoresB","escalacaoB","elencoB"],[]);
+
+    const codigo = criarCodigo(id);
+    const data = dataBR(campo(sumula,["data","dataJogo","criadoEm"],""));
+    const hora = campo(sumula,["hora","horario"],"-");
+    const campoJogo = campo(sumula,["local","campo","estadio"],"-");
+    const arbitro = campo(sumula,["arbitro","arbitroNome","arbitroEmail"],"-");
+
+    const melhor = campo(sumula,["melhorJogador"],"-");
+    const melhorTime = campo(sumula,["melhorJogadorTime"], nomeA);
+    const fotoMelhor = campo(sumula,["fotoMelhorJogador","fotoMelhor"],"logo-liga.jfif");
+
+    app.innerHTML = `
+      <div class="sumula-page">
+
+        <header class="header">
+          <div class="header-logo">
+            <img src="logo-liga.jfif" alt="Liga Goiana">
+          </div>
+
+          <div class="header-title">
+            <h1>SÚMULA OFICIAL</h1>
+            <p>${campo(sumula,["campeonato"],"CAMPEONATO LIGA GOIANA")} ${campo(sumula,["categoria"],"")}</p>
+          </div>
+
+          <div class="header-right">
+            <div>FUTEBOL<br>É PAIXÃO!</div>
+            <div style="color:var(--dourado);font-size:16px;margin-top:2px;">★★★</div>
+            <div class="header-ball">⚽</div>
+          </div>
+        </header>
+
+        <section class="info-strip">
+          <div class="info-box">
+            <i class="fa-regular fa-file-lines"></i>
+            <div>
+              <small>Súmula Nº</small>
+              <strong>${codigo}</strong>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <i class="fa-solid fa-barcode"></i>
+            <div>
+              <small>Código da partida</small>
+              <strong>${codigo}</strong>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <i class="fa-solid fa-trophy"></i>
+            <div>
+              <small>Fase</small>
+              <strong>${campo(sumula,["fase"],"1ª Fase")}</strong>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <i class="fa-solid fa-list-ol"></i>
+            <div>
+              <small>Rodada</small>
+              <strong>${campo(sumula,["rodada"],"-")}</strong>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <div>
+              <small>Status</small>
+              <strong class="status-finalizado"><i class="fa-solid fa-check"></i> FINALIZADO</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="score-card">
+          <div class="team-score">
+            <img src="${logoA}" onerror="this.src='logo-liga.jfif'" alt="${nomeA}">
+            <div class="team-name">
+              <h2>${nomeA}</h2>
+              <p>${cidadeA}</p>
+            </div>
+          </div>
+
+          <div class="score-center">
+            <div class="score-number">${placarA(sumula)} x ${placarB(sumula)}</div>
+            <span>Placar Final</span>
+          </div>
+
+          <div class="team-score away">
+            <img src="${logoB}" onerror="this.src='logo-liga.jfif'" alt="${nomeB}">
+            <div class="team-name">
+              <h2>${nomeB}</h2>
+              <p>${cidadeB}</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="match-strip">
+          <div class="match-box">
+            <i class="fa-regular fa-calendar-days"></i>
+            <div>
+              <small>Data</small>
+              <strong>${data}</strong>
+            </div>
+          </div>
+
+          <div class="match-box">
+            <i class="fa-regular fa-clock"></i>
+            <div>
+              <small>Horário</small>
+              <strong>${hora}</strong>
+            </div>
+          </div>
+
+          <div class="match-box">
+            <i class="fa-solid fa-diamond"></i>
+            <div>
+              <small>Campo</small>
+              <strong>${campoJogo}</strong>
+            </div>
+          </div>
+
+          <div class="match-box">
+            <i class="fa-solid fa-whistle"></i>
+            <div>
+              <small>Árbitro</small>
+              <strong>${arbitro}</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="lineups">
+          <div class="section-title">Escalações</div>
+
+          <div class="lineups-grid">
+            <div class="lineup-panel">
+              <div class="lineup-head">
+                ${nomeA}
+                <img src="${logoA}" onerror="this.src='logo-liga.jfif'">
+              </div>
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="num">Nº</th>
+                    <th>Jogador</th>
+                    <th class="posicao">Posição</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${renderJogadores(jogadoresA)}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="lineup-panel">
+              <div class="lineup-head">
+                ${nomeB}
+                <img src="${logoB}" onerror="this.src='logo-liga.jfif'">
+              </div>
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="num">Nº</th>
+                    <th>Jogador</th>
+                    <th class="posicao">Posição</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${renderJogadores(jogadoresB)}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="legend">(G) Goleiro &nbsp;&nbsp;&nbsp; (C) Capitão</div>
+        </section>
+
+        <section class="events-grid">
+          <div class="team-events">
+            <h3>${nomeA}</h3>
+            <div class="events-columns">
+              <div class="event-col">
+                <h4>Gols</h4>
+                ${renderGols(golsPorTime.a)}
+              </div>
+              <div class="event-col">
+                <h4>Cartões</h4>
+                ${renderCartoes(cartoesPorTime.a)}
+              </div>
+            </div>
+          </div>
+
+          <div class="team-events away">
+            <h3>${nomeB}</h3>
+            <div class="events-columns">
+              <div class="event-col">
+                <h4>Gols</h4>
+                ${renderGols(golsPorTime.b)}
+              </div>
+              <div class="event-col">
+                <h4>Cartões</h4>
+                ${renderCartoes(cartoesPorTime.b)}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="lower-grid">
+          <div class="panel">
+            <h3>Arbitragem</h3>
+            <div class="official-row">
+              <div class="official-label"><i class="fa-solid fa-user-tie"></i> Árbitro</div>
+              <div class="official-value">${arbitro}</div>
+            </div>
+            <div class="official-row">
+              <div class="official-label"><i class="fa-solid fa-flag"></i> Assistente 1</div>
+              <div class="official-value">${campo(sumula,["assistente1"],"-")}</div>
+            </div>
+            <div class="official-row">
+              <div class="official-label"><i class="fa-solid fa-flag"></i> Assistente 2</div>
+              <div class="official-value">${campo(sumula,["assistente2"],"-")}</div>
+            </div>
+            <div class="official-row">
+              <div class="official-label"><i class="fa-solid fa-location-dot"></i> Observador</div>
+              <div class="official-value">${campo(sumula,["observador"],"-")}</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Resumo da Partida</h3>
+
+            <div class="summary-grid">
+              <div class="summary-box">
+                <i class="fa-solid fa-futbol"></i>
+                <span>Gols</span>
+                <strong>${gols.length || (placarA(sumula) + placarB(sumula))}</strong>
+                <div class="summary-detail">(${placarA(sumula)} x ${placarB(sumula)})</div>
+              </div>
+
+              <div class="summary-box">
+                <div class="summary-card-icon yellow-card"></div>
+                <span>Cartões Amarelos</span>
+                <strong>${totalCartoes.amarelos}</strong>
+              </div>
+
+              <div class="summary-box">
+                <div class="summary-card-icon red-card"></div>
+                <span>Cartões Vermelhos</span>
+                <strong>${totalCartoes.vermelhos}</strong>
+              </div>
+            </div>
+
+            <div class="best-player">
+              <img class="best-photo" src="${fotoMelhor}" onerror="this.src='logo-liga.jfif'">
+              <div>
+                <h4>Melhor jogador da partida</h4>
+                <strong>${melhor}</strong>
+                <span>${melhorTime}</span>
+              </div>
+              <div class="trophy">🏆</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="footer-grid">
+          <div class="panel">
+            <h3>Autenticação</h3>
+            <div class="auth-box">
+              <img src="${qrUrl()}" alt="QR Code">
+              <div class="auth-text">
+                <strong>Súmula publicada em</strong>
+                <p>${data}</p>
+                <p>Código de verificação</p>
+                <div class="auth-code">${codigo}</div>
+                <p>Escaneie o QR Code para verificar a autenticidade desta súmula.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel share-panel">
+            <h3>Compartilhar</h3>
+            <div class="buttons">
+              <button class="btn btn-whats" onclick="compartilharWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Compartilhar WhatsApp</button>
+              <button class="btn btn-email" onclick="enviarEmail()"><i class="fa-solid fa-envelope"></i> Enviar por E-mail</button>
+              <button class="btn btn-link" onclick="copiarLink()"><i class="fa-solid fa-link"></i> Copiar Link</button>
+              <button class="btn btn-pdf" onclick="baixarPDF()"><i class="fa-solid fa-file-pdf"></i> Baixar PDF</button>
+            </div>
+          </div>
+        </section>
+
+        <footer class="final-footer">
+          <div>Documento oficial gerado pelo sistema Liga Goiana</div>
+          <div>Todos os direitos reservados © 2026</div>
+        </footer>
+
+      </div>
+    `;
+  }catch(error){
+    console.error(error);
+    app.innerHTML = `<div class="error">Erro ao carregar súmula oficial.</div>`;
+  }
 }
 
-/* ================= CONTROLE ================= */
-
-window.proximaEtapa = function(){
-  alert("Próxima etapa chegando...");
-};
-
+carregar();
 </script>
 
 </body>
