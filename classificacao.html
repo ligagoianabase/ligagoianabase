@@ -27,11 +27,7 @@
   --max:1240px;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   font-family:Arial, sans-serif;
@@ -43,21 +39,9 @@ body{
   overflow-x:hidden;
 }
 
-a{
-  text-decoration:none;
-  color:inherit;
-}
-
-button,
-input,
-select{
-  font-family:inherit;
-}
-
-button{
-  cursor:pointer;
-  border:none;
-}
+a{text-decoration:none;color:inherit}
+button,input,select{font-family:inherit}
+button{cursor:pointer;border:none}
 
 .wrap{
   width:min(100% - 28px, var(--max));
@@ -65,8 +49,7 @@ button{
 }
 
 .topo{
-  background:
-    linear-gradient(180deg, rgba(8,23,44,.98), rgba(6,20,39,.98));
+  background:linear-gradient(180deg, rgba(8,23,44,.98), rgba(6,20,39,.98));
   border-bottom:3px solid var(--gold);
   box-shadow:var(--shadow);
 }
@@ -85,8 +68,7 @@ button{
 }
 
 .menu-principal{
-  background:
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
   border-top:1px solid rgba(255,255,255,.06);
 }
 
@@ -103,8 +85,7 @@ button{
 .menu-tabs button{
   font-weight:900;
   font-size:clamp(11px,.92vw,15px);
-  background:
-    linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
+  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
   color:#fff;
   padding:clamp(8px,.75vw,12px) clamp(9px,1vw,18px);
   border-radius:15px;
@@ -124,9 +105,7 @@ button{
   border-color:var(--gold);
 }
 
-.container{
-  padding:22px 0 34px;
-}
+.container{padding:22px 0 34px}
 
 .hero{
   background:
@@ -175,8 +154,7 @@ button{
   margin-bottom:14px;
 }
 
-select,
-input{
+select,input{
   width:100%;
   padding:12px;
   border:none;
@@ -188,8 +166,7 @@ input{
   box-shadow:0 8px 18px rgba(0,0,0,.22);
 }
 
-select:focus,
-input:focus{
+select:focus,input:focus{
   outline:2px solid rgba(247,198,0,.65);
 }
 
@@ -201,8 +178,7 @@ input:focus{
 }
 
 .card-resumo{
-  background:
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
   border:1px solid rgba(247,198,0,.22);
   border-radius:15px;
   padding:15px;
@@ -227,8 +203,7 @@ input:focus{
 }
 
 .tabela-box{
-  background:
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
   border:1px solid rgba(247,198,0,.22);
   border-radius:18px;
   box-shadow:var(--shadow);
@@ -256,9 +231,7 @@ td{
   font-size:14px;
 }
 
-tbody tr:hover{
-  background:rgba(247,198,0,.08);
-}
+tbody tr:hover{background:rgba(247,198,0,.08)}
 
 .pos{
   text-align:center;
@@ -294,13 +267,8 @@ tbody tr:hover{
   color:#111;
 }
 
-.badge.red{
-  background:var(--red);
-}
-
-.badge.green{
-  background:var(--green);
-}
+.badge.red{background:var(--red)}
+.badge.green{background:var(--green)}
 
 .vazio{
   color:var(--muted);
@@ -321,9 +289,7 @@ tbody tr:hover{
     scrollbar-width:none;
   }
 
-  .menu-tabs::-webkit-scrollbar{
-    display:none;
-  }
+  .menu-tabs::-webkit-scrollbar{display:none}
 
   .menu-tabs button{
     flex:0 0 auto;
@@ -331,23 +297,13 @@ tbody tr:hover{
     padding:12px 18px;
   }
 
-  .filtros{
-    grid-template-columns:1fr;
-  }
-
-  .cards-resumo{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .tabela-box{
-    overflow-x:auto;
-  }
+  .filtros{grid-template-columns:1fr}
+  .cards-resumo{grid-template-columns:1fr 1fr}
+  .tabela-box{overflow-x:auto}
 }
 
 @media(max-width:430px){
-  .cards-resumo{
-    grid-template-columns:1fr;
-  }
+  .cards-resumo{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -406,7 +362,6 @@ tbody tr:hover{
   <section id="conteudo"></section>
 
 </main>
-
 <script type="module">
 import { db } from "./firebase.js";
 import {
@@ -688,7 +643,7 @@ function tituloDescricao(titulo,desc){
   document.getElementById("descricaoAba").innerText = desc;
 }
 
-function tabelaHtml(lista, titulo="Classificação"){
+function tabelaHtml(lista){
   if(!lista.length){
     return `<div class="tabela-box"><div class="vazio">Nenhum dado encontrado.</div></div>`;
   }
@@ -733,8 +688,7 @@ function tabelaHtml(lista, titulo="Classificação"){
 
 function renderDetalhes(){
   tituloDescricao("Detalhes","Resumo geral da competição com dados automáticos das súmulas finalizadas.");
-  const lista = tabelaClassificacao("geral");
-  conteudo.innerHTML = tabelaHtml(lista);
+  conteudo.innerHTML = tabelaHtml(tabelaClassificacao("geral"));
 }
 
 function renderClassificacao(){
