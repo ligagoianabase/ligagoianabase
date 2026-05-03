@@ -30,14 +30,8 @@ body{
   min-height:100vh;
 }
 
-button,input,select,textarea{
-  font-family:inherit;
-}
-
-button{
-  cursor:pointer;
-  border:none;
-}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer;border:none}
 
 input,select,textarea{
   width:100%;
@@ -50,15 +44,9 @@ input,select,textarea{
   outline:none;
 }
 
-textarea{
-  min-height:90px;
-  resize:vertical;
-}
+textarea{min-height:90px;resize:vertical}
 
-input:disabled,
-select:disabled,
-textarea:disabled,
-button:disabled{
+input:disabled,select:disabled,textarea:disabled,button:disabled{
   opacity:.65;
   cursor:not-allowed;
 }
@@ -113,23 +101,9 @@ button:disabled{
   gap:8px;
 }
 
-.alerta-ok{
-  background:#dcfce7;
-  color:#14532d;
-  border:1px solid #86efac;
-}
-
-.alerta-aviso{
-  background:#fff7d6;
-  color:#854d0e;
-  border:1px solid #f7c600;
-}
-
-.alerta-erro{
-  background:#fee2e2;
-  color:#991b1b;
-  border:1px solid #fecaca;
-}
+.alerta-ok{background:#dcfce7;color:#14532d;border:1px solid #86efac}
+.alerta-aviso{background:#fff7d6;color:#854d0e;border:1px solid #f7c600}
+.alerta-erro{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
 
 .page{
   width:min(100% - 20px,1180px);
@@ -149,10 +123,7 @@ button:disabled{
   padding:16px 18px 8px;
 }
 
-.header-logo{
-  display:flex;
-  justify-content:center;
-}
+.header-logo{display:flex;justify-content:center}
 
 .header-logo img{
   width:94px;
@@ -160,9 +131,7 @@ button:disabled{
   object-fit:contain;
 }
 
-.header-title{
-  text-align:center;
-}
+.header-title{text-align:center}
 
 .header-title h1{
   color:var(--azul);
@@ -276,9 +245,7 @@ button:disabled{
   object-fit:contain;
 }
 
-.team-name{
-  text-align:center;
-}
+.team-name{text-align:center}
 
 .team-name input.nome{
   color:var(--azul);
@@ -383,9 +350,7 @@ button:disabled{
   text-transform:uppercase;
 }
 
-.section-body{
-  padding:12px;
-}
+.section-body{padding:12px}
 
 .grid2{
   display:grid;
@@ -437,8 +402,7 @@ td{
   border:1px solid #e5eaf1;
 }
 
-td input,
-td select{
+td input,td select{
   border:none;
   padding:5px;
 }
@@ -565,9 +529,7 @@ td select{
   text-transform:uppercase;
 }
 
-.panel-body{
-  padding:12px;
-}
+.panel-body{padding:12px}
 
 .arb-grid{
   display:grid;
@@ -597,7 +559,6 @@ td select{
   text-transform:uppercase;
 }
 
-summary-box strong,
 .summary-box strong{
   display:block;
   color:var(--azul);
@@ -699,22 +660,9 @@ summary-box strong,
 }
 
 @media(max-width:900px){
-  .topbar-inner,
-  .header,
-  .info-strip,
-  .score-card,
-  .match-strip,
-  .grid2,
-  .event-columns,
-  .lower-grid,
-  .summary-grid,
-  .footer-grid,
-  .buttons,
-  .auth-box,
-  .add-row,
-  .event-form,
-  .event-form.cartao-form,
-  .busca-box{
+  .topbar-inner,.header,.info-strip,.score-card,.match-strip,.grid2,
+  .event-columns,.lower-grid,.summary-grid,.footer-grid,.buttons,
+  .auth-box,.add-row,.event-form,.event-form.cartao-form,.busca-box{
     grid-template-columns:1fr;
   }
 
@@ -757,9 +705,7 @@ import {
   updateDoc,
   serverTimestamp,
   collection,
-  getDocs,
-  query,
-  where
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
@@ -773,10 +719,8 @@ let jogoId = "";
 let jogo = null;
 let sumulaSalva = null;
 let finalizada = false;
-let bloqueada = false;
 let podeEditar = false;
 let autoSaveTimer = null;
-let jaCarregouInicial = false;
 
 let jogadoresA = [];
 let jogadoresB = [];
@@ -822,9 +766,8 @@ function normalizarTexto(txt){
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g,"");
 }
-
 function mesmoDiaDoJogo(){
-  const data = campo(jogo,["data","dataJogo"],"");
+  const data = campo(jogo,["data","dataJogo","dataHora"],"");
   if(!data) return true;
 
   const hoje = new Date();
@@ -833,9 +776,9 @@ function mesmoDiaDoJogo(){
   const dd = String(hoje.getDate()).padStart(2,"0");
   const hojeISO = `${yyyy}-${mm}-${dd}`;
 
-  if(data.includes("-")) return data.slice(0,10) === hojeISO;
+  if(String(data).includes("-")) return String(data).slice(0,10) === hojeISO;
 
-  const partes = data.split("/");
+  const partes = String(data).split("/");
   if(partes.length === 3){
     const dataISO = `${partes[2]}-${partes[1].padStart(2,"0")}-${partes[0].padStart(2,"0")}`;
     return dataISO === hojeISO;
@@ -847,10 +790,6 @@ function mesmoDiaDoJogo(){
 function exibirAlerta(tipo, texto){
   const classe = tipo === "erro" ? "alerta-erro" : tipo === "ok" ? "alerta-ok" : "alerta-aviso";
   alertaSistema.innerHTML = `<div class="alerta-sistema ${classe}"><i class="fa-solid fa-circle-info"></i> ${texto}</div>`;
-}
-
-function limparAlerta(){
-  alertaSistema.innerHTML = "";
 }
 
 function perfilEhAdmin(){
@@ -1099,7 +1038,8 @@ function criarTela(){
         </div>
       </div>
     </section>
-<section class="section">
+
+    <section class="section">
       <div class="section-title">Gols e Cartões</div>
       <div class="section-body grid2">
 
@@ -1225,7 +1165,7 @@ function criarTela(){
     <section class="section">
       <div class="section-title">Observações</div>
       <div class="section-body">
-        <textarea id="observacoes"></textarea>
+        <textarea id="observacoes" placeholder="Observações oficiais do árbitro"></textarea>
       </div>
     </section>
 
@@ -1247,15 +1187,15 @@ function criarTela(){
       <div class="panel">
         <h3>Compartilhar</h3>
         <div class="panel-body buttons">
-          <button class="btn btn-whats" onclick="compartilharWhatsApp()">WhatsApp</button>
-          <button class="btn btn-email" onclick="enviarEmail()">E-mail</button>
-          <button class="btn btn-link" onclick="copiarLink()">Link</button>
-          <button class="btn btn-pdf" onclick="baixarPDF()">PDF</button>
+          <button class="btn btn-whats" onclick="compartilharWhatsApp()"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+          <button class="btn btn-email" onclick="enviarEmail()"><i class="fa-solid fa-envelope"></i> E-mail</button>
+          <button class="btn btn-link" onclick="copiarLink()"><i class="fa-solid fa-link"></i> Link</button>
+          <button class="btn btn-pdf" onclick="baixarPDF()"><i class="fa-solid fa-file-pdf"></i> PDF</button>
         </div>
 
         <div class="panel-body">
           <button class="btn btn-gold" style="width:100%" onclick="finalizarSumula()">
-            🔒 Finalizar Súmula
+            <i class="fa-solid fa-lock"></i> Finalizar Súmula
           </button>
         </div>
       </div>
@@ -1267,21 +1207,481 @@ function criarTela(){
 
   </div>
 `;
+}
 
-/* ======================= REGRAS NOVAS ======================= */
+function preencher(){
+  const A = timeAObj();
+  const B = timeBObj();
 
-function toggleVermelhoExtra(time){
-  const tipo = document.getElementById(`cartaoTipo${time}`).value;
-  const extra = document.getElementById(`cartaoVermelhoTipo${time}`);
+  $("campeonato").value = campo(jogo,["campeonato","campeonatoNome"],"CAMPEONATO LIGA GOIANA");
+  $("numeroSumula").value = campo(sumulaSalva,["numeroSumula"], campo(jogo,["numeroSumula"],`${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`));
+  $("codigoPartida").value = campo(jogo,["codigoPartida","codigo"],jogoId);
+  $("fase").value = campo(jogo,["fase"],"Primeira fase");
+  $("rodada").value = campo(jogo,["rodada"],"");
+
+  $("timeA").value = campo(A,["nome","nomeTime"],"Mandante");
+  $("timeB").value = campo(B,["nome","nomeTime"],"Visitante");
+  $("cidadeA").value = campo(A,["cidade","municipio"],"");
+  $("cidadeB").value = campo(B,["cidade","municipio"],"");
+  $("logoA").src = campo(A,["logo","escudo","imagem"],"logo-liga.jfif");
+  $("logoB").src = campo(B,["logo","escudo","imagem"],"logo-liga.jfif");
+  $("miniLogoA").src = $("logoA").src;
+  $("miniLogoB").src = $("logoB").src;
+
+  $("dataJogo").value = campo(jogo,["data","dataJogo","dataHora"],"");
+  $("horaJogo").value = campo(jogo,["hora","horario"],"");
+  $("localJogo").value = campo(jogo,["local","campo","estadio"],"");
+  $("arbitroTopo").value = campo(jogo,["arbitro","arbitroNome"],"");
+  $("arbitro").value = campo(jogo,["arbitro","arbitroNome"],"");
+  $("assistente1").value = campo(jogo,["assistente1"],"");
+  $("assistente2").value = campo(jogo,["assistente2"],"");
+  $("observador").value = campo(jogo,["observador","quartoArbitro","arbitroAuxiliar"],"");
+
+  jogadoresA = primeiroArray(
+    sumulaSalva?.jogadoresA,
+    sumulaSalva?.escalacaoA,
+    jogo.jogadoresA,
+    jogo.escalacaoA,
+    jogo.titularesA
+  ).map(normalizarJogador);
+
+  jogadoresB = primeiroArray(
+    sumulaSalva?.jogadoresB,
+    sumulaSalva?.escalacaoB,
+    jogo.jogadoresB,
+    jogo.escalacaoB,
+    jogo.titularesB
+  ).map(normalizarJogador);
+
+  golsA = Array.isArray(sumulaSalva?.gols) ? sumulaSalva.gols.filter(g=>g.time==="A") : [];
+  golsB = Array.isArray(sumulaSalva?.gols) ? sumulaSalva.gols.filter(g=>g.time==="B") : [];
+
+  cartoesA = Array.isArray(sumulaSalva?.cartoes) ? sumulaSalva.cartoes.filter(c=>c.time==="A") : [];
+  cartoesB = Array.isArray(sumulaSalva?.cartoes) ? sumulaSalva.cartoes.filter(c=>c.time==="B") : [];
+
+  $("melhorJogador").value = campo(sumulaSalva,["melhorJogador"],"");
+  $("melhorDestaque").value = campo(sumulaSalva,["melhorJogadorDestaque","melhorDestaque"],"");
+  $("observacoes").value = campo(sumulaSalva,["observacoes","observacoesArbitro"],"");
+
+  $("codigoVerificacao").innerText = campo(sumulaSalva,["codigoVerificacao","hash"],"---");
+  $("linkPublicoTexto").innerText = campo(sumulaSalva,["linkPublico"],linkPublico());
+  $("publicadaEm").innerText = campo(sumulaSalva,["publicadaEmTexto"],"Aguardando finalização");
+
+  atualizarTitulos();
+  renderEscalacoes();
+  montarSelects();
+  renderEventos();
+  atualizarResumo();
+  atualizarStatusVisual();
+  gerarQr(linkPublico());
+}
+function atualizarTitulos(){
+  const a = getTimeA().nome;
+  const b = getTimeB().nome;
+
+  $("tituloA").innerText = a;
+  $("tituloB").innerText = b;
+  $("eventoTituloA").innerText = a;
+  $("eventoTituloB").innerText = b;
+
+  $("melhorJogadorTime").innerHTML = `
+    <option value="${a}">${a}</option>
+    <option value="${b}">${b}</option>
+  `;
+}
+
+function renderEscalacoes(){
+  $("escA").innerHTML = renderJogadores(jogadoresA,"A");
+  $("escB").innerHTML = renderJogadores(jogadoresB,"B");
+}
+
+function renderJogadores(lista,time){
+  const titulares = lista.filter(j=>j.tipo !== "suplente");
+  const suplentes = lista.filter(j=>j.tipo === "suplente");
+
+  return `
+    <tr class="sub-row"><td colspan="7">Titulares</td></tr>
+    ${titulares.map(j=>linhaJogador(j,time)).join("")}
+    <tr class="sub-row"><td colspan="7">Suplentes</td></tr>
+    ${suplentes.map(j=>linhaJogador(j,time)).join("")}
+  `;
+}
+
+function linhaJogador(j,time){
+  const lista = time === "A" ? jogadoresA : jogadoresB;
+  const i = lista.indexOf(j);
+
+  return `
+    <tr>
+      <td><input value="${j.numero || ""}" onchange="editarJogador('${time}',${i},'numero',this.value)" placeholder="Nº"></td>
+      <td><input value="${j.nome || ""}" onchange="editarJogador('${time}',${i},'nome',this.value)" placeholder="Nome"></td>
+      <td><input value="${j.cpf || ""}" onchange="editarJogador('${time}',${i},'cpf',this.value)" placeholder="CPF"></td>
+      <td><input value="${j.nascimento || ""}" onchange="editarJogador('${time}',${i},'nascimento',this.value)" placeholder="Nasc."></td>
+      <td><input value="${j.posicao || ""}" onchange="editarJogador('${time}',${i},'posicao',this.value)" placeholder="Posição"></td>
+      <td>
+        <select onchange="editarJogador('${time}',${i},'tipo',this.value)">
+          <option value="titular" ${j.tipo !== "suplente" ? "selected" : ""}>Titular</option>
+          <option value="suplente" ${j.tipo === "suplente" ? "selected" : ""}>Suplente</option>
+        </select>
+      </td>
+      <td><button class="btn btn-red" onclick="removerJogador('${time}',${i})">X</button></td>
+    </tr>
+  `;
+}
+
+window.editarJogador = function(time,i,c,v){
+  const lista = time === "A" ? jogadoresA : jogadoresB;
+  if(!lista[i]) return;
+  lista[i][c] = v;
+  montarSelects();
+  salvarRascunhoRapido();
+};
+
+window.removerJogador = function(time,i){
+  const lista = time === "A" ? jogadoresA : jogadoresB;
+  lista.splice(i,1);
+  renderEscalacoes();
+  montarSelects();
+  salvarRascunhoRapido();
+};
+
+window.adicionarJogador = function(time){
+  const n = $(`novoNum${time}`).value;
+  const nome = $(`novoNome${time}`).value;
+  const pos = $(`novaPos${time}`).value;
+  const tipo = $(`novoTipo${time}`).value;
+
+  if(!n || !nome){
+    alert("Informe número e nome.");
+    return;
+  }
+
+  const obj = {
+    id:"",
+    numero:n,
+    nome,
+    cpf:"",
+    nascimento:"",
+    posicao:pos,
+    categoria:campo(jogo,["categoria"],""),
+    tipo,
+    manual:true
+  };
+
+  if(time === "A") jogadoresA.push(obj);
+  else jogadoresB.push(obj);
+
+  $(`novoNum${time}`).value = "";
+  $(`novoNome${time}`).value = "";
+  $(`novaPos${time}`).value = "";
+
+  renderEscalacoes();
+  montarSelects();
+  salvarRascunhoRapido();
+};
+
+window.buscarOutroJogador = async function(time){
+  const termo = normalizarTexto($(`buscaOutro${time}`).value);
+  if(!termo){
+    alert("Digite o nome do jogador.");
+    return;
+  }
+
+  const timeId = time === "A" ? campo(jogo,["timeAId"], campo(jogo?.timeA,["id"],"")) : campo(jogo,["timeBId"], campo(jogo?.timeB,["id"],""));
+  const timeNome = time === "A" ? getTimeA().nome : getTimeB().nome;
+
+  const snap = await getDocs(collection(db,"jogadores"));
+  const encontrados = [];
+
+  snap.forEach(d=>{
+    const j = {id:d.id,...d.data()};
+
+    const mesmoTime =
+      j.timeId === timeId ||
+      j.timeID === timeId ||
+      normalizarTexto(j.timeNome) === normalizarTexto(timeNome) ||
+      normalizarTexto(j.time) === normalizarTexto(timeNome);
+
+    const nomeBate = normalizarTexto(j.nome).includes(termo);
+
+    if(mesmoTime && nomeBate){
+      encontrados.push(normalizarJogador(j));
+    }
+  });
+
+  if(!encontrados.length){
+    alert("Nenhum jogador encontrado nesse time.");
+    return;
+  }
+
+  const escolhido = encontrados[0];
+  escolhido.numero = "";
+  escolhido.tipo = "suplente";
+
+  if(time === "A") jogadoresA.push(escolhido);
+  else jogadoresB.push(escolhido);
+
+  $(`buscaOutro${time}`).value = "";
+
+  renderEscalacoes();
+  montarSelects();
+  salvarRascunhoRapido();
+
+  alert("Jogador puxado de outra categoria. Informe o número da camisa na súmula.");
+};
+
+function montarSelects(){
+  const optA = jogadoresA
+    .filter(j=>j.nome)
+    .map(j=>`<option value="${j.nome}" data-num="${j.numero || ""}">${j.numero || "S/N"} - ${j.nome}</option>`)
+    .join("");
+
+  const optB = jogadoresB
+    .filter(j=>j.nome)
+    .map(j=>`<option value="${j.nome}" data-num="${j.numero || ""}">${j.numero || "S/N"} - ${j.nome}</option>`)
+    .join("");
+
+  $("golJogadorA").innerHTML = optA || `<option value="">Sem jogadores</option>`;
+  $("cartaoJogadorA").innerHTML = optA || `<option value="">Sem jogadores</option>`;
+  $("golJogadorB").innerHTML = optB || `<option value="">Sem jogadores</option>`;
+  $("cartaoJogadorB").innerHTML = optB || `<option value="">Sem jogadores</option>`;
+}
+
+window.toggleVermelhoExtra = function(time){
+  const tipo = $(`cartaoTipo${time}`).value;
+  const extra = $(`cartaoVermelhoTipo${time}`);
   extra.style.display = tipo === "vermelho" ? "block" : "none";
+};
+
+window.adicionarGol = function(time){
+  const sel = $(time === "A" ? "golJogadorA" : "golJogadorB");
+  if(!sel.value) return;
+
+  const minuto = $(time === "A" ? "golMinutoA" : "golMinutoB").value;
+  const tipo = $(time === "A" ? "golTipoA" : "golTipoB").value;
+
+  const obj = {
+    time,
+    timeNome: time === "A" ? getTimeA().nome : getTimeB().nome,
+    nome:sel.value,
+    jogador:sel.value,
+    numero:sel.selectedOptions[0]?.dataset?.num || "",
+    minuto,
+    tempo:minuto,
+    tipo
+  };
+
+  if(time === "A") golsA.push(obj);
+  else golsB.push(obj);
+
+  $(time === "A" ? "golMinutoA" : "golMinutoB").value = "";
+
+  renderEventos();
+  atualizarResumo();
+  salvarRascunhoRapido();
+};
+
+window.adicionarCartao = function(time){
+  const sel = $(time === "A" ? "cartaoJogadorA" : "cartaoJogadorB");
+  if(!sel.value) return;
+
+  const minuto = $(time === "A" ? "cartaoMinutoA" : "cartaoMinutoB").value;
+  const tipo = $(time === "A" ? "cartaoTipoA" : "cartaoTipoB").value;
+  const vermelhoTipo = tipo === "vermelho" ? $(time === "A" ? "cartaoVermelhoTipoA" : "cartaoVermelhoTipoB").value : "";
+
+  const obj = {
+    time,
+    timeNome: time === "A" ? getTimeA().nome : getTimeB().nome,
+    nome:sel.value,
+    jogador:sel.value,
+    numero:sel.selectedOptions[0]?.dataset?.num || "",
+    minuto,
+    tempo:minuto,
+    tipo,
+    vermelhoTipo
+  };
+
+  if(time === "A") cartoesA.push(obj);
+  else cartoesB.push(obj);
+
+  $(time === "A" ? "cartaoMinutoA" : "cartaoMinutoB").value = "";
+
+  renderEventos();
+  atualizarResumo();
+  salvarRascunhoRapido();
+};
+
+function renderEventos(){
+  $("listaGolsA").innerHTML = golsA.map((g,i)=>eventoHtml(g,"gol","A",i)).join("");
+  $("listaGolsB").innerHTML = golsB.map((g,i)=>eventoHtml(g,"gol","B",i)).join("");
+  $("listaCartoesA").innerHTML = cartoesA.map((c,i)=>eventoHtml(c,"cartao","A",i)).join("");
+  $("listaCartoesB").innerHTML = cartoesB.map((c,i)=>eventoHtml(c,"cartao","B",i)).join("");
 }
 
-function atualizarPlacarAutomatico(){
-  document.getElementById("golsA").innerText = golsA.length;
-  document.getElementById("golsB").innerText = golsB.length;
+function eventoHtml(e,tipo,time,i){
+  const icone = tipo === "gol" ? "⚽" : (e.tipo === "vermelho" ? "🟥" : "🟨");
+  const extra = e.tipo === "vermelho"
+    ? ` - ${e.vermelhoTipo === "segundo_amarelo" ? "2º amarelo" : "direto"}`
+    : "";
+
+  const fn = tipo === "gol" ? "removerGol" : "removerCartao";
+
+  return `
+    <div class="event-item">
+      <span>${icone} <strong>${e.minuto || "-"}</strong> ${e.nome} Nº ${e.numero || "S/N"} ${extra}</span>
+      <button onclick="${fn}('${time}',${i})">X</button>
+    </div>
+  `;
 }
 
-/* ======================= AUTO SAVE ======================= */
+window.removerGol = function(time,i){
+  if(time === "A") golsA.splice(i,1);
+  else golsB.splice(i,1);
+
+  renderEventos();
+  atualizarResumo();
+  salvarRascunhoRapido();
+};
+
+window.removerCartao = function(time,i){
+  if(time === "A") cartoesA.splice(i,1);
+  else cartoesB.splice(i,1);
+
+  renderEventos();
+  atualizarResumo();
+  salvarRascunhoRapido();
+};
+
+window.atualizarResumo = function(){
+  $("golsA").innerText = golsA.length;
+  $("golsB").innerText = golsB.length;
+
+  const todosCartoes = [...cartoesA,...cartoesB];
+
+  $("totalGols").innerText = golsA.length + golsB.length;
+  $("totalAmarelos").innerText = todosCartoes.filter(c=>c.tipo==="amarelo").length;
+  $("totalVermelhos").innerText = todosCartoes.filter(c=>c.tipo==="vermelho").length;
+};
+
+function atualizarStatusVisual(){
+  const status = finalizada ? "FINALIZADO" : "EM ANDAMENTO";
+  const elStatus = $("statusOficial");
+
+  elStatus.innerText = status;
+  elStatus.className = "status-badge " + (finalizada ? "status-finalizado" : "status-andamento");
+}
+
+function gerarQr(link){
+  if(window.QRCode && $("qrCanvas")){
+    QRCode.toCanvas($("qrCanvas"), link, {width:98, margin:1});
+  }
+}
+
+function montarDados(finalizar=false){
+  const timeA = getTimeA();
+  const timeB = getTimeB();
+  const gols = [...golsA.map(g=>({...g,time:"A",timeNome:timeA.nome})), ...golsB.map(g=>({...g,time:"B",timeNome:timeB.nome}))];
+  const cartoes = [...cartoesA.map(c=>({...c,time:"A",timeNome:timeA.nome})), ...cartoesB.map(c=>({...c,time:"B",timeNome:timeB.nome}))];
+
+  const codigo = finalizar ? codigoVerificacao() : campo(sumulaSalva,["codigoVerificacao","hash"],"");
+  const link = linkPublico();
+
+  return {
+    jogoId,
+    id:jogoId,
+
+    campeonato:$("campeonato").value,
+    categoria:campo(jogo,["categoria"],""),
+    numeroSumula:$("numeroSumula").value,
+    codigoPartida:$("codigoPartida").value || jogoId,
+    codigo:$("codigoPartida").value || jogoId,
+    fase:$("fase").value,
+    rodada:$("rodada").value,
+
+    data:$("dataJogo").value,
+    dataHora:$("dataJogo").value,
+    hora:$("horaJogo").value,
+    horario:$("horaJogo").value,
+    local:$("localJogo").value,
+    campo:$("localJogo").value,
+
+    timeA,
+    timeB,
+    timeAId:campo(jogo,["timeAId"], campo(jogo?.timeA,["id"],"")),
+    timeBId:campo(jogo,["timeBId"], campo(jogo?.timeB,["id"],"")),
+    timeANome:timeA.nome,
+    timeBNome:timeB.nome,
+
+    golsA:golsA.length,
+    golsB:golsB.length,
+    placar:`${golsA.length} x ${golsB.length}`,
+
+    jogadoresA,
+    jogadoresB,
+    escalacaoA:jogadoresA,
+    escalacaoB:jogadoresB,
+
+    gols,
+    cartoes,
+    golsLista:gols,
+    cartoesLista:cartoes,
+
+    arbitro:$("arbitro").value || $("arbitroTopo").value,
+    arbitroNome:$("arbitro").value || $("arbitroTopo").value,
+    arbitroId:campo(jogo,["arbitroId"],""),
+    arbitroUid:campo(jogo,["arbitroUid"],""),
+
+    assistente1:$("assistente1").value,
+    assistente2:$("assistente2").value,
+    observador:$("observador").value,
+
+    arbitragem:{
+      arbitro:$("arbitro").value || $("arbitroTopo").value,
+      assistente1:$("assistente1").value,
+      assistente2:$("assistente2").value,
+      observador:$("observador").value
+    },
+
+    melhorJogador:$("melhorJogador").value,
+    melhorJogadorTime:$("melhorJogadorTime").value,
+    melhorJogadorDestaque:$("melhorDestaque").value,
+
+    observacoes:$("observacoes").value,
+    observacoesArbitro:$("observacoes").value,
+
+    codigoVerificacao:codigo,
+    hash:codigo,
+    linkPublico:link,
+
+    publicadaEmTexto:finalizar ? dataAgora() : campo(sumulaSalva,["publicadaEmTexto"],"Aguardando finalização"),
+    autenticada:finalizar,
+    publico:finalizar,
+    publica:finalizar,
+    status:finalizar ? "finalizado" : "em_andamento",
+    sumulaStatus:finalizar ? "finalizada" : "em_andamento",
+    sumulaFinalizada:finalizar,
+    finalizadaEm:finalizar ? serverTimestamp() : null,
+
+    removidoSubstituicoes:true,
+    atualizadoEm:serverTimestamp()
+  };
+}
+
+async function salvarRascunhoRapido(){
+  if(!podeEditar || finalizada || !jogoId) return;
+
+  try{
+    const dados = montarDados(false);
+    await setDoc(doc(db,"sumulas",jogoId),dados,{merge:true});
+    await updateDoc(doc(db,"jogos",jogoId),{
+      sumulaStatus:"em_andamento",
+      atualizadoEm:serverTimestamp()
+    });
+    $("statusMsg").innerText = "Rascunho salvo.";
+  }catch(e){
+    console.error(e);
+  }
+}
 
 function iniciarAutoSave(){
   if(autoSaveTimer) clearInterval(autoSaveTimer);
@@ -1290,69 +1690,181 @@ function iniciarAutoSave(){
     if(!podeEditar || finalizada) return;
 
     try{
-      await setDoc(doc(db,"sumulas",jogoId), montarDados(), {merge:true});
-      $("statusMsg").innerText = "Salvando automático...";
+      await setDoc(doc(db,"sumulas",jogoId), montarDados(false), {merge:true});
+      $("statusMsg").innerText = "Salvo automático.";
     }catch(e){
       console.error("AutoSave erro:", e);
     }
   }, 5000);
 }
 
-/* ======================= BLOQUEIOS ======================= */
+function aplicarBloqueio(motivo=""){
+  if(podeEditar && !finalizada) return;
 
-function aplicarBloqueio(){
-  if(!podeEditar){
-    document.querySelectorAll("input,select,textarea,button").forEach(el=>{
-      if(!el.classList.contains("btn-link")) el.disabled = true;
-    });
-
-    const aviso = document.getElementById("bloqueioAviso");
-    aviso.style.display = "block";
-    aviso.innerText = "Você não tem permissão para editar esta súmula.";
-  }
-
-  if(finalizada){
-    document.querySelectorAll("input,select,textarea,button").forEach(el=>{
-      el.disabled = true;
-    });
-
-    const aviso = document.getElementById("bloqueioAviso");
-    aviso.style.display = "block";
-    aviso.innerText = "Súmula finalizada. Edição bloqueada.";
-  }
-}
-
-/* ======================= FINALIZAÇÃO ======================= */
-
-window.finalizarSumula = async function(){
-
-  if(!confirm("Tem certeza? Após finalizar não poderá editar.")) return;
-
-  const dados = montarDados();
-
-  await setDoc(doc(db,"sumulas",jogoId), dados, {merge:true});
-
-  await updateDoc(doc(db,"jogos",jogoId),{
-    status:"finalizado",
-    sumulaFinalizada:true,
-    linkSumula:linkPublico()
+  document.querySelectorAll("#paginaSumula input,#paginaSumula select,#paginaSumula textarea,#paginaSumula button").forEach(el=>{
+    el.disabled = true;
   });
 
-  alert("Súmula finalizada!");
-  location.href = linkPublico();
+  const aviso = $("bloqueioAviso");
+  aviso.style.display = "block";
+  aviso.innerText = motivo || (finalizada ? "Súmula finalizada. Edição bloqueada." : "Você não tem permissão para editar esta súmula.");
+}
+
+window.carregarJogo = async function(){
+  jogoId = $("inputJogoId").value.trim() || new URLSearchParams(location.search).get("id");
+
+  if(!jogoId){
+    alert("Informe o ID do jogo.");
+    return;
+  }
+
+  $("statusMsg").innerText = "Carregando...";
+
+  const jogoSnap = await getDoc(doc(db,"jogos",jogoId));
+  if(!jogoSnap.exists()){
+    app.innerHTML = `<div class="error">Jogo não encontrado.</div>`;
+    return;
+  }
+
+  jogo = {id:jogoId,...jogoSnap.data()};
+
+  const sumulaSnap = await getDoc(doc(db,"sumulas",jogoId));
+  sumulaSalva = sumulaSnap.exists() ? {id:jogoId,...sumulaSnap.data()} : null;
+
+  if(!sumulaSalva){
+    sumulaSalva = {
+      id:jogoId,
+      jogoId,
+      ...jogo,
+      status:"pendente",
+      sumulaStatus:"pendente",
+      sumulaFinalizada:false,
+      publico:false,
+      publica:false,
+      criadoAutomaticamente:false,
+      criadoEmServidor:serverTimestamp()
+    };
+
+    await setDoc(doc(db,"sumulas",jogoId),sumulaSalva,{merge:true});
+  }
+
+  finalizada = !!sumulaSalva.sumulaFinalizada || sumulaSalva.status === "finalizado";
+
+  const admin = perfilEhAdmin();
+  const arbitroDoJogo = perfilEhArbitroDoJogo();
+  const diaDoJogo = mesmoDiaDoJogo();
+
+  podeEditar = (admin || arbitroDoJogo) && !finalizada && diaDoJogo;
+
+  if(!admin && !arbitroDoJogo){
+    criarTela();
+    preencher();
+    aplicarBloqueio("Acesso negado. Somente o árbitro designado para este jogo ou um ADM autorizado pode editar esta súmula.");
+    exibirAlerta("erro","Acesso negado para edição desta súmula.");
+    return;
+  }
+
+  criarTela();
+  preencher();
+
+  if(!diaDoJogo && !admin){
+    aplicarBloqueio("A súmula só pode ser editada pelo árbitro no dia do jogo.");
+    exibirAlerta("aviso","A súmula ainda não está liberada para edição. Ela será aberta no dia do jogo.");
+  }else if(finalizada){
+    aplicarBloqueio("Súmula finalizada. Edição bloqueada.");
+    exibirAlerta("ok","Esta súmula já foi finalizada.");
+  }else{
+    exibirAlerta("ok","Súmula liberada para edição.");
+    iniciarAutoSave();
+  }
+
+  $("statusMsg").innerText = "Jogo carregado.";
 };
 
-/* ======================= INIT ======================= */
+window.finalizarSumula = async function(){
+  if(!podeEditar || finalizada){
+    alert("Você não pode finalizar esta súmula.");
+    return;
+  }
+
+  if(!confirm("Tem certeza? Após finalizar, a súmula será publicada e não poderá ser editada.")) return;
+
+  try{
+    const dados = montarDados(true);
+
+    await setDoc(doc(db,"sumulas",jogoId),dados,{merge:true});
+
+    await updateDoc(doc(db,"jogos",jogoId),{
+      status:"finalizado",
+      sumulaFinalizada:true,
+      sumulaStatus:"finalizada",
+      publico:true,
+      publica:true,
+      golsA:dados.golsA,
+      golsB:dados.golsB,
+      placar:dados.placar,
+      linkSumula:dados.linkPublico,
+      sumulaPublica:dados.linkPublico,
+      codigoVerificacao:dados.codigoVerificacao,
+      finalizadoEm:serverTimestamp(),
+      atualizadoEm:serverTimestamp()
+    });
+
+    finalizada = true;
+    podeEditar = false;
+
+    $("codigoVerificacao").innerText = dados.codigoVerificacao;
+    $("linkPublicoTexto").innerText = dados.linkPublico;
+    $("publicadaEm").innerText = dados.publicadaEmTexto;
+    gerarQr(dados.linkPublico);
+    atualizarStatusVisual();
+
+    alert("Súmula finalizada e publicada com sucesso.");
+    location.href = dados.linkPublico;
+
+  }catch(error){
+    console.error("Erro ao finalizar súmula:", error);
+    alert("Erro ao finalizar súmula. Veja o console.");
+  }
+};
+
+window.compartilharWhatsApp = function(){
+  const texto = encodeURIComponent(`Súmula oficial Liga Goiana: ${linkPublico()}`);
+  window.open(`https://wa.me/?text=${texto}`,"_blank");
+};
+
+window.enviarEmail = function(){
+  const assunto = encodeURIComponent("Súmula oficial - Liga Goiana");
+  const corpo = encodeURIComponent(`Segue link da súmula oficial:\n${linkPublico()}`);
+  location.href = `mailto:?subject=${assunto}&body=${corpo}`;
+};
+
+window.copiarLink = async function(){
+  await navigator.clipboard.writeText(linkPublico());
+  alert("Link copiado.");
+};
+
+window.baixarPDF = async function(){
+  alert("Use imprimir/salvar como PDF pelo navegador. A função PDF avançada pode ser ligada depois.");
+};
 
 onAuthStateChanged(auth, async (user)=>{
   usuarioAtual = user;
 
   if(!user){
-    app.innerHTML = `<div class="error">Faça login.</div>`;
+    app.innerHTML = `<div class="error">Faça login para acessar a súmula.</div>`;
     return;
   }
 
   usuarioPerfil = await carregarPerfilUsuario();
+
+  const idUrl = new URLSearchParams(location.search).get("id");
+  if(idUrl){
+    $("inputJogoId").value = idUrl;
+    await window.carregarJogo();
+  }else{
+    app.innerHTML = `<div class="loading">Informe o ID do jogo ou abra pelo link da súmula.</div>`;
+  }
 });
 </script>
 
