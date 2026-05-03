@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Criar Dados de Teste - Liga Goiana</title>
+
+<style>
+body{
+  font-family:Arial, sans-serif;
+  background:#061427;
+  color:#fff;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.box{
+  width:min(100%,520px);
+  background:#0d2a52;
+  border:1px solid #f7c600;
+  border-radius:18px;
+  padding:24px;
+  text-align:center;
+}
+
+h1{
+  color:#f7c600;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#f7c600;
+  color:#111;
+  font-weight:900;
+  font-size:16px;
+  cursor:pointer;
+}
+
+#status{
+  margin-top:18px;
+  line-height:1.5;
+  color:#cbd6ea;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h1>Criar Dados de Teste</h1>
+  <p>Esse botão cria times, jogadores e jogo de teste no Firebase.</p>
+
+  <button onclick="criarDadosTeste()">CRIAR DADOS AGORA</button>
+
+  <div id="status">Aguardando...</div>
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  doc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const status = document.getElementById("status");
+
+const jogadoresAtletico = [
+  { numero:"1", nome:"João Victor", posicao:"Goleiro", tipo:"titular", goleiro:true },
+  { numero:"2", nome:"Lucas Silva", posicao:"Lateral Direito", tipo:"titular" },
+  { numero:"3", nome:"Pedro Henrique", posicao:"Zagueiro", tipo:"titular" },
+  { numero:"4", nome:"Miguel Santos", posicao:"Zagueiro", tipo:"titular" },
+  { numero:"5", nome:"Rafael Lima", posicao:"Lateral Esquerdo", tipo:"titular" },
+  { numero:"6", nome:"Gabriel Souza", posicao:"Volante", tipo:"titular" },
+  { numero:"7", nome:"Arthur Dias", posicao:"Meia", tipo:"titular" },
+  { numero:"8", nome:"Matheus Costa", posicao:"Meia", tipo:"titular" },
+  { numero:"9", nome:"Davi Rocha", posicao:"Atacante", tipo:"titular", capitao:true },
+  { numero:"10", nome:"Enzo Martins", posicao:"Atacante", tipo:"titular" },
+  { numero:"11", nome:"Bruno Alves", posicao:"Atacante", tipo:"titular" },
+  { numero:"12", nome:"Caio Ferreira", posicao:"Goleiro", tipo:"suplente" },
+  { numero:"13", nome:"Felipe Gomes", posicao:"Zagueiro", tipo:"suplente" },
+  { numero:"14", nome:"Murilo Reis", posicao:"Meia", tipo:"suplente" }
+];
+
+const jogadoresVila = [
+  { numero:"1", nome:"Gustavo Melo", posicao:"Goleiro", tipo:"titular", goleiro:true },
+  { numero:"2", nome:"Samuel Ribeiro", posicao:"Lateral Direito", tipo:"titular" },
+  { numero:"3", nome:"Bernardo Castro", posicao:"Zagueiro", tipo:"titular" },
+  { numero:"4", nome:"Leonardo Nunes", posicao:"Zagueiro", tipo:"titular" },
+  { numero:"5", nome:"Thiago Barbosa", posicao:"Lateral Esquerdo", tipo:"titular" },
+  { numero:"6", nome:"Nicolas Pereira", posicao:"Volante", tipo:"titular" },
+  { numero:"7", nome:"Henrique Lopes", posicao:"Meia", tipo:"titular" },
+  { numero:"8", nome:"Daniel Cardoso", posicao:"Meia", tipo:"titular", capitao:true },
+  { numero:"9", nome:"Igor Fernandes", posicao:"Atacante", tipo:"titular" },
+  { numero:"10", nome:"Luan Batista", posicao:"Atacante", tipo:"titular" },
+  { numero:"11", nome:"Ryan Oliveira", posicao:"Atacante", tipo:"titular" },
+  { numero:"12", nome:"Kevin Almeida", posicao:"Goleiro", tipo:"suplente" },
+  { numero:"13", nome:"Otávio Ramos", posicao:"Zagueiro", tipo:"suplente" },
+  { numero:"14", nome:"Vitor Moreira", posicao:"Meia", tipo:"suplente" }
+];
+
+window.criarDadosTeste = async function(){
+
+  try{
+    status.innerHTML = "Criando times...";
+
+    const timeA = {
+      id:"time-atletico-teste",
+      nome:"ATLÉTICO GO",
+      cidade:"Goiânia - GO",
+      escudo:"logo-liga.jfif",
+      logo:"logo-liga.jfif",
+      jogadores:jogadoresAtletico,
+      criadoEm:serverTimestamp()
+    };
+
+    const timeB = {
+      id:"time-vila-teste",
+      nome:"VILA NOVA",
+      cidade:"Goiânia - GO",
+      escudo:"logo-liga.jfif",
+      logo:"logo-liga.jfif",
+      jogadores:jogadoresVila,
+      criadoEm:serverTimestamp()
+    };
+
+    await setDoc(doc(db,"times","time-atletico-teste"), timeA);
+    await setDoc(doc(db,"times","time-vila-teste"), timeB);
+
+    status.innerHTML = "Criando jogadores...";
+
+    for(const jogador of jogadoresAtletico){
+      await setDoc(doc(db,"jogadores",`atletico-${jogador.numero}`), {
+        ...jogador,
+        timeId:"time-atletico-teste",
+        timeNome:"ATLÉTICO GO",
+        categoria:"SUB-15",
+        cpf:"",
+        nascimento:"",
+        aprovado:true,
+        criadoEm:serverTimestamp()
+      });
+    }
+
+    for(const jogador of jogadoresVila){
+      await setDoc(doc(db,"jogadores",`vila-${jogador.numero}`), {
+        ...jogador,
+        timeId:"time-vila-teste",
+        timeNome:"VILA NOVA",
+        categoria:"SUB-15",
+        cpf:"",
+        nascimento:"",
+        aprovado:true,
+        criadoEm:serverTimestamp()
+      });
+    }
+
+    status.innerHTML = "Criando jogo teste...";
+
+    await setDoc(doc(db,"jogos","jogo-teste-001"), {
+      id:"jogo-teste-001",
+
+      campeonato:"CAMPEONATO LIGA GOIANA SUB-15",
+      campeonatoNome:"CAMPEONATO LIGA GOIANA SUB-15",
+      categoria:"SUB-15",
+      fase:"1ª FASE",
+      rodada:"1",
+
+      timeAId:"time-atletico-teste",
+      timeBId:"time-vila-teste",
+
+      timeA:timeA,
+      timeB:timeB,
+
+      data:"10/05/2026",
+      hora:"10:00",
+      horario:"10:00",
+      campo:"CT DO ATLÉTICO",
+      local:"CT DO ATLÉTICO",
+      estadio:"CT DO ATLÉTICO",
+
+      arbitro:"José Aparecido",
+      arbitroNome:"José Aparecido",
+      arbitroId:"",
+
+      assistente1:"Carlos Eduardo",
+      assistente2:"Marcos Vinícius",
+      observador:"Liga Goiana",
+
+      status:"agendado",
+      sumulaFinalizada:false,
+
+      golsA:0,
+      golsB:0,
+
+      criadoEm:serverTimestamp()
+    });
+
+    status.innerHTML = `
+      ✅ Dados criados com sucesso!<br><br>
+      Agora abra:<br>
+      <strong>sumula-arbitro.html?id=jogo-teste-001</strong>
+    `;
+
+  }catch(error){
+    console.error(error);
+    status.innerHTML = "❌ Erro ao criar dados. Veja o console.";
+  }
+};
+</script>
+
+</body>
+</html>
