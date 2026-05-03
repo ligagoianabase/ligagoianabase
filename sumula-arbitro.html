@@ -1405,76 +1405,214 @@ function montarDados(){
   };
 }
 
+function idSeguroJogador(jogador, timeId, timeNome){
+  const base = jogador.id || jogador.jogadorId || jogador.uid || jogador.cpf || `${timeId || timeNome}-${jogador.nome}`;
+  return String(base)
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"-")
+    .replace(/^-+|-+$/g,"");
+}
+
+async function aplicarEstatisticasJogadores(dados){
+  const todos = [
+    ...jogadoresA.map(j => ({...j, lado:"A", timeId:dados.timeAId, timeNome:dados.timeANome})),
+    ...jogadoresB.map(j => ({...j, lado:"B", timeId:dados.timeBId, timeNome:dados.timeBNome}))
+  ];
+
+  for(const jogador of todos){
+    if(!jogador.nome) continue;
+
+    const jogadorId = idSeguroJogador(jogador, jogador.timeId, jogador.timeNome);
+    const refJogador = doc(db,"jogadores",jogadorId);
+    const snapJogador = await getDoc(refJogador);
+    const atual = snapJogador.exists() ? snapJogador.data() : {};
+
+    const golsJogador = dados.golsLista.filter(g =>
+      g.nome === jogador.nome && g.time === jogador.lado
+    ).length;
+
+    const amarelosJogador = dados.cartoesLista.filter(c =>
+      c.nome === jogador.nome && c.time === jogador.lado && c.tipo === "amarelo"
+    ).length;
+
+    const vermelhosJogador = dados.cartoesLista.filter(c =>
+      c.nome === jogador.nome && c.time === jogador.lado && c.tipo === "vermelho"
+    ).length;
+
+    await setDoc(refJogador,{
+      id:jogadorId,
+      nome:jogador.nome,
+      numero:jogador.numero || "",
+      posicao:jogador.posicao || "",
+      tipo:jogador.tipo || "",
+      timeId:jogador.timeId || "",
+      timeNome:jogador.timeNome || "",
+      categoria:dados.categoria || "",
+
+      jogos:(atual.jogos || 0) + 1,
+      gols:(atual.gols || 0) + golsJogador,
+      amarelos:(atual.amarelos || 0) + amarelosJogador,
+      vermelhos:(atual.vermelhos || 0) + vermelhosJogador,
+
+      atualizadoEm:serverTimestamp()
+    },{merge:true});
+
+    await setDoc(doc(db,"jogadores",jogadorId,"participacoes",jogoId),{
+      jogoId,
+      sumulaId:jogoId,
+      time:jogador.lado,
+      timeNome:jogador.timeNome || "",
+      campeonato:dados.campeonato || "",
+      categoria:dados.categoria || "",
+      rodada:dados.rodada || "",
+      data:dados.data || "",
+      placar:dados.placar || "",
+      numeroNaPartida:jogador.numero || "",
+      nome:jogador.nome,
+      posicao:jogador.posicao || "",
+      gols:golsJogador,
+      amarelos:amarelosJogador,
+      vermelhos:vermelhosJogador,
+      registradoEm:serverTimestamp()
+    },{merge:true});
+  }
+}
+
+async function aplicarEstatisticasTimes(dados){
+  const ga = Number(dados.golsA || 0);
+  const gb = Number(dados.golsB || 0);
+
+  const resultadoA = ga > gb ? "vitoria" : ga === gb ? "empate" : "derrota";
+  const resultadoB = gb > ga ? "vitoria" : ga === gb ? "empate" : "derrota";
+
+  async function atualizarTime(timeId, timeObj, golsPro, golsContra, resultado){
+    if(!timeId) return;
+
+    const refTime = doc(db,"times",timeId);
+    const snapTime = await getDoc(refTime);
+    const atual = snapTime.exists() ? snapTime.data() : {};
+
+    const vitoria = resultado === "vitoria" ? 1 : 0;
+    const empate = resultado === "empate" ? 1 : 0;
+    const derrota = resultado === "derrota" ? 1 : 0;
+
+    await setDoc(refTime,{
+      id:timeId,
+      nome:timeObj.nome || "",
+      cidade:timeObj.cidade || "",
+      escudo:timeObj.escudo || timeObj.logo || "",
+
+      jogos:(atual.jogos || 0) + 1,
+      vitorias:(atual.vitorias || 0) + vitoria,
+      empates:(atual.empates || 0) + empate,
+      derrotas:(atual.derrotas || 0) + derrota,
+      pontos:(atual.pontos || 0) + (vitoria * 3) + empate,
+      golsPro:(atual.golsPro || 0) + golsPro,
+      golsContra:(atual.golsContra || 0) + golsContra,
+      saldo:(atual.saldo || 0) + (golsPro - golsContra),
+
+      atualizadoEm:serverTimestamp()
+    },{merge:true});
+
+    await setDoc(doc(db,"times",timeId,"jogos",jogoId),{
+      jogoId,
+      sumulaId:jogoId,
+      campeonato:dados.campeonato || "",
+      categoria:dados.categoria || "",
+      rodada:dados.rodada || "",
+      placar:dados.placar || "",
+      golsPro,
+      golsContra,
+      resultado,
+      pontos:(vitoria * 3) + empate,
+      registradoEm:serverTimestamp()
+    },{merge:true});
+  }
+
+  await atualizarTime(dados.timeAId, dados.timeA, ga, gb, resultadoA);
+  await atualizarTime(dados.timeBId, dados.timeB, gb, ga, resultadoB);
+}
+
+async function salvarHistoricoFinalizacao(dados){
+  await setDoc(doc(db,"sumulas",jogoId,"historico","finalizacao"),{
+    jogoId,
+    sumulaId:jogoId,
+    campeonato:dados.campeonato || "",
+    categoria:dados.categoria || "",
+    placar:dados.placar || "",
+    arbitro:dados.arbitro || "",
+    codigoVerificacao:dados.codigoVerificacao || "",
+    linkPublico:dados.linkPublico || "",
+    publicadaEmTexto:dados.publicadaEmTexto || "",
+    criadoEm:serverTimestamp()
+  },{merge:true});
+}
+
 window.finalizarSumula = async function(){
-  if(!jogoId || !jogo){ alert("Carregue o jogo primeiro."); return; }
-  if(finalizada && !confirm("Súmula já finalizada. Deseja sobrescrever?")) return;
-
-  const dados = montarDados();
-
-  await setDoc(doc(db,"sumulas",jogoId),dados);
-  await updateDoc(doc(db,"jogos",jogoId),{
-    status:"finalizado",
-    sumulaFinalizada:true,
-    golsA:dados.golsA,
-    golsB:dados.golsB,
-    placar:dados.placar,
-    linkSumula:dados.linkPublico,
-    sumulaPublica:dados.linkPublico
-  });
-
-  $("statusOficial").innerText = "FINALIZADO";
-  $("codigoVerificacao").innerText = dados.codigoVerificacao;
-  $("linkPublicoTexto").innerText = dados.linkPublico;
-  $("publicadaEm").innerText = dados.publicadaEmTexto;
-  gerarQr(dados.linkPublico);
-
-  finalizada = true;
-  alert("Súmula finalizada e publicada.");
-  location.href = dados.linkPublico;
-};
-
-window.compartilharWhatsApp = function(){
-  window.open(`https://wa.me/?text=${encodeURIComponent("Súmula oficial: " + linkPublico())}`,"_blank");
-};
-
-window.enviarEmail = function(){
-  location.href = `mailto:?subject=Súmula Oficial&body=${encodeURIComponent(linkPublico())}`;
-};
-
-window.copiarLink = async function(){
-  await navigator.clipboard.writeText(linkPublico());
-  alert("Link copiado.");
-};
-
-window.baixarPDF = async function(){
-  const canvas = await html2canvas($("paginaSumula"),{scale:2,useCORS:true,backgroundColor:"#fff"});
-  const img = canvas.toDataURL("image/png");
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF("p","mm","a4");
-  const w = pdf.internal.pageSize.getWidth();
-  const h = canvas.height * w / canvas.width;
-  let pos = 0;
-  pdf.addImage(img,"PNG",0,pos,w,h);
-  let left = h - pdf.internal.pageSize.getHeight();
-  while(left > 0){
-    pos = left - h;
-    pdf.addPage();
-    pdf.addImage(img,"PNG",0,pos,w,h);
-    left -= pdf.internal.pageSize.getHeight();
+  if(!jogoId || !jogo){
+    alert("Carregue o jogo primeiro.");
+    return;
   }
-  pdf.save(`sumula-${jogoId || "oficial"}.pdf`);
-};
 
-onAuthStateChanged(auth,user=>{
-  usuarioAtual = user;
-  const id = new URLSearchParams(location.search).get("id");
-  if(id){
-    $("inputJogoId").value = id;
-    carregarJogo();
-  }else{
-    app.innerHTML = `<div class="error">Informe o ID do jogo.</div>`;
+  const refSumula = doc(db,"sumulas",jogoId);
+  const snapAnterior = await getDoc(refSumula);
+  const sumulaAnterior = snapAnterior.exists() ? snapAnterior.data() : {};
+  const estatisticasJaAplicadas = !!sumulaAnterior.estatisticasAplicadas;
+
+  if(finalizada && !confirm("Súmula já finalizada. Deseja sobrescrever sem duplicar estatísticas?")){
+    return;
   }
-});
+
+  try{
+    const dados = montarDados();
+
+    await setDoc(refSumula,{
+      ...dados,
+      estatisticasAplicadas:estatisticasJaAplicadas
+    },{merge:true});
+
+    if(!estatisticasJaAplicadas){
+      await aplicarEstatisticasJogadores(dados);
+      await aplicarEstatisticasTimes(dados);
+      await salvarHistoricoFinalizacao(dados);
+
+      await setDoc(refSumula,{
+        estatisticasAplicadas:true,
+        estatisticasAplicadasEm:serverTimestamp()
+      },{merge:true});
+    }
+
+    await updateDoc(doc(db,"jogos",jogoId),{
+      status:"finalizado",
+      sumulaFinalizada:true,
+      sumulaStatus:"finalizada",
+      golsA:dados.golsA,
+      golsB:dados.golsB,
+      placar:dados.placar,
+      linkSumula:dados.linkPublico,
+      sumulaPublica:dados.linkPublico,
+      codigoVerificacao:dados.codigoVerificacao,
+      finalizadoEm:serverTimestamp()
+    });
+
+    $("statusOficial").innerText = "FINALIZADO";
+    $("codigoVerificacao").innerText = dados.codigoVerificacao;
+    $("linkPublicoTexto").innerText = dados.linkPublico;
+    $("publicadaEm").innerText = dados.publicadaEmTexto;
+    gerarQr(dados.linkPublico);
+
+    finalizada = true;
+    alert("Súmula finalizada, publicada e estatísticas atualizadas.");
+    location.href = dados.linkPublico;
+
+  }catch(error){
+    console.error("Erro ao finalizar súmula:", error);
+    alert("Erro ao finalizar súmula. Veja o console.");
+  }
+};
 </script>
 
 </body>
