@@ -24,11 +24,7 @@
   --max:1240px;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   font-family:Arial, sans-serif;
@@ -39,25 +35,9 @@ body{
   min-height:100vh;
 }
 
-a{
-  text-decoration:none;
-  color:inherit;
-  transition:var(--transition);
-}
-
-button{
-  font-family:inherit;
-  cursor:pointer;
-  transition:var(--transition);
-  border:none;
-  background:none;
-}
-
-input,
-select,
-textarea{
-  font-family:inherit;
-}
+a{text-decoration:none;color:inherit;transition:var(--transition)}
+button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
+input,select,textarea{font-family:inherit}
 
 .wrap{
   width:min(100% - 28px, var(--max));
@@ -80,8 +60,7 @@ header{
   padding:14px 0;
 }
 
-.header-left,
-.header-right{
+.header-left,.header-right{
   display:flex;
   align-items:center;
   gap:10px;
@@ -106,25 +85,10 @@ header{
   white-space:nowrap;
 }
 
-.btn-light{
-  background:#fff4cf;
-  color:#111;
-}
-
-.btn-light:hover{
-  background:var(--gold);
-  transform:translateY(-2px);
-}
-
-.btn-gold{
-  background:var(--gold);
-  color:#111;
-}
-
-.btn-gold:hover{
-  filter:brightness(1.04);
-  transform:translateY(-2px);
-}
+.btn-light{background:#fff4cf;color:#111}
+.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
+.btn-gold{background:var(--gold);color:#111}
+.btn-gold:hover{filter:brightness(1.04);transform:translateY(-2px)}
 
 .nav-bar{
   background:rgba(16,42,82,.95);
@@ -162,13 +126,9 @@ header{
   color:black;
 }
 
-.container{
-  padding:24px 0 34px;
-}
+.container{padding:24px 0 34px}
 
-.hero,
-.form-panel,
-.list-panel{
+.hero,.form-panel,.list-panel{
   background:linear-gradient(135deg,#102a52,#0d2346);
   border:1px solid var(--gold-line);
   border-radius:18px;
@@ -203,9 +163,7 @@ header{
   gap:12px;
 }
 
-.full{
-  grid-column:1/-1;
-}
+.full{grid-column:1/-1}
 
 label{
   display:block;
@@ -215,9 +173,7 @@ label{
   color:#fff;
 }
 
-input,
-select,
-textarea{
+input,select,textarea{
   width:100%;
   padding:13px;
   border:none;
@@ -227,9 +183,7 @@ textarea{
   color:#111;
 }
 
-input:focus,
-select:focus,
-textarea:focus{
+input:focus,select:focus,textarea:focus{
   outline:2px solid rgba(247,198,0,.5);
 }
 
@@ -254,25 +208,11 @@ textarea:focus{
   white-space:nowrap;
 }
 
-.btn-ver{
-  background:var(--gold);
-  color:black;
-}
+.btn-ver{background:var(--gold);color:black}
+.btn-danger{background:#d94141;color:#fff}
+.btn-blue{background:#1a3f73;color:#fff}
+.btn-green{background:#1b5e20;color:#fff}
 
-.btn-danger{
-  background:#d94141;
-  color:#fff;
-}
-
-.btn-blue{
-  background:#1a3f73;
-  color:#fff;
-}
-
-.btn-green{
-  background:#1b5e20;
-  color:#fff;
-}
 .filtros{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
@@ -374,29 +314,23 @@ textarea:focus{
     text-align:center;
   }
 
-  .header-left,
-  .header-right{
+  .header-left,.header-right{
     width:100%;
     justify-content:center;
   }
 
-  .form-grid,
-  .filtros,
-  .card-grid,
-  .preview-times{
+  .form-grid,.filtros,.card-grid,.preview-times{
     grid-template-columns:1fr;
   }
 }
 
 @media(max-width:600px){
-  .top-btn,
-  .btn-acao{
+  .top-btn,.btn-acao{
     width:100%;
     justify-content:center;
   }
 
-  .header-left,
-  .header-right{
+  .header-left,.header-right{
     flex-direction:row;
     flex-wrap:nowrap;
   }
@@ -416,9 +350,7 @@ textarea:focus{
     padding-bottom:14px;
   }
 
-  .menu a{
-    flex:0 0 auto;
-  }
+  .menu a{flex:0 0 auto}
 }
 </style>
 </head>
@@ -469,7 +401,7 @@ textarea:focus{
     <h2>Jogos ADM</h2>
     <p>
       Crie jogos vinculando campeonato, categoria, times, jogadores, técnicos e arbitragem.
-      A súmula será criada automaticamente com tudo pronto para finalizar e atualizar estatísticas no Firebase.
+      A súmula será criada automaticamente com tudo pronto para o árbitro abrir, preencher e finalizar.
     </p>
   </div>
 
@@ -573,7 +505,7 @@ textarea:focus{
 
     <div class="form-actions">
       <button class="btn-acao btn-ver" type="button" onclick="salvarJogo()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Jogo
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Jogo + Súmula
       </button>
 
       <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
@@ -602,7 +534,6 @@ textarea:focus{
   </section>
 
 </div>
-
 <script type="module">
 import { db } from "./firebase.js";
 import {
@@ -628,13 +559,8 @@ const categoriasFixas = [
   "Sub-17","Sub-18","Sub-19","Sub-20","Sub-21"
 ];
 
-function el(id){
-  return document.getElementById(id);
-}
-
-function txt(v){
-  return String(v || "").trim();
-}
+function el(id){ return document.getElementById(id); }
+function txt(v){ return String(v || "").trim(); }
 
 function normalizar(texto){
   return String(texto || "")
@@ -644,26 +570,42 @@ function normalizar(texto){
     .replace(/[\u0300-\u036f]/g,"");
 }
 
-function buscarCampeonato(id){
-  return campeonatosCache.find(c => c.id === id) || null;
+function baseUrl(){
+  return location.href.split("/").slice(0,-1).join("/");
 }
 
-function buscarTime(id){
-  return timesCache.find(t => t.id === id) || null;
+function linkSumulaArbitro(jogoId){
+  return `${baseUrl()}/sumula-arbitro.html?id=${jogoId}`;
 }
 
-function buscarArbitro(id){
-  return arbitrosCache.find(a => a.id === id) || null;
+function linkSumulaAdmin(jogoId){
+  return `${baseUrl()}/sumula-admin.html?id=${jogoId}`;
 }
 
-function buscarAssistente(id){
-  return assistentesCache.find(a => a.id === id) || null;
+function linkSumulaPublica(jogoId){
+  return `${baseUrl()}/sumula-publica.html?id=${jogoId}`;
+}
+
+function buscarCampeonato(id){ return campeonatosCache.find(c => c.id === id) || null; }
+function buscarTime(id){ return timesCache.find(t => t.id === id) || null; }
+function buscarArbitro(id){ return arbitrosCache.find(a => a.id === id) || null; }
+function buscarAssistente(id){ return assistentesCache.find(a => a.id === id) || null; }
+
+function formatarContato(pessoa){
+  return {
+    id:pessoa?.id || "",
+    nome:pessoa?.nome || "",
+    email:pessoa?.email || pessoa?.gmail || "",
+    whatsapp:pessoa?.whatsapp || pessoa?.telefone || pessoa?.celular || "",
+    telefone:pessoa?.telefone || pessoa?.celular || "",
+    cpf:pessoa?.cpf || ""
+  };
 }
 
 function formatarJogador(j){
   return {
     id:j.id || "",
-    numero:j.numero || "",
+    numero:"",
     nome:j.nome || "",
     posicao:j.posicao || "",
     capitao:j.capitao === true,
@@ -673,7 +615,8 @@ function formatarJogador(j){
     categoria:j.categoria || "",
     timeId:j.timeId || "",
     timeNome:j.timeNome || j.time || "",
-    status:j.status || "ativo"
+    status:j.status || "ativo",
+    manual:false
   };
 }
 
@@ -696,12 +639,7 @@ function jogadoresDoTime(timeId,categoria){
 
       return mesmoTime && mesmaCategoria && ativo;
     })
-    .sort((a,b)=>{
-      const na = Number(a.numero || 999);
-      const nb = Number(b.numero || 999);
-      if(na !== nb) return na - nb;
-      return (a.nome || "").localeCompare(b.nome || "","pt-BR");
-    })
+    .sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"))
     .map(formatarJogador);
 }
 
@@ -731,8 +669,19 @@ function comissaoDoTime(timeId,categoria){
       funcao:t.funcao || "Técnico",
       categoria:t.categoria || "",
       timeId,
-      timeNome:time?.nome || ""
+      timeNome:time?.nome || "",
+      email:t.email || "",
+      whatsapp:t.whatsapp || t.telefone || t.celular || "",
+      telefone:t.telefone || t.celular || ""
     }));
+}
+
+function tecnicoPrincipal(comissao){
+  return (
+    comissao.find(t => normalizar(t.funcao).includes("tecnico")) ||
+    comissao[0] ||
+    null
+  );
 }
 
 function categoriasDoCampeonato(campeonato){
@@ -752,11 +701,82 @@ function preencherSelect(select,lista,valor,texto){
   });
 }
 
+function montarMensagemJogo({jogoId,jogo,arbitroObj,tecnicoA,tecnicoB}){
+  const nomeA = jogo.timeA?.nome || "Time A";
+  const nomeB = jogo.timeB?.nome || "Time B";
+  const mensagem =
+`LIGA GOIANA DE FUTEBOL DE BASE
+
+Jogo criado e súmula vinculada.
+
+Campeonato: ${jogo.campeonato || "-"}
+Categoria: ${jogo.categoria || "-"}
+Jogo: ${nomeA} x ${nomeB}
+Data/Hora: ${jogo.dataHora || jogo.data || "-"}
+Local: ${jogo.local || "-"}
+Árbitro: ${jogo.arbitro || "-"}
+
+Link da súmula do árbitro:
+${linkSumulaArbitro(jogoId)}
+
+Painel ADM:
+${linkSumulaAdmin(jogoId)}`;
+
+  return mensagem;
+}
+
+async function criarNotificacoesAutomaticas(jogoId,jogo,arbitroObj,tecnicoA,tecnicoB){
+  const mensagem = montarMensagemJogo({jogoId,jogo,arbitroObj,tecnicoA,tecnicoB});
+
+  const destinatarios = [
+    {
+      tipo:"arbitro",
+      nome:arbitroObj?.nome || jogo.arbitro || "Árbitro",
+      email:arbitroObj?.email || "",
+      whatsapp:arbitroObj?.whatsapp || arbitroObj?.telefone || arbitroObj?.celular || ""
+    },
+    {
+      tipo:"tecnico_time_a",
+      nome:tecnicoA?.nome || jogo.tecnicoA || "Técnico Time A",
+      email:tecnicoA?.email || "",
+      whatsapp:tecnicoA?.whatsapp || tecnicoA?.telefone || ""
+    },
+    {
+      tipo:"tecnico_time_b",
+      nome:tecnicoB?.nome || jogo.tecnicoB || "Técnico Time B",
+      email:tecnicoB?.email || "",
+      whatsapp:tecnicoB?.whatsapp || tecnicoB?.telefone || ""
+    }
+  ];
+
+  for(const dest of destinatarios){
+    await addDoc(collection(db,"notificacoes"),{
+      jogoId,
+      sumulaId:jogoId,
+      tipo:"sumula_criada",
+      destinatarioTipo:dest.tipo,
+      destinatarioNome:dest.nome,
+      email:dest.email || "",
+      whatsapp:dest.whatsapp || "",
+      mensagem,
+      statusEmail:dest.email ? "pendente" : "sem_email",
+      statusWhatsApp:dest.whatsapp ? "pendente" : "sem_whatsapp",
+      criadoEm:serverTimestamp()
+    });
+  }
+
+  await setDoc(doc(db,"sumulas",jogoId,"notificacoes","criacao"),{
+    jogoId,
+    mensagem,
+    destinatarios,
+    criadoEm:serverTimestamp()
+  },{merge:true});
+}
+
 async function carregarCampeonatos(){
   const snap = await getDocs(collection(db,"campeonatos"));
   campeonatosCache = [];
   snap.forEach(d=>campeonatosCache.push({id:d.id,...d.data()}));
-
   campeonatosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
 
   preencherSelect(
@@ -913,6 +933,7 @@ window.salvarJogo = async function(){
   if(!local) return alert("Digite o local.");
   if(!timeAId || !timeBId) return alert("Selecione os times.");
   if(timeAId === timeBId) return alert("Os times não podem ser iguais.");
+  if(!arbitroId) return alert("Selecione o árbitro principal.");
 
   const timeAObj = buscarTime(timeAId);
   const timeBObj = buscarTime(timeBId);
@@ -922,13 +943,16 @@ window.salvarJogo = async function(){
   const assistente2Obj = buscarAssistente(assistente2Id);
   const arbitroAuxiliarObj = buscarArbitro(arbitroAuxiliarId);
 
-  const titularesA = jogadoresDoTime(timeAId,categoria);
-  const titularesB = jogadoresDoTime(timeBId,categoria);
+  const jogadoresA = jogadoresDoTime(timeAId,categoria);
+  const jogadoresB = jogadoresDoTime(timeBId,categoria);
 
   const comissaoA = comissaoDoTime(timeAId,categoria);
   const comissaoB = comissaoDoTime(timeBId,categoria);
 
-  const jogo = {
+  const tecnicoAObj = tecnicoPrincipal(comissaoA);
+  const tecnicoBObj = tecnicoPrincipal(comissaoB);
+
+  const jogoBase = {
     campeonatoId,
     campeonato:campeonatoObj?.nome || "",
     campeonatoNome:campeonatoObj?.nome || "",
@@ -946,6 +970,9 @@ window.salvarJogo = async function(){
     campo:local,
     fase:"Primeira fase",
 
+    timeAId,
+    timeBId,
+
     timeA:{
       id:timeAObj.id,
       nome:timeAObj.nome || "",
@@ -962,130 +989,125 @@ window.salvarJogo = async function(){
       cidade:timeBObj.cidade || ""
     },
 
-    titularesA,
-    titularesB,
-    escalacaoA:titularesA,
-    escalacaoB:titularesB,
-    reservasA:[],
-    reservasB:[],
+    jogadoresA,
+    jogadoresB,
+    titularesA:jogadoresA,
+    titularesB:jogadoresB,
+    escalacaoA:jogadoresA,
+    escalacaoB:jogadoresB,
 
     comissaoA,
     comissaoB,
 
-    tecnicoA:comissaoA.find(t => normalizar(t.funcao).includes("tecnico"))?.nome || "",
-    tecnicoB:comissaoB.find(t => normalizar(t.funcao).includes("tecnico"))?.nome || "",
+    tecnicoA:tecnicoAObj?.nome || "",
+    tecnicoB:tecnicoBObj?.nome || "",
+    tecnicoAObj:tecnicoAObj ? formatarContato(tecnicoAObj) : null,
+    tecnicoBObj:tecnicoBObj ? formatarContato(tecnicoBObj) : null,
 
-    arbitroId:arbitroId || "",
+    arbitroId,
+    arbitroUid:arbitroObj?.uid || arbitroId,
+    arbitroEmail:arbitroObj?.email || "",
     arbitro:arbitroObj?.nome || "",
+    arbitroNome:arbitroObj?.nome || "",
+    arbitroObj:formatarContato(arbitroObj),
 
     assistente1Id:assistente1Id || "",
     assistente1:assistente1Obj?.nome || "",
+    assistente1Obj:assistente1Obj ? formatarContato(assistente1Obj) : null,
 
     assistente2Id:assistente2Id || "",
     assistente2:assistente2Obj?.nome || "",
+    assistente2Obj:assistente2Obj ? formatarContato(assistente2Obj) : null,
 
     arbitroAuxiliarId:arbitroAuxiliarId || "",
     arbitroAuxiliar:arbitroAuxiliarObj?.nome || "",
     quartoArbitro:arbitroAuxiliarObj?.nome || "",
+    quartoArbitroObj:arbitroAuxiliarObj ? formatarContato(arbitroAuxiliarObj) : null,
 
-    placar:{A:0,B:0},
     golsA:0,
     golsB:0,
+    placar:"0 x 0",
     gols:[],
     cartoes:[],
-    substituicoes:[],
     observacoes:"",
     observacoesArbitro:"",
     melhorJogador:"",
     melhorJogadorId:"",
 
     status:statusInicial,
+    sumulaStatus:"pendente",
+    sumulaCriada:true,
     sumulaFinalizada:false,
     publico:false,
+    publica:false,
 
     criadoEm:new Date().toISOString(),
     criadoEmServidor:serverTimestamp(),
     atualizadoEm:serverTimestamp()
   };
 
-  const ref = await addDoc(collection(db,"jogos"),jogo);
+  const ref = await addDoc(collection(db,"jogos"),jogoBase);
+
+  const links = {
+    arbitro:linkSumulaArbitro(ref.id),
+    admin:linkSumulaAdmin(ref.id),
+    publica:linkSumulaPublica(ref.id)
+  };
 
   const sumula = {
+    ...jogoBase,
     id:ref.id,
     jogoId:ref.id,
+    numeroSumula:`${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`,
+    codigoPartida:ref.id,
+    codigo:ref.id,
 
-    campeonatoId:jogo.campeonatoId,
-    campeonato:jogo.campeonato,
-    campeonatoNome:jogo.campeonatoNome,
-    logoCampeonato:jogo.logoCampeonato,
-    temporada:jogo.temporada,
-    regrasCartoes:jogo.regrasCartoes,
-    formatoCampeonato:jogo.formatoCampeonato,
-    categoria:jogo.categoria,
-    rodada:jogo.rodada,
-    fase:jogo.fase,
-
-    data:jogo.data,
-    dataHora:jogo.dataHora,
-    hora:jogo.hora,
-    local:jogo.local,
-    campo:jogo.campo,
-
-    timeA:jogo.timeA,
-    timeB:jogo.timeB,
-
-    titularesA:jogo.titularesA,
-    titularesB:jogo.titularesB,
-    escalacaoA:jogo.escalacaoA,
-    escalacaoB:jogo.escalacaoB,
-    reservasA:[],
-    reservasB:[],
-
-    comissaoA:jogo.comissaoA,
-    comissaoB:jogo.comissaoB,
-    tecnicoA:jogo.tecnicoA,
-    tecnicoB:jogo.tecnicoB,
-
-    arbitroId:jogo.arbitroId,
-    arbitro:jogo.arbitro,
-    assistente1Id:jogo.assistente1Id,
-    assistente1:jogo.assistente1,
-    assistente2Id:jogo.assistente2Id,
-    assistente2:jogo.assistente2,
-    arbitroAuxiliarId:jogo.arbitroAuxiliarId,
-    arbitroAuxiliar:jogo.arbitroAuxiliar,
-    quartoArbitro:jogo.quartoArbitro,
-
-    placar:{A:0,B:0},
-    golsA:0,
-    golsB:0,
-    gols:[],
-    cartoes:[],
-    substituicoes:[],
-    ocorrencias:[],
-
-    observacoes:"",
-    observacoesArbitro:"",
-    melhorJogador:"",
-    melhorJogadorId:"",
+    links,
+    linkSumulaArbitro:links.arbitro,
+    linkSumulaAdmin:links.admin,
+    linkPublico:links.publica,
 
     status:"pendente",
+    sumulaStatus:"pendente",
     sumulaFinalizada:false,
+    autenticada:false,
+    publico:false,
     publica:false,
     finalizadaEm:null,
 
-    criadoEm:new Date().toISOString(),
-    criadoEmServidor:serverTimestamp(),
+    criadoAutomaticamente:true,
+    criadoPeloAdmin:true,
+    podeEditarApenasArbitroDesignado:true,
+    edicaoSomenteNoDiaDoJogo:true,
+
+    removidoSubstituicoes:true,
+    regrasVermelho:{
+      permiteVermelhoDireto:true,
+      permiteSegundoAmarelo:true
+    },
+
     atualizadoEm:serverTimestamp()
   };
 
   await setDoc(doc(db,"sumulas",ref.id),sumula);
 
+  await setDoc(doc(db,"jogos",ref.id),{
+    id:ref.id,
+    sumulaId:ref.id,
+    linkSumula:links.admin,
+    linkSumulaAdmin:links.admin,
+    linkSumulaArbitro:links.arbitro,
+    sumulaPublica:links.publica,
+    atualizadoEm:serverTimestamp()
+  },{merge:true});
+
+  await criarNotificacoesAutomaticas(ref.id,{...jogoBase,id:ref.id},arbitroObj,tecnicoAObj,tecnicoBObj);
+
   alert(
     "Jogo e súmula criados com sucesso!\\n\\n" +
-    "Jogadores mandante: " + titularesA.length + "\\n" +
-    "Jogadores visitante: " + titularesB.length + "\\n\\n" +
-    "Súmula ADM: sumula-admin.html?id=" + ref.id
+    "A súmula já foi vinculada ao jogo.\\n" +
+    "Notificações para árbitro e técnicos foram registradas.\\n\\n" +
+    "Súmula do árbitro:\\n" + links.arbitro
   );
 
   limparFormulario();
@@ -1093,7 +1115,7 @@ window.salvarJogo = async function(){
 };
 
 window.excluirJogo = async function(id){
-  if(!confirm("Deseja excluir este jogo?")) return;
+  if(!confirm("Deseja excluir este jogo e a súmula vinculada?")) return;
   await deleteDoc(doc(db,"jogos",id));
   await deleteDoc(doc(db,"sumulas",id));
   await carregarJogos();
@@ -1108,7 +1130,7 @@ async function carregarJogos(){
   jogosCache = [];
   snap.forEach(d=>jogosCache.push({id:d.id,...d.data()}));
 
-  jogosCache.sort((a,b)=>(a.data || "").localeCompare(b.data || ""));
+  jogosCache.sort((a,b)=>(b.data || "").localeCompare(a.data || ""));
 
   renderizarJogos();
 }
@@ -1160,17 +1182,21 @@ function renderizarJogos(){
           <div><span>Data</span>${j.data || "-"}</div>
           <div><span>Local</span>${j.local || "-"}</div>
           <div><span>Status</span>${j.status || "agendado"}</div>
-          <div><span>Mandante</span>${(j.titularesA || []).length} jogadores</div>
-          <div><span>Visitante</span>${(j.titularesB || []).length} jogadores</div>
+          <div><span>Mandante</span>${(j.jogadoresA || j.titularesA || []).length} jogadores</div>
+          <div><span>Visitante</span>${(j.jogadoresB || j.titularesB || []).length} jogadores</div>
           <div><span>Árbitro</span>${j.arbitro || "-"}</div>
           <div><span>Assistente 1</span>${j.assistente1 || "-"}</div>
           <div><span>Assistente 2</span>${j.assistente2 || "-"}</div>
-          <div><span>Súmula</span>${j.sumulaFinalizada ? "Finalizada" : "Aberta"}</div>
+          <div><span>Súmula</span>${j.sumulaFinalizada ? "Finalizada" : "Criada / Pendente"}</div>
         </div>
 
         <div class="card-actions">
           <a class="btn-acao btn-ver" href="sumula-admin.html?id=${j.id}">
             <i class="fa-solid fa-file-signature"></i> Súmula ADM
+          </a>
+
+          <a class="btn-acao btn-green" href="sumula-arbitro.html?id=${j.id}">
+            <i class="fa-solid fa-whistle"></i> Súmula Árbitro
           </a>
 
           ${j.sumulaFinalizada ? `
