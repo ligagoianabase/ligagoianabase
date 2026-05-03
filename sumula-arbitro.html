@@ -354,12 +354,6 @@ textarea{
   gap:18px;
 }
 
-.grid3{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:10px;
-}
-
 .lineup-head{
   height:42px;
   display:flex;
@@ -648,7 +642,6 @@ td select{
   .score-card,
   .match-strip,
   .grid2,
-  .grid3,
   .event-columns,
   .lower-grid,
   .summary-grid,
@@ -714,15 +707,18 @@ let golsB = [];
 let cartoesA = [];
 let cartoesB = [];
 
-function normalizar(v){
-  return String(v || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-}
-
 function campo(obj, chaves, fallback=""){
   for(const c of chaves){
     if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== "") return obj[c];
   }
   return fallback;
+}
+
+function primeiroArray(...listas){
+  for(const lista of listas){
+    if(Array.isArray(lista) && lista.length) return lista;
+  }
+  return [];
 }
 
 function dataAgora(){
@@ -851,25 +847,10 @@ function criarTela(){
     </section>
 
     <section class="match-strip">
-      <div class="match-box">
-        <i class="fa-regular fa-calendar-days"></i>
-        <div><small>Data</small><input id="dataJogo"></div>
-      </div>
-
-      <div class="match-box">
-        <i class="fa-regular fa-clock"></i>
-        <div><small>Horário</small><input id="horaJogo"></div>
-      </div>
-
-      <div class="match-box">
-        <i class="fa-solid fa-diamond"></i>
-        <div><small>Campo</small><input id="localJogo"></div>
-      </div>
-
-      <div class="match-box">
-        <i class="fa-solid fa-whistle"></i>
-        <div><small>Árbitro</small><input id="arbitroTopo"></div>
-      </div>
+      <div class="match-box"><i class="fa-regular fa-calendar-days"></i><div><small>Data</small><input id="dataJogo"></div></div>
+      <div class="match-box"><i class="fa-regular fa-clock"></i><div><small>Horário</small><input id="horaJogo"></div></div>
+      <div class="match-box"><i class="fa-solid fa-diamond"></i><div><small>Campo</small><input id="localJogo"></div></div>
+      <div class="match-box"><i class="fa-solid fa-whistle"></i><div><small>Árbitro</small><input id="arbitroTopo"></div></div>
     </section>
 
     <section class="section">
@@ -914,7 +895,6 @@ function criarTela(){
     <section class="section">
       <div class="section-title">Gols e Cartões</div>
       <div class="section-body grid2">
-
         <div class="event-box">
           <h3 id="eventoTituloA">TIME A</h3>
           <div class="event-columns">
@@ -968,7 +948,6 @@ function criarTela(){
             </div>
           </div>
         </div>
-
       </div>
     </section>
 
@@ -1043,9 +1022,7 @@ function criarTela(){
       <div>Documento oficial gerado pelo sistema Liga Goiana</div>
       <div>Todos os direitos reservados © 2026</div>
     </footer>
-
-  </div>
-  `;
+  </div>`;
 }
 
 function preencher(){
@@ -1076,8 +1053,8 @@ function preencher(){
   $("assistente2").value = campo(jogo,["assistente2"],"");
   $("observador").value = campo(jogo,["observador"],"");
 
-  jogadoresA = (campo(jogo,["jogadoresA","escalacaoA"],[]) || campo(A,["jogadores"],[]) || []).map(normalizarJogador);
-  jogadoresB = (campo(jogo,["jogadoresB","escalacaoB"],[]) || campo(B,["jogadores"],[]) || []).map(normalizarJogador);
+  jogadoresA = primeiroArray(jogo.jogadoresA, jogo.escalacaoA, jogo.timeA_jogadores, A.jogadores).map(normalizarJogador);
+  jogadoresB = primeiroArray(jogo.jogadoresB, jogo.escalacaoB, jogo.timeB_jogadores, B.jogadores).map(normalizarJogador);
 
   if(!jogadoresA.length) jogadoresA = jogadoresPadrao();
   if(!jogadoresB.length) jogadoresB = jogadoresPadrao();
