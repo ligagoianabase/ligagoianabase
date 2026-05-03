@@ -55,10 +55,15 @@ textarea{
   resize:vertical;
 }
 
+input:disabled,
+select:disabled,
+textarea:disabled,
+button:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+
 .topbar{
-  position:sticky;
-  top:0;
-  z-index:50;
   background:#fff;
   border-bottom:2px solid var(--azul);
   padding:10px;
@@ -71,6 +76,12 @@ textarea{
   grid-template-columns:1fr auto auto;
   gap:8px;
   align-items:center;
+}
+
+#statusMsg{
+  font-size:13px;
+  font-weight:900;
+  color:var(--azul);
 }
 
 .btn{
@@ -89,6 +100,36 @@ textarea{
 .btn-green{background:var(--verde);color:#fff}
 .btn-red{background:var(--vermelho);color:#fff}
 .btn-gray{background:#475569;color:#fff}
+
+.alerta-sistema{
+  width:min(100% - 20px,1180px);
+  margin:12px auto 0;
+  padding:10px 12px;
+  border-radius:9px;
+  font-size:13px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.alerta-ok{
+  background:#dcfce7;
+  color:#14532d;
+  border:1px solid #86efac;
+}
+
+.alerta-aviso{
+  background:#fff7d6;
+  color:#854d0e;
+  border:1px solid #f7c600;
+}
+
+.alerta-erro{
+  background:#fee2e2;
+  color:#991b1b;
+  border:1px solid #fecaca;
+}
 
 .page{
   width:min(100% - 20px,1180px);
@@ -191,18 +232,22 @@ textarea{
   margin-bottom:4px;
 }
 
-.status-finalizado{
+.status-badge{
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:7px;
-  background:var(--verde);
   color:#fff;
   padding:8px 15px;
   border-radius:8px;
-  font-size:16px;
+  font-size:15px;
   font-weight:900;
+  text-transform:uppercase;
 }
+
+.status-pendente{background:#ca8a04}
+.status-andamento{background:#2563eb}
+.status-finalizado{background:var(--verde)}
 
 .score-card{
   margin:0 18px 12px;
@@ -271,15 +316,9 @@ textarea{
   font-weight:900;
 }
 
-.score-number input{
-  width:78px;
-  border:none;
-  background:transparent;
-  color:#fff;
-  font-size:70px;
-  font-weight:900;
+.score-valor{
+  min-width:72px;
   text-align:center;
-  padding:0;
 }
 
 .score-center span{
@@ -355,7 +394,7 @@ textarea{
 }
 
 .lineup-head{
-  height:42px;
+  min-height:42px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -417,9 +456,16 @@ td select{
 
 .add-row{
   display:grid;
-  grid-template-columns:60px 1fr 1fr 90px auto;
+  grid-template-columns:60px 1fr 1fr 95px auto;
   gap:6px;
   margin-top:8px;
+}
+
+.busca-box{
+  margin-top:8px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:6px;
 }
 
 .event-box{
@@ -464,9 +510,13 @@ td select{
 
 .event-form{
   display:grid;
-  grid-template-columns:1fr 70px 90px auto;
+  grid-template-columns:1fr 64px 100px auto;
   gap:6px;
   margin-bottom:8px;
+}
+
+.event-form.cartao-form{
+  grid-template-columns:1fr 58px 92px 125px auto;
 }
 
 .event-item{
@@ -547,6 +597,7 @@ td select{
   text-transform:uppercase;
 }
 
+summary-box strong,
 .summary-box strong{
   display:block;
   color:var(--azul);
@@ -635,6 +686,18 @@ td select{
   font-weight:900;
 }
 
+.locked-overlay{
+  background:#fff7d6;
+  border:1px solid var(--dourado);
+  color:#713f12;
+  margin:0 18px 12px;
+  padding:12px;
+  border-radius:8px;
+  font-size:14px;
+  font-weight:900;
+  display:none;
+}
+
 @media(max-width:900px){
   .topbar-inner,
   .header,
@@ -649,12 +712,14 @@ td select{
   .buttons,
   .auth-box,
   .add-row,
-  .event-form{
+  .event-form,
+  .event-form.cartao-form,
+  .busca-box{
     grid-template-columns:1fr;
   }
 
   .header-title h1{font-size:36px}
-  .score-number,.score-number input{font-size:50px}
+  .score-number{font-size:50px}
   .team-score,.team-score.away{flex-direction:column}
 }
 </style>
@@ -669,6 +734,8 @@ td select{
     <span id="statusMsg">Aguardando...</span>
   </div>
 </div>
+
+<div id="alertaSistema"></div>
 
 <div id="app">
   <div class="loading">
@@ -688,17 +755,28 @@ import {
   getDoc,
   setDoc,
   updateDoc,
-  serverTimestamp
+  serverTimestamp,
+  collection,
+  getDocs,
+  query,
+  where
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
 const app = document.getElementById("app");
+const alertaSistema = document.getElementById("alertaSistema");
 const $ = id => document.getElementById(id);
 
 let usuarioAtual = null;
+let usuarioPerfil = null;
 let jogoId = "";
 let jogo = null;
+let sumulaSalva = null;
 let finalizada = false;
+let bloqueada = false;
+let podeEditar = false;
+let autoSaveTimer = null;
+let jaCarregouInicial = false;
 
 let jogadoresA = [];
 let jogadoresB = [];
@@ -737,14 +815,110 @@ function linkPublico(){
   return `${base}/sumula-publica.html?id=${jogoId}`;
 }
 
+function normalizarTexto(txt){
+  return String(txt || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function mesmoDiaDoJogo(){
+  const data = campo(jogo,["data","dataJogo"],"");
+  if(!data) return true;
+
+  const hoje = new Date();
+  const yyyy = hoje.getFullYear();
+  const mm = String(hoje.getMonth()+1).padStart(2,"0");
+  const dd = String(hoje.getDate()).padStart(2,"0");
+  const hojeISO = `${yyyy}-${mm}-${dd}`;
+
+  if(data.includes("-")) return data.slice(0,10) === hojeISO;
+
+  const partes = data.split("/");
+  if(partes.length === 3){
+    const dataISO = `${partes[2]}-${partes[1].padStart(2,"0")}-${partes[0].padStart(2,"0")}`;
+    return dataISO === hojeISO;
+  }
+
+  return true;
+}
+
+function exibirAlerta(tipo, texto){
+  const classe = tipo === "erro" ? "alerta-erro" : tipo === "ok" ? "alerta-ok" : "alerta-aviso";
+  alertaSistema.innerHTML = `<div class="alerta-sistema ${classe}"><i class="fa-solid fa-circle-info"></i> ${texto}</div>`;
+}
+
+function limparAlerta(){
+  alertaSistema.innerHTML = "";
+}
+
+function perfilEhAdmin(){
+  const tipo = normalizarTexto(campo(usuarioPerfil,["tipo","perfil","cargo","role"],""));
+  const nivel = normalizarTexto(campo(usuarioPerfil,["nivel","permissao"],""));
+  return tipo.includes("admin") || nivel.includes("admin") || usuarioPerfil?.admin === true;
+}
+
+function perfilEhArbitroDoJogo(){
+  if(!usuarioAtual || !jogo) return false;
+
+  const uid = usuarioAtual.uid;
+  const email = normalizarTexto(usuarioAtual.email || "");
+
+  const idsPermitidos = [
+    campo(jogo,["arbitroId"],""),
+    campo(jogo,["arbitroUid"],""),
+    campo(jogo,["arbitroPrincipalId"],""),
+    campo(jogo?.arbitroObj,["id","uid"],"")
+  ].filter(Boolean);
+
+  if(idsPermitidos.includes(uid)) return true;
+
+  const emailsPermitidos = [
+    campo(jogo,["arbitroEmail"],""),
+    campo(jogo?.arbitroObj,["email"],"")
+  ].map(normalizarTexto).filter(Boolean);
+
+  if(email && emailsPermitidos.includes(email)) return true;
+
+  return false;
+}
+
+async function carregarPerfilUsuario(){
+  if(!usuarioAtual) return null;
+
+  const refs = [
+    doc(db,"usuarios",usuarioAtual.uid),
+    doc(db,"users",usuarioAtual.uid),
+    doc(db,"arbitros",usuarioAtual.uid),
+    doc(db,"admins",usuarioAtual.uid)
+  ];
+
+  for(const ref of refs){
+    const snap = await getDoc(ref);
+    if(snap.exists()) return {id:snap.id,...snap.data()};
+  }
+
+  return {
+    id:usuarioAtual.uid,
+    email:usuarioAtual.email || "",
+    nome:usuarioAtual.displayName || ""
+  };
+}
+
 function normalizarJogador(j){
   return {
+    id: campo(j,["id","uid","jogadorId"],""),
+    cpf: campo(j,["cpf","CPF"],""),
+    nascimento: campo(j,["nascimento","dataNascimento","data_nascimento"],""),
     numero: campo(j,["numero","camisa","n"],""),
     nome: campo(j,["nome","jogador","jogadorNome","atleta"],""),
     posicao: campo(j,["posicao","posição","funcao"],""),
+    categoria: campo(j,["categoria"],""),
     tipo: campo(j,["tipo","status","condicao"],"titular"),
     capitao: !!j.capitao,
-    goleiro: !!j.goleiro
+    goleiro: !!j.goleiro,
+    manual: !!j.manual
   };
 }
 
@@ -815,9 +989,11 @@ function criarTela(){
       </div>
 
       <div class="info-box">
-        <div><small>Status</small><strong class="status-finalizado" id="statusOficial">EM PREENCHIMENTO</strong></div>
+        <div><small>Status</small><strong class="status-badge status-pendente" id="statusOficial">PENDENTE</strong></div>
       </div>
     </section>
+
+    <div class="locked-overlay" id="bloqueioAviso"></div>
 
     <section class="score-card">
       <div class="team-score">
@@ -830,11 +1006,11 @@ function criarTela(){
 
       <div class="score-center">
         <div class="score-number">
-          <input id="golsA" type="number" value="0" min="0" oninput="atualizarResumo()">
+          <strong class="score-valor" id="golsA">0</strong>
           <span>x</span>
-          <input id="golsB" type="number" value="0" min="0" oninput="atualizarResumo()">
+          <strong class="score-valor" id="golsB">0</strong>
         </div>
-        <span>Placar Final</span>
+        <span>Placar automático</span>
       </div>
 
       <div class="team-score away">
@@ -860,16 +1036,32 @@ function criarTela(){
           <div class="lineup-head"><span id="tituloA">TIME A</span><img id="miniLogoA" src="logo-liga.jfif"></div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th class="num">Nº</th><th>Jogador</th><th>Posição</th><th>Tipo</th><th></th></tr></thead>
+              <thead>
+                <tr>
+                  <th class="num">Nº</th>
+                  <th>Jogador</th>
+                  <th>CPF</th>
+                  <th>Nasc.</th>
+                  <th>Posição</th>
+                  <th>Tipo</th>
+                  <th></th>
+                </tr>
+              </thead>
               <tbody id="escA"></tbody>
             </table>
           </div>
+
           <div class="add-row">
             <input id="novoNumA" placeholder="Nº">
-            <input id="novoNomeA" placeholder="Jogador">
+            <input id="novoNomeA" placeholder="Jogador não cadastrado">
             <input id="novaPosA" placeholder="Posição">
             <select id="novoTipoA"><option value="titular">Titular</option><option value="suplente">Suplente</option></select>
             <button class="btn btn-blue" onclick="adicionarJogador('A')">+</button>
+          </div>
+
+          <div class="busca-box">
+            <input id="buscaOutroA" placeholder="Buscar jogador de outra categoria pelo nome">
+            <button class="btn btn-gray" onclick="buscarOutroJogador('A')"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
           </div>
         </div>
 
@@ -877,33 +1069,54 @@ function criarTela(){
           <div class="lineup-head"><span id="tituloB">TIME B</span><img id="miniLogoB" src="logo-liga.jfif"></div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th class="num">Nº</th><th>Jogador</th><th>Posição</th><th>Tipo</th><th></th></tr></thead>
+              <thead>
+                <tr>
+                  <th class="num">Nº</th>
+                  <th>Jogador</th>
+                  <th>CPF</th>
+                  <th>Nasc.</th>
+                  <th>Posição</th>
+                  <th>Tipo</th>
+                  <th></th>
+                </tr>
+              </thead>
               <tbody id="escB"></tbody>
             </table>
           </div>
+
           <div class="add-row">
             <input id="novoNumB" placeholder="Nº">
-            <input id="novoNomeB" placeholder="Jogador">
+            <input id="novoNomeB" placeholder="Jogador não cadastrado">
             <input id="novaPosB" placeholder="Posição">
             <select id="novoTipoB"><option value="titular">Titular</option><option value="suplente">Suplente</option></select>
             <button class="btn btn-blue" onclick="adicionarJogador('B')">+</button>
           </div>
+
+          <div class="busca-box">
+            <input id="buscaOutroB" placeholder="Buscar jogador de outra categoria pelo nome">
+            <button class="btn btn-gray" onclick="buscarOutroJogador('B')"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+          </div>
         </div>
       </div>
     </section>
-
-    <section class="section">
+<section class="section">
       <div class="section-title">Gols e Cartões</div>
       <div class="section-body grid2">
+
         <div class="event-box">
           <h3 id="eventoTituloA">TIME A</h3>
           <div class="event-columns">
+
             <div class="event-col">
               <h4>Gols</h4>
               <div class="event-form">
                 <select id="golJogadorA"></select>
                 <input id="golMinutoA" placeholder="23">
-                <select id="golTipoA"><option value="normal">Gol</option><option value="penalti">Pênalti</option><option value="contra">Contra</option></select>
+                <select id="golTipoA">
+                  <option value="normal">Gol</option>
+                  <option value="penalti">Pênalti</option>
+                  <option value="contra">Contra</option>
+                </select>
                 <button class="btn btn-blue" onclick="adicionarGol('A')">⚽</button>
               </div>
               <div id="listaGolsA"></div>
@@ -911,26 +1124,42 @@ function criarTela(){
 
             <div class="event-col">
               <h4>Cartões</h4>
-              <div class="event-form">
+              <div class="event-form cartao-form">
                 <select id="cartaoJogadorA"></select>
                 <input id="cartaoMinutoA" placeholder="18">
-                <select id="cartaoTipoA"><option value="amarelo">Amarelo</option><option value="vermelho">Vermelho</option></select>
+
+                <select id="cartaoTipoA" onchange="toggleVermelhoExtra('A')">
+                  <option value="amarelo">Amarelo</option>
+                  <option value="vermelho">Vermelho</option>
+                </select>
+
+                <select id="cartaoVermelhoTipoA" style="display:none;">
+                  <option value="direto">Direto</option>
+                  <option value="segundo_amarelo">2º Amarelo</option>
+                </select>
+
                 <button class="btn btn-blue" onclick="adicionarCartao('A')">+</button>
               </div>
               <div id="listaCartoesA"></div>
             </div>
+
           </div>
         </div>
 
         <div class="event-box away">
           <h3 id="eventoTituloB">TIME B</h3>
           <div class="event-columns">
+
             <div class="event-col">
               <h4>Gols</h4>
               <div class="event-form">
                 <select id="golJogadorB"></select>
                 <input id="golMinutoB" placeholder="39">
-                <select id="golTipoB"><option value="normal">Gol</option><option value="penalti">Pênalti</option><option value="contra">Contra</option></select>
+                <select id="golTipoB">
+                  <option value="normal">Gol</option>
+                  <option value="penalti">Pênalti</option>
+                  <option value="contra">Contra</option>
+                </select>
                 <button class="btn btn-blue" onclick="adicionarGol('B')">⚽</button>
               </div>
               <div id="listaGolsB"></div>
@@ -938,16 +1167,28 @@ function criarTela(){
 
             <div class="event-col">
               <h4>Cartões</h4>
-              <div class="event-form">
+              <div class="event-form cartao-form">
                 <select id="cartaoJogadorB"></select>
                 <input id="cartaoMinutoB" placeholder="45">
-                <select id="cartaoTipoB"><option value="amarelo">Amarelo</option><option value="vermelho">Vermelho</option></select>
+
+                <select id="cartaoTipoB" onchange="toggleVermelhoExtra('B')">
+                  <option value="amarelo">Amarelo</option>
+                  <option value="vermelho">Vermelho</option>
+                </select>
+
+                <select id="cartaoVermelhoTipoB" style="display:none;">
+                  <option value="direto">Direto</option>
+                  <option value="segundo_amarelo">2º Amarelo</option>
+                </select>
+
                 <button class="btn btn-blue" onclick="adicionarCartao('B')">+</button>
               </div>
               <div id="listaCartoesB"></div>
             </div>
+
           </div>
         </div>
+
       </div>
     </section>
 
@@ -974,8 +1215,8 @@ function criarTela(){
           <div class="trophy">🏆</div>
           <div>
             <input id="melhorJogador" placeholder="Melhor jogador">
-            <select id="melhorJogadorTime" style="margin-top:8px;"></select>
-            <input id="melhorDestaque" placeholder="Destaque: 1 gol marcado" style="margin-top:8px;">
+            <select id="melhorJogadorTime"></select>
+            <input id="melhorDestaque" placeholder="Ex: 1 gol e 1 assistência">
           </div>
         </div>
       </div>
@@ -984,7 +1225,7 @@ function criarTela(){
     <section class="section">
       <div class="section-title">Observações</div>
       <div class="section-body">
-        <textarea id="observacoes" placeholder="Observações oficiais da partida"></textarea>
+        <textarea id="observacoes"></textarea>
       </div>
     </section>
 
@@ -1006,614 +1247,110 @@ function criarTela(){
       <div class="panel">
         <h3>Compartilhar</h3>
         <div class="panel-body buttons">
-          <button class="btn btn-whats" onclick="compartilharWhatsApp()"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
-          <button class="btn btn-email" onclick="enviarEmail()"><i class="fa-solid fa-envelope"></i> E-mail</button>
-          <button class="btn btn-link" onclick="copiarLink()"><i class="fa-solid fa-link"></i> Link</button>
-          <button class="btn btn-pdf" onclick="baixarPDF()"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+          <button class="btn btn-whats" onclick="compartilharWhatsApp()">WhatsApp</button>
+          <button class="btn btn-email" onclick="enviarEmail()">E-mail</button>
+          <button class="btn btn-link" onclick="copiarLink()">Link</button>
+          <button class="btn btn-pdf" onclick="baixarPDF()">PDF</button>
         </div>
 
         <div class="panel-body">
-          <button class="btn btn-gold" style="width:100%" onclick="finalizarSumula()"><i class="fa-solid fa-lock"></i> Finalizar e Publicar Súmula</button>
+          <button class="btn btn-gold" style="width:100%" onclick="finalizarSumula()">
+            🔒 Finalizar Súmula
+          </button>
         </div>
       </div>
     </section>
 
     <footer class="final-footer">
-      <div>Documento oficial gerado pelo sistema Liga Goiana</div>
-      <div>Todos os direitos reservados © 2026</div>
+      Sistema Liga Goiana - Súmula Oficial
     </footer>
-  </div>`;
+
+  </div>
+`;
+
+/* ======================= REGRAS NOVAS ======================= */
+
+function toggleVermelhoExtra(time){
+  const tipo = document.getElementById(`cartaoTipo${time}`).value;
+  const extra = document.getElementById(`cartaoVermelhoTipo${time}`);
+  extra.style.display = tipo === "vermelho" ? "block" : "none";
 }
 
-function preencher(){
-  const A = timeAObj();
-  const B = timeBObj();
-
-  $("campeonato").value = campo(jogo,["campeonato","campeonatoNome"],"CAMPEONATO LIGA GOIANA");
-  $("numeroSumula").value = campo(jogo,["numeroSumula","sumulaNumero"],`${new Date().getFullYear()}-${String(Math.floor(Math.random()*99999)).padStart(5,"0")}`);
-  $("codigoPartida").value = campo(jogo,["codigoPartida","codigo"],jogoId);
-  $("fase").value = campo(jogo,["fase"],"1ª Fase");
-  $("rodada").value = campo(jogo,["rodada"],"");
-
-  $("timeA").value = campo(A,["nome","nomeTime"], campo(jogo,["mandante","timeA_nome"],"Mandante"));
-  $("timeB").value = campo(B,["nome","nomeTime"], campo(jogo,["visitante","timeB_nome"],"Visitante"));
-  $("cidadeA").value = campo(A,["cidade","municipio"], campo(jogo,["cidadeA"],"Goiânia - GO"));
-  $("cidadeB").value = campo(B,["cidade","municipio"], campo(jogo,["cidadeB"],"Goiânia - GO"));
-  $("logoA").src = campo(A,["logo","escudo","imagem"], campo(jogo,["logoA","escudoTimeA"],"logo-liga.jfif"));
-  $("logoB").src = campo(B,["logo","escudo","imagem"], campo(jogo,["logoB","escudoTimeB"],"logo-liga.jfif"));
-  $("miniLogoA").src = $("logoA").src;
-  $("miniLogoB").src = $("logoB").src;
-
-  $("dataJogo").value = campo(jogo,["data","dataJogo"],"");
-  $("horaJogo").value = campo(jogo,["hora","horario"],"");
-  $("localJogo").value = campo(jogo,["local","campo","estadio"],"");
-  $("arbitroTopo").value = campo(jogo,["arbitro","arbitroNome"],"");
-  $("arbitro").value = campo(jogo,["arbitro","arbitroNome"],"");
-  $("assistente1").value = campo(jogo,["assistente1"],"");
-  $("assistente2").value = campo(jogo,["assistente2"],"");
-  $("observador").value = campo(jogo,["observador"],"");
-
-  jogadoresA = primeiroArray(jogo.jogadoresA, jogo.escalacaoA, jogo.timeA_jogadores, A.jogadores).map(normalizarJogador);
-  jogadoresB = primeiroArray(jogo.jogadoresB, jogo.escalacaoB, jogo.timeB_jogadores, B.jogadores).map(normalizarJogador);
-
-  if(!jogadoresA.length) jogadoresA = jogadoresPadrao();
-  if(!jogadoresB.length) jogadoresB = jogadoresPadrao();
-
-  $("golsA").value = campo(jogo,["golsA"],0);
-  $("golsB").value = campo(jogo,["golsB"],0);
-
-  atualizarTitulos();
-  renderEscalacoes();
-  montarSelects();
-  atualizarResumo();
-  gerarQr(linkPublico());
+function atualizarPlacarAutomatico(){
+  document.getElementById("golsA").innerText = golsA.length;
+  document.getElementById("golsB").innerText = golsB.length;
 }
 
-function jogadoresPadrao(){
-  return [
-    {numero:"1",nome:"",posicao:"Goleiro",tipo:"titular",goleiro:true},
-    {numero:"2",nome:"",posicao:"Lateral",tipo:"titular"},
-    {numero:"3",nome:"",posicao:"Zagueiro",tipo:"titular"},
-    {numero:"4",nome:"",posicao:"Zagueiro",tipo:"titular"},
-    {numero:"5",nome:"",posicao:"Lateral",tipo:"titular"},
-    {numero:"6",nome:"",posicao:"Volante",tipo:"titular"},
-    {numero:"7",nome:"",posicao:"Meia",tipo:"titular"},
-    {numero:"8",nome:"",posicao:"Meia",tipo:"titular"},
-    {numero:"9",nome:"",posicao:"Atacante",tipo:"titular"},
-    {numero:"10",nome:"",posicao:"Atacante",tipo:"titular"},
-    {numero:"11",nome:"",posicao:"Atacante",tipo:"titular"},
-    {numero:"12",nome:"",posicao:"Reserva",tipo:"suplente"}
-  ];
-}
-
-function atualizarTitulos(){
-  const a = getTimeA().nome;
-  const b = getTimeB().nome;
-  $("tituloA").innerText = a;
-  $("tituloB").innerText = b;
-  $("eventoTituloA").innerText = a;
-  $("eventoTituloB").innerText = b;
-  $("melhorJogadorTime").innerHTML = `<option value="${a}">${a}</option><option value="${b}">${b}</option>`;
-}
-
-function renderEscalacoes(){
-  $("escA").innerHTML = renderJogadores(jogadoresA,"A");
-  $("escB").innerHTML = renderJogadores(jogadoresB,"B");
-}
-
-function renderJogadores(lista,time){
-  const titulares = lista.filter(j=>j.tipo !== "suplente");
-  const suplentes = lista.filter(j=>j.tipo === "suplente");
-
-  return `
-    <tr class="sub-row"><td colspan="5">Titulares</td></tr>
-    ${titulares.map(j=>linhaJogador(j,time)).join("")}
-    <tr class="sub-row"><td colspan="5">Suplentes</td></tr>
-    ${suplentes.map(j=>linhaJogador(j,time)).join("")}
-  `;
-}
-
-function linhaJogador(j,time){
-  const lista = time === "A" ? jogadoresA : jogadoresB;
-  const i = lista.indexOf(j);
-  return `
-    <tr>
-      <td><input value="${j.numero || ""}" onchange="editarJogador('${time}',${i},'numero',this.value)"></td>
-      <td><input value="${j.nome || ""}" onchange="editarJogador('${time}',${i},'nome',this.value)"></td>
-      <td><input value="${j.posicao || ""}" onchange="editarJogador('${time}',${i},'posicao',this.value)"></td>
-      <td>
-        <select onchange="editarJogador('${time}',${i},'tipo',this.value)">
-          <option value="titular" ${j.tipo !== "suplente" ? "selected" : ""}>Titular</option>
-          <option value="suplente" ${j.tipo === "suplente" ? "selected" : ""}>Suplente</option>
-        </select>
-      </td>
-      <td><button class="btn btn-red" onclick="removerJogador('${time}',${i})">X</button></td>
-    </tr>
-  `;
-}
-
-window.editarJogador = function(time,i,c,v){
-  const lista = time === "A" ? jogadoresA : jogadoresB;
-  lista[i][c] = v;
-  montarSelects();
-};
-
-window.removerJogador = function(time,i){
-  const lista = time === "A" ? jogadoresA : jogadoresB;
-  lista.splice(i,1);
-  renderEscalacoes();
-  montarSelects();
-};
-
-window.adicionarJogador = function(time){
-  const n = $(`novoNum${time}`).value;
-  const nome = $(`novoNome${time}`).value;
-  const pos = $(`novaPos${time}`).value;
-  const tipo = $(`novoTipo${time}`).value;
-  if(!n || !nome){ alert("Informe número e nome."); return; }
-  const obj = {numero:n,nome,posicao:pos,tipo};
-  if(time === "A") jogadoresA.push(obj); else jogadoresB.push(obj);
-  $(`novoNum${time}`).value = "";
-  $(`novoNome${time}`).value = "";
-  $(`novaPos${time}`).value = "";
-  renderEscalacoes();
-  montarSelects();
-};
-
-function montarSelects(){
-  const optA = jogadoresA.filter(j=>j.nome).map(j=>`<option value="${j.nome}" data-num="${j.numero}">${j.numero} - ${j.nome}</option>`).join("");
-  const optB = jogadoresB.filter(j=>j.nome).map(j=>`<option value="${j.nome}" data-num="${j.numero}">${j.numero} - ${j.nome}</option>`).join("");
-  $("golJogadorA").innerHTML = optA || `<option value="">Sem jogadores</option>`;
-  $("cartaoJogadorA").innerHTML = optA || `<option value="">Sem jogadores</option>`;
-  $("golJogadorB").innerHTML = optB || `<option value="">Sem jogadores</option>`;
-  $("cartaoJogadorB").innerHTML = optB || `<option value="">Sem jogadores</option>`;
-}
-
-window.adicionarGol = function(time){
-  const sel = $(time === "A" ? "golJogadorA" : "golJogadorB");
-  if(!sel.value) return;
-  const minuto = $(time === "A" ? "golMinutoA" : "golMinutoB").value;
-  const tipo = $(time === "A" ? "golTipoA" : "golTipoB").value;
-  const obj = {
-    time,
-    timeNome: time === "A" ? getTimeA().nome : getTimeB().nome,
-    nome:sel.value,
-    jogador:sel.value,
-    numero:sel.selectedOptions[0].dataset.num || "",
-    minuto,
-    tempo:minuto,
-    tipo
-  };
-  if(time === "A") golsA.push(obj); else golsB.push(obj);
-  $("golsA").value = golsA.length;
-  $("golsB").value = golsB.length;
-  renderEventos();
-  atualizarResumo();
-};
-
-window.adicionarCartao = function(time){
-  const sel = $(time === "A" ? "cartaoJogadorA" : "cartaoJogadorB");
-  if(!sel.value) return;
-  const minuto = $(time === "A" ? "cartaoMinutoA" : "cartaoMinutoB").value;
-  const tipo = $(time === "A" ? "cartaoTipoA" : "cartaoTipoB").value;
-  const obj = {
-    time,
-    timeNome: time === "A" ? getTimeA().nome : getTimeB().nome,
-    nome:sel.value,
-    jogador:sel.value,
-    numero:sel.selectedOptions[0].dataset.num || "",
-    minuto,
-    tempo:minuto,
-    tipo
-  };
-  if(time === "A") cartoesA.push(obj); else cartoesB.push(obj);
-  renderEventos();
-  atualizarResumo();
-};
-
-function renderEventos(){
-  $("listaGolsA").innerHTML = golsA.map((g,i)=>eventoHtml(g,"gol","A",i)).join("");
-  $("listaGolsB").innerHTML = golsB.map((g,i)=>eventoHtml(g,"gol","B",i)).join("");
-  $("listaCartoesA").innerHTML = cartoesA.map((c,i)=>eventoHtml(c,"cartao","A",i)).join("");
-  $("listaCartoesB").innerHTML = cartoesB.map((c,i)=>eventoHtml(c,"cartao","B",i)).join("");
-}
-
-function eventoHtml(e,tipo,time,i){
-  const icone = tipo === "gol" ? "⚽" : (e.tipo === "vermelho" ? "🟥" : "🟨");
-  const fn = tipo === "gol" ? "removerGol" : "removerCartao";
-  return `
-    <div class="event-item">
-      <span>${icone} <strong>${e.minuto || "-"}</strong> ${e.nome} Nº ${e.numero}</span>
-      <button onclick="${fn}('${time}',${i})">X</button>
-    </div>
-  `;
-}
-
-window.removerGol = function(time,i){
-  if(time === "A") golsA.splice(i,1); else golsB.splice(i,1);
-  $("golsA").value = golsA.length;
-  $("golsB").value = golsB.length;
-  renderEventos();
-  atualizarResumo();
-};
-
-window.removerCartao = function(time,i){
-  if(time === "A") cartoesA.splice(i,1); else cartoesB.splice(i,1);
-  renderEventos();
-  atualizarResumo();
-};
-
-window.atualizarResumo = function(){
-  const ga = Number($("golsA").value || 0);
-  const gb = Number($("golsB").value || 0);
-  const todosCartoes = [...cartoesA,...cartoesB];
-  $("totalGols").innerText = ga + gb;
-  $("totalAmarelos").innerText = todosCartoes.filter(c=>c.tipo==="amarelo").length;
-  $("totalVermelhos").innerText = todosCartoes.filter(c=>c.tipo==="vermelho").length;
-};
-
-function gerarQr(link){
-  QRCode.toCanvas($("qrCanvas"), link, {width:98, margin:1});
-}
-
-window.carregarJogo = async function(){
-  jogoId = $("inputJogoId").value.trim() || new URLSearchParams(location.search).get("id");
-  if(!jogoId){ alert("Informe o ID do jogo."); return; }
-
-  $("statusMsg").innerText = "Carregando...";
-
-  const snap = await getDoc(doc(db,"jogos",jogoId));
-  if(!snap.exists()){
-    app.innerHTML = `<div class="error">Jogo não encontrado.</div>`;
-    return;
-  }
-
-  jogo = {id:jogoId,...snap.data()};
-
-  if(usuarioAtual && jogo.arbitroId && usuarioAtual.uid !== jogo.arbitroId && jogo.adminId !== usuarioAtual.uid){
-    app.innerHTML = `<div class="error">Acesso negado.</div>`;
-    return;
-  }
-
-  criarTela();
-  preencher();
-
-  const sSnap = await getDoc(doc(db,"sumulas",jogoId));
-  if(sSnap.exists()){
-    carregarSumulaSalva(sSnap.data());
-  }
-
-  $("statusMsg").innerText = "Jogo carregado.";
-};
-
-function carregarSumulaSalva(s){
-  if(s.sumulaFinalizada){
-    finalizada = true;
-    $("statusOficial").innerText = "FINALIZADO";
-  }
-
-  if(Array.isArray(s.gols)){
-    golsA = s.gols.filter(g=>g.time === "A");
-    golsB = s.gols.filter(g=>g.time === "B");
-  }
-
-  if(Array.isArray(s.cartoes)){
-    cartoesA = s.cartoes.filter(c=>c.time === "A");
-    cartoesB = s.cartoes.filter(c=>c.time === "B");
-  }
-
-  if(Array.isArray(s.jogadoresA)) jogadoresA = s.jogadoresA;
-  if(Array.isArray(s.jogadoresB)) jogadoresB = s.jogadoresB;
-
-  $("golsA").value = campo(s,["golsA"],golsA.length);
-  $("golsB").value = campo(s,["golsB"],golsB.length);
-  $("codigoVerificacao").innerText = campo(s,["codigoVerificacao","hash"],"---");
-  $("linkPublicoTexto").innerText = campo(s,["linkPublico"],linkPublico());
-  $("publicadaEm").innerText = campo(s,["publicadaEmTexto"],"Aguardando finalização");
-
-  renderEscalacoes();
-  montarSelects();
-  renderEventos();
-  atualizarResumo();
-  gerarQr(campo(s,["linkPublico"],linkPublico()));
-}
-
-function montarDados(){
-  const ga = Number($("golsA").value || 0);
-  const gb = Number($("golsB").value || 0);
-  const timeA = getTimeA();
-  const timeB = getTimeB();
-  const gols = [...golsA.map(g=>({...g,time:"A",timeNome:timeA.nome})), ...golsB.map(g=>({...g,time:"B",timeNome:timeB.nome}))];
-  const cartoes = [...cartoesA.map(c=>({...c,time:"A",timeNome:timeA.nome})), ...cartoesB.map(c=>({...c,time:"B",timeNome:timeB.nome}))];
-  const codigo = codigoVerificacao();
-  const link = linkPublico();
-
-  return {
-    jogoId,
-    id:jogoId,
-
-    campeonato:$("campeonato").value,
-    categoria:campo(jogo,["categoria"],""),
-    numeroSumula:$("numeroSumula").value,
-    numero:$("numeroSumula").value,
-    codigoPartida:$("codigoPartida").value || jogoId,
-    codigo:$("codigoPartida").value || jogoId,
-    fase:$("fase").value,
-    rodada:$("rodada").value,
-
-    data:$("dataJogo").value,
-    hora:$("horaJogo").value,
-    horario:$("horaJogo").value,
-    local:$("localJogo").value,
-    campo:$("localJogo").value,
-
-    timeA,
-    timeB,
-    timeAId:campo(jogo,["timeAId"],""),
-    timeBId:campo(jogo,["timeBId"],""),
-    timeANome:timeA.nome,
-    timeBNome:timeB.nome,
-    cidadeA:timeA.cidade,
-    cidadeB:timeB.cidade,
-    logoA:timeA.escudo,
-    logoB:timeB.escudo,
-    escudoTimeA:timeA.escudo,
-    escudoTimeB:timeB.escudo,
-
-    golsA:ga,
-    golsB:gb,
-    placar:`${ga} x ${gb}`,
-
-    jogadoresA,
-    jogadoresB,
-    escalacaoA:jogadoresA,
-    escalacaoB:jogadoresB,
-
-    gols,
-    cartoes,
-    golsLista:gols,
-    cartoesLista:cartoes,
-
-    arbitro:$("arbitro").value || $("arbitroTopo").value,
-    arbitroNome:$("arbitro").value || $("arbitroTopo").value,
-    assistente1:$("assistente1").value,
-    assistente2:$("assistente2").value,
-    observador:$("observador").value,
-
-    arbitragem:{
-      arbitro:$("arbitro").value || $("arbitroTopo").value,
-      assistente1:$("assistente1").value,
-      assistente2:$("assistente2").value,
-      observador:$("observador").value
-    },
-
-    melhorJogador:$("melhorJogador").value,
-    melhorJogadorTime:$("melhorJogadorTime").value,
-    melhorJogadorDestaque:$("melhorDestaque").value,
-
-    observacoes:$("observacoes").value,
-
-    codigoVerificacao:codigo,
-    hash:codigo,
-    linkPublico:link,
-    publicadaEmTexto:dataAgora(),
-    autenticada:true,
-    publico:true,
-    status:"finalizado",
-    sumulaFinalizada:true,
-    finalizadaEm:serverTimestamp()
-  };
-}
-
-function idSeguroJogador(jogador, timeId, timeNome){
-  const base = jogador.id || jogador.jogadorId || jogador.uid || jogador.cpf || `${timeId || timeNome}-${jogador.nome}`;
-  return String(base)
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .replace(/[^a-z0-9]+/g,"-")
-    .replace(/^-+|-+$/g,"");
-}
-
-async function aplicarEstatisticasJogadores(dados){
-  const todos = [
-    ...jogadoresA.map(j => ({...j, lado:"A", timeId:dados.timeAId, timeNome:dados.timeANome})),
-    ...jogadoresB.map(j => ({...j, lado:"B", timeId:dados.timeBId, timeNome:dados.timeBNome}))
-  ];
-
-  for(const jogador of todos){
-    if(!jogador.nome) continue;
-
-    const jogadorId = idSeguroJogador(jogador, jogador.timeId, jogador.timeNome);
-    const refJogador = doc(db,"jogadores",jogadorId);
-    const snapJogador = await getDoc(refJogador);
-    const atual = snapJogador.exists() ? snapJogador.data() : {};
-
-    const golsJogador = dados.golsLista.filter(g =>
-      g.nome === jogador.nome && g.time === jogador.lado
-    ).length;
-
-    const amarelosJogador = dados.cartoesLista.filter(c =>
-      c.nome === jogador.nome && c.time === jogador.lado && c.tipo === "amarelo"
-    ).length;
-
-    const vermelhosJogador = dados.cartoesLista.filter(c =>
-      c.nome === jogador.nome && c.time === jogador.lado && c.tipo === "vermelho"
-    ).length;
-
-    await setDoc(refJogador,{
-      id:jogadorId,
-      nome:jogador.nome,
-      numero:jogador.numero || "",
-      posicao:jogador.posicao || "",
-      tipo:jogador.tipo || "",
-      timeId:jogador.timeId || "",
-      timeNome:jogador.timeNome || "",
-      categoria:dados.categoria || "",
-
-      jogos:(atual.jogos || 0) + 1,
-      gols:(atual.gols || 0) + golsJogador,
-      amarelos:(atual.amarelos || 0) + amarelosJogador,
-      vermelhos:(atual.vermelhos || 0) + vermelhosJogador,
-
-      atualizadoEm:serverTimestamp()
-    },{merge:true});
-
-    await setDoc(doc(db,"jogadores",jogadorId,"participacoes",jogoId),{
-      jogoId,
-      sumulaId:jogoId,
-      time:jogador.lado,
-      timeNome:jogador.timeNome || "",
-      campeonato:dados.campeonato || "",
-      categoria:dados.categoria || "",
-      rodada:dados.rodada || "",
-      data:dados.data || "",
-      placar:dados.placar || "",
-      numeroNaPartida:jogador.numero || "",
-      nome:jogador.nome,
-      posicao:jogador.posicao || "",
-      gols:golsJogador,
-      amarelos:amarelosJogador,
-      vermelhos:vermelhosJogador,
-      registradoEm:serverTimestamp()
-    },{merge:true});
-  }
-}
-
-async function aplicarEstatisticasTimes(dados){
-  const ga = Number(dados.golsA || 0);
-  const gb = Number(dados.golsB || 0);
-
-  const resultadoA = ga > gb ? "vitoria" : ga === gb ? "empate" : "derrota";
-  const resultadoB = gb > ga ? "vitoria" : ga === gb ? "empate" : "derrota";
-
-  async function atualizarTime(timeId, timeObj, golsPro, golsContra, resultado){
-    if(!timeId) return;
-
-    const refTime = doc(db,"times",timeId);
-    const snapTime = await getDoc(refTime);
-    const atual = snapTime.exists() ? snapTime.data() : {};
-
-    const vitoria = resultado === "vitoria" ? 1 : 0;
-    const empate = resultado === "empate" ? 1 : 0;
-    const derrota = resultado === "derrota" ? 1 : 0;
-
-    await setDoc(refTime,{
-      id:timeId,
-      nome:timeObj.nome || "",
-      cidade:timeObj.cidade || "",
-      escudo:timeObj.escudo || timeObj.logo || "",
-
-      jogos:(atual.jogos || 0) + 1,
-      vitorias:(atual.vitorias || 0) + vitoria,
-      empates:(atual.empates || 0) + empate,
-      derrotas:(atual.derrotas || 0) + derrota,
-      pontos:(atual.pontos || 0) + (vitoria * 3) + empate,
-      golsPro:(atual.golsPro || 0) + golsPro,
-      golsContra:(atual.golsContra || 0) + golsContra,
-      saldo:(atual.saldo || 0) + (golsPro - golsContra),
-
-      atualizadoEm:serverTimestamp()
-    },{merge:true});
-
-    await setDoc(doc(db,"times",timeId,"jogos",jogoId),{
-      jogoId,
-      sumulaId:jogoId,
-      campeonato:dados.campeonato || "",
-      categoria:dados.categoria || "",
-      rodada:dados.rodada || "",
-      placar:dados.placar || "",
-      golsPro,
-      golsContra,
-      resultado,
-      pontos:(vitoria * 3) + empate,
-      registradoEm:serverTimestamp()
-    },{merge:true});
-  }
-
-  await atualizarTime(dados.timeAId, dados.timeA, ga, gb, resultadoA);
-  await atualizarTime(dados.timeBId, dados.timeB, gb, ga, resultadoB);
-}
-
-async function salvarHistoricoFinalizacao(dados){
-  await setDoc(doc(db,"sumulas",jogoId,"historico","finalizacao"),{
-    jogoId,
-    sumulaId:jogoId,
-    campeonato:dados.campeonato || "",
-    categoria:dados.categoria || "",
-    placar:dados.placar || "",
-    arbitro:dados.arbitro || "",
-    codigoVerificacao:dados.codigoVerificacao || "",
-    linkPublico:dados.linkPublico || "",
-    publicadaEmTexto:dados.publicadaEmTexto || "",
-    criadoEm:serverTimestamp()
-  },{merge:true});
-}
-
-window.finalizarSumula = async function(){
-  if(!jogoId || !jogo){
-    alert("Carregue o jogo primeiro.");
-    return;
-  }
-
-  const refSumula = doc(db,"sumulas",jogoId);
-  const snapAnterior = await getDoc(refSumula);
-  const sumulaAnterior = snapAnterior.exists() ? snapAnterior.data() : {};
-  const estatisticasJaAplicadas = !!sumulaAnterior.estatisticasAplicadas;
-
-  if(finalizada && !confirm("Súmula já finalizada. Deseja sobrescrever sem duplicar estatísticas?")){
-    return;
-  }
-
-  try{
-    const dados = montarDados();
-
-    await setDoc(refSumula,{
-      ...dados,
-      estatisticasAplicadas:estatisticasJaAplicadas
-    },{merge:true});
-
-    if(!estatisticasJaAplicadas){
-      await aplicarEstatisticasJogadores(dados);
-      await aplicarEstatisticasTimes(dados);
-      await salvarHistoricoFinalizacao(dados);
-
-      await setDoc(refSumula,{
-        estatisticasAplicadas:true,
-        estatisticasAplicadasEm:serverTimestamp()
-      },{merge:true});
+/* ======================= AUTO SAVE ======================= */
+
+function iniciarAutoSave(){
+  if(autoSaveTimer) clearInterval(autoSaveTimer);
+
+  autoSaveTimer = setInterval(async ()=>{
+    if(!podeEditar || finalizada) return;
+
+    try{
+      await setDoc(doc(db,"sumulas",jogoId), montarDados(), {merge:true});
+      $("statusMsg").innerText = "Salvando automático...";
+    }catch(e){
+      console.error("AutoSave erro:", e);
     }
+  }, 5000);
+}
 
-    await updateDoc(doc(db,"jogos",jogoId),{
-      status:"finalizado",
-      sumulaFinalizada:true,
-      sumulaStatus:"finalizada",
-      golsA:dados.golsA,
-      golsB:dados.golsB,
-      placar:dados.placar,
-      linkSumula:dados.linkPublico,
-      sumulaPublica:dados.linkPublico,
-      codigoVerificacao:dados.codigoVerificacao,
-      finalizadoEm:serverTimestamp()
+/* ======================= BLOQUEIOS ======================= */
+
+function aplicarBloqueio(){
+  if(!podeEditar){
+    document.querySelectorAll("input,select,textarea,button").forEach(el=>{
+      if(!el.classList.contains("btn-link")) el.disabled = true;
     });
 
-    $("statusOficial").innerText = "FINALIZADO";
-    $("codigoVerificacao").innerText = dados.codigoVerificacao;
-    $("linkPublicoTexto").innerText = dados.linkPublico;
-    $("publicadaEm").innerText = dados.publicadaEmTexto;
-    gerarQr(dados.linkPublico);
-
-    finalizada = true;
-    alert("Súmula finalizada, publicada e estatísticas atualizadas.");
-    location.href = dados.linkPublico;
-
-  }catch(error){
-    console.error("Erro ao finalizar súmula:", error);
-    alert("Erro ao finalizar súmula. Veja o console.");
+    const aviso = document.getElementById("bloqueioAviso");
+    aviso.style.display = "block";
+    aviso.innerText = "Você não tem permissão para editar esta súmula.";
   }
-};
-</script>
 
-</body>
-</html>
+  if(finalizada){
+    document.querySelectorAll("input,select,textarea,button").forEach(el=>{
+      el.disabled = true;
+    });
+
+    const aviso = document.getElementById("bloqueioAviso");
+    aviso.style.display = "block";
+    aviso.innerText = "Súmula finalizada. Edição bloqueada.";
+  }
+}
+
+/* ======================= FINALIZAÇÃO ======================= */
+
+window.finalizarSumula = async function(){
+
+  if(!confirm("Tem certeza? Após finalizar não poderá editar.")) return;
+
+  const dados = montarDados();
+
+  await setDoc(doc(db,"sumulas",jogoId), dados, {merge:true});
+
+  await updateDoc(doc(db,"jogos",jogoId),{
+    status:"finalizado",
+    sumulaFinalizada:true,
+    linkSumula:linkPublico()
+  });
+
+  alert("Súmula finalizada!");
+  location.href = linkPublico();
+};
+
+/* ======================= INIT ======================= */
+
+onAuthStateChanged(auth, async (user)=>{
+  usuarioAtual = user;
+
+  if(!user){
+    app.innerHTML = `<div class="error">Faça login.</div>`;
+    return;
+  }
+
+  usuarioPerfil = await carregarPerfilUsuario();
+});
