@@ -818,9 +818,7 @@ body{
 import { db } from "./firebase.js";
 import {
   doc,
-  getDoc,
-  collection,
-  getDocs
+  getDoc
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const app = document.getElementById("app");
@@ -851,8 +849,21 @@ function nomeTime(valor, fallback = "TIME"){
   if(valor && typeof valor === "object"){
     return campo(valor, ["nome","nomeTime","time","equipe"], fallback);
   }
-
   return texto(valor, fallback);
+}
+
+function escudoTime(valor){
+  if(valor && typeof valor === "object"){
+    return campo(valor, ["escudo","logo","imagem","foto"], "logo-liga.jfif");
+  }
+  return "logo-liga.jfif";
+}
+
+function cidadeTime(valor, fallback = "-"){
+  if(valor && typeof valor === "object"){
+    return campo(valor, ["cidade","municipio","local"], fallback);
+  }
+  return fallback;
 }
 
 function dataBR(valor){
@@ -872,73 +883,33 @@ function dataBR(valor){
 }
 
 function placarA(sumula){
-  return Number(campo(sumula, ["placarA","golsMandante","golsA"], 0));
+  return Number(campo(sumula, ["golsA","placarA","golsMandante"], 0));
 }
 
 function placarB(sumula){
-  return Number(campo(sumula, ["placarB","golsVisitante","golsB"], 0));
+  return Number(campo(sumula, ["golsB","placarB","golsVisitante"], 0));
 }
 
-async function buscarTimes(){
-  try{
-    const snap = await getDocs(collection(db,"times"));
-    return snap.docs.map(d => ({
-      id:d.id,
-      ...d.data()
-    }));
-  }catch(error){
-    console.error("Erro ao buscar times:", error);
-    return [];
-  }
-}
-
-function acharTime(times, nome, idTime){
-  if(idTime){
-    const porId = times.find(t => t.id === idTime);
-    if(porId) return porId;
-  }
-
-  const alvo = normalizar(nome);
-
-  return times.find(t =>
-    normalizar(t.nome || t.nomeTime || t.equipe) === alvo
-  ) || null;
-}
-
-function escudoTime(time){
-  return campo(time, ["logo","escudo","imagem","foto"], "logo-liga.jfif");
-}
-
-function cidadeTime(time, fallback = "-"){
-  return campo(time, ["cidade","municipio","local"], fallback);
-}
-
-function criarCodigo(id){
-  return String(id || "LG").slice(0,12).toUpperCase();
+function codigoSumula(sumula){
+  return campo(sumula, ["codigoVerificacao","hash","numeroSumula","codigoPartida","codigo"], String(id || "LG").slice(0,12).toUpperCase());
 }
 
 function qrUrl(){
   return `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(window.location.href)}`;
 }
 
-function separarEventosPorTime(lista, timeA, timeB){
+function separarEventosPorTime(lista){
   const a = [];
   const b = [];
 
   lista.forEach(item=>{
-    const time = normalizar(item.time || item.timeNome || item.equipe || item.clube || item.lado);
+    const time = normalizar(item.time || item.lado || "");
 
-    if(time === "a" || time === "mandante" || time === normalizar(timeA)){
-      a.push(item);
-      return;
-    }
-
-    if(time === "b" || time === "visitante" || time === normalizar(timeB)){
+    if(time === "b" || time === "visitante"){
       b.push(item);
-      return;
+    }else{
+      a.push(item);
     }
-
-    a.push(item);
   });
 
   return {a,b};
@@ -949,30 +920,23 @@ function renderJogadores(lista){
     return `<tr><td colspan="3" class="line-empty">Nenhum jogador informado.</td></tr>`;
   }
 
-  const titulares = lista.filter(j => {
-    const tipo = normalizar(j.tipo || j.status || j.condicao || "");
-    return !tipo.includes("reserva") && !tipo.includes("suplente");
-  });
+  const titulares = lista.filter(j => normalizar(j.tipo || "") !== "suplente");
+  const suplentes = lista.filter(j => normalizar(j.tipo || "") === "suplente");
 
-  const reservas = lista.filter(j => {
-    const tipo = normalizar(j.tipo || j.status || j.condicao || "");
-    return tipo.includes("reserva") || tipo.includes("suplente");
-  });
+  const linhasTitulares = `
+    <tr class="sub-row"><td colspan="3">Titulares</td></tr>
+    ${titulares.map(j=>`
+      <tr>
+        <td class="num">${campo(j,["numero","camisa","n"],"-")}</td>
+        <td>${campo(j,["nome","jogador","jogadorNome","atleta"],"-")}</td>
+        <td class="posicao">${campo(j,["posicao","posição","funcao"],"-")}</td>
+      </tr>
+    `).join("")}
+  `;
 
-  const base = titulares.length ? titulares : lista.slice(0,11);
-  const banco = reservas.length ? reservas : (titulares.length ? [] : lista.slice(11));
-
-  const linhasTitulares = base.map(j=>`
-    <tr>
-      <td class="num">${campo(j,["numero","camisa","n"],"-")}</td>
-      <td>${campo(j,["nome","jogador","jogadorNome","atleta"],"-")}</td>
-      <td class="posicao">${campo(j,["posicao","posição","funcao"],"-")}</td>
-    </tr>
-  `).join("");
-
-  const linhasBanco = banco.length ? `
+  const linhasSuplentes = suplentes.length ? `
     <tr class="sub-row"><td colspan="3">Suplentes</td></tr>
-    ${banco.map(j=>`
+    ${suplentes.map(j=>`
       <tr>
         <td class="num">${campo(j,["numero","camisa","n"],"-")}</td>
         <td>${campo(j,["nome","jogador","jogadorNome","atleta"],"-")}</td>
@@ -981,7 +945,7 @@ function renderJogadores(lista){
     `).join("")}
   ` : "";
 
-  return linhasTitulares + linhasBanco;
+  return linhasTitulares + linhasSuplentes;
 }
 
 function renderGols(lista){
@@ -993,7 +957,10 @@ function renderGols(lista){
     <div class="event-item">
       <span class="ball">⚽</span>
       <span class="event-minute">${campo(g,["minuto","tempo"],"-")}'</span>
-      <span class="event-name">${campo(g,["nome","jogador","jogadorNome","atleta"],"-")}</span>
+      <span class="event-name">
+        ${campo(g,["nome","jogador","jogadorNome","atleta"],"-")}
+        ${campo(g,["numero"],"") ? `Nº ${campo(g,["numero"],"")}` : ""}
+      </span>
     </div>
   `).join("");
 }
@@ -1005,12 +972,20 @@ function renderCartoes(lista){
 
   return lista.map(c=>{
     const vermelho = normalizar(campo(c,["tipo","cartao","cor"],"amarelo")).includes("verm");
+    const vermelhoTipo = campo(c,["vermelhoTipo"],"");
+    const extra = vermelho
+      ? `<small>${vermelhoTipo === "segundo_amarelo" ? "2º amarelo" : "vermelho direto"}</small>`
+      : "";
 
     return `
       <div class="event-item">
         <span class="${vermelho ? "red-card" : "yellow-card"}"></span>
         <span class="event-minute">${campo(c,["minuto","tempo"],"-")}'</span>
-        <span class="event-name">${campo(c,["nome","jogador","jogadorNome","atleta"],"-")}</span>
+        <span class="event-name">
+          ${campo(c,["nome","jogador","jogadorNome","atleta"],"-")}
+          ${campo(c,["numero"],"") ? `Nº ${campo(c,["numero"],"")}` : ""}
+          ${extra}
+        </span>
       </div>
     `;
   }).join("");
@@ -1065,46 +1040,40 @@ async function carregar(){
       return;
     }
 
-    const sumula = {
-      id:snap.id,
-      ...snap.data()
-    };
+    const sumula = { id:snap.id, ...snap.data() };
 
-    const times = await buscarTimes();
+    if(!sumula.sumulaFinalizada && sumula.status !== "finalizado"){
+      app.innerHTML = `<div class="error">Esta súmula ainda não foi finalizada.</div>`;
+      return;
+    }
 
-    const nomeAOriginal = nomeTime(sumula.timeA || sumula.mandante || sumula.timeMandanteNome, "MANDANTE");
-    const nomeBOriginal = nomeTime(sumula.timeB || sumula.visitante || sumula.timeVisitanteNome, "VISITANTE");
+    const timeAObj = sumula.timeA || {};
+    const timeBObj = sumula.timeB || {};
 
-    const timeAId = campo(sumula, ["timeAId","timeMandanteId","mandanteId"], "");
-    const timeBId = campo(sumula, ["timeBId","timeVisitanteId","visitanteId"], "");
+    const nomeA = nomeTime(timeAObj, campo(sumula,["timeANome","mandante"],"MANDANTE"));
+    const nomeB = nomeTime(timeBObj, campo(sumula,["timeBNome","visitante"],"VISITANTE"));
 
-    const timeA = acharTime(times, nomeAOriginal, timeAId);
-    const timeB = acharTime(times, nomeBOriginal, timeBId);
+    const logoA = campo(sumula,["logoA","escudoTimeA"], escudoTime(timeAObj));
+    const logoB = campo(sumula,["logoB","escudoTimeB"], escudoTime(timeBObj));
 
-    const nomeA = campo(timeA, ["nome","nomeTime","equipe"], nomeAOriginal);
-    const nomeB = campo(timeB, ["nome","nomeTime","equipe"], nomeBOriginal);
-
-    const logoA = escudoTime(timeA);
-    const logoB = escudoTime(timeB);
-
-    const cidadeA = cidadeTime(timeA, campo(sumula,["cidadeA"],"Goiânia - GO"));
-    const cidadeB = cidadeTime(timeB, campo(sumula,["cidadeB"],"Goiânia - GO"));
+    const cidadeA = campo(sumula,["cidadeA"], cidadeTime(timeAObj,"Goiânia - GO"));
+    const cidadeB = campo(sumula,["cidadeB"], cidadeTime(timeBObj,"Goiânia - GO"));
 
     const gols = Array.isArray(sumula.gols) ? sumula.gols : [];
     const cartoes = Array.isArray(sumula.cartoes) ? sumula.cartoes : [];
 
-    const golsPorTime = separarEventosPorTime(gols, nomeA, nomeB);
-    const cartoesPorTime = separarEventosPorTime(cartoes, nomeA, nomeB);
+    const golsPorTime = separarEventosPorTime(gols);
+    const cartoesPorTime = separarEventosPorTime(cartoes);
     const totalCartoes = contarCartoes(cartoes);
 
     const jogadoresA = campo(sumula,["jogadoresA","escalacaoA","elencoA"],[]);
     const jogadoresB = campo(sumula,["jogadoresB","escalacaoB","elencoB"],[]);
 
-    const codigo = criarCodigo(id);
-    const data = dataBR(campo(sumula,["data","dataJogo","criadoEm"],""));
+    const codigo = codigoSumula(sumula);
+    const data = dataBR(campo(sumula,["data","dataJogo","dataHora","criadoEm"],""));
     const hora = campo(sumula,["hora","horario"],"-");
     const campoJogo = campo(sumula,["local","campo","estadio"],"-");
-    const arbitro = campo(sumula,["arbitro","arbitroNome","arbitroEmail"],"-");
+    const arbitro = campo(sumula,["arbitro","arbitroNome"],"-");
 
     const melhor = campo(sumula,["melhorJogador"],"-");
     const melhorTime = campo(sumula,["melhorJogadorTime"], nomeA);
@@ -1120,7 +1089,7 @@ async function carregar(){
 
           <div class="header-title">
             <h1>SÚMULA OFICIAL</h1>
-            <p>${campo(sumula,["campeonato"],"CAMPEONATO LIGA GOIANA")} ${campo(sumula,["categoria"],"")}</p>
+            <p>${campo(sumula,["campeonato","campeonatoNome"],"CAMPEONATO LIGA GOIANA")} ${campo(sumula,["categoria"],"")}</p>
           </div>
 
           <div class="header-right">
@@ -1135,7 +1104,7 @@ async function carregar(){
             <i class="fa-regular fa-file-lines"></i>
             <div>
               <small>Súmula Nº</small>
-              <strong>${codigo}</strong>
+              <strong>${campo(sumula,["numeroSumula"],codigo)}</strong>
             </div>
           </div>
 
@@ -1143,7 +1112,7 @@ async function carregar(){
             <i class="fa-solid fa-barcode"></i>
             <div>
               <small>Código da partida</small>
-              <strong>${codigo}</strong>
+              <strong>${campo(sumula,["codigoPartida","codigo"],id)}</strong>
             </div>
           </div>
 
@@ -1197,34 +1166,22 @@ async function carregar(){
         <section class="match-strip">
           <div class="match-box">
             <i class="fa-regular fa-calendar-days"></i>
-            <div>
-              <small>Data</small>
-              <strong>${data}</strong>
-            </div>
+            <div><small>Data</small><strong>${data}</strong></div>
           </div>
 
           <div class="match-box">
             <i class="fa-regular fa-clock"></i>
-            <div>
-              <small>Horário</small>
-              <strong>${hora}</strong>
-            </div>
+            <div><small>Horário</small><strong>${hora}</strong></div>
           </div>
 
           <div class="match-box">
             <i class="fa-solid fa-diamond"></i>
-            <div>
-              <small>Campo</small>
-              <strong>${campoJogo}</strong>
-            </div>
+            <div><small>Campo</small><strong>${campoJogo}</strong></div>
           </div>
 
           <div class="match-box">
             <i class="fa-solid fa-whistle"></i>
-            <div>
-              <small>Árbitro</small>
-              <strong>${arbitro}</strong>
-            </div>
+            <div><small>Árbitro</small><strong>${arbitro}</strong></div>
           </div>
         </section>
 
@@ -1246,9 +1203,7 @@ async function carregar(){
                     <th class="posicao">Posição</th>
                   </tr>
                 </thead>
-                <tbody>
-                  ${renderJogadores(jogadoresA)}
-                </tbody>
+                <tbody>${renderJogadores(jogadoresA)}</tbody>
               </table>
             </div>
 
@@ -1266,14 +1221,12 @@ async function carregar(){
                     <th class="posicao">Posição</th>
                   </tr>
                 </thead>
-                <tbody>
-                  ${renderJogadores(jogadoresB)}
-                </tbody>
+                <tbody>${renderJogadores(jogadoresB)}</tbody>
               </table>
             </div>
           </div>
 
-          <div class="legend">(G) Goleiro &nbsp;&nbsp;&nbsp; (C) Capitão</div>
+          <div class="legend">Dados públicos da súmula. CPF e nascimento não são exibidos.</div>
         </section>
 
         <section class="events-grid">
@@ -1370,7 +1323,7 @@ async function carregar(){
               <img src="${qrUrl()}" alt="QR Code">
               <div class="auth-text">
                 <strong>Súmula publicada em</strong>
-                <p>${data}</p>
+                <p>${campo(sumula,["publicadaEmTexto"],data)}</p>
                 <p>Código de verificação</p>
                 <div class="auth-code">${codigo}</div>
                 <p>Escaneie o QR Code para verificar a autenticidade desta súmula.</p>
