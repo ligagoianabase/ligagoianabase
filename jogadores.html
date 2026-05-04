@@ -514,8 +514,8 @@ select:focus{
   <div class="filtros">
     <input id="busca" placeholder="Buscar jogador, time ou posição...">
 
-    <select id="filtroCampeonato">
-      <option value="">Todos os campeonatos</option>
+    <select id="filtroTime">
+      <option value="">Todos os times</option>
     </select>
 
     <select id="filtroCategoria">
@@ -528,6 +528,7 @@ select:focus{
   <div class="lista" id="lista"></div>
 
 </main>
+
 <script type="module">
 import { renderMenu } from "./menu.js";
 import { db } from "./firebase.js";
@@ -540,14 +541,14 @@ renderMenu("jogadores");
 
 let jogadores = [];
 let jogos = [];
-let campeonatos = [];
+let times = [];
 let sumulas = [];
 
 function n(txt){
   return String(txt || "")
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\\u0300-\\u036f]/g,"")
+    .replace(/[\u0300-\u036f]/g,"")
     .trim();
 }
 
@@ -589,8 +590,19 @@ function fotoJogador(j){
   return val(j,["foto","imagem","fotoUrl","avatar"],"logo-liga.jfif");
 }
 
+function nomeTimeDoc(t){
+  return val(t,["nome","timeNome","nomeTime","equipe"],"");
+}
+
+function escudoPorTime(nome){
+  const encontrado = times.find(t => n(nomeTimeDoc(t)) === n(nome));
+  return val(encontrado,["logo","escudo","imagem","foto"],"logo-liga.jfif");
+}
+
 function escudoJogador(j){
-  return val(j,["escudo","logoTime","timeLogo","logo"],"logo-liga.jfif");
+  const direto = val(j,["escudo","logoTime","timeLogo","logo"],"");
+  if(direto) return direto;
+  return escudoPorTime(timeJogador(j));
 }
 
 function timeJogador(j){
@@ -664,25 +676,6 @@ function linkRede(valor,tipo){
   }
 
   return "#";
-}
-
-function getCampSelecionado(){
-  const id = document.getElementById("filtroCampeonato").value;
-  return campeonatos.find(c => c.id === id);
-}
-
-function nomeCampeonato(c){
-  return val(c,["nome","campeonato","titulo","nomeCampeonato"],"");
-}
-
-function jogoDoCamp(jogo, camp){
-  if(!camp) return false;
-
-  const campIdJogo = val(jogo,["campeonatoId","idCampeonato"]);
-  const campNomeJogo = val(jogo,["campeonato","nomeCampeonato"]);
-  const campNome = nomeCampeonato(camp);
-
-  return campIdJogo === camp.id || n(campNomeJogo) === n(campNome);
 }
 
 function timeA(j){
@@ -832,19 +825,34 @@ function calcularStats(jogador){
   };
 }
 
-function preencherCampeonatos(){
-  const select = document.getElementById("filtroCampeonato");
+function preencherTimes(){
+  const select = document.getElementById("filtroTime");
+  const nomes = new Set();
 
-  select.innerHTML = `<option value="">Todos os campeonatos</option>`;
+  jogadores.forEach(j=>{
+    const time = timeJogador(j);
+    if(time && time !== "-") nomes.add(time);
+  });
 
-  campeonatos
-    .sort((a,b)=>nomeCampeonato(a).localeCompare(nomeCampeonato(b),"pt-BR"))
-    .forEach(c=>{
-      select.innerHTML += `
-        <option value="${c.id}">
-          ${nomeCampeonato(c) || "-"}
-        </option>
-      `;
+  jogos.forEach(j=>{
+    const a = timeA(j);
+    const b = timeB(j);
+
+    if(a) nomes.add(a);
+    if(b) nomes.add(b);
+  });
+
+  times.forEach(t=>{
+    const nome = nomeTimeDoc(t);
+    if(nome) nomes.add(nome);
+  });
+
+  select.innerHTML = `<option value="">Todos os times</option>`;
+
+  Array.from(nomes)
+    .sort((a,b)=>String(a).localeCompare(String(b),"pt-BR"))
+    .forEach(time=>{
+      select.innerHTML += `<option value="${time}">${time}</option>`;
     });
 }
 
@@ -872,44 +880,17 @@ function preencherCategorias(){
 }
 
 function filtrarJogadores(){
-  const camp = getCampSelecionado();
+  const timeSelecionado = document.getElementById("filtroTime").value;
   const categoria = document.getElementById("filtroCategoria").value;
   const busca = n(document.getElementById("busca").value);
-
-  let timesDoCampeonato = new Set();
-
-  if(camp){
-    jogos.forEach(j=>{
-      if(!jogoDoCamp(j,camp)) return;
-      if(categoria && j.categoria && j.categoria !== categoria) return;
-
-      const a = timeA(j);
-      const b = timeB(j);
-
-      if(a) timesDoCampeonato.add(n(a));
-      if(b) timesDoCampeonato.add(n(b));
-    });
-  }
 
   return jogadores.filter(j=>{
     const nome = nomeJogador(j);
     const time = timeJogador(j);
     const posicao = posicaoJogador(j);
 
-    if(camp){
-      const jogadorCampId = val(j,["campeonatoId","idCampeonato"]);
-      const jogadorCampNome = val(j,["campeonato","nomeCampeonato"]);
-      const campNome = nomeCampeonato(camp);
-
-      const pertencePorCamp =
-        jogadorCampId === camp.id ||
-        n(jogadorCampNome) === n(campNome);
-
-      const pertencePorTime = timesDoCampeonato.size
-        ? timesDoCampeonato.has(n(time))
-        : true;
-
-      if(!pertencePorCamp && !pertencePorTime) return false;
+    if(timeSelecionado && n(time) !== n(timeSelecionado)){
+      return false;
     }
 
     if(categoria && !categoriasJogador(j).includes(categoria)){
@@ -966,10 +947,10 @@ function atualizarTopo(lista){
   document.getElementById("tagCartoes").innerText = `Cartões: ${cartoes}`;
 
   const categoria = document.getElementById("filtroCategoria").value;
-  const camp = getCampSelecionado();
+  const time = document.getElementById("filtroTime").value;
 
   document.getElementById("tituloPagina").innerText =
-    `Jogadores${categoria ? " - " + categoria : ""}${camp ? " | " + nomeCampeonato(camp) : ""}`;
+    `Jogadores${categoria ? " - " + categoria : ""}${time ? " | " + time : ""}`;
 }
 
 function render(){
@@ -1133,16 +1114,16 @@ async function carregarDados(){
 
   jogadores = await carregarColecao("jogadores");
   jogos = await carregarColecao("jogos");
-  campeonatos = await carregarColecao("campeonatos");
+  times = await carregarColecao("times");
   sumulas = await carregarColecao("sumulas");
 
-  preencherCampeonatos();
+  preencherTimes();
   preencherCategorias();
   render();
 }
 
 document.getElementById("busca").addEventListener("input", render);
-document.getElementById("filtroCampeonato").addEventListener("change", render);
+document.getElementById("filtroTime").addEventListener("change", render);
 document.getElementById("filtroCategoria").addEventListener("change", render);
 
 carregarDados();
