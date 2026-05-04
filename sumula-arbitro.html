@@ -1782,33 +1782,162 @@ window.carregarJogo = async function(){
 };
 
 window.finalizarSumula = async function(){
-  if(!podeEditar || finalizada){
-    alert("Você não pode finalizar esta súmula.");
-    return;
-  }
 
-  if(!confirm("Tem certeza? Após finalizar, a súmula será publicada e não poderá ser editada.")) return;
+  if(!confirm("Tem certeza? Após finalizar não poderá editar.")) return;
 
-  try{
-    const dados = montarDados(true);
+  const dados = montarDados();
 
-    await setDoc(doc(db,"sumulas",jogoId),dados,{merge:true});
+  // 🔹 SALVAR SÚMULA
+  await setDoc(doc(db,"sumulas",jogoId), dados, {merge:true});
 
-    await updateDoc(doc(db,"jogos",jogoId),{
-      status:"finalizado",
-      sumulaFinalizada:true,
-      sumulaStatus:"finalizada",
-      publico:true,
-      publica:true,
-      golsA:dados.golsA,
-      golsB:dados.golsB,
-      placar:dados.placar,
-      linkSumula:dados.linkPublico,
-      sumulaPublica:dados.linkPublico,
-      codigoVerificacao:dados.codigoVerificacao,
-      finalizadoEm:serverTimestamp(),
+  // 🔹 ATUALIZAR JOGO
+  await updateDoc(doc(db,"jogos",jogoId),{
+    status:"finalizado",
+    sumulaFinalizada:true,
+    placar:{
+      A:golsA.length,
+      B:golsB.length
+    },
+    golsA:golsA.length,
+    golsB:golsB.length,
+    linkSumula:linkPublico()
+  });
+
+  const timeA = jogo.timeA;
+  const timeB = jogo.timeB;
+
+  const golsTimeA = golsA.length;
+  const golsTimeB = golsB.length;
+
+  // ============================
+  // 🔥 ATUALIZAR CLASSIFICAÇÃO
+  // ============================
+
+  async function atualizarTimeTabela(time, golsPro, golsContra){
+    const ref = doc(db,"classificacao", `${jogo.campeonatoId}_${time.id}`);
+    const snap = await getDoc(ref);
+
+    let dadosTime = {
+      jogos:0,
+      vitorias:0,
+      empates:0,
+      derrotas:0,
+      golsPro:0,
+      golsContra:0,
+      saldo:0,
+      pontos:0
+    };
+
+    if(snap.exists()){
+      dadosTime = snap.data();
+    }
+
+    dadosTime.jogos += 1;
+    dadosTime.golsPro += golsPro;
+    dadosTime.golsContra += golsContra;
+    dadosTime.saldo = dadosTime.golsPro - dadosTime.golsContra;
+
+    if(golsPro > golsContra){
+      dadosTime.vitorias += 1;
+      dadosTime.pontos += 3;
+    }else if(golsPro === golsContra){
+      dadosTime.empates += 1;
+      dadosTime.pontos += 1;
+    }else{
+      dadosTime.derrotas += 1;
+    }
+
+    await setDoc(ref,{
+      ...dadosTime,
+      timeId:time.id,
+      timeNome:time.nome,
+      campeonatoId:jogo.campeonatoId,
       atualizadoEm:serverTimestamp()
     });
+  }
+
+  await atualizarTimeTabela(timeA, golsTimeA, golsTimeB);
+  await atualizarTimeTabela(timeB, golsTimeB, golsTimeA);
+
+  // ============================
+  // 🔥 ATUALIZAR JOGADORES
+  // ============================
+
+  async function atualizarJogador(jogadorId, tipo){
+    if(!jogadorId) return;
+
+    const ref = doc(db,"jogadores", jogadorId);
+    const snap = await getDoc(ref);
+
+    if(!snap.exists()) return;
+
+    const dadosJog = snap.data();
+
+    let update = {
+      jogos:(dadosJog.jogos || 0) + 1
+    };
+
+    if(tipo === "gol"){
+      update.gols = (dadosJog.gols || 0) + 1;
+    }
+
+    if(tipo === "amarelo"){
+      update.amarelos = (dadosJog.amarelos || 0) + 1;
+    }
+
+    if(tipo === "vermelho"){
+      update.vermelhos = (dadosJog.vermelhos || 0) + 1;
+    }
+
+    await updateDoc(ref, update);
+  }
+
+  // GOLS
+  for(const g of golsA){
+    await atualizarJogador(g.id, "gol");
+  }
+  for(const g of golsB){
+    await atualizarJogador(g.id, "gol");
+  }
+
+  // CARTÕES
+  for(const c of cartoesA){
+    if(c.tipo === "amarelo"){
+      await atualizarJogador(c.id, "amarelo");
+    }else{
+      await atualizarJogador(c.id, "vermelho");
+    }
+  }
+
+  for(const c of cartoesB){
+    if(c.tipo === "amarelo"){
+      await atualizarJogador(c.id, "amarelo");
+    }else{
+      await atualizarJogador(c.id, "vermelho");
+    }
+  }
+
+  // ============================
+  // 🔥 ATUALIZAR ÁRBITRO
+  // ============================
+
+  if(jogo.arbitroId){
+    const refArbitro = doc(db,"arbitros", jogo.arbitroId);
+    const snapArb = await getDoc(refArbitro);
+
+    if(snapArb.exists()){
+      const dadosArb = snapArb.data();
+
+      await updateDoc(refArbitro,{
+        jogos:(dadosArb.jogos || 0) + 1
+      });
+    }
+  }
+
+  alert("Súmula finalizada + estatísticas atualizadas!");
+
+  location.href = linkPublico();
+};
 
     finalizada = true;
     podeEditar = false;
