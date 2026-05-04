@@ -27,7 +27,13 @@ function getSumula(id){
 }
 
 function sumulaFinalizada(s){
-  return !!s && (s.sumulaFinalizada === true || norm(s.status) === "finalizado" || norm(s.sumulaStatus) === "finalizada");
+  return !!s && (
+    s.sumulaFinalizada === true ||
+    s.publica === true ||
+    s.publico === true ||
+    norm(s.status) === "finalizado" ||
+    norm(s.sumulaStatus) === "finalizada"
+  );
 }
 
 function finalizado(j){
@@ -223,7 +229,6 @@ function atualizarHero(){
   const tabela = calcularTabela();
   const partidas = partidasFinalizadas();
   const gols = partidas.reduce((s,p)=>s + p.golsA + p.golsB,0);
-
   const camp = campeonatos.find(x => x.id === filtroCamp() || norm(x.nome) === norm(filtroCamp()));
 
   $("heroTitulo").innerText = camp?.nome || filtroCamp() || "Tabela da Competição";
@@ -261,7 +266,7 @@ function tabelaHTML(lista,modo="geral"){
         <div class="row header">
           <div class="col-pos">#</div><div class="col-time">Time</div>
           <div class="col">P</div><div class="col">J</div><div class="col">V</div><div class="col">E</div><div class="col">D</div>
-          <div class="col">GP</div><div class="col">GC</div><div class="col">SG</div><div class="col">%</div><div class="col-wide">Forma</div>
+          <div class="col">GP</div><div class="col">GC</div><div class="col">SG</div><div class="col">%</div><div class="col-wide">Desempenho</div>
         </div>
         ${lista.map((t,i)=>{
           const x = modo === "casa" ? t.casa : modo === "fora" ? t.fora : t;
@@ -301,12 +306,43 @@ function renderDetalhes(){
 
   $("areaTabela").innerHTML = `
     <div class="cards-resumo">
-      <div class="card-resumo"><div class="card-resumo-icon"><i class="fa-solid fa-trophy"></i></div><strong>Líder</strong><span>${tabela[0]?.nome || "-"}</span></div>
-      <div class="card-resumo"><div class="card-resumo-icon"><i class="fa-solid fa-shield"></i></div><strong>Times</strong><span>${tabela.length}</span></div>
-      <div class="card-resumo"><div class="card-resumo-icon"><i class="fa-solid fa-calendar-check"></i></div><strong>Jogos finalizados</strong><span>${partidas.length}</span></div>
-      <div class="card-resumo"><div class="card-resumo-icon"><i class="fa-solid fa-futbol"></i></div><strong>Gols</strong><span>${gols}</span></div>
-      <div class="card-resumo"><div class="card-resumo-icon"><i class="fa-solid fa-square"></i></div><strong>Amarelos</strong><span>${amarelos}</span></div>
-      <div class="card-resumo"><div class="card-resumo-icon"><i class="fa-solid fa-square"></i></div><strong>Vermelhos</strong><span>${vermelhos}</span></div>
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-ranking-star"></i></div>
+        <strong>Top 3</strong>
+        <div class="top3-list">
+          ${tabela.slice(0,3).map((t,i)=>`<div>${i+1}º ${t.nome}</div>`).join("") || "<div>-</div>"}
+        </div>
+      </div>
+
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <strong>Times</strong>
+        <span>${tabela.length}</span>
+      </div>
+
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-calendar-check"></i></div>
+        <strong>Jogos</strong>
+        <span>${partidas.length}</span>
+      </div>
+
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-futbol"></i></div>
+        <strong>Gols</strong>
+        <span>${gols}</span>
+      </div>
+
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-note-sticky"></i></div>
+        <strong>Amarelos</strong>
+        <span>${amarelos}</span>
+      </div>
+
+      <div class="card-resumo">
+        <div class="card-resumo-icon"><i class="fa-solid fa-rectangle-xmark"></i></div>
+        <strong>Vermelhos</strong>
+        <span>${vermelhos}</span>
+      </div>
     </div>
   `;
 }
@@ -331,7 +367,6 @@ function renderCasaFora(){
 window.renderTabelaCasaFora = (modo,btn)=>{
   document.querySelectorAll(".sub-aba").forEach(b=>b.classList.remove("ativa"));
   btn.classList.add("ativa");
-
   const lista = calcularTabela();
   const ordenada = [...lista].sort((a,b)=>(b[modo].pontos||0)-(a[modo].pontos||0)||(b[modo].saldo||0)-(a[modo].saldo||0));
   $("subArea").innerHTML = tabelaHTML(ordenada,modo);
@@ -353,17 +388,12 @@ function renderJogos(){
             <div class="card-icon"><i class="fa-solid fa-calendar-days"></i></div>
             <div class="status-tag ${p.finalizado ? "status-finalizado" : "status-agendado"}">${p.finalizado ? "Finalizado" : "Agendado"}</div>
           </div>
-
           <div class="times-linha">
             <div class="time-box"><img class="escudo" src="${logoTime(p.timeA)}" onerror="this.src='logo-liga.jfif'"><span>${nomeTime(p.timeA)}</span></div>
             <div class="placar">${p.finalizado ? `${p.golsA} x ${p.golsB}` : "x"}</div>
             <div class="time-box visitante"><span>${nomeTime(p.timeB)}</span><img class="escudo" src="${logoTime(p.timeB)}" onerror="this.src='logo-liga.jfif'"></div>
           </div>
-
-          <div class="info-item">
-            <strong>${p.campeonato || "-"}</strong><br>${p.categoria || "-"}<br>${p.data || "-"}<br>${p.local || "-"}
-          </div>
-
+          <div class="info-item"><strong>${p.campeonato || "-"}</strong><br>${p.categoria || "-"}<br>${p.data || "-"}<br>${p.local || "-"}</div>
           ${p.finalizado ? `<a class="btn-ver" href="sumula-publica.html?id=${p.id}"><i class="fa-solid fa-file-lines"></i> Ver Súmula</a>` : ""}
         </article>
       `).join("")}
@@ -393,7 +423,6 @@ function rankingAssist(){
       if(!mapa[nome]) mapa[nome] = {nome,time:a.timeNome || a.time || "",valor:0};
       mapa[nome].valor++;
     });
-
     (s.gols || []).forEach(g=>{
       const nome = g.assistencia || g.assistente;
       if(!nome) return;
@@ -406,7 +435,7 @@ function rankingAssist(){
 
 function renderRanking(lista,label){
   $("areaTabela").innerHTML = lista.length ? `
-    <div class="ranking-lista">
+    <div class="ranking-lista ranking-3">
       ${lista.map((j,i)=>`
         <article class="ranking-card ${i === 0 ? "lider-ranking" : ""}">
           <div class="ranking-top">
@@ -445,16 +474,18 @@ function renderCartoes(){
   const lista = rankingCartoes();
 
   $("areaTabela").innerHTML = lista.length ? `
-    <div class="ranking-lista">
-      ${lista.map((j,i)=>`
-        <article class="ranking-card">
+    <div class="ranking-lista ranking-3">
+      ${lista.map(j=>`
+        <article class="ranking-card cartao-card">
           <div class="ranking-top">
             <div class="player-box">
-              <div class="pos">${medalha(i)}</div>
               <img src="${fotoJogador(j.nome)}" class="photo" onerror="this.src='logo-liga.jfif'">
               <div class="player-info"><strong>${j.nome}</strong><small>${j.time || "Atleta"}</small></div>
             </div>
-            <div class="numero-destaque">🟨 ${j.amarelos}<br>🟥 ${j.vermelhos}</div>
+            <div class="cartao-numeros">
+              <div class="cartao-num">🟨 ${j.amarelos}</div>
+              <div class="cartao-num">🟥 ${j.vermelhos}</div>
+            </div>
           </div>
         </article>
       `).join("")}
@@ -466,51 +497,20 @@ function renderSuspensos(){
   const lista = rankingCartoes().filter(j=>j.vermelhos >= 1 || j.amarelos >= 3);
 
   $("areaTabela").innerHTML = lista.length ? `
-    <div class="ranking-lista">
-      ${lista.map((j,i)=>`
+    <div class="ranking-lista ranking-3">
+      ${lista.map(j=>`
         <article class="ranking-card">
           <div class="ranking-top">
             <div class="player-box">
-              <div class="pos">${i + 1}</div>
               <img src="${fotoJogador(j.nome)}" class="photo" onerror="this.src='logo-liga.jfif'">
               <div class="player-info"><strong>${j.nome}</strong><small>${j.time || "Atleta"}</small></div>
             </div>
-            <div class="numero-destaque">1<small>jogo suspenso</small></div>
+            <div class="suspenso-badge">1 jogo</div>
           </div>
         </article>
       `).join("")}
     </div>
   ` : `<div class="vazio">Nenhum suspenso automático.</div>`;
-}
-
-function renderArbitros(){
-  const mapa = {};
-
-  partidasFinalizadas().forEach(p=>{
-    if(!p.arbitro) return;
-    if(!mapa[p.arbitro]) mapa[p.arbitro] = {nome:p.arbitro,jogos:0,cartoes:0};
-    mapa[p.arbitro].jogos++;
-    mapa[p.arbitro].cartoes += (p.cartoes || []).length;
-  });
-
-  const lista = Object.values(mapa).sort((a,b)=>b.jogos-a.jogos);
-
-  $("areaTabela").innerHTML = lista.length ? `
-    <div class="ranking-lista">
-      ${lista.map((a,i)=>`
-        <article class="ranking-card">
-          <div class="ranking-top">
-            <div class="player-box">
-              <div class="pos">${medalha(i)}</div>
-              <img src="logo-liga.jfif" class="photo">
-              <div class="player-info"><strong>${a.nome}</strong><small>Árbitro</small></div>
-            </div>
-            <div class="numero-destaque">${a.jogos}<small>jogos</small>${a.cartoes}<small>cartões</small></div>
-          </div>
-        </article>
-      `).join("")}
-    </div>
-  ` : `<div class="vazio">Nenhum árbitro.</div>`;
 }
 
 function blocoTop(titulo,lista,campo,label){
@@ -563,7 +563,6 @@ function renderHistorico(){
           <p>Vice: <strong>${h.vice || "-"}</strong></p>
         </div>
       `).join("")}
-
       ${Object.entries(temporadas).map(([t,v])=>`
         <div class="ranking-card">
           <h3 style="color:var(--gold)">${t}</h3>
@@ -594,7 +593,6 @@ function atualizarTela(){
   if(abaAtual === "assistencias") renderAssistencias();
   if(abaAtual === "cartoes") renderCartoes();
   if(abaAtual === "suspensos") renderSuspensos();
-  if(abaAtual === "arbitros") renderArbitros();
   if(abaAtual === "historico") renderHistorico();
 }
 
