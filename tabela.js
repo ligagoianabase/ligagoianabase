@@ -8,7 +8,6 @@ let times = [];
 let campeonatos = [];
 let historico = [];
 let abaAtual = "detalhes";
-let modoClassificacao = localStorage.getItem("modoClassificacaoTabela") || "app";
 
 const $ = id => document.getElementById(id);
 
@@ -50,8 +49,13 @@ function catItem(x){
   return x.categoria || "";
 }
 
-function filtroCamp(){ return $("filtroCampeonato").value; }
-function filtroCat(){ return $("filtroCategoria").value; }
+function filtroCamp(){
+  return $("filtroCampeonato").value;
+}
+
+function filtroCat(){
+  return $("filtroCategoria").value;
+}
 
 function passaFiltro(x){
   if(filtroCamp() && norm(campItem(x)) !== norm(filtroCamp())) return false;
@@ -59,8 +63,13 @@ function passaFiltro(x){
   return true;
 }
 
-function jogosFiltrados(){ return jogos.filter(passaFiltro); }
-function sumulasFiltradas(){ return sumulas.filter(s => sumulaFinalizada(s)).filter(passaFiltro); }
+function jogosFiltrados(){
+  return jogos.filter(passaFiltro);
+}
+
+function sumulasFiltradas(){
+  return sumulas.filter(s => sumulaFinalizada(s)).filter(passaFiltro);
+}
 
 function escudoPorNome(nome){
   const t = times.find(x => norm(x.nome) === norm(nome) || norm(x.timeNome) === norm(nome));
@@ -107,10 +116,38 @@ function baseTime(nome, logo){
   return {
     nome,
     logo: logo || escudoPorNome(nome),
-    pontos:0,jogos:0,vitorias:0,empates:0,derrotas:0,golsPro:0,golsContra:0,saldo:0,aproveitamento:0,
+    pontos:0,
+    jogos:0,
+    vitorias:0,
+    empates:0,
+    derrotas:0,
+    golsPro:0,
+    golsContra:0,
+    saldo:0,
+    aproveitamento:0,
     forma:[],
-    casa:{pontos:0,jogos:0,vitorias:0,empates:0,derrotas:0,golsPro:0,golsContra:0,saldo:0,aproveitamento:0},
-    fora:{pontos:0,jogos:0,vitorias:0,empates:0,derrotas:0,golsPro:0,golsContra:0,saldo:0,aproveitamento:0},
+    casa:{
+      pontos:0,
+      jogos:0,
+      vitorias:0,
+      empates:0,
+      derrotas:0,
+      golsPro:0,
+      golsContra:0,
+      saldo:0,
+      aproveitamento:0
+    },
+    fora:{
+      pontos:0,
+      jogos:0,
+      vitorias:0,
+      empates:0,
+      derrotas:0,
+      golsPro:0,
+      golsContra:0,
+      saldo:0,
+      aproveitamento:0
+    },
     cleanSheets:0,
     cartoesAmarelos:0,
     cartoesVermelhos:0
@@ -146,6 +183,7 @@ function calcularTabela(){
   partidasFinalizadas().forEach(p=>{
     const A = nomeTime(p.timeA);
     const B = nomeTime(p.timeB);
+
     if(!A || !B) return;
 
     if(!mapa[A]) mapa[A] = baseTime(A, logoTime(p.timeA));
@@ -159,6 +197,7 @@ function calcularTabela(){
 
     mapa[A].forma.unshift(rA);
     mapa[B].forma.unshift(rB);
+
     mapa[A].forma = mapa[A].forma.slice(0,5);
     mapa[B].forma = mapa[B].forma.slice(0,5);
 
@@ -171,6 +210,7 @@ function calcularTabela(){
         norm(c.time) === "b" || norm(c.timeNome) === norm(B) ? mapa[B] : null;
 
       if(!alvo) return;
+
       if(c.tipo === "amarelo") alvo.cartoesAmarelos++;
       if(c.tipo === "vermelho") alvo.cartoesVermelhos++;
     });
@@ -202,6 +242,7 @@ function preencherFiltros(){
   [...campeonatos,...jogos,...sumulas].forEach(x=>{
     const id = x.id && x.nome ? x.id : campItem(x);
     const nome = x.nome || x.campeonato || x.campeonatoNome || id;
+
     if(id && nome) camps.set(id,nome);
   });
 
@@ -209,7 +250,9 @@ function preencherFiltros(){
     `<option value="">Todos os campeonatos</option>` +
     [...camps.entries()].map(([id,n])=>`<option value="${id}">${n}</option>`).join("");
 
-  if([...camps.keys()].includes(campAtual)) $("filtroCampeonato").value = campAtual;
+  if([...camps.keys()].includes(campAtual)){
+    $("filtroCampeonato").value = campAtual;
+  }
 
   const cats = new Set();
 
@@ -223,7 +266,9 @@ function preencherFiltros(){
     `<option value="">Todas categorias</option>` +
     [...cats].sort().map(c=>`<option value="${c}">${c}</option>`).join("");
 
-  if([...cats].includes(catAtual)) $("filtroCategoria").value = catAtual;
+  if([...cats].includes(catAtual)){
+    $("filtroCategoria").value = catAtual;
+  }
 }
 
 function atualizarHero(){
@@ -233,7 +278,11 @@ function atualizarHero(){
   const camp = campeonatos.find(x => x.id === filtroCamp() || norm(x.nome) === norm(filtroCamp()));
 
   $("heroTitulo").innerText = camp?.nome || filtroCamp() || "Tabela da Competição";
-  $("heroSub").innerText = filtroCat() ? `Categoria ${filtroCat()}` : "Classificação, jogos e estatísticas geradas automaticamente pelas súmulas finalizadas.";
+
+  $("heroSub").innerText = filtroCat()
+    ? `Categoria ${filtroCat()}`
+    : "Classificação, jogos e estatísticas geradas automaticamente pelas súmulas finalizadas.";
+
   $("heroTagCategoria").innerText = `Categoria: ${filtroCat() || "Todas"}`;
   $("heroTagJogos").innerText = `Jogos finalizados: ${partidas.length}`;
   $("heroTagTimes").innerText = `Times: ${tabela.length}`;
@@ -252,7 +301,6 @@ function medalha(i){
   if(i === 2) return "🥉";
   return i + 1;
 }
-
 function rowClasse(i){
   if(i === 0) return "row top1";
   if(i === 1) return "row top2";
@@ -260,420 +308,223 @@ function rowClasse(i){
   return "row";
 }
 
+/* ================= SWIPE MOBILE ================= */
+function tabelaMobileSwipe(lista){
+
+  const paginas = [
+    { nome:"Base", campos:["pontos","jogos","vitorias","empates","derrotas"] },
+    { nome:"Gols", campos:["golsPro","golsContra","saldo"] },
+    { nome:"%", campos:["aproveitamento"] }
+  ];
+
+  return `
+    <div class="swipe-container">
+
+      <div class="swipe-header">
+        <div>#</div>
+        <div>Time</div>
+        <div class="swipe-title">← Deslize →</div>
+      </div>
+
+      <div class="swipe-body">
+        ${lista.map((t,i)=>`
+          <div class="swipe-row">
+            <div class="swipe-pos">${medalha(i)}</div>
+
+            <div class="swipe-team">
+              <img src="${t.logo}" class="escudo">
+              ${t.nome}
+            </div>
+
+            <div class="swipe-cards">
+              ${paginas.map(p=>`
+                <div class="swipe-card">
+                  ${p.campos.map(c=>`
+                    <div class="swipe-item">
+                      <strong>${c.replace("gols","").toUpperCase()}</strong>
+                      <span>${t[c] || 0}${c==="aproveitamento"?"%":""}</span>
+                    </div>
+                  `).join("")}
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `).join("")}
+      </div>
+
+    </div>
+  `;
+}
+
+/* ================= CSS SWIPE ================= */
+function aplicarCssSwipe(){
+  if(document.getElementById("cssSwipe")) return;
+
+  const css = document.createElement("style");
+  css.id = "cssSwipe";
+
+  css.innerHTML = `
+    .swipe-container{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .swipe-header{
+      display:grid;
+      grid-template-columns:40px 1fr 120px;
+      font-weight:900;
+      color:var(--gold);
+      padding:0 6px;
+    }
+
+    .swipe-body{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .swipe-row{
+      display:grid;
+      grid-template-columns:40px 1fr;
+      gap:8px;
+      background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+      padding:10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .swipe-pos{
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .swipe-team{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-weight:900;
+    }
+
+    .swipe-cards{
+      grid-column:1/-1;
+      display:flex;
+      overflow-x:auto;
+      gap:10px;
+      scroll-snap-type:x mandatory;
+      padding-top:8px;
+    }
+
+    .swipe-card{
+      min-width:220px;
+      background:#0d2a52;
+      border-radius:10px;
+      padding:10px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:6px;
+      scroll-snap-align:start;
+    }
+
+    .swipe-item{
+      background:rgba(255,255,255,.05);
+      padding:6px;
+      border-radius:6px;
+      text-align:center;
+    }
+
+    .swipe-item strong{
+      display:block;
+      font-size:10px;
+      color:var(--gold);
+    }
+
+    .swipe-item span{
+      font-size:13px;
+      font-weight:900;
+    }
+  `;
+
+  document.head.appendChild(css);
+}
+
+/* ================= TABELA ================= */
 function tabelaHTML(lista,modo="geral"){
+
+  if(window.innerWidth <= 900){
+    aplicarCssSwipe();
+    return tabelaMobileSwipe(lista);
+  }
+
   return `
     <div class="box-tabela">
       <div class="table">
         <div class="row header">
-          <div class="col-pos">#</div><div class="col-time">Time</div>
-          <div class="col">P</div><div class="col">J</div><div class="col">V</div><div class="col">E</div><div class="col">D</div>
-          <div class="col">GP</div><div class="col">GC</div><div class="col">SG</div><div class="col">%</div><div class="col-wide">Desempenho</div>
+          <div class="col-pos">#</div>
+          <div class="col-time">Time</div>
+          <div class="col">P</div>
+          <div class="col">J</div>
+          <div class="col">V</div>
+          <div class="col">E</div>
+          <div class="col">D</div>
+          <div class="col">GP</div>
+          <div class="col">GC</div>
+          <div class="col">SG</div>
+          <div class="col">%</div>
+          <div class="col-wide">Desempenho</div>
         </div>
+
         ${lista.map((t,i)=>{
           const x = modo === "casa" ? t.casa : modo === "fora" ? t.fora : t;
+
           return `
             <div class="${rowClasse(i)}">
               <div class="col-pos">${medalha(i)}</div>
+
               <div class="col-time">
                 <div class="team">
-                  <img class="escudo" src="${t.logo}" onerror="this.src='logo-liga.jfif'">
+                  <img class="escudo" src="${t.logo}">
                   ${t.nome}
                 </div>
               </div>
-              <div class="col">${x.pontos || 0}</div>
-              <div class="col">${x.jogos || 0}</div>
-              <div class="col">${x.vitorias || 0}</div>
-              <div class="col">${x.empates || 0}</div>
-              <div class="col">${x.derrotas || 0}</div>
-              <div class="col">${x.golsPro || 0}</div>
-              <div class="col">${x.golsContra || 0}</div>
-              <div class="col">${x.saldo || 0}</div>
-              <div class="col">${x.aproveitamento || 0}%</div>
-              <div class="col-wide">${modo === "geral" ? formaHTML(t.forma) : "-"}</div>
+
+              <div class="col">${x.pontos}</div>
+              <div class="col">${x.jogos}</div>
+              <div class="col">${x.vitorias}</div>
+              <div class="col">${x.empates}</div>
+              <div class="col">${x.derrotas}</div>
+              <div class="col">${x.golsPro}</div>
+              <div class="col">${x.golsContra}</div>
+              <div class="col">${x.saldo}</div>
+              <div class="col">${x.aproveitamento}%</div>
+              <div class="col-wide">${formaHTML(t.forma)}</div>
             </div>
           `;
         }).join("")}
+
       </div>
     </div>
   `;
 }
 
-function classificacaoAppHTML(lista,modo="geral"){
-  return `
-    <div class="classificacao-app">
-      ${lista.map((t,i)=>{
-        const x = modo === "casa" ? t.casa : modo === "fora" ? t.fora : t;
-
-        return `
-          <article class="class-card ${i === 0 ? "top1" : ""}">
-            <div class="class-head">
-              <div class="class-pos">${i + 1}</div>
-
-              <div class="class-team">
-                <img class="escudo" src="${t.logo}" onerror="this.src='logo-liga.jfif'">
-                <strong>${t.nome}</strong>
-              </div>
-
-              <div class="class-pontos">
-                ${x.pontos || 0}
-                <small>PTS</small>
-              </div>
-            </div>
-
-            <div class="metricas">
-              <div class="metrica"><span>J</span><strong>${x.jogos || 0}</strong></div>
-              <div class="metrica"><span>V</span><strong>${x.vitorias || 0}</strong></div>
-              <div class="metrica"><span>E</span><strong>${x.empates || 0}</strong></div>
-              <div class="metrica"><span>D</span><strong>${x.derrotas || 0}</strong></div>
-              <div class="metrica"><span>GP</span><strong>${x.golsPro || 0}</strong></div>
-              <div class="metrica"><span>GC</span><strong>${x.golsContra || 0}</strong></div>
-              <div class="metrica"><span>SG</span><strong>${x.saldo || 0}</strong></div>
-              <div class="metrica"><span>%</span><strong>${x.aproveitamento || 0}%</strong></div>
-            </div>
-
-            <div class="class-extra">
-              <div class="aproveitamento">Desempenho</div>
-              ${modo === "geral" ? formaHTML(t.forma) : `<span class="tag">${modo === "casa" ? "Casa" : "Fora"}</span>`}
-            </div>
-          </article>
-        `;
-      }).join("")}
-    </div>
-  `;
-}
-
-function controleModoHTML(){
-  return `
-    <div class="modo-tabela">
-      <button class="modo-btn ${modoClassificacao === "app" ? "ativo" : ""}" onclick="mudarModoClassificacao('app')">
-        <i class="fa-solid fa-mobile-screen"></i> App
-      </button>
-      <button class="modo-btn ${modoClassificacao === "compacto" ? "ativo" : ""}" onclick="mudarModoClassificacao('compacto')">
-        <i class="fa-solid fa-table-cells"></i> Compacto
-      </button>
-      <button class="modo-btn ${modoClassificacao === "swipe" ? "ativo" : ""}" onclick="mudarModoClassificacao('swipe')">
-        <i class="fa-solid fa-arrows-left-right"></i> Swipe
-      </button>
-    </div>
-  `;
-}
-
-window.mudarModoClassificacao = function(modo){
-  modoClassificacao = modo;
-  localStorage.setItem("modoClassificacaoTabela", modo);
-  atualizarTela();
-};
-
-function renderTabelaPorModo(lista, modo="geral"){
-  if(!lista.length){
-    return `<div class="vazio">Nenhum jogo finalizado.</div>`;
-  }
-
-  if(modoClassificacao === "swipe"){
-    return tabelaHTML(lista, modo);
-  }
-
-  return classificacaoAppHTML(lista, modo);
-}
-
-function renderDetalhes(){
-  const tabela = calcularTabela();
-  const partidas = partidasFinalizadas();
-  const gols = partidas.reduce((s,p)=>s + p.golsA + p.golsB,0);
-  const amarelos = sumulasFiltradas().reduce((s,x)=>s + (x.cartoes || []).filter(c=>c.tipo === "amarelo").length,0);
-  const vermelhos = sumulasFiltradas().reduce((s,x)=>s + (x.cartoes || []).filter(c=>c.tipo === "vermelho").length,0);
-
-  $("areaTabela").innerHTML = `
-    <div class="cards-resumo">
-      <div class="card-resumo">
-        <div class="card-resumo-icon"><i class="fa-solid fa-ranking-star"></i></div>
-        <strong>Top 3</strong>
-        <div class="top3-list">
-          ${tabela.slice(0,3).map((t,i)=>`<div>${i+1}º ${t.nome}</div>`).join("") || "<div>-</div>"}
-        </div>
-      </div>
-
-      <div class="card-resumo">
-        <div class="card-resumo-icon"><i class="fa-solid fa-shield-halved"></i></div>
-        <strong>Times</strong>
-        <span>${tabela.length}</span>
-      </div>
-
-      <div class="card-resumo">
-        <div class="card-resumo-icon"><i class="fa-solid fa-calendar-check"></i></div>
-        <strong>Jogos</strong>
-        <span>${partidas.length}</span>
-      </div>
-
-      <div class="card-resumo">
-        <div class="card-resumo-icon"><i class="fa-solid fa-futbol"></i></div>
-        <strong>Gols</strong>
-        <span>${gols}</span>
-      </div>
-
-      <div class="card-resumo">
-        <div class="card-resumo-icon"><i class="fa-solid fa-note-sticky"></i></div>
-        <strong>Amarelos</strong>
-        <span>${amarelos}</span>
-      </div>
-
-      <div class="card-resumo">
-        <div class="card-resumo-icon"><i class="fa-solid fa-rectangle-xmark"></i></div>
-        <strong>Vermelhos</strong>
-        <span>${vermelhos}</span>
-      </div>
-    </div>
-  `;
-}
-
+/* ================= RENDER ================= */
 function renderClassificacao(){
   const lista = calcularTabela();
 
-  $("areaTabela").innerHTML = `
-    ${controleModoHTML()}
-    ${renderTabelaPorModo(lista,"geral")}
-  `;
+  $("areaTabela").innerHTML = lista.length
+    ? tabelaHTML(lista,"geral")
+    : `<div class="vazio">Nenhum jogo finalizado.</div>`;
 }
 
-function renderCasaFora(){
-  const lista = calcularTabela();
-
-  const casa = [...lista].sort((a,b)=>
-    (b.casa.pontos||0)-(a.casa.pontos||0) ||
-    (b.casa.saldo||0)-(a.casa.saldo||0)
-  );
-
-  $("areaTabela").innerHTML = `
-    ${controleModoHTML()}
-
-    <div class="sub-abas">
-      <button class="sub-aba ativa" onclick="renderTabelaCasaFora('casa',this)">Casa</button>
-      <button class="sub-aba" onclick="renderTabelaCasaFora('fora',this)">Fora</button>
-    </div>
-
-    <div id="subArea">${renderTabelaPorModo(casa,"casa")}</div>
-  `;
-}
-
-window.renderTabelaCasaFora = (modo,btn)=>{
-  document.querySelectorAll(".sub-aba").forEach(b=>b.classList.remove("ativa"));
-  btn.classList.add("ativa");
-
-  const lista = calcularTabela();
-  const ordenada = [...lista].sort((a,b)=>
-    (b[modo].pontos||0)-(a[modo].pontos||0) ||
-    (b[modo].saldo||0)-(a[modo].saldo||0)
-  );
-
-  $("subArea").innerHTML = renderTabelaPorModo(ordenada,modo);
-};
-
-function renderJogos(){
-  const lista = jogosFiltrados().map(partidaBase);
-
-  if(!lista.length){
-    $("areaTabela").innerHTML = `<div class="vazio">Nenhum jogo encontrado.</div>`;
-    return;
-  }
-
-  $("areaTabela").innerHTML = `
-    <div class="lista-grid">
-      ${lista.map(p=>`
-        <article class="card-item">
-          <div class="card-top">
-            <div class="card-icon"><i class="fa-solid fa-calendar-days"></i></div>
-            <div class="status-tag ${p.finalizado ? "status-finalizado" : "status-agendado"}">${p.finalizado ? "Finalizado" : "Agendado"}</div>
-          </div>
-          <div class="times-linha">
-            <div class="time-box"><img class="escudo" src="${logoTime(p.timeA)}" onerror="this.src='logo-liga.jfif'"><span>${nomeTime(p.timeA)}</span></div>
-            <div class="placar">${p.finalizado ? `${p.golsA} x ${p.golsB}` : "x"}</div>
-            <div class="time-box visitante"><span>${nomeTime(p.timeB)}</span><img class="escudo" src="${logoTime(p.timeB)}" onerror="this.src='logo-liga.jfif'"></div>
-          </div>
-          <div class="info-item"><strong>${p.campeonato || "-"}</strong><br>${p.categoria || "-"}<br>${p.data || "-"}<br>${p.local || "-"}</div>
-          ${p.finalizado ? `<a class="btn-ver" href="sumula-publica.html?id=${p.id}"><i class="fa-solid fa-file-lines"></i> Ver Súmula</a>` : ""}
-        </article>
-      `).join("")}
-    </div>
-  `;
-}
-
-function rankingGols(){
-  const mapa = {};
-  sumulasFiltradas().forEach(s=>{
-    (s.gols || []).forEach(g=>{
-      const nome = g.nome || g.jogador;
-      if(!nome) return;
-      if(!mapa[nome]) mapa[nome] = {nome,time:g.timeNome || g.time || "",valor:0};
-      mapa[nome].valor++;
-    });
-  });
-  return Object.values(mapa).sort((a,b)=>b.valor-a.valor);
-}
-
-function rankingAssist(){
-  const mapa = {};
-  sumulasFiltradas().forEach(s=>{
-    (s.assistencias || []).forEach(a=>{
-      const nome = a.nome || a.jogador;
-      if(!nome) return;
-      if(!mapa[nome]) mapa[nome] = {nome,time:a.timeNome || a.time || "",valor:0};
-      mapa[nome].valor++;
-    });
-    (s.gols || []).forEach(g=>{
-      const nome = g.assistencia || g.assistente;
-      if(!nome) return;
-      if(!mapa[nome]) mapa[nome] = {nome,time:g.timeNome || g.time || "",valor:0};
-      mapa[nome].valor++;
-    });
-  });
-  return Object.values(mapa).sort((a,b)=>b.valor-a.valor);
-}
-
-function renderRanking(lista,label){
-  $("areaTabela").innerHTML = lista.length ? `
-    <div class="ranking-lista ranking-3">
-      ${lista.map((j,i)=>`
-        <article class="ranking-card ${i === 0 ? "lider-ranking" : ""}">
-          <div class="ranking-top">
-            <div class="player-box">
-              <div class="pos">${medalha(i)}</div>
-              <img src="${fotoJogador(j.nome)}" class="photo" onerror="this.src='logo-liga.jfif'">
-              <div class="player-info"><strong>${j.nome}</strong><small>${j.time || "Atleta"}</small></div>
-            </div>
-            <div class="numero-destaque">${j.valor}<small>${label}</small></div>
-          </div>
-        </article>
-      `).join("")}
-    </div>
-  ` : `<div class="vazio">Nada registrado.</div>`;
-}
-
-function renderArtilharia(){ renderRanking(rankingGols(),"gol(s)"); }
-function renderAssistencias(){ renderRanking(rankingAssist(),"assist."); }
-
-function rankingCartoes(){
-  const mapa = {};
-  sumulasFiltradas().forEach(s=>{
-    (s.cartoes || []).forEach(c=>{
-      const nome = c.nome || c.jogador;
-      if(!nome) return;
-      if(!mapa[nome]) mapa[nome] = {nome,time:c.timeNome || c.time || "",amarelos:0,vermelhos:0,valor:0};
-      if(c.tipo === "amarelo") mapa[nome].amarelos++;
-      if(c.tipo === "vermelho") mapa[nome].vermelhos++;
-      mapa[nome].valor = mapa[nome].amarelos + mapa[nome].vermelhos * 3;
-    });
-  });
-  return Object.values(mapa).sort((a,b)=>b.valor-a.valor);
-}
-
-function renderCartoes(){
-  const lista = rankingCartoes();
-
-  $("areaTabela").innerHTML = lista.length ? `
-    <div class="ranking-lista ranking-3">
-      ${lista.map(j=>`
-        <article class="ranking-card cartao-card">
-          <div class="ranking-top">
-            <div class="player-box">
-              <img src="${fotoJogador(j.nome)}" class="photo" onerror="this.src='logo-liga.jfif'">
-              <div class="player-info"><strong>${j.nome}</strong><small>${j.time || "Atleta"}</small></div>
-            </div>
-            <div class="cartao-numeros">
-              <div class="cartao-num">🟨 ${j.amarelos}</div>
-              <div class="cartao-num">🟥 ${j.vermelhos}</div>
-            </div>
-          </div>
-        </article>
-      `).join("")}
-    </div>
-  ` : `<div class="vazio">Nenhum cartão.</div>`;
-}
-
-function renderSuspensos(){
-  const lista = rankingCartoes().filter(j=>j.vermelhos >= 1 || j.amarelos >= 3);
-
-  $("areaTabela").innerHTML = lista.length ? `
-    <div class="ranking-lista ranking-3">
-      ${lista.map(j=>`
-        <article class="ranking-card">
-          <div class="ranking-top">
-            <div class="player-box">
-              <img src="${fotoJogador(j.nome)}" class="photo" onerror="this.src='logo-liga.jfif'">
-              <div class="player-info"><strong>${j.nome}</strong><small>${j.time || "Atleta"}</small></div>
-            </div>
-            <div class="suspenso-badge">1 jogo</div>
-          </div>
-        </article>
-      `).join("")}
-    </div>
-  ` : `<div class="vazio">Nenhum suspenso automático.</div>`;
-}
-
-function blocoTop(titulo,lista,campo,label){
-  return `
-    <div class="ranking-card">
-      <h3 style="color:var(--gold);margin-bottom:10px">${titulo}</h3>
-      ${lista.slice(0,8).map((t,i)=>`
-        <div class="ranking-top" style="margin-bottom:8px">
-          <div class="team"><span class="pos">${i + 1}</span><img class="escudo" src="${t.logo}" onerror="this.src='logo-liga.jfif'">${t.nome}</div>
-          <strong>${t[campo] || 0} ${label}</strong>
-        </div>
-      `).join("")}
-    </div>
-  `;
-}
-
-function renderEstatisticasTimes(){
-  const lista = calcularTabela();
-  const ataque = [...lista].sort((a,b)=>b.golsPro-a.golsPro);
-  const defesa = [...lista].sort((a,b)=>a.golsContra-b.golsContra);
-  const clean = [...lista].sort((a,b)=>b.cleanSheets-a.cleanSheets);
-  const disciplina = [...lista].sort((a,b)=>(a.cartoesAmarelos+a.cartoesVermelhos*3)-(b.cartoesAmarelos+b.cartoesVermelhos*3));
-
-  $("areaTabela").innerHTML = `
-    <div class="duplo">
-      <div>${blocoTop("Melhor ataque",ataque,"golsPro","gols")}</div>
-      <div>${blocoTop("Melhor defesa",defesa,"golsContra","sofridos")}</div>
-      <div>${blocoTop("Clean sheets",clean,"cleanSheets","jogos")}</div>
-      <div>${blocoTop("Mais disciplinado",disciplina,"cartoesAmarelos","amarelos")}</div>
-    </div>
-  `;
-}
-
-function renderHistorico(){
-  const temporadas = {};
-
-  partidasFinalizadas().forEach(p=>{
-    const temp = p.temporada || "Temporada atual";
-    if(!temporadas[temp]) temporadas[temp] = {jogos:0,gols:0};
-    temporadas[temp].jogos++;
-    temporadas[temp].gols += p.golsA + p.golsB;
-  });
-
-  $("areaTabela").innerHTML = `
-    <div class="lista-grid">
-      ${historico.filter(passaFiltro).map(h=>`
-        <div class="ranking-card">
-          <h3 style="color:var(--gold)">${h.temporada || h.ano || "-"}</h3>
-          <p>Campeão: <strong>${h.campeao || "-"}</strong></p>
-          <p>Vice: <strong>${h.vice || "-"}</strong></p>
-        </div>
-      `).join("")}
-      ${Object.entries(temporadas).map(([t,v])=>`
-        <div class="ranking-card">
-          <h3 style="color:var(--gold)">${t}</h3>
-          <p>${v.jogos} jogos finalizados</p>
-          <p>${v.gols} gols</p>
-        </div>
-      `).join("")}
-    </div>
-  `;
-}
-
+/* ================= ABAS ================= */
 window.trocarAba = (nome,btn)=>{
   abaAtual = nome;
+
   document.querySelectorAll(".aba").forEach(b=>b.classList.remove("ativa"));
   btn.classList.add("ativa");
+
   atualizarTela();
 };
 
@@ -692,17 +543,20 @@ function atualizarTela(){
   if(abaAtual === "historico") renderHistorico();
 }
 
+/* ================= LISTENERS ================= */
 $("filtroCampeonato").addEventListener("change",()=>{
   preencherFiltros();
   atualizarTela();
 });
 
-$("filtroCategoria").addEventListener("change",atualizarTela);
+$("filtroCategoria").addEventListener("change", atualizarTela);
 
 function ouvir(nome,setter,refreshFiltro=false){
   onSnapshot(collection(db,nome),snap=>{
     setter(snap.docs.map(d=>({id:d.id,...d.data()})));
+
     if(refreshFiltro) preencherFiltros();
+
     atualizarTela();
   });
 }
