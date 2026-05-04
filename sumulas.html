@@ -407,392 +407,172 @@ select:focus{
 <script type="module">
 import { renderMenu } from "./menu.js";
 import { db } from "./firebase.js";
-import {
-  collection,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 renderMenu("sumulas");
 
 let jogos = [];
 let sumulas = [];
 
-function normalizarTexto(texto){
-  return String(texto || "")
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"");
-}
+const $ = id => document.getElementById(id);
 
-function valorCampo(obj, chaves, fallback = ""){
-  for(const chave of chaves){
-    if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
-      return obj[chave];
-    }
+const norm = txt => String(txt || "")
+  .trim()
+  .toLowerCase()
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g,"");
+
+function campo(obj, chaves, fallback=""){
+  for(const c of chaves){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== "") return obj[c];
   }
   return fallback;
 }
 
-function formatarDataHora(valor){
-  if(!valor) return "-";
-
-  if(typeof valor.toDate === "function"){
-    valor = valor.toDate();
-  }
-
-  const data = new Date(valor);
-
-  if(isNaN(data.getTime())){
-    return String(valor);
-  }
-
-  return data.toLocaleString("pt-BR", {
-    day:"2-digit",
-    month:"2-digit",
-    year:"numeric",
-    hour:"2-digit",
-    minute:"2-digit"
-  });
-}
-
-function dataOrdenacao(valor){
-  if(!valor) return 0;
-
-  if(typeof valor.toDate === "function"){
-    return valor.toDate().getTime();
-  }
-
-  const data = new Date(valor).getTime();
-  return isNaN(data) ? 0 : data;
+function sumulaFinalizada(s){
+  return s.sumulaFinalizada === true ||
+    s.publica === true ||
+    s.publico === true ||
+    norm(s.status) === "finalizado" ||
+    norm(s.sumulaStatus) === "finalizada";
 }
 
 function pegarJogo(id){
   return jogos.find(j => j.id === id || j.id === String(id)) || {};
 }
 
-function pegarTimeA(j){
-  if(j.timeA && typeof j.timeA === "object"){
-    return j.timeA.nome || j.timeA.time || "Time A";
-  }
-
-  return valorCampo(j, [
-    "timeA",
-    "mandante",
-    "timeMandanteNome",
-    "mandanteNome",
-    "nomeTimeA"
-  ], "Time A");
+function nomeTime(obj, fallback){
+  if(obj && typeof obj === "object") return campo(obj,["nome","nomeTime","time","equipe"],fallback);
+  return obj || fallback;
 }
 
-function pegarTimeB(j){
-  if(j.timeB && typeof j.timeB === "object"){
-    return j.timeB.nome || j.timeB.time || "Time B";
-  }
-
-  return valorCampo(j, [
-    "timeB",
-    "visitante",
-    "timeVisitanteNome",
-    "visitanteNome",
-    "nomeTimeB"
-  ], "Time B");
+function logoTime(obj){
+  if(obj && typeof obj === "object") return campo(obj,["logo","escudo","imagem"],"logo-liga.jfif");
+  return "logo-liga.jfif";
 }
 
-function pegarLogoA(j){
-  if(j.timeA && typeof j.timeA === "object"){
-    return j.timeA.logo || j.timeA.escudo || j.timeA.imagem || "logo-liga.jfif";
-  }
-
-  return valorCampo(j, [
-    "logoTimeA",
-    "escudoA",
-    "logoA",
-    "timeALogo",
-    "mandanteLogo"
-  ], "logo-liga.jfif");
+function dataMs(v){
+  if(!v) return 0;
+  if(typeof v.toDate === "function") return v.toDate().getTime();
+  const d = new Date(v).getTime();
+  return isNaN(d) ? 0 : d;
 }
 
-function pegarLogoB(j){
-  if(j.timeB && typeof j.timeB === "object"){
-    return j.timeB.logo || j.timeB.escudo || j.timeB.imagem || "logo-liga.jfif";
-  }
-
-  return valorCampo(j, [
-    "logoTimeB",
-    "escudoB",
-    "logoB",
-    "timeBLogo",
-    "visitanteLogo"
-  ], "logo-liga.jfif");
+function dataBR(v){
+  if(!v) return "-";
+  if(typeof v.toDate === "function") v = v.toDate();
+  const d = new Date(v);
+  if(isNaN(d.getTime())) return String(v);
+  return d.toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
 }
 
-function pegarPlacarA(s,j){
-  if(s.placar && typeof s.placar === "object"){
-    return s.placar.A ?? s.placar.a ?? s.placar.mandante ?? 0;
-  }
+function itemCompleto(s){
+  const id = s.jogoId || s.id;
+  const j = pegarJogo(id);
 
-  if(j.placar && typeof j.placar === "object"){
-    return j.placar.A ?? j.placar.a ?? j.placar.mandante ?? 0;
-  }
-
-  return Number(
-    valorCampo(s, ["golsA", "placarA", "golsMandante"],
-    valorCampo(j, ["golsA", "placarA", "golsMandante"], 0))
-  );
+  return {
+    id,
+    campeonato: campo(s,["campeonato","campeonatoNome"], campo(j,["campeonato","campeonatoNome"],"Campeonato")),
+    categoria: campo(s,["categoria"], campo(j,["categoria"],"-")),
+    rodada: campo(s,["rodada","fase"], campo(j,["rodada","fase"],"Súmula")),
+    local: campo(s,["local","campo","estadio"], campo(j,["local","campo","estadio"],"-")),
+    data: campo(s,["finalizadaEm","publicadaEm","data","dataHora"], campo(j,["data","dataHora"],"")),
+    arbitro: campo(s,["arbitro","arbitroNome"], campo(j,["arbitro","arbitroNome"],"Árbitro")),
+    timeA: s.timeA || j.timeA || {},
+    timeB: s.timeB || j.timeB || {},
+    golsA: Number(campo(s,["golsA","placarA"], campo(j,["golsA","placarA"],0))),
+    golsB: Number(campo(s,["golsB","placarB"], campo(j,["golsB","placarB"],0))),
+    raw:s
+  };
 }
 
-function pegarPlacarB(s,j){
-  if(s.placar && typeof s.placar === "object"){
-    return s.placar.B ?? s.placar.b ?? s.placar.visitante ?? 0;
-  }
-
-  if(j.placar && typeof j.placar === "object"){
-    return j.placar.B ?? j.placar.b ?? j.placar.visitante ?? 0;
-  }
-
-  return Number(
-    valorCampo(s, ["golsB", "placarB", "golsVisitante"],
-    valorCampo(j, ["golsB", "placarB", "golsVisitante"], 0))
-  );
-}
-
-function obterCampeonato(item,jogo={}){
-  return valorCampo(item, [
-    "campeonato",
-    "campeonatoNome",
-    "nomeCampeonato"
-  ], valorCampo(jogo, [
-    "campeonato",
-    "campeonatoNome",
-    "nomeCampeonato"
-  ], "Campeonato"));
-}
-
-function obterCategoria(item,jogo={}){
-  return valorCampo(item, ["categoria","categoriaNome"], valorCampo(jogo, ["categoria","categoriaNome"], "-"));
-}
-
-function obterRodada(item,jogo={}){
-  return valorCampo(item, ["rodada", "fase"], valorCampo(jogo, ["rodada", "fase"], "Súmula"));
-}
-
-function obterLocal(item,jogo={}){
-  return valorCampo(item, ["local", "campo", "estadio"], valorCampo(jogo, ["local", "campo", "estadio"], "-"));
-}
-
-function obterData(item,jogo={}){
-  return valorCampo(item, [
-    "dataFinalizacao",
-    "finalizadaEm",
-    "publicadaEm",
-    "data",
-    "dataHora",
-    "dataJogo"
-  ], valorCampo(jogo, [
-    "data",
-    "dataHora",
-    "dataJogo"
-  ], ""));
-}
-
-function obterArbitro(item,jogo={}){
-  return valorCampo(item, ["arbitro","arbitroNome"], valorCampo(jogo, ["arbitro","arbitroNome"], "Árbitro"));
-}
-
-function sumulasPublicadas(){
-  return sumulas.filter(s =>
-    s.sumulaFinalizada === true ||
-    s.publica === true ||
-    s.publico === true ||
-    normalizarTexto(s.status) === "finalizado"
-  );
+function listaPublicada(){
+  return sumulas.filter(sumulaFinalizada).map(itemCompleto);
 }
 
 function preencherFiltros(){
-  const filtroCampeonato = document.getElementById("filtroCampeonato");
-  const filtroCategoria = document.getElementById("filtroCategoria");
+  const campAtual = $("filtroCampeonato").value;
+  const catAtual = $("filtroCategoria").value;
 
-  const campeonatoAtual = filtroCampeonato.value;
-  const categoriaAtual = filtroCategoria.value;
+  const camps = [...new Set(listaPublicada().map(x=>x.campeonato).filter(Boolean))].sort();
+  $("filtroCampeonato").innerHTML = `<option value="">Todos os campeonatos</option>` +
+    camps.map(c=>`<option value="${c}">${c}</option>`).join("");
 
-  const campeonatos = new Set();
+  if(camps.includes(campAtual)) $("filtroCampeonato").value = campAtual;
 
-  sumulasPublicadas().forEach(s=>{
-    const j = pegarJogo(s.jogoId || s.id);
-    const nome = obterCampeonato(s,j);
+  const cats = [...new Set(listaPublicada()
+    .filter(x => !$("filtroCampeonato").value || x.campeonato === $("filtroCampeonato").value)
+    .map(x=>x.categoria)
+    .filter(Boolean)
+  )].sort();
 
-    if(nome && nome !== "Campeonato"){
-      campeonatos.add(nome);
-    }
-  });
+  $("filtroCategoria").innerHTML = `<option value="">Todas categorias</option>` +
+    cats.map(c=>`<option value="${c}">${c}</option>`).join("");
 
-  filtroCampeonato.innerHTML = `<option value="">Todos os campeonatos</option>`;
-
-  [...campeonatos].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(nome=>{
-    filtroCampeonato.innerHTML += `<option value="${nome}">${nome}</option>`;
-  });
-
-  if([...campeonatos].includes(campeonatoAtual)){
-    filtroCampeonato.value = campeonatoAtual;
-  }
-
-  const categorias = new Set();
-
-  sumulasPublicadas().forEach(s=>{
-    const j = pegarJogo(s.jogoId || s.id);
-    const campeonato = obterCampeonato(s,j);
-
-    if(filtroCampeonato.value && campeonato !== filtroCampeonato.value) return;
-
-    const categoria = obterCategoria(s,j);
-
-    if(categoria && categoria !== "-"){
-      categorias.add(categoria);
-    }
-  });
-
-  filtroCategoria.innerHTML = `<option value="">Todas categorias</option>`;
-
-  [...categorias].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(nome=>{
-    filtroCategoria.innerHTML += `<option value="${nome}">${nome}</option>`;
-  });
-
-  if([...categorias].includes(categoriaAtual)){
-    filtroCategoria.value = categoriaAtual;
-  }
+  if(cats.includes(catAtual)) $("filtroCategoria").value = catAtual;
 }
 
-function sumulasFiltradas(){
-  const busca = normalizarTexto(document.getElementById("busca").value);
-  const campeonatoSelecionado = document.getElementById("filtroCampeonato").value;
-  const categoriaSelecionada = document.getElementById("filtroCategoria").value;
+function filtradas(){
+  const busca = norm($("busca").value);
+  const camp = $("filtroCampeonato").value;
+  const cat = $("filtroCategoria").value;
 
-  return sumulasPublicadas().filter(s=>{
-    const j = pegarJogo(s.jogoId || s.id);
-
-    const baseA = s.timeA ? s : j;
-    const baseB = s.timeB ? s : j;
-
-    const timeA = pegarTimeA(baseA);
-    const timeB = pegarTimeB(baseB);
-    const campeonato = obterCampeonato(s,j);
-    const categoria = obterCategoria(s,j);
-    const local = obterLocal(s,j);
-    const rodada = obterRodada(s,j);
-    const arbitro = obterArbitro(s,j);
-
-    if(campeonatoSelecionado && campeonato !== campeonatoSelecionado) return false;
-    if(categoriaSelecionada && categoria !== categoriaSelecionada) return false;
+  return listaPublicada().filter(x=>{
+    if(camp && x.campeonato !== camp) return false;
+    if(cat && x.categoria !== cat) return false;
 
     if(busca){
-      const texto = normalizarTexto(`${timeA} ${timeB} ${campeonato} ${categoria} ${local} ${rodada} ${arbitro}`);
-
+      const texto = norm(`${nomeTime(x.timeA,"")} ${nomeTime(x.timeB,"")} ${x.campeonato} ${x.categoria} ${x.local} ${x.rodada} ${x.arbitro}`);
       if(!texto.includes(busca)) return false;
     }
 
     return true;
-  });
+  }).sort((a,b)=>dataMs(b.data)-dataMs(a.data));
 }
 
 function atualizarTopo(){
-  const filtradas = sumulasFiltradas();
-  const campeonatoSelecionado = document.getElementById("filtroCampeonato").value;
-  const categoriaSelecionada = document.getElementById("filtroCategoria").value;
-
-  document.getElementById("tagTotal").innerText = `Publicadas: ${filtradas.length}`;
-  document.getElementById("tagCampeonato").innerText = `Campeonato: ${campeonatoSelecionado || "Todos"}`;
-  document.getElementById("tagCategoria").innerText = `Categoria: ${categoriaSelecionada || "Todas"}`;
-
-  document.getElementById("tituloPagina").innerText =
-    `Súmulas${categoriaSelecionada ? " - " + categoriaSelecionada : ""}${campeonatoSelecionado ? " | " + campeonatoSelecionado : ""}`;
+  const lista = filtradas();
+  $("tagTotal").innerText = `Publicadas: ${lista.length}`;
+  $("tagCampeonato").innerText = `Campeonato: ${$("filtroCampeonato").value || "Todos"}`;
+  $("tagCategoria").innerText = `Categoria: ${$("filtroCategoria").value || "Todas"}`;
+  $("tituloPagina").innerText = `Súmulas${$("filtroCategoria").value ? " - " + $("filtroCategoria").value : ""}`;
 }
 
-function ehNova(s){
-  const data =
-    s.finalizadaEm ||
-    s.dataFinalizacao ||
-    s.publicadaEm ||
-    s.atualizadoEm ||
-    s.criadoEmServidor ||
-    "";
-
-  const time = dataOrdenacao(data);
-
-  if(!time) return false;
-
-  const dias = (Date.now() - time) / (1000 * 60 * 60 * 24);
-
-  return dias <= 3;
-}
-
-function abrirWhatsApp(id){
-  const base = location.origin + location.pathname.replace("sumulas.html","");
-  const url = `${base}sumula-publica.html?id=${encodeURIComponent(id)}`;
-  const texto = `Súmula oficial da Liga Goiana de Futebol de Base: ${url}`;
-
-  window.open("https://wa.me/?text=" + encodeURIComponent(texto), "_blank");
-}
+window.abrirSumula = id => location.href = `sumula-publica.html?id=${encodeURIComponent(id)}`;
 
 window.compartilharSumula = function(id,event){
   event.stopPropagation();
-  abrirWhatsApp(id);
+  const base = location.href.split("/").slice(0,-1).join("/");
+  const url = `${base}/sumula-publica.html?id=${encodeURIComponent(id)}`;
+  window.open("https://wa.me/?text=" + encodeURIComponent("Súmula oficial: " + url), "_blank");
 };
 
-window.abrirSumula = function(id){
-  window.location.href = `sumula-publica.html?id=${encodeURIComponent(id)}`;
-};
-
-function renderizarSumulas(){
-  const lista = document.getElementById("listaSumulas");
-  const filtradas = sumulasFiltradas();
-
+function renderizar(){
   atualizarTopo();
 
-  if(!filtradas.length){
-    lista.innerHTML = `<div class="vazio">Nenhuma súmula publicada encontrada.</div>`;
+  const lista = filtradas();
+  const box = $("listaSumulas");
+
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhuma súmula publicada encontrada.</div>`;
     return;
   }
 
-  const ordenadas = [...filtradas].sort((a,b)=>{
-    const jogoA = pegarJogo(a.jogoId || a.id);
-    const jogoB = pegarJogo(b.jogoId || b.id);
+  box.innerHTML = lista.map(x=>{
+    const nomeA = nomeTime(x.timeA,"Time A");
+    const nomeB = nomeTime(x.timeB,"Time B");
+    const logoA = logoTime(x.timeA);
+    const logoB = logoTime(x.timeB);
 
-    return dataOrdenacao(obterData(b,jogoB)) - dataOrdenacao(obterData(a,jogoA));
-  });
-
-  lista.innerHTML = ordenadas.map(s=>{
-    const id = s.jogoId || s.id;
-    const j = pegarJogo(id);
-
-    const baseA = s.timeA ? s : j;
-    const baseB = s.timeB ? s : j;
-
-    const timeA = pegarTimeA(baseA);
-    const timeB = pegarTimeB(baseB);
-    const logoA = pegarLogoA(baseA);
-    const logoB = pegarLogoB(baseB);
-
-    const golsA = pegarPlacarA(s,j);
-    const golsB = pegarPlacarB(s,j);
-
-    const campeonato = obterCampeonato(s,j);
-    const categoria = obterCategoria(s,j);
-    const data = formatarDataHora(obterData(s,j));
-    const local = obterLocal(s,j);
-    const rodada = obterRodada(s,j);
-    const arbitro = obterArbitro(s,j);
+    const nova = (Date.now() - dataMs(x.data)) / 86400000 <= 3;
 
     return `
-      <article class="card-sumula" onclick="abrirSumula('${id}')">
+      <article class="card-sumula" onclick="abrirSumula('${x.id}')">
         <div>
           <div class="card-top">
-            <div class="card-icon">
-              <i class="fa-solid fa-file-lines"></i>
-            </div>
-
+            <div class="card-icon"><i class="fa-solid fa-file-lines"></i></div>
             <div class="status-area">
-              ${ehNova(s) ? `<div class="status-tag status-nova">Nova</div>` : ""}
+              ${nova ? `<div class="status-tag status-nova">Nova</div>` : ""}
               <div class="status-tag">Publicada</div>
             </div>
           </div>
@@ -800,36 +580,36 @@ function renderizarSumulas(){
           <div class="times-linha">
             <div class="time-box">
               <img src="${logoA}" class="escudo" onerror="this.src='logo-liga.jfif'">
-              <span>${timeA}</span>
+              <span>${nomeA}</span>
             </div>
 
-            <div class="placar">${golsA} x ${golsB}</div>
+            <div class="placar">${x.golsA} x ${x.golsB}</div>
 
             <div class="time-box">
               <img src="${logoB}" class="escudo" onerror="this.src='logo-liga.jfif'">
-              <span>${timeB}</span>
+              <span>${nomeB}</span>
             </div>
           </div>
 
           <div class="info-jogo">
-            <strong>${campeonato}</strong><br>
-            ${categoria}<br>
-            ${data}<br>
-            ${local}
+            <strong>${x.campeonato}</strong><br>
+            ${x.categoria}<br>
+            ${dataBR(x.data)}<br>
+            ${x.local}
           </div>
 
           <div class="tags">
-            <span class="tag">${rodada}</span>
-            <span class="tag">${arbitro}</span>
+            <span class="tag">${x.rodada}</span>
+            <span class="tag">${x.arbitro}</span>
           </div>
         </div>
 
         <div class="card-actions">
-          <a class="btn-ver" href="sumula-publica.html?id=${encodeURIComponent(id)}" onclick="event.stopPropagation()">
+          <a class="btn-ver" href="sumula-publica.html?id=${encodeURIComponent(x.id)}" onclick="event.stopPropagation()">
             <i class="fa-solid fa-eye"></i> Ver Súmula
           </a>
 
-          <button class="btn-wpp" onclick="compartilharSumula('${id}', event)">
+          <button class="btn-wpp" onclick="compartilharSumula('${x.id}', event)">
             <i class="fa-brands fa-whatsapp"></i>
           </button>
         </div>
@@ -838,26 +618,26 @@ function renderizarSumulas(){
   }).join("");
 }
 
-document.getElementById("busca").addEventListener("input", renderizarSumulas);
+$("busca").addEventListener("input",renderizar);
 
-document.getElementById("filtroCampeonato").addEventListener("change", ()=>{
+$("filtroCampeonato").addEventListener("change",()=>{
   preencherFiltros();
-  document.getElementById("filtroCategoria").value = "";
-  renderizarSumulas();
+  $("filtroCategoria").value = "";
+  renderizar();
 });
 
-document.getElementById("filtroCategoria").addEventListener("change", renderizarSumulas);
+$("filtroCategoria").addEventListener("change",renderizar);
 
 onSnapshot(collection(db,"jogos"),snap=>{
   jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
   preencherFiltros();
-  renderizarSumulas();
+  renderizar();
 });
 
 onSnapshot(collection(db,"sumulas"),snap=>{
   sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
   preencherFiltros();
-  renderizarSumulas();
+  renderizar();
 });
 </script>
 
