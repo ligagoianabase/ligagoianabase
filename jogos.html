@@ -54,7 +54,6 @@ img{
   margin:0 auto;
 }
 
-/* PÁGINA */
 .container{
   padding:22px 0 34px;
 }
@@ -131,38 +130,12 @@ select:focus{
   margin:0 0 12px;
 }
 
-/* GRID PADRÃO — MÁXIMO 5 POR LINHA */
 .lista-grid{
   display:grid;
   grid-template-columns:repeat(5, 1fr);
   gap:12px;
 }
 
-@media(max-width:1100px){
-  .lista-grid{
-    grid-template-columns:repeat(4, 1fr);
-  }
-}
-
-@media(max-width:900px){
-  .lista-grid{
-    grid-template-columns:repeat(3, 1fr);
-  }
-}
-
-@media(max-width:650px){
-  .lista-grid{
-    grid-template-columns:repeat(2, 1fr);
-  }
-}
-
-@media(max-width:430px){
-  .lista-grid{
-    grid-template-columns:1fr;
-  }
-}
-
-/* CARD PADRÃO FIFA */
 .card-jogo{
   background:
     radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
@@ -318,7 +291,7 @@ select:focus{
 }
 
 .acoes.duas{
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:1fr;
 }
 
 .btn-acao{
@@ -349,7 +322,6 @@ select:focus{
   color:#fff;
 }
 
-/* DETALHE DO JOGO */
 .detalhe-jogo{
   display:none;
   margin-top:18px;
@@ -400,10 +372,36 @@ select:focus{
   grid-column:1/-1;
 }
 
-/* CELULAR */
+@media(max-width:1100px){
+  .lista-grid{
+    grid-template-columns:repeat(4, 1fr);
+  }
+}
+
 @media(max-width:900px){
-  .filtros{grid-template-columns:1fr}
-  .detalhe-grid{grid-template-columns:1fr}
+  .filtros{
+    grid-template-columns:1fr;
+  }
+
+  .lista-grid{
+    grid-template-columns:repeat(3, 1fr);
+  }
+
+  .detalhe-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:650px){
+  .lista-grid{
+    grid-template-columns:repeat(2, 1fr);
+  }
+}
+
+@media(max-width:430px){
+  .lista-grid{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -444,6 +442,7 @@ select:focus{
   <section class="detalhe-jogo" id="detalheJogo"></section>
 
 </main>
+
 <script type="module">
 import { renderMenu } from "./menu.js";
 import { db } from "./firebase.js";
@@ -504,7 +503,8 @@ function sumulaFinalizada(jogo){
     s?.sumulaFinalizada === true ||
     s?.publica === true ||
     s?.publico === true ||
-    normalizarTexto(s?.status) === "finalizado"
+    normalizarTexto(s?.status) === "finalizado" ||
+    normalizarTexto(s?.sumulaStatus) === "finalizada"
   );
 }
 
@@ -577,7 +577,7 @@ function obterData(j){
 }
 
 function obterArbitro(j){
-  return valorCampo(j, ["arbitro"], "Árbitro");
+  return valorCampo(j, ["arbitro", "arbitroNome"], "Árbitro");
 }
 
 function classeStatus(j){
@@ -731,45 +731,14 @@ window.abrirJogo = function(id){
     <h2>${pegarTimeA(j)} ${placar} ${pegarTimeB(j)}</h2>
 
     <div class="detalhe-grid">
-      <div class="detalhe-item">
-        <strong>Campeonato</strong>
-        ${obterCampeonato(j)}
-      </div>
-
-      <div class="detalhe-item">
-        <strong>Categoria</strong>
-        ${obterCategoria(j)}
-      </div>
-
-      <div class="detalhe-item">
-        <strong>Data</strong>
-        ${formatarDataHora(obterData(j))}
-      </div>
-
-      <div class="detalhe-item">
-        <strong>Local</strong>
-        ${obterLocal(j)}
-      </div>
-
-      <div class="detalhe-item">
-        <strong>Rodada/Fase</strong>
-        ${obterRodada(j)}
-      </div>
-
-      <div class="detalhe-item">
-        <strong>Árbitro</strong>
-        ${obterArbitro(j)}
-      </div>
-
-      <div class="detalhe-item">
-        <strong>Status</strong>
-        ${textoStatus(j)}
-      </div>
-
-      <div class="detalhe-item">
-        <strong>Súmula</strong>
-        ${finalizado ? "Publicada" : "Aguardando finalização"}
-      </div>
+      <div class="detalhe-item"><strong>Campeonato</strong>${obterCampeonato(j)}</div>
+      <div class="detalhe-item"><strong>Categoria</strong>${obterCategoria(j)}</div>
+      <div class="detalhe-item"><strong>Data</strong>${formatarDataHora(obterData(j))}</div>
+      <div class="detalhe-item"><strong>Local</strong>${obterLocal(j)}</div>
+      <div class="detalhe-item"><strong>Rodada/Fase</strong>${obterRodada(j)}</div>
+      <div class="detalhe-item"><strong>Árbitro</strong>${obterArbitro(j)}</div>
+      <div class="detalhe-item"><strong>Status</strong>${textoStatus(j)}</div>
+      <div class="detalhe-item"><strong>Súmula</strong>${finalizado ? "Publicada" : "Aguardando finalização"}</div>
     </div>
   `;
 
@@ -823,9 +792,7 @@ function renderizarJogos(){
 
           <div class="status-area">
             ${ehNovo(j) ? `<div class="status-tag status-nova">Novo</div>` : ""}
-            <div class="status-tag ${classeStatus(j)}">
-              ${textoStatus(j)}
-            </div>
+            <div class="status-tag ${classeStatus(j)}">${textoStatus(j)}</div>
           </div>
         </div>
 
@@ -866,13 +833,7 @@ function renderizarJogos(){
                 <a class="btn-acao btn-secundario" href="sumula-publica.html?id=${encodeURIComponent(j.id)}">
                   <i class="fa-solid fa-file-lines"></i> Súmula
                 </a>
-              `
-              : ""
-          }
 
-          ${
-            finalizado
-              ? `
                 <button class="btn-acao btn-wpp" onclick="compartilharSumula('${j.id}', event)">
                   <i class="fa-brands fa-whatsapp"></i> Enviar
                 </button>
