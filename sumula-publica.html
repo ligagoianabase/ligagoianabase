@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Súmula Oficial - Liga Goiana</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -16,16 +17,14 @@
   --linha:#d6dde8;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;}
-
 body{
-  font-family:Arial, Helvetica, sans-serif;
+  font-family:Arial;
   background:#e6edf6;
 }
 
-.container{
+.sumula{
   max-width:1100px;
-  margin:10px auto;
+  margin:auto;
   background:#fff;
   border:1px solid #ccc;
 }
@@ -33,53 +32,77 @@ body{
 /* HEADER */
 .header{
   display:grid;
-  grid-template-columns:120px 1fr 120px;
+  grid-template-columns:120px 1fr 200px;
   align-items:center;
   padding:10px;
-  border-bottom:2px solid var(--azul);
 }
-.header img{width:90px}
-.title{text-align:center}
-.title h1{font-size:36px;color:var(--azul)}
-.title p{font-weight:900}
 
-/* INFO */
-.info{
+.header img{width:90px}
+
+.title{text-align:center}
+.title h1{
+  font-size:50px;
+  color:var(--azul);
+  font-weight:900;
+}
+.title p{
+  font-weight:900;
+}
+
+/* STRIP */
+.strip{
   display:grid;
   grid-template-columns:repeat(5,1fr);
-  border-bottom:1px solid #ccc;
+  border-top:2px solid var(--azul);
+  border-bottom:2px solid var(--azul);
 }
-.info div{
-  padding:8px;
+.strip div{
+  padding:10px;
+  text-align:center;
+  font-weight:bold;
   border-right:1px solid #ccc;
-  font-size:13px;
 }
-.info div:last-child{border-right:none}
 
 /* PLACAR */
 .placar{
   display:grid;
-  grid-template-columns:1fr 200px 1fr;
-  text-align:center;
+  grid-template-columns:1fr 300px 1fr;
   align-items:center;
+  text-align:center;
+  padding:15px;
 }
+.time img{width:90px}
 .score{
   background:var(--azul);
   color:#fff;
-  font-size:48px;
+  font-size:70px;
   font-weight:900;
-  padding:10px 0;
+  padding:20px;
+}
+
+/* ESCALAÇÃO */
+.lineups{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+.table{
+  width:100%;
+  border-collapse:collapse;
+}
+.table th, .table td{
+  border:1px solid #ddd;
+  padding:6px;
+  font-size:13px;
 }
 
 /* EVENTOS */
 .events{
   display:grid;
   grid-template-columns:1fr 1fr;
-  border-top:2px solid var(--azul);
 }
-.col{
+.box{
+  border:1px solid #ccc;
   padding:10px;
-  font-size:14px;
 }
 
 /* RESUMO */
@@ -87,28 +110,21 @@ body{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   text-align:center;
-  border-top:2px solid var(--azul);
 }
-.summary div{padding:10px;font-weight:900}
-
-/* ARBITRAGEM */
-.ref{
-  padding:10px;
-  border-top:1px solid #ccc;
-  font-size:14px;
+.summary div{
+  padding:15px;
+  font-weight:900;
 }
 
 /* MVP */
 .mvp{
   display:flex;
   align-items:center;
-  gap:10px;
-  padding:10px;
-  border-top:1px solid #ccc;
+  gap:15px;
+  padding:15px;
 }
 .mvp img{
-  width:70px;
-  height:70px;
+  width:80px;
   border-radius:50%;
   border:3px solid var(--dourado);
 }
@@ -117,27 +133,26 @@ body{
 .qr{
   display:flex;
   justify-content:space-between;
-  padding:10px;
-  border-top:1px solid #ccc;
+  padding:15px;
 }
 
 /* BOTÕES */
 .btns{
   display:flex;
   gap:10px;
-  padding:10px;
+  padding:15px;
 }
 button{
-  padding:10px;
+  padding:12px;
   border:none;
   color:#fff;
-  font-weight:900;
-  cursor:pointer;
+  font-weight:bold;
 }
 .whats{background:#25d366}
 .email{background:#2563eb}
 .pdf{background:#dc2626}
 
+/* PRINT */
 @media print{
   button{display:none}
 }
@@ -147,7 +162,6 @@ button{
 <body>
 
 <div id="app">Carregando...</div>
-
 <script type="module">
 import { db } from "./firebase.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
@@ -155,123 +169,181 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase
 const id = new URLSearchParams(location.search).get("id");
 const app = document.getElementById("app");
 
-function qr(){
-  return "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + location.href;
+/* ================== FUNÇÕES ================== */
+
+function campo(obj, chaves, f=""){
+  for(const c of chaves){
+    if(obj && obj[c]) return obj[c];
+  }
+  return f;
+}
+
+function nome(t){
+  return typeof t=="object" ? campo(t,["nome","time"],"TIME") : t;
+}
+
+function logo(t){
+  return typeof t=="object" ? campo(t,["escudo","logo"],"logo-liga.jfif") : "logo-liga.jfif";
 }
 
 function separar(lista){
-  const a=[], b=[];
+  const a=[],b=[];
   lista.forEach(e=>{
-    if((e.time || "A") === "B") b.push(e);
+    if((e.time||"A")=="B") b.push(e);
     else a.push(e);
   });
   return {a,b};
 }
 
-function renderGols(lista){
-  if(!lista.length) return "Nenhum";
-  return lista.map(g => "⚽ " + (g.nome||"-") + " (" + (g.minuto||"-") + "')").join("<br>");
+function golsHTML(lista){
+  return lista.map(g=>`⚽ ${g.nome} (${g.minuto}')`).join("<br>") || "Nenhum";
 }
 
-function renderCartoes(lista){
-  if(!lista.length) return "Nenhum";
-  return lista.map(c => {
-    const icon = c.tipo === "vermelho" ? "🟥" : "🟨";
-    return icon + " " + (c.nome||"-") + " (" + (c.minuto||"-") + "')";
-  }).join("<br>");
+function cartoesHTML(lista){
+  return lista.map(c=>{
+    return `${c.tipo=="vermelho"?"🟥":"🟨"} ${c.nome} (${c.minuto}')`;
+  }).join("<br>") || "Nenhum";
 }
+
+function jogadoresHTML(lista){
+  return lista.map(j=>`
+    <tr>
+      <td>${j.numero}</td>
+      <td>${j.nome}</td>
+      <td>${j.posicao}</td>
+    </tr>
+  `).join("");
+}
+
+function qr(){
+  return "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+location.href;
+}
+
+/* ================== LOAD ================== */
 
 async function load(){
-  if(!id){
-    app.innerHTML = "Súmula não informada";
-    return;
-  }
 
-  const snap = await getDoc(doc(db,"sumulas",id));
+const snap = await getDoc(doc(db,"sumulas",id));
+const s = snap.data();
 
-  if(!snap.exists()){
-    app.innerHTML = "Súmula não encontrada";
-    return;
-  }
+const A = s.timeA || {};
+const B = s.timeB || {};
 
-  const s = snap.data();
+const gols = separar(s.gols||[]);
+const cartoes = separar(s.cartoes||[]);
 
-  const g = separar(s.gols || []);
-  const c = separar(s.cartoes || []);
+app.innerHTML = `
+<div class="sumula">
 
-  app.innerHTML = `
-  <div class="container">
-
-    <div class="header">
-      <img src="logo-liga.jfif">
-      <div class="title">
-        <h1>SÚMULA OFICIAL</h1>
-        <p>${s.campeonato || "-"}</p>
-      </div>
-      <img src="logo-liga.jfif">
-    </div>
-
-    <div class="info">
-      <div>Nº ${id}</div>
-      <div>Rodada ${s.rodada || "-"}</div>
-      <div>Fase ${s.fase || "-"}</div>
-      <div>${s.data || "-"}</div>
-      <div>FINALIZADO</div>
-    </div>
-
-    <div class="placar">
-      <div>${s.timeA || "-"}</div>
-      <div class="score">${s.golsA || 0} x ${s.golsB || 0}</div>
-      <div>${s.timeB || "-"}</div>
-    </div>
-
-    <div class="events">
-      <div class="col">
-        <b>${s.timeA || "-"}</b><br>
-        Gols:<br>${renderGols(g.a)}<br><br>
-        Cartões:<br>${renderCartoes(c.a)}
-      </div>
-
-      <div class="col">
-        <b>${s.timeB || "-"}</b><br>
-        Gols:<br>${renderGols(g.b)}<br><br>
-        Cartões:<br>${renderCartoes(c.b)}
-      </div>
-    </div>
-
-    <div class="summary">
-      <div>Gols<br>${(s.golsA||0)+(s.golsB||0)}</div>
-      <div>Amarelos<br>${(s.cartoes||[]).filter(c=>c.tipo!=="vermelho").length}</div>
-      <div>Vermelhos<br>${(s.cartoes||[]).filter(c=>c.tipo==="vermelho").length}</div>
-    </div>
-
-    <div class="ref">
-      Árbitro: ${s.arbitro || "-"}<br>
-      Assistente 1: ${s.ass1 || "-"}<br>
-      Assistente 2: ${s.ass2 || "-"}
-    </div>
-
-    <div class="mvp">
-      <img src="${s.fotoMelhor || 'logo-liga.jfif'}">
-      <div>
-        <b>Melhor Jogador</b><br>
-        ${s.melhorJogador || "-"}
-      </div>
-    </div>
-
-    <div class="qr">
-      <div>Código: ${id}</div>
-      <img src="${qr()}">
-    </div>
-
-    <div class="btns">
-      <button class="whats" onclick="window.open('https://wa.me/?text='+location.href)">Whats</button>
-      <button class="email" onclick="location.href='mailto:?body='+location.href">Email</button>
-      <button class="pdf" onclick="window.print()">PDF</button>
-    </div>
-
+<!-- HEADER -->
+<div class="header">
+  <img src="logo-liga.jfif">
+  <div class="title">
+    <h1>SÚMULA OFICIAL</h1>
+    <p>${s.campeonato||""}</p>
   </div>
-  `;
+  <div style="text-align:center;font-weight:900">
+    FUTEBOL É PAIXÃO ⭐⭐⭐
+  </div>
+</div>
+
+<!-- STRIP -->
+<div class="strip">
+  <div>${id}</div>
+  <div>Rodada ${s.rodada||"-"}</div>
+  <div>${s.fase||"-"}</div>
+  <div>${s.data||"-"}</div>
+  <div style="color:green">FINALIZADO</div>
+</div>
+
+<!-- PLACAR -->
+<div class="placar">
+  <div class="time">
+    <img src="${logo(A)}">
+    <div>${nome(A)}</div>
+  </div>
+
+  <div class="score">${s.golsA||0} x ${s.golsB||0}</div>
+
+  <div class="time">
+    <img src="${logo(B)}">
+    <div>${nome(B)}</div>
+  </div>
+</div>
+
+<!-- ESCALAÇÃO -->
+<div class="lineups">
+
+<table class="table">
+<tr><th colspan="3">${nome(A)}</th></tr>
+<tr><th>Nº</th><th>Jogador</th><th>Posição</th></tr>
+${jogadoresHTML(s.jogadoresA||[])}
+</table>
+
+<table class="table">
+<tr><th colspan="3">${nome(B)}</th></tr>
+<tr><th>Nº</th><th>Jogador</th><th>Posição</th></tr>
+${jogadoresHTML(s.jogadoresB||[])}
+</table>
+
+</div>
+
+<!-- EVENTOS -->
+<div class="events">
+  <div class="box">
+    <b>${nome(A)}</b><br>
+    Gols:<br>${golsHTML(gols.a)}<br><br>
+    Cartões:<br>${cartoesHTML(cartoes.a)}
+  </div>
+
+  <div class="box">
+    <b>${nome(B)}</b><br>
+    Gols:<br>${golsHTML(gols.b)}<br><br>
+    Cartões:<br>${cartoesHTML(cartoes.b)}
+  </div>
+</div>
+
+<!-- RESUMO -->
+<div class="summary">
+  <div>Gols<br>${(s.golsA||0)+(s.golsB||0)}</div>
+  <div>Amarelos<br>${(s.cartoes||[]).filter(c=>c.tipo!="vermelho").length}</div>
+  <div>Vermelhos<br>${(s.cartoes||[]).filter(c=>c.tipo=="vermelho").length}</div>
+</div>
+
+<!-- ARBITRAGEM -->
+<div style="padding:15px">
+<b>Arbitragem</b><br>
+Árbitro: ${s.arbitro||"-"}<br>
+Assistente 1: ${s.ass1||"-"}<br>
+Assistente 2: ${s.ass2||"-"}<br>
+Observador: ${s.observador||"-"}
+</div>
+
+<!-- MVP -->
+<div class="mvp">
+  <img src="${s.fotoMelhor||'logo-liga.jfif'}">
+  <div>
+    <b>Melhor Jogador</b><br>
+    ${s.melhorJogador||"-"}
+  </div>
+</div>
+
+<!-- QR -->
+<div class="qr">
+  <div>Código: ${id}</div>
+  <img src="${qr()}">
+</div>
+
+<!-- BOTÕES -->
+<div class="btns">
+  <button class="whats" onclick="window.open('https://wa.me/?text='+location.href)">Whats</button>
+  <button class="email" onclick="location.href='mailto:?body='+location.href">Email</button>
+  <button class="pdf" onclick="window.print()">PDF</button>
+</div>
+
+</div>
+`;
+
 }
 
 load();
