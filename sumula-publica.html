@@ -10,14 +10,14 @@
 
 <style>
 :root{
-  --azul:#0A1F3D;
-  --azul2:#102a52;
+  --azul:#061d44;
+  --azul2:#08285c;
   --azul3:#0c3d86;
-  --vermelho:#d90429;
+  --vermelho:#e30613;
   --verde:#069447;
   --dourado:#f7c600;
-  --cinza:#f5f7fb;
-  --linha:#d6dde8;
+  --cinza:#eef2f7;
+  --linha:#cfd7e3;
   --texto:#071833;
   --muted:#4b5563;
 }
@@ -51,7 +51,7 @@ body{
 
 .header{
   display:grid;
-  grid-template-columns:150px 1fr 180px;
+  grid-template-columns:150px 1fr 210px;
   align-items:center;
   gap:10px;
   padding:16px 18px 8px;
@@ -91,21 +91,22 @@ body{
 
 .header-right{
   text-align:center;
-  color:var(--azul);
-  font-weight:900;
-  line-height:1.15;
 }
 
-.header-right .liga-nome{
-  font-size:21px;
+.header-brand-title{
+  color:var(--azul);
+  font-size:19px;
+  font-weight:900;
+  line-height:1.08;
   text-transform:uppercase;
 }
 
-.header-right .liga-slogan{
+.header-brand-sub{
   margin-top:6px;
   color:var(--dourado);
-  font-size:15px;
+  font-size:14px;
   font-weight:900;
+  line-height:1.1;
 }
 
 .info-strip{
@@ -223,7 +224,6 @@ body{
   justify-content:center;
   border-left:1px solid var(--linha);
   border-right:1px solid var(--linha);
-  box-shadow:0 6px 16px rgba(0,0,0,.18);
 }
 
 .score-number{
@@ -314,16 +314,15 @@ body{
   gap:24px;
 }
 
-.lineup-card{
+.lineup-panel{
   border:1px solid var(--linha);
-  border-radius:8px;
+  border-radius:6px;
   overflow:hidden;
   background:#fff;
-  box-shadow:0 5px 14px rgba(0,0,0,.08);
 }
 
 .lineup-head{
-  height:44px;
+  height:42px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -335,7 +334,7 @@ body{
   text-transform:uppercase;
 }
 
-.lineup-card.away .lineup-head{
+.lineup-panel.away .lineup-head{
   background:var(--vermelho);
 }
 
@@ -412,10 +411,9 @@ body{
 
 .team-events{
   border:1px solid var(--linha);
-  border-radius:8px;
+  border-radius:6px;
   overflow:hidden;
   background:#fff;
-  box-shadow:0 5px 14px rgba(0,0,0,.08);
 }
 
 .team-events h3{
@@ -509,10 +507,9 @@ body{
 
 .panel{
   border:1px solid var(--linha);
-  border-radius:8px;
+  border-radius:6px;
   overflow:hidden;
   background:#fff;
-  box-shadow:0 5px 14px rgba(0,0,0,.08);
 }
 
 .panel h3{
@@ -751,19 +748,16 @@ body{
 
 @media print{
   @page{
-    size:A4 landscape;
-    margin:5mm;
+    size:A4 portrait;
+    margin:7mm;
   }
 
+  html,
   body{
+    width:210mm;
     background:#fff;
-    -webkit-print-color-adjust:exact;
-    print-color-adjust:exact;
-  }
-
-  #app{
-    width:100%;
-    min-width:0;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
   }
 
   .sumula-page{
@@ -772,18 +766,22 @@ body{
     border:none;
     border-radius:0;
     box-shadow:none;
+    overflow:visible;
   }
 
   .buttons{
     display:none;
   }
 
-  .lineup-card,
-  .team-events,
-  .panel,
+  .header,
+  .info-strip,
   .score-card,
   .match-strip,
-  .info-strip{
+  .lineups,
+  .lineup-panel,
+  .team-events,
+  .panel,
+  .footer-grid{
     break-inside:avoid;
     page-break-inside:avoid;
   }
@@ -794,16 +792,65 @@ body{
 }
 
 @media(max-width:900px){
-  body{
-    overflow-x:auto;
-  }
-
-  #app{
-    min-width:1180px;
-  }
-
   .sumula-page{
-    width:1180px;
+    width:100%;
+    margin:0;
+    border-radius:0;
+  }
+
+  .header,
+  .info-strip,
+  .score-card,
+  .match-strip,
+  .lineups-grid,
+  .events-grid,
+  .events-columns,
+  .lower-grid,
+  .summary-grid,
+  .best-player,
+  .footer-grid,
+  .buttons{
+    grid-template-columns:1fr;
+  }
+
+  .header{
+    padding:14px;
+  }
+
+  .header-title h1{
+    font-size:36px;
+  }
+
+  .header-title p{
+    font-size:15px;
+  }
+
+  .header-brand-title{
+    font-size:18px;
+  }
+
+  .header-brand-sub{
+    font-size:13px;
+  }
+
+  .score-number{
+    font-size:56px;
+  }
+
+  .team-score,
+  .team-score.away{
+    flex-direction:column;
+  }
+
+  .info-box,
+  .match-box,
+  .event-col,
+  .summary-box{
+    border-right:none;
+  }
+
+  .official-row{
+    grid-template-columns:1fr;
   }
 }
 </style>
@@ -818,36 +865,41 @@ body{
 </div>
 <script type="module">
 import { db } from "./firebase.js";
-import {
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const app = document.getElementById("app");
 const id = new URLSearchParams(window.location.search).get("id");
 
+/* ========= FUNÇÕES ========= */
+
 function texto(v,f=""){return v===undefined||v===null||v===""?f:v}
+
 function normalizar(v){
   return String(v||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 }
+
 function campo(obj,chs,f=""){
   for(const c of chs){
     if(obj && obj[c]!==undefined && obj[c]!==null && obj[c]!=="") return obj[c];
   }
   return f;
 }
+
 function nomeTime(v,f="TIME"){
   if(v && typeof v==="object") return campo(v,["nome","nomeTime","time","equipe"],f);
   return texto(v,f);
 }
+
 function escudoTime(v){
   if(v && typeof v==="object") return campo(v,["escudo","logo","imagem","foto"],"logo-liga.jfif");
   return "logo-liga.jfif";
 }
+
 function cidadeTime(v,f="-"){
   if(v && typeof v==="object") return campo(v,["cidade","municipio","local"],f);
   return f;
 }
+
 function dataBR(v){
   if(!v) return "-";
   if(typeof v.toDate==="function") v=v.toDate();
@@ -855,222 +907,193 @@ function dataBR(v){
   if(!isNaN(d.getTime())) return d.toLocaleDateString("pt-BR");
   return String(v);
 }
-function placarA(s){return Number(campo(s,["golsA","placarA","golsMandante"],0))}
-function placarB(s){return Number(campo(s,["golsB","placarB","golsVisitante"],0))}
+
+function placarA(s){return Number(campo(s,["golsA","placarA"],0))}
+function placarB(s){return Number(campo(s,["golsB","placarB"],0))}
+
 function codigoSumula(s){
-  return campo(s,["codigoVerificacao","hash","numeroSumula","codigoPartida","codigo"], String(id||"LG").slice(0,12).toUpperCase());
+  return campo(s,["codigoVerificacao","numeroSumula","codigo"],String(id||"LG").slice(0,12).toUpperCase());
 }
+
 function qrUrl(){
   return `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(window.location.href)}`;
 }
-function separarEventosPorTime(lista){
-  const a=[], b=[];
-  lista.forEach(it=>{
-    const t=normalizar(it.time||it.lado||"");
-    if(t==="b"||t==="visitante") b.push(it); else a.push(it);
+
+function separar(lista){
+  const a=[],b=[];
+  lista.forEach(i=>{
+    const t=normalizar(i.time||"");
+    if(t==="b") b.push(i); else a.push(i);
   });
   return {a,b};
 }
 
 function renderJogadores(lista){
-  if(!Array.isArray(lista)||!lista.length){
-    return `<tr><td colspan="3" class="line-empty">Nenhum jogador informado.</td></tr>`;
-  }
-
-  const titulares=lista.filter(j=>normalizar(j.tipo||"")!=="suplente");
-  const suplentes=lista.filter(j=>normalizar(j.tipo||"")==="suplente");
-
-  return `
-    <tr class="sub-row"><td colspan="3">Titulares</td></tr>
-    ${titulares.map(j=>`
-      <tr>
-        <td class="num">${campo(j,["numero","camisa"],"-")}</td>
-        <td>${campo(j,["nome"],"-")}</td>
-        <td class="posicao">${campo(j,["posicao"],"-")}</td>
-      </tr>
-    `).join("")}
-
-    ${suplentes.length ? `
-      <tr class="sub-row"><td colspan="3">Suplentes</td></tr>
-      ${suplentes.map(j=>`
-        <tr>
-          <td class="num">${campo(j,["numero","camisa"],"-")}</td>
-          <td>${campo(j,["nome"],"-")}</td>
-          <td class="posicao">${campo(j,["posicao"],"-")}</td>
-        </tr>
-      `).join("")}
-    ` : ""}
-  `;
+  if(!lista.length) return `<tr><td colspan="3" class="line-empty">Sem jogadores</td></tr>`;
+  return lista.map(j=>`
+    <tr>
+      <td class="num">${campo(j,["numero"],"-")}</td>
+      <td>${campo(j,["nome"],"-")}</td>
+      <td class="posicao">${campo(j,["posicao"],"-")}</td>
+    </tr>
+  `).join("");
 }
 
 function renderGols(lista){
-  if(!lista.length) return `<div class="line-empty">Nenhum gol.</div>`;
+  if(!lista.length) return `<div class="line-empty">Nenhum gol</div>`;
   return lista.map(g=>`
     <div class="event-item">
-      <span class="ball">⚽</span>
-      <span class="event-minute">${campo(g,["minuto"],"-")}'</span>
-      <span class="event-name">${campo(g,["nome"],"-")}</span>
+      ⚽ ${campo(g,["minuto"],"-")}' - ${campo(g,["nome"],"-")}
     </div>
   `).join("");
 }
 
 function renderCartoes(lista){
-  if(!lista.length) return `<div class="line-empty">Nenhum cartão.</div>`;
+  if(!lista.length) return `<div class="line-empty">Nenhum cartão</div>`;
   return lista.map(c=>{
     const verm=normalizar(c.tipo).includes("verm");
     return `
       <div class="event-item">
         <span class="${verm?"red-card":"yellow-card"}"></span>
-        <span class="event-minute">${campo(c,["minuto"],"-")}'</span>
-        <span class="event-name">${campo(c,["nome"],"-")}</span>
+        ${campo(c,["minuto"],"-")}' - ${campo(c,["nome"],"-")}
       </div>
     `;
   }).join("");
 }
 
-window.baixarPDF=()=>window.print();
+/* ========= AÇÕES ========= */
+
+window.baixarPDF = ()=>window.print();
+window.copiarLink = ()=>navigator.clipboard.writeText(window.location.href);
+
+/* ========= CARREGAR ========= */
 
 async function carregar(){
   if(!id){
-    app.innerHTML=`<div class="error">Súmula não informada.</div>`;
+    app.innerHTML=`<div class="error">ID não informado</div>`;
     return;
   }
 
-  try{
-    const snap=await getDoc(doc(db,"sumulas",id));
+  const snap = await getDoc(doc(db,"sumulas",id));
+  if(!snap.exists()){
+    app.innerHTML=`<div class="error">Súmula não encontrada</div>`;
+    return;
+  }
 
-    if(!snap.exists()){
-      app.innerHTML=`<div class="error">Súmula não encontrada.</div>`;
-      return;
-    }
+  const s={id:snap.id,...snap.data()};
 
-    const s={id:snap.id,...snap.data()};
+  const nomeA=nomeTime(s.timeA);
+  const nomeB=nomeTime(s.timeB);
 
-    const A=s.timeA||{}, B=s.timeB||{};
-    const nomeA=nomeTime(A,"MANDANTE");
-    const nomeB=nomeTime(B,"VISITANTE");
+  const logoA=escudoTime(s.timeA);
+  const logoB=escudoTime(s.timeB);
 
-    const logoA=escudoTime(A);
-    const logoB=escudoTime(B);
+  const gols=s.gols||[];
+  const cartoes=s.cartoes||[];
 
-    const jogadoresA=s.jogadoresA||[];
-    const jogadoresB=s.jogadoresB||[];
+  const g=separar(gols);
+  const c=separar(cartoes);
 
-    const gols=s.gols||[];
-    const cartoes=s.cartoes||[];
+  app.innerHTML=`
+  <div class="sumula-page">
 
-    const gpt=separarEventosPorTime(gols);
-    const cpt=separarEventosPorTime(cartoes);
-
-    app.innerHTML=`
-    <div class="sumula-page">
-
-      <header class="header">
-        <div class="header-logo">
-          <img src="logo-liga.jfif">
-        </div>
-
-        <div class="header-title">
-          <h1>SÚMULA OFICIAL</h1>
-          <p>LIGA GOIANA DE FUTEBOL DE BASE</p>
-        </div>
-
-        <div class="header-right">
-          <div class="liga-nome">Liga Goiana de Futebol de Base</div>
-          <div class="liga-slogan">Onde o talento encontra o futuro</div>
-        </div>
-      </header>
-
-      <section class="score-card">
-        <div class="team-score">
-          <img src="${logoA}">
-          <div class="team-name">
-            <h2>${nomeA}</h2>
-          </div>
-        </div>
-
-        <div class="score-center">
-          <div class="score-number">${placarA(s)} x ${placarB(s)}</div>
-          <span>Placar Final</span>
-        </div>
-
-        <div class="team-score away">
-          <img src="${logoB}">
-          <div class="team-name">
-            <h2>${nomeB}</h2>
-          </div>
-        </div>
-      </section>
-
-      <section class="lineups">
-        <div class="section-title">Escalações</div>
-
-        <div class="lineups-grid">
-
-          <div class="lineup-card">
-            <div class="lineup-head">${nomeA}</div>
-            <table class="table">
-              <tbody>${renderJogadores(jogadoresA)}</tbody>
-            </table>
-          </div>
-
-          <div class="lineup-card away">
-            <div class="lineup-head">${nomeB}</div>
-            <table class="table">
-              <tbody>${renderJogadores(jogadoresB)}</tbody>
-            </table>
-          </div>
-
-        </div>
-      </section>
-
-      <section class="events-grid">
-
-        <div class="team-events">
-          <h3>${nomeA}</h3>
-          <div class="events-columns">
-            <div class="event-col">
-              <h4>Gols</h4>
-              ${renderGols(gpt.a)}
-            </div>
-            <div class="event-col">
-              <h4>Cartões</h4>
-              ${renderCartoes(cpt.a)}
-            </div>
-          </div>
-        </div>
-
-        <div class="team-events away">
-          <h3>${nomeB}</h3>
-          <div class="events-columns">
-            <div class="event-col">
-              <h4>Gols</h4>
-              ${renderGols(gpt.b)}
-            </div>
-            <div class="event-col">
-              <h4>Cartões</h4>
-              ${renderCartoes(cpt.b)}
-            </div>
-          </div>
-        </div>
-
-      </section>
-
-      <div style="padding:20px;text-align:center">
-        <button onclick="baixarPDF()" style="padding:12px 20px;background:#dc2626;color:#fff;border:none;border-radius:6px;font-weight:900;">
-          BAIXAR PDF
-        </button>
+    <header class="header">
+      <div class="header-logo">
+        <img src="logo-liga.jfif">
       </div>
 
-    </div>
-    `;
-  }catch(e){
-    console.error(e);
-    app.innerHTML=`<div class="error">Erro ao carregar súmula.</div>`;
-  }
+      <div class="header-title">
+        <h1>SÚMULA OFICIAL</h1>
+        <p>${campo(s,["campeonato"],"Liga Goiana")} ${campo(s,["categoria"],"")}</p>
+      </div>
+
+      <div class="header-right">
+        <div class="header-brand-title">
+          LIGA GOIANA<br>DE FUTEBOL DE BASE
+        </div>
+        <div class="header-brand-sub">
+          Onde o talento encontra o futuro
+        </div>
+      </div>
+    </header>
+
+    <section class="score-card">
+      <div class="team-score">
+        <img src="${logoA}">
+        <div class="team-name">
+          <h2>${nomeA}</h2>
+        </div>
+      </div>
+
+      <div class="score-center">
+        <div class="score-number">${placarA(s)} x ${placarB(s)}</div>
+        <span>Placar Final</span>
+      </div>
+
+      <div class="team-score away">
+        <img src="${logoB}">
+        <div class="team-name">
+          <h2>${nomeB}</h2>
+        </div>
+      </div>
+    </section>
+
+    <section class="lineups">
+      <div class="section-title">Escalações</div>
+
+      <div class="lineups-grid">
+        <div class="lineup-panel">
+          <div class="lineup-head">${nomeA}</div>
+          <table class="table">
+            ${renderJogadores(s.jogadoresA||[])}
+          </table>
+        </div>
+
+        <div class="lineup-panel away">
+          <div class="lineup-head">${nomeB}</div>
+          <table class="table">
+            ${renderJogadores(s.jogadoresB||[])}
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="events-grid">
+      <div class="team-events">
+        <h3>${nomeA}</h3>
+        ${renderGols(g.a)}
+        ${renderCartoes(c.a)}
+      </div>
+
+      <div class="team-events away">
+        <h3>${nomeB}</h3>
+        ${renderGols(g.b)}
+        ${renderCartoes(c.b)}
+      </div>
+    </section>
+
+    <section class="footer-grid">
+      <div class="panel">
+        <h3>Autenticação</h3>
+        <div class="auth-box">
+          <img src="${qrUrl()}">
+          <div>
+            Código: ${codigoSumula(s)}
+          </div>
+        </div>
+      </div>
+
+      <div class="panel share-panel">
+        <button class="btn btn-pdf" onclick="baixarPDF()">Baixar PDF</button>
+      </div>
+    </section>
+
+  </div>
+  `;
 }
 
 carregar();
 </script>
+
 </body>
 </html>
