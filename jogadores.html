@@ -144,123 +144,156 @@ select:focus{
   margin:0 0 12px;
 }
 
-/* GRID PADRÃO — MÁXIMO 5 POR LINHA */
 .lista{
   display:grid;
-  grid-template-columns:repeat(5, 1fr);
-  gap:12px;
-}
-
-@media(max-width:1100px){
-  .lista{
-    grid-template-columns:repeat(4, 1fr);
-  }
-}
-
-@media(max-width:900px){
-  .lista{
-    grid-template-columns:repeat(3, 1fr);
-  }
-}
-
-@media(max-width:650px){
-  .lista{
-    grid-template-columns:repeat(2, 1fr);
-  }
-}
-
-@media(max-width:430px){
-  .lista{
-    grid-template-columns:1fr;
-  }
+  grid-template-columns:repeat(4, 1fr);
+  gap:14px;
 }
 
 .card{
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  gap:10px;
-  padding:12px;
-  min-height:390px;
-  border-radius:14px;
+  position:relative;
+  overflow:hidden;
+  min-height:350px;
+  border-radius:16px;
   background:
-    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
-  border:1px solid rgba(247,198,0,.18);
-  box-shadow:0 8px 18px rgba(0,0,0,.25);
-}
-
-.card:hover{
-  border-color:var(--gold);
-  transform:translateY(-2px);
+    radial-gradient(circle at top right, rgba(247,198,0,.16), transparent 35%),
+    linear-gradient(180deg, rgba(13,42,82,.98), rgba(6,20,39,.98));
+  border:1px solid rgba(247,198,0,.48);
+  box-shadow:0 10px 25px rgba(0,0,0,.32);
   transition:.25s ease;
 }
 
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold);
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg, transparent 0%, rgba(0,0,0,.18) 45%, rgba(0,0,0,.62) 100%);
+  pointer-events:none;
+  z-index:1;
+}
+
 .card-top{
+  position:absolute;
+  top:12px;
+  left:12px;
+  right:12px;
+  z-index:3;
   display:flex;
-  align-items:center;
+  align-items:flex-start;
   justify-content:space-between;
   gap:8px;
 }
 
-.card-icon{
-  width:32px;
-  height:32px;
-  border-radius:10px;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#111;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:15px;
+.numero-card{
+  color:var(--gold);
+  font-size:18px;
+  font-weight:900;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
 }
 
 .status{
-  padding:5px 8px;
+  padding:5px 9px;
   border-radius:999px;
   font-size:10px;
   font-weight:900;
   color:#fff;
+  backdrop-filter:blur(8px);
 }
 
-.status.aprovado{background:var(--green);}
-.status.pendente{background:var(--yellow);}
-.status.reprovado{background:var(--red);}
+.status.aprovado{background:rgba(27,94,32,.88);}
+.status.pendente{background:rgba(122,90,0,.88);}
+.status.reprovado{background:rgba(180,35,35,.88);}
 
 .player{
+  position:relative;
+  z-index:2;
+  min-height:350px;
   display:flex;
   flex-direction:column;
-  align-items:center;
-  text-align:center;
-  gap:8px;
+  justify-content:flex-end;
+}
+
+.photo-area{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding-top:26px;
+  z-index:0;
 }
 
 .photo{
-  width:70px;
-  height:70px;
-  border-radius:50%;
+  width:100%;
+  height:205px;
   object-fit:cover;
-  border:2px solid var(--gold);
-  background:#1a3f73;
+  object-position:center top;
+  background:#123b7a;
+  border-bottom:1px solid rgba(247,198,0,.22);
 }
 
-.info{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  width:100%;
+.escudo-mini{
+  position:absolute;
+  top:42px;
+  right:14px;
+  z-index:3;
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#fff;
+  border:2px solid var(--gold);
+  box-shadow:0 5px 14px rgba(0,0,0,.35);
+}
+
+.posicao-badge{
+  position:absolute;
+  top:174px;
+  right:12px;
+  z-index:4;
+  background:linear-gradient(135deg,#1a5bb8,#0d3f8c);
+  border:1px solid rgba(255,255,255,.18);
+  padding:6px 10px;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:900;
+  color:#fff;
+  box-shadow:0 5px 14px rgba(0,0,0,.32);
+}
+
+.player-content{
+  position:relative;
+  z-index:3;
+  padding:210px 12px 12px;
+  text-align:center;
 }
 
 .nome{
   font-weight:900;
-  font-size:14px;
+  font-size:18px;
   color:#fff;
-  line-height:1.25;
+  line-height:1.2;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
+  margin-bottom:4px;
+}
+
+.time-nome{
+  color:var(--gold);
+  font-size:13px;
+  font-weight:900;
+  text-transform:uppercase;
+  margin-bottom:10px;
 }
 
 .sub{
   font-size:12px;
   color:var(--muted);
+  margin-bottom:3px;
 }
 
 .tags{
@@ -268,55 +301,88 @@ select:focus{
   justify-content:center;
   gap:5px;
   flex-wrap:wrap;
+  margin-bottom:10px;
 }
 
 .tag{
-  background:#1a3f73;
+  background:rgba(26,63,115,.95);
   padding:4px 8px;
   border-radius:999px;
   font-size:10px;
-  font-weight:800;
+  font-weight:900;
   border:1px solid rgba(255,255,255,.08);
 }
 
 .tag.ok{
-  background:var(--green);
+  background:rgba(27,94,32,.92);
 }
 
 .tag.alerta{
-  background:var(--yellow);
+  background:rgba(122,90,0,.95);
 }
 
 .tag.red{
-  background:var(--red);
+  background:rgba(180,35,35,.92);
 }
 
 .stats-grid{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:6px;
-  margin-top:8px;
+  grid-template-columns:repeat(4,1fr);
+  gap:0;
+  margin:10px 0 12px;
+  border-top:1px solid rgba(255,255,255,.10);
+  border-bottom:1px solid rgba(255,255,255,.10);
+  background:rgba(3,12,29,.28);
 }
 
 .stat{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:9px;
-  padding:7px 4px;
+  padding:8px 4px;
   text-align:center;
+  border-right:1px solid rgba(255,255,255,.08);
+}
+
+.stat:last-child{
+  border-right:none;
 }
 
 .stat strong{
   color:var(--gold);
   display:block;
-  font-size:15px;
+  font-size:16px;
   line-height:1;
 }
 
 .stat span{
-  color:var(--muted);
+  color:#fff;
   font-size:9px;
-  font-weight:800;
+  font-weight:900;
+}
+
+.stats-extra{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  margin-bottom:10px;
+}
+
+.stat-extra{
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:9px;
+  padding:6px 4px;
+  text-align:center;
+}
+
+.stat-extra strong{
+  color:var(--gold);
+  display:block;
+  font-size:13px;
+}
+
+.stat-extra span{
+  color:var(--muted);
+  font-size:8px;
+  font-weight:900;
 }
 
 .redes{
@@ -324,12 +390,12 @@ select:focus{
   justify-content:center;
   gap:6px;
   flex-wrap:wrap;
-  margin-top:8px;
+  margin-bottom:10px;
 }
 
 .rede{
-  width:31px;
-  height:31px;
+  width:30px;
+  height:30px;
   border-radius:50%;
   display:flex;
   align-items:center;
@@ -357,9 +423,16 @@ select:focus{
   border-radius:10px;
   font-weight:900;
   font-size:12px;
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
-  color:#111;
+  background:transparent;
+  color:var(--gold);
   text-align:center;
+  border:1px solid var(--gold);
+  transition:.2s ease;
+}
+
+.btn-ver:hover{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
 }
 
 .vazio{
@@ -372,9 +445,41 @@ select:focus{
   border:1px solid rgba(255,255,255,.08);
 }
 
+@media(max-width:1100px){
+  .lista{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
 @media(max-width:900px){
   .filtros{
     grid-template-columns:1fr;
+  }
+
+  .lista{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:650px){
+  .lista{
+    grid-template-columns:1fr;
+  }
+
+  .card{
+    min-height:370px;
+  }
+
+  .player{
+    min-height:370px;
+  }
+
+  .photo{
+    height:215px;
+  }
+
+  .player-content{
+    padding-top:220px;
   }
 }
 
@@ -423,7 +528,6 @@ select:focus{
   <div class="lista" id="lista"></div>
 
 </main>
-
 <script type="module">
 import { renderMenu } from "./menu.js";
 import { db } from "./firebase.js";
@@ -483,6 +587,10 @@ function nomeJogador(j){
 
 function fotoJogador(j){
   return val(j,["foto","imagem","fotoUrl","avatar"],"logo-liga.jfif");
+}
+
+function escudoJogador(j){
+  return val(j,["escudo","logoTime","timeLogo","logo"],"logo-liga.jfif");
 }
 
 function timeJogador(j){
@@ -886,6 +994,7 @@ function render(){
     const time = timeJogador(j);
     const posicao = posicaoJogador(j);
     const foto = fotoJogador(j);
+    const escudo = escudoJogador(j);
     const cats = categoriasJogador(j);
     const status = statusJogador(j);
     const stats = calcularStats(j);
@@ -895,25 +1004,26 @@ function render(){
     return `
       <div class="card">
 
-        <div>
-          <div class="card-top">
-            <div class="card-icon">
-              <i class="fa-solid fa-user-shield"></i>
-            </div>
+        <div class="card-top">
+          <div class="numero-card">Nº ${numero}</div>
 
-            <div class="status ${statusClasse(status)}">
-              ${statusTexto(status)}
-            </div>
+          <div class="status ${statusClasse(status)}">
+            ${statusTexto(status)}
+          </div>
+        </div>
+
+        <img src="${escudo}" class="escudo-mini" onerror="this.src='logo-liga.jfif'">
+
+        <div class="posicao-badge">${posicao}</div>
+
+        <div class="player">
+          <div class="photo-area">
+            <img src="${foto}" class="photo" onerror="this.src='logo-liga.jfif'">
           </div>
 
-          <div class="player">
-            <img src="${foto}" class="photo" onerror="this.src='logo-liga.jfif'">
-
-            <div class="info">
-              <div class="nome">${nome}</div>
-              <div class="sub">Nº ${numero} • ${posicao}</div>
-              <div class="sub">Time: ${time}</div>
-            </div>
+          <div class="player-content">
+            <div class="nome">${nome}</div>
+            <div class="time-nome">${time}</div>
 
             <div class="tags">
               ${
@@ -950,46 +1060,23 @@ function render(){
               </div>
 
               <div class="stat">
+                <strong>${stats.mediaGols}</strong>
+                <span>MÉDIA</span>
+              </div>
+            </div>
+
+            <div class="stats-extra">
+              <div class="stat-extra">
                 <strong>${stats.amarelos}</strong>
                 <span>AMAR.</span>
               </div>
 
-              <div class="stat">
+              <div class="stat-extra">
                 <strong>${stats.vermelhos}</strong>
                 <span>VERM.</span>
               </div>
 
-              <div class="stat">
-                <strong>${stats.mediaGols}</strong>
-                <span>G/JOGO</span>
-              </div>
-
-              <div class="stat">
-                <strong>${stats.vitorias}</strong>
-                <span>VIT.</span>
-              </div>
-
-              <div class="stat">
-                <strong>${stats.empates}</strong>
-                <span>EMP.</span>
-              </div>
-
-              <div class="stat">
-                <strong>${stats.derrotas}</strong>
-                <span>DER.</span>
-              </div>
-
-              <div class="stat">
-                <strong>${stats.pontos}</strong>
-                <span>PTS TIME</span>
-              </div>
-
-              <div class="stat">
-                <strong>${stats.saldoTime}</strong>
-                <span>SALDO</span>
-              </div>
-
-              <div class="stat">
+              <div class="stat-extra">
                 <strong>${stats.aproveitamento}%</strong>
                 <span>APROV.</span>
               </div>
@@ -1008,13 +1095,13 @@ function render(){
                 : ""
               }
             </div>
-          </div>
-        </div>
 
-        <div class="actions">
-          <a class="btn-ver" href="jogador-publico.html?id=${j.id}">
-            <i class="fa-solid fa-eye"></i> Ver Perfil Completo
-          </a>
+            <div class="actions">
+              <a class="btn-ver" href="jogador-publico.html?id=${j.id}">
+                <i class="fa-solid fa-eye"></i> Ver Perfil
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     `;
