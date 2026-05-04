@@ -13,6 +13,7 @@
 :root{
   --bg:#061427;
   --card:#071d37;
+  --card2:#0d2a52;
   --gold:#f7c600;
   --gold2:#ffe45c;
   --white:#ffffff;
@@ -20,16 +21,36 @@
   --line:rgba(255,255,255,.12);
   --gold-line:rgba(247,198,0,.45);
   --red:#b42323;
+  --green:#1b5e20;
+  --blue:#1a3f73;
   --shadow:0 14px 34px rgba(0,0,0,.38);
   --max:1240px;
 }
 
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
 body{
-  font-family:Arial;
+  font-family:Arial, sans-serif;
   background:
     linear-gradient(rgba(2,8,20,.9), rgba(2,8,20,.96)),
     url("fundo.png") center/cover fixed no-repeat;
   color:#fff;
+  min-height:100vh;
+}
+
+button,
+input,
+select{
+  font-family:inherit;
+}
+
+button{
+  border:none;
+  cursor:pointer;
 }
 
 .wrap{
@@ -37,56 +58,229 @@ body{
   margin:auto;
 }
 
-.container{padding:20px}
+.container{
+  padding:22px 0 34px;
+}
 
 .hero{
-  background:linear-gradient(135deg,#0d2a52,#08172c);
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg,#0d2a52,#08172c);
   border:1px solid var(--gold-line);
   border-radius:18px;
   padding:20px;
   margin-bottom:14px;
+  box-shadow:var(--shadow);
 }
 
 .hero h2{
   color:var(--gold);
-  font-size:26px;
+  font-size:28px;
+  font-weight:900;
+  margin-bottom:6px;
 }
 
-.tabela{
-  background:#071d37;
-  border-radius:14px;
-  overflow:hidden;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-}
-
-th{
-  background:#123b7a;
-  color:var(--gold);
-  padding:12px;
-}
-
-td{
-  padding:12px;
-  border-top:1px solid var(--line);
+.hero p{
   color:var(--muted);
+  font-size:14px;
+  line-height:1.5;
+}
+
+.hero-tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.hero-tag{
+  background:rgba(26,63,115,.9);
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+input,
+select{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
+}
+
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+
+.card{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+.card-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.player-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.photo{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#fff;
+  border:2px solid var(--gold);
+  flex-shrink:0;
+}
+
+.player-info{
+  min-width:0;
+}
+
+.player-info strong{
+  display:block;
+  color:#fff;
+  font-size:14px;
+  font-weight:900;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.player-info small{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  margin-top:3px;
 }
 
 .badge{
   padding:6px 10px;
   border-radius:999px;
   font-weight:900;
+  font-size:11px;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  color:#fff;
+  white-space:nowrap;
 }
 
-.amarelo{background:#7a5a00}
-.vermelho{background:#b42323}
+.amarelo{
+  background:#7a5a00;
+}
+
+.vermelho{
+  background:#b42323;
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+
+.info{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;
+  padding:9px;
+  text-align:center;
+}
+
+.info span{
+  display:block;
+  color:var(--gold);
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+  margin-bottom:4px;
+}
+
+.info strong{
+  color:#fff;
+  font-size:15px;
+}
+
+.motivos{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:12px;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+  margin-top:12px;
+}
+
+.btn-liberar{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  border-radius:11px;
+  padding:10px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+}
 
 .vazio{
-  padding:20px;
+  color:var(--muted);
   text-align:center;
+  padding:22px;
+  background:rgba(7,29,55,.9);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  grid-column:1/-1;
+}
+
+@media(max-width:1000px){
+  .lista-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media(max-width:760px){
+  .filtros,
+  .lista-grid{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -100,80 +294,346 @@ renderMenu("suspensos");
 
 <main class="wrap container">
 
-<section class="hero">
-<h2>Suspensos</h2>
-<p>Jogadores suspensos automaticamente por cartões.</p>
-</section>
+  <section class="hero">
+    <h2>Suspensos</h2>
+    <p>Jogadores suspensos automaticamente por cartões, puxando dados das súmulas finalizadas e dos cadastros.</p>
 
-<div class="tabela">
-<table>
-<thead>
-<tr>
-<th>Jogador</th>
-<th>Time</th>
-<th>Motivo</th>
-</tr>
-</thead>
-<tbody id="lista"></tbody>
-</table>
-</div>
+    <div class="hero-tags">
+      <div class="hero-tag" id="tagTotal">Suspensos: 0</div>
+      <div class="hero-tag" id="tagVermelhos">Vermelho direto: 0</div>
+      <div class="hero-tag" id="tagAmarelos">3 amarelos: 0</div>
+      <div class="hero-tag">Tempo real</div>
+    </div>
+  </section>
+
+  <section class="filtros">
+    <input id="busca" placeholder="Pesquisar jogador, time, categoria ou motivo...">
+
+    <select id="filtroTime">
+      <option value="">Todos os times</option>
+    </select>
+
+    <select id="filtroCategoria">
+      <option value="">Todas categorias</option>
+    </select>
+  </section>
+
+  <section class="lista-grid" id="lista">
+    <div class="vazio">
+      <i class="fa-solid fa-spinner fa-spin"></i> Carregando suspensos...
+    </div>
+  </section>
 
 </main>
 
 <script type="module">
 import { db } from "./firebase.js";
-import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import {
+  collection,
+  onSnapshot,
+  doc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+let jogadores = [];
 let sumulas = [];
 
+const $ = id => document.getElementById(id);
+
 function normalizar(t){
-  return String(t||"").toLowerCase();
+  return String(t || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
 }
 
-function render(){
+function sumulaFinalizada(s){
+  return s.sumulaFinalizada === true ||
+    s.publica === true ||
+    s.publico === true ||
+    normalizar(s.status) === "finalizado" ||
+    normalizar(s.sumulaStatus) === "finalizada";
+}
+
+function jogadorFoto(j){
+  return j.foto || j.imagem || j.avatar || "logo-liga.jfif";
+}
+
+function jogadorTime(j){
+  return j.timeNome || j.time || j.clube || "-";
+}
+
+function jogadorCategoria(j){
+  return j.categoria || "-";
+}
+
+function calcularPorSumulas(){
   const mapa = {};
 
-  sumulas.forEach(s=>{
-    if(!s.publica && !s.finalizada) return;
+  sumulas.filter(sumulaFinalizada).forEach(s=>{
+    const categoria = s.categoria || "";
+    const campeonato = s.campeonato || s.campeonatoNome || "";
 
     (s.cartoes || []).forEach(c=>{
-      const nome = c.nome || c.jogador;
-      const time = c.time || "-";
+      const id = c.jogadorId || c.id || c.nome;
+      const nome = c.nome || c.jogador || "-";
+      const time = c.timeNome || c.time || "-";
 
-      if(!mapa[nome]){
-        mapa[nome] = {nome,time,amarelo:0,vermelho:0};
+      if(!id || !nome) return;
+
+      if(!mapa[id]){
+        mapa[id] = {
+          id,
+          nome,
+          time,
+          categoria,
+          campeonato,
+          amarelos:0,
+          vermelhos:0,
+          vermelhoDireto:0,
+          segundoAmarelo:0,
+          suspenso:0,
+          motivo:[]
+        };
       }
 
-      if(normalizar(c.tipo) === "amarelo") mapa[nome].amarelo++;
-      if(normalizar(c.tipo) === "vermelho") mapa[nome].vermelho++;
+      if(c.tipo === "amarelo"){
+        mapa[id].amarelos++;
+      }
+
+      if(c.tipo === "vermelho"){
+        mapa[id].vermelhos++;
+
+        if(c.vermelhoTipo === "segundo_amarelo"){
+          mapa[id].segundoAmarelo++;
+        }else{
+          mapa[id].vermelhoDireto++;
+        }
+      }
     });
   });
 
-  const suspensos = Object.values(mapa).filter(p =>
-    p.vermelho >= 1 || p.amarelo >= 3
-  );
+  return mapa;
+}
 
-  const tbody = document.getElementById("lista");
+function listaSuspensos(){
+  const mapaCartoes = calcularPorSumulas();
+  const lista = [];
 
-  if(!suspensos.length){
-    tbody.innerHTML = `<tr><td colspan="3" class="vazio">Nenhum suspenso</td></tr>`;
+  jogadores.forEach(j=>{
+    const id = j.id || j.jogadorId || j.nome;
+    const calc = mapaCartoes[id] || mapaCartoes[j.nome] || {};
+
+    const suspensoFirestore = Number(j.suspenso || j.suspensao || 0);
+    const amarelosFirestore = Number(j.cartoesAmarelos || j.amarelos || 0);
+    const vermelhosFirestore = Number(j.cartoesVermelhos || j.vermelhos || 0);
+
+    const amarelos = Math.max(calc.amarelos || 0, amarelosFirestore);
+    const vermelhos = Math.max(calc.vermelhos || 0, vermelhosFirestore);
+    const vermelhoDireto = Math.max(calc.vermelhoDireto || 0, vermelhosFirestore > 0 ? 1 : 0);
+
+    let suspenso = suspensoFirestore;
+    const motivos = [];
+
+    if(vermelhoDireto >= 1){
+      suspenso = Math.max(suspenso, 1);
+      motivos.push("Vermelho direto");
+    }
+
+    if(amarelos >= 3){
+      suspenso = Math.max(suspenso, 1);
+      motivos.push("3 amarelos");
+    }
+
+    if(suspenso > 0){
+      lista.push({
+        id,
+        nome:j.nome || calc.nome || "-",
+        foto:jogadorFoto(j),
+        time:jogadorTime(j) !== "-" ? jogadorTime(j) : (calc.time || "-"),
+        categoria:jogadorCategoria(j) !== "-" ? jogadorCategoria(j) : (calc.categoria || "-"),
+        campeonato:calc.campeonato || "",
+        amarelos,
+        vermelhos,
+        suspenso,
+        motivos
+      });
+    }
+  });
+
+  Object.values(mapaCartoes).forEach(calc=>{
+    const jaExiste = lista.some(x => x.id === calc.id || normalizar(x.nome) === normalizar(calc.nome));
+    if(jaExiste) return;
+
+    const motivos = [];
+    let suspenso = 0;
+
+    if(calc.vermelhoDireto >= 1){
+      suspenso = 1;
+      motivos.push("Vermelho direto");
+    }
+
+    if(calc.amarelos >= 3){
+      suspenso = 1;
+      motivos.push("3 amarelos");
+    }
+
+    if(suspenso > 0){
+      lista.push({
+        id:calc.id,
+        nome:calc.nome,
+        foto:"logo-liga.jfif",
+        time:calc.time || "-",
+        categoria:calc.categoria || "-",
+        campeonato:calc.campeonato || "",
+        amarelos:calc.amarelos || 0,
+        vermelhos:calc.vermelhos || 0,
+        suspenso,
+        motivos
+      });
+    }
+  });
+
+  return lista.sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
+}
+
+function preencherFiltros(){
+  const timeAtual = $("filtroTime").value;
+  const categoriaAtual = $("filtroCategoria").value;
+
+  const lista = listaSuspensos();
+
+  const times = [...new Set(lista.map(x=>x.time).filter(x=>x && x !== "-"))].sort();
+  const categorias = [...new Set(lista.map(x=>x.categoria).filter(x=>x && x !== "-"))].sort();
+
+  $("filtroTime").innerHTML = `<option value="">Todos os times</option>` +
+    times.map(t=>`<option value="${t}">${t}</option>`).join("");
+
+  $("filtroCategoria").innerHTML = `<option value="">Todas categorias</option>` +
+    categorias.map(c=>`<option value="${c}">${c}</option>`).join("");
+
+  if(times.includes(timeAtual)) $("filtroTime").value = timeAtual;
+  if(categorias.includes(categoriaAtual)) $("filtroCategoria").value = categoriaAtual;
+}
+
+function listaFiltrada(){
+  const busca = normalizar($("busca").value);
+  const time = $("filtroTime").value;
+  const categoria = $("filtroCategoria").value;
+
+  return listaSuspensos().filter(j=>{
+    if(time && j.time !== time) return false;
+    if(categoria && j.categoria !== categoria) return false;
+
+    if(busca){
+      const texto = normalizar(`${j.nome} ${j.time} ${j.categoria} ${j.motivos.join(" ")}`);
+      if(!texto.includes(busca)) return false;
+    }
+
+    return true;
+  });
+}
+
+function atualizarTags(){
+  const lista = listaFiltrada();
+
+  $("tagTotal").innerText = `Suspensos: ${lista.length}`;
+  $("tagVermelhos").innerText = `Vermelho direto: ${lista.filter(j=>j.motivos.includes("Vermelho direto")).length}`;
+  $("tagAmarelos").innerText = `3 amarelos: ${lista.filter(j=>j.motivos.includes("3 amarelos")).length}`;
+}
+
+window.liberarSuspenso = async function(id){
+  if(!confirm("Liberar este jogador da suspensão?")) return;
+
+  await setDoc(doc(db,"jogadores",id),{
+    suspenso:0,
+    suspensao:0,
+    atualizadoEm:serverTimestamp()
+  },{merge:true});
+
+  alert("Jogador liberado.");
+};
+
+function render(){
+  preencherFiltros();
+  atualizarTags();
+
+  const lista = listaFiltrada();
+  const box = $("lista");
+
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhum jogador suspenso no momento.</div>`;
     return;
   }
 
-  tbody.innerHTML = suspensos.map(p=>`
-    <tr>
-      <td>${p.nome}</td>
-      <td>${p.time}</td>
-      <td>
-        ${p.vermelho ? `<span class="badge vermelho">Vermelho</span>` : ""}
-        ${p.amarelo>=3 ? `<span class="badge amarelo">3 Amarelos</span>` : ""}
-      </td>
-    </tr>
+  box.innerHTML = lista.map(j=>`
+    <article class="card">
+      <div class="card-top">
+        <div class="player-box">
+          <img class="photo" src="${j.foto}" onerror="this.src='logo-liga.jfif'">
+          <div class="player-info">
+            <strong>${j.nome}</strong>
+            <small>${j.time} • ${j.categoria}</small>
+          </div>
+        </div>
+
+        <span class="badge vermelho">
+          <i class="fa-solid fa-ban"></i> Suspenso
+        </span>
+      </div>
+
+      <div class="info-grid">
+        <div class="info">
+          <span>Amarelos</span>
+          <strong>${j.amarelos}</strong>
+        </div>
+
+        <div class="info">
+          <span>Vermelhos</span>
+          <strong>${j.vermelhos}</strong>
+        </div>
+
+        <div class="info">
+          <span>Suspensão</span>
+          <strong>${j.suspenso} jogo(s)</strong>
+        </div>
+
+        <div class="info">
+          <span>Categoria</span>
+          <strong>${j.categoria}</strong>
+        </div>
+      </div>
+
+      <div class="motivos">
+        ${j.motivos.map(m=>`
+          <span class="badge ${m.includes("amarelos") ? "amarelo" : "vermelho"}">
+            ${m}
+          </span>
+        `).join("")}
+      </div>
+
+      <div class="actions">
+        <button class="btn-liberar" onclick="liberarSuspenso('${j.id}')">
+          <i class="fa-solid fa-unlock"></i> Liberar suspensão
+        </button>
+      </div>
+    </article>
   `).join("");
 }
 
+$("busca").addEventListener("input",render);
+$("filtroTime").addEventListener("change",render);
+$("filtroCategoria").addEventListener("change",render);
+
+onSnapshot(collection(db,"jogadores"),snap=>{
+  jogadores = snap.docs.map(d=>({id:d.id,...d.data()}));
+  render();
+});
+
 onSnapshot(collection(db,"sumulas"),snap=>{
-  sumulas = snap.docs.map(d=>d.data());
+  sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
   render();
 });
 </script>
