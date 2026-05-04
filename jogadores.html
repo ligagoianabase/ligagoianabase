@@ -1,151 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jogadores - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="menu.css">
+
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --gold-line:rgba(247,198,0,.45);
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Arial;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed;
+  color:#fff;
+}
+
+.wrap{width:min(100% - 28px,1240px);margin:auto;}
+.container{padding:22px 0;}
+
+.hero{
+  background:linear-gradient(135deg,#102a52,#08172c);
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
+}
+
+.hero h2{color:var(--gold);font-size:28px;}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+input,select{
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  background:#f5f7fb;
+}
+
+/* 🔥 GRID 3 POR LINHA */
+.lista{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.card{
+  border-radius:16px;
+  background:linear-gradient(180deg,#0d2a52,#061427);
+  border:1px solid var(--gold);
+  overflow:hidden;
+}
+
+.photo{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+}
+
+.content{
+  padding:10px;
+  text-align:center;
+}
+
+.nome{font-weight:900;}
+.time{color:var(--gold);font-size:12px;}
+
+.btn{
+  margin-top:8px;
+  display:block;
+  padding:10px;
+  border:1px solid var(--gold);
+  border-radius:10px;
+  text-align:center;
+}
+
+.btn:hover{
+  background:var(--gold);
+  color:#111;
+}
+
+/* RESPONSIVO */
+@media(max-width:900px){
+  .lista{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:600px){
+  .lista{grid-template-columns:1fr;}
+}
+</style>
+</head>
+
+<body>
+
+<main class="wrap container">
+
+<section class="hero">
+<h2>Jogadores</h2>
+<p>Lista automática integrada com Firebase.</p>
+</section>
+
+<div class="filtros">
+<input id="busca" placeholder="Buscar jogador...">
+
+<select id="filtroTime">
+<option value="">Todos os times</option>
+</select>
+
+<select id="filtroCategoria">
+<option value="">Todas categorias</option>
+</select>
+</div>
+
+<div class="lista" id="lista"></div>
+
+</main>
+
 <script type="module">
 import { db } from "./firebase.js";
-import {
-  collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { collection,getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-let jogadoresCache = [];
-let jogosCache = [];
-let campeonatosCache = [];
+let jogadores=[];
+let times=[];
 
-window.voltarPagina = function(){
-  if (window.history.length > 1) {
-    window.history.back();
-  } else {
-    window.location.href = "index.html";
-  }
-};
+function n(t){return String(t||"").toLowerCase()}
 
-// ================= UTIL =================
-function n(txt){
-  return String(txt || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .trim();
+function val(o,k,f=""){
+for(const c of k){if(o[c]) return o[c];}
+return f;
 }
 
-function val(obj, keys, fallback=""){
-  for(const k of keys){
-    if(obj && obj[k] !== undefined && obj[k] !== null && obj[k] !== ""){
-      return obj[k];
-    }
-  }
-  return fallback;
+function nome(j){return val(j,["nome"],"-")}
+function time(j){return val(j,["time"],"-")}
+function foto(j){return val(j,["foto"],"logo-liga.jfif")}
+
+async function carregar(){
+jogadores=(await getDocs(collection(db,"jogadores"))).docs.map(d=>({id:d.id,...d.data()}));
+times=(await getDocs(collection(db,"times"))).docs.map(d=>d.data());
+
+preencherTimes();
+render();
 }
 
-// ================= FIREBASE =================
-async function carregarDados(){
-  const [jogSnap, jogsSnap, campSnap] = await Promise.all([
-    getDocs(collection(db,"jogadores")),
-    getDocs(collection(db,"jogos")),
-    getDocs(collection(db,"campeonatos"))
-  ]);
+function preencherTimes(){
+const select=document.getElementById("filtroTime");
+const set=new Set();
 
-  jogadoresCache = jogSnap.docs.map(d=>({id:d.id,...d.data()}));
-  jogosCache = jogsSnap.docs.map(d=>({id:d.id,...d.data()}));
-  campeonatosCache = campSnap.docs.map(d=>({id:d.id,...d.data()}));
+jogadores.forEach(j=>set.add(time(j)));
+
+select.innerHTML=`<option value="">Todos os times</option>`;
+set.forEach(t=>select.innerHTML+=`<option>${t}</option>`);
 }
 
-// ================= FILTROS =================
-function preencherFiltroCampeonato(){
-  const select = document.getElementById("filtroCampeonato");
+function filtrar(){
+const busca=n(document.getElementById("busca").value);
+const tsel=document.getElementById("filtroTime").value;
 
-  select.innerHTML = `<option value="">Selecione o campeonato</option>`;
-
-  campeonatosCache.forEach(c=>{
-    select.innerHTML += `<option value="${c.id}">${val(c,["nome"],"-")}</option>`;
-  });
+return jogadores.filter(j=>{
+if(tsel && time(j)!==tsel) return false;
+if(busca && !n(nome(j)).includes(busca)) return false;
+return true;
+});
 }
 
-function preencherFiltroCategoria(){
-  const select = document.getElementById("filtroCategoria");
-  select.innerHTML = `<option value="">Selecione a categoria</option>`;
+function render(){
+const lista=document.getElementById("lista");
+const dados=filtrar();
 
-  const categorias = new Set();
-
-  jogadoresCache.forEach(j=>{
-    const cats = val(j,["categorias"],[]);
-    if(Array.isArray(cats)){
-      cats.forEach(c=>categorias.add(c));
-    }
-  });
-
-  categorias.forEach(c=>{
-    select.innerHTML += `<option value="${c}">${c}</option>`;
-  });
+if(!dados.length){
+lista.innerHTML=`<div>Nenhum jogador</div>`;
+return;
 }
 
-// ================= RENDER =================
-window.carregarJogadores = function(){
+lista.innerHTML=dados.map(j=>`
+<div class="card">
+<img src="${foto(j)}" class="photo">
 
-  const lista = document.getElementById("listaJogadores");
-  const busca = n(document.getElementById("buscaJogador").value);
+<div class="content">
+<div class="nome">${nome(j)}</div>
+<div class="time">${time(j)}</div>
 
-  let jogadores = [...jogadoresCache];
-
-  // BUSCA
-  if(busca){
-    jogadores = jogadores.filter(j =>
-      n(val(j,["nome"])).includes(busca) ||
-      n(val(j,["time"])).includes(busca) ||
-      n(val(j,["posicao"])).includes(busca)
-    );
-  }
-
-  if(!jogadores.length){
-    lista.innerHTML = `<div class="vazio">Nenhum jogador encontrado.</div>`;
-    return;
-  }
-
-  lista.innerHTML = jogadores.map(j => {
-
-    const nome = val(j,["nome"],"-");
-    const numero = val(j,["numero"],"-");
-    const time = val(j,["time"],"-");
-    const posicao = val(j,["posicao"],"-");
-    const foto = val(j,["foto","imagem"],"logo-liga.jfif");
-
-    return `
-      <div class="card">
-        <div class="player">
-          <img src="${foto}" class="photo" onerror="this.src='logo-liga.jfif'">
-
-          <div class="player-info">
-            <div class="nome-jogador">
-              ${numero} - ${nome}
-            </div>
-
-            <small>Time: ${time}</small>
-            <small>Posição: ${posicao}</small>
-          </div>
-        </div>
-
-        <div class="actions">
-          <a class="btn-acao btn-ver" href="jogador-publico.html?id=${j.id}">
-            <i class="fa-solid fa-eye"></i> Ver Jogador
-          </a>
-        </div>
-      </div>
-    `;
-  }).join("");
-};
-
-// ================= EVENTOS =================
-document.getElementById("buscaJogador")
-  .addEventListener("input", carregarJogadores);
-
-// ================= INIT =================
-async function iniciar(){
-  document.getElementById("listaJogadores").innerHTML =
-    `<div class="vazio">Carregando...</div>`;
-
-  await carregarDados();
-  preencherFiltroCampeonato();
-  preencherFiltroCategoria();
-  carregarJogadores();
+<a class="btn" href="jogador-publico.html?id=${j.id}">
+Ver Perfil
+</a>
+</div>
+</div>
+`).join("");
 }
 
-iniciar();
+document.getElementById("busca").addEventListener("input",render);
+document.getElementById("filtroTime").addEventListener("change",render);
+
+carregar();
 </script>
+
+</body>
+</html>
