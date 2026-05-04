@@ -51,21 +51,19 @@ body{
 
 .header{
   display:grid;
-  grid-template-columns:150px 1fr 150px;
+  grid-template-columns:150px 1fr 180px;
   align-items:center;
   gap:10px;
   padding:16px 18px 8px;
 }
 
-.header-logo,
-.header-right{
+.header-logo{
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
-.header-logo img,
-.header-right img{
+.header-logo img{
   width:94px;
   height:94px;
   object-fit:contain;
@@ -89,6 +87,25 @@ body{
   font-size:21px;
   font-weight:900;
   text-transform:uppercase;
+}
+
+.header-right{
+  text-align:center;
+  color:var(--azul);
+  font-weight:900;
+  line-height:1.15;
+}
+
+.header-right .liga-nome{
+  font-size:21px;
+  text-transform:uppercase;
+}
+
+.header-right .liga-slogan{
+  margin-top:6px;
+  color:var(--dourado);
+  font-size:15px;
+  font-weight:900;
 }
 
 .info-strip{
@@ -734,12 +751,19 @@ body{
 
 @media print{
   @page{
-    size:A4 portrait;
-    margin:7mm;
+    size:A4 landscape;
+    margin:5mm;
   }
 
   body{
     background:#fff;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+
+  #app{
+    width:100%;
+    min-width:0;
   }
 
   .sumula-page{
@@ -770,47 +794,16 @@ body{
 }
 
 @media(max-width:900px){
-  .header,
-  .info-strip,
-  .score-card,
-  .match-strip,
-  .lineups-grid,
-  .events-grid,
-  .events-columns,
-  .lower-grid,
-  .summary-grid,
-  .best-player,
-  .footer-grid,
-  .buttons{
-    grid-template-columns:1fr;
+  body{
+    overflow-x:auto;
   }
 
-  .header-title h1{
-    font-size:36px;
+  #app{
+    min-width:1180px;
   }
 
-  .header-title p{
-    font-size:15px;
-  }
-
-  .score-number{
-    font-size:56px;
-  }
-
-  .team-score,
-  .team-score.away{
-    flex-direction:column;
-  }
-
-  .info-box,
-  .match-box,
-  .event-col,
-  .summary-box{
-    border-right:none;
-  }
-
-  .official-row{
-    grid-template-columns:1fr;
+  .sumula-page{
+    width:1180px;
   }
 }
 </style>
@@ -878,395 +871,202 @@ function separarEventosPorTime(lista){
   });
   return {a,b};
 }
+
 function renderJogadores(lista){
   if(!Array.isArray(lista)||!lista.length){
     return `<tr><td colspan="3" class="line-empty">Nenhum jogador informado.</td></tr>`;
   }
+
   const titulares=lista.filter(j=>normalizar(j.tipo||"")!=="suplente");
   const suplentes=lista.filter(j=>normalizar(j.tipo||"")==="suplente");
 
-  const t1=`
+  return `
     <tr class="sub-row"><td colspan="3">Titulares</td></tr>
     ${titulares.map(j=>`
       <tr>
-        <td class="num">${campo(j,["numero","camisa","n"],"-")}</td>
-        <td>${campo(j,["nome","jogador","jogadorNome","atleta"],"-")}</td>
-        <td class="posicao">${campo(j,["posicao","posição","funcao"],"-")}</td>
+        <td class="num">${campo(j,["numero","camisa"],"-")}</td>
+        <td>${campo(j,["nome"],"-")}</td>
+        <td class="posicao">${campo(j,["posicao"],"-")}</td>
       </tr>
     `).join("")}
+
+    ${suplentes.length ? `
+      <tr class="sub-row"><td colspan="3">Suplentes</td></tr>
+      ${suplentes.map(j=>`
+        <tr>
+          <td class="num">${campo(j,["numero","camisa"],"-")}</td>
+          <td>${campo(j,["nome"],"-")}</td>
+          <td class="posicao">${campo(j,["posicao"],"-")}</td>
+        </tr>
+      `).join("")}
+    ` : ""}
   `;
-  const t2=suplentes.length?`
-    <tr class="sub-row"><td colspan="3">Suplentes</td></tr>
-    ${suplentes.map(j=>`
-      <tr>
-        <td class="num">${campo(j,["numero","camisa","n"],"-")}</td>
-        <td>${campo(j,["nome","jogador","jogadorNome","atleta"],"-")}</td>
-        <td class="posicao">${campo(j,["posicao","posição","funcao"],"-")}</td>
-      </tr>
-    `).join("")}
-  `:"";
-  return t1+t2;
 }
+
 function renderGols(lista){
   if(!lista.length) return `<div class="line-empty">Nenhum gol.</div>`;
   return lista.map(g=>`
     <div class="event-item">
       <span class="ball">⚽</span>
-      <span class="event-minute">${campo(g,["minuto","tempo"],"-")}'</span>
-      <span class="event-name">
-        ${campo(g,["nome","jogador","jogadorNome","atleta"],"-")}
-        ${campo(g,["numero"],"")?`Nº ${campo(g,["numero"],"")}`:""}
-      </span>
+      <span class="event-minute">${campo(g,["minuto"],"-")}'</span>
+      <span class="event-name">${campo(g,["nome"],"-")}</span>
     </div>
   `).join("");
 }
+
 function renderCartoes(lista){
   if(!lista.length) return `<div class="line-empty">Nenhum cartão.</div>`;
   return lista.map(c=>{
-    const verm=normalizar(campo(c,["tipo","cartao","cor"],"amarelo")).includes("verm");
-    const vt=campo(c,["vermelhoTipo"],"");
-    const extra=verm?` <small>${vt==="segundo_amarelo"?"2º amarelo":"vermelho direto"}</small>`:"";
+    const verm=normalizar(c.tipo).includes("verm");
     return `
       <div class="event-item">
         <span class="${verm?"red-card":"yellow-card"}"></span>
-        <span class="event-minute">${campo(c,["minuto","tempo"],"-")}'</span>
-        <span class="event-name">
-          ${campo(c,["nome","jogador","jogadorNome","atleta"],"-")}
-          ${campo(c,["numero"],"")?`Nº ${campo(c,["numero"],"")}`:""}
-          ${extra}
-        </span>
+        <span class="event-minute">${campo(c,["minuto"],"-")}'</span>
+        <span class="event-name">${campo(c,["nome"],"-")}</span>
       </div>
     `;
   }).join("");
 }
-function contarCartoes(lista){
-  let amarelos=0, vermelhos=0;
-  lista.forEach(c=>{
-    if(normalizar(campo(c,["tipo","cartao","cor"],"amarelo")).includes("verm")) vermelhos++;
-    else amarelos++;
-  });
-  return {amarelos,vermelhos};
-}
 
-window.copiarLink=()=>{navigator.clipboard.writeText(window.location.href); alert("Link copiado.");}
-window.compartilharWhatsApp=()=>{window.open(`https://wa.me/?text=${encodeURIComponent("Súmula oficial: "+window.location.href)}`,"_blank");}
-window.enviarEmail=()=>{window.location.href=`mailto:?subject=Súmula Oficial&body=${encodeURIComponent(window.location.href)}`;}
-window.baixarPDF=()=>{window.print();}
+window.baixarPDF=()=>window.print();
 
 async function carregar(){
   if(!id){
     app.innerHTML=`<div class="error">Súmula não informada.</div>`;
     return;
   }
+
   try{
     const snap=await getDoc(doc(db,"sumulas",id));
+
     if(!snap.exists()){
       app.innerHTML=`<div class="error">Súmula não encontrada.</div>`;
       return;
     }
+
     const s={id:snap.id,...snap.data()};
-    if(!s.sumulaFinalizada && s.status!=="finalizado"){
-      app.innerHTML=`<div class="error">Esta súmula ainda não foi finalizada.</div>`;
-      return;
-    }
 
     const A=s.timeA||{}, B=s.timeB||{};
-    const nomeA=nomeTime(A, campo(s,["timeANome","mandante"],"MANDANTE"));
-    const nomeB=nomeTime(B, campo(s,["timeBNome","visitante"],"VISITANTE"));
-    const logoA=campo(s,["logoA","escudoTimeA"], escudoTime(A));
-    const logoB=campo(s,["logoB","escudoTimeB"], escudoTime(B));
-    const cidadeA=campo(s,["cidadeA"], cidadeTime(A,"Goiânia - GO"));
-    const cidadeB=campo(s,["cidadeB"], cidadeTime(B,"Goiânia - GO"));
+    const nomeA=nomeTime(A,"MANDANTE");
+    const nomeB=nomeTime(B,"VISITANTE");
 
-    const gols=Array.isArray(s.gols)?s.gols:[];
-    const cartoes=Array.isArray(s.cartoes)?s.cartoes:[];
+    const logoA=escudoTime(A);
+    const logoB=escudoTime(B);
+
+    const jogadoresA=s.jogadoresA||[];
+    const jogadoresB=s.jogadoresB||[];
+
+    const gols=s.gols||[];
+    const cartoes=s.cartoes||[];
+
     const gpt=separarEventosPorTime(gols);
     const cpt=separarEventosPorTime(cartoes);
-    const totC=contarCartoes(cartoes);
-
-    const jogadoresA=campo(s,["jogadoresA","escalacaoA","elencoA"],[]);
-    const jogadoresB=campo(s,["jogadoresB","escalacaoB","elencoB"],[]);
-
-    const codigo=codigoSumula(s);
-    const data=dataBR(campo(s,["data","dataJogo","dataHora","criadoEm"],""));
-    const hora=campo(s,["hora","horario"],"-");
-    const campoJ=campo(s,["local","campo","estadio"],"-");
-    const arbitro=campo(s,["arbitro","arbitroNome"],"-");
-
-    const melhor=campo(s,["melhorJogador"],"-");
-    const melhorTime=campo(s,["melhorJogadorTime"], nomeA);
-    const fotoMelhor=campo(s,["fotoMelhorJogador","fotoMelhor"],"logo-liga.jfif");
 
     app.innerHTML=`
-      <div class="sumula-page">
+    <div class="sumula-page">
 
-        <header class="header">
-          <div class="header-logo">
-            <img src="logo-liga.jfif" alt="Liga Goiana">
+      <header class="header">
+        <div class="header-logo">
+          <img src="logo-liga.jfif">
+        </div>
+
+        <div class="header-title">
+          <h1>SÚMULA OFICIAL</h1>
+          <p>LIGA GOIANA DE FUTEBOL DE BASE</p>
+        </div>
+
+        <div class="header-right">
+          <div class="liga-nome">Liga Goiana de Futebol de Base</div>
+          <div class="liga-slogan">Onde o talento encontra o futuro</div>
+        </div>
+      </header>
+
+      <section class="score-card">
+        <div class="team-score">
+          <img src="${logoA}">
+          <div class="team-name">
+            <h2>${nomeA}</h2>
+          </div>
+        </div>
+
+        <div class="score-center">
+          <div class="score-number">${placarA(s)} x ${placarB(s)}</div>
+          <span>Placar Final</span>
+        </div>
+
+        <div class="team-score away">
+          <img src="${logoB}">
+          <div class="team-name">
+            <h2>${nomeB}</h2>
+          </div>
+        </div>
+      </section>
+
+      <section class="lineups">
+        <div class="section-title">Escalações</div>
+
+        <div class="lineups-grid">
+
+          <div class="lineup-card">
+            <div class="lineup-head">${nomeA}</div>
+            <table class="table">
+              <tbody>${renderJogadores(jogadoresA)}</tbody>
+            </table>
           </div>
 
-          <div class="header-title">
-            <h1>SÚMULA OFICIAL</h1>
-            <p>${campo(s,["campeonato","campeonatoNome"],"CAMPEONATO LIGA GOIANA")} ${campo(s,["categoria"],"")}</p>
+          <div class="lineup-card away">
+            <div class="lineup-head">${nomeB}</div>
+            <table class="table">
+              <tbody>${renderJogadores(jogadoresB)}</tbody>
+            </table>
           </div>
 
-          <!-- ALTERADO: logo no lugar de "Futebol é paixão" -->
-          <div class="header-right">
-            <img src="logo-liga.jfif" alt="Liga Goiana">
-          </div>
-        </header>
+        </div>
+      </section>
 
-        <section class="info-strip">
-          <div class="info-box">
-            <i class="fa-regular fa-file-lines"></i>
-            <div>
-              <small>Súmula Nº</small>
-              <strong>${campo(s,["numeroSumula"],codigo)}</strong>
+      <section class="events-grid">
+
+        <div class="team-events">
+          <h3>${nomeA}</h3>
+          <div class="events-columns">
+            <div class="event-col">
+              <h4>Gols</h4>
+              ${renderGols(gpt.a)}
+            </div>
+            <div class="event-col">
+              <h4>Cartões</h4>
+              ${renderCartoes(cpt.a)}
             </div>
           </div>
+        </div>
 
-          <div class="info-box">
-            <i class="fa-solid fa-barcode"></i>
-            <div>
-              <small>Código da partida</small>
-              <strong>${campo(s,["codigoPartida","codigo"],id)}</strong>
+        <div class="team-events away">
+          <h3>${nomeB}</h3>
+          <div class="events-columns">
+            <div class="event-col">
+              <h4>Gols</h4>
+              ${renderGols(gpt.b)}
+            </div>
+            <div class="event-col">
+              <h4>Cartões</h4>
+              ${renderCartoes(cpt.b)}
             </div>
           </div>
+        </div>
 
-          <div class="info-box">
-            <i class="fa-solid fa-trophy"></i>
-            <div>
-              <small>Fase</small>
-              <strong>${campo(s,["fase"],"1ª Fase")}</strong>
-            </div>
-          </div>
+      </section>
 
-          <div class="info-box">
-            <i class="fa-solid fa-list-ol"></i>
-            <div>
-              <small>Rodada</small>
-              <strong>${campo(s,["rodada"],"-")}</strong>
-            </div>
-          </div>
-
-          <div class="info-box">
-            <div>
-              <small>Status</small>
-              <strong class="status-finalizado"><i class="fa-solid fa-check"></i> FINALIZADO</strong>
-            </div>
-          </div>
-        </section>
-
-        <section class="score-card">
-          <div class="team-score">
-            <img src="${logoA}" onerror="this.src='logo-liga.jfif'">
-            <div class="team-name">
-              <h2>${nomeA}</h2>
-              <p>${cidadeA}</p>
-            </div>
-          </div>
-
-          <div class="score-center">
-            <div class="score-number">${placarA(s)} x ${placarB(s)}</div>
-            <span>Placar Final</span>
-          </div>
-
-          <div class="team-score away">
-            <img src="${logoB}" onerror="this.src='logo-liga.jfif'">
-            <div class="team-name">
-              <h2>${nomeB}</h2>
-              <p>${cidadeB}</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="match-strip">
-          <div class="match-box">
-            <i class="fa-regular fa-calendar-days"></i>
-            <div><small>Data</small><strong>${data}</strong></div>
-          </div>
-          <div class="match-box">
-            <i class="fa-regular fa-clock"></i>
-            <div><small>Horário</small><strong>${hora}</strong></div>
-          </div>
-          <div class="match-box">
-            <i class="fa-solid fa-diamond"></i>
-            <div><small>Campo</small><strong>${campoJ}</strong></div>
-          </div>
-          <div class="match-box">
-            <i class="fa-solid fa-whistle"></i>
-            <div><small>Árbitro</small><strong>${arbitro}</strong></div>
-          </div>
-        </section>
-
-        <!-- ESCALAÇÕES EM CARDS (cada time no seu quadrado) -->
-        <section class="lineups">
-          <div class="section-title">Escalações</div>
-
-          <div class="lineups-grid">
-            <div class="lineup-card">
-              <div class="lineup-head">
-                ${nomeA}
-                <img src="${logoA}" onerror="this.src='logo-liga.jfif'">
-              </div>
-
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th class="num">Nº</th>
-                    <th>Jogador</th>
-                    <th class="posicao">Posição</th>
-                  </tr>
-                </thead>
-                <tbody>${renderJogadores(jogadoresA)}</tbody>
-              </table>
-            </div>
-
-            <div class="lineup-card away">
-              <div class="lineup-head">
-                ${nomeB}
-                <img src="${logoB}" onerror="this.src='logo-liga.jfif'">
-              </div>
-
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th class="num">Nº</th>
-                    <th>Jogador</th>
-                    <th class="posicao">Posição</th>
-                  </tr>
-                </thead>
-                <tbody>${renderJogadores(jogadoresB)}</tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="legend">Dados públicos da súmula. CPF e nascimento não são exibidos.</div>
-        </section>
-
-        <section class="events-grid">
-          <div class="team-events">
-            <h3>${nomeA}</h3>
-            <div class="events-columns">
-              <div class="event-col">
-                <h4>Gols</h4>
-                ${renderGols(gpt.a)}
-              </div>
-              <div class="event-col">
-                <h4>Cartões</h4>
-                ${renderCartoes(cpt.a)}
-              </div>
-            </div>
-          </div>
-
-          <div class="team-events away">
-            <h3>${nomeB}</h3>
-            <div class="events-columns">
-              <div class="event-col">
-                <h4>Gols</h4>
-                ${renderGols(gpt.b)}
-              </div>
-              <div class="event-col">
-                <h4>Cartões</h4>
-                ${renderCartoes(cpt.b)}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="lower-grid">
-          <div class="panel">
-            <h3>Arbitragem</h3>
-            <div class="official-row">
-              <div class="official-label"><i class="fa-solid fa-user-tie"></i> Árbitro</div>
-              <div class="official-value">${arbitro}</div>
-            </div>
-            <div class="official-row">
-              <div class="official-label"><i class="fa-solid fa-flag"></i> Assistente 1</div>
-              <div class="official-value">${campo(s,["assistente1"],"-")}</div>
-            </div>
-            <div class="official-row">
-              <div class="official-label"><i class="fa-solid fa-flag"></i> Assistente 2</div>
-              <div class="official-value">${campo(s,["assistente2"],"-")}</div>
-            </div>
-            <div class="official-row">
-              <div class="official-label"><i class="fa-solid fa-location-dot"></i> Observador</div>
-              <div class="official-value">${campo(s,["observador"],"-")}</div>
-            </div>
-          </div>
-
-          <div class="panel">
-            <h3>Resumo da Partida</h3>
-
-            <div class="summary-grid">
-              <div class="summary-box">
-                <i class="fa-solid fa-futbol"></i>
-                <span>Gols</span>
-                <strong>${gols.length || (placarA(s)+placarB(s))}</strong>
-                <div class="summary-detail">(${placarA(s)} x ${placarB(s)})</div>
-              </div>
-
-              <div class="summary-box">
-                <div class="summary-card-icon yellow-card"></div>
-                <span>Cartões Amarelos</span>
-                <strong>${totC.amarelos}</strong>
-              </div>
-
-              <div class="summary-box">
-                <div class="summary-card-icon red-card"></div>
-                <span>Cartões Vermelhos</span>
-                <strong>${totC.vermelhos}</strong>
-              </div>
-            </div>
-
-            <div class="best-player">
-              <img class="best-photo" src="${fotoMelhor}" onerror="this.src='logo-liga.jfif'">
-              <div>
-                <h4>Melhor jogador da partida</h4>
-                <strong>${melhor}</strong>
-                <span>${melhorTime}</span>
-              </div>
-              <div class="trophy">🏆</div>
-            </div>
-          </div>
-        </section>
-
-        <section class="footer-grid">
-          <div class="panel">
-            <h3>Autenticação</h3>
-            <div class="auth-box">
-              <img src="${qrUrl()}" alt="QR Code">
-              <div class="auth-text">
-                <strong>Súmula publicada em</strong>
-                <p>${campo(s,["publicadaEmTexto"],data)}</p>
-                <p>Código de verificação</p>
-                <div class="auth-code">${codigo}</div>
-                <p>Escaneie o QR Code para verificar a autenticidade desta súmula.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel share-panel">
-            <h3>Compartilhar</h3>
-            <div class="buttons">
-              <button class="btn btn-whats" onclick="compartilharWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Compartilhar WhatsApp</button>
-              <button class="btn btn-email" onclick="enviarEmail()"><i class="fa-solid fa-envelope"></i> Enviar por E-mail</button>
-              <button class="btn btn-link" onclick="copiarLink()"><i class="fa-solid fa-link"></i> Copiar Link</button>
-              <button class="btn btn-pdf" onclick="baixarPDF()"><i class="fa-solid fa-file-pdf"></i> Baixar PDF</button>
-            </div>
-          </div>
-        </section>
-
-        <footer class="final-footer">
-          <div>Documento oficial gerado pelo sistema Liga Goiana</div>
-          <div>Todos os direitos reservados © 2026</div>
-        </footer>
-
+      <div style="padding:20px;text-align:center">
+        <button onclick="baixarPDF()" style="padding:12px 20px;background:#dc2626;color:#fff;border:none;border-radius:6px;font-weight:900;">
+          BAIXAR PDF
+        </button>
       </div>
+
+    </div>
     `;
   }catch(e){
     console.error(e);
-    app.innerHTML=`<div class="error">Erro ao carregar súmula oficial.</div>`;
+    app.innerHTML=`<div class="error">Erro ao carregar súmula.</div>`;
   }
 }
 
