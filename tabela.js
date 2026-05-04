@@ -8,6 +8,7 @@ let times = [];
 let campeonatos = [];
 let historico = [];
 let abaAtual = "detalhes";
+let modoClassificacao = localStorage.getItem("modoClassificacaoTabela") || "app";
 
 const $ = id => document.getElementById(id);
 
@@ -297,6 +298,84 @@ function tabelaHTML(lista,modo="geral"){
   `;
 }
 
+function classificacaoAppHTML(lista,modo="geral"){
+  return `
+    <div class="classificacao-app">
+      ${lista.map((t,i)=>{
+        const x = modo === "casa" ? t.casa : modo === "fora" ? t.fora : t;
+
+        return `
+          <article class="class-card ${i === 0 ? "top1" : ""}">
+            <div class="class-head">
+              <div class="class-pos">${i + 1}</div>
+
+              <div class="class-team">
+                <img class="escudo" src="${t.logo}" onerror="this.src='logo-liga.jfif'">
+                <strong>${t.nome}</strong>
+              </div>
+
+              <div class="class-pontos">
+                ${x.pontos || 0}
+                <small>PTS</small>
+              </div>
+            </div>
+
+            <div class="metricas">
+              <div class="metrica"><span>J</span><strong>${x.jogos || 0}</strong></div>
+              <div class="metrica"><span>V</span><strong>${x.vitorias || 0}</strong></div>
+              <div class="metrica"><span>E</span><strong>${x.empates || 0}</strong></div>
+              <div class="metrica"><span>D</span><strong>${x.derrotas || 0}</strong></div>
+              <div class="metrica"><span>GP</span><strong>${x.golsPro || 0}</strong></div>
+              <div class="metrica"><span>GC</span><strong>${x.golsContra || 0}</strong></div>
+              <div class="metrica"><span>SG</span><strong>${x.saldo || 0}</strong></div>
+              <div class="metrica"><span>%</span><strong>${x.aproveitamento || 0}%</strong></div>
+            </div>
+
+            <div class="class-extra">
+              <div class="aproveitamento">Desempenho</div>
+              ${modo === "geral" ? formaHTML(t.forma) : `<span class="tag">${modo === "casa" ? "Casa" : "Fora"}</span>`}
+            </div>
+          </article>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+function controleModoHTML(){
+  return `
+    <div class="modo-tabela">
+      <button class="modo-btn ${modoClassificacao === "app" ? "ativo" : ""}" onclick="mudarModoClassificacao('app')">
+        <i class="fa-solid fa-mobile-screen"></i> App
+      </button>
+      <button class="modo-btn ${modoClassificacao === "compacto" ? "ativo" : ""}" onclick="mudarModoClassificacao('compacto')">
+        <i class="fa-solid fa-table-cells"></i> Compacto
+      </button>
+      <button class="modo-btn ${modoClassificacao === "swipe" ? "ativo" : ""}" onclick="mudarModoClassificacao('swipe')">
+        <i class="fa-solid fa-arrows-left-right"></i> Swipe
+      </button>
+    </div>
+  `;
+}
+
+window.mudarModoClassificacao = function(modo){
+  modoClassificacao = modo;
+  localStorage.setItem("modoClassificacaoTabela", modo);
+  atualizarTela();
+};
+
+function renderTabelaPorModo(lista, modo="geral"){
+  if(!lista.length){
+    return `<div class="vazio">Nenhum jogo finalizado.</div>`;
+  }
+
+  if(modoClassificacao === "swipe"){
+    return tabelaHTML(lista, modo);
+  }
+
+  return classificacaoAppHTML(lista, modo);
+}
+
 function renderDetalhes(){
   const tabela = calcularTabela();
   const partidas = partidasFinalizadas();
@@ -349,27 +428,44 @@ function renderDetalhes(){
 
 function renderClassificacao(){
   const lista = calcularTabela();
-  $("areaTabela").innerHTML = lista.length ? tabelaHTML(lista,"geral") : `<div class="vazio">Nenhum jogo finalizado.</div>`;
+
+  $("areaTabela").innerHTML = `
+    ${controleModoHTML()}
+    ${renderTabelaPorModo(lista,"geral")}
+  `;
 }
 
 function renderCasaFora(){
   const lista = calcularTabela();
 
+  const casa = [...lista].sort((a,b)=>
+    (b.casa.pontos||0)-(a.casa.pontos||0) ||
+    (b.casa.saldo||0)-(a.casa.saldo||0)
+  );
+
   $("areaTabela").innerHTML = `
+    ${controleModoHTML()}
+
     <div class="sub-abas">
       <button class="sub-aba ativa" onclick="renderTabelaCasaFora('casa',this)">Casa</button>
       <button class="sub-aba" onclick="renderTabelaCasaFora('fora',this)">Fora</button>
     </div>
-    <div id="subArea">${tabelaHTML([...lista].sort((a,b)=>(b.casa.pontos||0)-(a.casa.pontos||0)||(b.casa.saldo||0)-(a.casa.saldo||0)),"casa")}</div>
+
+    <div id="subArea">${renderTabelaPorModo(casa,"casa")}</div>
   `;
 }
 
 window.renderTabelaCasaFora = (modo,btn)=>{
   document.querySelectorAll(".sub-aba").forEach(b=>b.classList.remove("ativa"));
   btn.classList.add("ativa");
+
   const lista = calcularTabela();
-  const ordenada = [...lista].sort((a,b)=>(b[modo].pontos||0)-(a[modo].pontos||0)||(b[modo].saldo||0)-(a[modo].saldo||0));
-  $("subArea").innerHTML = tabelaHTML(ordenada,modo);
+  const ordenada = [...lista].sort((a,b)=>
+    (b[modo].pontos||0)-(a[modo].pontos||0) ||
+    (b[modo].saldo||0)-(a[modo].saldo||0)
+  );
+
+  $("subArea").innerHTML = renderTabelaPorModo(ordenada,modo);
 };
 
 function renderJogos(){
