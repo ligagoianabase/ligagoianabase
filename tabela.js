@@ -193,39 +193,67 @@ function calcularTabela(){
   );
 }
 
-/* ===================== SCROLL LATERAL MOBILE ===================== */
-function ativarScrollTabela(){
-  const box = document.querySelector(".box-tabela");
-  if(!box) return;
-
-  let isDown = false;
-  let startX;
-  let scrollLeft;
-
-  box.addEventListener("touchstart", (e)=>{
-    isDown = true;
-    startX = e.touches[0].pageX - box.offsetLeft;
-    scrollLeft = box.scrollLeft;
-  });
-
-  box.addEventListener("touchmove", (e)=>{
-    if(!isDown) return;
-    const x = e.touches[0].pageX - box.offsetLeft;
-    const walk = (x - startX) * 1.3;
-    box.scrollLeft = scrollLeft - walk;
-  });
-
-  box.addEventListener("touchend", ()=>{
-    isDown = false;
-  });
+function tabelaHTML(lista,modo="geral"){
+  return `
+    <div style="overflow-x:auto; -webkit-overflow-scrolling: touch;">
+      <div class="box-tabela" style="min-width:900px;">
+        <div class="table">
+          <div class="row header">
+            <div class="col-pos">#</div><div class="col-time">Time</div>
+            <div class="col">P</div><div class="col">J</div><div class="col">V</div><div class="col">E</div><div class="col">D</div>
+            <div class="col">GP</div><div class="col">GC</div><div class="col">SG</div><div class="col">%</div><div class="col-wide">Desempenho</div>
+          </div>
+          ${lista.map((t,i)=>{
+            const x = modo === "casa" ? t.casa : modo === "fora" ? t.fora : t;
+            return `
+              <div class="${rowClasse(i)}">
+                <div class="col-pos">${medalha(i)}</div>
+                <div class="col-time">
+                  <div class="team">
+                    <img class="escudo" src="${t.logo}" onerror="this.src='logo-liga.jfif'">
+                    ${t.nome}
+                  </div>
+                </div>
+                <div class="col">${x.pontos || 0}</div>
+                <div class="col">${x.jogos || 0}</div>
+                <div class="col">${x.vitorias || 0}</div>
+                <div class="col">${x.empates || 0}</div>
+                <div class="col">${x.derrotas || 0}</div>
+                <div class="col">${x.golsPro || 0}</div>
+                <div class="col">${x.golsContra || 0}</div>
+                <div class="col">${x.saldo || 0}</div>
+                <div class="col">${x.aproveitamento || 0}%</div>
+                <div class="col-wide">${modo === "geral" ? formaHTML(t.forma) : "-"}</div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+    </div>
+  `;
 }
 
-/* ===================== RENDER ===================== */
+function medalha(i){
+  if(i === 0) return "🥇";
+  if(i === 1) return "🥈";
+  if(i === 2) return "🥉";
+  return i + 1;
+}
+
+function rowClasse(i){
+  if(i === 0) return "row top1";
+  if(i === 1) return "row top2";
+  if(i === 2) return "row top3";
+  return "row";
+}
+
+function formaHTML(arr){
+  return `<div class="forma">${(arr || []).map(f=>`<span class="f-${f.toLowerCase()}">${f}</span>`).join("")}</div>`;
+}
 
 function renderClassificacao(){
   const lista = calcularTabela();
   $("areaTabela").innerHTML = lista.length ? tabelaHTML(lista,"geral") : `<div class="vazio">Nenhum jogo finalizado.</div>`;
-  setTimeout(ativarScrollTabela,100);
 }
 
 function renderCasaFora(){
@@ -236,15 +264,27 @@ function renderCasaFora(){
       <button class="sub-aba ativa" onclick="renderTabelaCasaFora('casa',this)">Casa</button>
       <button class="sub-aba" onclick="renderTabelaCasaFora('fora',this)">Fora</button>
     </div>
-    <div id="subArea">${tabelaHTML(lista,"casa")}</div>
+    <div id="subArea">${tabelaHTML([...lista].sort((a,b)=>(b.casa.pontos||0)-(a.casa.pontos||0)),"casa")}</div>
   `;
-  setTimeout(ativarScrollTabela,100);
 }
 
 window.renderTabelaCasaFora = (modo,btn)=>{
   document.querySelectorAll(".sub-aba").forEach(b=>b.classList.remove("ativa"));
   btn.classList.add("ativa");
   const lista = calcularTabela();
-  $("subArea").innerHTML = tabelaHTML(lista,modo);
-  setTimeout(ativarScrollTabela,100);
+  const ordenada = [...lista].sort((a,b)=>(b[modo].pontos||0)-(a[modo].pontos||0));
+  $("subArea").innerHTML = tabelaHTML(ordenada,modo);
 };
+
+function ouvir(nome,setter,refreshFiltro=false){
+  onSnapshot(collection(db,nome),snap=>{
+    setter(snap.docs.map(d=>({id:d.id,...d.data()})));
+  });
+}
+
+ouvir("jogos",v=>jogos=v);
+ouvir("sumulas",v=>sumulas=v);
+ouvir("jogadores",v=>jogadores=v);
+ouvir("times",v=>times=v);
+ouvir("campeonatos",v=>campeonatos=v);
+ouvir("historico",v=>historico=v);
