@@ -1080,28 +1080,66 @@
     }
 
     @media (max-width:600px){
-      html,
-      body{
-        width:100%;
-        max-width:100%;
-        overflow-x:hidden;
-      }
 
-      body{
-        background:
-          linear-gradient(rgba(1,9,24,.86), rgba(1,9,24,.95)),
-          url("fundo.png") center/cover scroll no-repeat;
-      }
+  .topbar-inner{
+    grid-template-columns:48px 1fr 48px;
+    grid-template-areas:
+      "menu logo login"
+      "nav nav nav";
+    gap:10px;
+  }
 
-      .wrap{
-        width:100%;
-        max-width:100%;
-        padding-left:10px;
-        padding-right:10px;
-        margin-left:auto;
-        margin-right:auto;
-        overflow-x:hidden;
-      }
+  .top-nav{
+    grid-area:nav;
+    width:100%;
+    overflow:hidden;
+    margin-top:8px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .top-nav ul{
+    width:100%;
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:8px;
+  }
+
+  .top-nav li{
+    width:100%;
+  }
+
+  .top-nav a,
+  .dropdown-toggle{
+    width:100%;
+    min-height:38px;
+    padding:8px 6px;
+    font-size:12px;
+    border-radius:12px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,212,0,.20);
+    justify-content:center;
+    text-align:center;
+    white-space:nowrap;
+  }
+
+  .top-nav a:hover,
+  .dropdown-toggle:hover{
+    background:rgba(255,212,0,.16);
+    color:var(--yellow);
+  }
+
+  .dropdown-menu,
+  .dropdown.mobile-fixed .dropdown-menu{
+    position:fixed;
+    left:12px !important;
+    right:12px !important;
+    top:auto !important;
+    transform:none !important;
+    width:auto;
+    max-width:calc(100vw - 24px);
+  }
+}
 
       .topbar{
         width:100%;
