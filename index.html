@@ -21,7 +21,13 @@
     }
 
     *{margin:0;padding:0;box-sizing:border-box;}
-    html{scroll-behavior:smooth;}
+
+    html{
+      scroll-behavior:smooth;
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden;
+    }
 
     body{
       font-family:Arial, Helvetica, sans-serif;
@@ -29,7 +35,10 @@
         linear-gradient(rgba(1,9,24,.86), rgba(1,9,24,.95)),
         url("fundo.png") center/cover fixed no-repeat;
       color:var(--white);
+      width:100%;
+      max-width:100%;
       overflow-x:hidden;
+      position:relative;
     }
 
     a{text-decoration:none;color:inherit;transition:var(--transition);}
@@ -1071,29 +1080,53 @@
     }
 
     @media (max-width:600px){
+      html,
+      body{
+        width:100%;
+        max-width:100%;
+        overflow-x:hidden;
+      }
+
+      body{
+        background:
+          linear-gradient(rgba(1,9,24,.86), rgba(1,9,24,.95)),
+          url("fundo.png") center/cover scroll no-repeat;
+      }
+
       .wrap{
-        width:min(100% - 20px, var(--max));
+        width:100%;
+        max-width:100%;
+        padding-left:10px;
+        padding-right:10px;
+        margin-left:auto;
+        margin-right:auto;
+        overflow-x:hidden;
       }
 
       .topbar{
-        overflow:visible;
+        width:100%;
+        max-width:100%;
+        overflow:hidden;
       }
 
       .topbar-inner{
+        width:100%;
+        max-width:100%;
         min-height:auto;
         display:grid;
-        grid-template-columns:auto 1fr auto;
+        grid-template-columns:42px minmax(0,1fr) 42px;
         grid-template-areas:
           "menu logo login"
           "nav nav nav";
         gap:8px;
         align-items:center;
         padding:10px 0;
+        overflow:hidden;
       }
 
       .topbar-left{
         grid-area:menu;
-        width:auto;
+        width:42px;
         min-width:0;
         order:initial;
       }
@@ -1107,17 +1140,25 @@
 
       .topbar-logo{
         grid-area:logo;
-        width:auto;
-        justify-content:flex-start;
+        width:100%;
+        max-width:100%;
+        justify-content:center;
         gap:7px;
         min-width:0;
         order:initial;
+        overflow:hidden;
       }
 
       .topbar-logo img{
         width:42px;
         height:42px;
         border-radius:11px;
+      }
+
+      .logo-text{
+        min-width:0;
+        max-width:100%;
+        overflow:hidden;
       }
 
       .logo-text strong{
@@ -1136,7 +1177,7 @@
 
       .top-actions{
         grid-area:login;
-        width:auto;
+        width:42px;
         min-width:0;
         margin-left:0;
         justify-content:flex-end;
@@ -1144,8 +1185,9 @@
       }
 
       .btn-login-chip{
+        width:42px;
         min-height:42px;
-        padding:7px 9px;
+        padding:7px;
         border-radius:12px;
       }
 
@@ -1162,7 +1204,7 @@
         min-height:42px;
         padding:7px 9px;
         border-radius:12px;
-        max-width:48px;
+        max-width:42px;
       }
 
       .user-chip-text,
@@ -1173,48 +1215,83 @@
       .top-nav{
         grid-area:nav;
         order:initial;
-        justify-content:flex-start;
-        overflow-x:auto;
-        overflow-y:visible;
         width:100%;
-        margin-top:4px;
-        scrollbar-width:none;
-        -ms-overflow-style:none;
-      }
-
-      .top-nav::-webkit-scrollbar{
-        display:none;
+        max-width:100%;
+        display:flex;
+        justify-content:center;
+        overflow:hidden;
+        margin-top:6px;
       }
 
       .top-nav ul{
-        width:max-content;
-        min-width:max-content;
-        justify-content:flex-start;
-        flex-wrap:nowrap;
+        width:100%;
+        min-width:0;
+        max-width:100%;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        flex-wrap:wrap;
         gap:6px;
+        padding:0;
+        overflow:hidden;
+      }
+
+      .top-nav li{
+        flex:0 1 auto;
+        min-width:0;
+        max-width:100%;
       }
 
       .top-nav a,
       .dropdown-toggle{
-        padding:8px 10px;
-        font-size:12px;
-        border-radius:10px;
+        padding:7px 9px;
+        font-size:11px;
+        border-radius:999px;
+        max-width:100%;
+        white-space:nowrap;
+        background:rgba(255,255,255,.045);
+        border-color:rgba(255,212,0,.16);
       }
 
-      .dropdown-menu{
-        min-width:220px;
-        max-width:92vw;
+      .dropdown-menu,
+      .dropdown.mobile-fixed .dropdown-menu{
+        position:fixed;
+        left:10px !important;
+        right:10px !important;
+        width:auto;
+        min-width:0;
+        max-width:calc(100vw - 20px);
+        transform:none !important;
         z-index:9999;
+        overflow-x:hidden;
       }
 
       .user-dropdown{
-        right:0;
-        width:300px;
+        position:fixed;
+        right:10px;
+        left:10px;
+        width:auto;
         max-width:calc(100vw - 20px);
+        overflow-x:hidden;
       }
 
       .hero{
         padding-top:24px;
+      }
+
+      .hero-card,
+      .hero-grid,
+      .cards-pilares,
+      .content-grid,
+      .panel,
+      .cta-banner,
+      .cta-banner-inner,
+      footer,
+      .footer-grid,
+      .footer-card{
+        width:100%;
+        max-width:100%;
+        overflow-x:hidden;
       }
 
       .hero-grid{
@@ -1231,8 +1308,19 @@
       }
 
       .match-table{
-        display:block;
-        overflow-x:auto;
+        width:100%;
+        max-width:100%;
+        table-layout:fixed;
+        display:table;
+        overflow:hidden;
+      }
+
+      .match-table th,
+      .match-table td{
+        word-break:break-word;
+        overflow-wrap:anywhere;
+        font-size:11px;
+        padding:8px 5px;
       }
     }
   </style>
@@ -1657,14 +1745,16 @@
       if(!sidebar || !sidebarOverlay) return;
       sidebar.classList.add("open");
       sidebarOverlay.classList.add("show");
-      document.body.style.overflow = "hidden";
+      document.body.style.overflowY = "hidden";
+      document.body.style.overflowX = "hidden";
     }
 
     function closeSidebar(){
       if(!sidebar || !sidebarOverlay) return;
       sidebar.classList.remove("open");
       sidebarOverlay.classList.remove("show");
-      document.body.style.overflow = "";
+      document.body.style.overflowY = "";
+      document.body.style.overflowX = "hidden";
     }
 
     function resetDropdown(dropdown){
