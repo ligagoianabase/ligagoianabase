@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Relatórios ADM - Liga Goiana</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#0b1f3a;
+  --card:#102a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --muted:#d9e3f2;
+  --line:rgba(255,255,255,.10);
+  --gold-line:rgba(247,198,0,.34);
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --red:#d94141;
+  --green:#1b8f43;
+  --max:1280px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.90),rgba(11,31,58,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:#fff;
+}
+
+a{text-decoration:none;color:inherit}
+button,select,input{font-family:inherit}
+button{cursor:pointer;border:none}
+
+.wrap{
+  width:min(100% - 28px,var(--max));
+  margin:0 auto;
+}
+
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.header-inner{
+  min-height:84px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
+
+.header-left,
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:900;
+}
+
+.btn-light{
+  background:#fff4cf;
+  color:#111;
+}
+
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.container{
+  padding:24px 0 34px;
+}
+
+.hero-panel,
+.section-panel{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
+
+.hero-panel h2{
+  font-size:28px;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
+.hero-panel p{
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.bloco-titulo{
+  margin:0 0 14px;
+  color:var(--gold);
+  font-size:18px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:18px;
+  text-align:center;
+}
+
+.card i{
+  font-size:30px;
+  color:var(--gold);
+  margin-bottom:10px;
+}
+
+.card strong{
+  display:block;
+  font-size:28px;
+  color:#fff;
+  margin-bottom:5px;
+}
+
+.card span{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.lista{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:14px;
+}
+
+.item{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-left:4px solid var(--gold);
+  border-radius:14px;
+  padding:14px;
+}
+
+.item strong{
+  color:var(--gold);
+  display:block;
+  margin-bottom:8px;
+  font-size:16px;
+}
+
+.item p{
+  color:var(--muted);
+  line-height:1.6;
+  font-size:13px;
+}
+
+.status{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:13px;
+}
+
+.status-erro{
+  display:block;
+  background:rgba(217,65,65,.18);
+  color:#ffb7b7;
+  border:1px solid rgba(217,65,65,.35);
+}
+
+@media(max-width:900px){
+  .header-title{
+    order:3;
+    width:100%;
+    text-align:center;
+    font-size:19px;
+  }
+
+  .header-left,
+  .header-right{
+    width:100%;
+    justify-content:center;
+  }
+}
+
+@media(max-width:600px){
+  .top-btn{
+    width:100%;
+  }
+
+  .hero-panel h2{
+    font-size:23px;
+  }
+
+  .hero-panel,
+  .section-panel{
+    padding:16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
+
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
+
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
+    </div>
+
+    <div class="header-title">Relatórios ADM</div>
+
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="carregarTudo()">
+        <i class="fa-solid fa-rotate"></i> Atualizar
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+<section class="hero-panel">
+  <h2>Relatórios Gerais do Sistema</h2>
+  <p>
+    Visualize estatísticas completas da Liga Goiana: usuários, campeonatos, jogos,
+    súmulas, cartões, árbitros, gols e dados gerais do sistema.
+  </p>
+  <div id="statusBox" class="status"></div>
+</section>
+
+<section class="section-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-chart-column"></i> Resumo Geral
+  </h3>
+
+  <div class="cards">
+
+    <div class="card">
+      <i class="fa-solid fa-users"></i>
+      <strong id="totalUsuarios">0</strong>
+      <span>Total de Usuários</span>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-user"></i>
+      <strong id="totalJogadores">0</strong>
+      <span>Jogadores</span>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-user-tie"></i>
+      <strong id="totalTecnicos">0</strong>
+      <span>Técnicos</span>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-whistle"></i>
+      <strong id="totalArbitros">0</strong>
+      <span>Árbitros</span>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-shield-heart"></i>
+      <strong id="totalAssistentes">0</strong>
+      <span>Assistentes</span>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-futbol"></i>
+      <strong id="totalJogos">0</strong>
+      <span>Jogos</span>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-file-signature"></i>
+      <strong id="totalSumulas">0</strong>
+      <span>Súmulas</span>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-trophy"></i>
+      <strong id="totalCampeonatos">0</strong>
+      <span>Campeonatos</span>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-shield"></i>
+      <strong id="totalTimes">0</strong>
+      <span>Times</span>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-futbol"></i>
+      <strong id="totalGols">0</strong>
+      <span>Gols</span>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-square"></i>
+      <strong id="totalAmarelos">0</strong>
+      <span>Cartões Amarelos</span>
+    </div>
+
+    <div class="card">
+      <i class="fa-solid fa-square-full"></i>
+      <strong id="totalVermelhos">0</strong>
+      <span>Cartões Vermelhos</span>
+    </div>
+
+  </div>
+</section>
+
+<section class="section-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-whistle"></i> Jogos por Árbitro
+  </h3>
+
+  <div id="listaArbitros" class="lista">
+    <div class="item">
+      <strong>Carregando...</strong>
+      <p>Aguarde.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-trophy"></i> Campeonatos
+  </h3>
+
+  <div id="listaCampeonatos" class="lista">
+    <div class="item">
+      <strong>Carregando...</strong>
+      <p>Aguarde.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-clock-rotate-left"></i> Últimos Jogos
+  </h3>
+
+  <div id="listaJogos" class="lista">
+    <div class="item">
+      <strong>Carregando...</strong>
+      <p>Aguarde.</p>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let jogadores = [];
+let tecnicos = [];
+let arbitros = [];
+let assistentes = [];
+let jogos = [];
+let sumulas = [];
+let campeonatos = [];
+let times = [];
+
+function el(id){
+  return document.getElementById(id);
+}
+
+function n(v){
+  const num = Number(v);
+  return Number.isFinite(num) ? num : 0;
+}
+
+function texto(v){
+  return String(v || "").trim();
+}
+
+function mostrarErro(msg){
+  const box = el("statusBox");
+  box.className = "status status-erro";
+  box.innerText = msg;
+}
+
+window.voltarPagina = function(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = "admin.html";
+  }
+};
+
+function setTotal(id,valor){
+  el(id).innerText = valor;
+}
+
+async function carregarColecao(nome){
+  const snap = await getDocs(collection(db,nome));
+  const lista = [];
+  snap.forEach(d=>lista.push({id:d.id,...d.data()}));
+  return lista;
+}
+
+function calcularGols(){
+  let gols = 0;
+
+  jogos.forEach(j=>{
+    gols += n(j.placarA);
+    gols += n(j.placarB);
+  });
+
+  return gols;
+}
+
+function calcularCartoes(tipo){
+  let total = 0;
+
+  jogos.forEach(j=>{
+    total += n(j[tipo]);
+  });
+
+  return total;
+}
+
+function renderArbitros(){
+  const box = el("listaArbitros");
+
+  if(!arbitros.length){
+    box.innerHTML = `
+      <div class="item">
+        <strong>Nenhum árbitro encontrado</strong>
+        <p>Cadastre árbitros no sistema.</p>
+      </div>
+    `;
+    return;
+  }
+
+  box.innerHTML = arbitros.map(a=>{
+    const nome = a.nome || a.nomeCompleto || "-";
+
+    const jogosApitados = jogos.filter(j=>{
+      const arb = [
+        j.arbitroNome,
+        j.nomeArbitro,
+        j.arbitro
+      ].join(" ");
+
+      return arb.includes(nome);
+    });
+
+    return `
+      <div class="item">
+        <strong>${nome}</strong>
+        <p>
+          Jogos apitados: ${jogosApitados.length}<br>
+          Status: ${a.status || "ativo"}<br>
+          Cidade: ${a.cidade || "-"}<br>
+          Categoria: ${a.categoria || "-"}
+        </p>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderCampeonatos(){
+  const box = el("listaCampeonatos");
+
+  if(!campeonatos.length){
+    box.innerHTML = `
+      <div class="item">
+        <strong>Nenhum campeonato encontrado</strong>
+        <p>Cadastre campeonatos.</p>
+      </div>
+    `;
+    return;
+  }
+
+  box.innerHTML = campeonatos.map(c=>{
+    return `
+      <div class="item">
+        <strong>${c.nome || c.titulo || "Campeonato"}</strong>
+        <p>
+          Status: ${c.status || "ativo"}<br>
+          Fase: ${c.faseAtual || "classificacao"}<br>
+          Categorias: ${(c.categorias || []).join(", ") || "-"}
+        </p>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderJogos(){
+  const box = el("listaJogos");
+
+  if(!jogos.length){
+    box.innerHTML = `
+      <div class="item">
+        <strong>Nenhum jogo encontrado</strong>
+        <p>Cadastre jogos.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const ordenados = [...jogos].sort((a,b)=>{
+    return String(b.data || "").localeCompare(String(a.data || ""));
+  }).slice(0,10);
+
+  box.innerHTML = ordenados.map(j=>{
+    const a = j.timeA_nome || j.timeA || j.mandante || "Time A";
+    const b = j.timeB_nome || j.timeB || j.visitante || "Time B";
+
+    return `
+      <div class="item">
+        <strong>${a} x ${b}</strong>
+        <p>
+          Data: ${j.data || "-"} ${j.hora || ""}<br>
+          Local: ${j.local || "-"}<br>
+          Placar: ${n(j.placarA)} x ${n(j.placarB)}<br>
+          Árbitro: ${j.arbitroNome || j.nomeArbitro || "-"}
+        </p>
+      </div>
+    `;
+  }).join("");
+}
+
+window.carregarTudo = async function(){
+  try{
+    [
+      jogadores,
+      tecnicos,
+      arbitros,
+      assistentes,
+      jogos,
+      sumulas,
+      campeonatos,
+      times
+    ] = await Promise.all([
+      carregarColecao("jogadores"),
+      carregarColecao("tecnicos"),
+      carregarColecao("arbitros"),
+      carregarColecao("assistentes"),
+      carregarColecao("jogos"),
+      carregarColecao("sumulas"),
+      carregarColecao("campeonatos"),
+      carregarColecao("times")
+    ]);
+
+    const totalUsuarios =
+      jogadores.length +
+      tecnicos.length +
+      arbitros.length +
+      assistentes.length;
+
+    setTotal("totalUsuarios",totalUsuarios);
+    setTotal("totalJogadores",jogadores.length);
+    setTotal("totalTecnicos",tecnicos.length);
+    setTotal("totalArbitros",arbitros.length);
+    setTotal("totalAssistentes",assistentes.length);
+    setTotal("totalJogos",jogos.length);
+    setTotal("totalSumulas",sumulas.length);
+    setTotal("totalCampeonatos",campeonatos.length);
+    setTotal("totalTimes",times.length);
+    setTotal("totalGols",calcularGols());
+    setTotal("totalAmarelos",calcularCartoes("cartoesAmarelos"));
+    setTotal("totalVermelhos",calcularCartoes("cartoesVermelhos"));
+
+    renderArbitros();
+    renderCampeonatos();
+    renderJogos();
+
+  }catch(e){
+    console.error(e);
+    mostrarErro("Erro ao carregar relatórios. Confira Firebase.");
+  }
+};
+
+carregarTudo();
+</script>
+
+</body>
+</html>
