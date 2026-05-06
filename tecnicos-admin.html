@@ -416,6 +416,11 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
       </div>
 
       <div>
+        <label>Data de nascimento</label>
+        <input id="nascimento" type="date">
+      </div>
+
+      <div>
         <label>Status</label>
         <select id="status">
           <option value="ativo">Ativo</option>
@@ -605,6 +610,7 @@ window.limparFormulario = function(){
   document.getElementById("tecnicoId").value = "";
   document.getElementById("nome").value = "";
   document.getElementById("cpf").value = "";
+  document.getElementById("nascimento").value = "";
   document.getElementById("status").value = "ativo";
   document.getElementById("telefone").value = "";
   document.getElementById("whatsapp").value = "";
@@ -625,19 +631,23 @@ window.salvarTecnico = async function(){
   const id = document.getElementById("tecnicoId").value;
 
   const nome = txt(document.getElementById("nome").value);
-  const cpf = txt(document.getElementById("cpf").value);
+  const cpf = limparNumero(document.getElementById("cpf").value);
+  const nascimento = document.getElementById("nascimento").value;
   const status = document.getElementById("status").value;
   const telefone = txt(document.getElementById("telefone").value);
   const whatsapp = limparNumero(document.getElementById("whatsapp").value);
-  const email = txt(document.getElementById("email").value);
+  const email = txt(document.getElementById("email").value).toLowerCase();
   const timeId = document.getElementById("time").value;
   const categoria = document.getElementById("categoria").value;
   const funcao = document.getElementById("funcao").value;
 
   if(!nome) return alert("Digite o nome do técnico.");
   if(!cpf) return alert("Digite o CPF.");
+  if(cpf.length !== 11) return alert("Digite um CPF válido com 11 números.");
+  if(!nascimento) return alert("Digite a data de nascimento.");
   if(!telefone) return alert("Digite o telefone.");
   if(!whatsapp) return alert("Digite o WhatsApp.");
+  if(whatsapp.length < 10) return alert("Digite um WhatsApp válido.");
   if(!email) return alert("Digite o e-mail.");
   if(!timeId) return alert("Selecione o time.");
   if(!categoria) return alert("Selecione a categoria.");
@@ -647,7 +657,10 @@ window.salvarTecnico = async function(){
 
   const dados = {
     nome,
+    nomeCompleto:nome,
     cpf,
+    nascimento,
+    dataNascimento:nascimento,
     status,
     telefone,
     whatsapp,
@@ -688,6 +701,7 @@ window.editarTecnico = function(id){
   document.getElementById("tecnicoId").value = t.id;
   document.getElementById("nome").value = t.nome || "";
   document.getElementById("cpf").value = t.cpf || "";
+  document.getElementById("nascimento").value = t.nascimento || t.dataNascimento || "";
   document.getElementById("status").value = t.status || "ativo";
   document.getElementById("telefone").value = t.telefone || "";
   document.getElementById("whatsapp").value = t.whatsapp || "";
@@ -774,6 +788,8 @@ function renderizarTecnicos(){
       const texto = normalizarTexto(`
         ${t.nome || ""}
         ${t.cpf || ""}
+        ${t.nascimento || ""}
+        ${t.dataNascimento || ""}
         ${t.telefone || ""}
         ${t.whatsapp || ""}
         ${t.email || ""}
@@ -809,6 +825,7 @@ function renderizarTecnicos(){
             <div class="nome-jogador">${t.nome || "-"}</div>
 
             <small>CPF: ${t.cpf || "-"}</small>
+            <small>Nascimento: ${t.nascimento || t.dataNascimento || "-"}</small>
             <small>Telefone: ${t.telefone || "-"}</small>
             <small>WhatsApp: ${t.whatsapp || "-"}</small>
             <small>E-mail: ${t.email || "-"}</small>
