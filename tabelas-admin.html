@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Times - Admin</title>
+<title>Tabelas - Admin</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -293,7 +293,7 @@ input,select{
       </a>
     </div>
 
-    <div class="header-title">Times ADM</div>
+    <div class="header-title">Tabelas ADM</div>
 
     <div class="header-right">
       <button class="top-btn btn-gold" type="button" onclick="salvarTime()">
@@ -306,8 +306,8 @@ input,select{
 <div class="wrap container">
 
 <section class="hero-panel">
-  <h2>Cadastro de Times</h2>
-  <p>Cadastre os times da Liga. Esses dados serão usados automaticamente em jogos, súmulas, jogadores, técnicos e tabelas.</p>
+  <h2>Gerenciamento de Tabelas e Punições</h2>
+  <p>Edite pontuação, gols, saldo, cartões, punições e controle completo das tabelas do campeonato.</p>
 </section>
 
 <section class="form-panel">
@@ -355,6 +355,62 @@ input,select{
     </button>
   </div>
 </section>
+
+
+<section class="form-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-gavel"></i> Punições e Ajustes da Tabela
+  </h3>
+
+  <div class="grid">
+
+    <div>
+      <label>Tipo da punição</label>
+      <select id="tipoPunicao">
+        <option value="time">Time</option>
+        <option value="jogador">Jogador</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Pontos perdidos</label>
+      <input id="pontosPunicao" type="number" placeholder="-3">
+    </div>
+
+    <div>
+      <label>Motivo</label>
+      <select id="motivoPunicao">
+        <option>Briga</option>
+        <option>Racismo</option>
+        <option>Agressão</option>
+        <option>Invasão</option>
+        <option>W.O</option>
+        <option>Outro</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Excluir jogador do campeonato?</label>
+      <select id="expulsaoCampeonato">
+        <option value="nao">Não</option>
+        <option value="sim">Sim</option>
+      </select>
+    </div>
+
+    <div class="full">
+      <label>Observação da punição</label>
+      <input id="obsPunicao" placeholder="Descreva o motivo da punição">
+    </div>
+
+  </div>
+
+  <div class="top-actions">
+    <button class="action-btn" type="button" onclick="registrarPunicao()">
+      <i class="fa-solid fa-gavel"></i> Registrar Punição
+    </button>
+  </div>
+</section>
+
 
 <section class="list-panel">
   <h3 class="bloco-titulo">Times Cadastrados</h3>
@@ -451,7 +507,24 @@ window.salvarTime = async function(){
   }
 
   limparFormulario();
-  carregarTimes();
+  
+window.registrarPunicao = async function(){
+  const tipo = document.getElementById("tipoPunicao").value;
+  const pontos = document.getElementById("pontosPunicao").value;
+  const motivo = document.getElementById("motivoPunicao").value;
+  const obs = document.getElementById("obsPunicao").value;
+
+  alert(
+    "Punição registrada!\n\n" +
+    "Tipo: " + tipo + "\n" +
+    "Pontos: " + pontos + "\n" +
+    "Motivo: " + motivo + "\n" +
+    "Observação: " + obs
+  );
+};
+
+
+carregarTimes();
 };
 
 window.editarTime = function(id){
@@ -472,7 +545,24 @@ window.editarTime = function(id){
 window.excluirTime = async function(id){
   if(!confirm("Deseja excluir este time?")) return;
   await deleteDoc(doc(db,"times",id));
-  carregarTimes();
+  
+window.registrarPunicao = async function(){
+  const tipo = document.getElementById("tipoPunicao").value;
+  const pontos = document.getElementById("pontosPunicao").value;
+  const motivo = document.getElementById("motivoPunicao").value;
+  const obs = document.getElementById("obsPunicao").value;
+
+  alert(
+    "Punição registrada!\n\n" +
+    "Tipo: " + tipo + "\n" +
+    "Pontos: " + pontos + "\n" +
+    "Motivo: " + motivo + "\n" +
+    "Observação: " + obs
+  );
+};
+
+
+carregarTimes();
 };
 
 async function carregarTimes(){
@@ -510,7 +600,7 @@ async function carregarTimes(){
         </div>
 
         <p>
-          Jogos: ${t.jogos || 0}<br>
+          <i class="fa-solid fa-gavel" style="color:#f7c600"></i> Sem punições<br>Jogos: ${t.jogos || 0}<br>
           Pontos: ${t.pontos || 0}<br>
           GP: ${t.golsPro || 0} | GC: ${t.golsContra || 0}
         </p>
@@ -528,6 +618,23 @@ async function carregarTimes(){
     `;
   }).join("");
 }
+
+
+window.registrarPunicao = async function(){
+  const tipo = document.getElementById("tipoPunicao").value;
+  const pontos = document.getElementById("pontosPunicao").value;
+  const motivo = document.getElementById("motivoPunicao").value;
+  const obs = document.getElementById("obsPunicao").value;
+
+  alert(
+    "Punição registrada!\n\n" +
+    "Tipo: " + tipo + "\n" +
+    "Pontos: " + pontos + "\n" +
+    "Motivo: " + motivo + "\n" +
+    "Observação: " + obs
+  );
+};
+
 
 carregarTimes();
 </script>
