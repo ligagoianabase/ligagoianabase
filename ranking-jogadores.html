@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ranking Jogadores - Liga Goiana</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#fff;
+  --muted:#cbd6ea;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.92), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:#fff;
+  min-height:100vh;
+}
+
+.container{
+  width:min(100% - 24px, 1300px);
+  margin:auto;
+  padding:20px 0 40px;
+}
+
+.topo{
+  margin-bottom:20px;
+}
+
+.topo h1{
+  color:var(--gold);
+  font-size:34px;
+  margin-bottom:8px;
+}
+
+.topo p{
+  color:var(--muted);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.card{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 35%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.25);
+  border-radius:18px;
+  overflow:hidden;
+}
+
+.card-head{
+  padding:16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.card-head h2{
+  color:var(--gold);
+  font-size:18px;
+}
+
+.lista{
+  padding:12px;
+}
+
+.item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px;
+  border-radius:12px;
+  background:rgba(255,255,255,.04);
+  margin-bottom:10px;
+}
+
+.pos{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  flex-shrink:0;
+}
+
+.foto{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--gold);
+  background:#fff;
+  flex-shrink:0;
+}
+
+.info{
+  flex:1;
+  min-width:0;
+}
+
+.info strong{
+  display:block;
+  font-size:14px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.info small{
+  color:var(--muted);
+  display:block;
+  margin-top:4px;
+}
+
+.valor{
+  color:var(--gold);
+  font-weight:900;
+  font-size:18px;
+}
+
+.vazio{
+  text-align:center;
+  color:var(--muted);
+  padding:18px;
+}
+
+@media(max-width:1000px){
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:700px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="topo">
+    <h1>Ranking dos Jogadores</h1>
+    <p>Estatísticas automáticas baseadas nas súmulas finalizadas.</p>
+  </div>
+
+  <div class="grid">
+
+    <section class="card">
+      <div class="card-head">
+        <h2><i class="fa-solid fa-futbol"></i> Artilheiros</h2>
+      </div>
+      <div class="lista" id="artilheiros"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2><i class="fa-solid fa-handshake"></i> Assistências</h2>
+      </div>
+      <div class="lista" id="assistencias"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2><i class="fa-solid fa-shield-halved"></i> Menos Cartões</h2>
+      </div>
+      <div class="lista" id="menosCartoes"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2><i class="fa-solid fa-glove"></i> Goleiros Menos Vazados</h2>
+      </div>
+      <div class="lista" id="goleiros"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2><i class="fa-solid fa-star"></i> Melhor Jogador</h2>
+      </div>
+      <div class="lista" id="melhores"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2><i class="fa-solid fa-users"></i> Jogos Disputados</h2>
+      </div>
+      <div class="lista" id="jogos"></div>
+    </section>
+
+  </div>
+
+</div>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+  collection,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let jogadores = [];
+let sumulas = [];
+
+function normalizar(t){
+  return String(t || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function sumulaFinalizada(s){
+  return s.sumulaFinalizada === true ||
+    s.publica === true ||
+    s.publico === true ||
+    normalizar(s.status) === "finalizado" ||
+    normalizar(s.sumulaStatus) === "finalizada";
+}
+
+function foto(j){
+  return j.foto || j.imagem || j.avatar || "logo-liga.jfif";
+}
+
+function criarMapa(){
+
+  const mapa = {};
+
+  jogadores.forEach(j=>{
+
+    const id = j.id;
+
+    mapa[id] = {
+      id,
+      nome:j.nome || "-",
+      foto:foto(j),
+      time:j.timeNome || j.time || "-",
+      categoria:j.categoria || "-",
+      gols:Number(j.gols || 0),
+      assistencias:Number(j.assistencias || 0),
+      amarelos:Number(j.amarelos || 0),
+      vermelhos:Number(j.vermelhos || 0),
+      jogos:Number(j.jogos || 0),
+      defesas:Number(j.defesas || 0),
+      golsSofridos:Number(j.golsSofridos || 0),
+      melhorJogador:Number(j.melhorJogador || 0)
+    };
+  });
+
+  sumulas.filter(sumulaFinalizada).forEach(s=>{
+
+    (s.gols || []).forEach(g=>{
+
+      const id = g.id || g.jogadorId;
+      if(!id) return;
+
+      if(!mapa[id]){
+        mapa[id] = {
+          id,
+          nome:g.nome || "-",
+          foto:"logo-liga.jfif",
+          time:g.time || "-",
+          categoria:s.categoria || "-",
+          gols:0,
+          assistencias:0,
+          amarelos:0,
+          vermelhos:0,
+          jogos:0,
+          defesas:0,
+          golsSofridos:0,
+          melhorJogador:0
+        };
+      }
+
+      mapa[id].gols++;
+
+      if(g.assistenciaId){
+
+        if(!mapa[g.assistenciaId]){
+          mapa[g.assistenciaId] = {
+            id:g.assistenciaId,
+            nome:g.assistenciaNome || "-",
+            foto:"logo-liga.jfif",
+            time:g.time || "-",
+            categoria:s.categoria || "-",
+            gols:0,
+            assistencias:0,
+            amarelos:0,
+            vermelhos:0,
+            jogos:0,
+            defesas:0,
+            golsSofridos:0,
+            melhorJogador:0
+          };
+        }
+
+        mapa[g.assistenciaId].assistencias++;
+      }
+    });
+
+    (s.cartoes || []).forEach(c=>{
+
+      const id = c.id || c.jogadorId;
+      if(!id || !mapa[id]) return;
+
+      if(c.tipo === "amarelo"){
+        mapa[id].amarelos++;
+      }
+
+      if(c.tipo === "vermelho"){
+        mapa[id].vermelhos++;
+      }
+    });
+
+  });
+
+  return Object.values(mapa);
+}
+
+function renderLista(id,lista,valorFn){
+
+  const box = document.getElementById(id);
+
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhum dado encontrado.</div>`;
+    return;
+  }
+
+  box.innerHTML = lista.map((j,i)=>`
+    <div class="item">
+
+      <div class="pos">${i + 1}</div>
+
+      <img class="foto" src="${j.foto}" onerror="this.src='logo-liga.jfif'">
+
+      <div class="info">
+        <strong>${j.nome}</strong>
+        <small>${j.time} • ${j.categoria}</small>
+      </div>
+
+      <div class="valor">
+        ${valorFn(j)}
+      </div>
+
+    </div>
+  `).join("");
+}
+
+function render(){
+
+  const lista = criarMapa();
+
+  renderLista(
+    "artilheiros",
+    [...lista].sort((a,b)=>b.gols-a.gols).slice(0,10),
+    j=>j.gols
+  );
+
+  renderLista(
+    "assistencias",
+    [...lista].sort((a,b)=>b.assistencias-a.assistencias).slice(0,10),
+    j=>j.assistencias
+  );
+
+  renderLista(
+    "menosCartoes",
+    [...lista]
+      .filter(j=>j.jogos > 0)
+      .sort((a,b)=>
+        ((a.amarelos+a.vermelhos) - (b.amarelos+b.vermelhos))
+      )
+      .slice(0,10),
+    j=>(j.amarelos + j.vermelhos)
+  );
+
+  renderLista(
+    "goleiros",
+    [...lista]
+      .filter(j=>j.golsSofridos >= 0)
+      .sort((a,b)=>a.golsSofridos-b.golsSofridos)
+      .slice(0,10),
+    j=>j.golsSofridos
+  );
+
+  renderLista(
+    "melhores",
+    [...lista]
+      .sort((a,b)=>b.melhorJogador-a.melhorJogador)
+      .slice(0,10),
+    j=>j.melhorJogador
+  );
+
+  renderLista(
+    "jogos",
+    [...lista]
+      .sort((a,b)=>b.jogos-a.jogos)
+      .slice(0,10),
+    j=>j.jogos
+  );
+}
+
+onSnapshot(collection(db,"jogadores"),snap=>{
+  jogadores = snap.docs.map(d=>({
+    id:d.id,
+    ...d.data()
+  }));
+
+  render();
+});
+
+onSnapshot(collection(db,"sumulas"),snap=>{
+  sumulas = snap.docs.map(d=>({
+    id:d.id,
+    ...d.data()
+  }));
+
+  render();
+});
+
+</script>
+
+</body>
+</html>
