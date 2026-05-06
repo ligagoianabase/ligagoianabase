@@ -416,6 +416,11 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
       </div>
 
       <div>
+        <label>Data de nascimento</label>
+        <input id="nascimento" type="date">
+      </div>
+
+      <div>
         <label>Status</label>
         <select id="status">
           <option value="ativo">Ativo</option>
@@ -575,6 +580,7 @@ window.limparFormulario = function(){
   document.getElementById("arbitroId").value = "";
   document.getElementById("nome").value = "";
   document.getElementById("cpf").value = "";
+  document.getElementById("nascimento").value = "";
   document.getElementById("status").value = "ativo";
   document.getElementById("telefone").value = "";
   document.getElementById("whatsapp").value = "";
@@ -593,24 +599,31 @@ window.salvarArbitro = async function(){
   const id = document.getElementById("arbitroId").value;
 
   const nome = txt(document.getElementById("nome").value);
-  const cpf = txt(document.getElementById("cpf").value);
+  const cpf = limparNumero(document.getElementById("cpf").value);
+  const nascimento = document.getElementById("nascimento").value;
   const status = document.getElementById("status").value;
   const telefone = txt(document.getElementById("telefone").value);
   const whatsapp = limparNumero(document.getElementById("whatsapp").value);
-  const email = txt(document.getElementById("email").value);
+  const email = txt(document.getElementById("email").value).toLowerCase();
   const funcaoPrincipal = document.getElementById("funcaoPrincipal").value;
 
   if(!nome) return alert("Digite o nome do árbitro.");
   if(!cpf) return alert("Digite o CPF.");
+  if(cpf.length !== 11) return alert("Digite um CPF válido com 11 números.");
+  if(!nascimento) return alert("Digite a data de nascimento.");
   if(!telefone) return alert("Digite o telefone.");
   if(!whatsapp) return alert("Digite o WhatsApp.");
+  if(whatsapp.length < 10) return alert("Digite um WhatsApp válido.");
   if(!email) return alert("Digite o e-mail.");
 
   const foto = await uploadFotoSeExistir();
 
   const dados = {
     nome,
+    nomeCompleto:nome,
     cpf,
+    nascimento,
+    dataNascimento:nascimento,
     status,
     telefone,
     whatsapp,
@@ -649,6 +662,7 @@ window.editarArbitro = function(id){
   document.getElementById("arbitroId").value = a.id;
   document.getElementById("nome").value = a.nome || "";
   document.getElementById("cpf").value = a.cpf || "";
+  document.getElementById("nascimento").value = a.nascimento || a.dataNascimento || "";
   document.getElementById("status").value = a.status || "ativo";
   document.getElementById("telefone").value = a.telefone || "";
   document.getElementById("whatsapp").value = a.whatsapp || "";
@@ -709,6 +723,8 @@ function renderizarArbitros(){
       const texto = normalizarTexto(`
         ${a.nome || ""}
         ${a.cpf || ""}
+        ${a.nascimento || ""}
+        ${a.dataNascimento || ""}
         ${a.telefone || ""}
         ${a.whatsapp || ""}
         ${a.email || ""}
@@ -739,6 +755,7 @@ function renderizarArbitros(){
           <div class="nome-jogador">${a.nome || "-"}</div>
 
           <small>CPF: ${a.cpf || "-"}</small>
+          <small>Nascimento: ${a.nascimento || a.dataNascimento || "-"}</small>
           <small>Telefone: ${a.telefone || "-"}</small>
           <small>WhatsApp: ${a.whatsapp || "-"}</small>
           <small>E-mail: ${a.email || "-"}</small>
