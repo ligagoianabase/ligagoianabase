@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Classificação ADM - Liga Goiana</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#0b1f3a;
+  --card:#102a52;
+  --card2:#0d2446;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#d9e3f2;
+  --line:rgba(255,255,255,.10);
+  --gold-line:rgba(247,198,0,.34);
+  --red:#d94141;
+  --green:#1b8f43;
+  --blue:#1a3f73;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --max:1280px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.90),rgba(11,31,58,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:#fff;
+}
+
+a{text-decoration:none;color:inherit}
+button,select,input{font-family:inherit}
+button{cursor:pointer;border:none}
+
+.wrap{
+  width:min(100% - 28px,var(--max));
+  margin:0 auto;
+}
+
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.header-inner{
+  min-height:84px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
+
+.header-left,
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:900;
+}
+
+.btn-light{
+  background:#fff4cf;
+  color:#111;
+}
+
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.container{
+  padding:24px 0 34px;
+}
+
+.hero-panel,
+.filter-panel,
+.table-panel{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
+
+.hero-panel h2{
+  font-size:28px;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
+.hero-panel p{
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.bloco-titulo{
+  margin:0 0 14px;
+  color:var(--gold);
+  font-size:18px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+label{
+  display:block;
+  margin:0 0 6px;
+  font-weight:900;
+  color:#eef4ff;
+  font-size:13px;
+}
+
+select{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+}
+
+.table-box{
+  width:100%;
+  overflow-x:auto;
+  border-radius:14px;
+  border:1px solid var(--line);
+}
+
+table{
+  width:100%;
+  min-width:980px;
+  border-collapse:collapse;
+  background:rgba(255,255,255,.035);
+}
+
+th{
+  background:rgba(247,198,0,.16);
+  color:var(--gold);
+  font-size:12px;
+  text-transform:uppercase;
+  padding:12px 8px;
+  border-bottom:1px solid var(--gold-line);
+  white-space:nowrap;
+}
+
+td{
+  padding:10px 8px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  text-align:center;
+  color:#fff;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+td.time-cell{
+  text-align:left;
+  min-width:230px;
+  font-weight:900;
+}
+
+.pos{
+  width:34px;
+  height:34px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(247,198,0,.12);
+  color:var(--gold);
+  border:1px solid var(--gold-line);
+  border-radius:10px;
+  font-weight:900;
+}
+
+.time-info{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.time-info img{
+  width:34px;
+  height:34px;
+  border-radius:9px;
+  object-fit:contain;
+  background:#fff;
+  border:1px solid var(--gold-line);
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:4px 7px;
+  border-radius:999px;
+  background:rgba(247,198,0,.12);
+  border:1px solid var(--gold-line);
+  color:var(--gold);
+  font-size:11px;
+  font-weight:900;
+}
+
+.gavel{
+  color:var(--gold);
+  margin-right:5px;
+}
+
+.punido{
+  color:#ffd45c;
+  font-weight:900;
+}
+
+.status{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:13px;
+}
+
+.status-ok{
+  display:block;
+  background:rgba(27,143,67,.18);
+  color:#aaf0bd;
+  border:1px solid rgba(27,143,67,.35);
+}
+
+.status-erro{
+  display:block;
+  background:rgba(217,65,65,.18);
+  color:#ffb7b7;
+  border:1px solid rgba(217,65,65,.35);
+}
+
+@media(max-width:900px){
+  .header-title{
+    order:3;
+    width:100%;
+    text-align:center;
+    font-size:19px;
+  }
+
+  .header-left,
+  .header-right{
+    width:100%;
+    justify-content:center;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:600px){
+  .top-btn{
+    width:100%;
+  }
+
+  .hero-panel h2{
+    font-size:23px;
+  }
+
+  .hero-panel,
+  .filter-panel,
+  .table-panel{
+    padding:16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
+
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
+
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
+    </div>
+
+    <div class="header-title">Classificação ADM</div>
+
+    <div class="header-right">
+      <a href="tabelas-admin.html" class="top-btn btn-gold">
+        <i class="fa-solid fa-pen-to-square"></i> Editar Tabela
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+<section class="hero-panel">
+  <h2>Classificação dos Campeonatos</h2>
+  <p>
+    Visualize a classificação oficial por campeonato e categoria. Para alterar pontos, gols ou punições,
+    use o botão Editar Tabela.
+  </p>
+  <div id="statusBox" class="status"></div>
+</section>
+
+<section class="filter-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-filter"></i> Filtros
+  </h3>
+
+  <div class="grid">
+    <div>
+      <label>Campeonato</label>
+      <select id="campeonatoSelect" onchange="carregarClassificacao()">
+        <option value="">Todos os campeonatos</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Categoria</label>
+      <select id="categoriaSelect" onchange="carregarClassificacao()">
+        <option value="">Todas / Geral</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<section class="table-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-ranking-star"></i> Tabela de Classificação
+  </h3>
+
+  <div class="table-box">
+    <table>
+      <thead>
+        <tr>
+          <th>Pos</th>
+          <th>Time</th>
+          <th>Pts</th>
+          <th>J</th>
+          <th>V</th>
+          <th>E</th>
+          <th>D</th>
+          <th>GP</th>
+          <th>GC</th>
+          <th>SG</th>
+          <th>CA</th>
+          <th>CV</th>
+          <th>Punição</th>
+          <th>Aproveit.</th>
+        </tr>
+      </thead>
+      <tbody id="corpoTabela">
+        <tr><td colspan="14">Carregando classificação...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let campeonatosCache = [];
+let timesCache = [];
+
+function el(id){
+  return document.getElementById(id);
+}
+
+function n(v){
+  const num = Number(v);
+  return Number.isFinite(num) ? num : 0;
+}
+
+function txt(v){
+  return String(v || "").trim();
+}
+
+function mostrarStatus(msg,tipo="ok"){
+  const box = el("statusBox");
+  box.className = "status " + (tipo === "erro" ? "status-erro" : "status-ok");
+  box.innerText = msg;
+}
+
+window.voltarPagina = function(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = "admin.html";
+  }
+};
+
+function saldo(t){
+  return n(t.golsPro) - n(t.golsContra);
+}
+
+function aproveitamento(t){
+  const jogos = n(t.jogos);
+  if(!jogos) return "0%";
+  const max = jogos * 3;
+  return Math.round((n(t.pontos) / max) * 100) + "%";
+}
+
+function temPunicao(t){
+  return n(t.pontosPunicao) < 0 || txt(t.motivoPunicao);
+}
+
+function ordenar(lista){
+  return [...lista].sort((a,b)=>{
+    if(n(b.pontos) !== n(a.pontos)) return n(b.pontos) - n(a.pontos);
+    if(saldo(b) !== saldo(a)) return saldo(b) - saldo(a);
+    if(n(b.golsPro) !== n(a.golsPro)) return n(b.golsPro) - n(a.golsPro);
+    return (a.nome || "").localeCompare(b.nome || "","pt-BR");
+  });
+}
+
+async function carregarCampeonatos(){
+  const select = el("campeonatoSelect");
+  select.innerHTML = `<option value="">Todos os campeonatos</option>`;
+
+  try{
+    const snap = await getDocs(collection(db,"campeonatos"));
+    campeonatosCache = [];
+    snap.forEach(d=>campeonatosCache.push({id:d.id,...d.data()}));
+
+    campeonatosCache.sort((a,b)=>(a.nome || a.titulo || "").localeCompare(b.nome || b.titulo || "","pt-BR"));
+
+    campeonatosCache.forEach(c=>{
+      const nome = c.nome || c.titulo || "Campeonato";
+      select.innerHTML += `<option value="${c.id}">${nome}</option>`;
+    });
+
+    carregarCategorias();
+  }catch(e){
+    console.error(e);
+    mostrarStatus("Erro ao carregar campeonatos.","erro");
+  }
+}
+
+function carregarCategorias(){
+  const select = el("categoriaSelect");
+  const campId = el("campeonatoSelect").value;
+  const camp = campeonatosCache.find(c=>c.id === campId);
+
+  select.innerHTML = `<option value="">Todas / Geral</option>`;
+
+  let categorias = [];
+  if(camp){
+    if(Array.isArray(camp.categorias)) categorias = camp.categorias;
+    if(Array.isArray(camp.categoriasSelecionadas)) categorias = camp.categoriasSelecionadas;
+  }
+
+  categorias.forEach(cat=>{
+    select.innerHTML += `<option value="${cat}">${cat}</option>`;
+  });
+}
+
+async function carregarTimes(){
+  const snap = await getDocs(collection(db,"times"));
+  timesCache = [];
+  snap.forEach(d=>timesCache.push({id:d.id,...d.data()}));
+}
+
+window.carregarClassificacao = function(){
+  carregarCategorias();
+
+  const campId = el("campeonatoSelect").value;
+  const categoria = el("categoriaSelect").value;
+
+  let lista = timesCache.filter(t=>{
+    if(categoria){
+      const cats = Array.isArray(t.categorias) ? t.categorias : [];
+      if(!cats.includes(categoria)) return false;
+    }
+
+    if(campId && t.campeonatoId && t.campeonatoId !== campId) return false;
+
+    return true;
+  });
+
+  lista = ordenar(lista);
+
+  const tbody = el("corpoTabela");
+
+  if(!lista.length){
+    tbody.innerHTML = `<tr><td colspan="14">Nenhum time encontrado para essa classificação.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = lista.map((t,i)=>{
+    const punicao = temPunicao(t)
+      ? `<span class="badge"><i class="fa-solid fa-gavel"></i> ${n(t.pontosPunicao)} pts</span>`
+      : "-";
+
+    return `
+      <tr>
+        <td><span class="pos">${i+1}</span></td>
+        <td class="time-cell">
+          <div class="time-info">
+            <img src="${t.logo || t.escudo || "logo-liga.jfif"}" onerror="this.src='logo-liga.jfif'">
+            <span>${temPunicao(t) ? `<i class="fa-solid fa-gavel gavel"></i>` : ""}${t.nome || "-"}</span>
+          </div>
+        </td>
+        <td class="${temPunicao(t) ? "punido" : ""}">${n(t.pontos)}</td>
+        <td>${n(t.jogos)}</td>
+        <td>${n(t.vitorias)}</td>
+        <td>${n(t.empates)}</td>
+        <td>${n(t.derrotas)}</td>
+        <td>${n(t.golsPro)}</td>
+        <td>${n(t.golsContra)}</td>
+        <td>${saldo(t)}</td>
+        <td>${n(t.cartoesAmarelos || t.amarelos)}</td>
+        <td>${n(t.cartoesVermelhos || t.vermelhos)}</td>
+        <td>${punicao}</td>
+        <td>${aproveitamento(t)}</td>
+      </tr>
+    `;
+  }).join("");
+};
+
+async function iniciar(){
+  await carregarCampeonatos();
+  await carregarTimes();
+  carregarClassificacao();
+}
+
+iniciar();
+</script>
+
+</body>
+</html>
