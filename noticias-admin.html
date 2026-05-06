@@ -167,6 +167,17 @@ textarea{
   resize:vertical;
 }
 
+.preview-img{
+  width:100%;
+  max-height:230px;
+  object-fit:cover;
+  border-radius:12px;
+  border:2px solid var(--gold);
+  background:#0d2a52;
+  display:none;
+  margin-top:8px;
+}
+
 .top-actions{
   display:flex;
   gap:10px;
@@ -379,6 +390,12 @@ textarea{
     </div>
 
     <div>
+      <label>Foto do celular / computador</label>
+      <input id="arquivoImagem" type="file" accept="image/*" onchange="previewImagemSelecionada()">
+      <img id="previewImagem" class="preview-img" src="">
+    </div>
+
+    <div>
       <label>Status</label>
       <select id="status">
         <option value="publicado">Publicado</option>
@@ -432,7 +449,7 @@ textarea{
 </div>
 
 <script type="module">
-import { db } from "./firebase.js";
+import { db, storage } from "./firebase.js";
 import {
   collection,
   addDoc,
@@ -442,6 +459,12 @@ import {
   updateDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
 
 let noticiasCache = [];
 
@@ -473,6 +496,9 @@ window.limparFormulario = function(){
   el("titulo").value = "";
   el("categoria").value = "";
   el("imagem").value = "";
+  el("arquivoImagem").value = "";
+  el("previewImagem").src = "";
+  el("previewImagem").style.display = "none";
   el("status").value = "publicado";
   el("autor").value = "";
   el("data").value = "";
@@ -481,13 +507,43 @@ window.limparFormulario = function(){
   el("tituloFormulario").innerHTML = `<i class="fa-solid fa-newspaper"></i> Nova Notícia`;
 };
 
+window.previewImagemSelecionada = function(){
+  const arquivo = el("arquivoImagem").files[0];
+  const preview = el("previewImagem");
+
+  if(!arquivo){
+    preview.style.display = "none";
+    preview.src = "";
+    return;
+  }
+
+  preview.src = URL.createObjectURL(arquivo);
+  preview.style.display = "block";
+};
+
+async function uploadImagemNoticia(idBase){
+  const arquivo = el("arquivoImagem").files[0];
+
+  if(!arquivo){
+    return texto(el("imagem").value);
+  }
+
+  const extensao = arquivo.name.split(".").pop() || "jpg";
+  const nomeArquivo = `noticias/${idBase || Date.now()}-${Date.now()}.${extensao}`;
+  const arquivoRef = ref(storage,nomeArquivo);
+
+  await uploadBytes(arquivoRef,arquivo);
+  return await getDownloadURL(arquivoRef);
+}
+
 window.salvarNoticia = async function(){
   const id = el("noticiaId").value;
+  const imagemFinal = await uploadImagemNoticia(id || "nova-noticia");
 
   const dados = {
     titulo:texto(el("titulo").value),
     categoria:texto(el("categoria").value),
-    imagem:texto(el("imagem").value) || "hero-liga.jpeg",
+    imagem:imagemFinal || "hero-liga.jpeg",
     status:el("status").value,
     publicado:el("status").value === "publicado",
     autor:texto(el("autor").value) || "Liga Goiana",
@@ -524,6 +580,14 @@ window.editarNoticia = function(id){
   el("titulo").value = n.titulo || "";
   el("categoria").value = n.categoria || "";
   el("imagem").value = n.imagem || "";
+  el("arquivoImagem").value = "";
+  if(n.imagem){
+    el("previewImagem").src = n.imagem;
+    el("previewImagem").style.display = "block";
+  }else{
+    el("previewImagem").src = "";
+    el("previewImagem").style.display = "none";
+  }
   el("status").value = n.status || (n.publicado ? "publicado" : "rascunho");
   el("autor").value = n.autor || n.publicadoPor || "Liga Goiana";
   el("data").value = String(n.data || "").slice(0,10);
