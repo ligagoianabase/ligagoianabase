@@ -20,17 +20,16 @@
   --muted:#cbd6ea;
   --line:rgba(255,255,255,.12);
   --gold-line:rgba(247,198,0,.45);
-  --green:#1b5e20;
-  --red:#b42323;
-  --blue:#1a3f73;
   --shadow:0 14px 34px rgba(0,0,0,.38);
   --max:1240px;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
 }
 
 body{
@@ -40,29 +39,12 @@ body{
     url("fundo.png") center/cover fixed no-repeat;
   color:var(--white);
   min-height:100vh;
-  overflow-x:hidden;
 }
 
-a{
-  text-decoration:none;
-  color:inherit;
-}
-
-button{
-  font-family:inherit;
-  cursor:pointer;
-  border:none;
-}
-
-input,
-select{
-  font-family:inherit;
-}
-
-img{
-  display:block;
-  max-width:100%;
-}
+a{text-decoration:none;color:inherit}
+button,input,select{font-family:inherit}
+button{cursor:pointer;border:none}
+img{display:block;max-width:100%}
 
 .wrap{
   width:min(100% - 28px, var(--max));
@@ -120,8 +102,7 @@ img{
   margin-bottom:14px;
 }
 
-input,
-select{
+input,select{
   width:100%;
   padding:12px;
   border:none;
@@ -133,11 +114,6 @@ select{
   box-shadow:0 8px 18px rgba(0,0,0,.22);
 }
 
-input:focus,
-select:focus{
-  outline:2px solid rgba(247,198,0,.65);
-}
-
 .titulo-secao{
   color:var(--gold);
   font-size:22px;
@@ -145,35 +121,10 @@ select:focus{
   margin:0 0 12px;
 }
 
-/* GRID PADRÃO — MÁXIMO 5 POR LINHA */
 .lista-grid{
   display:grid;
   grid-template-columns:repeat(5, 1fr);
   gap:12px;
-}
-
-@media(max-width:1100px){
-  .lista-grid{
-    grid-template-columns:repeat(4, 1fr);
-  }
-}
-
-@media(max-width:900px){
-  .lista-grid{
-    grid-template-columns:repeat(3, 1fr);
-  }
-}
-
-@media(max-width:650px){
-  .lista-grid{
-    grid-template-columns:repeat(2, 1fr);
-  }
-}
-
-@media(max-width:430px){
-  .lista-grid{
-    grid-template-columns:1fr;
-  }
 }
 
 .card-noticia{
@@ -284,14 +235,22 @@ select:focus{
   grid-column:1/-1;
 }
 
-@media(max-width:900px){
-  .filtros{
-    grid-template-columns:1fr;
-  }
+@media(max-width:1100px){
+  .lista-grid{grid-template-columns:repeat(4,1fr)}
+}
 
-  .hero h2{
-    font-size:22px;
-  }
+@media(max-width:900px){
+  .lista-grid{grid-template-columns:repeat(3,1fr)}
+  .filtros{grid-template-columns:1fr}
+  .hero h2{font-size:22px}
+}
+
+@media(max-width:650px){
+  .lista-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:430px){
+  .lista-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -330,10 +289,7 @@ select:focus{
 <script type="module">
 import { renderMenu } from "./menu.js";
 import { db } from "./firebase.js";
-import {
-  collection,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 renderMenu("noticias");
 
@@ -358,38 +314,26 @@ function val(obj,chaves,f=""){
 
 function formatarData(valor){
   if(!valor) return "-";
-
-  if(typeof valor.toDate === "function"){
-    valor = valor.toDate();
-  }
-
+  if(typeof valor.toDate === "function") valor = valor.toDate();
   const data = new Date(valor);
-
-  if(isNaN(data.getTime())){
-    return String(valor);
-  }
-
-  return data.toLocaleDateString("pt-BR", {
-    day:"2-digit",
-    month:"2-digit",
-    year:"numeric"
-  });
+  if(isNaN(data.getTime())) return String(valor);
+  return data.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
 }
 
 function dataOrdenacao(item){
-  const data =
-    item.publicadaEm ||
-    item.criadoEm ||
-    item.data ||
-    item.atualizadoEm ||
-    "";
-
-  if(data && typeof data.toDate === "function"){
-    return data.toDate().getTime();
-  }
-
+  const data = item.publicadaEm || item.criadoEm || item.data || item.atualizadoEm || "";
+  if(data && typeof data.toDate === "function") return data.toDate().getTime();
   const d = new Date(data).getTime();
   return isNaN(d) ? 0 : d;
+}
+
+function publicado(item){
+  return item.publicado === true ||
+    item.publica === true ||
+    item.status === "publicado" ||
+    item.status === "ativa" ||
+    item.status === "ativo" ||
+    item.status === undefined;
 }
 
 function preencherCategorias(){
@@ -399,7 +343,7 @@ function preencherCategorias(){
 
   noticias.forEach(noticia=>{
     const cat = val(noticia,["categoria","tipo","categoriaNoticia"],"");
-    if(cat) set.add(cat);
+    if(cat && publicado(noticia)) set.add(cat);
   });
 
   select.innerHTML = `<option value="">Todas categorias</option>`;
@@ -408,9 +352,7 @@ function preencherCategorias(){
     select.innerHTML += `<option value="${cat}">${cat}</option>`;
   });
 
-  if([...set].includes(atual)){
-    select.value = atual;
-  }
+  if([...set].includes(atual)) select.value = atual;
 }
 
 function noticiasFiltradas(){
@@ -424,16 +366,7 @@ function noticiasFiltradas(){
     const campeonato = val(item,["campeonato","campeonatoNome"],"");
     const time = val(item,["time","timeNome"],"");
 
-    const publicado =
-      item.publicado === true ||
-      item.publica === true ||
-      item.status === "publicado" ||
-      item.status === "ativa" ||
-      item.status === "ativo" ||
-      item.status === undefined;
-
-    if(!publicado) return false;
-
+    if(!publicado(item)) return false;
     if(categoria && cat !== categoria) return false;
 
     if(busca){
@@ -442,16 +375,14 @@ function noticiasFiltradas(){
     }
 
     return true;
-  }).sort((a,b)=>dataOrdenacao(b) - dataOrdenacao(a));
+  }).sort((a,b)=>dataOrdenacao(b)-dataOrdenacao(a));
 }
 
 function atualizarTopo(lista){
   const categoria = document.getElementById("filtroCategoria").value;
-
   document.getElementById("tagTotal").innerText = `Notícias: ${lista.length}`;
   document.getElementById("tagCategoria").innerText = `Categoria: ${categoria || "Todas"}`;
-  document.getElementById("tituloPagina").innerText =
-    `Notícias${categoria ? " - " + categoria : ""}`;
+  document.getElementById("tituloPagina").innerText = `Notícias${categoria ? " - " + categoria : ""}`;
 }
 
 function render(){
@@ -514,325 +445,6 @@ onSnapshot(collection(db,"noticias"),snap=>{
   preencherCategorias();
   render();
 });
-</script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Notícia - LIGA GOIANA DE FUTEBOL DE BASE</title>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="menu.css">
-
-<style>
-:root{
-  --bg:#061427;
-  --card:#071d37;
-  --card2:#0d2a52;
-  --gold:#f7c600;
-  --gold2:#ffe45c;
-  --white:#ffffff;
-  --muted:#cbd6ea;
-  --gold-line:rgba(247,198,0,.45);
-  --shadow:0 14px 34px rgba(0,0,0,.38);
-  --max:980px;
-}
-
-*{margin:0;padding:0;box-sizing:border-box}
-
-body{
-  font-family:Arial, sans-serif;
-  background:
-    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
-    url("fundo.png") center/cover fixed no-repeat;
-  color:var(--white);
-  min-height:100vh;
-}
-
-a{text-decoration:none;color:inherit}
-
-.wrap{
-  width:min(100% - 28px, var(--max));
-  margin:0 auto;
-}
-
-.container{
-  padding:22px 0 34px;
-}
-
-.noticia{
-  background:
-    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border:1px solid var(--gold-line);
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:var(--shadow);
-}
-
-.capa{
-  width:100%;
-  height:360px;
-  object-fit:cover;
-  background:#0d2a52;
-}
-
-.conteudo{
-  padding:22px;
-}
-
-.badge{
-  display:inline-flex;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#111;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:900;
-  margin-bottom:12px;
-}
-
-h1{
-  color:var(--gold);
-  font-size:34px;
-  line-height:1.15;
-  margin-bottom:10px;
-}
-
-.meta{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  color:var(--muted);
-  font-size:12px;
-  font-weight:800;
-  margin-bottom:18px;
-}
-
-.meta span{
-  background:rgba(26,63,115,.9);
-  border:1px solid rgba(255,255,255,.08);
-  padding:5px 8px;
-  border-radius:999px;
-}
-
-.resumo{
-  color:#fff;
-  font-size:17px;
-  line-height:1.6;
-  font-weight:700;
-  margin-bottom:18px;
-}
-
-.texto{
-  color:var(--muted);
-  font-size:15px;
-  line-height:1.75;
-  white-space:pre-line;
-}
-
-.acoes{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-top:22px;
-}
-
-.btn{
-  padding:12px;
-  border-radius:12px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  border:none;
-  cursor:pointer;
-  font-size:14px;
-}
-
-.btn-gold{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#111;
-}
-
-.btn-blue{
-  background:#1a3f73;
-  color:#fff;
-}
-
-.btn-wpp{
-  background:#25d366;
-  color:#fff;
-}
-
-.vazio{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border:1px solid var(--gold-line);
-  border-radius:18px;
-  padding:25px;
-  color:var(--muted);
-  text-align:center;
-}
-
-@media(max-width:700px){
-  .capa{
-    height:230px;
-  }
-
-  h1{
-    font-size:25px;
-  }
-
-  .conteudo{
-    padding:16px;
-  }
-
-  .acoes{
-    grid-template-columns:1fr;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<main class="wrap container" id="app">
-  <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando notícia...</div>
-</main>
-
-<script type="module">
-import { renderMenu } from "./menu.js";
-import { db } from "./firebase.js";
-import {
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-
-renderMenu("noticias");
-
-const app = document.getElementById("app");
-const id = new URLSearchParams(location.search).get("id");
-
-function val(obj,chaves,f=""){
-  for(const c of chaves){
-    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== ""){
-      return obj[c];
-    }
-  }
-  return f;
-}
-
-function formatarData(valor){
-  if(!valor) return "-";
-
-  if(typeof valor.toDate === "function"){
-    valor = valor.toDate();
-  }
-
-  const data = new Date(valor);
-
-  if(isNaN(data.getTime())){
-    return String(valor);
-  }
-
-  return data.toLocaleDateString("pt-BR", {
-    day:"2-digit",
-    month:"2-digit",
-    year:"numeric"
-  });
-}
-
-window.compartilharWhats = function(){
-  const texto = `Notícia da Liga Goiana de Futebol de Base: ${location.href}`;
-  window.open("https://wa.me/?text=" + encodeURIComponent(texto), "_blank");
-};
-
-window.copiarLink = function(){
-  navigator.clipboard.writeText(location.href);
-  alert("Link copiado!");
-};
-
-async function carregar(){
-  if(!id){
-    app.innerHTML = `<div class="vazio">Notícia não informada.</div>`;
-    return;
-  }
-
-  const snap = await getDoc(doc(db,"noticias",id));
-
-  if(!snap.exists()){
-    app.innerHTML = `<div class="vazio">Notícia não encontrada.</div>`;
-    return;
-  }
-
-  const noticia = { id:snap.id, ...snap.data() };
-
-  const publicado =
-    noticia.publicado === true ||
-    noticia.publica === true ||
-    noticia.status === "publicado" ||
-    noticia.status === "ativa" ||
-    noticia.status === "ativo" ||
-    noticia.status === undefined;
-
-  if(!publicado){
-    app.innerHTML = `<div class="vazio">Esta notícia ainda não está publicada.</div>`;
-    return;
-  }
-
-  const titulo = val(noticia,["titulo","title"],"Sem título");
-  const resumo = val(noticia,["descricao","resumo","subtitulo"],"");
-  const conteudo = val(noticia,["conteudo","texto","materia","body"],resumo);
-  const img = val(noticia,["imagem","foto","capa","image"],"hero-liga.jpeg");
-  const cat = val(noticia,["categoria","tipo","categoriaNoticia"],"Notícia");
-  const autor = val(noticia,["autor","publicadoPor","admin"],"Liga Goiana");
-  const data = formatarData(val(noticia,["publicadaEm","criadoEm","data","atualizadoEm"],""));
-
-  document.title = `${titulo} - LIGA GOIANA DE FUTEBOL DE BASE`;
-
-  app.innerHTML = `
-    <article class="noticia">
-      <img class="capa" src="${img}" onerror="this.src='hero-liga.jpeg'">
-
-      <div class="conteudo">
-        <div class="badge">${cat}</div>
-
-        <h1>${titulo}</h1>
-
-        <div class="meta">
-          <span><i class="fa-regular fa-calendar"></i> ${data}</span>
-          <span><i class="fa-solid fa-user"></i> ${autor}</span>
-        </div>
-
-        ${resumo ? `<div class="resumo">${resumo}</div>` : ""}
-
-        <div class="texto">${conteudo}</div>
-
-        <div class="acoes">
-          <a class="btn btn-gold" href="noticias.html">
-            <i class="fa-solid fa-arrow-left"></i> Notícias
-          </a>
-
-          <button class="btn btn-wpp" onclick="compartilharWhats()">
-            <i class="fa-brands fa-whatsapp"></i> WhatsApp
-          </button>
-
-          <button class="btn btn-blue" onclick="copiarLink()">
-            <i class="fa-solid fa-link"></i> Copiar Link
-          </button>
-        </div>
-      </div>
-    </article>
-  `;
-}
-
-carregar();
 </script>
 
 </body>
