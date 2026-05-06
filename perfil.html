@@ -237,6 +237,10 @@
       grid-column:1 / -1;
     }
 
+    .campo-oculto{
+      display:none !important;
+    }
+
     .field label{
       font-size:14px;
       font-weight:700;
@@ -419,47 +423,47 @@
       <h2 style="color:var(--gold); margin-bottom:10px;">Dados do usuário</h2>
 
       <div class="grid">
-        <div class="field">
+        <div class="field campo-basico">
           <label for="nome">Nome completo</label>
           <input type="text" id="nome" placeholder="Seu nome completo">
         </div>
 
-        <div class="field">
+        <div class="field campo-basico">
           <label for="nomeExibicao">Nome que quer usar</label>
           <input type="text" id="nomeExibicao" placeholder="Nome de exibição">
         </div>
 
-        <div class="field">
+        <div class="field campo-basico">
           <label for="tipoUsuario">Tipo de usuário</label>
           <input type="text" id="tipoUsuario" readonly>
         </div>
 
-        <div class="field">
+        <div class="field campo-basico">
           <label for="email">Email</label>
           <input type="email" id="email" readonly>
         </div>
 
-        <div class="field">
+        <div class="field campo-basico">
           <label for="cpf">CPF</label>
           <input type="text" id="cpf" placeholder="CPF">
         </div>
 
-        <div class="field">
+        <div class="field campo-basico">
           <label for="telefone">WhatsApp</label>
           <input type="text" id="telefone" placeholder="WhatsApp com DDD">
         </div>
 
-        <div class="field">
+        <div class="field campo-basico">
           <label for="dataNascimento">Data de nascimento</label>
           <input type="date" id="dataNascimento">
         </div>
 
-        <div class="field">
+        <div class="field campo-jogador campo-tecnico campo-assistente">
           <label for="time">Time</label>
           <input type="text" id="time" placeholder="Nome do time">
         </div>
 
-        <div class="field">
+        <div class="field campo-jogador campo-tecnico campo-assistente">
           <label for="categoria">Categoria</label>
           <select id="categoria">
             <option value="">Selecione</option>
@@ -474,17 +478,17 @@
           </select>
         </div>
 
-        <div class="field">
+        <div class="field campo-jogador campo-tecnico campo-arbitro campo-assistente">
           <label for="funcao">Função / Cargo</label>
           <input type="text" id="funcao" placeholder="Ex.: Goleiro, Técnico principal, Árbitro central">
         </div>
 
-        <div class="field">
+        <div class="field campo-jogador">
           <label for="numeroCamisa">Número</label>
           <input type="text" id="numeroCamisa" placeholder="Número da camisa">
         </div>
 
-        <div class="field">
+        <div class="field campo-basico">
           <label for="genero">Gênero</label>
           <select id="genero">
             <option value="">Selecione</option>
@@ -494,7 +498,27 @@
           </select>
         </div>
 
-        <div class="field full">
+        <div class="field campo-fotografo">
+          <label for="cidade">Cidade</label>
+          <input type="text" id="cidade" placeholder="Ex.: Goiânia - GO">
+        </div>
+
+        <div class="field campo-fotografo">
+          <label for="instagram">Instagram</label>
+          <input type="text" id="instagram" placeholder="@seuinstagram">
+        </div>
+
+        <div class="field campo-fotografo">
+          <label for="portfolio">Site / Portfólio</label>
+          <input type="text" id="portfolio" placeholder="https://...">
+        </div>
+
+        <div class="field campo-fotografo">
+          <label for="especialidade">Especialidade</label>
+          <input type="text" id="especialidade" placeholder="Ex.: fotografia esportiva">
+        </div>
+
+        <div class="field full campo-basico campo-fotografo">
           <label for="bio">Observações / Biografia</label>
           <textarea id="bio" rows="4" placeholder="Escreva algo sobre você"></textarea>
         </div>
@@ -539,8 +563,8 @@
 
   <script type="module">
     import { auth, db } from "./firebase.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
     let usuarioAtualId = "";
     let fotoBase64Atual = "";
@@ -578,15 +602,51 @@
         .replace(/[\u0300-\u036f]/g, "");
     }
 
+    function tipoNormalizado(tipo){
+      return normalizarTexto(tipo)
+        .replace(/\s+/g,"_")
+        .replace("fotografo","fotografo")
+        .replace("fotógrafo","fotografo");
+    }
+
     function tipoLabel(tipo){
-      const valor = normalizarTexto(tipo);
+      const valor = tipoNormalizado(tipo);
       if(valor === "admin" || valor === "administrador") return "Administrador";
-      if(valor === "arbitro" || valor === "árbitro") return "Árbitro";
+      if(valor === "arbitro") return "Árbitro";
       if(valor === "assistente") return "Assistente";
-      if(valor === "tecnico" || valor === "técnico") return "Técnico";
+      if(valor === "tecnico") return "Técnico";
       if(valor === "jogador") return "Jogador";
+      if(valor === "fotografo") return "Fotógrafo";
       if(valor === "pai_atleta") return "Pai de Atleta";
       return "Torcedor";
+    }
+
+    function aplicarCamposPorTipo(tipo){
+      const valor = tipoNormalizado(tipo);
+
+      document
+        .querySelectorAll(".campo-jogador,.campo-tecnico,.campo-arbitro,.campo-assistente,.campo-fotografo")
+        .forEach(campo => campo.classList.add("campo-oculto"));
+
+      if(valor === "jogador"){
+        document.querySelectorAll(".campo-jogador").forEach(campo => campo.classList.remove("campo-oculto"));
+      }
+
+      if(valor === "tecnico"){
+        document.querySelectorAll(".campo-tecnico").forEach(campo => campo.classList.remove("campo-oculto"));
+      }
+
+      if(valor === "arbitro"){
+        document.querySelectorAll(".campo-arbitro").forEach(campo => campo.classList.remove("campo-oculto"));
+      }
+
+      if(valor === "assistente"){
+        document.querySelectorAll(".campo-assistente").forEach(campo => campo.classList.remove("campo-oculto"));
+      }
+
+      if(valor === "fotografo"){
+        document.querySelectorAll(".campo-fotografo").forEach(campo => campo.classList.remove("campo-oculto"));
+      }
     }
 
     function preencherFoto(src){
@@ -604,30 +664,48 @@
     }
 
     function preencherResumo(dados){
-      document.getElementById("resumoTipo").textContent = tipoLabel(dados.tipoUsuario || "");
-      document.getElementById("resumoTime").textContent = dados.time || "-";
-      document.getElementById("resumoCategoria").textContent = dados.categoria || "-";
+      const tipo = tipoNormalizado(dados.tipoUsuario || dados.tipo || dados.perfil || "");
+      document.getElementById("resumoTipo").textContent = tipoLabel(dados.tipoUsuario || dados.tipo || dados.perfil || "");
+
+      if(tipo === "fotografo"){
+        document.getElementById("resumoTime").textContent = dados.cidade || "-";
+        document.getElementById("resumoCategoria").textContent = dados.especialidade || "-";
+      }else if(tipo === "arbitro"){
+        document.getElementById("resumoTime").textContent = dados.funcao || "Árbitro";
+        document.getElementById("resumoCategoria").textContent = "-";
+      }else{
+        document.getElementById("resumoTime").textContent = dados.time || "-";
+        document.getElementById("resumoCategoria").textContent = dados.categoria || "-";
+      }
+
       document.getElementById("resumoStatus").textContent = dados.status || "-";
     }
 
     function preencherTela(dados){
+      const tipoOriginal = dados.tipoUsuario || dados.tipo || dados.perfil || "torcedor";
+      aplicarCamposPorTipo(tipoOriginal);
+
       document.getElementById("tituloNome").textContent = dados.nomeExibicao || dados.nome || "Meu Perfil";
 
       document.getElementById("nome").value = dados.nome || "";
       document.getElementById("nomeExibicao").value = dados.nomeExibicao || "";
-      document.getElementById("tipoUsuario").value = tipoLabel(dados.tipoUsuario || "");
+      document.getElementById("tipoUsuario").value = tipoLabel(tipoOriginal);
       document.getElementById("email").value = dados.email || auth.currentUser?.email || "";
       document.getElementById("cpf").value = dados.cpf || "";
-      document.getElementById("telefone").value = dados.telefone || "";
+      document.getElementById("telefone").value = dados.telefone || dados.whatsapp || "";
       document.getElementById("dataNascimento").value = dados.dataNascimento || dados.nascimento || "";
-      document.getElementById("time").value = dados.time || "";
+      document.getElementById("time").value = dados.time || dados.timeNome || "";
       document.getElementById("categoria").value = dados.categoria || "";
-      document.getElementById("funcao").value = dados.funcao || dados.posicao || "";
+      document.getElementById("funcao").value = dados.funcao || dados.posicao || dados.cargo || "";
       document.getElementById("numeroCamisa").value = dados.numeroCamisa || dados.numero || "";
       document.getElementById("genero").value = dados.genero || "";
-      document.getElementById("bio").value = dados.bio || dados.observacoes || "";
+      document.getElementById("cidade").value = dados.cidade || "";
+      document.getElementById("instagram").value = dados.instagram || "";
+      document.getElementById("portfolio").value = dados.portfolio || dados.site || dados.link || "";
+      document.getElementById("especialidade").value = dados.especialidade || "";
+      document.getElementById("bio").value = dados.bio || dados.observacoes || dados.descricao || "";
 
-      document.getElementById("tagTipoUsuario").textContent = `Tipo: ${tipoLabel(dados.tipoUsuario || "")}`;
+      document.getElementById("tagTipoUsuario").textContent = `Tipo: ${tipoLabel(tipoOriginal)}`;
       document.getElementById("tagStatusUsuario").textContent = `Status: ${dados.status || "-"}`;
       document.getElementById("tagAprovacao").textContent = `Aprovação: ${dados.aprovado === true ? "Aprovado" : "Pendente"}`;
       document.getElementById("tagAutorizacao").textContent = `Autorização: ${dados.autorizado === true ? "Autorizado" : "Não autorizado"}`;
@@ -655,6 +733,10 @@
           funcao: "",
           numeroCamisa: "",
           genero: "",
+          cidade: "",
+          instagram: "",
+          portfolio: "",
+          especialidade: "",
           bio: "",
           fotoPerfil: "",
           tipoUsuario: "torcedor",
@@ -713,6 +795,10 @@
       const funcao = document.getElementById("funcao").value.trim();
       const numeroCamisa = document.getElementById("numeroCamisa").value.trim();
       const genero = document.getElementById("genero").value;
+      const cidade = document.getElementById("cidade").value.trim();
+      const instagram = document.getElementById("instagram").value.trim();
+      const portfolio = document.getElementById("portfolio").value.trim();
+      const especialidade = document.getElementById("especialidade").value.trim();
       const bio = document.getElementById("bio").value.trim();
 
       if(!nome){
@@ -740,6 +826,46 @@
         return;
       }
 
+      const snapAtual = await getDoc(doc(db, "usuarios", usuarioAtualId));
+      const dadosAtuais = snapAtual.exists() ? snapAtual.data() : {};
+      const tipoAtual = tipoNormalizado(dadosAtuais.tipoUsuario || dadosAtuais.tipo || dadosAtuais.perfil || "torcedor");
+
+      if(tipoAtual === "jogador"){
+        if(!time){
+          mostrarErro("Informe o time do jogador.");
+          return;
+        }
+
+        if(!categoria){
+          mostrarErro("Informe a categoria do jogador.");
+          return;
+        }
+
+        if(!numeroCamisa){
+          mostrarErro("Informe o número da camisa do jogador.");
+          return;
+        }
+      }
+
+      if(tipoAtual === "tecnico" || tipoAtual === "assistente"){
+        if(!time){
+          mostrarErro("Informe o time.");
+          return;
+        }
+      }
+
+      if(tipoAtual === "fotografo"){
+        if(!cidade){
+          mostrarErro("Informe a cidade do fotógrafo.");
+          return;
+        }
+
+        if(!especialidade){
+          mostrarErro("Informe a especialidade do fotógrafo.");
+          return;
+        }
+      }
+
       try{
         const ref = doc(db, "usuarios", usuarioAtualId);
 
@@ -755,12 +881,50 @@
           categoria,
           funcao,
           numeroCamisa,
+          numero:numeroCamisa,
           genero,
+          cidade,
+          instagram,
+          portfolio,
+          site:portfolio,
+          especialidade,
           bio,
+          descricao:bio,
           cadastroIncompleto:false,
           fotoPerfil: fotoBase64Atual,
+          foto: fotoBase64Atual,
           atualizadoEm: new Date().toISOString()
         });
+
+        if(tipoAtual === "fotografo"){
+          await setDoc(doc(db, "fotografos", usuarioAtualId), {
+            uid:usuarioAtualId,
+            nome,
+            nomeExibicao,
+            email:auth.currentUser?.email || "",
+            cpf,
+            telefone,
+            whatsapp:telefone,
+            dataNascimento,
+            nascimento:dataNascimento,
+            cidade,
+            instagram,
+            portfolio,
+            site:portfolio,
+            especialidade,
+            bio,
+            descricao:bio,
+            fotoPerfil:fotoBase64Atual,
+            foto:fotoBase64Atual,
+            tipoUsuario:"fotografo",
+            tipo:"fotografo",
+            perfil:"fotografo",
+            aprovado:dadosAtuais.aprovado === true,
+            autorizado:dadosAtuais.autorizado === true,
+            status:dadosAtuais.status || "pendente",
+            atualizadoEm:new Date().toISOString()
+          }, {merge:true});
+        }
 
         mostrarSucesso("Perfil salvo com sucesso.");
         await window.recarregarDados();
