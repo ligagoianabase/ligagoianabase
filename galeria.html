@@ -206,6 +206,54 @@ input,select{
   margin-top:12px;
 }
 
+.fotografo-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:12px;
+  padding:10px;
+  border-radius:14px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.fotografo-avatar{
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--gold);
+  background:#fff;
+}
+
+.fotografo-info{
+  flex:1;
+}
+
+.fotografo-info strong{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:4px;
+}
+
+.selo-oficial{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.link-fotografo{
+  color:var(--gold);
+  font-weight:900;
+}
+
 .btn{
   min-height:40px;
   border-radius:11px;
@@ -402,6 +450,7 @@ renderMenu("galeria");
 
 const idUrl = new URLSearchParams(location.search).get("id");
 let albuns = [];
+let fotografos = [];
 
 function el(id){return document.getElementById(id)}
 
@@ -440,6 +489,95 @@ function dataOrdenacao(item){
 function publicado(item){
   return item.publicado !== false && item.status !== "oculto" && item.status !== "rascunho";
 }
+
+
+function fotografoAprovado(f){
+  if(!f) return false;
+
+  const status = n(val(f,["status","situacao"],""));
+
+  if(
+    status === "bloqueado" ||
+    status === "reprovado" ||
+    status === "pendente" ||
+    status === "oculto"
+  ){
+    return false;
+  }
+
+  return f.aprovado === true ||
+    f.autorizado === true ||
+    status === "ativo" ||
+    status === "aprovado";
+}
+
+function fotografoOficial(f){
+  return f?.fotografoOficial === true ||
+    f?.oficial === true;
+}
+
+function buscarFotografo(album){
+  const uid = album.fotografoUid || album.criadoPorUid || "";
+
+  if(uid){
+    const achado = fotografos.find(f=>f.id === uid || f.uid === uid);
+    if(achado) return achado;
+  }
+
+  const nome = n(album.fotografo || album.fotografoNome || "");
+
+  return fotografos.find(f=>{
+    const n1 = n(val(f,["nome","nomeCompleto","displayName"],""));
+    return n1 && n1 === nome;
+  }) || null;
+}
+
+function albumVisivel(album){
+  if(!publicado(album)) return false;
+
+  const fotografo = buscarFotografo(album);
+
+  if(!fotografo) return true;
+
+  return fotografoAprovado(fotografo);
+}
+
+function renderFotografoBox(f){
+  if(!f) return "";
+
+  const insta = val(f,["instagram"],"");
+  const portfolio = val(f,["portfolio","site","link"],"");
+
+  const instaLink = insta
+    ? (String(insta).startsWith("http")
+      ? insta
+      : "https://instagram.com/" + String(insta).replace("@",""))
+    : "";
+
+  return `
+    <div class="fotografo-box">
+      <img class="fotografo-avatar" src="${val(f,["foto","fotoPerfil","avatar"],"logo-liga.jfif")}" onerror="this.src='logo-liga.jfif'">
+
+      <div class="fotografo-info">
+        <strong>
+          <a class="link-fotografo" href="fotografos.html?id=${encodeURIComponent(f.id || f.uid || "")}">
+            ${val(f,["nome","nomeCompleto"],"Fotógrafo")}
+          </a>
+
+          ${fotografoOficial(f)
+            ? `<span class="selo-oficial"><i class="fa-solid fa-certificate"></i> Oficial</span>`
+            : ""}
+        </strong>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${instaLink ? `<a class="btn btn-blue" style="min-height:34px;padding:0 12px" href="${instaLink}" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>` : ""}
+          ${portfolio ? `<a class="btn btn-gray" style="min-height:34px;padding:0 12px" href="${portfolio}" target="_blank"><i class="fa-solid fa-globe"></i> Portfólio</a>` : ""}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 
 function midiasAlbum(item){
   if(Array.isArray(item.midias) && item.midias.length) return item.midias;
@@ -490,7 +628,7 @@ function filtrados(){
   const cat = el("filtroCategoria").value;
 
   return albuns.filter(a=>{
-    if(!publicado(a)) return false;
+    if(!albumVisivel(a)) return false;
     if(camp && a.campeonato !== camp) return false;
     if(cat && a.categoria !== cat) return false;
 
@@ -526,10 +664,11 @@ function renderCardAlbum(a){
         <strong>${a.titulo || "Álbum"}</strong>
         <p>
           Campeonato: ${a.campeonato || "-"}<br>
-          Fotógrafo: ${a.fotografo || "-"}<br>
           Data: ${formatarData(a.data || a.criadoEm)}<br>
           ${a.descricao || ""}
         </p>
+
+        ${renderFotografoBox(buscarFotografo(a))}
 
         <div class="album-actions">
           <a class="btn btn-gold" href="galeria.html?id=${encodeURIComponent(a.id)}">
@@ -579,10 +718,11 @@ function renderAlbumDetalhe(album){
         <p>
           Campeonato: ${album.campeonato || "-"}<br>
           Categoria: ${album.categoria || "-"}<br>
-          Fotógrafo: ${album.fotografo || "-"}<br>
           Data: ${formatarData(album.data || album.criadoEm)}<br>
           ${album.descricao || ""}
         </p>
+
+        ${renderFotografoBox(buscarFotografo(album))}
       </div>
 
       <div class="album-actions" style="min-width:260px">
@@ -665,6 +805,12 @@ async function carregarAlbumPorId(){
     }
 
     const album = {id:snap.id,...snap.data()};
+
+    if(!albumVisivel(album)){
+      el("conteudoGaleria").innerHTML = `<div class="vazio">Álbum não disponível.</div>`;
+      return;
+    }
+
     renderAlbumDetalhe(album);
   }catch(e){
     console.error(e);
@@ -673,11 +819,20 @@ async function carregarAlbumPorId(){
 }
 
 if(idUrl){
-  carregarAlbumPorId();
+
+  onSnapshot(collection(db,"fotografos"),snap=>{
+    fotografos = snap.docs.map(d=>({id:d.id,uid:d.id,...d.data()}));
+    carregarAlbumPorId();
+  });
+
 }else{
   el("busca").addEventListener("input",renderLista);
   el("filtroCampeonato").addEventListener("change",renderLista);
   el("filtroCategoria").addEventListener("change",renderLista);
+
+  onSnapshot(collection(db,"fotografos"),snap=>{
+    fotografos = snap.docs.map(d=>({id:d.id,uid:d.id,...d.data()}));
+  });
 
   onSnapshot(collection(db,"galeria"),snap=>{
     albuns = snap.docs.map(d=>({id:d.id,...d.data()}));
