@@ -87,7 +87,8 @@ label{
 }
 
 input,
-select{
+select,
+textarea{
   width:100%;
   padding:13px;
   border:none;
@@ -99,7 +100,8 @@ select{
 }
 
 input:focus,
-select:focus{
+select:focus,
+textarea:focus{
   outline:2px solid rgba(247,198,0,.65);
 }
 
@@ -237,6 +239,7 @@ select:focus{
     <option value="tecnico">Técnico</option>
     <option value="assistente">Assistente</option>
     <option value="arbitro">Árbitro</option>
+    <option value="fotografo">Fotógrafo</option>
     <option value="admin">Administrador</option>
   </select>
 
@@ -275,6 +278,32 @@ select:focus{
       Para técnico, árbitro e assistente, o cadastro fica pendente até aprovação/autorização.
     </div>
   </div>
+
+  <div class="campos-extra" id="camposFotografo">
+    <label for="cidadeFotografo">Cidade</label>
+    <input type="text" id="cidadeFotografo" placeholder="Digite sua cidade">
+
+    <label for="instagramFotografo">Instagram</label>
+    <input type="text" id="instagramFotografo" placeholder="@usuario ou link">
+
+    <label for="portfolioFotografo">Portfólio / Site</label>
+    <input type="text" id="portfolioFotografo" placeholder="https://...">
+
+    <label for="especialidadeFotografo">Especialidade</label>
+    <input type="text" id="especialidadeFotografo" placeholder="Ex: Fotografia esportiva">
+
+    <label for="bioFotografo">Biografia</label>
+    <textarea id="bioFotografo" placeholder="Fale sobre você"></textarea>
+
+    <label for="fotoFotografo">Foto de perfil</label>
+    <input type="file" id="fotoFotografo" accept="image/*">
+
+    <div class="aviso">
+      O cadastro de fotógrafo ficará pendente até aprovação do administrador.
+      Instagram, portfólio e fotos podem aparecer publicamente no perfil do fotógrafo.
+    </div>
+  </div>
+
 
   <label for="senha">Senha</label>
   <div class="senha-wrap">
@@ -368,13 +397,14 @@ function normalizarTipo(tipo){
   if(valor === "tecnico") return "tecnico";
   if(valor === "assistente") return "assistente";
   if(valor === "arbitro") return "arbitro";
+  if(valor === "fotografo" || valor === "fotógrafo") return "fotografo";
   if(valor === "admin" || valor === "administrador") return "admin";
 
   return "torcedor";
 }
 
 function regrasDePermissao(tipoUsuario){
-  if(tipoUsuario === "admin" || tipoUsuario === "arbitro" || tipoUsuario === "assistente" || tipoUsuario === "tecnico" || tipoUsuario === "jogador"){
+  if(tipoUsuario === "admin" || tipoUsuario === "arbitro" || tipoUsuario === "assistente" || tipoUsuario === "tecnico" || tipoUsuario === "jogador" || tipoUsuario === "fotografo"){
     return {
       autorizado:false,
       aprovado:false,
@@ -405,6 +435,9 @@ window.mostrarCamposExtras = function(){
 
   document.getElementById("camposFuncao").style.display =
     ["tecnico","arbitro","assistente"].includes(tipo) ? "block" : "none";
+
+  document.getElementById("camposFotografo").style.display =
+    tipo === "fotografo" ? "block" : "none";
 };
 
 window.alternarSenha = function(idInput, botao){
@@ -441,6 +474,23 @@ async function buscarRegistroPorCPF(nomeColecao, cpf){
 function numeroEstatistica(valor){
   const n = Number(valor || 0);
   return isNaN(n) ? 0 : n;
+}
+
+
+async function arquivoParaBase64(arquivo){
+  return new Promise((resolve,reject)=>{
+    if(!arquivo){
+      resolve("");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = e => resolve(e.target.result || "");
+    reader.onerror = reject;
+
+    reader.readAsDataURL(arquivo);
+  });
 }
 
 async function criarRegistroPublico(uid,dados){
@@ -550,6 +600,41 @@ async function criarRegistroPublico(uid,dados){
     },{merge:true});
   }
 
+  if(tipo === "fotografo"){
+    await setDoc(doc(db,"fotografos",uid),{
+      usuarioId:uid,
+      cadastroUid:uid,
+      uid,
+      nome:dados.nome,
+      nomeCompleto:dados.nome,
+      cpf:dados.cpf,
+      whatsapp:dados.whatsapp,
+      telefone:dados.whatsapp,
+      email:dados.email,
+      nascimento:dados.dataNascimento,
+      dataNascimento:dados.dataNascimento,
+      cidade:dados.cidadeFotografo || "",
+      instagram:dados.instagramFotografo || "",
+      portfolio:dados.portfolioFotografo || "",
+      site:dados.portfolioFotografo || "",
+      especialidade:dados.especialidadeFotografo || "",
+      bio:dados.bioFotografo || "",
+      descricao:dados.bioFotografo || "",
+      foto:dados.fotoFotografo || "logo-liga.jfif",
+      fotoPerfil:dados.fotoFotografo || "logo-liga.jfif",
+      fotografo:true,
+      fotografoOficial:false,
+      aprovado:false,
+      autorizado:false,
+      status:"pendente",
+      jogos:0,
+      galerias:0,
+      criadoEm:serverTimestamp(),
+      atualizadoEm:serverTimestamp()
+    },{merge:true});
+  }
+
+
   if(tipo === "assistente"){
     await setDoc(doc(db,"assistentes",uid),{
       usuarioId:uid,
@@ -594,6 +679,13 @@ window.cadastrar = async function(){
 
   const cidade = document.getElementById("cidade").value.trim();
   const categoriaFuncao = document.getElementById("categoriaFuncao").value.trim();
+
+  const cidadeFotografo = document.getElementById("cidadeFotografo").value.trim();
+  const instagramFotografo = document.getElementById("instagramFotografo").value.trim();
+  const portfolioFotografo = document.getElementById("portfolioFotografo").value.trim();
+  const especialidadeFotografo = document.getElementById("especialidadeFotografo").value.trim();
+  const bioFotografo = document.getElementById("bioFotografo").value.trim();
+  const arquivoFotoFotografo = document.getElementById("fotoFotografo").files[0] || null;
 
   const senha = document.getElementById("senha").value.trim();
   const confirmarSenha = document.getElementById("confirmarSenha").value.trim();
@@ -653,6 +745,16 @@ window.cadastrar = async function(){
     return;
   }
 
+  if(tipoUsuario === "fotografo" && !cidadeFotografo){
+    mostrarErro("Informe a cidade do fotógrafo.");
+    return;
+  }
+
+  if(tipoUsuario === "fotografo" && !especialidadeFotografo){
+    mostrarErro("Informe a especialidade do fotógrafo.");
+    return;
+  }
+
   if(!senha){
     mostrarErro("Digite sua senha.");
     return;
@@ -672,6 +774,8 @@ window.cadastrar = async function(){
   btnCadastrar.innerText = "Criando conta...";
 
   try{
+    const fotoFotografo = await arquivoParaBase64(arquivoFotoFotografo);
+
     const cred = await createUserWithEmailAndPassword(auth,email,senha);
     const uid = cred.user.uid;
 
@@ -698,6 +802,20 @@ window.cadastrar = async function(){
       facebook,
       cidade,
       categoriaFuncao,
+      cidadeFotografo,
+      instagramFotografo,
+      portfolioFotografo,
+      especialidadeFotografo,
+      bioFotografo,
+      fotoFotografo,
+      instagram:tipoUsuario === "fotografo" ? instagramFotografo : instagram,
+      portfolio:portfolioFotografo,
+      site:portfolioFotografo,
+      especialidade:especialidadeFotografo,
+      bio:bioFotografo,
+      foto:fotoFotografo || "logo-liga.jfif",
+      fotoPerfil:fotoFotografo || "logo-liga.jfif",
+      fotografo:tipoUsuario === "fotografo",
       status:regras.status,
       autorizado:regras.autorizado,
       aprovado:regras.aprovado,
@@ -718,6 +836,8 @@ window.cadastrar = async function(){
       mostrarSucesso("Cadastro realizado. Seu acesso de árbitro ficará pendente de autorização do administrador.");
     }else if(tipoUsuario === "assistente"){
       mostrarSucesso("Cadastro realizado. Seu acesso de assistente ficará pendente de aprovação.");
+    }else if(tipoUsuario === "fotografo"){
+      mostrarSucesso("Cadastro realizado. Seu perfil de fotógrafo ficará pendente de aprovação.");
     }else{
       mostrarSucesso("Cadastro realizado com sucesso. Redirecionando...");
     }
