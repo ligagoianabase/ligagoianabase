@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jogador Público - Liga Goiana</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="menu.css">
+
+<style>
+:root{
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --muted:#cbd6ea;
+  --gold-line:rgba(247,198,0,.45);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:#fff;
+  min-height:100vh;
+}
+
+.wrap{
+  width:min(100% - 24px,1280px);
+  margin:auto;
+  padding:22px 0 40px;
+}
+
+.hero{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.18), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.97), rgba(8,23,44,.98));
+  border:1px solid var(--gold-line);
+  border-radius:22px;
+  padding:22px;
+  display:grid;
+  grid-template-columns:180px 1fr;
+  gap:22px;
+  align-items:center;
+  margin-bottom:16px;
+}
+
+.foto{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid var(--gold);
+  background:#fff;
+}
+
+.hero h1{
+  color:var(--gold);
+  font-size:38px;
+  margin-bottom:8px;
+}
+
+.hero p{
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.tags{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.tag{
+  background:#1a3f73;
+  padding:7px 12px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.tag.ok{
+  background:#1b5e20;
+}
+
+.tag.red{
+  background:#b42323;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.stat{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 35%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:16px;
+  padding:15px;
+  text-align:center;
+}
+
+.stat strong{
+  display:block;
+  color:var(--gold);
+  font-size:26px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:900;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.panel{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 35%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:18px;
+  overflow:hidden;
+}
+
+.panel h2{
+  color:var(--gold);
+  padding:16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.panel-body{
+  padding:14px;
+}
+
+.item{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.item:last-child{
+  border-bottom:none;
+}
+
+.item span{
+  color:var(--muted);
+}
+
+.item strong{
+  color:#fff;
+}
+
+.jogo{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:10px;
+}
+
+.jogo strong{
+  display:block;
+  margin-bottom:6px;
+}
+
+.jogo p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.loading{
+  max-width:700px;
+  margin:80px auto;
+  background:rgba(16,42,82,.96);
+  border:1px solid var(--gold-line);
+  color:var(--gold);
+  padding:24px;
+  border-radius:18px;
+  text-align:center;
+  font-weight:900;
+}
+
+@media(max-width:1100px){
+  .stats{
+    grid-template-columns:repeat(4,1fr);
+  }
+}
+
+@media(max-width:700px){
+  .hero{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+
+  .foto{
+    margin:auto;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .hero h1{
+    font-size:30px;
+  }
+
+  .tags{
+    justify-content:center;
+  }
+}
+
+@media(max-width:500px){
+  .stats{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap" id="app">
+
+  <div class="loading">
+    <i class="fa-solid fa-spinner fa-spin"></i><br>
+    Carregando jogador...
+  </div>
+
+</div>
+
+<script type="module">
+
+import { renderMenu } from "./menu.js";
+import { db } from "./firebase.js";
+
+import {
+  collection,
+  getDocs,
+  getDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+renderMenu("jogadores");
+
+const app = document.getElementById("app");
+const id = new URLSearchParams(location.search).get("id");
+
+let jogador = null;
+let jogos = [];
+let sumulas = [];
+
+function val(obj,chaves,f=""){
+  for(const c of chaves){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== ""){
+      return obj[c];
+    }
+  }
+  return f;
+}
+
+function n(t){
+  return String(t || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .trim();
+}
+
+function nomeJogador(j){
+  return val(j,["nome","nomeCompleto","jogador"],"Jogador");
+}
+
+function fotoJogador(j){
+  return val(j,["foto","imagem","avatar","fotoUrl"],"logo-liga.jfif");
+}
+
+function timeJogador(j){
+  return val(j,["time","timeNome","nomeTime","equipe"],"-");
+}
+
+function posicao(j){
+  return val(j,["posicao","funcao","função"],"-");
+}
+
+function categorias(j){
+  const cats = val(j,["categorias"],[]);
+  if(Array.isArray(cats) && cats.length) return cats;
+  const cat = val(j,["categoria","categoriaNome"],"");
+  return cat ? [cat] : [];
+}
+
+function mesmoJogador(item){
+
+  const ids = [
+    val(item,["jogadorId","idJogador","atletaId"],"")
+  ];
+
+  if(ids.includes(id)) return true;
+
+  return n(val(item,["nome","jogador","nomeJogador"],"")) ===
+    n(nomeJogador(jogador));
+}
+
+function finalizado(j){
+  return j.finalizado === true ||
+    j.encerrado === true ||
+    j.sumulaFinalizada === true ||
+    n(val(j,["status"],"")) === "finalizado";
+}
+
+function calcular(){
+
+  let jogosCount = 0;
+  let gols = 0;
+  let assistencias = 0;
+  let amarelos = 0;
+  let vermelhos = 0;
+  let v = 0;
+  let e = 0;
+  let d = 0;
+
+  const recentes = [];
+
+  sumulas.forEach(s=>{
+
+    const elenco = [
+      ...(s.escalacao || []),
+      ...(s.jogadores || [])
+    ];
+
+    const participou = elenco.some(p=>mesmoJogador(p));
+
+    if(participou){
+      jogosCount++;
+    }
+
+    const eventos = [
+      ...(s.eventos || []),
+      ...(s.gols || []),
+      ...(s.cartoes || []),
+      ...(s.assistencias || [])
+    ];
+
+    eventos.forEach(ev=>{
+
+      if(!mesmoJogador(ev)) return;
+
+      const tipo = n(val(ev,["tipo","evento","acao"],""));
+
+      if(tipo.includes("gol") && !tipo.includes("contra")){
+        gols++;
+      }
+
+      if(tipo.includes("assist")){
+        assistencias++;
+      }
+
+      if(tipo.includes("amarelo")){
+        amarelos++;
+      }
+
+      if(tipo.includes("vermelho")){
+        vermelhos++;
+      }
+    });
+  });
+
+  jogos.forEach(j=>{
+
+    const a = n(val(j,["timeA","timeANome"],""));
+    const b = n(val(j,["timeB","timeBNome"],""));
+    const meu = n(timeJogador(jogador));
+
+    if(a !== meu && b !== meu) return;
+
+    recentes.push(j);
+
+    if(finalizado(j)){
+
+      const ga = Number(val(j,["golsA","placarA"],0));
+      const gb = Number(val(j,["golsB","placarB"],0));
+
+      if(a === meu){
+
+        if(ga > gb) v++;
+        else if(ga === gb) e++;
+        else d++;
+      }
+
+      if(b === meu){
+
+        if(gb > ga) v++;
+        else if(gb === ga) e++;
+        else d++;
+      }
+    }
+  });
+
+  const pontos = (v * 3) + e;
+  const total = v + e + d;
+
+  const aproveitamento = total
+    ? Math.round((pontos / (total * 3)) * 100)
+    : 0;
+
+  return {
+    jogos:jogosCount,
+    gols,
+    assistencias,
+    amarelos,
+    vermelhos,
+    v,e,d,
+    aproveitamento,
+    suspenso:
+      vermelhos > 0 ||
+      amarelos >= 3 ||
+      jogador.suspenso === true,
+    recentes:recentes.reverse().slice(0,8)
+  };
+}
+
+function jogoNome(j){
+  const a = val(j,["timeANome"], j.timeA?.nome || j.timeA || "Time A");
+  const b = val(j,["timeBNome"], j.timeB?.nome || j.timeB || "Time B");
+  return `${a} x ${b}`;
+}
+
+function render(){
+
+  if(!jogador){
+    app.innerHTML = `<div class="loading">Jogador não encontrado.</div>`;
+    return;
+  }
+
+  const s = calcular();
+
+  app.innerHTML = `
+    <section class="hero">
+
+      <img class="foto" src="${fotoJogador(jogador)}" onerror="this.src='logo-liga.jfif'">
+
+      <div>
+
+        <h1>${nomeJogador(jogador)}</h1>
+
+        <p>
+          Jogador oficial da Liga Goiana de Futebol de Base.<br>
+          Time: ${timeJogador(jogador)}<br>
+          Posição: ${posicao(jogador)}<br>
+          Camisa: ${val(jogador,["numero","camisa","numeroCamisa"],"-")}
+        </p>
+
+        <div class="tags">
+
+          <span class="tag">${timeJogador(jogador)}</span>
+
+          ${categorias(jogador).map(c=>`
+            <span class="tag">${c}</span>
+          `).join("")}
+
+          ${
+            s.suspenso
+            ? `<span class="tag red">Suspenso</span>`
+            : `<span class="tag ok">Liberado</span>`
+          }
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="stats">
+
+      <div class="stat">
+        <strong>${s.jogos}</strong>
+        <span>JOGOS</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.gols}</strong>
+        <span>GOLS</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.assistencias}</strong>
+        <span>ASSIST.</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.amarelos}</strong>
+        <span>AMARELOS</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.vermelhos}</strong>
+        <span>VERMELHOS</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.v}</strong>
+        <span>VITÓRIAS</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.e}</strong>
+        <span>EMPATES</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.d}</strong>
+        <span>DERROTAS</span>
+      </div>
+
+    </section>
+
+    <section class="grid">
+
+      <div class="panel">
+
+        <h2><i class="fa-solid fa-chart-line"></i> Estatísticas</h2>
+
+        <div class="panel-body">
+
+          <div class="item">
+            <span>Aproveitamento</span>
+            <strong>${s.aproveitamento}%</strong>
+          </div>
+
+          <div class="item">
+            <span>Status</span>
+            <strong>${s.suspenso ? "Suspenso" : "Liberado"}</strong>
+          </div>
+
+          <div class="item">
+            <span>Posição</span>
+            <strong>${posicao(jogador)}</strong>
+          </div>
+
+          <div class="item">
+            <span>Categoria</span>
+            <strong>${categorias(jogador).join(", ")}</strong>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="panel">
+
+        <h2><i class="fa-solid fa-calendar-days"></i> Jogos recentes</h2>
+
+        <div class="panel-body">
+
+          ${
+            s.recentes.length
+            ? s.recentes.map(j=>`
+              <div class="jogo">
+
+                <strong>${jogoNome(j)}</strong>
+
+                <p>
+                  Campeonato: ${val(j,["campeonato","campeonatoNome"],"-")}<br>
+                  Categoria: ${val(j,["categoria"],"-")}<br>
+                  Data: ${val(j,["data","dataJogo","dataHora"],"-")}<br>
+                  Status: ${val(j,["status"],"-")}
+                </p>
+
+              </div>
+            `).join("")
+            : `<div class="loading">Nenhum jogo encontrado.</div>`
+          }
+
+        </div>
+
+      </div>
+
+    </section>
+  `;
+}
+
+async function carregar(){
+
+  if(!id){
+    app.innerHTML = `<div class="loading">ID do jogador não informado.</div>`;
+    return;
+  }
+
+  const jogadorSnap = await getDoc(doc(db,"jogadores",id));
+
+  if(jogadorSnap.exists()){
+
+    jogador = {
+      id:jogadorSnap.id,
+      ...jogadorSnap.data()
+    };
+  }
+
+  const jogosSnap = await getDocs(collection(db,"jogos"));
+
+  jogos = jogosSnap.docs.map(d=>({
+    id:d.id,
+    ...d.data()
+  }));
+
+  const sumulasSnap = await getDocs(collection(db,"sumulas"));
+
+  sumulas = sumulasSnap.docs.map(d=>({
+    id:d.id,
+    ...d.data()
+  }));
+
+  render();
+}
+
+carregar();
+
+</script>
+
+</body>
+</html>
