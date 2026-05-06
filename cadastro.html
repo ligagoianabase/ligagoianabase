@@ -223,6 +223,12 @@ select:focus{
   <label for="cpf">CPF</label>
   <input type="text" id="cpf" placeholder="Digite seu CPF">
 
+  <label for="whatsapp">WhatsApp</label>
+  <input type="text" id="whatsapp" placeholder="Digite seu WhatsApp">
+
+  <label for="dataNascimento">Data de nascimento</label>
+  <input type="date" id="dataNascimento">
+
   <label for="tipoUsuario">Tipo de usuário</label>
   <select id="tipoUsuario" onchange="mostrarCamposExtras()">
     <option value="torcedor">Torcedor</option>
@@ -254,7 +260,7 @@ select:focus{
     <input type="text" id="facebook" placeholder="Nome ou link do Facebook">
 
     <div class="aviso">
-      CPF, telefone e e-mail não aparecem para o público. Instagram e Facebook podem aparecer no perfil público do jogador.
+      CPF, WhatsApp, telefone e e-mail não aparecem para o público. Instagram e Facebook podem aparecer no perfil público do jogador.
     </div>
   </div>
 
@@ -307,7 +313,11 @@ import {
 import {
   doc,
   setDoc,
-  serverTimestamp
+  serverTimestamp,
+  collection,
+  query,
+  where,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const msgErro = document.getElementById("msgErro");
@@ -337,6 +347,10 @@ function limparCPF(cpf){
   return String(cpf || "").replace(/\D/g,"");
 }
 
+function limparNumero(valor){
+  return String(valor || "").replace(/\D/g,"");
+}
+
 function normalizarTexto(txt){
   return String(txt || "")
     .trim()
@@ -360,15 +374,7 @@ function normalizarTipo(tipo){
 }
 
 function regrasDePermissao(tipoUsuario){
-  if(tipoUsuario === "admin"){
-    return {
-      autorizado:true,
-      aprovado:true,
-      status:"ativo"
-    };
-  }
-
-  if(tipoUsuario === "arbitro" || tipoUsuario === "assistente" || tipoUsuario === "tecnico" || tipoUsuario === "jogador"){
+  if(tipoUsuario === "admin" || tipoUsuario === "arbitro" || tipoUsuario === "assistente" || tipoUsuario === "tecnico" || tipoUsuario === "jogador"){
     return {
       autorizado:false,
       aprovado:false,
@@ -414,54 +420,106 @@ window.alternarSenha = function(idInput, botao){
   }
 };
 
+async function buscarRegistroPorCPF(nomeColecao, cpf){
+  try{
+    const q = query(collection(db,nomeColecao), where("cpf","==",cpf));
+    const snap = await getDocs(q);
+
+    if(snap.empty) return null;
+
+    const primeiro = snap.docs[0];
+    return {
+      id:primeiro.id,
+      ...primeiro.data()
+    };
+  }catch(error){
+    console.error("Erro ao buscar CPF em " + nomeColecao, error);
+    return null;
+  }
+}
+
+function numeroEstatistica(valor){
+  const n = Number(valor || 0);
+  return isNaN(n) ? 0 : n;
+}
+
 async function criarRegistroPublico(uid,dados){
   const tipo = dados.tipoUsuario;
 
   if(tipo === "jogador"){
+    const antigo = await buscarRegistroPorCPF("jogadores",dados.cpf);
+
     await setDoc(doc(db,"jogadores",uid),{
       usuarioId:uid,
+      cadastroUid:uid,
+      registroAntigoId:antigo?.id || "",
       nome:dados.nome,
       nomeCompleto:dados.nome,
       cpf:dados.cpf,
-      time:dados.time,
-      timeNome:dados.time,
-      numero:dados.numero || "",
-      camisa:dados.numero || "",
-      posicao:dados.posicao || "",
-      categoria:dados.categoria || "",
-      categorias:dados.categoria ? [dados.categoria] : [],
-      instagram:dados.instagram || "",
-      facebook:dados.facebook || "",
-      foto:"logo-liga.jfif",
-      jogos:0,
-      gols:0,
-      assistencias:0,
-      amarelos:0,
-      vermelhos:0,
+      whatsapp:dados.whatsapp,
+      telefone:dados.whatsapp,
+      email:dados.email,
+      nascimento:dados.dataNascimento,
+      dataNascimento:dados.dataNascimento,
+      time:dados.time || antigo?.time || antigo?.timeNome || "",
+      timeNome:dados.time || antigo?.timeNome || antigo?.time || "",
+      timeId:antigo?.timeId || "",
+      numero:dados.numero || antigo?.numero || "",
+      camisa:dados.numero || antigo?.camisa || antigo?.numero || "",
+      posicao:dados.posicao || antigo?.posicao || "",
+      categoria:dados.categoria || antigo?.categoria || "",
+      categorias:dados.categoria ? [dados.categoria] : (Array.isArray(antigo?.categorias) ? antigo.categorias : []),
+      instagram:dados.instagram || antigo?.instagram || "",
+      facebook:dados.facebook || antigo?.facebook || "",
+      foto:antigo?.foto || "logo-liga.jfif",
+      jogos:numeroEstatistica(antigo?.jogos),
+      gols:numeroEstatistica(antigo?.gols),
+      assistencias:numeroEstatistica(antigo?.assistencias),
+      cartoesAmarelos:numeroEstatistica(antigo?.cartoesAmarelos || antigo?.amarelos),
+      cartoesVermelhos:numeroEstatistica(antigo?.cartoesVermelhos || antigo?.vermelhos),
+      amarelos:numeroEstatistica(antigo?.amarelos || antigo?.cartoesAmarelos),
+      vermelhos:numeroEstatistica(antigo?.vermelhos || antigo?.cartoesVermelhos),
+      suspenso:numeroEstatistica(antigo?.suspenso),
+      historico:antigo?.historico || [],
       aprovado:false,
       autorizado:false,
       status:"pendente",
-      criadoEm:serverTimestamp(),
+      criadoEm:antigo?.criadoEm || serverTimestamp(),
       atualizadoEm:serverTimestamp()
     },{merge:true});
   }
 
   if(tipo === "tecnico"){
+    const antigo = await buscarRegistroPorCPF("tecnicos",dados.cpf);
+
     await setDoc(doc(db,"tecnicos",uid),{
       usuarioId:uid,
+      cadastroUid:uid,
+      registroAntigoId:antigo?.id || "",
       nome:dados.nome,
       nomeCompleto:dados.nome,
       cpf:dados.cpf,
-      time:dados.time,
-      timeNome:dados.time,
-      cidade:dados.cidade || "",
-      categoria:dados.categoriaFuncao || "",
-      categorias:dados.categoriaFuncao ? [dados.categoriaFuncao] : [],
-      foto:"logo-liga.jfif",
+      whatsapp:dados.whatsapp,
+      telefone:dados.whatsapp,
+      email:dados.email,
+      nascimento:dados.dataNascimento,
+      dataNascimento:dados.dataNascimento,
+      time:dados.time || antigo?.time || antigo?.timeNome || "",
+      timeNome:dados.time || antigo?.timeNome || antigo?.time || "",
+      timeId:antigo?.timeId || "",
+      cidade:dados.cidade || antigo?.cidade || "",
+      categoria:dados.categoriaFuncao || antigo?.categoria || "",
+      categorias:dados.categoriaFuncao ? [dados.categoriaFuncao] : (Array.isArray(antigo?.categorias) ? antigo.categorias : []),
+      foto:antigo?.foto || "logo-liga.jfif",
+      jogos:numeroEstatistica(antigo?.jogos),
+      vitorias:numeroEstatistica(antigo?.vitorias),
+      empates:numeroEstatistica(antigo?.empates),
+      derrotas:numeroEstatistica(antigo?.derrotas),
+      historico:antigo?.historico || [],
       aprovado:false,
       autorizado:false,
       status:"pendente",
-      criadoEm:serverTimestamp(),
+      criadoEm:antigo?.criadoEm || serverTimestamp(),
       atualizadoEm:serverTimestamp()
     },{merge:true});
   }
@@ -472,6 +530,11 @@ async function criarRegistroPublico(uid,dados){
       nome:dados.nome,
       nomeCompleto:dados.nome,
       cpf:dados.cpf,
+      whatsapp:dados.whatsapp,
+      telefone:dados.whatsapp,
+      email:dados.email,
+      nascimento:dados.dataNascimento,
+      dataNascimento:dados.dataNascimento,
       cidade:dados.cidade || "",
       categoria:dados.categoriaFuncao || "",
       categorias:dados.categoriaFuncao ? [dados.categoriaFuncao] : ["Todas as categorias"],
@@ -493,6 +556,11 @@ async function criarRegistroPublico(uid,dados){
       nome:dados.nome,
       nomeCompleto:dados.nome,
       cpf:dados.cpf,
+      whatsapp:dados.whatsapp,
+      telefone:dados.whatsapp,
+      email:dados.email,
+      nascimento:dados.dataNascimento,
+      dataNascimento:dados.dataNascimento,
       cidade:dados.cidade || "",
       categoria:dados.categoriaFuncao || "",
       categorias:dados.categoriaFuncao ? [dados.categoriaFuncao] : ["Todas as categorias"],
@@ -513,6 +581,8 @@ window.cadastrar = async function(){
   const nome = document.getElementById("nome").value.trim();
   const email = document.getElementById("email").value.trim().toLowerCase();
   const cpf = limparCPF(document.getElementById("cpf").value);
+  const whatsapp = limparNumero(document.getElementById("whatsapp").value);
+  const dataNascimento = document.getElementById("dataNascimento").value;
   const tipoUsuario = normalizarTipo(document.getElementById("tipoUsuario").value);
   const time = document.getElementById("time").value.trim();
 
@@ -548,6 +618,21 @@ window.cadastrar = async function(){
     return;
   }
 
+  if(!whatsapp){
+    mostrarErro("Digite seu WhatsApp.");
+    return;
+  }
+
+  if(whatsapp.length < 10){
+    mostrarErro("Digite um WhatsApp válido.");
+    return;
+  }
+
+  if(!dataNascimento){
+    mostrarErro("Digite sua data de nascimento.");
+    return;
+  }
+
   if(tipoUsuario === "jogador" && !time){
     mostrarErro("Para jogador, informe o time.");
     return;
@@ -555,6 +640,11 @@ window.cadastrar = async function(){
 
   if(tipoUsuario === "jogador" && !categoria){
     mostrarErro("Para jogador, informe a categoria.");
+    return;
+  }
+
+  if(tipoUsuario === "tecnico" && !time){
+    mostrarErro("Para técnico, informe o time.");
     return;
   }
 
@@ -593,6 +683,10 @@ window.cadastrar = async function(){
       nomeCompleto:nome,
       email,
       cpf,
+      whatsapp,
+      telefone:whatsapp,
+      dataNascimento,
+      nascimento:dataNascimento,
       tipoUsuario,
       tipo:tipoUsuario,
       perfil:tipoUsuario,
@@ -614,10 +708,12 @@ window.cadastrar = async function(){
     await setDoc(doc(db,"usuarios",uid),dadosUsuario,{merge:true});
     await criarRegistroPublico(uid,dadosUsuario);
 
-    if(tipoUsuario === "jogador"){
+    if(tipoUsuario === "admin"){
+      mostrarSucesso("Cadastro realizado. Seu acesso de administrador ficará pendente de aprovação.");
+    }else if(tipoUsuario === "jogador"){
       mostrarSucesso("Cadastro realizado. Seu acesso de jogador ficará pendente de aprovação e vinculado ao CPF.");
     }else if(tipoUsuario === "tecnico"){
-      mostrarSucesso("Cadastro realizado. Seu acesso de técnico ficará pendente de aprovação.");
+      mostrarSucesso("Cadastro realizado. Seu acesso de técnico ficará pendente de aprovação e vinculado ao CPF.");
     }else if(tipoUsuario === "arbitro"){
       mostrarSucesso("Cadastro realizado. Seu acesso de árbitro ficará pendente de autorização do administrador.");
     }else if(tipoUsuario === "assistente"){
