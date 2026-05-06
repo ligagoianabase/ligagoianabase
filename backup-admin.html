@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Backup ADM - LIGA GOIANA</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#fff;
+  --muted:#cbd6ea;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.92), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:#fff;
+  min-height:100vh;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:25px;
+}
+
+.card{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.28);
+  border-radius:20px;
+  padding:25px;
+}
+
+h1{
+  color:var(--gold);
+  font-size:32px;
+  margin-bottom:10px;
+}
+
+p{
+  color:var(--muted);
+  line-height:1.6;
+  margin-bottom:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+button,
+label.arquivo{
+  border:none;
+  border-radius:14px;
+  padding:16px;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  text-align:center;
+}
+
+.btn-backup{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.btn-restaurar{
+  background:#14335f;
+  color:#fff;
+}
+
+input[type=file]{
+  display:none;
+}
+
+.log{
+  margin-top:20px;
+  background:rgba(255,255,255,.05);
+  border-radius:14px;
+  padding:16px;
+  min-height:120px;
+  font-size:14px;
+  line-height:1.6;
+}
+
+.item{
+  margin-bottom:6px;
+}
+
+.ok{
+  color:#7dffab;
+}
+
+.erro{
+  color:#ff9f9f;
+}
+
+@media(max-width:700px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="card">
+
+    <h1>Backup do Sistema</h1>
+
+    <p>
+      Gere backup completo do sistema da Liga Goiana e restaure os dados quando necessário.
+    </p>
+
+    <div class="grid">
+
+      <button class="btn-backup" onclick="gerarBackup()">
+        <i class="fa-solid fa-download"></i>
+        Gerar Backup
+      </button>
+
+      <label class="arquivo btn-restaurar">
+        <i class="fa-solid fa-upload"></i>
+        Restaurar Backup
+        <input type="file" id="arquivoBackup" accept=".json">
+      </label>
+
+    </div>
+
+    <div class="log" id="log">
+      Sistema pronto.
+    </div>
+
+  </div>
+
+</div>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+  collection,
+  getDocs,
+  doc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const log = document.getElementById("log");
+
+const colecoes = [
+  "usuarios",
+  "jogadores",
+  "times",
+  "jogos",
+  "sumulas",
+  "campeonatos",
+  "tecnicos",
+  "arbitros",
+  "noticias"
+];
+
+function addLog(msg,classe=""){
+  log.innerHTML += `<div class="item ${classe}">${msg}</div>`;
+  log.scrollTop = log.scrollHeight;
+}
+
+window.gerarBackup = async function(){
+
+  log.innerHTML = "";
+
+  try{
+
+    const backup = {
+      criadoEm:new Date().toISOString(),
+      sistema:"Liga Goiana",
+      dados:{}
+    };
+
+    for(const nome of colecoes){
+
+      addLog(`Lendo coleção: ${nome}`);
+
+      const snap = await getDocs(collection(db,nome));
+
+      backup.dados[nome] = snap.docs.map(docSnap=>({
+        id:docSnap.id,
+        ...docSnap.data()
+      }));
+
+      addLog(`✔ ${nome}: ${snap.size} registros`, "ok");
+    }
+
+    const blob = new Blob(
+      [JSON.stringify(backup,null,2)],
+      {type:"application/json"}
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+      "backup-liga-goiana-" +
+      new Date().toISOString().slice(0,10) +
+      ".json";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+    addLog("✔ Backup gerado com sucesso.","ok");
+
+  }catch(e){
+
+    console.error(e);
+
+    addLog("Erro ao gerar backup.","erro");
+  }
+};
+
+document.getElementById("arquivoBackup")
+.addEventListener("change", async(e)=>{
+
+  const arquivo = e.target.files[0];
+
+  if(!arquivo) return;
+
+  if(!confirm(
+    "Deseja restaurar o backup? Isso pode sobrescrever dados."
+  )) return;
+
+  log.innerHTML = "";
+
+  try{
+
+    const texto = await arquivo.text();
+
+    const backup = JSON.parse(texto);
+
+    for(const nome of Object.keys(backup.dados || {})){
+
+      const lista = backup.dados[nome];
+
+      addLog(`Restaurando coleção: ${nome}`);
+
+      for(const item of lista){
+
+        const id = item.id;
+
+        delete item.id;
+
+        await setDoc(
+          doc(db,nome,id),
+          {
+            ...item,
+            restauradoEm:serverTimestamp()
+          },
+          {merge:true}
+        );
+      }
+
+      addLog(`✔ ${nome} restaurada`, "ok");
+    }
+
+    addLog("✔ Backup restaurado com sucesso.","ok");
+
+  }catch(e){
+
+    console.error(e);
+
+    addLog("Erro ao restaurar backup.","erro");
+  }
+});
+
+</script>
+
+</body>
+</html>
