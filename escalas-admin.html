@@ -11,17 +11,11 @@
 <style>
 :root{
   --bg:#0b1f3a;
-  --card:#102a52;
-  --card2:#0d2446;
   --gold:#f7c600;
   --gold2:#ffe45c;
-  --white:#ffffff;
   --muted:#d9e3f2;
   --line:rgba(255,255,255,.10);
   --gold-line:rgba(247,198,0,.34);
-  --red:#d94141;
-  --green:#1b8f43;
-  --blue:#1a3f73;
   --shadow:0 8px 22px rgba(0,0,0,.28);
   --max:1280px;
 }
@@ -43,7 +37,7 @@ body{
 }
 
 a{text-decoration:none;color:inherit}
-button,input,select,textarea{font-family:inherit}
+button,input,select{font-family:inherit}
 button{cursor:pointer;border:none}
 
 .wrap{
@@ -103,17 +97,12 @@ header{
   color:#111;
 }
 
-.btn-red{
-  background:var(--red);
-  color:#fff;
-}
-
 .container{
   padding:24px 0 34px;
 }
 
 .hero-panel,
-.form-panel,
+.filter-panel,
 .list-panel{
   background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
   border:1px solid rgba(255,255,255,.06);
@@ -150,8 +139,6 @@ header{
   gap:12px;
 }
 
-.full{grid-column:1/-1}
-
 label{
   display:block;
   margin:0 0 6px;
@@ -160,7 +147,7 @@ label{
   font-size:13px;
 }
 
-input,select,textarea{
+input,select{
   width:100%;
   padding:12px;
   border:none;
@@ -171,43 +158,9 @@ input,select,textarea{
   outline:none;
 }
 
-textarea{
-  min-height:86px;
-  resize:vertical;
-}
-
-.top-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:16px;
-}
-
-.action-btn,
-.link-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:10px 14px;
-  border-radius:10px;
-  font-weight:900;
-}
-
-.action-btn{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#111;
-}
-
-.link-btn{
-  background:var(--gold);
-  color:#111;
-  font-size:12px;
-}
-
 .lista{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(310px,1fr));
   gap:14px;
 }
 
@@ -221,14 +174,14 @@ textarea{
 .card strong{
   display:block;
   color:var(--gold);
-  font-size:16px;
+  font-size:17px;
   margin-bottom:8px;
 }
 
 .card p{
   color:var(--muted);
   font-size:13px;
-  line-height:1.55;
+  line-height:1.65;
 }
 
 .tag{
@@ -245,6 +198,16 @@ textarea{
   margin-top:8px;
 }
 
+.mensagem-vazia{
+  color:var(--muted);
+  text-align:center;
+  padding:16px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;
+  grid-column:1/-1;
+}
+
 .status{
   display:none;
   margin-top:12px;
@@ -254,28 +217,11 @@ textarea{
   font-size:13px;
 }
 
-.status-ok{
-  display:block;
-  background:rgba(27,143,67,.18);
-  color:#aaf0bd;
-  border:1px solid rgba(27,143,67,.35);
-}
-
 .status-erro{
   display:block;
   background:rgba(217,65,65,.18);
   color:#ffb7b7;
   border:1px solid rgba(217,65,65,.35);
-}
-
-.mensagem-vazia{
-  color:var(--muted);
-  text-align:center;
-  padding:16px;
-  background:rgba(255,255,255,.035);
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:14px;
-  grid-column:1/-1;
 }
 
 @media(max-width:900px){
@@ -298,9 +244,7 @@ textarea{
 }
 
 @media(max-width:600px){
-  .top-btn,
-  .action-btn,
-  .link-btn{
+  .top-btn{
     width:100%;
   }
 
@@ -309,7 +253,7 @@ textarea{
   }
 
   .hero-panel,
-  .form-panel,
+  .filter-panel,
   .list-panel{
     padding:16px;
   }
@@ -338,8 +282,8 @@ textarea{
     <div class="header-title">Escalas ADM</div>
 
     <div class="header-right">
-      <button class="top-btn btn-gold" type="button" onclick="salvarEscala()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Escala
+      <button class="top-btn btn-gold" type="button" onclick="carregarJogos()">
+        <i class="fa-solid fa-rotate"></i> Atualizar
       </button>
     </div>
   </div>
@@ -348,111 +292,53 @@ textarea{
 <div class="wrap container">
 
 <section class="hero-panel">
-  <h2>Escalas de Arbitragem</h2>
+  <h2>Escalas dos Jogos</h2>
   <p>
-    Selecione um jogo cadastrado e defina árbitro, assistentes, status e observações.
-    A escala fica vinculada ao jogo e atualiza os dados para súmula.
+    Veja qual árbitro foi designado para cada jogo, com detalhes de campeonato, categoria, data, horário e local.
+    A escala vem dos dados cadastrados na criação do jogo.
   </p>
   <div id="statusBox" class="status"></div>
 </section>
 
-<section class="form-panel">
+<section class="filter-panel">
   <h3 class="bloco-titulo">
-    <i class="fa-solid fa-clipboard-list"></i> Criar / Editar Escala
+    <i class="fa-solid fa-filter"></i> Filtros
   </h3>
 
-  <input type="hidden" id="escalaId">
-
   <div class="grid">
-    <div class="full">
-      <label>Jogo</label>
-      <select id="jogoSelect" onchange="preencherDadosJogo()">
-        <option value="">Carregando jogos...</option>
-      </select>
+    <div>
+      <label>Buscar jogo / time / árbitro</label>
+      <input id="busca" placeholder="Digite para filtrar" oninput="renderJogos()">
     </div>
 
     <div>
-      <label>Campeonato</label>
-      <input id="campeonato" readonly>
-    </div>
-
-    <div>
-      <label>Categoria</label>
-      <input id="categoria" readonly>
-    </div>
-
-    <div>
-      <label>Data / Hora</label>
-      <input id="dataHora" readonly>
-    </div>
-
-    <div>
-      <label>Local</label>
-      <input id="local" readonly>
-    </div>
-
-    <div>
-      <label>Árbitro Principal</label>
-      <select id="arbitroPrincipal">
-        <option value="">Selecione</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Assistente 1</label>
-      <select id="assistente1">
-        <option value="">Selecione</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Assistente 2</label>
-      <select id="assistente2">
-        <option value="">Selecione</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Quarto Árbitro / Apoio</label>
-      <select id="quartoArbitro">
-        <option value="">Opcional</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Status da escala</label>
-      <select id="statusEscala">
+      <label>Status</label>
+      <select id="filtroStatus" onchange="renderJogos()">
+        <option value="">Todos</option>
+        <option value="agendado">Agendado</option>
         <option value="pendente">Pendente</option>
-        <option value="confirmada">Confirmada</option>
-        <option value="alterada">Alterada</option>
-        <option value="cancelada">Cancelada</option>
+        <option value="finalizado">Finalizado</option>
       </select>
     </div>
 
-    <div class="full">
-      <label>Observações</label>
-      <textarea id="observacoes" placeholder="Observações da escala"></textarea>
+    <div>
+      <label>Mostrar</label>
+      <select id="filtroArbitro" onchange="renderJogos()">
+        <option value="">Todos os jogos</option>
+        <option value="com">Com árbitro definido</option>
+        <option value="sem">Sem árbitro definido</option>
+      </select>
     </div>
-  </div>
-
-  <div class="top-actions">
-    <button class="action-btn" type="button" onclick="salvarEscala()">
-      <i class="fa-solid fa-floppy-disk"></i> Salvar Escala
-    </button>
-
-    <button class="action-btn btn-red" type="button" onclick="limparFormulario()">
-      <i class="fa-solid fa-broom"></i> Limpar
-    </button>
   </div>
 </section>
 
 <section class="list-panel">
   <h3 class="bloco-titulo">
-    <i class="fa-solid fa-clock-rotate-left"></i> Escalas Cadastradas
+    <i class="fa-solid fa-whistle"></i> Jogos e Árbitros
   </h3>
 
-  <div id="listaEscalas" class="lista">
-    <div class="mensagem-vazia">Carregando escalas...</div>
+  <div id="listaJogos" class="lista">
+    <div class="mensagem-vazia">Carregando jogos...</div>
   </div>
 </section>
 
@@ -462,17 +348,10 @@ textarea{
 import { db } from "./firebase.js";
 import {
   collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  doc,
-  serverTimestamp
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 let jogosCache = [];
-let arbitrosCache = [];
-let assistentesCache = [];
-let escalasCache = [];
 
 function el(id){
   return document.getElementById(id);
@@ -482,11 +361,14 @@ function texto(v){
   return String(v || "").trim();
 }
 
-function mostrarStatus(msg,tipo="ok"){
+function normalizar(v){
+  return texto(v).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+
+function mostrarErro(msg){
   const box = el("statusBox");
-  box.className = "status " + (tipo === "erro" ? "status-erro" : "status-ok");
+  box.className = "status status-erro";
   box.innerText = msg;
-  setTimeout(()=>{ box.style.display = "none"; }, 3500);
 }
 
 window.voltarPagina = function(){
@@ -497,243 +379,130 @@ window.voltarPagina = function(){
   }
 };
 
-function nomePessoa(p){
-  return p.nome || p.nomeCompleto || p.apelido || p.email || "-";
+function nomeTimeA(j){
+  return j.timeA_nome || j.timeA || j.mandanteNome || j.mandante || j.timeCasaNome || "Time A";
 }
 
-function nomeJogo(j){
-  const a = j.timeA_nome || j.timeA || j.mandanteNome || j.mandante || "Time A";
-  const b = j.timeB_nome || j.timeB || j.visitanteNome || j.visitante || "Time B";
+function nomeTimeB(j){
+  return j.timeB_nome || j.timeB || j.visitanteNome || j.visitante || j.timeForaNome || "Time B";
+}
+
+function nomeArbitro(j){
+  return j.arbitroNome || j.nomeArbitro || j.arbitro || j.arbitroPrincipalNome || "";
+}
+
+function nomeAssistente1(j){
+  return j.assistente1Nome || j.nomeAssistente1 || j.assistente1 || "";
+}
+
+function nomeAssistente2(j){
+  return j.assistente2Nome || j.nomeAssistente2 || j.assistente2 || "";
+}
+
+function statusJogo(j){
+  return j.status || j.statusJogo || "agendado";
+}
+
+function dataHora(j){
   const data = j.data || j.dataJogo || "";
   const hora = j.hora || j.horario || "";
-  return `${a} x ${b} ${data ? " - " + data : ""} ${hora ? hora : ""}`;
+  return [data,hora].filter(Boolean).join(" às ");
 }
 
-function dadosJogo(j){
-  const campeonato = j.campeonatoNome || j.campeonato || j.nomeCampeonato || "";
-  const categoria = j.categoria || "";
-  const data = j.data || j.dataJogo || "";
-  const hora = j.hora || j.horario || "";
-  const local = j.local || j.estadio || j.campo || "";
-  return {campeonato,categoria,dataHora:[data,hora].filter(Boolean).join(" "),local};
-}
-
-async function carregarJogos(){
-  const snap = await getDocs(collection(db,"jogos"));
-  jogosCache = [];
-  snap.forEach(d=>jogosCache.push({id:d.id,...d.data()}));
-
-  jogosCache.sort((a,b)=>String(a.data || a.dataJogo || "").localeCompare(String(b.data || b.dataJogo || "")));
-
-  const select = el("jogoSelect");
-  select.innerHTML = `<option value="">Selecione o jogo</option>`;
-
-  jogosCache.forEach(j=>{
-    select.innerHTML += `<option value="${j.id}">${nomeJogo(j)}</option>`;
+function ordenarJogos(lista){
+  return [...lista].sort((a,b)=>{
+    const da = String(a.data || a.dataJogo || "");
+    const db = String(b.data || b.dataJogo || "");
+    if(da !== db) return da.localeCompare(db);
+    return String(a.hora || a.horario || "").localeCompare(String(b.hora || b.horario || ""));
   });
 }
 
-async function carregarArbitros(){
-  const snap = await getDocs(collection(db,"arbitros"));
-  arbitrosCache = [];
-  snap.forEach(d=>arbitrosCache.push({id:d.id,...d.data()}));
+window.renderJogos = function(){
+  const lista = el("listaJogos");
+  const busca = normalizar(el("busca").value);
+  const st = el("filtroStatus").value;
+  const filtroArbitro = el("filtroArbitro").value;
 
-  arbitrosCache.sort((a,b)=>nomePessoa(a).localeCompare(nomePessoa(b),"pt-BR"));
+  let jogos = jogosCache.filter(j=>{
+    const arbitro = nomeArbitro(j);
+    const temArbitro = !!texto(arbitro);
 
-  const selects = ["arbitroPrincipal","quartoArbitro"];
-  selects.forEach(id=>{
-    el(id).innerHTML = id === "quartoArbitro" ? `<option value="">Opcional</option>` : `<option value="">Selecione</option>`;
-    arbitrosCache.forEach(a=>{
-      el(id).innerHTML += `<option value="${a.id}">${nomePessoa(a)}</option>`;
-    });
+    if(st && statusJogo(j) !== st) return false;
+    if(filtroArbitro === "com" && !temArbitro) return false;
+    if(filtroArbitro === "sem" && temArbitro) return false;
+
+    if(busca){
+      const alvo = normalizar([
+        nomeTimeA(j),
+        nomeTimeB(j),
+        arbitro,
+        nomeAssistente1(j),
+        nomeAssistente2(j),
+        j.campeonatoNome,
+        j.campeonato,
+        j.categoria,
+        j.local,
+        j.estadio,
+        j.campo
+      ].join(" "));
+      if(!alvo.includes(busca)) return false;
+    }
+
+    return true;
   });
-}
 
-async function carregarAssistentes(){
-  const snap = await getDocs(collection(db,"assistentes"));
-  assistentesCache = [];
-  snap.forEach(d=>assistentesCache.push({id:d.id,...d.data()}));
+  jogos = ordenarJogos(jogos);
 
-  assistentesCache.sort((a,b)=>nomePessoa(a).localeCompare(nomePessoa(b),"pt-BR"));
-
-  ["assistente1","assistente2"].forEach(id=>{
-    el(id).innerHTML = `<option value="">Selecione</option>`;
-    assistentesCache.forEach(a=>{
-      el(id).innerHTML += `<option value="${a.id}">${nomePessoa(a)}</option>`;
-    });
-  });
-}
-
-async function carregarEscalas(){
-  const snap = await getDocs(collection(db,"escalas"));
-  escalasCache = [];
-  snap.forEach(d=>escalasCache.push({id:d.id,...d.data()}));
-  renderEscalas();
-}
-
-window.preencherDadosJogo = function(){
-  const id = el("jogoSelect").value;
-  const jogo = jogosCache.find(j=>j.id === id);
-  if(!jogo){
-    el("campeonato").value = "";
-    el("categoria").value = "";
-    el("dataHora").value = "";
-    el("local").value = "";
+  if(!jogos.length){
+    lista.innerHTML = `<div class="mensagem-vazia">Nenhum jogo encontrado.</div>`;
     return;
   }
 
-  const d = dadosJogo(jogo);
-  el("campeonato").value = d.campeonato;
-  el("categoria").value = d.categoria;
-  el("dataHora").value = d.dataHora;
-  el("local").value = d.local;
-};
+  lista.innerHTML = jogos.map(j=>{
+    const arbitro = nomeArbitro(j) || "Árbitro não definido";
+    const assist1 = nomeAssistente1(j) || "Não definido";
+    const assist2 = nomeAssistente2(j) || "Não definido";
+    const local = j.local || j.estadio || j.campo || "-";
+    const campeonato = j.campeonatoNome || j.campeonato || j.nomeCampeonato || "-";
+    const categoria = j.categoria || "-";
+    const status = statusJogo(j);
 
-function limparFormularioCampos(){
-  el("escalaId").value = "";
-  el("jogoSelect").value = "";
-  el("campeonato").value = "";
-  el("categoria").value = "";
-  el("dataHora").value = "";
-  el("local").value = "";
-  el("arbitroPrincipal").value = "";
-  el("assistente1").value = "";
-  el("assistente2").value = "";
-  el("quartoArbitro").value = "";
-  el("statusEscala").value = "pendente";
-  el("observacoes").value = "";
-}
-
-window.limparFormulario = limparFormularioCampos;
-
-function pegarNomeLista(lista,id){
-  return nomePessoa(lista.find(x=>x.id === id) || {});
-}
-
-window.salvarEscala = async function(){
-  const escalaId = el("escalaId").value;
-  const jogoId = el("jogoSelect").value;
-
-  if(!jogoId) return mostrarStatus("Selecione um jogo.","erro");
-  if(!el("arbitroPrincipal").value) return mostrarStatus("Selecione o árbitro principal.","erro");
-
-  const jogo = jogosCache.find(j=>j.id === jogoId);
-  const d = dadosJogo(jogo || {});
-
-  const dados = {
-    jogoId,
-    jogoNome:nomeJogo(jogo || {}),
-    campeonato:d.campeonato,
-    categoria:d.categoria,
-    dataHora:d.dataHora,
-    local:d.local,
-    arbitroPrincipalId:el("arbitroPrincipal").value,
-    arbitroPrincipalNome:pegarNomeLista(arbitrosCache,el("arbitroPrincipal").value),
-    assistente1Id:el("assistente1").value,
-    assistente1Nome:pegarNomeLista(assistentesCache,el("assistente1").value),
-    assistente2Id:el("assistente2").value,
-    assistente2Nome:pegarNomeLista(assistentesCache,el("assistente2").value),
-    quartoArbitroId:el("quartoArbitro").value,
-    quartoArbitroNome:pegarNomeLista(arbitrosCache,el("quartoArbitro").value),
-    status:el("statusEscala").value,
-    observacoes:texto(el("observacoes").value),
-    atualizadoEm:serverTimestamp()
-  };
-
-  if(escalaId){
-    await updateDoc(doc(db,"escalas",escalaId),dados);
-  }else{
-    await addDoc(collection(db,"escalas"),{
-      ...dados,
-      criadoEm:serverTimestamp()
-    });
-  }
-
-  await updateDoc(doc(db,"jogos",jogoId),{
-    escalaCriada:true,
-    escalaStatus:dados.status,
-    arbitroId:dados.arbitroPrincipalId,
-    arbitroNome:dados.arbitroPrincipalNome,
-    assistente1Id:dados.assistente1Id,
-    assistente1Nome:dados.assistente1Nome,
-    assistente2Id:dados.assistente2Id,
-    assistente2Nome:dados.assistente2Nome,
-    quartoArbitroId:dados.quartoArbitroId,
-    quartoArbitroNome:dados.quartoArbitroNome,
-    atualizadoEm:serverTimestamp()
-  });
-
-  mostrarStatus("Escala salva e vinculada ao jogo.");
-  limparFormularioCampos();
-  await carregarEscalas();
-};
-
-window.editarEscala = function(id){
-  const e = escalasCache.find(x=>x.id === id);
-  if(!e) return;
-
-  el("escalaId").value = e.id;
-  el("jogoSelect").value = e.jogoId || "";
-  preencherDadosJogo();
-  el("arbitroPrincipal").value = e.arbitroPrincipalId || "";
-  el("assistente1").value = e.assistente1Id || "";
-  el("assistente2").value = e.assistente2Id || "";
-  el("quartoArbitro").value = e.quartoArbitroId || "";
-  el("statusEscala").value = e.status || "pendente";
-  el("observacoes").value = e.observacoes || "";
-
-  window.scrollTo({top:220,behavior:"smooth"});
-};
-
-function renderEscalas(){
-  const lista = el("listaEscalas");
-
-  if(!escalasCache.length){
-    lista.innerHTML = `<div class="mensagem-vazia">Nenhuma escala cadastrada ainda.</div>`;
-    return;
-  }
-
-  lista.innerHTML = escalasCache.map(e=>{
     return `
       <div class="card">
-        <strong><i class="fa-solid fa-clipboard-list"></i> ${e.jogoNome || "Jogo"}</strong>
+        <strong><i class="fa-solid fa-futbol"></i> ${nomeTimeA(j)} x ${nomeTimeB(j)}</strong>
         <p>
-          Campeonato: ${e.campeonato || "-"}<br>
-          Categoria: ${e.categoria || "-"}<br>
-          Data/Hora: ${e.dataHora || "-"}<br>
-          Local: ${e.local || "-"}<br><br>
-          Árbitro: ${e.arbitroPrincipalNome || "-"}<br>
-          Assistente 1: ${e.assistente1Nome || "-"}<br>
-          Assistente 2: ${e.assistente2Nome || "-"}<br>
-          Quarto árbitro: ${e.quartoArbitroNome || "-"}<br>
-          Observações: ${e.observacoes || "-"}
+          <i class="fa-solid fa-trophy"></i> Campeonato: ${campeonato}<br>
+          <i class="fa-solid fa-layer-group"></i> Categoria: ${categoria}<br>
+          <i class="fa-solid fa-calendar-days"></i> Data/Hora: ${dataHora(j) || "-"}<br>
+          <i class="fa-solid fa-location-dot"></i> Local: ${local}<br><br>
+          <i class="fa-solid fa-whistle"></i> Árbitro: ${arbitro}<br>
+          <i class="fa-solid fa-flag"></i> Assistente 1: ${assist1}<br>
+          <i class="fa-solid fa-flag"></i> Assistente 2: ${assist2}
         </p>
-        <span class="tag"><i class="fa-solid fa-circle-check"></i> ${e.status || "pendente"}</span>
-        <div class="top-actions">
-          <button class="link-btn" type="button" onclick="editarEscala('${e.id}')">
-            <i class="fa-solid fa-pen"></i> Editar
-          </button>
-        </div>
+        <span class="tag"><i class="fa-solid fa-circle-check"></i> ${status}</span>
       </div>
     `;
   }).join("");
-}
+};
 
-async function iniciar(){
+window.carregarJogos = async function(){
+  const lista = el("listaJogos");
+  lista.innerHTML = `<div class="mensagem-vazia">Carregando jogos...</div>`;
+
   try{
-    await Promise.all([
-      carregarJogos(),
-      carregarArbitros(),
-      carregarAssistentes()
-    ]);
-    await carregarEscalas();
+    const snap = await getDocs(collection(db,"jogos"));
+    jogosCache = [];
+    snap.forEach(d=>jogosCache.push({id:d.id,...d.data()}));
+    renderJogos();
   }catch(e){
     console.error(e);
-    mostrarStatus("Erro ao carregar dados da escala. Confira Firebase/coleções.","erro");
+    mostrarErro("Erro ao carregar jogos. Confira Firebase e a coleção jogos.");
+    lista.innerHTML = `<div class="mensagem-vazia">Erro ao carregar jogos.</div>`;
   }
-}
+};
 
-iniciar();
+carregarJogos();
 </script>
 
 </body>
