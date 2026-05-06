@@ -553,11 +553,13 @@ import {
   setDoc,
   updateDoc,
   deleteDoc,
+  addDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 let usuariosCache = [];
 let usuarioSelecionadoId = "";
+let adminAtual = null;
 
 const msgErro = document.getElementById("msgErro");
 const msgSucesso = document.getElementById("msgSucesso");
@@ -607,6 +609,28 @@ function normalizarTipo(tipo){
 
   return valor || "torcedor";
 }
+
+
+
+async function registrarLog(adminUid,acao,usuarioAlvo,dadosExtras={}){
+
+  try{
+
+    await addDoc(collection(db,"logs_admin"),{
+      adminUid,
+      acao,
+      usuarioAlvoId:usuarioAlvo?.id || "",
+      usuarioAlvoNome:usuarioAlvo?.nome || usuarioAlvo?.nomeCompleto || "",
+      usuarioAlvoTipo:usuarioAlvo?.tipoUsuario || usuarioAlvo?.tipo || "",
+      data:serverTimestamp(),
+      ...dadosExtras
+    });
+
+  }catch(e){
+    console.error("Erro ao registrar log:",e);
+  }
+}
+
 
 function tipoLabel(tipo){
   const valor = normalizarTipo(tipo);
@@ -912,6 +936,10 @@ window.salvarEdicao = async function(){
 
     await sincronizarColecaoPublica(usuarioSelecionadoId,usuarioAtualizado);
 
+    await registrarLog(adminAtual?.uid,"editar_usuario",usuarioAtualizado,{
+      alteracoes:dados
+    });
+
     await carregarUsuarios();
     mostrarSucesso("Usuário atualizado e sincronizado com sucesso.");
   }catch(erro){
@@ -974,6 +1002,10 @@ window.aprovarUsuario = async function(id){
       ...dados
     });
 
+    await registrarLog(adminAtual?.uid,"aprovar_usuario",usuario,{
+      statusNovo:"ativo"
+    });
+
     await carregarUsuarios();
     mostrarSucesso("Usuário aprovado e sincronizado com sucesso.");
   }catch(erro){
@@ -1006,6 +1038,10 @@ window.reprovarUsuario = async function(id){
       ...dados
     });
 
+    await registrarLog(adminAtual?.uid,"usuario_pendente",usuario,{
+      statusNovo:"pendente"
+    });
+
     await carregarUsuarios();
     mostrarSucesso("Usuário voltou para pendente.");
   }catch(erro){
@@ -1033,6 +1069,10 @@ window.bloquearUsuario = async function(id){
     await sincronizarColecaoPublica(id,{
       ...usuario,
       ...dados
+    });
+
+    await registrarLog(adminAtual?.uid,"bloquear_usuario",usuario,{
+      statusNovo:"bloqueado"
     });
 
     await carregarUsuarios();
@@ -1071,6 +1111,10 @@ window.ativarUsuario = async function(id){
       ...dados
     });
 
+    await registrarLog(adminAtual?.uid,"ativar_usuario",usuario,{
+      statusNovo:"ativo"
+    });
+
     await carregarUsuarios();
     mostrarSucesso("Usuário ativado com sucesso.");
   }catch(erro){
@@ -1088,6 +1132,11 @@ window.excluirUsuario = async function(id){
 
   try{
     await deleteDoc(doc(db,"usuarios",id));
+    await registrarLog(adminAtual?.uid,"excluir_usuario",{
+      id,
+      nome:"Usuário removido"
+    });
+
     await carregarUsuarios();
     mostrarSucesso("Usuário excluído da coleção usuarios.");
   }catch(erro){
@@ -1113,6 +1162,10 @@ window.toggleFotografoOficial = async function(id){
       fotografoOficial:novoValor,
       atualizadoEm:serverTimestamp()
     },{merge:true});
+
+    await registrarLog(adminAtual?.uid,"fotografo_oficial",usuario,{
+      fotografoOficial:novoValor
+    });
 
     await carregarUsuarios();
     mostrarSucesso("Status de fotógrafo oficial atualizado.");
@@ -1287,6 +1340,7 @@ async function carregarUsuarios(){
 }
 
 onAuthStateChanged(auth, async(user)=>{
+  adminAtual = user;
   if(!user){
     window.location.href = "login.html";
     return;
