@@ -334,7 +334,7 @@ textarea:focus{
   </div>
 </div>
 <script type="module">
-import { auth, db } from "./firebase.js";
+import { auth, db, storage } from "./firebase.js";
 import {
   createUserWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
@@ -348,6 +348,12 @@ import {
   where,
   getDocs
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
 
 const msgErro = document.getElementById("msgErro");
 const msgSucesso = document.getElementById("msgSucesso");
@@ -477,20 +483,16 @@ function numeroEstatistica(valor){
 }
 
 
-async function arquivoParaBase64(arquivo){
-  return new Promise((resolve,reject)=>{
-    if(!arquivo){
-      resolve("");
-      return;
-    }
+async function uploadFotoFotografo(uid,arquivo){
+  if(!arquivo) return "";
 
-    const reader = new FileReader();
+  const nomeSeguro = arquivo.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+  const caminho = `fotografos/${uid}/perfil-${Date.now()}-${nomeSeguro}`;
+  const arquivoRef = ref(storage,caminho);
 
-    reader.onload = e => resolve(e.target.result || "");
-    reader.onerror = reject;
+  await uploadBytes(arquivoRef,arquivo);
 
-    reader.readAsDataURL(arquivo);
-  });
+  return await getDownloadURL(arquivoRef);
 }
 
 async function criarRegistroPublico(uid,dados){
@@ -774,10 +776,12 @@ window.cadastrar = async function(){
   btnCadastrar.innerText = "Criando conta...";
 
   try{
-    const fotoFotografo = await arquivoParaBase64(arquivoFotoFotografo);
-
     const cred = await createUserWithEmailAndPassword(auth,email,senha);
     const uid = cred.user.uid;
+
+    const fotoFotografo = tipoUsuario === "fotografo"
+      ? await uploadFotoFotografo(uid,arquivoFotoFotografo)
+      : "";
 
     const regras = regrasDePermissao(tipoUsuario);
 
