@@ -4,118 +4,430 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Notícias ADM - LIGA GOIANA</title>
+<title>Notícias ADM - Liga Goiana</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 :root{
-  --bg:#0b1f3a;
+  --bg:#061427;
   --card:#102a52;
+  --card2:#0d2a52;
   --gold:#f7c600;
+  --gold2:#ffe45c;
   --white:#fff;
   --muted:#cbd6ea;
+  --line:rgba(255,255,255,.10);
+  --gold-line:rgba(247,198,0,.34);
+  --red:#b42323;
+  --green:#1b5e20;
+  --blue:#1a3f73;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --max:1180px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
 }
 
 body{
-  margin:0;
-  font-family:Arial;
-  background:#061427;
-  color:white;
+  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88),rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:#fff;
 }
+
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer;border:none}
+
+.wrap{
+  width:min(100% - 28px,var(--max));
+  margin:0 auto;
+}
+
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.header-inner{
+  min-height:84px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
+
+.header-left,
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:900;
+}
+
+.btn-light{background:#fff4cf;color:#111}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
+.btn-red{background:var(--red);color:#fff}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-green{background:var(--green);color:#fff}
 
 .container{
-  max-width:1000px;
-  margin:auto;
-  padding:20px;
+  padding:24px 0 34px;
 }
 
-h1{
-  color:var(--gold);
-  text-align:center;
-}
-
-.form{
-  background:#102a52;
+.hero-panel,
+.form-panel,
+.list-panel{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
   padding:20px;
-  border-radius:12px;
+  box-shadow:var(--shadow);
   margin-bottom:20px;
 }
 
-input, textarea{
+.hero-panel h2{
+  font-size:28px;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
+.hero-panel p{
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.bloco-titulo{
+  margin:0 0 14px;
+  color:var(--gold);
+  font-size:18px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.full{grid-column:1/-1}
+
+label{
+  display:block;
+  margin:0 0 6px;
+  font-weight:900;
+  color:#eef4ff;
+  font-size:13px;
+}
+
+input,select,textarea{
   width:100%;
-  padding:10px;
-  margin:8px 0;
-  border-radius:8px;
+  padding:12px;
   border:none;
+  border-radius:10px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
 }
 
 textarea{
-  min-height:120px;
+  min-height:115px;
+  resize:vertical;
 }
 
-button{
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
-  cursor:pointer;
+.top-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
 }
 
-.btn{
+.action-btn,
+.link-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:900;
+}
+
+.action-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.link-btn{
   background:var(--gold);
   color:#111;
-  width:100%;
+  font-size:12px;
 }
 
 .lista{
   display:grid;
-  gap:10px;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:14px;
 }
 
 .card{
-  background:#102a52;
-  padding:15px;
-  border-radius:10px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  overflow:hidden;
 }
 
-.acoes{
-  margin-top:10px;
-  display:flex;
-  gap:10px;
+.card img{
+  width:100%;
+  height:170px;
+  object-fit:cover;
+  background:#0d2a52;
 }
 
-.btn-del{
-  background:#b42323;
-  color:white;
-  flex:1;
+.card-body{
+  padding:14px;
 }
 
-.btn-edit{
-  background:#1a3f73;
-  color:white;
-  flex:1;
+.card strong{
+  display:block;
+  color:var(--gold);
+  font-size:17px;
+  margin-bottom:8px;
+}
+
+.card p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 8px;
+  border-radius:999px;
+  background:rgba(247,198,0,.12);
+  border:1px solid var(--gold-line);
+  color:var(--gold);
+  font-size:11px;
+  font-weight:900;
+  margin-top:8px;
+}
+
+.status{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:13px;
+}
+
+.status-ok{
+  display:block;
+  background:rgba(27,94,32,.24);
+  color:#aaf0bd;
+  border:1px solid rgba(27,94,32,.45);
+}
+
+.status-erro{
+  display:block;
+  background:rgba(180,35,35,.22);
+  color:#ffb7b7;
+  border:1px solid rgba(255,120,120,.25);
+}
+
+.vazio{
+  color:var(--muted);
+  text-align:center;
+  padding:16px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;
+  grid-column:1/-1;
+}
+
+@media(max-width:900px){
+  .header-title{
+    order:3;
+    width:100%;
+    text-align:center;
+    font-size:19px;
+  }
+
+  .header-left,
+  .header-right{
+    width:100%;
+    justify-content:center;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:600px){
+  .top-btn,
+  .action-btn,
+  .link-btn{
+    width:100%;
+  }
+
+  .hero-panel h2{
+    font-size:23px;
+  }
+
+  .hero-panel,
+  .form-panel,
+  .list-panel{
+    padding:16px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<header>
+  <div class="wrap header-inner">
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
 
-<h1>Gerenciar Notícias</h1>
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
 
-<div class="form">
-  <input id="titulo" placeholder="Título da notícia">
-  <input id="imagem" placeholder="URL da imagem">
-  <input id="categoria" placeholder="Categoria (Ex: Campeonato)">
-  <textarea id="descricao" placeholder="Resumo"></textarea>
-  <textarea id="conteudo" placeholder="Conteúdo completo"></textarea>
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
+    </div>
 
-  <button class="btn" onclick="salvar()">Publicar Notícia</button>
-</div>
+    <div class="header-title">Notícias ADM</div>
 
-<div class="lista" id="lista"></div>
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarNoticia()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+<section class="hero-panel">
+  <h2>Gerenciar Notícias</h2>
+  <p>Cadastre, edite, publique e remova notícias oficiais da Liga Goiana de Futebol de Base.</p>
+  <div id="statusBox" class="status"></div>
+</section>
+
+<section class="form-panel">
+  <h3 class="bloco-titulo" id="tituloFormulario">
+    <i class="fa-solid fa-newspaper"></i> Nova Notícia
+  </h3>
+
+  <input type="hidden" id="noticiaId">
+
+  <div class="grid">
+    <div>
+      <label>Título</label>
+      <input id="titulo" placeholder="Título da notícia">
+    </div>
+
+    <div>
+      <label>Categoria</label>
+      <input id="categoria" placeholder="Ex: Campeonato, Jogo, Comunicado">
+    </div>
+
+    <div>
+      <label>Imagem / Capa URL</label>
+      <input id="imagem" placeholder="https://... ou hero-liga.jpeg">
+    </div>
+
+    <div>
+      <label>Status</label>
+      <select id="status">
+        <option value="publicado">Publicado</option>
+        <option value="rascunho">Rascunho</option>
+        <option value="oculto">Oculto</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Autor</label>
+      <input id="autor" placeholder="Liga Goiana">
+    </div>
+
+    <div>
+      <label>Data</label>
+      <input id="data" type="date">
+    </div>
+
+    <div class="full">
+      <label>Resumo</label>
+      <textarea id="descricao" placeholder="Resumo que aparece no card da notícia"></textarea>
+    </div>
+
+    <div class="full">
+      <label>Conteúdo completo</label>
+      <textarea id="conteudo" placeholder="Texto completo da notícia"></textarea>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <button class="action-btn" type="button" onclick="salvarNoticia()">
+      <i class="fa-solid fa-paper-plane"></i> Publicar / Salvar
+    </button>
+
+    <button class="action-btn btn-blue" type="button" onclick="limparFormulario()">
+      <i class="fa-solid fa-broom"></i> Limpar
+    </button>
+  </div>
+</section>
+
+<section class="list-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-list"></i> Notícias Cadastradas
+  </h3>
+
+  <div id="listaNoticias" class="lista">
+    <div class="vazio">Carregando notícias...</div>
+  </div>
+</section>
 
 </div>
 
@@ -127,105 +439,186 @@ import {
   getDocs,
   deleteDoc,
   doc,
-  updateDoc
+  updateDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-let editandoId = null;
+let noticiasCache = [];
 
-async function salvar(){
-  const titulo = document.getElementById("titulo").value;
-  const imagem = document.getElementById("imagem").value;
-  const categoria = document.getElementById("categoria").value;
-  const descricao = document.getElementById("descricao").value;
-  const conteudo = document.getElementById("conteudo").value;
+function el(id){
+  return document.getElementById(id);
+}
 
-  if(!titulo){
-    alert("Digite o título");
+function texto(v){
+  return String(v || "").trim();
+}
+
+function mostrarStatus(msg,tipo="ok"){
+  const box = el("statusBox");
+  box.className = "status " + (tipo === "erro" ? "status-erro" : "status-ok");
+  box.innerText = msg;
+  setTimeout(()=>{ box.style.display = "none"; }, 3500);
+}
+
+window.voltarPagina = function(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = "admin.html";
+  }
+};
+
+window.limparFormulario = function(){
+  el("noticiaId").value = "";
+  el("titulo").value = "";
+  el("categoria").value = "";
+  el("imagem").value = "";
+  el("status").value = "publicado";
+  el("autor").value = "";
+  el("data").value = "";
+  el("descricao").value = "";
+  el("conteudo").value = "";
+  el("tituloFormulario").innerHTML = `<i class="fa-solid fa-newspaper"></i> Nova Notícia`;
+};
+
+window.salvarNoticia = async function(){
+  const id = el("noticiaId").value;
+
+  const dados = {
+    titulo:texto(el("titulo").value),
+    categoria:texto(el("categoria").value),
+    imagem:texto(el("imagem").value) || "hero-liga.jpeg",
+    status:el("status").value,
+    publicado:el("status").value === "publicado",
+    autor:texto(el("autor").value) || "Liga Goiana",
+    data:texto(el("data").value) || new Date().toISOString(),
+    descricao:texto(el("descricao").value),
+    resumo:texto(el("descricao").value),
+    conteudo:texto(el("conteudo").value),
+    texto:texto(el("conteudo").value),
+    atualizadoEm:serverTimestamp()
+  };
+
+  if(!dados.titulo) return mostrarStatus("Digite o título da notícia.","erro");
+
+  if(id){
+    await updateDoc(doc(db,"noticias",id),dados);
+    mostrarStatus("Notícia atualizada com sucesso.");
+  }else{
+    await addDoc(collection(db,"noticias"),{
+      ...dados,
+      criadoEm:serverTimestamp()
+    });
+    mostrarStatus("Notícia publicada com sucesso.");
+  }
+
+  limparFormulario();
+  carregarNoticias();
+};
+
+window.editarNoticia = function(id){
+  const n = noticiasCache.find(x=>x.id === id);
+  if(!n) return;
+
+  el("noticiaId").value = n.id;
+  el("titulo").value = n.titulo || "";
+  el("categoria").value = n.categoria || "";
+  el("imagem").value = n.imagem || "";
+  el("status").value = n.status || (n.publicado ? "publicado" : "rascunho");
+  el("autor").value = n.autor || n.publicadoPor || "Liga Goiana";
+  el("data").value = String(n.data || "").slice(0,10);
+  el("descricao").value = n.descricao || n.resumo || "";
+  el("conteudo").value = n.conteudo || n.texto || "";
+  el("tituloFormulario").innerHTML = `<i class="fa-solid fa-pen"></i> Editar Notícia`;
+
+  window.scrollTo({top:190,behavior:"smooth"});
+};
+
+window.excluirNoticia = async function(id){
+  if(!confirm("Excluir notícia?")) return;
+  await deleteDoc(doc(db,"noticias",id));
+  mostrarStatus("Notícia excluída.");
+  carregarNoticias();
+};
+
+function formatarData(v){
+  if(!v) return "-";
+  if(typeof v.toDate === "function") v = v.toDate();
+  const d = new Date(v);
+  if(isNaN(d.getTime())) return String(v);
+  return d.toLocaleDateString("pt-BR");
+}
+
+function renderNoticias(){
+  const lista = el("listaNoticias");
+
+  if(!noticiasCache.length){
+    lista.innerHTML = `<div class="vazio">Nenhuma notícia cadastrada.</div>`;
     return;
   }
 
-  const dados = {
-    titulo,
-    imagem,
-    categoria,
-    descricao,
-    conteudo,
-    publicado:true,
-    data:new Date().toISOString()
-  };
+  lista.innerHTML = noticiasCache.map(n=>{
+    return `
+      <article class="card">
+        <img src="${n.imagem || "hero-liga.jpeg"}" onerror="this.src='hero-liga.jpeg'">
 
-  if(editandoId){
-    await updateDoc(doc(db,"noticias",editandoId), dados);
-    editandoId = null;
-  }else{
-    await addDoc(collection(db,"noticias"), dados);
-  }
+        <div class="card-body">
+          <strong>${n.titulo || "-"}</strong>
 
-  limpar();
-  carregar();
-}
+          <p>
+            Categoria: ${n.categoria || "-"}<br>
+            Autor: ${n.autor || "Liga Goiana"}<br>
+            Data: ${formatarData(n.data || n.criadoEm)}<br>
+            Resumo: ${n.descricao || n.resumo || "-"}
+          </p>
 
-function limpar(){
-  document.getElementById("titulo").value = "";
-  document.getElementById("imagem").value = "";
-  document.getElementById("categoria").value = "";
-  document.getElementById("descricao").value = "";
-  document.getElementById("conteudo").value = "";
-}
+          <span class="tag">
+            <i class="fa-solid fa-circle-check"></i> ${n.status || (n.publicado ? "publicado" : "rascunho")}
+          </span>
 
-async function carregar(){
-  const lista = document.getElementById("lista");
-  lista.innerHTML = "Carregando...";
+          <div class="top-actions">
+            <button class="link-btn" type="button" onclick="editarNoticia('${n.id}')">
+              <i class="fa-solid fa-pen"></i> Editar
+            </button>
 
-  const snap = await getDocs(collection(db,"noticias"));
+            <a class="link-btn btn-green" href="noticia.html?id=${n.id}" target="_blank">
+              <i class="fa-solid fa-eye"></i> Ver
+            </a>
 
-  let html = "";
-
-  snap.forEach(d=>{
-    const n = d.data();
-
-    html += `
-      <div class="card">
-        <strong>${n.titulo}</strong>
-        <div>${n.categoria || ""}</div>
-
-        <div class="acoes">
-          <button class="btn-edit" onclick="editar('${d.id}')">Editar</button>
-          <button class="btn-del" onclick="excluir('${d.id}')">Excluir</button>
+            <button class="link-btn btn-red" type="button" onclick="excluirNoticia('${n.id}')">
+              <i class="fa-solid fa-trash"></i> Excluir
+            </button>
+          </div>
         </div>
-      </div>
+      </article>
     `;
-  });
-
-  lista.innerHTML = html || "Nenhuma notícia";
+  }).join("");
 }
 
-window.editar = async function(id){
-  const snap = await getDocs(collection(db,"noticias"));
+async function carregarNoticias(){
+  const lista = el("listaNoticias");
+  lista.innerHTML = `<div class="vazio">Carregando notícias...</div>`;
 
-  snap.forEach(d=>{
-    if(d.id === id){
-      const n = d.data();
+  try{
+    const snap = await getDocs(collection(db,"noticias"));
+    noticiasCache = [];
+    snap.forEach(d=>noticiasCache.push({id:d.id,...d.data()}));
 
-      document.getElementById("titulo").value = n.titulo || "";
-      document.getElementById("imagem").value = n.imagem || "";
-      document.getElementById("categoria").value = n.categoria || "";
-      document.getElementById("descricao").value = n.descricao || "";
-      document.getElementById("conteudo").value = n.conteudo || "";
+    noticiasCache.sort((a,b)=>{
+      const da = new Date(a.data || 0).getTime() || 0;
+      const db = new Date(b.data || 0).getTime() || 0;
+      return db - da;
+    });
 
-      editandoId = id;
-    }
-  });
-};
-
-window.excluir = async function(id){
-  if(confirm("Excluir notícia?")){
-    await deleteDoc(doc(db,"noticias",id));
-    carregar();
+    renderNoticias();
+  }catch(e){
+    console.error(e);
+    lista.innerHTML = `<div class="vazio">Erro ao carregar notícias.</div>`;
+    mostrarStatus("Erro ao carregar notícias.","erro");
   }
-};
+}
 
-carregar();
+carregarNoticias();
 </script>
 
 </body>
