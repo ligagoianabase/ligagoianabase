@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Estatísticas do Campeonato - Liga Goiana</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#fff;
+  --muted:#cbd6ea;
+  --green:#1b5e20;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --max:1320px;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.92), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:#fff;
+  min-height:100vh;
+}
+
+.container{
+  width:min(100% - 24px, var(--max));
+  margin:auto;
+  padding:22px 0 40px;
+}
+
+.topo{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg,#0d2a52,#08172c);
+  border:1px solid rgba(247,198,0,.35);
+  border-radius:20px;
+  padding:22px;
+  margin-bottom:16px;
+}
+
+.topo h1{
+  color:var(--gold);
+  font-size:34px;
+  margin-bottom:8px;
+}
+
+.topo p{
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:16px;
+}
+
+select{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:12px;
+  background:#f5f7fb;
+  color:#111;
+  font-weight:700;
+}
+
+.grid-cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.card{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 35%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.25);
+  border-radius:18px;
+  padding:18px;
+}
+
+.card span{
+  display:block;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:900;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+.card strong{
+  color:var(--gold);
+  font-size:30px;
+}
+
+.grid-listas{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.box{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 35%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.25);
+  border-radius:18px;
+  overflow:hidden;
+}
+
+.box h2{
+  padding:16px;
+  color:var(--gold);
+  font-size:18px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.lista{
+  padding:12px;
+}
+
+.item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:rgba(255,255,255,.04);
+  border-radius:12px;
+  padding:10px;
+  margin-bottom:9px;
+}
+
+.pos{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+
+.info{
+  flex:1;
+  min-width:0;
+}
+
+.info strong{
+  display:block;
+  color:#fff;
+  font-size:14px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.info small{
+  color:var(--muted);
+  display:block;
+  margin-top:3px;
+  font-size:12px;
+}
+
+.valor{
+  color:var(--gold);
+  font-weight:900;
+  font-size:18px;
+}
+
+.vazio{
+  padding:18px;
+  color:var(--muted);
+  text-align:center;
+}
+
+@media(max-width:1050px){
+  .grid-cards{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .grid-listas{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:700px){
+  .grid-cards,
+  .grid-listas,
+  .filtros{
+    grid-template-columns:1fr;
+  }
+
+  .topo h1{
+    font-size:26px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <section class="topo">
+    <h1>Estatísticas do Campeonato</h1>
+    <p>Resumo automático por campeonato e categoria, usando jogos e súmulas finalizadas.</p>
+
+    <div class="filtros">
+      <select id="filtroCampeonato" onchange="render()">
+        <option value="">Todos os campeonatos</option>
+      </select>
+
+      <select id="filtroCategoria" onchange="render()">
+        <option value="">Todas categorias</option>
+      </select>
+    </div>
+  </section>
+
+  <section class="grid-cards">
+    <div class="card">
+      <span>Total de jogos</span>
+      <strong id="totalJogos">0</strong>
+    </div>
+
+    <div class="card">
+      <span>Jogos finalizados</span>
+      <strong id="jogosFinalizados">0</strong>
+    </div>
+
+    <div class="card">
+      <span>Jogos pendentes</span>
+      <strong id="jogosPendentes">0</strong>
+    </div>
+
+    <div class="card">
+      <span>Total de gols</span>
+      <strong id="totalGols">0</strong>
+    </div>
+
+    <div class="card">
+      <span>Média de gols</span>
+      <strong id="mediaGols">0</strong>
+    </div>
+
+    <div class="card">
+      <span>Cartões amarelos</span>
+      <strong id="amarelos">0</strong>
+    </div>
+
+    <div class="card">
+      <span>Cartões vermelhos</span>
+      <strong id="vermelhos">0</strong>
+    </div>
+
+    <div class="card">
+      <span>Aproveitamento geral</span>
+      <strong id="aproveitamento">0%</strong>
+    </div>
+  </section>
+
+  <section class="grid-listas">
+
+    <div class="box">
+      <h2><i class="fa-solid fa-futbol"></i> Artilheiro</h2>
+      <div class="lista" id="artilheiros"></div>
+    </div>
+
+    <div class="box">
+      <h2><i class="fa-solid fa-fire"></i> Melhor Ataque</h2>
+      <div class="lista" id="ataques"></div>
+    </div>
+
+    <div class="box">
+      <h2><i class="fa-solid fa-shield-halved"></i> Melhor Defesa</h2>
+      <div class="lista" id="defesas"></div>
+    </div>
+
+  </section>
+
+</div>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+  collection,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let jogos = [];
+let sumulas = [];
+let campeonatos = [];
+
+function n(t){
+  return String(t || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function finalizado(j){
+  return j.finalizado === true ||
+    j.encerrado === true ||
+    j.sumulaFinalizada === true ||
+    n(j.status) === "finalizado";
+}
+
+function sumulaFinalizada(s){
+  return s.sumulaFinalizada === true ||
+    s.publico === true ||
+    s.publica === true ||
+    n(s.status) === "finalizado" ||
+    n(s.sumulaStatus) === "finalizada";
+}
+
+function nomeCampeonato(obj){
+  return obj.campeonato || obj.campeonatoNome || "";
+}
+
+function categoria(obj){
+  return obj.categoria || "";
+}
+
+function preencherFiltros(){
+
+  const campAtual = document.getElementById("filtroCampeonato").value;
+  const catAtual = document.getElementById("filtroCategoria").value;
+
+  const camps = new Set();
+  const cats = new Set();
+
+  campeonatos.forEach(c=>{
+    if(c.nome) camps.add(c.nome);
+  });
+
+  jogos.forEach(j=>{
+    if(nomeCampeonato(j)) camps.add(nomeCampeonato(j));
+    if(categoria(j)) cats.add(categoria(j));
+  });
+
+  sumulas.forEach(s=>{
+    if(nomeCampeonato(s)) camps.add(nomeCampeonato(s));
+    if(categoria(s)) cats.add(categoria(s));
+  });
+
+  document.getElementById("filtroCampeonato").innerHTML =
+    `<option value="">Todos os campeonatos</option>` +
+    [...camps].sort().map(c=>`<option value="${c}">${c}</option>`).join("");
+
+  document.getElementById("filtroCategoria").innerHTML =
+    `<option value="">Todas categorias</option>` +
+    [...cats].sort().map(c=>`<option value="${c}">${c}</option>`).join("");
+
+  if([...camps].includes(campAtual)){
+    document.getElementById("filtroCampeonato").value = campAtual;
+  }
+
+  if([...cats].includes(catAtual)){
+    document.getElementById("filtroCategoria").value = catAtual;
+  }
+}
+
+function filtrado(obj){
+  const camp = document.getElementById("filtroCampeonato").value;
+  const cat = document.getElementById("filtroCategoria").value;
+
+  if(camp && nomeCampeonato(obj) !== camp) return false;
+  if(cat && categoria(obj) !== cat) return false;
+
+  return true;
+}
+
+function setText(id,valor){
+  document.getElementById(id).textContent = valor;
+}
+
+function renderRanking(id,lista,valorFn){
+
+  const box = document.getElementById(id);
+
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhum dado.</div>`;
+    return;
+  }
+
+  box.innerHTML = lista.slice(0,10).map((item,i)=>`
+    <div class="item">
+      <div class="pos">${i+1}</div>
+
+      <div class="info">
+        <strong>${item.nome}</strong>
+        <small>${item.sub || ""}</small>
+      </div>
+
+      <div class="valor">${valorFn(item)}</div>
+    </div>
+  `).join("");
+}
+
+window.render = function(){
+
+  const jogosFiltrados = jogos.filter(filtrado);
+  const sumulasFiltradas = sumulas.filter(s=>filtrado(s) && sumulaFinalizada(s));
+
+  const finalizados = jogosFiltrados.filter(finalizado);
+  const pendentes = jogosFiltrados.length - finalizados.length;
+
+  let gols = 0;
+  let amarelos = 0;
+  let vermelhos = 0;
+
+  const jogadores = {};
+  const times = {};
+
+  finalizados.forEach(j=>{
+    const golsA = Number(j.golsA || j.placarA || j.placar?.A || 0);
+    const golsB = Number(j.golsB || j.placarB || j.placar?.B || 0);
+
+    gols += golsA + golsB;
+
+    const a = j.timeAId || j.timeANome || j.timeA || "Time A";
+    const b = j.timeBId || j.timeBNome || j.timeB || "Time B";
+
+    if(!times[a]){
+      times[a] = {
+        nome:j.timeANome || j.timeA?.nome || j.timeA || "Time A",
+        ataque:0,
+        defesa:0
+      };
+    }
+
+    if(!times[b]){
+      times[b] = {
+        nome:j.timeBNome || j.timeB?.nome || j.timeB || "Time B",
+        ataque:0,
+        defesa:0
+      };
+    }
+
+    times[a].ataque += golsA;
+    times[a].defesa += golsB;
+
+    times[b].ataque += golsB;
+    times[b].defesa += golsA;
+  });
+
+  sumulasFiltradas.forEach(s=>{
+
+    (s.gols || s.golsLista || []).forEach(g=>{
+      const id = g.id || g.jogadorId || g.nome || g.jogador || "sem-id";
+
+      if(!jogadores[id]){
+        jogadores[id] = {
+          nome:g.nome || g.jogador || "-",
+          sub:g.timeNome || g.time || "",
+          gols:0
+        };
+      }
+
+      jogadores[id].gols++;
+    });
+
+    (s.cartoes || s.cartoesLista || []).forEach(c=>{
+      if(c.tipo === "amarelo") amarelos++;
+      if(c.tipo === "vermelho") vermelhos++;
+    });
+  });
+
+  const media = finalizados.length
+    ? (gols / finalizados.length).toFixed(2)
+    : "0";
+
+  const aproveitamento = jogosFiltrados.length
+    ? Math.round((finalizados.length / jogosFiltrados.length) * 100)
+    : 0;
+
+  setText("totalJogos",jogosFiltrados.length);
+  setText("jogosFinalizados",finalizados.length);
+  setText("jogosPendentes",pendentes);
+  setText("totalGols",gols);
+  setText("mediaGols",media);
+  setText("amarelos",amarelos);
+  setText("vermelhos",vermelhos);
+  setText("aproveitamento",aproveitamento + "%");
+
+  renderRanking(
+    "artilheiros",
+    Object.values(jogadores).sort((a,b)=>b.gols-a.gols),
+    item=>item.gols
+  );
+
+  renderRanking(
+    "ataques",
+    Object.values(times).sort((a,b)=>b.ataque-a.ataque),
+    item=>item.ataque
+  );
+
+  renderRanking(
+    "defesas",
+    Object.values(times).sort((a,b)=>a.defesa-b.defesa),
+    item=>item.defesa
+  );
+};
+
+function atualizar(){
+  preencherFiltros();
+  render();
+}
+
+onSnapshot(collection(db,"campeonatos"),snap=>{
+  campeonatos = snap.docs.map(d=>({id:d.id,...d.data()}));
+  atualizar();
+});
+
+onSnapshot(collection(db,"jogos"),snap=>{
+  jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
+  atualizar();
+});
+
+onSnapshot(collection(db,"sumulas"),snap=>{
+  sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
+  atualizar();
+});
+
+</script>
+
+</body>
+</html>
