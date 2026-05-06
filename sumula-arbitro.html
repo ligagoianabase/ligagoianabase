@@ -845,6 +845,15 @@ async function carregarPerfilUsuario(){
   };
 }
 
+
+
+function jogadorSuspenso(jogador){
+
+  return jogador?.suspenso === true ||
+         jogador?.bloqueado === true;
+}
+
+
 function normalizarJogador(j){
   return {
     id: campo(j,["id","uid","jogadorId"],""),
@@ -1367,6 +1376,12 @@ window.adicionarJogador = function(time){
     tipo,
     manual:true
   };
+
+
+  if(jogadorSuspenso(obj)){
+    alert("Este jogador está suspenso e não pode ser escalado.");
+    return;
+  }
 
   if(time === "A") jogadoresA.push(obj);
   else jogadoresB.push(obj);
@@ -1900,8 +1915,12 @@ window.finalizarSumula = async function(){
     await atualizarJogador(g.id, "gol");
   }
 
+
   // CARTÕES
   for(const c of cartoesA){
+
+    await aplicarSuspensaoAutomatica(c);
+
     if(c.tipo === "amarelo"){
       await atualizarJogador(c.id, "amarelo");
     }else{
@@ -1910,12 +1929,81 @@ window.finalizarSumula = async function(){
   }
 
   for(const c of cartoesB){
+
+    await aplicarSuspensaoAutomatica(c);
+
     if(c.tipo === "amarelo"){
       await atualizarJogador(c.id, "amarelo");
     }else{
       await atualizarJogador(c.id, "vermelho");
     }
   }
+
+
+  // ============================
+  // 🔥 SUSPENSÕES AUTOMÁTICAS
+  // ============================
+
+  async function aplicarSuspensaoAutomatica(cartao){
+
+    if(!cartao.id) return;
+
+    const refJogador = doc(db,"jogadores", cartao.id);
+    const snapJogador = await getDoc(refJogador);
+
+    if(!snapJogador.exists()) return;
+
+    const dadosJogador = snapJogador.data();
+
+    let amarelos = Number(dadosJogador.amarelos || 0);
+    let vermelhos = Number(dadosJogador.vermelhos || 0);
+
+    let update = {};
+
+    // 🔸 3 amarelos
+    if(cartao.tipo === "amarelo"){
+
+      amarelos += 1;
+
+      if(amarelos >= 3){
+
+        update.suspenso = true;
+        update.motivoSuspensao = "3 cartões amarelos";
+        update.jogosSuspensao = 1;
+        update.dataSuspensao = serverTimestamp();
+
+        amarelos = 0;
+      }
+
+      update.amarelos = amarelos;
+    }
+
+    // 🔸 vermelho
+    if(cartao.tipo === "vermelho"){
+
+      vermelhos += 1;
+
+      update.vermelhos = vermelhos;
+
+      update.suspenso = true;
+
+      if(cartao.vermelhoTipo === "segundo_amarelo"){
+
+        update.motivoSuspensao = "Expulsão por segundo amarelo";
+
+      }else{
+
+        update.motivoSuspensao = "Cartão vermelho direto";
+      }
+
+      update.jogosSuspensao = 1;
+      update.dataSuspensao = serverTimestamp();
+    }
+
+    await updateDoc(refJogador, update);
+  }
+
+
 
   // ============================
   // 🔥 ATUALIZAR ÁRBITRO
