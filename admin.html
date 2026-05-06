@@ -276,8 +276,8 @@ header{
 /* DASHBOARD */
 .grid{
   display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:10px;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
   margin-bottom:18px;
 }
 
@@ -285,31 +285,24 @@ header{
   background:
     radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 34%),
     linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
-  border-radius:14px;
-  padding:11px 8px;
+  border-radius:16px;
+  padding:16px;
   text-align:center;
   box-shadow:0 8px 20px rgba(0,0,0,.25);
   border:1px solid rgba(247,198,0,.18);
-  min-height:82px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
 }
 
 .card h3{
-  font-size:24px;
+  font-size:30px;
   color:var(--gold);
   font-weight:900;
-  line-height:1;
 }
 
 .card p{
-  margin-top:7px;
-  font-size:12px;
+  margin-top:8px;
+  font-size:13px;
   color:var(--muted);
   font-weight:900;
-  line-height:1.1;
 }
 
 .admin-block{
@@ -485,8 +478,7 @@ textarea:focus{
 
 @media(max-width:1100px){
   .grid{
-    grid-template-columns:repeat(6,minmax(88px,1fr));
-    gap:8px;
+    grid-template-columns:repeat(3,1fr);
   }
 
   .duplo{
@@ -505,43 +497,11 @@ textarea:focus{
   }
 
   .grid{
-    grid-template-columns:repeat(6,74px);
-    gap:7px;
-    overflow-x:auto;
-    overflow-y:hidden;
-    padding-bottom:6px;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-  }
-
-  .grid::-webkit-scrollbar{
-    display:none;
-  }
-
-  .card{
-    min-height:72px;
-    padding:9px 6px;
-    border-radius:12px;
-  }
-
-  .card h3{
-    font-size:22px;
-  }
-
-  .card p{
-    font-size:10.5px;
-    margin-top:6px;
+    grid-template-columns:1fr 1fr;
   }
 
   .menu{
-    grid-template-columns:1fr 1fr;
-    gap:9px;
-  }
-
-  .menu a{
-    padding:12px 10px;
-    font-size:12px;
-    border-radius:12px;
+    grid-template-columns:1fr;
   }
 
   .hero-panel h2{
@@ -565,6 +525,7 @@ textarea:focus{
     <a href="admin.html"><i class="fa-solid fa-house-user"></i> Painel ADM</a>
     <a href="index.html"><i class="fa-solid fa-house"></i> Página Inicial</a>
     <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos</a>
+    <a href="categorias-admin.html"><i class="fa-solid fa-layer-group"></i> Categorias</a>
     <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times</a>
     <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores</a>
     <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos</a>
@@ -572,15 +533,15 @@ textarea:focus{
     <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes</a>
     <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários e Permissões</a>
     <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
-    <a href="editar-sumula-admin.html"><i class="fa-solid fa-pen-to-square"></i> Editar Súmula</a>
+    <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Criar Súmula</a>
     <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Ver Súmulas</a>
-    <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Editar Tabelas</a>
+    <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Tabelas</a>
     <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação</a>
     <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas</a>
     <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
     <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria</a>
-    <a href="configuracoes-admin.html"><i class="fa-solid fa-sitemap"></i> Fases / Mata-mata</a>
-    <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios Gerais</a>
+    <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Configurações</a>
+    <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
   </div>
 </aside>
 <header>
@@ -620,31 +581,6 @@ textarea:focus{
       <div class="card"><h3 id="totalSumulas">0</h3><p>Súmulas</p></div>
     </div>
 
-    <!-- MENU ADM -->
-    <div class="admin-block">
-      <h3 class="section-title">Menus ADM</h3>
-
-      <div class="menu">
-        <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos</a>
-            <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times</a>
-        <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores</a>
-        <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos</a>
-        <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros</a>
-        <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes</a>
-        <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários</a>
-        <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
-        <a href="editar-sumula-admin.html"><i class="fa-solid fa-pen-to-square"></i> Editar Súmula</a>
-        <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Ver Súmulas</a>
-        <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Editar Tabelas</a>
-        <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação</a>
-        <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas</a>
-        <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
-        <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria</a>
-        <a href="configuracoes-admin.html"><i class="fa-solid fa-sitemap"></i> Fases / Mata-mata</a>
-        <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios Gerais</a>
-      </div>
-    </div>
-
     <!-- BLOCO PRINCIPAL -->
     <div class="duplo">
 
@@ -678,6 +614,19 @@ textarea:focus{
         </div>
       </div>
 
+    </div>
+
+    <!-- MENU RÁPIDO -->
+    <div class="admin-block">
+      <h3 class="section-title">Acesso Rápido</h3>
+
+      <div class="menu">
+        <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
+        <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Criar Súmula</a>
+        <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Ver Súmulas</a>
+        <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Tabelas</a>
+        <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
+      </div>
     </div>
 
     <div class="footer-note">
