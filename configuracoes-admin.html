@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Configurações ADM - Liga Goiana</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#0b1f3a;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --muted:#d9e3f2;
+  --line:rgba(255,255,255,.10);
+  --gold-line:rgba(247,198,0,.34);
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --red:#d94141;
+  --green:#1b8f43;
+  --blue:#1a3f73;
+  --max:1280px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.90),rgba(11,31,58,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:#fff;
+}
+
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer;border:none}
+
+.wrap{
+  width:min(100% - 28px,var(--max));
+  margin:0 auto;
+}
+
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.header-inner{
+  min-height:84px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
+
+.header-left,
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:900;
+}
+
+.btn-light{background:#fff4cf;color:#111}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
+.btn-green{background:var(--green);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+.btn-blue{background:var(--blue);color:#fff}
+
+.container{padding:24px 0 34px}
+
+.hero-panel,
+.form-panel,
+.list-panel{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
+
+.hero-panel h2{
+  font-size:28px;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
+.hero-panel p{
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.bloco-titulo{
+  margin:0 0 14px;
+  color:var(--gold);
+  font-size:18px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.full{grid-column:1/-1}
+
+label{
+  display:block;
+  margin:0 0 6px;
+  font-weight:900;
+  color:#eef4ff;
+  font-size:13px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.top-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.action-btn,
+.link-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:900;
+}
+
+.action-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.link-btn{
+  background:var(--gold);
+  color:#111;
+  font-size:12px;
+}
+
+.lista{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:14px;
+}
+
+.card strong{
+  display:block;
+  color:var(--gold);
+  font-size:17px;
+  margin-bottom:8px;
+}
+
+.card p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 8px;
+  border-radius:999px;
+  background:rgba(247,198,0,.12);
+  border:1px solid var(--gold-line);
+  color:var(--gold);
+  font-size:11px;
+  font-weight:900;
+  margin-top:8px;
+}
+
+.confrontos{
+  display:grid;
+  gap:10px;
+}
+
+.confronto{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-left:4px solid var(--gold);
+  border-radius:14px;
+  padding:12px;
+}
+
+.confronto strong{
+  color:var(--gold);
+  display:block;
+  margin-bottom:8px;
+}
+
+.status{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:13px;
+}
+
+.status-ok{
+  display:block;
+  background:rgba(27,143,67,.18);
+  color:#aaf0bd;
+  border:1px solid rgba(27,143,67,.35);
+}
+
+.status-erro{
+  display:block;
+  background:rgba(217,65,65,.18);
+  color:#ffb7b7;
+  border:1px solid rgba(217,65,65,.35);
+}
+
+.mensagem-vazia{
+  color:var(--muted);
+  text-align:center;
+  padding:16px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;
+  grid-column:1/-1;
+}
+
+@media(max-width:900px){
+  .header-title{
+    order:3;
+    width:100%;
+    text-align:center;
+    font-size:19px;
+  }
+
+  .header-left,
+  .header-right{
+    width:100%;
+    justify-content:center;
+  }
+
+  .grid,
+  .grid-2{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:600px){
+  .top-btn,
+  .action-btn,
+  .link-btn{
+    width:100%;
+  }
+
+  .hero-panel h2{font-size:23px}
+
+  .hero-panel,
+  .form-panel,
+  .list-panel{
+    padding:16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
+
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
+
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
+    </div>
+
+    <div class="header-title">Fases / Mata-Mata</div>
+
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarConfiguracao()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+<section class="hero-panel">
+  <h2>Configurações do Campeonato</h2>
+  <p>
+    Controle campeonatos já criados: fase atual, encerramento da classificação,
+    montagem de mata-mata, quartas, semifinal, final e confrontos da próxima fase.
+  </p>
+  <div id="statusBox" class="status"></div>
+</section>
+
+<section class="form-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-trophy"></i> Campeonato
+  </h3>
+
+  <div class="grid">
+    <div>
+      <label>Campeonato</label>
+      <select id="campeonatoSelect" onchange="carregarCampeonatoSelecionado()">
+        <option value="">Carregando campeonatos...</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Categoria</label>
+      <select id="categoriaSelect" onchange="gerarPreviaConfrontos()">
+        <option value="">Todas / Geral</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Status do campeonato</label>
+      <select id="statusCampeonato">
+        <option value="ativo">Ativo</option>
+        <option value="classificacao_encerrada">Classificação Encerrada</option>
+        <option value="mata_mata">Mata-Mata</option>
+        <option value="finalizado">Finalizado</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Fase atual</label>
+      <select id="faseAtual">
+        <option value="classificacao">Classificação</option>
+        <option value="oitavas">Oitavas</option>
+        <option value="quartas">Quartas de Final</option>
+        <option value="semifinal">Semifinal</option>
+        <option value="final">Final</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Próxima fase</label>
+      <select id="proximaFase">
+        <option value="oitavas">Oitavas</option>
+        <option value="quartas">Quartas de Final</option>
+        <option value="semifinal">Semifinal</option>
+        <option value="final">Final</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Times classificados</label>
+      <select id="quantidadeClassificados" onchange="gerarPreviaConfrontos()">
+        <option value="2">2 times</option>
+        <option value="4">4 times</option>
+        <option value="8">8 times</option>
+        <option value="16">16 times</option>
+      </select>
+    </div>
+
+    <div class="full">
+      <label>Observações</label>
+      <textarea id="observacoes" placeholder="Ex: classificação encerrada, quartas iniciadas, regra de confronto etc."></textarea>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <button class="action-btn" type="button" onclick="encerrarClassificacao()">
+      <i class="fa-solid fa-lock"></i> Encerrar Classificação
+    </button>
+
+    <button class="action-btn btn-blue" type="button" onclick="gerarPreviaConfrontos()">
+      <i class="fa-solid fa-sitemap"></i> Gerar Prévia
+    </button>
+
+    <button class="action-btn btn-green" type="button" onclick="criarMataMata()">
+      <i class="fa-solid fa-circle-nodes"></i> Criar Mata-Mata
+    </button>
+
+    <button class="action-btn" type="button" onclick="salvarConfiguracao()">
+      <i class="fa-solid fa-floppy-disk"></i> Salvar Configuração
+    </button>
+  </div>
+</section>
+
+<section class="list-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-ranking-star"></i> Times Classificados / Base da Tabela
+  </h3>
+
+  <div id="listaTimes" class="lista">
+    <div class="mensagem-vazia">Selecione um campeonato.</div>
+  </div>
+</section>
+
+<section class="list-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-sitemap"></i> Prévia dos Confrontos
+  </h3>
+
+  <div id="listaConfrontos" class="confrontos">
+    <div class="mensagem-vazia">Gere a prévia dos confrontos.</div>
+  </div>
+</section>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let campeonatosCache = [];
+let timesCache = [];
+let classificadosCache = [];
+let confrontosCache = [];
+
+function el(id){
+  return document.getElementById(id);
+}
+
+function n(v){
+  const num = Number(v);
+  return Number.isFinite(num) ? num : 0;
+}
+
+function texto(v){
+  return String(v || "").trim();
+}
+
+function mostrarStatus(msg,tipo="ok"){
+  const box = el("statusBox");
+  box.className = "status " + (tipo === "erro" ? "status-erro" : "status-ok");
+  box.innerText = msg;
+  setTimeout(()=>{ box.style.display = "none"; }, 4000);
+}
+
+window.voltarPagina = function(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = "admin.html";
+  }
+};
+
+function saldo(t){
+  return n(t.golsPro) - n(t.golsContra);
+}
+
+function ordenarTimes(lista){
+  return [...lista].sort((a,b)=>{
+    if(n(b.pontos) !== n(a.pontos)) return n(b.pontos) - n(a.pontos);
+    if(saldo(b) !== saldo(a)) return saldo(b) - saldo(a);
+    if(n(b.golsPro) !== n(a.golsPro)) return n(b.golsPro) - n(a.golsPro);
+    return (a.nome || "").localeCompare(b.nome || "","pt-BR");
+  });
+}
+
+async function carregarCampeonatos(){
+  const select = el("campeonatoSelect");
+  select.innerHTML = `<option value="">Selecione o campeonato</option>`;
+
+  const snap = await getDocs(collection(db,"campeonatos"));
+  campeonatosCache = [];
+  snap.forEach(d=>campeonatosCache.push({id:d.id,...d.data()}));
+
+  campeonatosCache.sort((a,b)=>(a.nome || a.titulo || "").localeCompare(b.nome || b.titulo || "","pt-BR"));
+
+  campeonatosCache.forEach(c=>{
+    select.innerHTML += `<option value="${c.id}">${c.nome || c.titulo || "Campeonato"}</option>`;
+  });
+}
+
+async function carregarTimes(){
+  const snap = await getDocs(collection(db,"times"));
+  timesCache = [];
+  snap.forEach(d=>timesCache.push({id:d.id,...d.data()}));
+}
+
+function carregarCategoriasDoCampeonato(camp){
+  const select = el("categoriaSelect");
+  select.innerHTML = `<option value="">Todas / Geral</option>`;
+
+  let categorias = [];
+  if(camp){
+    if(Array.isArray(camp.categorias)) categorias = camp.categorias;
+    if(Array.isArray(camp.categoriasSelecionadas)) categorias = camp.categoriasSelecionadas;
+  }
+
+  categorias.forEach(cat=>{
+    select.innerHTML += `<option value="${cat}">${cat}</option>`;
+  });
+}
+
+window.carregarCampeonatoSelecionado = function(){
+  const id = el("campeonatoSelect").value;
+  const camp = campeonatosCache.find(c=>c.id === id);
+
+  if(!camp){
+    el("listaTimes").innerHTML = `<div class="mensagem-vazia">Selecione um campeonato.</div>`;
+    el("listaConfrontos").innerHTML = `<div class="mensagem-vazia">Gere a prévia dos confrontos.</div>`;
+    return;
+  }
+
+  carregarCategoriasDoCampeonato(camp);
+
+  el("statusCampeonato").value = camp.status || "ativo";
+  el("faseAtual").value = camp.faseAtual || "classificacao";
+  el("proximaFase").value = camp.proximaFase || "quartas";
+  el("quantidadeClassificados").value = String(camp.quantidadeClassificados || 4);
+  el("observacoes").value = camp.observacoesConfiguracao || "";
+
+  montarClassificados();
+};
+
+function montarClassificados(){
+  const categoria = el("categoriaSelect").value;
+  const qtd = n(el("quantidadeClassificados").value) || 4;
+
+  let lista = timesCache.filter(t=>{
+    if(categoria){
+      const cats = Array.isArray(t.categorias) ? t.categorias : [];
+      if(!cats.includes(categoria)) return false;
+    }
+    return true;
+  });
+
+  lista = ordenarTimes(lista);
+  classificadosCache = lista.slice(0,qtd);
+
+  renderTimes(lista);
+}
+
+function renderTimes(lista){
+  const box = el("listaTimes");
+
+  if(!lista.length){
+    box.innerHTML = `<div class="mensagem-vazia">Nenhum time encontrado.</div>`;
+    return;
+  }
+
+  box.innerHTML = lista.map((t,i)=>{
+    const classificado = classificadosCache.some(c=>c.id === t.id);
+    return `
+      <div class="card">
+        <strong>${i+1}º - ${t.nome || "-"}</strong>
+        <p>
+          Pontos: ${n(t.pontos)}<br>
+          Jogos: ${n(t.jogos)} | Vitórias: ${n(t.vitorias)}<br>
+          GP: ${n(t.golsPro)} | GC: ${n(t.golsContra)} | SG: ${saldo(t)}
+        </p>
+        <span class="tag">
+          <i class="fa-solid ${classificado ? "fa-circle-check" : "fa-circle"}"></i>
+          ${classificado ? "Classificado" : "Fora da próxima fase"}
+        </span>
+      </div>
+    `;
+  }).join("");
+}
+
+window.gerarPreviaConfrontos = function(){
+  montarClassificados();
+
+  const lista = classificadosCache;
+  const box = el("listaConfrontos");
+
+  if(lista.length < 2){
+    box.innerHTML = `<div class="mensagem-vazia">Precisa de pelo menos 2 classificados.</div>`;
+    return;
+  }
+
+  confrontosCache = [];
+  let inicio = 0;
+  let fim = lista.length - 1;
+
+  while(inicio < fim){
+    confrontosCache.push({
+      timeAId:lista[inicio].id,
+      timeANome:lista[inicio].nome || "-",
+      timeBId:lista[fim].id,
+      timeBNome:lista[fim].nome || "-",
+      fase:el("proximaFase").value,
+      campeonatoId:el("campeonatoSelect").value,
+      categoria:el("categoriaSelect").value,
+      status:"pendente"
+    });
+
+    inicio++;
+    fim--;
+  }
+
+  renderConfrontos();
+};
+
+function renderConfrontos(){
+  const box = el("listaConfrontos");
+
+  if(!confrontosCache.length){
+    box.innerHTML = `<div class="mensagem-vazia">Nenhum confronto gerado.</div>`;
+    return;
+  }
+
+  box.innerHTML = confrontosCache.map((c,i)=>{
+    return `
+      <div class="confronto">
+        <strong>Confronto ${i+1} - ${nomeFase(c.fase)}</strong>
+        <p>
+          ${c.timeANome} x ${c.timeBNome}<br>
+          Categoria: ${c.categoria || "Geral"}<br>
+          Status: ${c.status}
+        </p>
+      </div>
+    `;
+  }).join("");
+}
+
+function nomeFase(fase){
+  const nomes = {
+    classificacao:"Classificação",
+    oitavas:"Oitavas",
+    quartas:"Quartas de Final",
+    semifinal:"Semifinal",
+    final:"Final"
+  };
+
+  return nomes[fase] || fase;
+}
+
+window.encerrarClassificacao = async function(){
+  const id = el("campeonatoSelect").value;
+  if(!id) return mostrarStatus("Selecione um campeonato.","erro");
+
+  await updateDoc(doc(db,"campeonatos",id),{
+    status:"classificacao_encerrada",
+    faseAtual:"classificacao",
+    classificacaoEncerrada:true,
+    atualizadoEm:serverTimestamp()
+  });
+
+  el("statusCampeonato").value = "classificacao_encerrada";
+  mostrarStatus("Classificação encerrada.");
+};
+
+window.criarMataMata = async function(){
+  const id = el("campeonatoSelect").value;
+  if(!id) return mostrarStatus("Selecione um campeonato.","erro");
+
+  gerarPreviaConfrontos();
+
+  if(!confrontosCache.length) return mostrarStatus("Nenhum confronto gerado.","erro");
+
+  for(const c of confrontosCache){
+    await addDoc(collection(db,"confrontos"),{
+      ...c,
+      criadoEm:serverTimestamp()
+    });
+  }
+
+  await updateDoc(doc(db,"campeonatos",id),{
+    status:"mata_mata",
+    faseAtual:el("proximaFase").value,
+    proximaFase:el("proximaFase").value,
+    quantidadeClassificados:n(el("quantidadeClassificados").value),
+    confrontosGerados:true,
+    atualizadoEm:serverTimestamp()
+  });
+
+  el("statusCampeonato").value = "mata_mata";
+  el("faseAtual").value = el("proximaFase").value;
+
+  mostrarStatus("Mata-mata criado e confrontos salvos.");
+};
+
+window.salvarConfiguracao = async function(){
+  const id = el("campeonatoSelect").value;
+  if(!id) return mostrarStatus("Selecione um campeonato.","erro");
+
+  await updateDoc(doc(db,"campeonatos",id),{
+    status:el("statusCampeonato").value,
+    faseAtual:el("faseAtual").value,
+    proximaFase:el("proximaFase").value,
+    quantidadeClassificados:n(el("quantidadeClassificados").value),
+    observacoesConfiguracao:texto(el("observacoes").value),
+    atualizadoEm:serverTimestamp()
+  });
+
+  mostrarStatus("Configurações salvas com sucesso.");
+};
+
+async function iniciar(){
+  try{
+    await Promise.all([
+      carregarCampeonatos(),
+      carregarTimes()
+    ]);
+  }catch(e){
+    console.error(e);
+    mostrarStatus("Erro ao carregar dados. Confira Firebase.","erro");
+  }
+}
+
+iniciar();
+</script>
+
+</body>
+</html>
