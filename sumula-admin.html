@@ -323,6 +323,8 @@ button:disabled{
         <tr>
           <th>Nº</th>
           <th>Jogador</th>
+          <th>CPF</th>
+          <th>Nascimento</th>
           <th>Posição</th>
           <th>C</th>
         </tr>
@@ -338,6 +340,8 @@ button:disabled{
         <tr>
           <th>Nº</th>
           <th>Jogador</th>
+          <th>CPF</th>
+          <th>Nascimento</th>
           <th>Posição</th>
           <th>C</th>
         </tr>
@@ -464,6 +468,21 @@ button:disabled{
   </div>
 </section>
 
+
+<section class="panel">
+  <div class="titulo-bloco">Compartilhar Súmula</div>
+
+  <div class="actions">
+    <button class="top-btn btn-green" onclick="compartilharWhatsapp()">
+      <i class="fa-brands fa-whatsapp"></i> WhatsApp
+    </button>
+
+    <button class="top-btn btn-gold" onclick="compartilharEmail()">
+      <i class="fa-solid fa-envelope"></i> Email
+    </button>
+  </div>
+</section>
+
 </main>
 <script type="module">
 import { auth, db } from "./firebase.js";
@@ -478,6 +497,10 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const id = new URLSearchParams(location.search).get("id");
+
+function numeroJogador(j){
+  return j.numero || j.camisa || j.numeroCamisa || "";
+}
 
 let jogo = {};
 let sumula = {};
@@ -553,13 +576,15 @@ function usuarioEhArbitroDesignado(){
 
 function renderJogadores(lista){
   if(!lista || !lista.length){
-    return `<tr><td colspan="4">Nenhum jogador encontrado.</td></tr>`;
+    return `<tr><td colspan="6">Nenhum jogador encontrado.</td></tr>`;
   }
 
   return lista.map(j => `
     <tr>
       <td>${j.numero || "-"}</td>
       <td>${j.nome || "-"}</td>
+      <td>${j.cpf || "-"}</td>
+      <td>${j.nascimento || j.dataNascimento || "-"}</td>
       <td>${j.posicao || "-"}</td>
       <td>${j.capitao ? "C" : ""}</td>
     </tr>
@@ -775,7 +800,7 @@ window.adicionarGol = function(){
     time:el("golTime").value,
     jogadorId:jogador.id || jogador.jogadorId || "",
     nome:jogador.nome || "",
-    numero:jogador.numero || "",
+    numero:numeroJogador(jogador),
     tempo:el("golTempo").value,
     minuto:el("golTempo").value,
     tipo:el("golTipo").value
@@ -803,7 +828,7 @@ window.adicionarCartao = function(){
     time:el("cartaoTime").value,
     jogadorId:jogador.id || jogador.jogadorId || "",
     nome:jogador.nome || "",
-    numero:jogador.numero || "",
+    numero:numeroJogador(jogador),
     tempo:el("cartaoTempo").value,
     minuto:el("cartaoTempo").value,
     tipo:el("cartaoTipo").value,
@@ -896,8 +921,19 @@ window.salvarRascunho = async function(){
 
   const dados = dadosBaseSalvar(false);
 
-  await updateDoc(doc(db,"jogos",id),dados);
-  await setDoc(doc(db,"sumulas",id),dados,{merge:true});
+  await updateDoc(doc(db,"jogos",id),{
+    ...dados,
+    status:"finalizado",
+    verSumula:true,
+    linkPublico:"sumula-publica.html?id="+id
+  });
+
+  await setDoc(doc(db,"sumulas",id),{
+    ...dados,
+    status:"finalizado",
+    verSumula:true,
+    linkPublico:"sumula-publica.html?id="+id
+  },{merge:true});
 
   alert("Rascunho salvo!");
 };
@@ -1055,8 +1091,19 @@ window.finalizarSumula = async function(){
     finalizadaEm:serverTimestamp()
   };
 
-  await updateDoc(doc(db,"jogos",id),dados);
-  await setDoc(doc(db,"sumulas",id),dados,{merge:true});
+  await updateDoc(doc(db,"jogos",id),{
+    ...dados,
+    status:"finalizado",
+    verSumula:true,
+    linkPublico:"sumula-publica.html?id="+id
+  });
+
+  await setDoc(doc(db,"sumulas",id),{
+    ...dados,
+    status:"finalizado",
+    verSumula:true,
+    linkPublico:"sumula-publica.html?id="+id
+  },{merge:true});
 
   await atualizarTudoAutomatico();
 
@@ -1066,7 +1113,7 @@ window.finalizarSumula = async function(){
 };
 
 window.abrirPublica = function(){
-  window.location.href = "sumula-publica.html?id="+id;
+  window.open("sumula-publica.html?id="+id,"_blank");
 };
 
 onAuthStateChanged(auth,async(user)=>{
@@ -1094,6 +1141,20 @@ onAuthStateChanged(auth,async(user)=>{
     bloquearTela();
   }
 });
+
+window.compartilharWhatsapp = function(){
+  const link = location.origin + "/sumula-publica.html?id=" + id;
+  window.open("https://wa.me/?text=" + encodeURIComponent("Confira a súmula oficial: " + link));
+};
+
+window.compartilharEmail = function(){
+  const link = location.origin + "/sumula-publica.html?id=" + id;
+
+  window.location.href =
+    "mailto:?subject=Súmula Oficial&body=" +
+    encodeURIComponent("Confira a súmula oficial: " + link);
+};
+
 </script>
 
 </body>
