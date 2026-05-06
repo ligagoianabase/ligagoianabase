@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Galeria ADM - Liga Goiana</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#0b1f3a;
+  --card:#102a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --muted:#d9e3f2;
+  --line:rgba(255,255,255,.10);
+  --gold-line:rgba(247,198,0,.34);
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --red:#d94141;
+  --max:1280px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.90),rgba(11,31,58,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:#fff;
+}
+
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer;border:none}
+
+.wrap{
+  width:min(100% - 28px,var(--max));
+  margin:0 auto;
+}
+
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.header-inner{
+  min-height:84px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
+
+.header-left,
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:900;
+}
+
+.btn-light{
+  background:#fff4cf;
+  color:#111;
+}
+
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.btn-red{
+  background:var(--red);
+  color:#fff;
+}
+
+.container{
+  padding:24px 0 34px;
+}
+
+.hero-panel,
+.form-panel,
+.list-panel{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
+
+.hero-panel h2{
+  font-size:28px;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
+.hero-panel p{
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.bloco-titulo{
+  margin:0 0 14px;
+  color:var(--gold);
+  font-size:18px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.full{grid-column:1/-1}
+
+label{
+  display:block;
+  margin:0 0 6px;
+  font-weight:900;
+  color:#eef4ff;
+  font-size:13px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.top-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.action-btn,
+.link-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:900;
+}
+
+.action-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.link-btn{
+  background:var(--gold);
+  color:#111;
+  font-size:12px;
+}
+
+.lista{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  overflow:hidden;
+}
+
+.card img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  background:#fff;
+}
+
+.card-body{
+  padding:14px;
+}
+
+.card strong{
+  display:block;
+  color:var(--gold);
+  font-size:17px;
+  margin-bottom:8px;
+}
+
+.card p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 8px;
+  border-radius:999px;
+  background:rgba(247,198,0,.12);
+  border:1px solid var(--gold-line);
+  color:var(--gold);
+  font-size:11px;
+  font-weight:900;
+  margin-top:8px;
+}
+
+.status{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:13px;
+}
+
+.status-ok{
+  display:block;
+  background:rgba(27,143,67,.18);
+  color:#aaf0bd;
+  border:1px solid rgba(27,143,67,.35);
+}
+
+.status-erro{
+  display:block;
+  background:rgba(217,65,65,.18);
+  color:#ffb7b7;
+  border:1px solid rgba(217,65,65,.35);
+}
+
+.mensagem-vazia{
+  color:var(--muted);
+  text-align:center;
+  padding:16px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;
+  grid-column:1/-1;
+}
+
+@media(max-width:900px){
+  .header-title{
+    order:3;
+    width:100%;
+    text-align:center;
+    font-size:19px;
+  }
+
+  .header-left,
+  .header-right{
+    width:100%;
+    justify-content:center;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:600px){
+  .top-btn,
+  .action-btn,
+  .link-btn{
+    width:100%;
+  }
+
+  .hero-panel h2{
+    font-size:23px;
+  }
+
+  .hero-panel,
+  .form-panel,
+  .list-panel{
+    padding:16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
+
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
+
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
+    </div>
+
+    <div class="header-title">Galeria ADM</div>
+
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarGaleria()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+<section class="hero-panel">
+  <h2>Galeria de Fotos</h2>
+  <p>
+    Cadastre fotos, links de álbuns e imagens dos jogos, campeonatos e fotógrafos da Liga.
+  </p>
+  <div id="statusBox" class="status"></div>
+</section>
+
+<section class="form-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-images"></i> Nova Foto / Álbum
+  </h3>
+
+  <input type="hidden" id="galeriaId">
+
+  <div class="grid">
+    <div>
+      <label>Título</label>
+      <input id="titulo" placeholder="Ex: Final Sub-15">
+    </div>
+
+    <div>
+      <label>Campeonato</label>
+      <input id="campeonato" placeholder="Ex: Copa Goiás">
+    </div>
+
+    <div>
+      <label>Categoria</label>
+      <input id="categoria" placeholder="Ex: Sub-15">
+    </div>
+
+    <div>
+      <label>Fotógrafo</label>
+      <input id="fotografo" placeholder="Nome do fotógrafo">
+    </div>
+
+    <div>
+      <label>Data</label>
+      <input id="data" type="date">
+    </div>
+
+    <div>
+      <label>Tipo</label>
+      <select id="tipo">
+        <option value="foto">Foto</option>
+        <option value="album">Álbum</option>
+        <option value="galeria">Galeria</option>
+      </select>
+    </div>
+
+    <div class="full">
+      <label>Link da imagem / álbum</label>
+      <input id="imagem" placeholder="https://...">
+    </div>
+
+    <div class="full">
+      <label>Descrição</label>
+      <textarea id="descricao" placeholder="Descrição da galeria"></textarea>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <button class="action-btn" type="button" onclick="salvarGaleria()">
+      <i class="fa-solid fa-floppy-disk"></i> Salvar
+    </button>
+
+    <button class="action-btn btn-red" type="button" onclick="limparFormulario()">
+      <i class="fa-solid fa-broom"></i> Limpar
+    </button>
+  </div>
+</section>
+
+<section class="list-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-camera"></i> Galeria Cadastrada
+  </h3>
+
+  <div id="listaGaleria" class="lista">
+    <div class="mensagem-vazia">Carregando galeria...</div>
+  </div>
+</section>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let galeriaCache = [];
+
+function el(id){
+  return document.getElementById(id);
+}
+
+function texto(v){
+  return String(v || "").trim();
+}
+
+function mostrarStatus(msg,tipo="ok"){
+  const box = el("statusBox");
+  box.className = "status " + (tipo === "erro" ? "status-erro" : "status-ok");
+  box.innerText = msg;
+  setTimeout(()=>{ box.style.display = "none"; }, 3500);
+}
+
+window.voltarPagina = function(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = "admin.html";
+  }
+};
+
+window.limparFormulario = function(){
+  el("galeriaId").value = "";
+  el("titulo").value = "";
+  el("campeonato").value = "";
+  el("categoria").value = "";
+  el("fotografo").value = "";
+  el("data").value = "";
+  el("tipo").value = "foto";
+  el("imagem").value = "";
+  el("descricao").value = "";
+};
+
+window.salvarGaleria = async function(){
+  const id = el("galeriaId").value;
+
+  const dados = {
+    titulo:texto(el("titulo").value),
+    campeonato:texto(el("campeonato").value),
+    categoria:texto(el("categoria").value),
+    fotografo:texto(el("fotografo").value),
+    data:texto(el("data").value),
+    tipo:texto(el("tipo").value),
+    imagem:texto(el("imagem").value),
+    descricao:texto(el("descricao").value),
+    atualizadoEm:serverTimestamp()
+  };
+
+  if(!dados.titulo) return mostrarStatus("Digite o título.","erro");
+  if(!dados.imagem) return mostrarStatus("Digite o link da imagem.","erro");
+
+  if(id){
+    await updateDoc(doc(db,"galeria",id),dados);
+  }else{
+    await addDoc(collection(db,"galeria"),{
+      ...dados,
+      criadoEm:serverTimestamp()
+    });
+  }
+
+  mostrarStatus("Galeria salva com sucesso.");
+  limparFormulario();
+  carregarGaleria();
+};
+
+window.editarGaleria = function(id){
+  const g = galeriaCache.find(x=>x.id === id);
+  if(!g) return;
+
+  el("galeriaId").value = g.id;
+  el("titulo").value = g.titulo || "";
+  el("campeonato").value = g.campeonato || "";
+  el("categoria").value = g.categoria || "";
+  el("fotografo").value = g.fotografo || "";
+  el("data").value = g.data || "";
+  el("tipo").value = g.tipo || "foto";
+  el("imagem").value = g.imagem || "";
+  el("descricao").value = g.descricao || "";
+
+  window.scrollTo({top:220,behavior:"smooth"});
+};
+
+window.excluirGaleria = async function(id){
+  if(!confirm("Deseja excluir este item da galeria?")) return;
+  await deleteDoc(doc(db,"galeria",id));
+  mostrarStatus("Item removido.");
+  carregarGaleria();
+};
+
+function renderGaleria(){
+  const lista = el("listaGaleria");
+
+  if(!galeriaCache.length){
+    lista.innerHTML = `<div class="mensagem-vazia">Nenhuma foto cadastrada ainda.</div>`;
+    return;
+  }
+
+  lista.innerHTML = galeriaCache.map(g=>{
+    return `
+      <div class="card">
+        <img src="${g.imagem || "logo-liga.jfif"}" onerror="this.src='logo-liga.jfif'">
+
+        <div class="card-body">
+          <strong>${g.titulo || "-"}</strong>
+
+          <p>
+            Campeonato: ${g.campeonato || "-"}<br>
+            Categoria: ${g.categoria || "-"}<br>
+            Fotógrafo: ${g.fotografo || "-"}<br>
+            Data: ${g.data || "-"}<br>
+            Descrição: ${g.descricao || "-"}
+          </p>
+
+          <span class="tag">
+            <i class="fa-solid fa-image"></i> ${g.tipo || "foto"}
+          </span>
+
+          <div class="top-actions">
+            <button class="link-btn" type="button" onclick="editarGaleria('${g.id}')">
+              <i class="fa-solid fa-pen"></i> Editar
+            </button>
+
+            <button class="link-btn btn-red" type="button" onclick="excluirGaleria('${g.id}')">
+              <i class="fa-solid fa-trash"></i> Excluir
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function carregarGaleria(){
+  const lista = el("listaGaleria");
+  lista.innerHTML = `<div class="mensagem-vazia">Carregando galeria...</div>`;
+
+  try{
+    const snap = await getDocs(collection(db,"galeria"));
+    galeriaCache = [];
+    snap.forEach(d=>galeriaCache.push({id:d.id,...d.data()}));
+
+    galeriaCache.sort((a,b)=>
+      String(b.data || "").localeCompare(String(a.data || ""))
+    );
+
+    renderGaleria();
+  }catch(e){
+    console.error(e);
+    mostrarStatus("Erro ao carregar galeria.","erro");
+    lista.innerHTML = `<div class="mensagem-vazia">Erro ao carregar galeria.</div>`;
+  }
+}
+
+carregarGaleria();
+</script>
+
+</body>
+</html>
