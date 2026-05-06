@@ -775,7 +775,44 @@ window.cadastrar = async function(){
   btnCadastrar.disabled = true;
   btnCadastrar.innerText = "Criando conta...";
 
+
   try{
+
+    const cpfExistenteUsuarios = await buscarRegistroPorCPF("usuarios",cpf);
+
+    if(cpfExistenteUsuarios){
+      mostrarErro("Já existe uma conta cadastrada com este CPF.");
+
+      btnCadastrar.disabled = false;
+      btnCadastrar.innerText = "Criar conta";
+      return;
+    }
+
+    const colecoesVerificacao = [
+      "jogadores",
+      "tecnicos",
+      "arbitros",
+      "assistentes",
+      "fotografos"
+    ];
+
+    for(const colecao of colecoesVerificacao){
+
+      const existente = await buscarRegistroPorCPF(colecao,cpf);
+
+      if(existente){
+
+        mostrarErro(
+          "Este CPF já está vinculado a outro cadastro no sistema."
+        );
+
+        btnCadastrar.disabled = false;
+        btnCadastrar.innerText = "Criar conta";
+        return;
+      }
+    }
+
+
     const cred = await createUserWithEmailAndPassword(auth,email,senha);
     const uid = cred.user.uid;
 
