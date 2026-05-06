@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Escalas ADM - Liga Goiana</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#0b1f3a;
+  --card:#102a52;
+  --card2:#0d2446;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#d9e3f2;
+  --line:rgba(255,255,255,.10);
+  --gold-line:rgba(247,198,0,.34);
+  --red:#d94141;
+  --green:#1b8f43;
+  --blue:#1a3f73;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --max:1280px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.90),rgba(11,31,58,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:#fff;
+}
+
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer;border:none}
+
+.wrap{
+  width:min(100% - 28px,var(--max));
+  margin:0 auto;
+}
+
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+
+.header-inner{
+  min-height:84px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
+
+.header-left,
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:900;
+}
+
+.btn-light{
+  background:#fff4cf;
+  color:#111;
+}
+
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.btn-red{
+  background:var(--red);
+  color:#fff;
+}
+
+.container{
+  padding:24px 0 34px;
+}
+
+.hero-panel,
+.form-panel,
+.list-panel{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
+
+.hero-panel h2{
+  font-size:28px;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
+.hero-panel p{
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.bloco-titulo{
+  margin:0 0 14px;
+  color:var(--gold);
+  font-size:18px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.full{grid-column:1/-1}
+
+label{
+  display:block;
+  margin:0 0 6px;
+  font-weight:900;
+  color:#eef4ff;
+  font-size:13px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+}
+
+textarea{
+  min-height:86px;
+  resize:vertical;
+}
+
+.top-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.action-btn,
+.link-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:900;
+}
+
+.action-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.link-btn{
+  background:var(--gold);
+  color:#111;
+  font-size:12px;
+}
+
+.lista{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:14px;
+}
+
+.card strong{
+  display:block;
+  color:var(--gold);
+  font-size:16px;
+  margin-bottom:8px;
+}
+
+.card p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.55;
+}
+
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 8px;
+  border-radius:999px;
+  background:rgba(247,198,0,.12);
+  border:1px solid var(--gold-line);
+  color:var(--gold);
+  font-size:11px;
+  font-weight:900;
+  margin-top:8px;
+}
+
+.status{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:13px;
+}
+
+.status-ok{
+  display:block;
+  background:rgba(27,143,67,.18);
+  color:#aaf0bd;
+  border:1px solid rgba(27,143,67,.35);
+}
+
+.status-erro{
+  display:block;
+  background:rgba(217,65,65,.18);
+  color:#ffb7b7;
+  border:1px solid rgba(217,65,65,.35);
+}
+
+.mensagem-vazia{
+  color:var(--muted);
+  text-align:center;
+  padding:16px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;
+  grid-column:1/-1;
+}
+
+@media(max-width:900px){
+  .header-title{
+    order:3;
+    width:100%;
+    text-align:center;
+    font-size:19px;
+  }
+
+  .header-left,
+  .header-right{
+    width:100%;
+    justify-content:center;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:600px){
+  .top-btn,
+  .action-btn,
+  .link-btn{
+    width:100%;
+  }
+
+  .hero-panel h2{
+    font-size:23px;
+  }
+
+  .hero-panel,
+  .form-panel,
+  .list-panel{
+    padding:16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
+
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
+
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
+    </div>
+
+    <div class="header-title">Escalas ADM</div>
+
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarEscala()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Escala
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+<section class="hero-panel">
+  <h2>Escalas de Arbitragem</h2>
+  <p>
+    Selecione um jogo cadastrado e defina árbitro, assistentes, status e observações.
+    A escala fica vinculada ao jogo e atualiza os dados para súmula.
+  </p>
+  <div id="statusBox" class="status"></div>
+</section>
+
+<section class="form-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-clipboard-list"></i> Criar / Editar Escala
+  </h3>
+
+  <input type="hidden" id="escalaId">
+
+  <div class="grid">
+    <div class="full">
+      <label>Jogo</label>
+      <select id="jogoSelect" onchange="preencherDadosJogo()">
+        <option value="">Carregando jogos...</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Campeonato</label>
+      <input id="campeonato" readonly>
+    </div>
+
+    <div>
+      <label>Categoria</label>
+      <input id="categoria" readonly>
+    </div>
+
+    <div>
+      <label>Data / Hora</label>
+      <input id="dataHora" readonly>
+    </div>
+
+    <div>
+      <label>Local</label>
+      <input id="local" readonly>
+    </div>
+
+    <div>
+      <label>Árbitro Principal</label>
+      <select id="arbitroPrincipal">
+        <option value="">Selecione</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Assistente 1</label>
+      <select id="assistente1">
+        <option value="">Selecione</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Assistente 2</label>
+      <select id="assistente2">
+        <option value="">Selecione</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Quarto Árbitro / Apoio</label>
+      <select id="quartoArbitro">
+        <option value="">Opcional</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Status da escala</label>
+      <select id="statusEscala">
+        <option value="pendente">Pendente</option>
+        <option value="confirmada">Confirmada</option>
+        <option value="alterada">Alterada</option>
+        <option value="cancelada">Cancelada</option>
+      </select>
+    </div>
+
+    <div class="full">
+      <label>Observações</label>
+      <textarea id="observacoes" placeholder="Observações da escala"></textarea>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <button class="action-btn" type="button" onclick="salvarEscala()">
+      <i class="fa-solid fa-floppy-disk"></i> Salvar Escala
+    </button>
+
+    <button class="action-btn btn-red" type="button" onclick="limparFormulario()">
+      <i class="fa-solid fa-broom"></i> Limpar
+    </button>
+  </div>
+</section>
+
+<section class="list-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-clock-rotate-left"></i> Escalas Cadastradas
+  </h3>
+
+  <div id="listaEscalas" class="lista">
+    <div class="mensagem-vazia">Carregando escalas...</div>
+  </div>
+</section>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  doc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let jogosCache = [];
+let arbitrosCache = [];
+let assistentesCache = [];
+let escalasCache = [];
+
+function el(id){
+  return document.getElementById(id);
+}
+
+function texto(v){
+  return String(v || "").trim();
+}
+
+function mostrarStatus(msg,tipo="ok"){
+  const box = el("statusBox");
+  box.className = "status " + (tipo === "erro" ? "status-erro" : "status-ok");
+  box.innerText = msg;
+  setTimeout(()=>{ box.style.display = "none"; }, 3500);
+}
+
+window.voltarPagina = function(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = "admin.html";
+  }
+};
+
+function nomePessoa(p){
+  return p.nome || p.nomeCompleto || p.apelido || p.email || "-";
+}
+
+function nomeJogo(j){
+  const a = j.timeA_nome || j.timeA || j.mandanteNome || j.mandante || "Time A";
+  const b = j.timeB_nome || j.timeB || j.visitanteNome || j.visitante || "Time B";
+  const data = j.data || j.dataJogo || "";
+  const hora = j.hora || j.horario || "";
+  return `${a} x ${b} ${data ? " - " + data : ""} ${hora ? hora : ""}`;
+}
+
+function dadosJogo(j){
+  const campeonato = j.campeonatoNome || j.campeonato || j.nomeCampeonato || "";
+  const categoria = j.categoria || "";
+  const data = j.data || j.dataJogo || "";
+  const hora = j.hora || j.horario || "";
+  const local = j.local || j.estadio || j.campo || "";
+  return {campeonato,categoria,dataHora:[data,hora].filter(Boolean).join(" "),local};
+}
+
+async function carregarJogos(){
+  const snap = await getDocs(collection(db,"jogos"));
+  jogosCache = [];
+  snap.forEach(d=>jogosCache.push({id:d.id,...d.data()}));
+
+  jogosCache.sort((a,b)=>String(a.data || a.dataJogo || "").localeCompare(String(b.data || b.dataJogo || "")));
+
+  const select = el("jogoSelect");
+  select.innerHTML = `<option value="">Selecione o jogo</option>`;
+
+  jogosCache.forEach(j=>{
+    select.innerHTML += `<option value="${j.id}">${nomeJogo(j)}</option>`;
+  });
+}
+
+async function carregarArbitros(){
+  const snap = await getDocs(collection(db,"arbitros"));
+  arbitrosCache = [];
+  snap.forEach(d=>arbitrosCache.push({id:d.id,...d.data()}));
+
+  arbitrosCache.sort((a,b)=>nomePessoa(a).localeCompare(nomePessoa(b),"pt-BR"));
+
+  const selects = ["arbitroPrincipal","quartoArbitro"];
+  selects.forEach(id=>{
+    el(id).innerHTML = id === "quartoArbitro" ? `<option value="">Opcional</option>` : `<option value="">Selecione</option>`;
+    arbitrosCache.forEach(a=>{
+      el(id).innerHTML += `<option value="${a.id}">${nomePessoa(a)}</option>`;
+    });
+  });
+}
+
+async function carregarAssistentes(){
+  const snap = await getDocs(collection(db,"assistentes"));
+  assistentesCache = [];
+  snap.forEach(d=>assistentesCache.push({id:d.id,...d.data()}));
+
+  assistentesCache.sort((a,b)=>nomePessoa(a).localeCompare(nomePessoa(b),"pt-BR"));
+
+  ["assistente1","assistente2"].forEach(id=>{
+    el(id).innerHTML = `<option value="">Selecione</option>`;
+    assistentesCache.forEach(a=>{
+      el(id).innerHTML += `<option value="${a.id}">${nomePessoa(a)}</option>`;
+    });
+  });
+}
+
+async function carregarEscalas(){
+  const snap = await getDocs(collection(db,"escalas"));
+  escalasCache = [];
+  snap.forEach(d=>escalasCache.push({id:d.id,...d.data()}));
+  renderEscalas();
+}
+
+window.preencherDadosJogo = function(){
+  const id = el("jogoSelect").value;
+  const jogo = jogosCache.find(j=>j.id === id);
+  if(!jogo){
+    el("campeonato").value = "";
+    el("categoria").value = "";
+    el("dataHora").value = "";
+    el("local").value = "";
+    return;
+  }
+
+  const d = dadosJogo(jogo);
+  el("campeonato").value = d.campeonato;
+  el("categoria").value = d.categoria;
+  el("dataHora").value = d.dataHora;
+  el("local").value = d.local;
+};
+
+function limparFormularioCampos(){
+  el("escalaId").value = "";
+  el("jogoSelect").value = "";
+  el("campeonato").value = "";
+  el("categoria").value = "";
+  el("dataHora").value = "";
+  el("local").value = "";
+  el("arbitroPrincipal").value = "";
+  el("assistente1").value = "";
+  el("assistente2").value = "";
+  el("quartoArbitro").value = "";
+  el("statusEscala").value = "pendente";
+  el("observacoes").value = "";
+}
+
+window.limparFormulario = limparFormularioCampos;
+
+function pegarNomeLista(lista,id){
+  return nomePessoa(lista.find(x=>x.id === id) || {});
+}
+
+window.salvarEscala = async function(){
+  const escalaId = el("escalaId").value;
+  const jogoId = el("jogoSelect").value;
+
+  if(!jogoId) return mostrarStatus("Selecione um jogo.","erro");
+  if(!el("arbitroPrincipal").value) return mostrarStatus("Selecione o árbitro principal.","erro");
+
+  const jogo = jogosCache.find(j=>j.id === jogoId);
+  const d = dadosJogo(jogo || {});
+
+  const dados = {
+    jogoId,
+    jogoNome:nomeJogo(jogo || {}),
+    campeonato:d.campeonato,
+    categoria:d.categoria,
+    dataHora:d.dataHora,
+    local:d.local,
+    arbitroPrincipalId:el("arbitroPrincipal").value,
+    arbitroPrincipalNome:pegarNomeLista(arbitrosCache,el("arbitroPrincipal").value),
+    assistente1Id:el("assistente1").value,
+    assistente1Nome:pegarNomeLista(assistentesCache,el("assistente1").value),
+    assistente2Id:el("assistente2").value,
+    assistente2Nome:pegarNomeLista(assistentesCache,el("assistente2").value),
+    quartoArbitroId:el("quartoArbitro").value,
+    quartoArbitroNome:pegarNomeLista(arbitrosCache,el("quartoArbitro").value),
+    status:el("statusEscala").value,
+    observacoes:texto(el("observacoes").value),
+    atualizadoEm:serverTimestamp()
+  };
+
+  if(escalaId){
+    await updateDoc(doc(db,"escalas",escalaId),dados);
+  }else{
+    await addDoc(collection(db,"escalas"),{
+      ...dados,
+      criadoEm:serverTimestamp()
+    });
+  }
+
+  await updateDoc(doc(db,"jogos",jogoId),{
+    escalaCriada:true,
+    escalaStatus:dados.status,
+    arbitroId:dados.arbitroPrincipalId,
+    arbitroNome:dados.arbitroPrincipalNome,
+    assistente1Id:dados.assistente1Id,
+    assistente1Nome:dados.assistente1Nome,
+    assistente2Id:dados.assistente2Id,
+    assistente2Nome:dados.assistente2Nome,
+    quartoArbitroId:dados.quartoArbitroId,
+    quartoArbitroNome:dados.quartoArbitroNome,
+    atualizadoEm:serverTimestamp()
+  });
+
+  mostrarStatus("Escala salva e vinculada ao jogo.");
+  limparFormularioCampos();
+  await carregarEscalas();
+};
+
+window.editarEscala = function(id){
+  const e = escalasCache.find(x=>x.id === id);
+  if(!e) return;
+
+  el("escalaId").value = e.id;
+  el("jogoSelect").value = e.jogoId || "";
+  preencherDadosJogo();
+  el("arbitroPrincipal").value = e.arbitroPrincipalId || "";
+  el("assistente1").value = e.assistente1Id || "";
+  el("assistente2").value = e.assistente2Id || "";
+  el("quartoArbitro").value = e.quartoArbitroId || "";
+  el("statusEscala").value = e.status || "pendente";
+  el("observacoes").value = e.observacoes || "";
+
+  window.scrollTo({top:220,behavior:"smooth"});
+};
+
+function renderEscalas(){
+  const lista = el("listaEscalas");
+
+  if(!escalasCache.length){
+    lista.innerHTML = `<div class="mensagem-vazia">Nenhuma escala cadastrada ainda.</div>`;
+    return;
+  }
+
+  lista.innerHTML = escalasCache.map(e=>{
+    return `
+      <div class="card">
+        <strong><i class="fa-solid fa-clipboard-list"></i> ${e.jogoNome || "Jogo"}</strong>
+        <p>
+          Campeonato: ${e.campeonato || "-"}<br>
+          Categoria: ${e.categoria || "-"}<br>
+          Data/Hora: ${e.dataHora || "-"}<br>
+          Local: ${e.local || "-"}<br><br>
+          Árbitro: ${e.arbitroPrincipalNome || "-"}<br>
+          Assistente 1: ${e.assistente1Nome || "-"}<br>
+          Assistente 2: ${e.assistente2Nome || "-"}<br>
+          Quarto árbitro: ${e.quartoArbitroNome || "-"}<br>
+          Observações: ${e.observacoes || "-"}
+        </p>
+        <span class="tag"><i class="fa-solid fa-circle-check"></i> ${e.status || "pendente"}</span>
+        <div class="top-actions">
+          <button class="link-btn" type="button" onclick="editarEscala('${e.id}')">
+            <i class="fa-solid fa-pen"></i> Editar
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function iniciar(){
+  try{
+    await Promise.all([
+      carregarJogos(),
+      carregarArbitros(),
+      carregarAssistentes()
+    ]);
+    await carregarEscalas();
+  }catch(e){
+    console.error(e);
+    mostrarStatus("Erro ao carregar dados da escala. Confira Firebase/coleções.","erro");
+  }
+}
+
+iniciar();
+</script>
+
+</body>
+</html>
