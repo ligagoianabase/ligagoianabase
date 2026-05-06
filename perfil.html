@@ -562,12 +562,20 @@
   </div>
 
   <script type="module">
-    import { auth, db } from "./firebase.js";
+    import { auth, db, storage } from "./firebase.js";
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
     import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
+
     let usuarioAtualId = "";
-    let fotoBase64Atual = "";
+    let fotoAtualUrl = "";
+    let arquivoFotoSelecionado = null;
 
     const msgErro = document.getElementById("msgErro");
     const msgSucesso = document.getElementById("msgSucesso");
@@ -651,16 +659,30 @@
 
     function preencherFoto(src){
       if(src){
-        fotoBase64Atual = src;
+        fotoAtualUrl = src;
         fotoPreview.src = src;
         fotoPreview.style.display = "block";
         fotoPlaceholder.style.display = "none";
       }else{
-        fotoBase64Atual = "";
+        fotoAtualUrl = "";
         fotoPreview.src = "";
         fotoPreview.style.display = "none";
         fotoPlaceholder.style.display = "flex";
       }
+    }
+
+    async function uploadFotoPerfil(uid,arquivo){
+      if(!arquivo) return fotoAtualUrl || "";
+
+      const nomeSeguro = arquivo.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+
+      const caminho = `usuarios/${uid}/perfil-${Date.now()}-${nomeSeguro}`;
+
+      const storageRef = ref(storage,caminho);
+
+      await uploadBytes(storageRef,arquivo);
+
+      return await getDownloadURL(storageRef);
     }
 
     function preencherResumo(dados){
@@ -869,6 +891,11 @@
       try{
         const ref = doc(db, "usuarios", usuarioAtualId);
 
+        const fotoUrlFinal = await uploadFotoPerfil(
+          usuarioAtualId,
+          arquivoFotoSelecionado
+        );
+
         await updateDoc(ref, {
           nome,
           nomeExibicao,
@@ -891,8 +918,8 @@
           bio,
           descricao:bio,
           cadastroIncompleto:false,
-          fotoPerfil: fotoBase64Atual,
-          foto: fotoBase64Atual,
+          fotoPerfil: fotoUrlFinal,
+          foto: fotoUrlFinal,
           atualizadoEm: new Date().toISOString()
         });
 
@@ -914,8 +941,8 @@
             especialidade,
             bio,
             descricao:bio,
-            fotoPerfil:fotoBase64Atual,
-            foto:fotoBase64Atual,
+            fotoPerfil:fotoUrlFinal,
+            foto:fotoUrlFinal,
             tipoUsuario:"fotografo",
             tipo:"fotografo",
             perfil:"fotografo",
@@ -934,20 +961,49 @@
       }
     };
 
-    window.removerFoto = function(){
-      preencherFoto("");
-      mostrarSucesso("Foto removida. Agora clique em salvar perfil.");
+    window.removerFoto = async function(){
+      try{
+        preencherFoto("");
+        arquivoFotoSelecionado = null;
+
+        if(usuarioAtualId){
+          await updateDoc(doc(db,"usuarios",usuarioAtualId),{
+            foto:"",
+            fotoPerfil:"",
+            atualizadoEm:new Date().toISOString()
+          }).catch(()=>{});
+
+          await updateDoc(doc(db,"fotografos",usuarioAtualId),{
+            foto:"",
+            fotoPerfil:"",
+            atualizadoEm:new Date().toISOString()
+          }).catch(()=>{});
+        }
+
+        mostrarSucesso("Foto removida com sucesso.");
+      }catch(e){
+        console.error(e);
+        mostrarErro("Erro ao remover foto.");
+      }
     };
 
     fotoInput.addEventListener("change", function(event){
       const arquivo = event.target.files?.[0];
+
       if(!arquivo) return;
 
+      arquivoFotoSelecionado = arquivo;
+
       const leitor = new FileReader();
+
       leitor.onload = function(e){
-        preencherFoto(e.target.result);
+        fotoPreview.src = e.target.result;
+        fotoPreview.style.display = "block";
+        fotoPlaceholder.style.display = "none";
+
         mostrarSucesso("Foto carregada. Agora clique em salvar perfil.");
       };
+
       leitor.readAsDataURL(arquivo);
     });
 
