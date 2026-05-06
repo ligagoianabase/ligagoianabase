@@ -507,6 +507,38 @@ input:focus,select:focus,textarea:focus{
         </div>
       </div>
 
+      
+      <div>
+        <label>Banner do campeonato</label>
+        <input type="file" id="bannerArquivo" accept="image/*">
+      </div>
+
+      <div>
+        <label>Regulamento PDF / Link</label>
+        <input id="regulamento" placeholder="https://...">
+      </div>
+
+      <div>
+        <label>Campeão</label>
+        <input id="campeao" placeholder="Time campeão">
+      </div>
+
+      <div>
+        <label>Vice-campeão</label>
+        <input id="vice" placeholder="Time vice-campeão">
+      </div>
+
+      <div>
+        <label>Artilheiro</label>
+        <input id="artilheiro" placeholder="Nome do artilheiro">
+      </div>
+
+      <div>
+        <label>Melhor goleiro</label>
+        <input id="melhorGoleiro" placeholder="Nome do goleiro">
+      </div>
+
+
       <div class="full">
         <label>Descrição / observações</label>
         <textarea id="descricao" placeholder="Descrição do campeonato"></textarea>
@@ -634,6 +666,18 @@ window.previewLogoArquivo = function(){
   leitor.readAsDataURL(arquivo);
 };
 
+
+async function uploadArquivo(arquivo,pasta="campeonatos"){
+  if(!arquivo) return "";
+
+  const nome = `${pasta}/${Date.now()}-${arquivo.name}`;
+  const referencia = ref(storage,nome);
+
+  await uploadBytes(referencia,arquivo);
+
+  return await getDownloadURL(referencia);
+}
+
 async function uploadLogoSeExistir(){
   const arquivo = document.getElementById("logoArquivo").files[0];
   const logoUrlManual = txt(document.getElementById("logo").value);
@@ -661,6 +705,12 @@ window.limparFormulario = function(){
   document.getElementById("zerarCartoesEm").value = "nunca";
   document.getElementById("logo").value = "";
   document.getElementById("logoArquivo").value = "";
+  document.getElementById("bannerArquivo").value = "";
+  document.getElementById("regulamento").value = "";
+  document.getElementById("campeao").value = "";
+  document.getElementById("vice").value = "";
+  document.getElementById("artilheiro").value = "";
+  document.getElementById("melhorGoleiro").value = "";
   document.getElementById("descricao").value = "";
   document.getElementById("amarelosParaSuspensao").value = 3;
   document.getElementById("jogosSuspensaoAmarelos").value = 1;
@@ -689,12 +739,23 @@ window.salvarCampeonato = async function(){
   const jogosSuspensaoVermelhoDireto = Number(document.getElementById("jogosSuspensaoVermelhoDireto").value || 2);
   const categorias = categoriasSelecionadas();
 
+  const regulamento = txt(document.getElementById("regulamento").value);
+  const campeao = txt(document.getElementById("campeao").value);
+  const vice = txt(document.getElementById("vice").value);
+  const artilheiro = txt(document.getElementById("artilheiro").value);
+  const melhorGoleiro = txt(document.getElementById("melhorGoleiro").value);
+
   if(!nome) return alert("Digite o nome do campeonato.");
   if(!temporada) return alert("Digite a temporada.");
   if(!formato) return alert("Selecione o formato.");
   if(!categorias.length) return alert("Selecione pelo menos uma categoria.");
 
   const logo = await uploadLogoSeExistir();
+
+  const bannerArquivo = document.getElementById("bannerArquivo").files[0];
+  const banner = bannerArquivo
+    ? await uploadArquivo(bannerArquivo,"campeonatos-banners")
+    : "";
 
   const dados = {
     nome,
@@ -706,6 +767,15 @@ window.salvarCampeonato = async function(){
     zerarCartoesEm,
     descricao,
     logo,
+    banner,
+    regulamento,
+
+    premiacoes:{
+      campeao,
+      vice,
+      artilheiro,
+      melhorGoleiro
+    },
     categorias,
     publicado:status === "publicado",
     publico:status === "publicado",
@@ -755,7 +825,18 @@ window.editarCampeonato = function(id){
   document.getElementById("zerarCartoesEm").value = c.zerarCartoesEm || "nunca";
   document.getElementById("logo").value = c.logo || "";
   document.getElementById("logoArquivo").value = "";
+  document.getElementById("bannerArquivo").value = "";
+  document.getElementById("regulamento").value = "";
+  document.getElementById("campeao").value = "";
+  document.getElementById("vice").value = "";
+  document.getElementById("artilheiro").value = "";
+  document.getElementById("melhorGoleiro").value = "";
   document.getElementById("descricao").value = c.descricao || "";
+  document.getElementById("regulamento").value = c.regulamento || "";
+  document.getElementById("campeao").value = c.premiacoes?.campeao || "";
+  document.getElementById("vice").value = c.premiacoes?.vice || "";
+  document.getElementById("artilheiro").value = c.premiacoes?.artilheiro || "";
+  document.getElementById("melhorGoleiro").value = c.premiacoes?.melhorGoleiro || "";
   document.getElementById("amarelosParaSuspensao").value = c.regrasCartoes?.amarelosParaSuspensao || 3;
   document.getElementById("jogosSuspensaoAmarelos").value = c.regrasCartoes?.jogosSuspensaoAmarelos || 1;
   document.getElementById("jogosSuspensaoVermelhoDireto").value = c.regrasCartoes?.jogosSuspensaoVermelhoDireto || 2;
@@ -850,6 +931,9 @@ function renderizarCampeonatos(){
               🟨 ${Number(c.estatisticas?.cartoesAmarelos || 0)} |
               🟥 ${Number(c.estatisticas?.cartoesVermelhos || 0)}
             </small>
+
+            <small>🏆 Campeão: ${c.premiacoes?.campeao || "-"}</small>
+            <small>⚽ Artilheiro: ${c.premiacoes?.artilheiro || "-"}</small>
 
             <div class="tags">
               <span class="tag">${c.status || "rascunho"}</span>
