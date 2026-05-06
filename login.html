@@ -273,10 +273,17 @@ async function garantirRegistroBasico(uid,email){
     nome:"",
     email,
     cpf:"",
+    whatsapp:"",
+    telefone:"",
+    dataNascimento:"",
+    nascimento:"",
     tipoUsuario:"torcedor",
-    status:"ativo",
+    tipo:"torcedor",
+    perfil:"torcedor",
+    status:"pendente",
     autorizado:false,
-    aprovado:true,
+    aprovado:false,
+    cadastroIncompleto:true,
     criadoEm:serverTimestamp(),
     atualizadoEm:serverTimestamp()
   });
@@ -331,6 +338,17 @@ window.login = async function(){
     const status = normalizarTipo(dados.status || "ativo");
     const aprovado = dados.aprovado === true;
     const autorizado = dados.autorizado === true;
+    const cadastroIncompleto = dados.cadastroIncompleto === true;
+    const cpf = String(dados.cpf || "").replace(/\D/g,"");
+    const whatsapp = String(dados.whatsapp || dados.telefone || "").replace(/\D/g,"");
+    const dataNascimento = dados.dataNascimento || dados.nascimento || "";
+
+    if(cadastroIncompleto || !cpf || !whatsapp || !dataNascimento){
+      mostrarErro("Cadastro incompleto. Complete CPF, WhatsApp e data de nascimento no cadastro.");
+      btnLogin.disabled = false;
+      btnLogin.innerText = "Entrar";
+      return;
+    }
 
     if(status === "bloqueado" || status === "inativo"){
       mostrarErro("Seu acesso está bloqueado.");
