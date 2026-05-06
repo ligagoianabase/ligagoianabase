@@ -383,6 +383,19 @@ window.login = async function(){
       return;
     }
 
+    if(tipo === "fotografo" || tipo === "fotógrafo"){
+      if(!aprovado){
+        mostrarErro("Seu cadastro de fotógrafo ainda está aguardando aprovação do ADM.");
+        btnLogin.disabled = false;
+        btnLogin.innerText = "Entrar";
+        return;
+      }
+
+      mostrarSucesso("Login realizado com sucesso.");
+      setTimeout(redirecionar,600);
+      return;
+    }
+
     if(tipo === "assistente" || tipo === "tecnico" || tipo === "jogador"){
       if(!aprovado){
         mostrarErro("Seu cadastro ainda está pendente de aprovação.");
