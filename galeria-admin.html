@@ -11,14 +11,13 @@
 <style>
 :root{
   --bg:#0b1f3a;
-  --card:#102a52;
   --gold:#f7c600;
   --gold2:#ffe45c;
   --muted:#d9e3f2;
-  --line:rgba(255,255,255,.10);
   --gold-line:rgba(247,198,0,.34);
   --shadow:0 8px 22px rgba(0,0,0,.28);
   --red:#d94141;
+  --blue:#1a3f73;
   --max:1280px;
 }
 
@@ -89,24 +88,12 @@ header{
   font-weight:900;
 }
 
-.btn-light{
-  background:#fff4cf;
-  color:#111;
-}
+.btn-light{background:#fff4cf;color:#111}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
+.btn-red{background:var(--red);color:#fff}
+.btn-blue{background:var(--blue);color:#fff}
 
-.btn-gold{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#111;
-}
-
-.btn-red{
-  background:var(--red);
-  color:#fff;
-}
-
-.container{
-  padding:24px 0 34px;
-}
+.container{padding:24px 0 34px}
 
 .hero-panel,
 .form-panel,
@@ -172,6 +159,29 @@ textarea{
   resize:vertical;
 }
 
+.preview-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:10px;
+  margin-top:10px;
+}
+
+.preview-item{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  overflow:hidden;
+  min-height:120px;
+}
+
+.preview-item img,
+.preview-item video{
+  width:100%;
+  height:120px;
+  object-fit:cover;
+  display:block;
+}
+
 .top-actions{
   display:flex;
   gap:10px;
@@ -214,7 +224,7 @@ textarea{
   overflow:hidden;
 }
 
-.card img{
+.card-cover{
   width:100%;
   height:220px;
   object-fit:cover;
@@ -236,6 +246,22 @@ textarea{
   color:var(--muted);
   font-size:13px;
   line-height:1.6;
+}
+
+.mini-galeria{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:5px;
+  margin:10px 0;
+}
+
+.mini-galeria img,
+.mini-galeria video{
+  width:100%;
+  height:58px;
+  object-fit:cover;
+  border-radius:8px;
+  background:#fff;
 }
 
 .tag{
@@ -285,6 +311,40 @@ textarea{
   grid-column:1/-1;
 }
 
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.82);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  padding:18px;
+}
+
+.modal.show{display:flex}
+
+.modal img,
+.modal video{
+  max-width:96vw;
+  max-height:86vh;
+  border-radius:14px;
+  background:#fff;
+}
+
+.modal-close{
+  position:fixed;
+  top:18px;
+  right:18px;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:var(--red);
+  color:#fff;
+  font-size:22px;
+  font-weight:900;
+}
+
 @media(max-width:900px){
   .header-title{
     order:3;
@@ -293,38 +353,28 @@ textarea{
     font-size:19px;
   }
 
-  .header-left,
-  .header-right{
+  .header-left,.header-right{
     width:100%;
     justify-content:center;
   }
 
-  .grid{
-    grid-template-columns:1fr;
-  }
+  .grid{grid-template-columns:1fr}
 }
 
 @media(max-width:600px){
-  .top-btn,
-  .action-btn,
-  .link-btn{
-    width:100%;
-  }
-
-  .hero-panel h2{
-    font-size:23px;
-  }
-
-  .hero-panel,
-  .form-panel,
-  .list-panel{
-    padding:16px;
-  }
+  .top-btn,.action-btn,.link-btn{width:100%}
+  .hero-panel h2{font-size:23px}
+  .hero-panel,.form-panel,.list-panel{padding:16px}
 }
 </style>
 </head>
 
 <body>
+
+<div class="modal" id="modalMidia" onclick="fecharModal()">
+  <button class="modal-close" type="button" onclick="fecharModal()">×</button>
+  <div id="modalConteudo"></div>
+</div>
 
 <header>
   <div class="wrap header-inner">
@@ -346,7 +396,7 @@ textarea{
 
     <div class="header-right">
       <button class="top-btn btn-gold" type="button" onclick="salvarGaleria()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar
+        <i class="fa-solid fa-cloud-arrow-up"></i> Salvar Álbum
       </button>
     </div>
   </div>
@@ -355,16 +405,17 @@ textarea{
 <div class="wrap container">
 
 <section class="hero-panel">
-  <h2>Galeria de Fotos</h2>
+  <h2>Galeria de Fotos e Vídeos</h2>
   <p>
-    Cadastre fotos, links de álbuns e imagens dos jogos, campeonatos e fotógrafos da Liga.
+    Cadastre álbuns com fotos/vídeos direto da memória do celular ou computador.
+    Também pode usar link externo quando quiser.
   </p>
   <div id="statusBox" class="status"></div>
 </section>
 
 <section class="form-panel">
   <h3 class="bloco-titulo">
-    <i class="fa-solid fa-images"></i> Nova Foto / Álbum
+    <i class="fa-solid fa-images"></i> Novo Álbum / Galeria
   </h3>
 
   <input type="hidden" id="galeriaId">
@@ -398,15 +449,22 @@ textarea{
     <div>
       <label>Tipo</label>
       <select id="tipo">
-        <option value="foto">Foto</option>
         <option value="album">Álbum</option>
+        <option value="foto">Foto</option>
+        <option value="video">Vídeo</option>
         <option value="galeria">Galeria</option>
       </select>
     </div>
 
     <div class="full">
-      <label>Link da imagem / álbum</label>
-      <input id="imagem" placeholder="https://...">
+      <label>Fotos/Vídeos do celular ou computador</label>
+      <input id="arquivosMidia" type="file" accept="image/*,video/*" multiple onchange="previewMidiasSelecionadas()">
+      <div id="previewMidias" class="preview-grid"></div>
+    </div>
+
+    <div class="full">
+      <label>Link externo opcional</label>
+      <input id="linkExterno" placeholder="https://... álbum Google Drive, foto, vídeo etc.">
     </div>
 
     <div class="full">
@@ -417,10 +475,10 @@ textarea{
 
   <div class="top-actions">
     <button class="action-btn" type="button" onclick="salvarGaleria()">
-      <i class="fa-solid fa-floppy-disk"></i> Salvar
+      <i class="fa-solid fa-cloud-arrow-up"></i> Salvar Álbum
     </button>
 
-    <button class="action-btn btn-red" type="button" onclick="limparFormulario()">
+    <button class="action-btn btn-blue" type="button" onclick="limparFormulario()">
       <i class="fa-solid fa-broom"></i> Limpar
     </button>
   </div>
@@ -439,7 +497,7 @@ textarea{
 </div>
 
 <script type="module">
-import { db } from "./firebase.js";
+import { db, storage } from "./firebase.js";
 import {
   collection,
   getDocs,
@@ -450,7 +508,14 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
+
 let galeriaCache = [];
+let midiasExistentesEdicao = [];
 
 function el(id){
   return document.getElementById(id);
@@ -464,7 +529,7 @@ function mostrarStatus(msg,tipo="ok"){
   const box = el("statusBox");
   box.className = "status " + (tipo === "erro" ? "status-erro" : "status-ok");
   box.innerText = msg;
-  setTimeout(()=>{ box.style.display = "none"; }, 3500);
+  setTimeout(()=>{ box.style.display = "none"; }, 4500);
 }
 
 window.voltarPagina = function(){
@@ -475,6 +540,66 @@ window.voltarPagina = function(){
   }
 };
 
+function tipoArquivoPorMime(mime){
+  return String(mime || "").startsWith("video/") ? "video" : "imagem";
+}
+
+function renderMidiaThumb(m){
+  if(m.tipo === "video"){
+    return `<video src="${m.url}" onclick="abrirModal('${m.url}','video')" muted></video>`;
+  }
+
+  return `<img src="${m.url}" onclick="abrirModal('${m.url}','imagem')" onerror="this.src='logo-liga.jfif'">`;
+}
+
+window.previewMidiasSelecionadas = function(){
+  const box = el("previewMidias");
+  const arquivos = Array.from(el("arquivosMidia").files || []);
+
+  if(!arquivos.length){
+    box.innerHTML = "";
+    return;
+  }
+
+  box.innerHTML = arquivos.map(arquivo=>{
+    const url = URL.createObjectURL(arquivo);
+    const tipo = tipoArquivoPorMime(arquivo.type);
+
+    if(tipo === "video"){
+      return `<div class="preview-item"><video src="${url}" muted controls></video></div>`;
+    }
+
+    return `<div class="preview-item"><img src="${url}"></div>`;
+  }).join("");
+};
+
+async function uploadMidias(){
+  const arquivos = Array.from(el("arquivosMidia").files || []);
+  const novasMidias = [];
+
+  for(const arquivo of arquivos){
+    const extensao = arquivo.name.split(".").pop() || "jpg";
+    const tipo = tipoArquivoPorMime(arquivo.type);
+    const nomeSeguro = arquivo.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+    const caminho = `galeria/${Date.now()}-${Math.random().toString(36).slice(2)}-${nomeSeguro}.${extensao}`;
+    const arquivoRef = ref(storage,caminho);
+
+    await uploadBytes(arquivoRef,arquivo);
+    const url = await getDownloadURL(arquivoRef);
+
+    novasMidias.push({
+      url,
+      tipo,
+      nome:arquivo.name,
+      caminho,
+      mime:arquivo.type,
+      criadoEm:new Date().toISOString()
+    });
+  }
+
+  return novasMidias;
+}
+
 window.limparFormulario = function(){
   el("galeriaId").value = "";
   el("titulo").value = "";
@@ -482,39 +607,61 @@ window.limparFormulario = function(){
   el("categoria").value = "";
   el("fotografo").value = "";
   el("data").value = "";
-  el("tipo").value = "foto";
-  el("imagem").value = "";
+  el("tipo").value = "album";
+  el("linkExterno").value = "";
   el("descricao").value = "";
+  el("arquivosMidia").value = "";
+  el("previewMidias").innerHTML = "";
+  midiasExistentesEdicao = [];
 };
 
 window.salvarGaleria = async function(){
   const id = el("galeriaId").value;
 
+  const titulo = texto(el("titulo").value);
+  if(!titulo) return mostrarStatus("Digite o título da galeria.","erro");
+
+  mostrarStatus("Enviando arquivos. Aguarde...");
+
+  const novasMidias = await uploadMidias();
+  const midias = [...midiasExistentesEdicao, ...novasMidias];
+
+  const linkExterno = texto(el("linkExterno").value);
+
+  if(!midias.length && !linkExterno){
+    return mostrarStatus("Envie pelo menos uma foto/vídeo ou informe um link externo.","erro");
+  }
+
+  const capa = midias.find(m=>m.tipo === "imagem")?.url || midias[0]?.url || linkExterno || "logo-liga.jfif";
+
   const dados = {
-    titulo:texto(el("titulo").value),
+    titulo,
     campeonato:texto(el("campeonato").value),
     categoria:texto(el("categoria").value),
     fotografo:texto(el("fotografo").value),
     data:texto(el("data").value),
     tipo:texto(el("tipo").value),
-    imagem:texto(el("imagem").value),
+    linkExterno,
+    imagem:capa,
+    capa,
+    midias,
+    totalMidias:midias.length,
     descricao:texto(el("descricao").value),
+    publicado:true,
     atualizadoEm:serverTimestamp()
   };
 
-  if(!dados.titulo) return mostrarStatus("Digite o título.","erro");
-  if(!dados.imagem) return mostrarStatus("Digite o link da imagem.","erro");
-
   if(id){
     await updateDoc(doc(db,"galeria",id),dados);
+    mostrarStatus("Galeria atualizada com sucesso.");
   }else{
     await addDoc(collection(db,"galeria"),{
       ...dados,
       criadoEm:serverTimestamp()
     });
+    mostrarStatus("Galeria salva com sucesso.");
   }
 
-  mostrarStatus("Galeria salva com sucesso.");
   limparFormulario();
   carregarGaleria();
 };
@@ -529,32 +676,63 @@ window.editarGaleria = function(id){
   el("categoria").value = g.categoria || "";
   el("fotografo").value = g.fotografo || "";
   el("data").value = g.data || "";
-  el("tipo").value = g.tipo || "foto";
-  el("imagem").value = g.imagem || "";
+  el("tipo").value = g.tipo || "album";
+  el("linkExterno").value = g.linkExterno || "";
   el("descricao").value = g.descricao || "";
+  el("arquivosMidia").value = "";
+
+  midiasExistentesEdicao = Array.isArray(g.midias) ? [...g.midias] : [];
+
+  el("previewMidias").innerHTML = midiasExistentesEdicao.map(m=>`
+    <div class="preview-item">${renderMidiaThumb(m)}</div>
+  `).join("");
 
   window.scrollTo({top:220,behavior:"smooth"});
 };
 
 window.excluirGaleria = async function(id){
-  if(!confirm("Deseja excluir este item da galeria?")) return;
+  if(!confirm("Deseja excluir este álbum da galeria?")) return;
   await deleteDoc(doc(db,"galeria",id));
-  mostrarStatus("Item removido.");
+  mostrarStatus("Álbum removido.");
   carregarGaleria();
+};
+
+window.abrirModal = function(url,tipo){
+  const modal = el("modalMidia");
+  const box = el("modalConteudo");
+
+  box.innerHTML = tipo === "video"
+    ? `<video src="${url}" controls autoplay></video>`
+    : `<img src="${url}">`;
+
+  modal.classList.add("show");
+};
+
+window.fecharModal = function(){
+  el("modalMidia").classList.remove("show");
+  el("modalConteudo").innerHTML = "";
+};
+
+window.compartilharGaleria = function(id){
+  const url = location.href.split("/").slice(0,-1).join("/") + "/galeria.html?id=" + encodeURIComponent(id);
+  window.open("https://wa.me/?text=" + encodeURIComponent("Galeria da Liga Goiana: " + url), "_blank");
 };
 
 function renderGaleria(){
   const lista = el("listaGaleria");
 
   if(!galeriaCache.length){
-    lista.innerHTML = `<div class="mensagem-vazia">Nenhuma foto cadastrada ainda.</div>`;
+    lista.innerHTML = `<div class="mensagem-vazia">Nenhum álbum cadastrado ainda.</div>`;
     return;
   }
 
   lista.innerHTML = galeriaCache.map(g=>{
+    const midias = Array.isArray(g.midias) ? g.midias : [];
+    const capa = g.capa || g.imagem || midias[0]?.url || "logo-liga.jfif";
+
     return `
       <div class="card">
-        <img src="${g.imagem || "logo-liga.jfif"}" onerror="this.src='logo-liga.jfif'">
+        <img class="card-cover" src="${capa}" onerror="this.src='logo-liga.jfif'">
 
         <div class="card-body">
           <strong>${g.titulo || "-"}</strong>
@@ -564,16 +742,25 @@ function renderGaleria(){
             Categoria: ${g.categoria || "-"}<br>
             Fotógrafo: ${g.fotografo || "-"}<br>
             Data: ${g.data || "-"}<br>
+            Total: ${g.totalMidias || midias.length || 0} arquivo(s)<br>
             Descrição: ${g.descricao || "-"}
           </p>
 
+          <div class="mini-galeria">
+            ${midias.slice(0,8).map(m=>renderMidiaThumb(m)).join("")}
+          </div>
+
           <span class="tag">
-            <i class="fa-solid fa-image"></i> ${g.tipo || "foto"}
+            <i class="fa-solid fa-images"></i> ${g.tipo || "album"}
           </span>
 
           <div class="top-actions">
             <button class="link-btn" type="button" onclick="editarGaleria('${g.id}')">
               <i class="fa-solid fa-pen"></i> Editar
+            </button>
+
+            <button class="link-btn btn-blue" type="button" onclick="compartilharGaleria('${g.id}')">
+              <i class="fa-brands fa-whatsapp"></i> Compartilhar
             </button>
 
             <button class="link-btn btn-red" type="button" onclick="excluirGaleria('${g.id}')">
