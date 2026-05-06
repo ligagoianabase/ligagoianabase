@@ -443,6 +443,16 @@ header{
       </div>
 
       <div class="field">
+        <label for="editNascimento">Nascimento</label>
+        <input type="date" id="editNascimento">
+      </div>
+
+      <div class="field">
+        <label for="editWhatsapp">WhatsApp</label>
+        <input type="text" id="editWhatsapp" placeholder="WhatsApp">
+      </div>
+
+      <div class="field">
         <label for="editTime">Time</label>
         <input type="text" id="editTime" placeholder="Time">
       </div>
@@ -678,6 +688,10 @@ async function sincronizarColecaoPublica(id, usuario){
     nomeCompleto:nome,
     email,
     cpf,
+    nascimento:usuario.dataNascimento || usuario.nascimento || "",
+    dataNascimento:usuario.dataNascimento || usuario.nascimento || "",
+    whatsapp:usuario.whatsapp || usuario.telefone || "",
+    telefone:usuario.whatsapp || usuario.telefone || "",
     time,
     timeNome:time,
     categoria,
@@ -744,6 +758,8 @@ window.limparEdicao = function(){
   document.getElementById("editNome").value = "";
   document.getElementById("editEmail").value = "";
   document.getElementById("editCpf").value = "";
+  document.getElementById("editNascimento").value = "";
+  document.getElementById("editWhatsapp").value = "";
   document.getElementById("editTime").value = "";
   document.getElementById("editTipo").value = "torcedor";
   document.getElementById("editStatus").value = "ativo";
@@ -762,6 +778,8 @@ window.selecionarUsuario = function(id){
   document.getElementById("editNome").value = usuario.nome || usuario.nomeCompleto || "";
   document.getElementById("editEmail").value = usuario.email || "";
   document.getElementById("editCpf").value = usuario.cpf || "";
+  document.getElementById("editNascimento").value = usuario.dataNascimento || usuario.nascimento || "";
+  document.getElementById("editWhatsapp").value = usuario.whatsapp || usuario.telefone || "";
   document.getElementById("editTime").value = usuario.time || usuario.timeNome || "";
   document.getElementById("editTipo").value = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "torcedor");
   document.getElementById("editStatus").value = usuario.status || "ativo";
@@ -787,6 +805,10 @@ window.salvarEdicao = async function(){
     nomeCompleto:document.getElementById("editNome").value.trim(),
     email:document.getElementById("editEmail").value.trim().toLowerCase(),
     cpf:limparCPF(document.getElementById("editCpf").value),
+    dataNascimento:document.getElementById("editNascimento").value,
+    nascimento:document.getElementById("editNascimento").value,
+    whatsapp:document.getElementById("editWhatsapp").value.trim(),
+    telefone:document.getElementById("editWhatsapp").value.trim(),
     time:document.getElementById("editTime").value.trim(),
     timeNome:document.getElementById("editTime").value.trim(),
     tipoUsuario:tipo,
@@ -805,6 +827,21 @@ window.salvarEdicao = async function(){
 
   if(!dados.email){
     mostrarErro("Digite o email do usuário.");
+    return;
+  }
+
+  if(!dados.cpf || dados.cpf.length !== 11){
+    mostrarErro("Digite um CPF válido.");
+    return;
+  }
+
+  if(!dados.dataNascimento){
+    mostrarErro("Digite a data de nascimento.");
+    return;
+  }
+
+  if(!dados.whatsapp){
+    mostrarErro("Digite o WhatsApp.");
     return;
   }
 
@@ -1017,6 +1054,7 @@ window.renderUsuarios = function(){
       normalizarTexto(u.nome || u.nomeCompleto).includes(busca) ||
       normalizarTexto(u.email).includes(busca) ||
       normalizarTexto(u.cpf).includes(busca) ||
+      normalizarTexto(u.whatsapp || u.telefone).includes(busca) ||
       normalizarTexto(u.time || u.timeNome).includes(busca)
     );
   }
@@ -1057,6 +1095,8 @@ window.renderUsuarios = function(){
             <h3>${usuario.nome || usuario.nomeCompleto || "Sem nome"}</h3>
             <p><strong>Email:</strong> ${usuario.email || "-"}</p>
             <p><strong>CPF:</strong> ${usuario.cpf || "-"}</p>
+            <p><strong>Nascimento:</strong> ${usuario.dataNascimento || usuario.nascimento || "-"}</p>
+            <p><strong>WhatsApp:</strong> ${usuario.whatsapp || usuario.telefone || "-"}</p>
             <p><strong>Time:</strong> ${usuario.time || usuario.timeNome || "-"}</p>
             <p><strong>ID:</strong> ${usuario.id}</p>
           </div>
