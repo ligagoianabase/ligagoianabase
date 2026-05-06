@@ -432,9 +432,6 @@ select:focus{
 
 </main>
 
-<div class="modal" id="modal">
-  <div class="modal-content" id="modalContent"></div>
-</div>
 
 <script type="module">
 import { renderMenu } from "./menu.js";
@@ -682,7 +679,7 @@ function renderizarTecnicos(){
           </div>
         </div>
 
-        <button class="btn-ver" onclick="verTecnico('${id}')">
+        <button class="btn-ver" onclick="location.href='tecnico-publico.html?id=${encodeURIComponent(id)}'">
           <i class="fa-solid fa-eye"></i> Ver Técnico
         </button>
       </article>
@@ -690,60 +687,6 @@ function renderizarTecnicos(){
   }).join("");
 }
 
-window.verTecnico = function(id){
-  const t = tecnicos.find(item=>item.id === id);
-  if(!t) return;
-
-  const nome = nomeTecnico(t);
-  const foto = fotoTecnico(t);
-  const time = timeTecnico(t);
-  const categoria = categoriaTecnico(t);
-  const cidade = cidadeTecnico(t);
-  const telefone = telefoneTecnico(t);
-  const email = emailTecnico(t);
-  const status = statusTecnico(t);
-
-  document.getElementById("modalContent").innerHTML = `
-    <img class="photo" style="width:90px;height:90px;margin:0 auto;" src="${foto}" onerror="this.src='logo-liga.jfif'">
-    <h2>${nome}</h2>
-
-    <div class="tags" style="justify-content:center;">
-      ${
-        categoria !== "-"
-        ? categoria.split(",").map(c=>`<span class="tag">${c.trim()}</span>`).join("")
-        : `<span class="tag">Sem categoria</span>`
-      }
-    </div>
-
-    <div class="modal-grid">
-      <div class="modal-box">
-        <strong>Time:</strong> ${time}<br>
-        <strong>Cidade:</strong> ${cidade}<br>
-        <strong>Status:</strong> ${status}
-      </div>
-
-      <div class="modal-box">
-        <strong>Telefone:</strong> ${telefone}<br>
-        <strong>Email:</strong> ${email}<br>
-        <strong>Categoria:</strong> ${categoria}
-      </div>
-    </div>
-
-    <button class="modal-close" onclick="fecharModal()">
-      <i class="fa-solid fa-xmark"></i> Fechar
-    </button>
-  `;
-
-  document.getElementById("modal").style.display = "flex";
-};
-
-window.fecharModal = function(){
-  document.getElementById("modal").style.display = "none";
-};
-
-document.getElementById("modal").addEventListener("click",e=>{
-  if(e.target.id === "modal") fecharModal();
-});
 
 document.getElementById("buscaTecnico").addEventListener("input",renderizarTecnicos);
 document.getElementById("filtroTime").addEventListener("change",renderizarTecnicos);
