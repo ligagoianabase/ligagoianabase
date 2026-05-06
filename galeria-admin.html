@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Galeria ADM - Liga Goiana</title>
+<title>Galeria / Fotógrafo - Liga Goiana</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -17,6 +17,7 @@
   --gold-line:rgba(247,198,0,.34);
   --shadow:0 8px 22px rgba(0,0,0,.28);
   --red:#d94141;
+  --green:#1b8f43;
   --blue:#1a3f73;
   --max:1280px;
 }
@@ -92,6 +93,7 @@ header{
 .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
 .btn-red{background:var(--red);color:#fff}
 .btn-blue{background:var(--blue);color:#fff}
+.btn-green{background:var(--green);color:#fff}
 
 .container{padding:24px 0 34px}
 
@@ -125,6 +127,26 @@ header{
   display:flex;
   align-items:center;
   gap:8px;
+}
+
+.perfil-box{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.perfil-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 10px;
+  border-radius:999px;
+  background:rgba(247,198,0,.12);
+  border:1px solid var(--gold-line);
+  color:var(--gold);
+  font-size:12px;
+  font-weight:900;
 }
 
 .grid{
@@ -275,8 +297,12 @@ textarea{
   color:var(--gold);
   font-size:11px;
   font-weight:900;
-  margin-top:8px;
+  margin:4px 4px 0 0;
 }
+
+.tag-ok{color:#9ff0b8;border-color:rgba(27,143,67,.45);background:rgba(27,143,67,.16)}
+.tag-warn{color:#ffe690;border-color:rgba(247,198,0,.45);background:rgba(247,198,0,.14)}
+.tag-red{color:#ffb7b7;border-color:rgba(217,65,65,.45);background:rgba(217,65,65,.14)}
 
 .status{
   display:none;
@@ -387,12 +413,12 @@ textarea{
         <i class="fa-solid fa-house"></i> Página Inicial
       </a>
 
-      <a href="admin.html" class="top-btn btn-light">
+      <a href="admin.html" class="top-btn btn-light" id="btnPainelAdm">
         <i class="fa-solid fa-gears"></i> Painel ADM
       </a>
     </div>
 
-    <div class="header-title">Galeria ADM</div>
+    <div class="header-title">Galeria / Fotógrafo</div>
 
     <div class="header-right">
       <button class="top-btn btn-gold" type="button" onclick="salvarGaleria()">
@@ -406,10 +432,15 @@ textarea{
 
 <section class="hero-panel">
   <h2>Galeria de Fotos e Vídeos</h2>
-  <p>
-    Cadastre álbuns com fotos/vídeos direto da memória do celular ou computador.
-    Também pode usar link externo quando quiser.
+  <p id="textoPerfil">
+    Carregando perfil...
   </p>
+
+  <div class="perfil-box">
+    <span class="perfil-tag" id="tagPerfil"><i class="fa-solid fa-user"></i> Perfil</span>
+    <span class="perfil-tag" id="tagVisao"><i class="fa-solid fa-eye"></i> Carregando</span>
+  </div>
+
   <div id="statusBox" class="status"></div>
 </section>
 
@@ -456,6 +487,31 @@ textarea{
       </select>
     </div>
 
+    <div id="boxStatusAdm">
+      <label>Status</label>
+      <select id="statusGaleria">
+        <option value="aprovado">Aprovado</option>
+        <option value="pendente">Pendente</option>
+        <option value="oculto">Oculto</option>
+      </select>
+    </div>
+
+    <div id="boxDestaqueAdm">
+      <label>Destaque</label>
+      <select id="destaqueGaleria">
+        <option value="nao">Não</option>
+        <option value="sim">Sim</option>
+      </select>
+    </div>
+
+    <div id="boxFotografoOficialAdm">
+      <label>Fotógrafo Oficial</label>
+      <select id="fotografoOficial">
+        <option value="sim">Sim</option>
+        <option value="nao">Não</option>
+      </select>
+    </div>
+
     <div class="full">
       <label>Fotos/Vídeos do celular ou computador</label>
       <input id="arquivosMidia" type="file" accept="image/*,video/*" multiple onchange="previewMidiasSelecionadas()">
@@ -485,7 +541,7 @@ textarea{
 </section>
 
 <section class="list-panel">
-  <h3 class="bloco-titulo">
+  <h3 class="bloco-titulo" id="tituloLista">
     <i class="fa-solid fa-camera"></i> Galeria Cadastrada
   </h3>
 
@@ -497,10 +553,13 @@ textarea{
 </div>
 
 <script type="module">
-import { db, storage } from "./firebase.js";
+import { auth, db, storage } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
 import {
   collection,
   getDocs,
+  getDoc,
   addDoc,
   updateDoc,
   deleteDoc,
@@ -514,6 +573,10 @@ import {
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
 
+let usuarioAtual = null;
+let perfilAtual = null;
+let isAdmin = false;
+let isFotografo = false;
 let galeriaCache = [];
 let midiasExistentesEdicao = [];
 
@@ -523,6 +586,17 @@ function el(id){
 
 function texto(v){
   return String(v || "").trim();
+}
+
+function normalizar(v){
+  return texto(v).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+
+function campo(obj,chaves,fallback=""){
+  for(const c of chaves){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== "") return obj[c];
+  }
+  return fallback;
 }
 
 function mostrarStatus(msg,tipo="ok"){
@@ -539,6 +613,79 @@ window.voltarPagina = function(){
     window.location.href = "admin.html";
   }
 };
+
+async function carregarPerfilUsuario(){
+  if(!usuarioAtual) return null;
+
+  const refs = [
+    doc(db,"usuarios",usuarioAtual.uid),
+    doc(db,"users",usuarioAtual.uid),
+    doc(db,"fotografos",usuarioAtual.uid),
+    doc(db,"admins",usuarioAtual.uid)
+  ];
+
+  for(const r of refs){
+    const snap = await getDoc(r);
+    if(snap.exists()) return {id:snap.id,...snap.data()};
+  }
+
+  return {
+    id:usuarioAtual.uid,
+    uid:usuarioAtual.uid,
+    email:usuarioAtual.email || "",
+    nome:usuarioAtual.displayName || ""
+  };
+}
+
+function definirPermissao(){
+  const tipo = normalizar(campo(perfilAtual,["tipoUsuario","tipo","perfil","cargo","role","funcao"],""));
+  const nivel = normalizar(campo(perfilAtual,["nivel","permissao"],""));
+
+  isAdmin =
+    tipo.includes("admin") ||
+    nivel.includes("admin") ||
+    perfilAtual?.admin === true ||
+    perfilAtual?.autorizado === true && tipo.includes("admin");
+
+  isFotografo =
+    tipo.includes("fotografo") ||
+    tipo.includes("fotógrafo") ||
+    tipo.includes("foto") ||
+    perfilAtual?.fotografo === true;
+
+  if(!isAdmin && !isFotografo){
+    // Se chegou aqui com login, libera como fotógrafo comum para publicar próprias galerias.
+    isFotografo = true;
+  }
+}
+
+function nomeFotografoAtual(){
+  return campo(perfilAtual,["nome","nomeCompleto","displayName"], usuarioAtual?.displayName || usuarioAtual?.email || "Fotógrafo");
+}
+
+function aplicarPerfilNaTela(){
+  if(isAdmin){
+    el("textoPerfil").innerText = "ADM pode publicar, aprovar, destacar e editar todas as galerias. Fotógrafos publicam e mexem apenas nas próprias galerias.";
+    el("tagPerfil").innerHTML = `<i class="fa-solid fa-user-shield"></i> ADM`;
+    el("tagVisao").innerHTML = `<i class="fa-solid fa-eye"></i> Visualizando todas as galerias`;
+    el("tituloLista").innerHTML = `<i class="fa-solid fa-camera"></i> Todas as Galerias`;
+    el("btnPainelAdm").style.display = "inline-flex";
+    el("boxStatusAdm").style.display = "block";
+    el("boxDestaqueAdm").style.display = "block";
+    el("boxFotografoOficialAdm").style.display = "block";
+  }else{
+    el("textoPerfil").innerText = "Fotógrafo pode publicar fotos/vídeos direto do celular e editar somente os próprios álbuns.";
+    el("tagPerfil").innerHTML = `<i class="fa-solid fa-camera"></i> Fotógrafo`;
+    el("tagVisao").innerHTML = `<i class="fa-solid fa-eye"></i> Minhas galerias`;
+    el("tituloLista").innerHTML = `<i class="fa-solid fa-camera"></i> Minhas Galerias`;
+    el("btnPainelAdm").style.display = "none";
+    el("boxStatusAdm").style.display = "none";
+    el("boxDestaqueAdm").style.display = "none";
+    el("boxFotografoOficialAdm").style.display = "none";
+  }
+
+  el("fotografo").value = nomeFotografoAtual();
+}
 
 function tipoArquivoPorMime(mime){
   return String(mime || "").startsWith("video/") ? "video" : "imagem";
@@ -578,10 +725,9 @@ async function uploadMidias(){
   const novasMidias = [];
 
   for(const arquivo of arquivos){
-    const extensao = arquivo.name.split(".").pop() || "jpg";
     const tipo = tipoArquivoPorMime(arquivo.type);
     const nomeSeguro = arquivo.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-    const caminho = `galeria/${Date.now()}-${Math.random().toString(36).slice(2)}-${nomeSeguro}.${extensao}`;
+    const caminho = `galeria/${usuarioAtual.uid}/${Date.now()}-${Math.random().toString(36).slice(2)}-${nomeSeguro}`;
     const arquivoRef = ref(storage,caminho);
 
     await uploadBytes(arquivoRef,arquivo);
@@ -605,9 +751,12 @@ window.limparFormulario = function(){
   el("titulo").value = "";
   el("campeonato").value = "";
   el("categoria").value = "";
-  el("fotografo").value = "";
+  el("fotografo").value = nomeFotografoAtual();
   el("data").value = "";
   el("tipo").value = "album";
+  el("statusGaleria").value = isAdmin ? "aprovado" : "pendente";
+  el("destaqueGaleria").value = "nao";
+  el("fotografoOficial").value = "sim";
   el("linkExterno").value = "";
   el("descricao").value = "";
   el("arquivosMidia").value = "";
@@ -615,11 +764,24 @@ window.limparFormulario = function(){
   midiasExistentesEdicao = [];
 };
 
-window.salvarGaleria = async function(){
-  const id = el("galeriaId").value;
+function podeMexerNaGaleria(g){
+  if(isAdmin) return true;
+  return g.fotografoUid === usuarioAtual?.uid || g.criadoPorUid === usuarioAtual?.uid;
+}
 
+window.salvarGaleria = async function(){
+  if(!usuarioAtual) return mostrarStatus("Faça login para publicar galeria.","erro");
+
+  const id = el("galeriaId").value;
   const titulo = texto(el("titulo").value);
   if(!titulo) return mostrarStatus("Digite o título da galeria.","erro");
+
+  if(id){
+    const atual = galeriaCache.find(g=>g.id === id);
+    if(atual && !podeMexerNaGaleria(atual)){
+      return mostrarStatus("Você não pode editar galeria de outro fotógrafo.","erro");
+    }
+  }
 
   mostrarStatus("Enviando arquivos. Aguarde...");
 
@@ -634,11 +796,19 @@ window.salvarGaleria = async function(){
 
   const capa = midias.find(m=>m.tipo === "imagem")?.url || midias[0]?.url || linkExterno || "logo-liga.jfif";
 
+  const statusFinal = isAdmin ? el("statusGaleria").value : "pendente";
+  const destaqueFinal = isAdmin && el("destaqueGaleria").value === "sim";
+  const fotografoOficialFinal = isAdmin ? el("fotografoOficial").value === "sim" : true;
+
   const dados = {
     titulo,
     campeonato:texto(el("campeonato").value),
     categoria:texto(el("categoria").value),
-    fotografo:texto(el("fotografo").value),
+    fotografo:texto(el("fotografo").value) || nomeFotografoAtual(),
+    fotografoNome:texto(el("fotografo").value) || nomeFotografoAtual(),
+    fotografoUid:id ? (galeriaCache.find(g=>g.id === id)?.fotografoUid || usuarioAtual.uid) : usuarioAtual.uid,
+    fotografoEmail:id ? (galeriaCache.find(g=>g.id === id)?.fotografoEmail || usuarioAtual.email || "") : (usuarioAtual.email || ""),
+    fotografoOficial:fotografoOficialFinal,
     data:texto(el("data").value),
     tipo:texto(el("tipo").value),
     linkExterno,
@@ -647,19 +817,24 @@ window.salvarGaleria = async function(){
     midias,
     totalMidias:midias.length,
     descricao:texto(el("descricao").value),
-    publicado:true,
+    status:statusFinal,
+    aprovado:statusFinal === "aprovado",
+    publicado:statusFinal === "aprovado",
+    destaque:destaqueFinal,
+    criadoPorUid:id ? (galeriaCache.find(g=>g.id === id)?.criadoPorUid || usuarioAtual.uid) : usuarioAtual.uid,
+    criadoPorNome:id ? (galeriaCache.find(g=>g.id === id)?.criadoPorNome || nomeFotografoAtual()) : nomeFotografoAtual(),
     atualizadoEm:serverTimestamp()
   };
 
   if(id){
     await updateDoc(doc(db,"galeria",id),dados);
-    mostrarStatus("Galeria atualizada com sucesso.");
+    mostrarStatus(isAdmin ? "Galeria atualizada." : "Galeria atualizada e enviada para aprovação.");
   }else{
     await addDoc(collection(db,"galeria"),{
       ...dados,
       criadoEm:serverTimestamp()
     });
-    mostrarStatus("Galeria salva com sucesso.");
+    mostrarStatus(isAdmin ? "Galeria publicada." : "Galeria enviada para aprovação do ADM.");
   }
 
   limparFormulario();
@@ -670,13 +845,20 @@ window.editarGaleria = function(id){
   const g = galeriaCache.find(x=>x.id === id);
   if(!g) return;
 
+  if(!podeMexerNaGaleria(g)){
+    return mostrarStatus("Você não pode editar galeria de outro fotógrafo.","erro");
+  }
+
   el("galeriaId").value = g.id;
   el("titulo").value = g.titulo || "";
   el("campeonato").value = g.campeonato || "";
   el("categoria").value = g.categoria || "";
-  el("fotografo").value = g.fotografo || "";
+  el("fotografo").value = g.fotografo || g.fotografoNome || nomeFotografoAtual();
   el("data").value = g.data || "";
   el("tipo").value = g.tipo || "album";
+  el("statusGaleria").value = g.status || (g.aprovado ? "aprovado" : "pendente");
+  el("destaqueGaleria").value = g.destaque ? "sim" : "nao";
+  el("fotografoOficial").value = g.fotografoOficial === false ? "nao" : "sim";
   el("linkExterno").value = g.linkExterno || "";
   el("descricao").value = g.descricao || "";
   el("arquivosMidia").value = "";
@@ -691,9 +873,39 @@ window.editarGaleria = function(id){
 };
 
 window.excluirGaleria = async function(id){
+  const g = galeriaCache.find(x=>x.id === id);
+  if(!g) return;
+
+  if(!podeMexerNaGaleria(g)){
+    return mostrarStatus("Você não pode excluir galeria de outro fotógrafo.","erro");
+  }
+
   if(!confirm("Deseja excluir este álbum da galeria?")) return;
   await deleteDoc(doc(db,"galeria",id));
   mostrarStatus("Álbum removido.");
+  carregarGaleria();
+};
+
+window.aprovarGaleria = async function(id){
+  if(!isAdmin) return;
+  await updateDoc(doc(db,"galeria",id),{
+    status:"aprovado",
+    aprovado:true,
+    publicado:true,
+    aprovadoEm:serverTimestamp(),
+    atualizadoEm:serverTimestamp()
+  });
+  mostrarStatus("Galeria aprovada.");
+  carregarGaleria();
+};
+
+window.marcarDestaque = async function(id,valor){
+  if(!isAdmin) return;
+  await updateDoc(doc(db,"galeria",id),{
+    destaque:valor,
+    atualizadoEm:serverTimestamp()
+  });
+  mostrarStatus(valor ? "Galeria marcada como destaque." : "Destaque removido.");
   carregarGaleria();
 };
 
@@ -718,17 +930,37 @@ window.compartilharGaleria = function(id){
   window.open("https://wa.me/?text=" + encodeURIComponent("Galeria da Liga Goiana: " + url), "_blank");
 };
 
+function tagStatus(g){
+  const status = g.status || (g.aprovado ? "aprovado" : "pendente");
+
+  if(status === "aprovado"){
+    return `<span class="tag tag-ok"><i class="fa-solid fa-circle-check"></i> Aprovado</span>`;
+  }
+
+  if(status === "oculto"){
+    return `<span class="tag tag-red"><i class="fa-solid fa-eye-slash"></i> Oculto</span>`;
+  }
+
+  return `<span class="tag tag-warn"><i class="fa-solid fa-clock"></i> Pendente</span>`;
+}
+
 function renderGaleria(){
   const lista = el("listaGaleria");
 
-  if(!galeriaCache.length){
-    lista.innerHTML = `<div class="mensagem-vazia">Nenhum álbum cadastrado ainda.</div>`;
+  const visiveis = galeriaCache.filter(g=>{
+    if(isAdmin) return true;
+    return g.fotografoUid === usuarioAtual?.uid || g.criadoPorUid === usuarioAtual?.uid;
+  });
+
+  if(!visiveis.length){
+    lista.innerHTML = `<div class="mensagem-vazia">${isAdmin ? "Nenhum álbum cadastrado ainda." : "Você ainda não publicou nenhum álbum."}</div>`;
     return;
   }
 
-  lista.innerHTML = galeriaCache.map(g=>{
+  lista.innerHTML = visiveis.map(g=>{
     const midias = Array.isArray(g.midias) ? g.midias : [];
     const capa = g.capa || g.imagem || midias[0]?.url || "logo-liga.jfif";
+    const podeEditar = podeMexerNaGaleria(g);
 
     return `
       <div class="card">
@@ -740,7 +972,7 @@ function renderGaleria(){
           <p>
             Campeonato: ${g.campeonato || "-"}<br>
             Categoria: ${g.categoria || "-"}<br>
-            Fotógrafo: ${g.fotografo || "-"}<br>
+            Fotógrafo: ${g.fotografo || g.fotografoNome || "-"}<br>
             Data: ${g.data || "-"}<br>
             Total: ${g.totalMidias || midias.length || 0} arquivo(s)<br>
             Descrição: ${g.descricao || "-"}
@@ -750,22 +982,38 @@ function renderGaleria(){
             ${midias.slice(0,8).map(m=>renderMidiaThumb(m)).join("")}
           </div>
 
-          <span class="tag">
-            <i class="fa-solid fa-images"></i> ${g.tipo || "album"}
-          </span>
+          ${tagStatus(g)}
+          ${g.destaque ? `<span class="tag"><i class="fa-solid fa-star"></i> Destaque</span>` : ""}
+          ${g.fotografoOficial !== false ? `<span class="tag"><i class="fa-solid fa-certificate"></i> Fotógrafo Oficial</span>` : ""}
 
           <div class="top-actions">
-            <button class="link-btn" type="button" onclick="editarGaleria('${g.id}')">
-              <i class="fa-solid fa-pen"></i> Editar
-            </button>
+            ${podeEditar ? `
+              <button class="link-btn" type="button" onclick="editarGaleria('${g.id}')">
+                <i class="fa-solid fa-pen"></i> Editar
+              </button>
+            ` : ""}
 
             <button class="link-btn btn-blue" type="button" onclick="compartilharGaleria('${g.id}')">
               <i class="fa-brands fa-whatsapp"></i> Compartilhar
             </button>
 
-            <button class="link-btn btn-red" type="button" onclick="excluirGaleria('${g.id}')">
-              <i class="fa-solid fa-trash"></i> Excluir
-            </button>
+            ${isAdmin && (g.status || "pendente") !== "aprovado" ? `
+              <button class="link-btn btn-green" type="button" onclick="aprovarGaleria('${g.id}')">
+                <i class="fa-solid fa-check"></i> Aprovar
+              </button>
+            ` : ""}
+
+            ${isAdmin ? `
+              <button class="link-btn" type="button" onclick="marcarDestaque('${g.id}',${!g.destaque})">
+                <i class="fa-solid fa-star"></i> ${g.destaque ? "Tirar Destaque" : "Destaque"}
+              </button>
+            ` : ""}
+
+            ${podeEditar ? `
+              <button class="link-btn btn-red" type="button" onclick="excluirGaleria('${g.id}')">
+                <i class="fa-solid fa-trash"></i> Excluir
+              </button>
+            ` : ""}
           </div>
         </div>
       </div>
@@ -794,7 +1042,21 @@ async function carregarGaleria(){
   }
 }
 
-carregarGaleria();
+onAuthStateChanged(auth, async user=>{
+  usuarioAtual = user;
+
+  if(!user){
+    el("listaGaleria").innerHTML = `<div class="mensagem-vazia">Faça login para publicar na galeria.</div>`;
+    mostrarStatus("Faça login para publicar na galeria.","erro");
+    return;
+  }
+
+  perfilAtual = await carregarPerfilUsuario();
+  definirPermissao();
+  aplicarPerfilNaTela();
+  limparFormulario();
+  await carregarGaleria();
+});
 </script>
 
 </body>
