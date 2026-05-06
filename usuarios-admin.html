@@ -207,6 +207,23 @@ header{
   flex-wrap:wrap;
 }
 
+.user-photo{
+  width:82px;
+  height:82px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--gold);
+  background:#fff;
+  flex:0 0 auto;
+}
+
+.user-main{
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+}
+
 .user-info h3{
   color:#fff;
   font-size:20px;
@@ -420,6 +437,15 @@ header{
           <option value="nao">Não autorizados</option>
         </select>
       </div>
+
+      <div class="field">
+        <label for="filtroFotografoOficial">Fotógrafo Oficial</label>
+        <select id="filtroFotografoOficial" onchange="renderUsuarios()">
+          <option value="">Todos</option>
+          <option value="sim">Somente oficiais</option>
+          <option value="nao">Não oficiais</option>
+        </select>
+      </div>
     </div>
   </section>
 
@@ -466,6 +492,7 @@ header{
           <option value="tecnico">Técnico</option>
           <option value="assistente">Assistente</option>
           <option value="arbitro">Árbitro</option>
+          <option value="fotografo">Fotógrafo</option>
           <option value="admin">Administrador</option>
         </select>
       </div>
@@ -575,6 +602,7 @@ function normalizarTipo(tipo){
   if(valor === "tecnico") return "tecnico";
   if(valor === "assistente") return "assistente";
   if(valor === "arbitro") return "arbitro";
+  if(valor === "fotografo" || valor === "fotógrafo") return "fotografo";
   if(valor === "admin" || valor === "administrador") return "admin";
 
   return valor || "torcedor";
@@ -588,6 +616,7 @@ function tipoLabel(tipo){
   if(valor === "assistente") return "Assistente";
   if(valor === "tecnico") return "Técnico";
   if(valor === "jogador") return "Jogador";
+  if(valor === "fotografo") return "Fotógrafo";
   if(valor === "pai_atleta") return "Pai de Atleta";
 
   return "Torcedor";
@@ -640,6 +669,10 @@ function aplicarRegrasPorTipo(tipo){
     return { aprovado:false, autorizado:false, status:"pendente" };
   }
 
+  if(valor === "fotografo"){
+    return { aprovado:false, autorizado:false, status:"pendente" };
+  }
+
   if(valor === "pai_atleta"){
     return { aprovado:true, autorizado:false, status:"ativo" };
   }
@@ -667,6 +700,10 @@ function regraAprovacao(tipo){
   }
 
   if(valor === "jogador"){
+    return { aprovado:true, autorizado:false, status:"ativo" };
+  }
+
+  if(valor === "fotografo"){
     return { aprovado:true, autorizado:false, status:"ativo" };
   }
 
@@ -737,6 +774,25 @@ async function sincronizarColecaoPublica(id, usuario){
       jogos:usuario.jogos || 0,
       amarelos:usuario.amarelos || 0,
       vermelhos:usuario.vermelhos || 0,
+      criadoEm:usuario.criadoEm || serverTimestamp()
+    },{merge:true});
+  }
+
+  if(tipo === "fotografo"){
+    await setDoc(doc(db,"fotografos",id),{
+      ...base,
+      cidade,
+      instagram:usuario.instagram || "",
+      portfolio:usuario.portfolio || usuario.site || "",
+      site:usuario.site || usuario.portfolio || "",
+      especialidade:usuario.especialidade || "",
+      bio:usuario.bio || usuario.descricao || "",
+      foto:usuario.foto || usuario.fotoPerfil || "logo-liga.jfif",
+      fotoPerfil:usuario.fotoPerfil || usuario.foto || "logo-liga.jfif",
+      fotografo:true,
+      fotografoOficial:usuario.fotografoOficial === true,
+      jogos:usuario.jogos || 0,
+      galerias:usuario.galerias || 0,
       criadoEm:usuario.criadoEm || serverTimestamp()
     },{merge:true});
   }
@@ -1040,12 +1096,48 @@ window.excluirUsuario = async function(id){
   }
 };
 
+
+window.toggleFotografoOficial = async function(id){
+  try{
+    const usuario = usuariosCache.find(u => u.id === id);
+    if(!usuario) return;
+
+    const novoValor = usuario.fotografoOficial === true ? false : true;
+
+    await updateDoc(doc(db,"usuarios",id),{
+      fotografoOficial:novoValor,
+      atualizadoEm:serverTimestamp()
+    });
+
+    await setDoc(doc(db,"fotografos",id),{
+      fotografoOficial:novoValor,
+      atualizadoEm:serverTimestamp()
+    },{merge:true});
+
+    await carregarUsuarios();
+    mostrarSucesso("Status de fotógrafo oficial atualizado.");
+  }catch(e){
+    console.error(e);
+    mostrarErro("Erro ao atualizar fotógrafo oficial.");
+  }
+};
+
+window.abrirPerfilPublico = function(id,tipo){
+  if(tipo === "fotografo"){
+    window.open("fotografos.html?id="+encodeURIComponent(id),"_blank");
+    return;
+  }
+
+  window.open("perfil.html?id="+encodeURIComponent(id),"_blank");
+};
+
 window.renderUsuarios = function(){
   const lista = document.getElementById("listaUsuarios");
   const busca = normalizarTexto(document.getElementById("buscaUsuario").value);
   const filtroTipo = normalizarTipo(document.getElementById("filtroTipo").value);
   const filtroStatus = normalizarTexto(document.getElementById("filtroStatus").value);
   const filtroAutorizado = document.getElementById("filtroAutorizado").value;
+  const filtroFotografoOficial = document.getElementById("filtroFotografoOficial").value;
 
   let usuarios = [...usuariosCache];
 
@@ -1075,6 +1167,14 @@ window.renderUsuarios = function(){
     usuarios = usuarios.filter(u => u.autorizado !== true);
   }
 
+  if(filtroFotografoOficial === "sim"){
+    usuarios = usuarios.filter(u => u.fotografoOficial === true);
+  }
+
+  if(filtroFotografoOficial === "nao"){
+    usuarios = usuarios.filter(u => u.fotografoOficial !== true);
+  }
+
   usuarios.sort((a,b)=>String(a.nome || a.nomeCompleto || "").localeCompare(String(b.nome || b.nomeCompleto || ""),"pt-BR"));
 
   if(!usuarios.length){
@@ -1091,14 +1191,24 @@ window.renderUsuarios = function(){
     return `
       <div class="user-card">
         <div class="user-top">
-          <div class="user-info">
-            <h3>${usuario.nome || usuario.nomeCompleto || "Sem nome"}</h3>
-            <p><strong>Email:</strong> ${usuario.email || "-"}</p>
-            <p><strong>CPF:</strong> ${usuario.cpf || "-"}</p>
-            <p><strong>Nascimento:</strong> ${usuario.dataNascimento || usuario.nascimento || "-"}</p>
-            <p><strong>WhatsApp:</strong> ${usuario.whatsapp || usuario.telefone || "-"}</p>
-            <p><strong>Time:</strong> ${usuario.time || usuario.timeNome || "-"}</p>
-            <p><strong>ID:</strong> ${usuario.id}</p>
+          <div class="user-main">
+            <img class="user-photo" src="${usuario.foto || usuario.fotoPerfil || 'logo-liga.jfif'}" onerror="this.src='logo-liga.jfif'">
+
+            <div class="user-info">
+              <h3>${usuario.nome || usuario.nomeCompleto || "Sem nome"}</h3>
+              <p><strong>Email:</strong> ${usuario.email || "-"}</p>
+              <p><strong>CPF:</strong> ${usuario.cpf || "-"}</p>
+              <p><strong>Nascimento:</strong> ${usuario.dataNascimento || usuario.nascimento || "-"}</p>
+              <p><strong>WhatsApp:</strong> ${usuario.whatsapp || usuario.telefone || "-"}</p>
+              <p><strong>Time:</strong> ${usuario.time || usuario.timeNome || "-"}</p>
+              ${tipo === "fotografo" ? `
+                <p><strong>Cidade:</strong> ${usuario.cidade || "-"}</p>
+                <p><strong>Instagram:</strong> ${usuario.instagram || "-"}</p>
+                <p><strong>Portfólio:</strong> ${usuario.portfolio || usuario.site || "-"}</p>
+                <p><strong>Especialidade:</strong> ${usuario.especialidade || "-"}</p>
+              ` : ""}
+              <p><strong>ID:</strong> ${usuario.id}</p>
+            </div>
           </div>
         </div>
 
@@ -1107,6 +1217,7 @@ window.renderUsuarios = function(){
           <span class="tag ${aprovado ? "success" : "warning"}">${aprovado ? "Aprovado" : "Pendente"}</span>
           <span class="tag ${autorizado ? "success" : "danger"}">${autorizado ? "Autorizado" : "Não autorizado"}</span>
           <span class="tag ${status === "ativo" ? "success" : status === "bloqueado" ? "danger" : "warning"}">${status}</span>
+          ${usuario.fotografoOficial === true ? `<span class="tag gold">Fotógrafo Oficial</span>` : ""}
         </div>
 
         <div class="user-actions">
@@ -1133,6 +1244,16 @@ window.renderUsuarios = function(){
           <button class="mini-btn mini-approve" onclick="ativarUsuario('${usuario.id}')">
             <i class="fa-solid fa-check"></i> Ativar
           </button>
+
+          ${tipo === "fotografo" ? `
+          <button class="mini-btn mini-admin" onclick="toggleFotografoOficial('${usuario.id}')">
+            <i class="fa-solid fa-camera"></i> Oficial
+          </button>
+
+          <button class="mini-btn mini-edit" onclick="abrirPerfilPublico('${usuario.id}','fotografo')">
+            <i class="fa-solid fa-user"></i> Perfil Público
+          </button>
+          ` : ""}
 
           <button class="mini-btn mini-delete" onclick="excluirUsuario('${usuario.id}')">
             <i class="fa-solid fa-trash"></i> Excluir
