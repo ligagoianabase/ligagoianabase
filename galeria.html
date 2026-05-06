@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Galeria - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="menu.css">
+
+<style>
+:root{
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1240px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+}
+
+a{text-decoration:none;color:inherit}
+button,input,select{font-family:inherit}
+button{cursor:pointer;border:none}
+img{display:block;max-width:100%}
+
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
+
+.container{
+  padding:22px 0 34px;
+}
+
+.hero{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+
+.hero h2{
+  color:var(--gold);
+  font-size:28px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+
+.hero p{
+  color:var(--muted);
+  line-height:1.5;
+  font-size:14px;
+}
+
+.hero-tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.hero-tag{
+  background:rgba(26,63,115,.9);
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 220px 220px;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
+}
+
+.titulo-secao{
+  color:var(--gold);
+  font-size:22px;
+  font-weight:900;
+  margin:0 0 12px;
+}
+
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+
+.album-card{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  transition:.25s ease;
+}
+
+.album-card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold);
+}
+
+.cover{
+  height:190px;
+  position:relative;
+  background:#0d2a52;
+  overflow:hidden;
+}
+
+.cover img,
+.cover video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.badge{
+  position:absolute;
+  top:9px;
+  left:9px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+}
+
+.count{
+  position:absolute;
+  right:9px;
+  bottom:9px;
+  background:rgba(0,0,0,.65);
+  color:#fff;
+  padding:6px 9px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.album-body{
+  padding:13px;
+}
+
+.album-body strong{
+  color:#fff;
+  display:block;
+  font-size:16px;
+  line-height:1.25;
+  margin-bottom:8px;
+}
+
+.album-body p{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.55;
+}
+
+.album-actions{
+  display:grid;
+  grid-template-columns:1fr 42px;
+  gap:8px;
+  margin-top:12px;
+}
+
+.btn{
+  min-height:40px;
+  border-radius:11px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  font-size:13px;
+}
+
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
+.btn-wpp{background:#25d366;color:#fff}
+.btn-blue{background:#1a3f73;color:#fff}
+.btn-gray{background:#4b5563;color:#fff}
+
+.album-detalhe{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+
+.detalhe-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+
+.detalhe-top h2{
+  color:var(--gold);
+  font-size:28px;
+  margin-bottom:6px;
+}
+
+.detalhe-top p{
+  color:var(--muted);
+  line-height:1.5;
+  font-size:14px;
+}
+
+.midia-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.midia-item{
+  height:190px;
+  border-radius:14px;
+  overflow:hidden;
+  background:#0d2a52;
+  border:1px solid rgba(255,255,255,.08);
+  cursor:pointer;
+  position:relative;
+}
+
+.midia-item img,
+.midia-item video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.video-icon{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:42px;
+  background:rgba(0,0,0,.18);
+}
+
+.vazio{
+  color:var(--muted);
+  text-align:center;
+  padding:18px;
+  background:rgba(7,29,55,.9);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  grid-column:1/-1;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.88);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  padding:18px;
+}
+
+.modal.show{display:flex}
+
+.modal img,
+.modal video{
+  max-width:96vw;
+  max-height:86vh;
+  border-radius:14px;
+  background:#fff;
+}
+
+.modal-close{
+  position:fixed;
+  top:18px;
+  right:18px;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:#b42323;
+  color:#fff;
+  font-size:22px;
+  font-weight:900;
+}
+
+@media(max-width:1100px){
+  .lista-grid,.midia-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+@media(max-width:900px){
+  .lista-grid,.midia-grid{grid-template-columns:repeat(2,1fr)}
+  .filtros{grid-template-columns:1fr}
+  .hero h2,.detalhe-top h2{font-size:23px}
+}
+
+@media(max-width:520px){
+  .lista-grid,.midia-grid{grid-template-columns:1fr}
+  .midia-item{height:240px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="modal" id="modalMidia" onclick="fecharModal()">
+  <button class="modal-close" type="button" onclick="fecharModal()">×</button>
+  <div id="modalConteudo"></div>
+</div>
+
+<main class="wrap container">
+
+  <section class="hero">
+    <h2>Galeria</h2>
+    <p>Fotos e vídeos oficiais dos jogos, campeonatos e eventos da Liga Goiana de Futebol de Base.</p>
+
+    <div class="hero-tags">
+      <div class="hero-tag" id="tagTotal">Álbuns: 0</div>
+      <div class="hero-tag" id="tagCampeonato">Campeonato: Todos</div>
+      <div class="hero-tag" id="tagCategoria">Categoria: Todas</div>
+    </div>
+  </section>
+
+  <section class="filtros" id="filtrosBox">
+    <input id="busca" placeholder="Pesquisar álbum, fotógrafo, campeonato ou categoria...">
+
+    <select id="filtroCampeonato">
+      <option value="">Todos campeonatos</option>
+    </select>
+
+    <select id="filtroCategoria">
+      <option value="">Todas categorias</option>
+    </select>
+  </section>
+
+  <h2 class="titulo-secao" id="tituloPagina">Galeria</h2>
+
+  <section id="conteudoGaleria" class="lista-grid">
+    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando galeria...</div>
+  </section>
+
+</main>
+
+<script type="module">
+import { renderMenu } from "./menu.js";
+import { db } from "./firebase.js";
+import {
+  collection,
+  onSnapshot,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+renderMenu("galeria");
+
+const idUrl = new URLSearchParams(location.search).get("id");
+let albuns = [];
+
+function el(id){return document.getElementById(id)}
+
+function n(txt){
+  return String(txt || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function val(obj,chaves,f=""){
+  for(const c of chaves){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== ""){
+      return obj[c];
+    }
+  }
+  return f;
+}
+
+function formatarData(valor){
+  if(!valor) return "-";
+  if(typeof valor.toDate === "function") valor = valor.toDate();
+  const data = new Date(valor);
+  if(isNaN(data.getTime())) return String(valor);
+  return data.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
+}
+
+function dataOrdenacao(item){
+  const data = item.data || item.criadoEm || item.atualizadoEm || "";
+  if(data && typeof data.toDate === "function") return data.toDate().getTime();
+  const d = new Date(data).getTime();
+  return isNaN(d) ? 0 : d;
+}
+
+function publicado(item){
+  return item.publicado !== false && item.status !== "oculto" && item.status !== "rascunho";
+}
+
+function midiasAlbum(item){
+  if(Array.isArray(item.midias) && item.midias.length) return item.midias;
+  const imagem = val(item,["imagem","capa","foto"],"");
+  const link = val(item,["linkExterno","link","url"],"");
+  const arr = [];
+  if(imagem) arr.push({url:imagem,tipo:"imagem"});
+  if(link && link !== imagem) arr.push({url:link,tipo:"link"});
+  return arr;
+}
+
+function capaAlbum(item){
+  return val(item,["capa","imagem","foto"], midiasAlbum(item)[0]?.url || "logo-liga.jfif");
+}
+
+function tipoMidia(m){
+  if(m.tipo === "video") return "video";
+  if(String(m.url || "").match(/\.(mp4|webm|ogg)(\?|$)/i)) return "video";
+  if(m.tipo === "link") return "link";
+  return "imagem";
+}
+
+function preencherFiltros(){
+  const campAtual = el("filtroCampeonato").value;
+  const catAtual = el("filtroCategoria").value;
+
+  const camps = new Set();
+  const cats = new Set();
+
+  albuns.filter(publicado).forEach(a=>{
+    if(a.campeonato) camps.add(a.campeonato);
+    if(a.categoria) cats.add(a.categoria);
+  });
+
+  el("filtroCampeonato").innerHTML = `<option value="">Todos campeonatos</option>` +
+    [...camps].sort((a,b)=>a.localeCompare(b,"pt-BR")).map(c=>`<option value="${c}">${c}</option>`).join("");
+
+  el("filtroCategoria").innerHTML = `<option value="">Todas categorias</option>` +
+    [...cats].sort((a,b)=>a.localeCompare(b,"pt-BR")).map(c=>`<option value="${c}">${c}</option>`).join("");
+
+  if([...camps].includes(campAtual)) el("filtroCampeonato").value = campAtual;
+  if([...cats].includes(catAtual)) el("filtroCategoria").value = catAtual;
+}
+
+function filtrados(){
+  const busca = n(el("busca").value);
+  const camp = el("filtroCampeonato").value;
+  const cat = el("filtroCategoria").value;
+
+  return albuns.filter(a=>{
+    if(!publicado(a)) return false;
+    if(camp && a.campeonato !== camp) return false;
+    if(cat && a.categoria !== cat) return false;
+
+    if(busca){
+      const alvo = n(`${a.titulo} ${a.campeonato} ${a.categoria} ${a.fotografo} ${a.descricao}`);
+      if(!alvo.includes(busca)) return false;
+    }
+
+    return true;
+  }).sort((a,b)=>dataOrdenacao(b)-dataOrdenacao(a));
+}
+
+function atualizarTopo(lista){
+  el("tagTotal").innerText = `Álbuns: ${lista.length}`;
+  el("tagCampeonato").innerText = `Campeonato: ${el("filtroCampeonato").value || "Todos"}`;
+  el("tagCategoria").innerText = `Categoria: ${el("filtroCategoria").value || "Todas"}`;
+}
+
+function renderCardAlbum(a){
+  const midias = midiasAlbum(a);
+  const qtd = a.totalMidias || midias.length || 0;
+  const capa = capaAlbum(a);
+
+  return `
+    <article class="album-card">
+      <div class="cover">
+        <img src="${capa}" onerror="this.src='logo-liga.jfif'">
+        <div class="badge">${a.categoria || "Galeria"}</div>
+        <div class="count"><i class="fa-solid fa-images"></i> ${qtd}</div>
+      </div>
+
+      <div class="album-body">
+        <strong>${a.titulo || "Álbum"}</strong>
+        <p>
+          Campeonato: ${a.campeonato || "-"}<br>
+          Fotógrafo: ${a.fotografo || "-"}<br>
+          Data: ${formatarData(a.data || a.criadoEm)}<br>
+          ${a.descricao || ""}
+        </p>
+
+        <div class="album-actions">
+          <a class="btn btn-gold" href="galeria.html?id=${encodeURIComponent(a.id)}">
+            <i class="fa-solid fa-eye"></i> Ver álbum
+          </a>
+
+          <button class="btn btn-wpp" onclick="compartilharAlbum('${a.id}')">
+            <i class="fa-brands fa-whatsapp"></i>
+          </button>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderLista(){
+  const lista = filtrados();
+  const box = el("conteudoGaleria");
+  box.className = "lista-grid";
+  atualizarTopo(lista);
+
+  if(!albuns.length){
+    box.innerHTML = `<div class="vazio">Nenhum álbum cadastrado no Firebase.</div>`;
+    return;
+  }
+
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhum álbum encontrado.</div>`;
+    return;
+  }
+
+  box.innerHTML = lista.map(renderCardAlbum).join("");
+}
+
+function renderAlbumDetalhe(album){
+  const box = el("conteudoGaleria");
+  const midias = midiasAlbum(album);
+
+  el("filtrosBox").style.display = "none";
+  el("tituloPagina").innerText = album.titulo || "Álbum";
+  box.className = "album-detalhe";
+
+  box.innerHTML = `
+    <div class="detalhe-top">
+      <div>
+        <h2>${album.titulo || "Álbum"}</h2>
+        <p>
+          Campeonato: ${album.campeonato || "-"}<br>
+          Categoria: ${album.categoria || "-"}<br>
+          Fotógrafo: ${album.fotografo || "-"}<br>
+          Data: ${formatarData(album.data || album.criadoEm)}<br>
+          ${album.descricao || ""}
+        </p>
+      </div>
+
+      <div class="album-actions" style="min-width:260px">
+        <a class="btn btn-gold" href="galeria.html">
+          <i class="fa-solid fa-arrow-left"></i> Galeria
+        </a>
+
+        <button class="btn btn-wpp" onclick="compartilharAlbum('${album.id}')">
+          <i class="fa-brands fa-whatsapp"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="midia-grid">
+      ${
+        midias.length
+        ? midias.map((m,i)=>renderMidia(m,i)).join("")
+        : `<div class="vazio">Nenhuma foto ou vídeo neste álbum.</div>`
+      }
+    </div>
+  `;
+
+  atualizarTopo([album]);
+}
+
+function renderMidia(m,i){
+  const tipo = tipoMidia(m);
+
+  if(tipo === "video"){
+    return `
+      <div class="midia-item" onclick="abrirModal('${m.url}','video')">
+        <video src="${m.url}" muted></video>
+        <div class="video-icon"><i class="fa-solid fa-play"></i></div>
+      </div>
+    `;
+  }
+
+  if(tipo === "link"){
+    return `
+      <a class="midia-item" href="${m.url}" target="_blank">
+        <div class="video-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+      </a>
+    `;
+  }
+
+  return `
+    <div class="midia-item" onclick="abrirModal('${m.url}','imagem')">
+      <img src="${m.url}" onerror="this.src='logo-liga.jfif'">
+    </div>
+  `;
+}
+
+window.abrirModal = function(url,tipo){
+  const modal = el("modalMidia");
+  const box = el("modalConteudo");
+
+  box.innerHTML = tipo === "video"
+    ? `<video src="${url}" controls autoplay></video>`
+    : `<img src="${url}">`;
+
+  modal.classList.add("show");
+};
+
+window.fecharModal = function(){
+  el("modalMidia").classList.remove("show");
+  el("modalConteudo").innerHTML = "";
+};
+
+window.compartilharAlbum = function(id){
+  const url = location.href.split("?")[0] + "?id=" + encodeURIComponent(id);
+  window.open("https://wa.me/?text=" + encodeURIComponent("Galeria da Liga Goiana: " + url), "_blank");
+};
+
+async function carregarAlbumPorId(){
+  try{
+    const snap = await getDoc(doc(db,"galeria",idUrl));
+    if(!snap.exists()){
+      el("conteudoGaleria").innerHTML = `<div class="vazio">Álbum não encontrado.</div>`;
+      return;
+    }
+
+    const album = {id:snap.id,...snap.data()};
+    renderAlbumDetalhe(album);
+  }catch(e){
+    console.error(e);
+    el("conteudoGaleria").innerHTML = `<div class="vazio">Erro ao carregar álbum.</div>`;
+  }
+}
+
+if(idUrl){
+  carregarAlbumPorId();
+}else{
+  el("busca").addEventListener("input",renderLista);
+  el("filtroCampeonato").addEventListener("change",renderLista);
+  el("filtroCategoria").addEventListener("change",renderLista);
+
+  onSnapshot(collection(db,"galeria"),snap=>{
+    albuns = snap.docs.map(d=>({id:d.id,...d.data()}));
+    preencherFiltros();
+    renderLista();
+  });
+}
+</script>
+
+</body>
+</html>
