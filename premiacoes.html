@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Premiações - Liga Goiana</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --muted:#cbd6ea;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.92), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:#fff;
+  min-height:100vh;
+}
+
+.container{
+  width:min(100% - 24px, 1320px);
+  margin:auto;
+  padding:24px 0 40px;
+}
+
+.topo{
+  margin-bottom:20px;
+}
+
+.topo h1{
+  color:var(--gold);
+  font-size:36px;
+  margin-bottom:8px;
+}
+
+.topo p{
+  color:var(--muted);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+.card{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.16), transparent 35%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.26);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+.head{
+  padding:18px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.icon{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  flex-shrink:0;
+}
+
+.head h2{
+  color:var(--gold);
+  font-size:19px;
+}
+
+.conteudo{
+  padding:20px;
+  text-align:center;
+}
+
+.foto{
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid var(--gold);
+  background:#fff;
+  margin-bottom:14px;
+}
+
+.nome{
+  color:#fff;
+  font-size:22px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.sub{
+  color:var(--muted);
+  margin-bottom:14px;
+}
+
+.numero{
+  color:var(--gold);
+  font-size:32px;
+  font-weight:900;
+}
+
+.vazio{
+  color:var(--muted);
+  padding:20px;
+}
+
+@media(max-width:1000px){
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:700px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .topo h1{
+    font-size:28px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="topo">
+    <h1>Premiações da Competição</h1>
+    <p>Premiações automáticas baseadas em jogos, súmulas e estatísticas.</p>
+  </div>
+
+  <div class="grid">
+
+    <section class="card">
+      <div class="head">
+        <div class="icon">
+          <i class="fa-solid fa-futbol"></i>
+        </div>
+        <h2>Artilheiro</h2>
+      </div>
+      <div class="conteudo" id="artilheiro"></div>
+    </section>
+
+    <section class="card">
+      <div class="head">
+        <div class="icon">
+          <i class="fa-solid fa-glove"></i>
+        </div>
+        <h2>Melhor Goleiro</h2>
+      </div>
+      <div class="conteudo" id="goleiro"></div>
+    </section>
+
+    <section class="card">
+      <div class="head">
+        <div class="icon">
+          <i class="fa-solid fa-star"></i>
+        </div>
+        <h2>Melhor Jogador</h2>
+      </div>
+      <div class="conteudo" id="melhorJogador"></div>
+    </section>
+
+    <section class="card">
+      <div class="head">
+        <div class="icon">
+          <i class="fa-solid fa-trophy"></i>
+        </div>
+        <h2>Time Campeão</h2>
+      </div>
+      <div class="conteudo" id="campeao"></div>
+    </section>
+
+    <section class="card">
+      <div class="head">
+        <div class="icon">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h2>Defesa Menos Vazada</h2>
+      </div>
+      <div class="conteudo" id="defesa"></div>
+    </section>
+
+    <section class="card">
+      <div class="head">
+        <div class="icon">
+          <i class="fa-solid fa-hand"></i>
+        </div>
+        <h2>Mais Disciplinado</h2>
+      </div>
+      <div class="conteudo" id="disciplinado"></div>
+    </section>
+
+    <section class="card">
+      <div class="head">
+        <div class="icon">
+          <i class="fa-solid fa-user-tie"></i>
+        </div>
+        <h2>Técnico Campeão</h2>
+      </div>
+      <div class="conteudo" id="tecnico"></div>
+    </section>
+
+    <section class="card">
+      <div class="head">
+        <div class="icon">
+          <i class="fa-solid fa-crown"></i>
+        </div>
+        <h2>Craque da Final</h2>
+      </div>
+      <div class="conteudo" id="craqueFinal"></div>
+    </section>
+
+  </div>
+
+</div>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+  collection,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let jogadores = [];
+let times = [];
+let jogos = [];
+let sumulas = [];
+let tecnicos = [];
+
+function n(t){
+  return String(t || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function foto(obj){
+  return obj?.foto ||
+    obj?.imagem ||
+    obj?.avatar ||
+    obj?.escudo ||
+    obj?.logo ||
+    "logo-liga.jfif";
+}
+
+function renderCard(id,dados={}){
+
+  const box = document.getElementById(id);
+
+  if(!dados.nome){
+    box.innerHTML = `<div class="vazio">Nenhum dado encontrado.</div>`;
+    return;
+  }
+
+  box.innerHTML = `
+    <img class="foto" src="${foto(dados)}" onerror="this.src='logo-liga.jfif'">
+
+    <div class="nome">${dados.nome}</div>
+
+    <div class="sub">${dados.sub || ""}</div>
+
+    <div class="numero">${dados.valor || ""}</div>
+  `;
+}
+
+function render(){
+
+  const jogadoresOrdenados =
+    [...jogadores].sort((a,b)=>
+      Number(b.gols || 0) - Number(a.gols || 0)
+    );
+
+  const goleiros =
+    [...jogadores]
+      .filter(j=>n(j.posicao).includes("goleiro"))
+      .sort((a,b)=>
+        Number(a.golsSofridos || 0) -
+        Number(b.golsSofridos || 0)
+      );
+
+  const melhores =
+    [...jogadores]
+      .sort((a,b)=>
+        Number(b.melhorJogador || 0) -
+        Number(a.melhorJogador || 0)
+      );
+
+  const disciplinados =
+    [...times]
+      .sort((a,b)=>
+        (Number(a.amarelos || 0) + Number(a.vermelhos || 0)) -
+        (Number(b.amarelos || 0) + Number(b.vermelhos || 0))
+      );
+
+  const defesa =
+    [...times]
+      .sort((a,b)=>
+        Number(a.golsContra || 0) -
+        Number(b.golsContra || 0)
+      );
+
+  const campeao =
+    [...times]
+      .sort((a,b)=>
+        Number(b.pontos || 0) -
+        Number(a.pontos || 0)
+      )[0];
+
+  const tecnico =
+    tecnicos.find(t=>
+      n(t.timeNome || t.time) === n(campeao?.nome)
+    );
+
+  const finais =
+    jogos.filter(j=>
+      n(j.fase).includes("final") &&
+      (
+        j.finalizado === true ||
+        n(j.status) === "finalizado"
+      )
+    );
+
+  let craqueFinal = null;
+
+  if(finais.length){
+
+    const ultimaFinal = finais[finais.length - 1];
+
+    craqueFinal = jogadores.find(j=>
+      j.id === ultimaFinal.melhorJogadorId
+    );
+  }
+
+  renderCard("artilheiro",{
+    ...jogadoresOrdenados[0],
+    sub:jogadoresOrdenados[0]?.timeNome || jogadoresOrdenados[0]?.time || "",
+    valor:(jogadoresOrdenados[0]?.gols || 0) + " gols"
+  });
+
+  renderCard("goleiro",{
+    ...goleiros[0],
+    sub:goleiros[0]?.timeNome || goleiros[0]?.time || "",
+    valor:(goleiros[0]?.golsSofridos || 0) + " sofridos"
+  });
+
+  renderCard("melhorJogador",{
+    ...melhores[0],
+    sub:melhores[0]?.timeNome || melhores[0]?.time || "",
+    valor:(melhores[0]?.melhorJogador || 0) + " MVP"
+  });
+
+  renderCard("campeao",{
+    ...campeao,
+    nome:campeao?.nome || "-",
+    valor:(campeao?.pontos || 0) + " pts"
+  });
+
+  renderCard("defesa",{
+    ...defesa[0],
+    nome:defesa[0]?.nome || "-",
+    valor:(defesa[0]?.golsContra || 0) + " sofridos"
+  });
+
+  renderCard("disciplinado",{
+    ...disciplinados[0],
+    nome:disciplinados[0]?.nome || "-",
+    valor:
+      (
+        Number(disciplinados[0]?.amarelos || 0) +
+        Number(disciplinados[0]?.vermelhos || 0)
+      ) + " cartões"
+  });
+
+  renderCard("tecnico",{
+    ...tecnico,
+    nome:tecnico?.nome || "-",
+    sub:tecnico?.timeNome || tecnico?.time || "",
+    valor:"Campeão"
+  });
+
+  renderCard("craqueFinal",{
+    ...craqueFinal,
+    sub:craqueFinal?.timeNome || craqueFinal?.time || "",
+    valor:"MVP Final"
+  });
+}
+
+onSnapshot(collection(db,"jogadores"),snap=>{
+  jogadores = snap.docs.map(d=>({
+    id:d.id,
+    ...d.data()
+  }));
+
+  render();
+});
+
+onSnapshot(collection(db,"times"),snap=>{
+  times = snap.docs.map(d=>({
+    id:d.id,
+    ...d.data()
+  }));
+
+  render();
+});
+
+onSnapshot(collection(db,"jogos"),snap=>{
+  jogos = snap.docs.map(d=>({
+    id:d.id,
+    ...d.data()
+  }));
+
+  render();
+});
+
+onSnapshot(collection(db,"sumulas"),snap=>{
+  sumulas = snap.docs.map(d=>({
+    id:d.id,
+    ...d.data()
+  }));
+
+  render();
+});
+
+onSnapshot(collection(db,"tecnicos"),snap=>{
+  tecnicos = snap.docs.map(d=>({
+    id:d.id,
+    ...d.data()
+  }));
+
+  render();
+});
+
+</script>
+
+</body>
+</html>
