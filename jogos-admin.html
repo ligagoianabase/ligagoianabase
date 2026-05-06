@@ -589,7 +589,9 @@ function linkSumulaPublica(jogoId){
 function buscarCampeonato(id){ return campeonatosCache.find(c => c.id === id) || null; }
 function buscarTime(id){ return timesCache.find(t => t.id === id) || null; }
 function buscarArbitro(id){ return arbitrosCache.find(a => a.id === id) || null; }
-function buscarAssistente(id){ return assistentesCache.find(a => a.id === id) || null; }
+function buscarAssistente(id){
+  return assistentesCache.find(a => a.id === id) || arbitrosCache.find(a => a.id === id) || null;
+}
 
 function formatarContato(pessoa){
   return {
@@ -605,13 +607,17 @@ function formatarContato(pessoa){
 function formatarJogador(j){
   return {
     id:j.id || "",
-    numero:"",
-    nome:j.nome || "",
+    numero:j.numero || j.camisa || j.numeroCamisa || "",
+    camisa:j.camisa || j.numero || j.numeroCamisa || "",
+    nome:j.nome || j.nomeCompleto || "",
     posicao:j.posicao || "",
     capitao:j.capitao === true,
     goleiro:j.goleiro === true || normalizar(j.posicao) === "goleiro",
     cpf:j.cpf || "",
     nascimento:j.nascimento || j.dataNascimento || "",
+    dataNascimento:j.dataNascimento || j.nascimento || "",
+    email:j.email || "",
+    whatsapp:j.whatsapp || j.telefone || "",
     categoria:j.categoria || "",
     timeId:j.timeId || "",
     timeNome:j.timeNome || j.time || "",
@@ -938,7 +944,10 @@ window.salvarJogo = async function(){
   const timeAObj = buscarTime(timeAId);
   const timeBObj = buscarTime(timeBId);
 
+  if(!timeAObj || !timeBObj) return alert("Erro ao localizar os times selecionados.");
+
   const arbitroObj = buscarArbitro(arbitroId);
+  if(!arbitroObj) return alert("Erro ao localizar o árbitro principal selecionado.");
   const assistente1Obj = buscarAssistente(assistente1Id);
   const assistente2Obj = buscarAssistente(assistente2Id);
   const arbitroAuxiliarObj = buscarArbitro(arbitroAuxiliarId);
@@ -972,6 +981,10 @@ window.salvarJogo = async function(){
 
     timeAId,
     timeBId,
+    mandanteId:timeAId,
+    visitanteId:timeBId,
+    timeMandanteId:timeAId,
+    timeVisitanteId:timeBId,
 
     timeA:{
       id:timeAObj.id,
@@ -980,6 +993,11 @@ window.salvarJogo = async function(){
       escudo:timeAObj.logo || timeAObj.escudo || "logo-liga.jfif",
       cidade:timeAObj.cidade || ""
     },
+
+    timeMandanteNome:timeAObj?.nome || "",
+    mandanteNome:timeAObj?.nome || "",
+    timeVisitanteNome:timeBObj?.nome || "",
+    visitanteNome:timeBObj?.nome || "",
 
     timeB:{
       id:timeBObj.id,
@@ -1001,11 +1019,14 @@ window.salvarJogo = async function(){
 
     tecnicoA:tecnicoAObj?.nome || "",
     tecnicoB:tecnicoBObj?.nome || "",
+    tecnicoAId:tecnicoAObj?.id || "",
+    tecnicoBId:tecnicoBObj?.id || "",
     tecnicoAObj:tecnicoAObj ? formatarContato(tecnicoAObj) : null,
     tecnicoBObj:tecnicoBObj ? formatarContato(tecnicoBObj) : null,
 
     arbitroId,
-    arbitroUid:arbitroObj?.uid || arbitroId,
+    arbitroUid:arbitroObj?.uid || arbitroObj?.usuarioId || arbitroId,
+    arbitroUsuarioId:arbitroObj?.usuarioId || arbitroObj?.uid || arbitroId,
     arbitroEmail:arbitroObj?.email || "",
     arbitro:arbitroObj?.nome || "",
     arbitroNome:arbitroObj?.nome || "",
@@ -1040,6 +1061,7 @@ window.salvarJogo = async function(){
     sumulaFinalizada:false,
     publico:false,
     publica:false,
+    verSumula:false,
 
     criadoEm:new Date().toISOString(),
     criadoEmServidor:serverTimestamp(),
@@ -1093,6 +1115,7 @@ window.salvarJogo = async function(){
 
   await setDoc(doc(db,"jogos",ref.id),{
     id:ref.id,
+    jogoId:ref.id,
     sumulaId:ref.id,
     linkSumula:links.admin,
     linkSumulaAdmin:links.admin,
@@ -1199,9 +1222,9 @@ function renderizarJogos(){
             <i class="fa-solid fa-whistle"></i> Súmula Árbitro
           </a>
 
-          ${j.sumulaFinalizada ? `
+          ${(j.sumulaFinalizada === true || j.publica === true || j.publico === true || normalizar(j.status) === "finalizado") ? `
             <a class="btn-acao btn-blue" href="sumula-publica.html?id=${j.id}">
-              <i class="fa-solid fa-eye"></i> Súmula Pública
+              <i class="fa-solid fa-eye"></i> Ver Súmula
             </a>
           ` : ""}
 
