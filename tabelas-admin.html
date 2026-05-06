@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tabelas - Admin</title>
+<title>Tabelas ADM - Liga Goiana</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -13,28 +13,40 @@
   --bg:#0b1f3a;
   --bg-dark:#08172c;
   --card:#102a52;
-  --card-hover:#153766;
+  --card2:#0d2446;
   --gold:#f7c600;
+  --gold2:#ffe45c;
   --gold-soft:rgba(247,198,0,.12);
-  --gold-line:rgba(247,198,0,.28);
+  --gold-line:rgba(247,198,0,.32);
   --white:#ffffff;
   --muted:#d9e3f2;
+  --line:rgba(255,255,255,.10);
+  --red:#d94141;
+  --green:#1b8f43;
+  --blue:#1a3f73;
   --shadow:0 8px 22px rgba(0,0,0,.28);
-  --max:1180px;
+  --max:1280px;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
 
+html,body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+}
+
 body{
   font-family:Arial,sans-serif;
   background:
-    linear-gradient(rgba(11,31,58,.88),rgba(11,31,58,.94)),
+    linear-gradient(rgba(11,31,58,.90),rgba(11,31,58,.96)),
     url("fundo.png") center/cover fixed no-repeat;
   color:#fff;
 }
 
 a{text-decoration:none;color:inherit}
-button{font-family:inherit;cursor:pointer;border:none}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer;border:none}
 
 .wrap{
   width:min(100% - 28px,var(--max));
@@ -69,16 +81,19 @@ header{
   flex:1;
   text-align:center;
   font-size:24px;
-  font-weight:700;
+  font-weight:900;
+  color:#fff;
+  text-transform:uppercase;
 }
 
 .top-btn{
   display:inline-flex;
   align-items:center;
+  justify-content:center;
   gap:8px;
   padding:10px 16px;
   border-radius:10px;
-  font-weight:700;
+  font-weight:900;
 }
 
 .btn-light{
@@ -87,8 +102,23 @@ header{
 }
 
 .btn-gold{
-  background:var(--gold);
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
   color:#111;
+}
+
+.btn-green{
+  background:var(--green);
+  color:#fff;
+}
+
+.btn-red{
+  background:var(--red);
+  color:#fff;
+}
+
+.btn-blue{
+  background:var(--blue);
+  color:#fff;
 }
 
 .container{
@@ -108,6 +138,7 @@ header{
 
 .hero-panel h2{
   font-size:28px;
+  color:var(--gold);
   margin-bottom:8px;
 }
 
@@ -117,31 +148,38 @@ header{
 }
 
 .bloco-titulo{
-  margin:0 0 12px;
+  margin:0 0 14px;
   color:var(--gold);
   font-size:18px;
-  font-weight:700;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
 .grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
 }
 
-.full{
-  grid-column:1/-1;
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
 }
+
+.full{grid-column:1/-1}
 
 label{
   display:block;
   margin:0 0 6px;
-  font-weight:700;
+  font-weight:900;
   color:#eef4ff;
-  font-size:14px;
+  font-size:13px;
 }
 
-input,select{
+input,select,textarea{
   width:100%;
   padding:12px;
   border:none;
@@ -149,6 +187,18 @@ input,select{
   font-size:14px;
   background:#f5f7fb;
   color:#111;
+  outline:none;
+}
+
+textarea{
+  min-height:86px;
+  resize:vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  outline:2px solid rgba(247,198,0,.65);
 }
 
 .top-actions{
@@ -164,87 +214,168 @@ input,select{
   align-items:center;
   justify-content:center;
   gap:8px;
-  background:var(--gold);
-  color:#111;
   padding:10px 14px;
   border-radius:10px;
-  font-weight:700;
+  font-weight:900;
 }
 
-.btn-danger{
-  background:#d94141;
-  color:#fff;
+.action-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
 }
 
-.lista-times{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:14px;
+.link-btn{
+  background:var(--gold);
+  color:#111;
+  font-size:12px;
 }
 
-.card{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.06);
-  padding:16px;
+.table-box{
+  width:100%;
+  overflow-x:auto;
   border-radius:14px;
-  text-align:center;
+  border:1px solid var(--line);
 }
 
-.card img{
-  width:88px;
-  height:88px;
+table{
+  width:100%;
+  min-width:980px;
+  border-collapse:collapse;
+  background:rgba(255,255,255,.035);
+}
+
+th{
+  background:rgba(247,198,0,.16);
+  color:var(--gold);
+  font-size:12px;
+  text-transform:uppercase;
+  padding:12px 8px;
+  border-bottom:1px solid var(--gold-line);
+  white-space:nowrap;
+}
+
+td{
+  padding:10px 8px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  text-align:center;
+  color:#fff;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+td.time-cell{
+  text-align:left;
+  min-width:220px;
+  font-weight:900;
+}
+
+.pos{
+  width:34px;
+  height:34px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(247,198,0,.12);
+  color:var(--gold);
+  border:1px solid var(--gold-line);
+  border-radius:10px;
+  font-weight:900;
+}
+
+.time-info{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.time-info img{
+  width:34px;
+  height:34px;
+  border-radius:9px;
   object-fit:contain;
   background:#fff;
-  border-radius:18px;
-  border:2px solid var(--gold);
-  margin:0 auto 10px;
+  border:1px solid var(--gold-line);
 }
 
-.card strong{
-  display:block;
+.punido{
+  color:#ffd45c;
+  font-weight:900;
+}
+
+.gavel{
   color:var(--gold);
-  font-size:18px;
-  margin-bottom:8px;
+  margin-right:5px;
 }
 
-.card p{
-  color:var(--muted);
-  font-size:14px;
-  line-height:1.5;
-  margin-bottom:8px;
-}
-
-.tags{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:6px;
-  margin:10px 0;
-}
-
-.tag{
+.badge-punicao{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:4px 7px;
+  border-radius:999px;
   background:rgba(247,198,0,.12);
   border:1px solid var(--gold-line);
   color:var(--gold);
-  border-radius:999px;
-  padding:5px 9px;
-  font-size:12px;
-  font-weight:700;
+  font-size:11px;
+  font-weight:900;
 }
 
-.card-actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-top:12px;
+.lista-historico{
+  display:grid;
+  gap:10px;
+  max-height:360px;
+  overflow:auto;
+  padding-right:4px;
+}
+
+.historico-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-left:4px solid var(--gold);
+  border-radius:14px;
+  padding:12px;
+}
+
+.historico-card strong{
+  color:var(--gold);
+  display:block;
+  margin-bottom:5px;
+}
+
+.historico-card p{
+  color:var(--muted);
+  line-height:1.45;
+  font-size:13px;
 }
 
 .mensagem-vazia{
   color:var(--muted);
   text-align:center;
-  padding:16px 0;
-  grid-column:1/-1;
+  padding:16px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;
+}
+
+.status-mini{
+  margin-top:10px;
+  display:none;
+  padding:12px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:13px;
+}
+
+.status-ok{
+  background:rgba(27,143,67,.18);
+  color:#9af0b4;
+  border:1px solid rgba(27,143,67,.35);
+}
+
+.status-erro{
+  background:rgba(217,65,65,.18);
+  color:#ffb7b7;
+  border:1px solid rgba(217,65,65,.35);
 }
 
 @media(max-width:900px){
@@ -252,6 +383,7 @@ input,select{
     order:3;
     width:100%;
     text-align:center;
+    font-size:19px;
   }
 
   .header-left,
@@ -260,7 +392,8 @@ input,select{
     justify-content:center;
   }
 
-  .grid{
+  .grid,
+  .grid-2{
     grid-template-columns:1fr;
   }
 }
@@ -270,6 +403,16 @@ input,select{
   .action-btn,
   .link-btn{
     width:100%;
+  }
+
+  .hero-panel h2{
+    font-size:23px;
+  }
+
+  .form-panel,
+  .list-panel,
+  .hero-panel{
+    padding:16px;
   }
 }
 </style>
@@ -296,8 +439,8 @@ input,select{
     <div class="header-title">Tabelas ADM</div>
 
     <div class="header-right">
-      <button class="top-btn btn-gold" type="button" onclick="salvarTime()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Time
+      <button class="top-btn btn-gold" type="button" onclick="salvarAlteracoesTabela()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Alterações
       </button>
     </div>
   </div>
@@ -307,101 +450,171 @@ input,select{
 
 <section class="hero-panel">
   <h2>Gerenciamento de Tabelas e Punições</h2>
-  <p>Edite pontuação, gols, saldo, cartões, punições e controle completo das tabelas do campeonato.</p>
+  <p>
+    Selecione o campeonato/categoria, ajuste classificação, pontos, gols, cartões e registre punições.
+    Quando houver punição de pontos, aparece o martelo de juiz na tabela.
+  </p>
+  <div id="statusMsg" class="status-mini"></div>
 </section>
 
 <section class="form-panel">
-  <h3 class="bloco-titulo" id="tituloFormulario">Novo Time</h3>
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-filter"></i> Seleção da Tabela
+  </h3>
 
-  <input type="hidden" id="timeId">
-
-  <div class="grid">
+  <div class="grid-2">
     <div>
-      <label>Nome do time</label>
-      <input id="nome" placeholder="Ex: Atlético GO">
-    </div>
-
-    <div>
-      <label>Cidade</label>
-      <input id="cidade" placeholder="Ex: Goiânia - GO">
-    </div>
-
-    <div>
-      <label>Escudo / Logo URL</label>
-      <input id="logo" placeholder="Ex: logo-time.png ou URL">
-    </div>
-
-    <div>
-      <label>Status</label>
-      <select id="status">
-        <option value="ativo">Ativo</option>
-        <option value="inativo">Inativo</option>
+      <label>Campeonato</label>
+      <select id="campeonatoSelect" onchange="carregarTabela()">
+        <option value="">Carregando campeonatos...</option>
       </select>
     </div>
 
-    <div class="full">
-      <label>Categorias do time</label>
-      <input id="categorias" placeholder="Ex: Sub-11, Sub-13, Sub-15, Sub-17">
+    <div>
+      <label>Categoria</label>
+      <select id="categoriaSelect" onchange="carregarTabela()">
+        <option value="">Todas / Geral</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<section class="form-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-pen-to-square"></i> Editar Dados da Tabela
+  </h3>
+
+  <div class="grid">
+    <div>
+      <label>Time</label>
+      <select id="timeEdicao">
+        <option value="">Selecione o time</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Pontos</label>
+      <input id="editPontos" type="number" value="0">
+    </div>
+
+    <div>
+      <label>Jogos</label>
+      <input id="editJogos" type="number" value="0">
+    </div>
+
+    <div>
+      <label>Vitórias</label>
+      <input id="editVitorias" type="number" value="0">
+    </div>
+
+    <div>
+      <label>Empates</label>
+      <input id="editEmpates" type="number" value="0">
+    </div>
+
+    <div>
+      <label>Derrotas</label>
+      <input id="editDerrotas" type="number" value="0">
+    </div>
+
+    <div>
+      <label>Gols Pró</label>
+      <input id="editGolsPro" type="number" value="0">
+    </div>
+
+    <div>
+      <label>Gols Contra</label>
+      <input id="editGolsContra" type="number" value="0">
+    </div>
+
+    <div>
+      <label>Cartões Amarelos</label>
+      <input id="editAmarelos" type="number" value="0">
+    </div>
+
+    <div>
+      <label>Cartões Vermelhos</label>
+      <input id="editVermelhos" type="number" value="0">
+    </div>
+
+    <div>
+      <label>Punição em pontos</label>
+      <input id="editPontosPunicao" type="number" value="0" placeholder="Ex: -3">
+    </div>
+
+    <div>
+      <label>Motivo da punição</label>
+      <input id="editMotivoPunicao" placeholder="Ex: briga em campo">
     </div>
   </div>
 
   <div class="top-actions">
-    <button class="action-btn" type="button" onclick="salvarTime()">
-      <i class="fa-solid fa-floppy-disk"></i> Salvar Time
+    <button class="action-btn" type="button" onclick="aplicarEdicaoTime()">
+      <i class="fa-solid fa-check"></i> Aplicar no Time
     </button>
-
-    <button class="action-btn btn-danger" type="button" onclick="limparFormulario()">
+    <button class="action-btn btn-blue" type="button" onclick="limparEdicao()">
       <i class="fa-solid fa-broom"></i> Limpar
     </button>
   </div>
 </section>
 
-
 <section class="form-panel">
   <h3 class="bloco-titulo">
-    <i class="fa-solid fa-gavel"></i> Punições e Ajustes da Tabela
+    <i class="fa-solid fa-gavel"></i> Punições
   </h3>
 
   <div class="grid">
-
     <div>
-      <label>Tipo da punição</label>
-      <select id="tipoPunicao">
+      <label>Tipo de punição</label>
+      <select id="tipoPunicao" onchange="alternarTipoPunicao()">
         <option value="time">Time</option>
         <option value="jogador">Jogador</option>
       </select>
     </div>
 
     <div>
-      <label>Pontos perdidos</label>
-      <input id="pontosPunicao" type="number" placeholder="-3">
+      <label>Time punido</label>
+      <select id="timePunicao">
+        <option value="">Selecione o time</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Jogador punido</label>
+      <select id="jogadorPunicao">
+        <option value="">Selecione o jogador</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Pontos retirados do time</label>
+      <input id="pontosPunicao" type="number" value="0" placeholder="Ex: -3">
     </div>
 
     <div>
       <label>Motivo</label>
       <select id="motivoPunicao">
-        <option>Briga</option>
-        <option>Racismo</option>
-        <option>Agressão</option>
-        <option>Invasão</option>
-        <option>W.O</option>
-        <option>Outro</option>
+        <option value="Briga">Briga</option>
+        <option value="Racismo">Racismo</option>
+        <option value="Agressão">Agressão</option>
+        <option value="Indisciplina">Indisciplina</option>
+        <option value="W.O">W.O</option>
+        <option value="Outro">Outro</option>
       </select>
     </div>
 
     <div>
       <label>Excluir jogador do campeonato?</label>
-      <select id="expulsaoCampeonato">
+      <select id="excluirJogadorCampeonato">
         <option value="nao">Não</option>
         <option value="sim">Sim</option>
       </select>
     </div>
 
     <div class="full">
-      <label>Observação da punição</label>
-      <input id="obsPunicao" placeholder="Descreva o motivo da punição">
+      <label>Observação</label>
+      <textarea id="obsPunicao" placeholder="Explique o motivo da punição"></textarea>
     </div>
-
   </div>
 
   <div class="top-actions">
@@ -411,11 +624,45 @@ input,select{
   </div>
 </section>
 
+<section class="list-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-table"></i> Classificação
+  </h3>
+
+  <div class="table-box">
+    <table>
+      <thead>
+        <tr>
+          <th>Pos</th>
+          <th>Time</th>
+          <th>Pts</th>
+          <th>J</th>
+          <th>V</th>
+          <th>E</th>
+          <th>D</th>
+          <th>GP</th>
+          <th>GC</th>
+          <th>SG</th>
+          <th>CA</th>
+          <th>CV</th>
+          <th>Punição</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="corpoTabela">
+        <tr><td colspan="14">Carregando tabela...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
 <section class="list-panel">
-  <h3 class="bloco-titulo">Times Cadastrados</h3>
-  <div id="listaTimes" class="lista-times">
-    <div class="mensagem-vazia">Carregando times...</div>
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-clock-rotate-left"></i> Histórico de Punições
+  </h3>
+
+  <div id="listaHistorico" class="lista-historico">
+    <div class="mensagem-vazia">Nenhuma punição registrada.</div>
   </div>
 </section>
 
@@ -425,15 +672,53 @@ input,select{
 import { db } from "./firebase.js";
 import {
   collection,
-  addDoc,
   getDocs,
   doc,
+  getDoc,
+  addDoc,
   updateDoc,
-  deleteDoc,
-  serverTimestamp
+  serverTimestamp,
+  query,
+  where
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+let campeonatosCache = [];
 let timesCache = [];
+let jogadoresCache = [];
+let tabelaCache = [];
+let historicoCache = [];
+
+const ids = {
+  campeonatoSelect:"campeonatoSelect",
+  categoriaSelect:"categoriaSelect",
+  timeEdicao:"timeEdicao",
+  timePunicao:"timePunicao",
+  jogadorPunicao:"jogadorPunicao",
+  corpoTabela:"corpoTabela",
+  listaHistorico:"listaHistorico",
+  statusMsg:"statusMsg"
+};
+
+function el(id){
+  return document.getElementById(id);
+}
+
+function n(v){
+  const num = Number(v);
+  return Number.isFinite(num) ? num : 0;
+}
+
+function texto(v){
+  return String(v || "").trim();
+}
+
+function mostrarStatus(msg,tipo="ok"){
+  const box = el(ids.statusMsg);
+  box.className = "status-mini " + (tipo === "erro" ? "status-erro" : "status-ok");
+  box.style.display = "block";
+  box.innerText = msg;
+  setTimeout(()=>{ box.style.display = "none"; }, 3500);
+}
 
 window.voltarPagina = function(){
   if(window.history.length > 1){
@@ -443,200 +728,399 @@ window.voltarPagina = function(){
   }
 };
 
-function limparTexto(v){
-  return String(v || "").trim();
+function saldo(t){
+  return n(t.golsPro) - n(t.golsContra);
 }
 
-function listaCategorias(valor){
-  return String(valor || "")
-    .split(",")
-    .map(c => c.trim())
-    .filter(Boolean);
+function pontosVisiveis(t){
+  return n(t.pontos);
 }
 
-window.limparFormulario = function(){
-  document.getElementById("timeId").value = "";
-  document.getElementById("nome").value = "";
-  document.getElementById("cidade").value = "";
-  document.getElementById("logo").value = "";
-  document.getElementById("status").value = "ativo";
-  document.getElementById("categorias").value = "";
-  document.getElementById("tituloFormulario").textContent = "Novo Time";
-};
+function temPunicao(t){
+  return n(t.pontosPunicao) < 0 || texto(t.motivoPunicao);
+}
 
-window.salvarTime = async function(){
-  const id = document.getElementById("timeId").value;
+function ordenarTabela(lista){
+  return [...lista].sort((a,b)=>{
+    if(pontosVisiveis(b) !== pontosVisiveis(a)) return pontosVisiveis(b) - pontosVisiveis(a);
+    if(saldo(b) !== saldo(a)) return saldo(b) - saldo(a);
+    if(n(b.golsPro) !== n(a.golsPro)) return n(b.golsPro) - n(a.golsPro);
+    return (a.nome || "").localeCompare(b.nome || "","pt-BR");
+  });
+}
 
-  const nome = limparTexto(document.getElementById("nome").value);
-  const cidade = limparTexto(document.getElementById("cidade").value);
-  const logo = limparTexto(document.getElementById("logo").value) || "logo-liga.jfif";
-  const status = document.getElementById("status").value;
-  const categorias = listaCategorias(document.getElementById("categorias").value);
+async function carregarCampeonatos(){
+  const select = el(ids.campeonatoSelect);
+  select.innerHTML = `<option value="">Todos os campeonatos</option>`;
 
-  if(!nome) return alert("Digite o nome do time.");
-  if(!cidade) return alert("Digite a cidade do time.");
-  if(!categorias.length) return alert("Digite pelo menos uma categoria.");
+  try{
+    const snap = await getDocs(collection(db,"campeonatos"));
+    campeonatosCache = [];
+    snap.forEach(d=>campeonatosCache.push({id:d.id,...d.data()}));
 
-  const dados = {
-    nome,
-    cidade,
-    logo,
-    escudo:logo,
-    status,
-    categorias,
-    atualizadoEm:serverTimestamp()
-  };
+    campeonatosCache.sort((a,b)=>(a.nome || a.titulo || "").localeCompare(b.nome || b.titulo || "","pt-BR"));
 
-  if(id){
-    await updateDoc(doc(db,"times",id),dados);
-    alert("Time atualizado com sucesso!");
-  }else{
-    await addDoc(collection(db,"times"),{
-      ...dados,
-      jogos:0,
-      pontos:0,
-      vitorias:0,
-      empates:0,
-      derrotas:0,
-      golsPro:0,
-      golsContra:0,
-      saldo:0,
-      criadoEm:serverTimestamp()
+    campeonatosCache.forEach(c=>{
+      const nome = c.nome || c.titulo || "Campeonato";
+      select.innerHTML += `<option value="${c.id}">${nome}</option>`;
     });
-    alert("Time cadastrado com sucesso!");
+
+    carregarCategorias();
+  }catch(e){
+    console.error(e);
+    select.innerHTML = `<option value="">Erro ao carregar campeonatos</option>`;
+  }
+}
+
+function carregarCategorias(){
+  const select = el(ids.categoriaSelect);
+  const campId = el(ids.campeonatoSelect).value;
+  const camp = campeonatosCache.find(c=>c.id === campId);
+
+  select.innerHTML = `<option value="">Todas / Geral</option>`;
+
+  let categorias = [];
+
+  if(camp){
+    if(Array.isArray(camp.categorias)) categorias = camp.categorias;
+    if(Array.isArray(camp.categoriasSelecionadas)) categorias = camp.categoriasSelecionadas;
   }
 
-  limparFormulario();
-  
-window.registrarPunicao = async function(){
-  const tipo = document.getElementById("tipoPunicao").value;
-  const pontos = document.getElementById("pontosPunicao").value;
-  const motivo = document.getElementById("motivoPunicao").value;
-  const obs = document.getElementById("obsPunicao").value;
-
-  alert(
-    "Punição registrada!\n\n" +
-    "Tipo: " + tipo + "\n" +
-    "Pontos: " + pontos + "\n" +
-    "Motivo: " + motivo + "\n" +
-    "Observação: " + obs
-  );
-};
-
-
-carregarTimes();
-};
-
-window.editarTime = function(id){
-  const time = timesCache.find(t => t.id === id);
-  if(!time) return;
-
-  document.getElementById("timeId").value = time.id;
-  document.getElementById("nome").value = time.nome || "";
-  document.getElementById("cidade").value = time.cidade || "";
-  document.getElementById("logo").value = time.logo || time.escudo || "";
-  document.getElementById("status").value = time.status || "ativo";
-  document.getElementById("categorias").value = Array.isArray(time.categorias) ? time.categorias.join(", ") : "";
-  document.getElementById("tituloFormulario").textContent = "Editar Time";
-
-  window.scrollTo({top:0,behavior:"smooth"});
-};
-
-window.excluirTime = async function(id){
-  if(!confirm("Deseja excluir este time?")) return;
-  await deleteDoc(doc(db,"times",id));
-  
-window.registrarPunicao = async function(){
-  const tipo = document.getElementById("tipoPunicao").value;
-  const pontos = document.getElementById("pontosPunicao").value;
-  const motivo = document.getElementById("motivoPunicao").value;
-  const obs = document.getElementById("obsPunicao").value;
-
-  alert(
-    "Punição registrada!\n\n" +
-    "Tipo: " + tipo + "\n" +
-    "Pontos: " + pontos + "\n" +
-    "Motivo: " + motivo + "\n" +
-    "Observação: " + obs
-  );
-};
-
-
-carregarTimes();
-};
+  categorias.forEach(cat=>{
+    select.innerHTML += `<option value="${cat}">${cat}</option>`;
+  });
+}
 
 async function carregarTimes(){
-  const lista = document.getElementById("listaTimes");
-  lista.innerHTML = `<div class="mensagem-vazia">Carregando times...</div>`;
-
   const snap = await getDocs(collection(db,"times"));
-
   timesCache = [];
-  snap.forEach(d => timesCache.push({id:d.id,...d.data()}));
-
+  snap.forEach(d=>timesCache.push({id:d.id,...d.data()}));
   timesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+}
 
-  if(!timesCache.length){
-    lista.innerHTML = `<div class="mensagem-vazia">Nenhum time cadastrado ainda.</div>`;
+async function carregarJogadores(){
+  try{
+    const snap = await getDocs(collection(db,"jogadores"));
+    jogadoresCache = [];
+    snap.forEach(d=>jogadoresCache.push({id:d.id,...d.data()}));
+    jogadoresCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+  }catch(e){
+    jogadoresCache = [];
+  }
+}
+
+async function carregarPunicoes(){
+  try{
+    const snap = await getDocs(collection(db,"punicoes"));
+    historicoCache = [];
+    snap.forEach(d=>historicoCache.push({id:d.id,...d.data()}));
+    historicoCache.sort((a,b)=>String(b.data || "").localeCompare(String(a.data || "")));
+  }catch(e){
+    historicoCache = [];
+  }
+}
+
+function preencherSelectTimes(){
+  const opcoes = [`<option value="">Selecione o time</option>`] + timesCache.map(t=>`<option value="${t.id}">${t.nome || "-"}</option>`);
+  el(ids.timeEdicao).innerHTML = opcoes.join("");
+  el(ids.timePunicao).innerHTML = opcoes.join("");
+}
+
+function preencherSelectJogadores(){
+  const timeId = el(ids.timePunicao).value;
+  const lista = jogadoresCache.filter(j=>{
+    const jt = j.timeId || j.idTime || j.time || j.timeAtualId || "";
+    if(!timeId) return true;
+    return jt === timeId || jt === (timesCache.find(t=>t.id===timeId)?.nome || "");
+  });
+
+  el(ids.jogadorPunicao).innerHTML = `<option value="">Selecione o jogador</option>` + lista.map(j=>{
+    return `<option value="${j.id}">${j.nome || "-"} ${j.numeroCamisa ? " - Nº " + j.numeroCamisa : ""}</option>`;
+  }).join("");
+}
+
+function montarTabelaBase(){
+  const categoria = el(ids.categoriaSelect).value;
+
+  tabelaCache = timesCache
+    .filter(t=>{
+      if(!categoria) return true;
+      const cats = Array.isArray(t.categorias) ? t.categorias : [];
+      return cats.includes(categoria);
+    })
+    .map(t=>({
+      id:t.id,
+      nome:t.nome || "-",
+      logo:t.logo || t.escudo || "logo-liga.jfif",
+      jogos:n(t.jogos),
+      pontos:n(t.pontos),
+      vitorias:n(t.vitorias),
+      empates:n(t.empates),
+      derrotas:n(t.derrotas),
+      golsPro:n(t.golsPro),
+      golsContra:n(t.golsContra),
+      cartoesAmarelos:n(t.cartoesAmarelos || t.amarelos),
+      cartoesVermelhos:n(t.cartoesVermelhos || t.vermelhos),
+      pontosPunicao:n(t.pontosPunicao),
+      motivoPunicao:texto(t.motivoPunicao),
+      campeonatoId:t.campeonatoId || "",
+      categoria
+    }));
+}
+
+function renderTabela(){
+  const tbody = el(ids.corpoTabela);
+  const lista = ordenarTabela(tabelaCache);
+
+  if(!lista.length){
+    tbody.innerHTML = `<tr><td colspan="14">Nenhum time encontrado para esta tabela.</td></tr>`;
     return;
   }
 
-  lista.innerHTML = timesCache.map(t => {
-    const categorias = Array.isArray(t.categorias) ? t.categorias : [];
+  tbody.innerHTML = lista.map((t,i)=>{
+    const punicao = temPunicao(t)
+      ? `<span class="badge-punicao"><i class="fa-solid fa-gavel"></i> ${t.pontosPunicao} pts</span>`
+      : "-";
 
     return `
-      <div class="card">
-        <img src="${t.logo || t.escudo || "logo-liga.jfif"}" onerror="this.src='logo-liga.jfif'">
-
-        <strong>${t.nome || "-"}</strong>
-
-        <p>
-          <i class="fa-solid fa-location-dot"></i> ${t.cidade || "-"}<br>
-          <i class="fa-solid fa-circle-check"></i> ${t.status || "ativo"}
-        </p>
-
-        <div class="tags">
-          ${categorias.map(c => `<span class="tag">${c}</span>`).join("")}
-        </div>
-
-        <p>
-          <i class="fa-solid fa-gavel" style="color:#f7c600"></i> Sem punições<br>Jogos: ${t.jogos || 0}<br>
-          Pontos: ${t.pontos || 0}<br>
-          GP: ${t.golsPro || 0} | GC: ${t.golsContra || 0}
-        </p>
-
-        <div class="card-actions">
-          <button class="link-btn" onclick="editarTime('${t.id}')">
+      <tr>
+        <td><span class="pos">${i+1}</span></td>
+        <td class="time-cell">
+          <div class="time-info">
+            <img src="${t.logo}" onerror="this.src='logo-liga.jfif'">
+            <span>${temPunicao(t) ? `<i class="fa-solid fa-gavel gavel"></i>` : ""}${t.nome}</span>
+          </div>
+        </td>
+        <td class="${temPunicao(t) ? "punido" : ""}">${t.pontos}</td>
+        <td>${t.jogos}</td>
+        <td>${t.vitorias}</td>
+        <td>${t.empates}</td>
+        <td>${t.derrotas}</td>
+        <td>${t.golsPro}</td>
+        <td>${t.golsContra}</td>
+        <td>${saldo(t)}</td>
+        <td>${t.cartoesAmarelos}</td>
+        <td>${t.cartoesVermelhos}</td>
+        <td>${punicao}</td>
+        <td>
+          <button class="link-btn" onclick="editarLinha('${t.id}')">
             <i class="fa-solid fa-pen"></i> Editar
           </button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
 
-          <button class="link-btn btn-danger" onclick="excluirTime('${t.id}')">
-            <i class="fa-solid fa-trash"></i> Excluir
-          </button>
-        </div>
+function renderHistorico(){
+  const lista = el(ids.listaHistorico);
+  const campId = el(ids.campeonatoSelect).value;
+  const categoria = el(ids.categoriaSelect).value;
+
+  let filtrado = historicoCache.filter(p=>{
+    if(campId && p.campeonatoId && p.campeonatoId !== campId) return false;
+    if(categoria && p.categoria && p.categoria !== categoria) return false;
+    return true;
+  });
+
+  if(!filtrado.length){
+    lista.innerHTML = `<div class="mensagem-vazia">Nenhuma punição registrada.</div>`;
+    return;
+  }
+
+  lista.innerHTML = filtrado.map(p=>{
+    return `
+      <div class="historico-card">
+        <strong><i class="fa-solid fa-gavel"></i> ${p.tipo || "Punição"} - ${p.nomeAlvo || "-"}</strong>
+        <p>
+          Pontos: ${p.pontos || 0}<br>
+          Motivo: ${p.motivo || "-"}<br>
+          ${p.excluidoCampeonato ? "Jogador excluído do campeonato: Sim<br>" : ""}
+          Observação: ${p.observacao || "-"}
+        </p>
       </div>
     `;
   }).join("");
 }
 
-
-window.registrarPunicao = async function(){
-  const tipo = document.getElementById("tipoPunicao").value;
-  const pontos = document.getElementById("pontosPunicao").value;
-  const motivo = document.getElementById("motivoPunicao").value;
-  const obs = document.getElementById("obsPunicao").value;
-
-  alert(
-    "Punição registrada!\n\n" +
-    "Tipo: " + tipo + "\n" +
-    "Pontos: " + pontos + "\n" +
-    "Motivo: " + motivo + "\n" +
-    "Observação: " + obs
-  );
+window.carregarTabela = async function(){
+  carregarCategorias();
+  montarTabelaBase();
+  preencherSelectTimes();
+  preencherSelectJogadores();
+  renderTabela();
+  renderHistorico();
 };
 
+window.editarLinha = function(id){
+  const t = tabelaCache.find(x=>x.id === id);
+  if(!t) return;
 
-carregarTimes();
+  el("timeEdicao").value = t.id;
+  el("editPontos").value = t.pontos;
+  el("editJogos").value = t.jogos;
+  el("editVitorias").value = t.vitorias;
+  el("editEmpates").value = t.empates;
+  el("editDerrotas").value = t.derrotas;
+  el("editGolsPro").value = t.golsPro;
+  el("editGolsContra").value = t.golsContra;
+  el("editAmarelos").value = t.cartoesAmarelos;
+  el("editVermelhos").value = t.cartoesVermelhos;
+  el("editPontosPunicao").value = t.pontosPunicao;
+  el("editMotivoPunicao").value = t.motivoPunicao;
+
+  window.scrollTo({top:260,behavior:"smooth"});
+};
+
+window.limparEdicao = function(){
+  el("timeEdicao").value = "";
+  ["editPontos","editJogos","editVitorias","editEmpates","editDerrotas","editGolsPro","editGolsContra","editAmarelos","editVermelhos","editPontosPunicao"].forEach(id=>el(id).value = 0);
+  el("editMotivoPunicao").value = "";
+};
+
+window.aplicarEdicaoTime = async function(){
+  const id = el("timeEdicao").value;
+  if(!id) return mostrarStatus("Selecione um time para editar.","erro");
+
+  const t = tabelaCache.find(x=>x.id === id);
+  if(!t) return mostrarStatus("Time não encontrado.","erro");
+
+  const pontosOriginais = n(el("editPontos").value);
+  const pontosPunicao = n(el("editPontosPunicao").value);
+  const pontosFinais = pontosOriginais + pontosPunicao;
+
+  const dados = {
+    pontos:pontosFinais,
+    pontosBase:pontosOriginais,
+    jogos:n(el("editJogos").value),
+    vitorias:n(el("editVitorias").value),
+    empates:n(el("editEmpates").value),
+    derrotas:n(el("editDerrotas").value),
+    golsPro:n(el("editGolsPro").value),
+    golsContra:n(el("editGolsContra").value),
+    saldo:n(el("editGolsPro").value) - n(el("editGolsContra").value),
+    cartoesAmarelos:n(el("editAmarelos").value),
+    cartoesVermelhos:n(el("editVermelhos").value),
+    pontosPunicao,
+    motivoPunicao:texto(el("editMotivoPunicao").value),
+    atualizadoEm:serverTimestamp()
+  };
+
+  await updateDoc(doc(db,"times",id),dados);
+
+  if(pontosPunicao < 0 || texto(dados.motivoPunicao)){
+    await addDoc(collection(db,"punicoes"),{
+      tipo:"time",
+      alvoId:id,
+      nomeAlvo:t.nome,
+      campeonatoId:el("campeonatoSelect").value,
+      categoria:el("categoriaSelect").value,
+      pontos:pontosPunicao,
+      motivo:dados.motivoPunicao || "Ajuste manual",
+      observacao:"Punição aplicada pela edição da tabela.",
+      data:new Date().toISOString(),
+      criadoEm:serverTimestamp()
+    });
+  }
+
+  mostrarStatus("Tabela atualizada com sucesso.");
+  await atualizarTudo();
+};
+
+window.registrarPunicao = async function(){
+  const tipo = el("tipoPunicao").value;
+  const timeId = el("timePunicao").value;
+  const jogadorId = el("jogadorPunicao").value;
+  const pontos = n(el("pontosPunicao").value);
+  const motivo = texto(el("motivoPunicao").value);
+  const obs = texto(el("obsPunicao").value);
+  const excluirJogador = el("excluirJogadorCampeonato").value === "sim";
+
+  if(!timeId) return mostrarStatus("Selecione o time punido.","erro");
+  if(tipo === "jogador" && !jogadorId) return mostrarStatus("Selecione o jogador punido.","erro");
+  if(!motivo) return mostrarStatus("Informe o motivo da punição.","erro");
+
+  const time = timesCache.find(t=>t.id === timeId);
+  const jogador = jogadoresCache.find(j=>j.id === jogadorId);
+
+  const nomeAlvo = tipo === "jogador"
+    ? `${jogador?.nome || "Jogador"} / ${time?.nome || "Time"}`
+    : (time?.nome || "Time");
+
+  const timeAtual = timesCache.find(t=>t.id === timeId) || {};
+  const pontosAtuais = n(timeAtual.pontos);
+  const pontosPunicaoAtual = n(timeAtual.pontosPunicao);
+  const novoPontosPunicao = pontosPunicaoAtual + pontos;
+  const novosPontos = pontosAtuais + pontos;
+
+  await updateDoc(doc(db,"times",timeId),{
+    pontos:novosPontos,
+    pontosPunicao:novoPontosPunicao,
+    motivoPunicao:motivo,
+    atualizadoEm:serverTimestamp()
+  });
+
+  if(tipo === "jogador" && excluirJogador && jogadorId){
+    await updateDoc(doc(db,"jogadores",jogadorId),{
+      statusCampeonato:"excluido",
+      excluidoCampeonato:true,
+      motivoExclusao:motivo,
+      observacaoExclusao:obs,
+      atualizadoEm:serverTimestamp()
+    });
+  }
+
+  await addDoc(collection(db,"punicoes"),{
+    tipo,
+    alvoId:tipo === "jogador" ? jogadorId : timeId,
+    timeId,
+    jogadorId:tipo === "jogador" ? jogadorId : "",
+    nomeAlvo,
+    campeonatoId:el("campeonatoSelect").value,
+    categoria:el("categoriaSelect").value,
+    pontos,
+    motivo,
+    observacao:obs,
+    excluidoCampeonato:tipo === "jogador" && excluirJogador,
+    data:new Date().toISOString(),
+    criadoEm:serverTimestamp()
+  });
+
+  el("pontosPunicao").value = 0;
+  el("obsPunicao").value = "";
+  el("excluirJogadorCampeonato").value = "nao";
+
+  mostrarStatus("Punição registrada com sucesso.");
+  await atualizarTudo();
+};
+
+window.alternarTipoPunicao = function(){
+  preencherSelectJogadores();
+};
+
+el("timePunicao").addEventListener("change",preencherSelectJogadores);
+
+window.salvarAlteracoesTabela = async function(){
+  mostrarStatus("Use o botão Editar de cada time ou Aplicar no Time para salvar alterações.");
+};
+
+async function atualizarTudo(){
+  await carregarTimes();
+  await carregarJogadores();
+  await carregarPunicoes();
+  preencherSelectTimes();
+  preencherSelectJogadores();
+  montarTabelaBase();
+  renderTabela();
+  renderHistorico();
+}
+
+async function iniciar(){
+  await carregarCampeonatos();
+  await atualizarTudo();
+}
+
+iniciar();
 </script>
 
 </body>
