@@ -445,8 +445,8 @@
         </div>
 
         <div class="field">
-          <label for="telefone">Telefone</label>
-          <input type="text" id="telefone" placeholder="Telefone">
+          <label for="telefone">WhatsApp</label>
+          <input type="text" id="telefone" placeholder="WhatsApp com DDD">
         </div>
 
         <div class="field">
@@ -720,6 +720,26 @@
         return;
       }
 
+      if(!cpf){
+        mostrarErro("CPF obrigatório.");
+        return;
+      }
+
+      if(String(cpf).replace(/\D/g,"").length !== 11){
+        mostrarErro("Digite um CPF válido.");
+        return;
+      }
+
+      if(!telefone){
+        mostrarErro("WhatsApp obrigatório.");
+        return;
+      }
+
+      if(!dataNascimento){
+        mostrarErro("Data de nascimento obrigatória.");
+        return;
+      }
+
       try{
         const ref = doc(db, "usuarios", usuarioAtualId);
 
@@ -728,13 +748,16 @@
           nomeExibicao,
           cpf,
           telefone,
+          whatsapp:telefone,
           dataNascimento,
+          nascimento:dataNascimento,
           time,
           categoria,
           funcao,
           numeroCamisa,
           genero,
           bio,
+          cadastroIncompleto:false,
           fotoPerfil: fotoBase64Atual,
           atualizadoEm: new Date().toISOString()
         });
