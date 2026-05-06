@@ -160,6 +160,8 @@ header{
   gap:12px;
 }
 
+.full{grid-column:1/-1}
+
 label{
   display:block;
   font-size:13px;
@@ -178,6 +180,8 @@ input,select{
   color:#111;
 }
 
+input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
+
 .preview-foto{
   display:none;
   align-items:center;
@@ -193,6 +197,11 @@ input,select{
   background:#fff;
   border-radius:50%;
   border:2px solid var(--gold);
+}
+
+.preview-foto span{
+  color:var(--muted);
+  font-size:13px;
 }
 
 .form-actions{
@@ -225,6 +234,11 @@ input,select{
   gap:14px;
   border:1px solid rgba(255,230,0,.10);
   box-shadow:var(--shadow);
+}
+
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold-line);
 }
 
 .player{
@@ -295,120 +309,599 @@ input,select{
   font-size:13px;
   border:none;
   cursor:pointer;
+  white-space:nowrap;
 }
 
 .btn-ver{background:var(--gold);color:black}
 .btn-danger{background:#d94141;color:#fff}
 
+.vazio{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:30px;
+  border-radius:14px;
+  text-align:center;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:var(--shadow);
+  grid-column:1/-1;
+}
+
 @media(max-width:900px){
+  .header-title{order:3;width:100%;text-align:center}
+  .header-left,.header-right{width:100%;justify-content:center}
   .form-grid,.filtros{grid-template-columns:1fr}
+  .card{flex-direction:column;align-items:flex-start}
+  .actions{width:100%;justify-content:flex-start}
+}
+
+@media(max-width:600px){
+  .top-btn,.btn-acao{width:100%;justify-content:center}
+  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
+  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
+  .menu{
+    justify-content:flex-start;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:14px;
+  }
+  .menu a{flex:0 0 auto}
 }
 </style>
 </head>
 
 <body>
 
+<header>
+  <div class="wrap header-top">
+    <div class="header-left">
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
+
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
+    </div>
+
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
+
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarJogador()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Jogador
+      </button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="wrap">
+      <div class="menu">
+        <a href="admin.html">Painel</a>
+        <a href="campeonatos-admin.html">Campeonatos</a>
+        <a href="jogos-admin.html">Jogos</a>
+        <a href="times-admin.html">Times</a>
+        <a href="tecnicos-admin.html">Técnicos</a>
+        <a href="jogadores-admin.html" class="ativo">Jogadores</a>
+        <a href="arbitros-admin.html">Árbitros</a>
+        <a href="assistentes-admin.html">Assistentes</a>
+        <a href="sumulas-admin.html">Súmulas</a>
+      </div>
+    </div>
+  </div>
+</header>
+
 <div class="wrap container">
 
-<section class="form-panel">
-<div class="form-title">Novo Jogador</div>
+  <div class="hero">
+    <h2>Jogadores ADM</h2>
+    <p>Cadastre jogadores com foto, time, categoria, posição e estatísticas. Tudo fica pronto para jogos, súmulas, artilharia, cartões e suspensões automáticas.</p>
+  </div>
 
-<div class="form-grid">
+  <section class="form-panel">
+    <div class="form-title" id="tituloFormulario">Novo Jogador</div>
 
-<div>
-<label>Nome completo *</label>
-<input id="nome">
+    <input type="hidden" id="jogadorId">
+
+    <div class="form-grid">
+      <div>
+        <label>Nome completo</label>
+        <input id="nome" placeholder="Nome do jogador">
+      </div>
+
+      <div>
+        <label>CPF</label>
+        <input id="cpf" placeholder="CPF do jogador">
+      </div>
+
+      <div>
+        <label>Data de nascimento</label>
+        <input id="nascimento" type="date">
+      </div>
+
+      <div>
+        <label>Email</label>
+        <input id="email" type="email" placeholder="Email do jogador">
+      </div>
+
+      <div>
+        <label>WhatsApp</label>
+        <input id="whatsapp" placeholder="WhatsApp do jogador">
+      </div>
+
+      <div>
+        <label>Número da camisa</label>
+        <input id="numero" type="number" placeholder="Ex: 10">
+      </div>
+
+      <div>
+        <label>Posição</label>
+        <select id="posicao">
+          <option value="">Selecione</option>
+          <option value="Goleiro">Goleiro</option>
+          <option value="Zagueiro">Zagueiro</option>
+          <option value="Lateral">Lateral</option>
+          <option value="Volante">Volante</option>
+          <option value="Meia">Meia</option>
+          <option value="Atacante">Atacante</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Capitão?</label>
+        <select id="capitao">
+          <option value="nao">Não</option>
+          <option value="sim">Sim</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Time</label>
+        <select id="time">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Categoria</label>
+        <select id="categoria">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Status</label>
+        <select id="status">
+          <option value="ativo">Ativo</option>
+          <option value="suspenso">Suspenso</option>
+          <option value="inativo">Inativo</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Foto URL</label>
+        <input id="foto" placeholder="foto-jogador.png ou URL">
+      </div>
+
+      <div>
+        <label>Enviar foto do PC/Celular</label>
+        <input type="file" id="fotoArquivo" accept="image/*" onchange="previewFotoArquivo()">
+      </div>
+
+      <div>
+        <label>Prévia</label>
+        <div class="preview-foto" id="previewFotoBox">
+          <img id="previewFotoImg" src="logo-liga.jfif">
+          <span id="previewFotoTexto">Pré-visualização da foto</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-acao btn-ver" type="button" onclick="salvarJogador()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Jogador
+      </button>
+
+      <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
+        <i class="fa-solid fa-broom"></i> Limpar
+      </button>
+    </div>
+  </section>
+
+  <div class="filtros">
+    <input id="buscaJogador" placeholder="Pesquisar jogador...">
+
+    <select id="filtroTime">
+      <option value="">Todos os times</option>
+    </select>
+
+    <select id="filtroCategoria">
+      <option value="">Todas categorias</option>
+    </select>
+  </div>
+
+  <div class="lista-grid" id="listaJogadores"></div>
+
 </div>
-
-<div>
-<label>CPF *</label>
-<input id="cpf">
-</div>
-
-<div>
-<label>Data de nascimento *</label>
-<input id="nascimento" type="date">
-</div>
-
-<div>
-<label>Email *</label>
-<input id="email" type="email">
-</div>
-
-<div>
-<label>WhatsApp *</label>
-<input id="whatsapp">
-</div>
-
-<div>
-<label>Número da camisa</label>
-<input id="numero" type="number">
-</div>
-
-</div>
-
-<div class="form-actions">
-<button class="btn-acao btn-ver" onclick="salvarJogador()">
-Salvar Jogador
-</button>
-</div>
-
-</section>
-
-</div>
-
 <script type="module">
 import { db } from "./firebase.js";
 import {
-collection,
-addDoc,
-serverTimestamp
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
+
+const storage = getStorage();
+
+let jogadoresCache = [];
+let timesCache = [];
+let fotoAtual = "";
+
+const categoriasFixas = [
+  "Sub-11","Sub-12","Sub-13","Sub-14","Sub-15","Sub-16",
+  "Sub-17","Sub-18","Sub-19","Sub-20","Sub-21"
+];
+
+function txt(v){
+  return String(v || "").trim();
+}
+
+function limparNumero(v){
+  return String(v || "").replace(/\D/g,"");
+}
+
+function normalizarTexto(texto){
+  return String(texto || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function boolSimNao(v){
+  return v === "sim";
+}
+
+function buscarTime(id){
+  return timesCache.find(t => t.id === id) || null;
+}
+
+function carregarCategorias(){
+  const categoria = document.getElementById("categoria");
+  const filtroCategoria = document.getElementById("filtroCategoria");
+
+  categoria.innerHTML = `<option value="">Selecione</option>`;
+  filtroCategoria.innerHTML = `<option value="">Todas categorias</option>`;
+
+  categoriasFixas.forEach(c=>{
+    categoria.innerHTML += `<option value="${c}">${c}</option>`;
+    filtroCategoria.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+}
+
+window.previewFotoArquivo = function(){
+  const arquivo = document.getElementById("fotoArquivo").files[0];
+  if(!arquivo) return;
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    document.getElementById("previewFotoBox").style.display = "flex";
+    document.getElementById("previewFotoImg").src = e.target.result;
+    document.getElementById("previewFotoTexto").textContent = arquivo.name;
+  };
+
+  leitor.readAsDataURL(arquivo);
+};
+
+async function uploadFotoSeExistir(){
+  const arquivo = document.getElementById("fotoArquivo").files[0];
+  const fotoUrlManual = txt(document.getElementById("foto").value);
+
+  if(arquivo){
+    const nomeArquivo = `jogadores/${Date.now()}-${arquivo.name}`;
+    const referencia = ref(storage,nomeArquivo);
+    await uploadBytes(referencia,arquivo);
+    return await getDownloadURL(referencia);
+  }
+
+  if(fotoUrlManual) return fotoUrlManual;
+
+  return fotoAtual || "logo-liga.jfif";
+}
+
+window.limparFormulario = function(){
+  document.getElementById("jogadorId").value = "";
+  document.getElementById("nome").value = "";
+  document.getElementById("cpf").value = "";
+  document.getElementById("nascimento").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("whatsapp").value = "";
+  document.getElementById("numero").value = "";
+  document.getElementById("posicao").value = "";
+  document.getElementById("capitao").value = "nao";
+  document.getElementById("time").value = "";
+  document.getElementById("categoria").value = "";
+  document.getElementById("status").value = "ativo";
+  document.getElementById("foto").value = "";
+  document.getElementById("fotoArquivo").value = "";
+  document.getElementById("tituloFormulario").textContent = "Novo Jogador";
+  document.getElementById("previewFotoBox").style.display = "none";
+  document.getElementById("previewFotoImg").src = "logo-liga.jfif";
+  document.getElementById("previewFotoTexto").textContent = "Pré-visualização da foto";
+  fotoAtual = "";
+};
+
 window.salvarJogador = async function(){
+  const id = document.getElementById("jogadorId").value;
 
-const nome = document.getElementById("nome").value.trim();
-const cpf = document.getElementById("cpf").value.trim();
-const nascimento = document.getElementById("nascimento").value;
-const email = document.getElementById("email").value.trim();
-const whatsapp = document.getElementById("whatsapp").value.trim();
+  const nome = txt(document.getElementById("nome").value);
+  const cpf = limparNumero(document.getElementById("cpf").value);
+  const nascimento = document.getElementById("nascimento").value;
+  const email = txt(document.getElementById("email").value).toLowerCase();
+  const whatsapp = limparNumero(document.getElementById("whatsapp").value);
+  const numero = Number(document.getElementById("numero").value || 0);
+  const posicao = document.getElementById("posicao").value;
+  const capitao = boolSimNao(document.getElementById("capitao").value);
+  const timeId = document.getElementById("time").value;
+  const categoria = document.getElementById("categoria").value;
+  const status = document.getElementById("status").value;
 
-if(!nome){
-alert("Digite o nome.");
-return;
+  if(!nome) return alert("Digite o nome do jogador.");
+  if(!cpf) return alert("Digite o CPF.");
+  if(cpf.length !== 11) return alert("Digite um CPF válido com 11 números.");
+  if(!whatsapp) return alert("Digite o WhatsApp.");
+  if(whatsapp.length < 10) return alert("Digite um WhatsApp válido.");
+  if(!email) return alert("Digite o email.");
+  if(!nascimento) return alert("Digite a data de nascimento.");
+  if(!timeId) return alert("Selecione o time.");
+  if(!categoria) return alert("Selecione a categoria.");
+
+  const time = buscarTime(timeId);
+  const foto = await uploadFotoSeExistir();
+
+  const dados = {
+    nome,
+    nomeCompleto:nome,
+    cpf,
+    nascimento,
+    dataNascimento:nascimento,
+    email,
+    whatsapp,
+    telefone:whatsapp,
+    numero,
+    posicao,
+    capitao,
+    goleiro:normalizarTexto(posicao) === "goleiro",
+    timeId,
+    timeNome:time?.nome || "",
+    time:time?.nome || "",
+    categoria,
+    categorias:[categoria],
+    foto,
+    status,
+    atualizadoEm:serverTimestamp()
+  };
+
+  if(id){
+    await updateDoc(doc(db,"jogadores",id),dados);
+    alert("Jogador atualizado!");
+  }else{
+    await addDoc(collection(db,"jogadores"),{
+      ...dados,
+      jogos:0,
+      gols:0,
+      assistencias:0,
+      cartoesAmarelos:0,
+      cartoesVermelhos:0,
+      amarelos:0,
+      vermelhos:0,
+      suspenso:0,
+      criadoEm:serverTimestamp()
+    });
+    alert("Jogador cadastrado!");
+  }
+
+  limparFormulario();
+  await carregarJogadores();
+};
+
+window.editarJogador = function(id){
+  const j = jogadoresCache.find(x => x.id === id);
+  if(!j) return;
+
+  document.getElementById("jogadorId").value = j.id;
+  document.getElementById("nome").value = j.nome || "";
+  document.getElementById("cpf").value = j.cpf || "";
+  document.getElementById("nascimento").value = j.nascimento || j.dataNascimento || "";
+  document.getElementById("email").value = j.email || "";
+  document.getElementById("whatsapp").value = j.whatsapp || j.telefone || "";
+  document.getElementById("numero").value = j.numero || "";
+  document.getElementById("posicao").value = j.posicao || "";
+  document.getElementById("capitao").value = j.capitao ? "sim" : "nao";
+  document.getElementById("time").value = j.timeId || "";
+  document.getElementById("categoria").value = j.categoria || "";
+  document.getElementById("status").value = j.status || "ativo";
+  document.getElementById("foto").value = j.foto || "";
+  document.getElementById("fotoArquivo").value = "";
+  document.getElementById("tituloFormulario").textContent = "Editar Jogador";
+
+  fotoAtual = j.foto || "";
+
+  if(fotoAtual){
+    document.getElementById("previewFotoBox").style.display = "flex";
+    document.getElementById("previewFotoImg").src = fotoAtual;
+    document.getElementById("previewFotoTexto").textContent = "Foto atual";
+  }
+
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.excluirJogador = async function(id){
+  if(!confirm("Excluir jogador?")) return;
+  await deleteDoc(doc(db,"jogadores",id));
+  await carregarJogadores();
+};
+
+async function carregarTimes(){
+  const select = document.getElementById("time");
+  const filtro = document.getElementById("filtroTime");
+
+  select.innerHTML = `<option value="">Selecione</option>`;
+  filtro.innerHTML = `<option value="">Todos os times</option>`;
+
+  const snap = await getDocs(collection(db,"times"));
+  timesCache = [];
+
+  snap.forEach(d => timesCache.push({id:d.id,...d.data()}));
+
+  timesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+
+  timesCache.forEach(t=>{
+    select.innerHTML += `<option value="${t.id}">${t.nome || "Time"}</option>`;
+    filtro.innerHTML += `<option value="${t.id}">${t.nome || "Time"}</option>`;
+  });
 }
 
-if(!cpf){
-alert("CPF obrigatório.");
-return;
+async function carregarJogadores(){
+  const lista = document.getElementById("listaJogadores");
+  lista.innerHTML = `<div class="vazio">Carregando jogadores...</div>`;
+
+  const snap = await getDocs(collection(db,"jogadores"));
+
+  jogadoresCache = [];
+  snap.forEach(d => jogadoresCache.push({id:d.id,...d.data()}));
+
+  jogadoresCache.sort((a,b)=>{
+    const ta = (a.timeNome || a.time || "").localeCompare(b.timeNome || b.time || "","pt-BR");
+    if(ta !== 0) return ta;
+
+    const na = Number(a.numero || 999);
+    const nb = Number(b.numero || 999);
+    if(na !== nb) return na - nb;
+
+    return (a.nome || "").localeCompare(b.nome || "","pt-BR");
+  });
+
+  renderizarJogadores();
 }
 
-if(!nascimento){
-alert("Data de nascimento obrigatória.");
-return;
+function renderizarJogadores(){
+  const lista = document.getElementById("listaJogadores");
+  const busca = normalizarTexto(document.getElementById("buscaJogador").value);
+  const filtroTime = document.getElementById("filtroTime").value;
+  const filtroCategoria = document.getElementById("filtroCategoria").value;
+
+  let jogadores = jogadoresCache.filter(j=>{
+    if(filtroTime && j.timeId !== filtroTime) return false;
+    if(filtroCategoria && j.categoria !== filtroCategoria) return false;
+
+    if(busca){
+      const texto = normalizarTexto(`
+        ${j.nome || ""}
+        ${j.cpf || ""}
+        ${j.email || ""}
+        ${j.whatsapp || ""}
+        ${j.telefone || ""}
+        ${j.timeNome || j.time || ""}
+        ${j.posicao || ""}
+        ${j.categoria || ""}
+        ${j.numero || ""}
+      `);
+
+      if(!texto.includes(busca)) return false;
+    }
+
+    return true;
+  });
+
+  if(!jogadores.length){
+    lista.innerHTML = `<div class="vazio">Nenhum jogador encontrado.</div>`;
+    return;
+  }
+
+  lista.innerHTML = jogadores.map(j=>{
+    const categorias = Array.isArray(j.categorias) && j.categorias.length
+      ? j.categorias
+      : [j.categoria || "Sem categoria"];
+
+    return `
+      <div class="card">
+        <div class="player">
+          <img
+            src="${j.foto || "logo-liga.jfif"}"
+            class="photo"
+            alt="${j.nome || "Jogador"}"
+            onerror="this.src='logo-liga.jfif'"
+          >
+
+          <div class="player-info">
+            <div class="nome-jogador">
+              ${j.numero || "-"} - ${j.nome || "-"}
+            </div>
+
+            <small>CPF: ${j.cpf || "-"}</small>
+            <small>Nascimento: ${j.nascimento || j.dataNascimento || "-"}</small>
+            <small>Email: ${j.email || "-"}</small>
+            <small>WhatsApp: ${j.whatsapp || j.telefone || "-"}</small>
+            <small>Time: ${j.timeNome || j.time || "-"}</small>
+            <small>Posição: ${j.posicao || "-"}</small>
+
+            <small>
+              Jogos: ${Number(j.jogos || 0)} |
+              Gols: ${Number(j.gols || 0)} |
+              Assistências: ${Number(j.assistencias || 0)}
+            </small>
+
+            <small>
+              Amarelos: ${Number(j.cartoesAmarelos || j.amarelos || 0)} |
+              Vermelhos: ${Number(j.cartoesVermelhos || j.vermelhos || 0)}
+            </small>
+
+            <div class="tags">
+              ${j.capitao ? '<span class="tag">Capitão</span>' : ""}
+              ${j.goleiro ? '<span class="tag">Goleiro</span>' : ""}
+              <span class="tag">${j.status || "ativo"}</span>
+              ${categorias.map(c=>`<span class="tag">${c}</span>`).join("")}
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-acao btn-ver" onclick="editarJogador('${j.id}')">
+            <i class="fa-solid fa-pen"></i> Editar
+          </button>
+
+          <button class="btn-acao btn-danger" onclick="excluirJogador('${j.id}')">
+            <i class="fa-solid fa-trash"></i> Excluir
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
-if(!email){
-alert("Email obrigatório.");
-return;
+document.getElementById("buscaJogador").addEventListener("input",renderizarJogadores);
+document.getElementById("filtroTime").addEventListener("change",renderizarJogadores);
+document.getElementById("filtroCategoria").addEventListener("change",renderizarJogadores);
+
+async function iniciarPagina(){
+  carregarCategorias();
+  await carregarTimes();
+  await carregarJogadores();
 }
 
-if(!whatsapp){
-alert("WhatsApp obrigatório.");
-return;
-}
-
-await addDoc(collection(db,"jogadores"),{
-nome,
-cpf,
-nascimento,
-email,
-whatsapp,
-criadoEm:serverTimestamp()
-});
-
-alert("Jogador cadastrado com sucesso.");
-}
+iniciarPagina();
 </script>
 
 </body>
