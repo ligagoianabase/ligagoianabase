@@ -4,560 +4,701 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Campeonatos ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Painel Admin - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 :root{
-  --bg:#0b1f3a;
-  --bg-dark:#08172c;
-  --card:#102a52;
-  --card-hover:#153766;
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
   --gold:#f7c600;
-  --gold-soft:rgba(247,198,0,.12);
-  --gold-line:rgba(247,198,0,.24);
+  --gold2:#ffe45c;
   --white:#ffffff;
-  --muted:#d8e1ef;
-  --shadow:0 8px 22px rgba(0,0,0,.28);
-  --transition:.25s ease;
-  --max:1240px;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --yellow:#7a5a00;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1280px;
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
 body{
   font-family:Arial, sans-serif;
   background:
-    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
     url("fundo.png") center/cover fixed no-repeat;
   color:var(--white);
   min-height:100vh;
+  overflow-x:hidden;
 }
 
-a{text-decoration:none;color:inherit;transition:var(--transition)}
-button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
-input,select,textarea{font-family:inherit}
+a{
+  text-decoration:none;
+  color:inherit;
+}
 
-.wrap{width:min(100% - 28px, var(--max));margin:0 auto}
+button,
+input,
+select,
+textarea{
+  font-family:inherit;
+}
 
+button{
+  cursor:pointer;
+  border:none;
+}
+
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
+
+/* SIDEBAR */
+.sidebar-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  opacity:0;
+  visibility:hidden;
+  transition:.25s ease;
+  z-index:998;
+}
+
+.sidebar-overlay.show{
+  opacity:1;
+  visibility:visible;
+}
+
+.sidebar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:320px;
+  max-width:88%;
+  height:100vh;
+  background:linear-gradient(180deg,#04132d,#021022);
+  border-right:1px solid var(--gold-line);
+  box-shadow:var(--shadow);
+  padding:22px 18px;
+  transform:translateX(-105%);
+  transition:.25s ease;
+  z-index:999;
+  overflow-y:auto;
+}
+
+.sidebar.open{
+  transform:translateX(0);
+}
+
+.sidebar-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:var(--gold);
+  font-size:18px;
+  font-weight:900;
+  padding-bottom:16px;
+  margin-bottom:16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.sidebar-close{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font-size:24px;
+}
+
+.side-menu{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.side-menu a{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  border-radius:12px;
+  color:var(--muted);
+  font-weight:900;
+  font-size:14px;
+  transition:.2s;
+}
+
+.side-menu a i{
+  color:var(--gold);
+  width:20px;
+  text-align:center;
+}
+
+.side-menu a:hover{
+  background:rgba(247,198,0,.12);
+  color:var(--gold);
+}
+
+/* HEADER */
 header{
-  background:rgba(8,23,44,.96);
+  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
   border-bottom:3px solid var(--gold);
   box-shadow:var(--shadow);
 }
 
-.header-top{
+.header-inner{
   min-height:82px;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:14px;
-  flex-wrap:wrap;
   padding:14px 0;
 }
 
-.header-left,.header-right{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
+.menu-toggle{
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  border:1px solid var(--gold-line);
+  background:rgba(247,198,0,.12);
+  color:var(--gold);
+  font-size:20px;
+  flex-shrink:0;
 }
 
 .header-title{
   flex:1;
   text-align:center;
-  font-size:24px;
-  font-weight:700;
+  font-size:22px;
+  font-weight:900;
+  color:var(--white);
+  text-transform:uppercase;
 }
 
 .top-btn{
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:900;
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:8px;
-  padding:10px 16px;
-  border-radius:10px;
-  font-weight:700;
-  white-space:nowrap;
 }
 
-.btn-light{background:#fff4cf;color:#111}
-.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
-.btn-gold{background:var(--gold);color:#111}
-.btn-gold:hover{filter:brightness(1.04);transform:translateY(-2px)}
-
-.nav-bar{
-  background:rgba(16,42,82,.95);
-  border-top:1px solid rgba(255,255,255,.06);
-  border-bottom:1px solid rgba(255,255,255,.08);
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
 }
 
-.menu{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  padding:12px 0;
-  flex-wrap:wrap;
+.btn-red{
+  background:var(--red);
+  color:#fff;
 }
 
-.menu a{
-  color:white;
-  font-weight:700;
-  font-size:14px;
-  background:#0d2346;
-  padding:10px 14px;
-  border-radius:10px;
-  border:1px solid transparent;
-  white-space:nowrap;
+.btn-green{
+  background:var(--green);
+  color:#fff;
 }
 
-.menu a:hover{
-  color:var(--gold);
-  background:var(--gold-soft);
-  border-color:var(--gold-line);
+.btn-blue{
+  background:var(--blue);
+  color:#fff;
 }
 
-.menu a.ativo{
-  background:var(--gold);
-  color:black;
+/* PAGE */
+.container{
+  padding:22px 0 30px;
 }
 
-.container{padding:24px 0 34px}
-
-.hero,.form-panel{
-  background:linear-gradient(135deg,#102a52,#0d2346);
+.hero-panel{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
   border:1px solid var(--gold-line);
-  border-radius:18px;
+  border-radius:20px;
   padding:22px;
-  margin-bottom:20px;
   box-shadow:var(--shadow);
+  margin-bottom:18px;
 }
 
-.hero h2{
-  margin:0 0 8px;
-  color:var(--gold);
+.hero-panel h2{
   font-size:28px;
+  color:var(--gold);
+  margin-bottom:8px;
 }
 
-.hero p{
-  margin:0;
+.hero-panel p{
   color:var(--muted);
   line-height:1.6;
-  font-size:15px;
+  max-width:900px;
+  font-size:14px;
 }
 
-.form-title{
+.status-box{
+  margin-top:14px;
+  padding:14px;
+  border-radius:12px;
+  display:none;
+  font-weight:900;
+  font-size:13px;
+  line-height:1.45;
+}
+
+.status-info{
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.status-erro{
+  background:rgba(180,35,35,.22);
+  color:#ffb0b0;
+  border:1px solid rgba(255,120,120,.25);
+}
+
+#painelConteudo{
+  display:none;
+}
+
+/* DASHBOARD */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:18px;
+}
+
+.card{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border-radius:16px;
+  padding:12px;
+  text-align:center;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  border:1px solid rgba(247,198,0,.18);
+}
+
+.card h3{
+  font-size:24px;
   color:var(--gold);
+  font-weight:900;
+}
+
+.card p{
+  margin-top:8px;
+  font-size:13px;
+  color:var(--muted);
+  font-weight:900;
+}
+
+.admin-block{
+  background:rgba(16,42,82,.45);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 8px 20px rgba(0,0,0,.18);
+}
+
+.section-title{
   font-size:20px;
+  color:var(--gold);
   margin-bottom:14px;
   font-weight:900;
 }
 
-.form-grid{
+.menu{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
   gap:12px;
 }
 
-.full{grid-column:1/-1}
-
-label{
-  display:block;
-  font-size:13px;
+.menu a{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  color:white;
+  padding:15px 16px;
+  border-radius:14px;
   font-weight:900;
-  margin-bottom:6px;
-  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.06);
+  font-size:14px;
 }
 
-input,select,textarea{
+.menu a i{
+  color:var(--gold);
+  width:20px;
+  text-align:center;
+}
+
+.menu a:hover{
+  border-color:var(--gold-line);
+  color:var(--gold);
+}
+
+.duplo{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.form-grid{
+  display:grid;
+  gap:10px;
+}
+
+input,
+select,
+textarea{
   width:100%;
-  padding:13px;
+  padding:12px;
   border:none;
-  border-radius:10px;
+  border-radius:12px;
   font-size:14px;
   background:#f5f7fb;
   color:#111;
+  outline:none;
 }
 
-textarea{min-height:100px;resize:vertical}
-
-input:focus,select:focus,textarea:focus{
-  outline:2px solid rgba(247,198,0,.5);
+textarea{
+  min-height:110px;
+  resize:vertical;
 }
 
-.preview-logo{
-  display:none;
+input:focus,
+select:focus,
+textarea:focus{
+  outline:2px solid rgba(247,198,0,.65);
+}
+
+.btn-full{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  font-weight:900;
+  display:flex;
   align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
-
-.preview-logo img{
-  width:78px;
-  height:78px;
-  object-fit:contain;
-  background:#fff;
-  border-radius:18px;
-  border:2px solid var(--gold);
-}
-
-.preview-logo span{
-  color:var(--muted);
-  font-size:13px;
-}
-
-.checkbox-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(115px,1fr));
+  justify-content:center;
   gap:8px;
 }
 
-.check-item{
-  background:#102a52;
-  padding:9px 10px;
-  border-radius:9px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:14px;
-  color:var(--muted);
-  border:1px solid rgba(255,255,255,.08);
-  cursor:pointer;
-}
-
-.check-item:hover{
-  background:#153766;
-  border-color:var(--gold-line);
-}
-
-.check-item input{width:auto}
-
-.form-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:16px;
-}
-
-.filtros{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-bottom:20px;
-}
-
-.lista-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-  gap:14px;
-}
-
-.card{
-  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
-  padding:16px;
-  border-radius:16px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:14px;
-  border:1px solid rgba(255,230,0,.10);
-  box-shadow:var(--shadow);
-}
-
-.card:hover{
-  transform:translateY(-2px);
-  border-color:var(--gold-line);
-}
-
-.player{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  flex:1;
-}
-
-.photo{
-  width:68px;
-  height:68px;
-  border-radius:50%;
-  object-fit:contain;
-  border:2px solid rgba(255,255,255,.15);
-  background:#fff;
-  flex-shrink:0;
-}
-
-.player-info{
+.lista-pendentes{
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:10px;
+  max-height:520px;
+  overflow:auto;
+  padding-right:4px;
 }
 
-.nome-jogador{
-  font-weight:700;
-  font-size:18px;
-  color:#fff;
+.usuario-card{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid rgba(247,198,0,.18);
+  border-radius:14px;
+  padding:12px;
 }
 
-.player-info small{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.5;
-}
-
-.tags{
+.usuario-top{
   display:flex;
-  gap:6px;
-  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.usuario-nome{
+  font-weight:900;
+  color:#fff;
+  font-size:14px;
+}
+
+.usuario-info{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
   margin-top:4px;
 }
 
 .tag{
-  background:#1a3f73;
-  padding:5px 9px;
-  border-radius:999px;
-  font-size:12px;
-  border:1px solid rgba(255,255,255,.08);
-}
-
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
-
-.btn-acao{
   display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:11px 14px;
-  border-radius:10px;
-  font-weight:700;
-  font-size:13px;
-  border:none;
-  cursor:pointer;
-  white-space:nowrap;
+  background:rgba(26,63,115,.9);
+  border:1px solid rgba(255,255,255,.08);
+  padding:4px 7px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  color:#fff;
 }
 
-.btn-ver{background:var(--gold);color:black}
-.btn-danger{background:#d94141;color:#fff}
-.btn-blue{background:#1a3f73;color:#fff}
+.usuario-acoes{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+
+.usuario-acoes.acoes-3{
+  grid-template-columns:1fr 1fr 1fr;
+}
+
+.usuario-foto{
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#fff;
+  border:2px solid var(--gold);
+  flex:0 0 auto;
+}
+
+.usuario-top-left{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.usuario-acoes button{
+  padding:9px;
+  border-radius:10px;
+  font-weight:900;
+  font-size:12px;
+}
 
 .vazio{
-  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
-  padding:30px;
-  border-radius:14px;
-  text-align:center;
   color:var(--muted);
-  border:1px solid rgba(255,255,255,.06);
-  box-shadow:var(--shadow);
-  grid-column:1/-1;
+  text-align:center;
+  padding:18px;
+  background:rgba(7,29,55,.9);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
 }
 
-@media(max-width:900px){
-  .header-title{order:3;width:100%;text-align:center}
-  .header-left,.header-right{width:100%;justify-content:center}
-  .form-grid,.filtros{grid-template-columns:1fr}
-  .card{flex-direction:column;align-items:flex-start}
-  .actions{width:100%;justify-content:flex-start}
+.footer-note{
+  margin-top:20px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
+  text-align:center;
 }
 
-@media(max-width:600px){
-  .top-btn,.btn-acao{width:100%;justify-content:center}
-  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
-  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
-  .menu{
-    justify-content:flex-start;
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-    padding-bottom:14px;
+@media(max-width:1100px){
+  .grid{
+    grid-template-columns:repeat(3,1fr);
   }
-  .menu a{flex:0 0 auto}
+
+  .duplo{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:650px){
+  .header-title{
+    font-size:16px;
+    line-height:1.2;
+  }
+
+  .top-btn span{
+    display:none;
+  }
+
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .menu{
+    grid-template-columns:1fr;
+  }
+
+  .hero-panel h2{
+    font-size:23px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <div class="wrap header-top">
-    <div class="header-left">
-      <a href="index.html" class="top-btn btn-light">
-        <i class="fa-solid fa-house"></i> Página Inicial
-      </a>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-      <a href="admin.html" class="top-btn btn-light">
-        <i class="fa-solid fa-gears"></i> Painel ADM
-      </a>
-    </div>
-
-    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
-
-    <div class="header-right">
-      <button class="top-btn btn-gold" type="button" onclick="salvarCampeonato()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Campeonato
-      </button>
-    </div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span>Painel ADM</span>
+    <button class="sidebar-close" id="sidebarClose" type="button">×</button>
   </div>
 
-  <div class="nav-bar">
-    <div class="wrap">
-      <div class="menu">
-        <a href="admin.html">Painel</a>
-        <a href="campeonatos-admin.html" class="ativo">Campeonatos</a>
-        <a href="jogos-admin.html">Jogos</a>
-        <a href="times-admin.html">Times</a>
-        <a href="tecnicos-admin.html">Técnicos</a>
-        <a href="jogadores-admin.html">Jogadores</a>
-        <a href="arbitros-admin.html">Árbitros</a>
-        <a href="assistentes-admin.html">Assistentes</a>
-        <a href="sumulas-admin.html">Súmulas</a>
-      </div>
-    </div>
+  <div class="side-menu">
+    <a href="admin.html"><i class="fa-solid fa-house-user"></i> Painel ADM</a>
+    <a href="index.html"><i class="fa-solid fa-house"></i> Página Inicial</a>
+    <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos</a>
+    <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
+    <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times</a>
+    <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos</a>
+    <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores</a>
+    <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros</a>
+    <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes</a>
+    <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Súmulas</a>
+    <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários e Permissões</a>
+    <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Editar Tabelas</a>
+    <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação</a>
+    <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas</a>
+    <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Editar Súmula</a>
+    <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Fases / Mata-Mata</a>
+    <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
+    <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria</a>
+        <a href="fotografos.html"><i class="fa-solid fa-camera"></i> Fotógrafos</a>
+    <a href="fotografos.html"><i class="fa-solid fa-camera"></i> Fotógrafos</a>
+    <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios Gerais</a>
+  </div>
+</aside>
+<header>
+  <div class="wrap header-inner">
+    <button class="menu-toggle" id="menuToggle">☰</button>
+
+    <div class="header-title">Painel do Administrador</div>
+
+    <button class="top-btn btn-red" onclick="logout()">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      <span>Sair</span>
+    </button>
   </div>
 </header>
 
 <div class="wrap container">
 
-  <div class="hero">
-    <h2>Campeonatos ADM</h2>
-    <p>Cadastre campeonatos, logo, temporada, formato, categorias e regras. Tudo salvo no Firebase para jogos, tabelas, súmulas e estatísticas automáticas.</p>
-  </div>
+  <section class="hero-panel">
+    <h2>Gestão Geral da Liga</h2>
+    <p>
+      Aqui você controla tudo: usuários, jogos, súmulas, estatísticas e notícias.
+    </p>
 
-  <section class="form-panel">
-    <div class="form-title" id="tituloFormulario">Novo Campeonato</div>
+    <div id="statusInfo" class="status-box status-info">Carregando painel...</div>
+    <div id="statusErro" class="status-box status-erro"></div>
+  </section>
 
-    <input type="hidden" id="campeonatoId">
+  <div id="painelConteudo">
 
-    <div class="form-grid">
-      <div>
-        <label>Nome do campeonato</label>
-        <input id="nome" placeholder="Ex: Copa União de Base">
+    <!-- DASHBOARD -->
+    <div class="grid">
+      <div class="card"><h3 id="totalTimes">0</h3><p>Times</p></div>
+      <div class="card"><h3 id="totalJogadores">0</h3><p>Jogadores</p></div>
+      <div class="card"><h3 id="totalTecnicos">0</h3><p>Técnicos</p></div>
+      <div class="card"><h3 id="totalArbitros">0</h3><p>Árbitros</p></div>
+      <div class="card"><h3 id="totalJogos">0</h3><p>Jogos</p></div>
+      <div class="card"><h3 id="totalSumulas">0</h3><p>Súmulas</p></div>
+    </div>
+
+    <!-- MENU ADM -->
+    <div class="admin-block">
+      <h3 class="section-title">Menus ADM</h3>
+
+      <div class="menu">
+        <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos</a>
+        <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
+        <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times</a>
+        <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos</a>
+        <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores</a>
+        <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros</a>
+        <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes</a>
+        <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Súmulas</a>
+
+        <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Editar Súmula</a>
+        <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Editar Tabelas</a>
+        <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação</a>
+        <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Fases / Mata-Mata</a>
+        <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas</a>
+        <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários</a>
+        <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
+        <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria</a>
+        <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios Gerais</a>
       </div>
+    </div>
 
-      <div>
-        <label>Temporada</label>
-        <input id="temporada" placeholder="Ex: 2026">
-      </div>
+    <!-- BLOCO PRINCIPAL -->
+    <div class="duplo">
 
-      <div>
-        <label>Status</label>
-        <select id="status">
-          <option value="rascunho">Rascunho</option>
-          <option value="publicado">Publicado</option>
-          <option value="encerrado">Encerrado</option>
-        </select>
-      </div>
+      <!-- APROVAÇÃO DE USUÁRIOS -->
+      <div class="admin-block">
+        <h3 class="section-title">
+          <i class="fa-solid fa-user-check"></i> Usuários Pendentes
+        </h3>
 
-      <div>
-        <label>Formato</label>
-        <select id="formato">
-          <option value="">Selecione</option>
-          <option value="Pontos corridos">Pontos corridos</option>
-          <option value="Mata-mata">Mata-mata</option>
-          <option value="Pontos corridos + fase final">Pontos corridos + fase final</option>
-          <option value="Fase de grupos">Fase de grupos</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Turno</label>
-        <select id="turno">
-          <option value="">Selecione</option>
-          <option value="Ida">Ida</option>
-          <option value="Ida e volta">Ida e volta</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Fase final começa com</label>
-        <input id="faseFinalInicio" type="number" min="1" placeholder="Ex: 8">
-      </div>
-
-      <div>
-        <label>Zerar cartões em</label>
-        <select id="zerarCartoesEm">
-          <option value="nunca">Nunca</option>
-          <option value="fim-primeira-fase">Fim da primeira fase</option>
-          <option value="quartas">Quartas</option>
-          <option value="semi">Semifinal</option>
-          <option value="final">Final</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Logo URL</label>
-        <input id="logo" placeholder="logo-campeonato.png ou URL">
-      </div>
-
-      <div>
-        <label>Enviar logo do PC/Celular</label>
-        <input type="file" id="logoArquivo" accept="image/*" onchange="previewLogoArquivo()">
-      </div>
-
-      <div>
-        <label>Prévia</label>
-        <div class="preview-logo" id="previewLogoBox">
-          <img id="previewLogoImg" src="logo-liga.jfif">
-          <span id="previewLogoTexto">Pré-visualização da logo</span>
+        <div class="lista-pendentes" id="listaUsuarios">
+          <div class="vazio">Carregando usuários...</div>
         </div>
       </div>
 
-      <div class="full">
-        <label>Descrição / observações</label>
-        <textarea id="descricao" placeholder="Descrição do campeonato"></textarea>
+      <!-- FOTÓGRAFOS PENDENTES -->
+      <div class="admin-block">
+        <h3 class="section-title">
+          <i class="fa-solid fa-camera"></i> Fotógrafos Pendentes
+        </h3>
+
+        <div class="lista-pendentes" id="listaFotografos">
+          <div class="vazio">Carregando fotógrafos...</div>
+        </div>
       </div>
 
-      <div>
-        <label>Amarelos para suspensão</label>
-        <input id="amarelosParaSuspensao" type="number" min="1" value="3">
-      </div>
+    </div>
 
-      <div>
-        <label>Jogos suspenso por amarelo</label>
-        <input id="jogosSuspensaoAmarelos" type="number" min="1" value="1">
-      </div>
+    <div class="admin-block">
+      <h3 class="section-title">
+        <i class="fa-solid fa-newspaper"></i> Nova Notícia
+      </h3>
 
-      <div>
-        <label>Jogos por vermelho direto</label>
-        <input id="jogosSuspensaoVermelhoDireto" type="number" min="1" value="2">
-      </div>
+      <div class="form-grid">
+        <input id="tituloNoticia" placeholder="Título da notícia">
 
-      <div class="full">
-        <label>Categorias do campeonato</label>
-        <div class="checkbox-grid" id="categoriasGrid"></div>
+        <textarea id="textoNoticia" placeholder="Conteúdo da notícia"></textarea>
+
+        <input id="imagemNoticia" placeholder="URL da imagem (opcional)">
+
+        <button class="btn-full btn-gold" onclick="postarNoticia()">
+          <i class="fa-solid fa-paper-plane"></i> Publicar Notícia
+        </button>
       </div>
     </div>
 
-    <div class="form-actions">
-      <button class="btn-acao btn-ver" type="button" onclick="salvarCampeonato()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Campeonato
-      </button>
-
-      <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
-        <i class="fa-solid fa-broom"></i> Limpar
-      </button>
+    <div class="footer-note">
+      Painel administrativo da Liga Goiana de Futebol de Base
     </div>
-  </section>
 
-  <div class="filtros">
-    <input id="buscaCampeonato" placeholder="Pesquisar campeonato...">
-
-    <select id="filtroStatus">
-      <option value="">Todos os status</option>
-      <option value="rascunho">Rascunho</option>
-      <option value="publicado">Publicado</option>
-      <option value="encerrado">Encerrado</option>
-    </select>
   </div>
 
-  <div class="lista-grid" id="listaCampeonatos"></div>
-
 </div>
+<script>
+const sidebar = document.getElementById("sidebar");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+const menuToggle = document.getElementById("menuToggle");
+const sidebarClose = document.getElementById("sidebarClose");
+
+menuToggle.onclick = () => {
+  sidebar.classList.add("open");
+  sidebarOverlay.classList.add("show");
+};
+
+sidebarClose.onclick = fecharSidebar;
+sidebarOverlay.onclick = fecharSidebar;
+
+function fecharSidebar(){
+  sidebar.classList.remove("open");
+  sidebarOverlay.classList.remove("show");
+}
+</script>
 
 <script type="module">
 import { db } from "./firebase.js";
@@ -578,17 +719,25 @@ import {
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
 
-const storage = getStorage();
+let storage = null;
+try{
+  storage = getStorage();
+}catch(e){
+  storage = null;
+}
 
 let campeonatosCache = [];
 let logoAtual = "";
+let salvando = false;
 
 const categoriasFixas = [
   "Sub-11","Sub-12","Sub-13","Sub-14","Sub-15","Sub-16",
   "Sub-17","Sub-18","Sub-19","Sub-20","Sub-21"
 ];
 
-function txt(v){return String(v || "").trim()}
+function txt(v){
+  return String(v || "").trim();
+}
 
 function normalizarTexto(texto){
   return String(texto || "")
@@ -598,8 +747,56 @@ function normalizarTexto(texto){
     .replace(/[\u0300-\u036f]/g,"");
 }
 
+function mostrarMensagem(texto,tipo="info"){
+  const box = document.getElementById("mensagemSistema");
+  if(!box) return;
+
+  box.style.display = "block";
+  box.textContent = texto;
+
+  if(tipo === "erro"){
+    box.style.background = "rgba(217,65,65,.22)";
+    box.style.color = "#ffd0d0";
+    box.style.border = "1px solid rgba(255,120,120,.35)";
+    return;
+  }
+
+  if(tipo === "sucesso"){
+    box.style.background = "rgba(31,130,68,.25)";
+    box.style.color = "#d8ffe6";
+    box.style.border = "1px solid rgba(120,255,170,.30)";
+    return;
+  }
+
+  box.style.background = "rgba(247,198,0,.16)";
+  box.style.color = "#fff4bf";
+  box.style.border = "1px solid rgba(247,198,0,.32)";
+}
+
+function esconderMensagem(){
+  const box = document.getElementById("mensagemSistema");
+  if(box){
+    box.style.display = "none";
+    box.textContent = "";
+  }
+}
+
+function botoesSalvar(){
+  return Array.from(document.querySelectorAll('button[onclick="salvarCampeonato()"]'));
+}
+
+function travarSalvar(ativo){
+  botoesSalvar().forEach(btn=>{
+    btn.disabled = ativo;
+    btn.style.opacity = ativo ? ".65" : "1";
+    btn.style.pointerEvents = ativo ? "none" : "auto";
+  });
+}
+
 function montarCategorias(){
   const grid = document.getElementById("categoriasGrid");
+  if(!grid) return;
+
   grid.innerHTML = categoriasFixas.map(c=>`
     <label class="check-item">
       <input type="checkbox" value="${c}">
@@ -616,6 +813,49 @@ function categoriasSelecionadas(){
 function marcarCategorias(categorias){
   document.querySelectorAll('#categoriasGrid input[type="checkbox"]').forEach(item=>{
     item.checked = (categorias || []).includes(item.value);
+  });
+}
+
+function arquivoParaBase64Reduzido(arquivo){
+  return new Promise((resolve,reject)=>{
+    const leitor = new FileReader();
+
+    leitor.onerror = () => reject(new Error("Não foi possível ler a imagem."));
+
+    leitor.onload = e=>{
+      const img = new Image();
+
+      img.onerror = () => resolve(e.target.result);
+
+      img.onload = ()=>{
+        const limite = 900;
+        let largura = img.width;
+        let altura = img.height;
+
+        if(largura > limite || altura > limite){
+          if(largura >= altura){
+            altura = Math.round((altura * limite) / largura);
+            largura = limite;
+          }else{
+            largura = Math.round((largura * limite) / altura);
+            altura = limite;
+          }
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = largura;
+        canvas.height = altura;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img,0,0,largura,altura);
+
+        resolve(canvas.toDataURL("image/jpeg",.82));
+      };
+
+      img.src = e.target.result;
+    };
+
+    leitor.readAsDataURL(arquivo);
   });
 }
 
@@ -639,10 +879,21 @@ async function uploadLogoSeExistir(){
   const logoUrlManual = txt(document.getElementById("logo").value);
 
   if(arquivo){
-    const nomeArquivo = `campeonatos/${Date.now()}-${arquivo.name}`;
-    const referencia = ref(storage,nomeArquivo);
-    await uploadBytes(referencia,arquivo);
-    return await getDownloadURL(referencia);
+    if(storage){
+      try{
+        const nomeSeguro = arquivo.name.replace(/[^a-zA-Z0-9._-]/g,"-");
+        const nomeArquivo = `campeonatos/${Date.now()}-${nomeSeguro}`;
+        const referencia = ref(storage,nomeArquivo);
+        await uploadBytes(referencia,arquivo);
+        return await getDownloadURL(referencia);
+      }catch(e){
+        console.warn("Falha no Storage. Salvando logo em base64 no Firestore.",e);
+        mostrarMensagem("Storage não permitiu enviar a imagem. Vou salvar o campeonato usando a logo convertida automaticamente.","info");
+        return await arquivoParaBase64Reduzido(arquivo);
+      }
+    }
+
+    return await arquivoParaBase64Reduzido(arquivo);
   }
 
   if(logoUrlManual) return logoUrlManual;
@@ -671,74 +922,107 @@ window.limparFormulario = function(){
   document.getElementById("previewLogoTexto").textContent = "Pré-visualização da logo";
   logoAtual = "";
   marcarCategorias([]);
+  esconderMensagem();
 };
 
 window.salvarCampeonato = async function(){
-  const id = document.getElementById("campeonatoId").value;
+  if(salvando) return;
 
-  const nome = txt(document.getElementById("nome").value);
-  const temporada = txt(document.getElementById("temporada").value);
-  const status = document.getElementById("status").value;
-  const formato = document.getElementById("formato").value;
-  const turno = document.getElementById("turno").value;
-  const faseFinalInicio = Number(document.getElementById("faseFinalInicio").value || 0);
-  const zerarCartoesEm = document.getElementById("zerarCartoesEm").value;
-  const descricao = txt(document.getElementById("descricao").value);
-  const amarelosParaSuspensao = Number(document.getElementById("amarelosParaSuspensao").value || 3);
-  const jogosSuspensaoAmarelos = Number(document.getElementById("jogosSuspensaoAmarelos").value || 1);
-  const jogosSuspensaoVermelhoDireto = Number(document.getElementById("jogosSuspensaoVermelhoDireto").value || 2);
-  const categorias = categoriasSelecionadas();
+  try{
+    salvando = true;
+    travarSalvar(true);
+    mostrarMensagem("Salvando campeonato...","info");
 
-  if(!nome) return alert("Digite o nome do campeonato.");
-  if(!temporada) return alert("Digite a temporada.");
-  if(!formato) return alert("Selecione o formato.");
-  if(!categorias.length) return alert("Selecione pelo menos uma categoria.");
+    const id = document.getElementById("campeonatoId").value;
 
-  const logo = await uploadLogoSeExistir();
+    const nome = txt(document.getElementById("nome").value);
+    const temporada = txt(document.getElementById("temporada").value);
+    const status = document.getElementById("status").value;
+    const formato = document.getElementById("formato").value;
+    const turno = document.getElementById("turno").value;
+    const faseFinalInicio = Number(document.getElementById("faseFinalInicio").value || 0);
+    const zerarCartoesEm = document.getElementById("zerarCartoesEm").value;
+    const descricao = txt(document.getElementById("descricao").value);
+    const amarelosParaSuspensao = Number(document.getElementById("amarelosParaSuspensao").value || 3);
+    const jogosSuspensaoAmarelos = Number(document.getElementById("jogosSuspensaoAmarelos").value || 1);
+    const jogosSuspensaoVermelhoDireto = Number(document.getElementById("jogosSuspensaoVermelhoDireto").value || 2);
+    const categorias = categoriasSelecionadas();
 
-  const dados = {
-    nome,
-    temporada,
-    status,
-    formato,
-    turno,
-    faseFinalInicio,
-    zerarCartoesEm,
-    descricao,
-    logo,
-    categorias,
-    publicado:status === "publicado",
-    publico:status === "publicado",
-    visivelPublico:status === "publicado",
-    regrasCartoes:{
-      amarelosParaSuspensao,
-      jogosSuspensaoAmarelos,
-      jogosSuspensaoVermelhoDireto
-    },
-    estatisticas:{
-      jogos:0,
-      gols:0,
-      cartoesAmarelos:0,
-      cartoesVermelhos:0,
-      times:0,
-      jogadores:0
-    },
-    atualizadoEm:serverTimestamp()
-  };
+    if(!nome){
+      mostrarMensagem("Digite o nome do campeonato.","erro");
+      return;
+    }
 
-  if(id){
-    await updateDoc(doc(db,"campeonatos",id),dados);
-    alert("Campeonato atualizado!");
-  }else{
-    await addDoc(collection(db,"campeonatos"),{
-      ...dados,
-      criadoEm:serverTimestamp()
-    });
-    alert("Campeonato cadastrado!");
+    if(!temporada){
+      mostrarMensagem("Digite a temporada.","erro");
+      return;
+    }
+
+    if(!formato){
+      mostrarMensagem("Selecione o formato.","erro");
+      return;
+    }
+
+    if(!categorias.length){
+      mostrarMensagem("Selecione pelo menos uma categoria.","erro");
+      return;
+    }
+
+    const logo = await uploadLogoSeExistir();
+
+    const dados = {
+      nome,
+      nomeNormalizado:normalizarTexto(nome),
+      temporada,
+      status,
+      formato,
+      turno,
+      faseFinalInicio,
+      zerarCartoesEm,
+      descricao,
+      logo,
+      categorias,
+      publicado:status === "publicado",
+      publico:status === "publicado",
+      visivelPublico:status === "publicado",
+      regrasCartoes:{
+        amarelosParaSuspensao,
+        jogosSuspensaoAmarelos,
+        jogosSuspensaoVermelhoDireto
+      },
+      atualizadoEm:serverTimestamp()
+    };
+
+    if(id){
+      await updateDoc(doc(db,"campeonatos",id),dados);
+      mostrarMensagem("Campeonato atualizado com sucesso!","sucesso");
+    }else{
+      await addDoc(collection(db,"campeonatos"),{
+        ...dados,
+        estatisticas:{
+          jogos:0,
+          gols:0,
+          cartoesAmarelos:0,
+          cartoesVermelhos:0,
+          times:0,
+          jogadores:0
+        },
+        criadoEm:serverTimestamp()
+      });
+      mostrarMensagem("Campeonato cadastrado com sucesso!","sucesso");
+    }
+
+    limparFormulario();
+    mostrarMensagem("Campeonato salvo com sucesso!","sucesso");
+    await carregarCampeonatos();
+
+  }catch(e){
+    console.error("Erro ao salvar campeonato:",e);
+    mostrarMensagem("Erro ao salvar campeonato: " + (e?.message || e),"erro");
+  }finally{
+    salvando = false;
+    travarSalvar(false);
   }
-
-  limparFormulario();
-  await carregarCampeonatos();
 };
 
 window.editarCampeonato = function(id){
@@ -753,7 +1037,7 @@ window.editarCampeonato = function(id){
   document.getElementById("turno").value = c.turno || "";
   document.getElementById("faseFinalInicio").value = c.faseFinalInicio || "";
   document.getElementById("zerarCartoesEm").value = c.zerarCartoesEm || "nunca";
-  document.getElementById("logo").value = c.logo || "";
+  document.getElementById("logo").value = c.logo && !String(c.logo).startsWith("data:image") ? c.logo : "";
   document.getElementById("logoArquivo").value = "";
   document.getElementById("descricao").value = c.descricao || "";
   document.getElementById("amarelosParaSuspensao").value = c.regrasCartoes?.amarelosParaSuspensao || 3;
@@ -767,30 +1051,45 @@ window.editarCampeonato = function(id){
     document.getElementById("previewLogoBox").style.display = "flex";
     document.getElementById("previewLogoImg").src = logoAtual;
     document.getElementById("previewLogoTexto").textContent = "Logo atual";
+  }else{
+    document.getElementById("previewLogoBox").style.display = "none";
   }
 
   marcarCategorias(Array.isArray(c.categorias) ? c.categorias : []);
+  esconderMensagem();
   window.scrollTo({top:0,behavior:"smooth"});
 };
 
 window.excluirCampeonato = async function(id){
   if(!confirm("Excluir campeonato?")) return;
-  await deleteDoc(doc(db,"campeonatos",id));
-  await carregarCampeonatos();
+
+  try{
+    await deleteDoc(doc(db,"campeonatos",id));
+    mostrarMensagem("Campeonato excluído.","sucesso");
+    await carregarCampeonatos();
+  }catch(e){
+    console.error("Erro ao excluir campeonato:",e);
+    mostrarMensagem("Erro ao excluir campeonato: " + (e?.message || e),"erro");
+  }
 };
 
 async function carregarCampeonatos(){
   const lista = document.getElementById("listaCampeonatos");
   lista.innerHTML = `<div class="vazio">Carregando campeonatos...</div>`;
 
-  const snap = await getDocs(collection(db,"campeonatos"));
+  try{
+    const snap = await getDocs(collection(db,"campeonatos"));
 
-  campeonatosCache = [];
-  snap.forEach(d=>campeonatosCache.push({id:d.id,...d.data()}));
+    campeonatosCache = [];
+    snap.forEach(d=>campeonatosCache.push({id:d.id,...d.data()}));
 
-  campeonatosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+    campeonatosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
 
-  renderizarCampeonatos();
+    renderizarCampeonatos();
+  }catch(e){
+    console.error("Erro ao carregar campeonatos:",e);
+    lista.innerHTML = `<div class="vazio">Erro ao carregar campeonatos: ${e?.message || e}</div>`;
+  }
 }
 
 function renderizarCampeonatos(){
@@ -863,11 +1162,11 @@ function renderizarCampeonatos(){
             <i class="fa-solid fa-eye"></i> Ver
           </a>
 
-          <button class="btn-acao btn-ver" onclick="editarCampeonato('${c.id}')">
+          <button class="btn-acao btn-ver" type="button" onclick="editarCampeonato('${c.id}')">
             <i class="fa-solid fa-pen"></i> Editar
           </button>
 
-          <button class="btn-acao btn-danger" onclick="excluirCampeonato('${c.id}')">
+          <button class="btn-acao btn-danger" type="button" onclick="excluirCampeonato('${c.id}')">
             <i class="fa-solid fa-trash"></i> Excluir
           </button>
         </div>
