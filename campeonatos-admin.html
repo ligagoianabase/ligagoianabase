@@ -571,7 +571,6 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-
 let campeonatosCache = [];
 let logoAtual = "";
 
@@ -626,24 +625,70 @@ window.previewLogoArquivo = function(){
   leitor.readAsDataURL(arquivo);
 };
 
+function arquivoParaLogoBase64(arquivo){
+  return new Promise((resolve,reject)=>{
+    if(!arquivo){
+      resolve("");
+      return;
+    }
+
+    if(!arquivo.type || !arquivo.type.startsWith("image/")){
+      reject(new Error("O arquivo da logo precisa ser uma imagem."));
+      return;
+    }
+
+    const leitor = new FileReader();
+
+    leitor.onload = function(e){
+      const img = new Image();
+
+      img.onload = function(){
+        const max = 700;
+        let largura = img.width;
+        let altura = img.height;
+
+        if(largura > altura && largura > max){
+          altura = Math.round((altura * max) / largura);
+          largura = max;
+        }else if(altura >= largura && altura > max){
+          largura = Math.round((largura * max) / altura);
+          altura = max;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = largura;
+        canvas.height = altura;
+
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0,0,largura,altura);
+        ctx.drawImage(img,0,0,largura,altura);
+
+        const base64 = canvas.toDataURL("image/jpeg",0.86);
+        resolve(base64);
+      };
+
+      img.onerror = function(){
+        reject(new Error("Não foi possível ler a imagem da logo."));
+      };
+
+      img.src = e.target.result;
+    };
+
+    leitor.onerror = function(){
+      reject(new Error("Erro ao carregar o arquivo da logo."));
+    };
+
+    leitor.readAsDataURL(arquivo);
+  });
+}
+
 async function uploadLogoSeExistir(){
   const arquivo = document.getElementById("logoArquivo").files[0];
   const logoUrlManual = txt(document.getElementById("logo").value);
 
   if(arquivo){
-    try{
-      const { getStorage, ref, uploadBytes, getDownloadURL } = await import("https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js");
-      const storage = getStorage();
-      const nomeSeguro = arquivo.name.replace(/[^a-zA-Z0-9._-]/g,"-");
-      const nomeArquivo = `campeonatos/${Date.now()}-${nomeSeguro}`;
-      const referencia = ref(storage,nomeArquivo);
-      await uploadBytes(referencia,arquivo);
-      return await getDownloadURL(referencia);
-    }catch(e){
-      console.error("Erro ao enviar logo:", e);
-      alert("Não consegui enviar a logo para o Firebase Storage. Vou salvar o campeonato com a logo padrão. Depois você pode editar e colocar uma URL de logo.");
-      return logoUrlManual || logoAtual || "logo-liga.jfif";
-    }
+    return await arquivoParaLogoBase64(arquivo);
   }
 
   if(logoUrlManual) return logoUrlManual;
@@ -675,75 +720,106 @@ window.limparFormulario = function(){
 };
 
 window.salvarCampeonato = async function(){
+  const botoesSalvar = document.querySelectorAll('button[onclick="salvarCampeonato()"]');
+
   try{
-  const id = document.getElementById("campeonatoId").value;
-
-  const nome = txt(document.getElementById("nome").value);
-  const temporada = txt(document.getElementById("temporada").value);
-  const status = document.getElementById("status").value;
-  const formato = document.getElementById("formato").value;
-  const turno = document.getElementById("turno").value;
-  const faseFinalInicio = Number(document.getElementById("faseFinalInicio").value || 0);
-  const zerarCartoesEm = document.getElementById("zerarCartoesEm").value;
-  const descricao = txt(document.getElementById("descricao").value);
-  const amarelosParaSuspensao = Number(document.getElementById("amarelosParaSuspensao").value || 3);
-  const jogosSuspensaoAmarelos = Number(document.getElementById("jogosSuspensaoAmarelos").value || 1);
-  const jogosSuspensaoVermelhoDireto = Number(document.getElementById("jogosSuspensaoVermelhoDireto").value || 2);
-  const categorias = categoriasSelecionadas();
-
-  if(!nome) return alert("Digite o nome do campeonato.");
-  if(!temporada) return alert("Digite a temporada.");
-  if(!formato) return alert("Selecione o formato.");
-  if(!categorias.length) return alert("Selecione pelo menos uma categoria.");
-
-  const logo = await uploadLogoSeExistir();
-
-  const dados = {
-    nome,
-    temporada,
-    status,
-    formato,
-    turno,
-    faseFinalInicio,
-    zerarCartoesEm,
-    descricao,
-    logo,
-    categorias,
-    publicado:status === "publicado",
-    publico:status === "publicado",
-    visivelPublico:status === "publicado",
-    regrasCartoes:{
-      amarelosParaSuspensao,
-      jogosSuspensaoAmarelos,
-      jogosSuspensaoVermelhoDireto
-    },
-    estatisticas:{
-      jogos:0,
-      gols:0,
-      cartoesAmarelos:0,
-      cartoesVermelhos:0,
-      times:0,
-      jogadores:0
-    },
-    atualizadoEm:serverTimestamp()
-  };
-
-  if(id){
-    await updateDoc(doc(db,"campeonatos",id),dados);
-    alert("Campeonato atualizado!");
-  }else{
-    await addDoc(collection(db,"campeonatos"),{
-      ...dados,
-      criadoEm:serverTimestamp()
+    botoesSalvar.forEach(btn=>{
+      btn.disabled = true;
+      btn.style.opacity = ".65";
+      btn.style.cursor = "not-allowed";
     });
-    alert("Campeonato cadastrado!");
-  }
 
-  limparFormulario();
-  await carregarCampeonatos();
+    const id = document.getElementById("campeonatoId").value;
+
+    const nome = txt(document.getElementById("nome").value);
+    const temporada = txt(document.getElementById("temporada").value);
+    const status = document.getElementById("status").value;
+    const formato = document.getElementById("formato").value;
+    const turno = document.getElementById("turno").value;
+    const faseFinalInicio = Number(document.getElementById("faseFinalInicio").value || 0);
+    const zerarCartoesEm = document.getElementById("zerarCartoesEm").value;
+    const descricao = txt(document.getElementById("descricao").value);
+    const amarelosParaSuspensao = Number(document.getElementById("amarelosParaSuspensao").value || 3);
+    const jogosSuspensaoAmarelos = Number(document.getElementById("jogosSuspensaoAmarelos").value || 1);
+    const jogosSuspensaoVermelhoDireto = Number(document.getElementById("jogosSuspensaoVermelhoDireto").value || 2);
+    const categorias = categoriasSelecionadas();
+
+    if(!nome){
+      alert("Digite o nome do campeonato.");
+      return;
+    }
+
+    if(!temporada){
+      alert("Digite a temporada.");
+      return;
+    }
+
+    if(!formato){
+      alert("Selecione o formato.");
+      return;
+    }
+
+    if(!categorias.length){
+      alert("Selecione pelo menos uma categoria.");
+      return;
+    }
+
+    const logo = await uploadLogoSeExistir();
+
+    const dados = {
+      nome,
+      temporada,
+      status,
+      formato,
+      turno,
+      faseFinalInicio,
+      zerarCartoesEm,
+      descricao,
+      logo,
+      logoCampeonato:logo,
+      categorias,
+      publicado:status === "publicado",
+      publico:status === "publicado",
+      visivelPublico:status === "publicado",
+      regrasCartoes:{
+        amarelosParaSuspensao,
+        jogosSuspensaoAmarelos,
+        jogosSuspensaoVermelhoDireto
+      },
+      estatisticas:{
+        jogos:0,
+        gols:0,
+        cartoesAmarelos:0,
+        cartoesVermelhos:0,
+        times:0,
+        jogadores:0
+      },
+      atualizadoEm:serverTimestamp()
+    };
+
+    if(id){
+      await updateDoc(doc(db,"campeonatos",id),dados);
+      alert("Campeonato atualizado com logo salva!");
+    }else{
+      await addDoc(collection(db,"campeonatos"),{
+        ...dados,
+        criadoEm:serverTimestamp()
+      });
+      alert("Campeonato cadastrado com logo salva!");
+    }
+
+    limparFormulario();
+    await carregarCampeonatos();
+
   }catch(e){
     console.error("Erro ao salvar campeonato:", e);
-    alert("Erro ao salvar campeonato: " + (e && e.message ? e.message : e));
+    alert("Erro ao salvar campeonato/logo: " + (e.message || e));
+  }finally{
+    botoesSalvar.forEach(btn=>{
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      btn.style.cursor = "pointer";
+    });
   }
 };
 
@@ -759,7 +835,7 @@ window.editarCampeonato = function(id){
   document.getElementById("turno").value = c.turno || "";
   document.getElementById("faseFinalInicio").value = c.faseFinalInicio || "";
   document.getElementById("zerarCartoesEm").value = c.zerarCartoesEm || "nunca";
-  document.getElementById("logo").value = c.logo || "";
+  document.getElementById("logo").value = (String(c.logo || "").startsWith("data:image/") ? "" : (c.logo || c.logoCampeonato || ""));
   document.getElementById("logoArquivo").value = "";
   document.getElementById("descricao").value = c.descricao || "";
   document.getElementById("amarelosParaSuspensao").value = c.regrasCartoes?.amarelosParaSuspensao || 3;
@@ -767,7 +843,7 @@ window.editarCampeonato = function(id){
   document.getElementById("jogosSuspensaoVermelhoDireto").value = c.regrasCartoes?.jogosSuspensaoVermelhoDireto || 2;
   document.getElementById("tituloFormulario").textContent = "Editar Campeonato";
 
-  logoAtual = c.logo || "";
+  logoAtual = c.logo || c.logoCampeonato || "";
 
   if(logoAtual){
     document.getElementById("previewLogoBox").style.display = "flex";
@@ -833,7 +909,7 @@ function renderizarCampeonatos(){
       <div class="card">
         <div class="player">
           <img
-            src="${c.logo || "logo-liga.jfif"}"
+            src="${c.logo || c.logoCampeonato || "logo-liga.jfif"}"
             class="photo"
             onerror="this.src='logo-liga.jfif'"
           >
