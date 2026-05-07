@@ -1840,7 +1840,33 @@
       if(valor === "jogador") return "jogador";
       if(valor === "pai_atleta") return "pai_atleta";
       if(valor === "fotografo" || valor === "fotógrafo") return "fotografo";
-      return "torcedor";
+      if(valor === "torcedor") return "torcedor";
+      return valor || "torcedor";
+    }
+
+    function pegarTiposUsuario(dados){
+      const bruto = dados.tipoUsuario ?? dados.tipousuario ?? dados.tipo ?? dados.perfil ?? "torcedor";
+
+      if(Array.isArray(bruto)){
+        return bruto.map(t => normalizarTipo(t)).filter(Boolean);
+      }
+
+      return [normalizarTipo(bruto)].filter(Boolean);
+    }
+
+    function temTipo(tipos, tipo){
+      return tipos.includes(normalizarTipo(tipo));
+    }
+
+    function tipoPrincipal(tipos){
+      if(temTipo(tipos, "admin")) return "admin";
+      if(temTipo(tipos, "arbitro")) return "arbitro";
+      if(temTipo(tipos, "assistente")) return "assistente";
+      if(temTipo(tipos, "tecnico")) return "tecnico";
+      if(temTipo(tipos, "jogador")) return "jogador";
+      if(temTipo(tipos, "pai_atleta")) return "pai_atleta";
+      if(temTipo(tipos, "fotografo")) return "fotografo";
+      return tipos[0] || "torcedor";
     }
 
     function tipoLabel(tipo){
@@ -1853,6 +1879,12 @@
       if(valor === "pai_atleta") return "Pai de Atleta";
       if(valor === "fotografo") return "Fotógrafo";
       return "Torcedor";
+    }
+
+    function tiposLabel(tipos){
+      const unicos = [...new Set(tipos.map(t => normalizarTipo(t)).filter(Boolean))];
+      if(!unicos.length) return "Torcedor";
+      return unicos.map(tipoLabel).join(" / ");
     }
 
     function preencherAvatar(elemento, foto){
@@ -1871,13 +1903,16 @@
     }
 
     function mostrarUsuarioLogado(dados, user){
-      const tipo = normalizarTipo(dados.tipoUsuario || dados.tipousuario || dados.tipo || "");
+      const tiposUsuario = pegarTiposUsuario(dados);
+      const tipo = tipoPrincipal(tiposUsuario);
       const nome = dados.nomeExibicao || dados.nome || dados.nomeCompleto || user.email || "Usuário";
       const foto = dados.fotoPerfil || dados.foto || "";
       const aprovado = dados.aprovado === true;
       const autorizado = dados.autorizado === true;
-      const ehArbitro = tipo === "arbitro";
-      const podePainel = (tipo === "admin" && aprovado && autorizado) || (tipo === "arbitro" && aprovado && autorizado);
+      const ehAdmin = temTipo(tiposUsuario, "admin");
+      const ehArbitro = temTipo(tiposUsuario, "arbitro");
+      const podePainel = (ehAdmin && aprovado && autorizado) || (ehArbitro && aprovado && autorizado);
+      const labelPerfil = tiposLabel(tiposUsuario);
 
       if(loginChip) loginChip.style.display = "none";
       if(userChipEl) userChipEl.style.display = "inline-flex";
@@ -1887,7 +1922,7 @@
       if(userAdminLink) userAdminLink.style.display = podePainel ? "flex" : "none";
 
       if(userChipName) userChipName.textContent = nome;
-      if(userChipRole) userChipRole.textContent = tipoLabel(tipo);
+      if(userChipRole) userChipRole.textContent = labelPerfil;
       if(userCardName) userCardName.textContent = nome;
       if(userCardEmail) userCardEmail.textContent = dados.email || user.email || "-";
       if(userCardStatus) userCardStatus.textContent = aprovado && autorizado ? "Aprovado / Autorizado" : aprovado ? "Aprovado" : "Pendente";
@@ -1895,7 +1930,7 @@
       if(userCardCategoria) userCardCategoria.textContent = dados.categoria || "-";
 
       if(userCardRole){
-        userCardRole.innerHTML = `<i class="${ehArbitro ? "fa-solid fa-whistle" : "fa-solid fa-user"}"></i><span>${tipoLabel(tipo)}</span>`;
+        userCardRole.innerHTML = `<i class="${ehArbitro ? "fa-solid fa-whistle" : "fa-solid fa-user"}"></i><span>${labelPerfil}</span>`;
       }
 
       if(userChipWhistle) userChipWhistle.style.display = ehArbitro ? "inline-flex" : "none";
