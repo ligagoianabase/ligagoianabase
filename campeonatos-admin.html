@@ -4,393 +4,379 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Campeonato Público - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Campeonatos ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 :root{
-  --bg:#061427;
-  --card:#071d37;
-  --card2:#0d2a52;
+  --bg:#0b1f3a;
+  --bg-dark:#08172c;
+  --card:#102a52;
+  --card-hover:#153766;
   --gold:#f7c600;
-  --gold2:#ffe45c;
+  --gold-soft:rgba(247,198,0,.12);
+  --gold-line:rgba(247,198,0,.24);
   --white:#ffffff;
-  --muted:#cbd6ea;
-  --line:rgba(255,255,255,.12);
-  --gold-line:rgba(247,198,0,.45);
-  --green:#1b5e20;
-  --yellow:#7a5a00;
-  --red:#b42323;
-  --blue:#1a3f73;
-  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --muted:#d8e1ef;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --transition:.25s ease;
   --max:1240px;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   font-family:Arial, sans-serif;
   background:
-    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
     url("fundo.png") center/cover fixed no-repeat;
   color:var(--white);
   min-height:100vh;
-  overflow-x:hidden;
 }
 
-a{
-  text-decoration:none;
-  color:inherit;
-}
+a{text-decoration:none;color:inherit;transition:var(--transition)}
+button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
+input,select,textarea{font-family:inherit}
 
-button{
-  font-family:inherit;
-  cursor:pointer;
-  border:none;
-}
+.wrap{width:min(100% - 28px, var(--max));margin:0 auto}
 
-img{
-  display:block;
-  max-width:100%;
-}
-
-.wrap{
-  width:min(100% - 28px, var(--max));
-  margin:0 auto;
-}
-
-/* HEADER PADRÃO */
-.site-header{
-  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
+header{
+  background:rgba(8,23,44,.96);
   border-bottom:3px solid var(--gold);
   box-shadow:var(--shadow);
 }
 
 .header-top{
-  min-height:92px;
+  min-height:82px;
   display:flex;
   align-items:center;
-  justify-content:center;
-  padding:18px 0;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
+
+.header-left,.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
 .header-title{
+  flex:1;
   text-align:center;
-  font-size:26px;
-  font-weight:900;
-  letter-spacing:.8px;
-  text-transform:uppercase;
-  line-height:1.15;
+  font-size:24px;
+  font-weight:700;
 }
 
-/* MENU FINAL PADRÃO */
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.btn-light{background:#fff4cf;color:#111}
+.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
+.btn-gold{background:var(--gold);color:#111}
+.btn-gold:hover{filter:brightness(1.04);transform:translateY(-2px)}
+
 .nav-bar{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
+  background:rgba(16,42,82,.95);
   border-top:1px solid rgba(255,255,255,.06);
-  overflow:hidden;
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
 
 .menu{
   display:flex;
   justify-content:center;
-  align-items:center;
-  gap:clamp(4px, .55vw, 10px);
-  padding:14px 6px;
-  flex-wrap:nowrap;
-  overflow:hidden;
+  gap:10px;
+  padding:12px 0;
+  flex-wrap:wrap;
 }
 
 .menu a{
-  color:#fff;
-  font-weight:900;
-  font-size:clamp(11px, .92vw, 15px);
-  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
-  padding:clamp(8px, .75vw, 12px) clamp(9px, 1vw, 18px);
-  border-radius:clamp(10px, .9vw, 15px);
-  border:1px solid rgba(255,255,255,.07);
+  color:white;
+  font-weight:700;
+  font-size:14px;
+  background:#0d2346;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid transparent;
   white-space:nowrap;
-  flex:0 1 auto;
-  box-shadow:0 10px 22px rgba(0,0,0,.24);
-  transition:.25s ease;
 }
 
 .menu a:hover{
   color:var(--gold);
+  background:var(--gold-soft);
   border-color:var(--gold-line);
 }
 
 .menu a.ativo{
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
-  color:#111;
-}
-/* CONTAINER */
-.container{
-  padding:26px 0 36px;
+  background:var(--gold);
+  color:black;
 }
 
-/* HERO */
-.hero{
-  background:linear-gradient(135deg, #0d2a52, #071d37);
+.container{padding:24px 0 34px}
+
+.hero,.form-panel{
+  background:linear-gradient(135deg,#102a52,#0d2346);
   border:1px solid var(--gold-line);
-  border-radius:22px;
-  padding:20px;
-  margin-bottom:18px;
-  box-shadow:var(--shadow);
-}
-
-.hero-top{
-  display:flex;
-  align-items:center;
-  gap:16px;
-  flex-wrap:wrap;
-}
-
-.hero-logo{
-  width:80px;
-  height:80px;
   border-radius:18px;
-  object-fit:cover;
-  border:2px solid var(--gold);
-  background:#fff;
-}
-
-.hero-info{
-  flex:1;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:var(--shadow);
 }
 
 .hero h2{
+  margin:0 0 8px;
   color:var(--gold);
-  font-size:24px;
-  font-weight:900;
-  margin-bottom:6px;
+  font-size:28px;
 }
 
 .hero p{
+  margin:0;
   color:var(--muted);
-  font-size:14px;
+  line-height:1.6;
+  font-size:15px;
 }
 
-.hero-tags{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
-
-.hero-tag{
-  background:#0b2447;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:800;
-}
-
-/* BOTÕES */
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:12px;
-}
-
-.btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  padding:10px 12px;
-  border-radius:10px;
+.form-title{
+  color:var(--gold);
+  font-size:20px;
+  margin-bottom:14px;
   font-weight:900;
-  font-size:12px;
 }
 
-.btn-main{
-  background:var(--gold);
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.full{grid-column:1/-1}
+
+label{
+  display:block;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:6px;
+  color:#fff;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  background:#f5f7fb;
   color:#111;
 }
 
-.btn-sec{
-  background:#1a3f73;
-  color:#fff;
-}
-/* GRID PRINCIPAL */
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  margin-bottom:14px;
+textarea{min-height:100px;resize:vertical}
+
+input:focus,select:focus,textarea:focus{
+  outline:2px solid rgba(247,198,0,.5);
 }
 
-/* CARD PADRÃO */
-.card{
-  background:linear-gradient(180deg, #0d2a52, #071d37);
+.preview-logo{
+  display:none;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.preview-logo img{
+  width:78px;
+  height:78px;
+  object-fit:contain;
+  background:#fff;
   border-radius:18px;
-  padding:16px;
+  border:2px solid var(--gold);
+}
+
+.preview-logo span{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.checkbox-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(115px,1fr));
+  gap:8px;
+}
+
+.check-item{
+  background:#102a52;
+  padding:9px 10px;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:14px;
+  color:var(--muted);
   border:1px solid rgba(255,255,255,.08);
+  cursor:pointer;
+}
+
+.check-item:hover{
+  background:#153766;
+  border-color:var(--gold-line);
+}
+
+.check-item input{width:auto}
+
+.form-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:16px;
+  border-radius:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  border:1px solid rgba(255,230,0,.10);
   box-shadow:var(--shadow);
 }
 
-.card h3{
-  color:var(--gold);
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold-line);
+}
+
+.player{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex:1;
+}
+
+.photo{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  object-fit:contain;
+  border:2px solid rgba(255,255,255,.15);
+  background:#fff;
+  flex-shrink:0;
+}
+
+.player-info{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.nome-jogador{
+  font-weight:700;
   font-size:18px;
-  margin-bottom:12px;
-  font-weight:900;
+  color:#fff;
 }
 
-/* INFO */
-.info-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.info{
-  background:#081c36;
-  border-radius:12px;
-  padding:10px;
-}
-
-.info strong{
-  display:block;
-  font-size:11px;
-  color:var(--gold);
-  margin-bottom:4px;
-}
-
-.info span{
+.player-info small{
+  color:var(--muted);
   font-size:13px;
-  font-weight:800;
+  line-height:1.5;
 }
 
-/* TAGS */
 .tags{
   display:flex;
-  flex-wrap:wrap;
   gap:6px;
-  margin-top:10px;
+  flex-wrap:wrap;
+  margin-top:4px;
 }
 
 .tag{
   background:#1a3f73;
   padding:5px 9px;
   border-radius:999px;
-  font-size:11px;
-}
-
-/* REGRAS */
-.rules{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.rule{
-  background:#081c36;
-  padding:10px;
-  border-radius:12px;
-  font-size:13px;
-}
-
-/* JOGOS */
-.games{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.game{
-  background:#081c36;
-  border-radius:12px;
-  padding:10px;
-}
-
-.game strong{
-  font-size:14px;
-}
-
-.game small{
-  display:block;
   font-size:12px;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.btn-acao{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:11px 14px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:13px;
+  border:none;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.btn-ver{background:var(--gold);color:black}
+.btn-danger{background:#d94141;color:#fff}
+.btn-blue{background:#1a3f73;color:#fff}
+
+.vazio{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:30px;
+  border-radius:14px;
+  text-align:center;
   color:var(--muted);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:var(--shadow);
+  grid-column:1/-1;
 }
 
-/* STATUS */
-.status{
-  margin-top:6px;
-  display:inline-block;
-  padding:5px 8px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:900;
-}
-
-.final{
-  background:var(--green);
-}
-
-.agendado{
-  background:var(--yellow);
-}
-/* RESPONSIVO */
 @media(max-width:900px){
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .info-grid{
-    grid-template-columns:1fr;
-  }
+  .header-title{order:3;width:100%;text-align:center}
+  .header-left,.header-right{width:100%;justify-content:center}
+  .form-grid,.filtros{grid-template-columns:1fr}
+  .card{flex-direction:column;align-items:flex-start}
+  .actions{width:100%;justify-content:flex-start}
 }
 
 @media(max-width:600px){
-  .wrap{
-    width:min(100% - 18px, var(--max));
-  }
-
-  .header-left,
-  .header-right{
-    display:none;
-  }
-
-  .header-title{
-    font-size:16px;
-    text-align:center;
-  }
-
+  .top-btn,.btn-acao{width:100%;justify-content:center}
+  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
+  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
   .menu{
     justify-content:flex-start;
-    padding:10px;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:14px;
   }
-
-  .hero{
-    padding:14px;
-  }
-
-  .hero h2{
-    font-size:20px;
-  }
-
-  .hero-logo{
-    width:70px;
-    height:70px;
-  }
-
-  .actions{
-    flex-direction:column;
-  }
-
-  .btn{
-    width:100%;
-  }
+  .menu a{flex:0 0 auto}
 }
 </style>
 </head>
@@ -399,558 +385,584 @@ img{
 
 <header>
   <div class="wrap header-top">
-
     <div class="header-left">
-      <button class="top-btn btn-light" onclick="voltarPagina()">
-        <i class="fa-solid fa-arrow-left"></i> Voltar
-      </button>
-
       <a href="index.html" class="top-btn btn-light">
         <i class="fa-solid fa-house"></i> Página Inicial
       </a>
+
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
     </div>
 
-    <div class="header-title">
-      LIGA GOIANA DE FUTEBOL DE BASE
-    </div>
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
-    <div class="header-right"></div>
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarCampeonato()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Campeonato
+      </button>
+    </div>
   </div>
 
   <div class="nav-bar">
     <div class="wrap">
-      <nav class="menu">
-        <a href="index.html">Início</a>
-        <a href="campeonatos.html" class="ativo">Campeonatos</a>
-        <a href="tabela.html">Tabela</a>
-        <a href="jogos.html">Jogos</a>
-        <a href="times.html">Times</a>
-        <a href="tecnicos.html">Técnicos</a>
-        <a href="jogadores.html">Jogadores</a>
-        <a href="arbitros.html">Árbitros</a>
-        <a href="assistentes.html">Assistente</a>
-        <a href="sumula-publica.html">Súmula</a>
-        <a href="noticias.html">Notícias</a>
-        <a href="login.html">Login</a>
-      </nav>
+      <div class="menu">
+        <a href="admin.html">Painel</a>
+        <a href="campeonatos-admin.html" class="ativo">Campeonatos</a>
+        <a href="jogos-admin.html">Jogos</a>
+        <a href="times-admin.html">Times</a>
+        <a href="tecnicos-admin.html">Técnicos</a>
+        <a href="jogadores-admin.html">Jogadores</a>
+        <a href="arbitros-admin.html">Árbitros</a>
+        <a href="assistentes-admin.html">Assistentes</a>
+        <a href="sumulas-admin.html">Súmulas</a>
+      </div>
     </div>
   </div>
 </header>
 
-<main class="wrap container" id="conteudo" style="display:none;">
+<div class="wrap container">
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-top">
+  <div class="hero">
+    <h2>Campeonatos ADM</h2>
+    <p>Cadastre campeonatos, logo, temporada, formato, categorias e regras. Tudo salvo no Firebase para jogos, tabelas, súmulas e estatísticas automáticas.</p>
+  </div>
 
-      <img id="logoCampeonato" class="hero-logo" src="logo-liga.jfif">
+  <section class="form-panel">
+    <div class="form-title" id="tituloFormulario">Novo Campeonato</div>
+
+    <input type="hidden" id="campeonatoId">
+
+    <div class="form-grid">
+      <div>
+        <label>Nome do campeonato</label>
+        <input id="nome" placeholder="Ex: Copa União de Base">
+      </div>
 
       <div>
-        <h2 id="nomeCampeonato">Carregando...</h2>
-        <p id="descricaoCampeonato">Carregando informações...</p>
+        <label>Temporada</label>
+        <input id="temporada" placeholder="Ex: 2026">
+      </div>
 
-        <div class="hero-tags">
-          <div class="hero-tag" id="tagTemporada">Temporada</div>
-          <div class="hero-tag" id="tagStatus">Status</div>
-          <div class="hero-tag" id="tagCategorias">Categorias</div>
-          <div class="hero-tag" id="tagJogos">Jogos</div>
-          <div class="hero-tag" id="tagTimes">Times</div>
-          <div class="hero-tag" id="tagGols">Gols</div>
-        </div>
+      <div>
+        <label>Status</label>
+        <select id="status">
+          <option value="rascunho">Rascunho</option>
+          <option value="publicado">Publicado</option>
+          <option value="encerrado">Encerrado</option>
+        </select>
+      </div>
 
-        <div class="actions">
-          <a id="btnTabela" class="btn btn-gold">
-            <i class="fa-solid fa-table"></i> Tabela
-          </a>
+      <div>
+        <label>Formato</label>
+        <select id="formato">
+          <option value="">Selecione</option>
+          <option value="Pontos corridos">Pontos corridos</option>
+          <option value="Mata-mata">Mata-mata</option>
+          <option value="Pontos corridos + fase final">Pontos corridos + fase final</option>
+          <option value="Fase de grupos">Fase de grupos</option>
+        </select>
+      </div>
 
-          <a id="btnJogos" class="btn btn-blue">
-            <i class="fa-solid fa-calendar"></i> Jogos
-          </a>
+      <div>
+        <label>Turno</label>
+        <select id="turno">
+          <option value="">Selecione</option>
+          <option value="Ida">Ida</option>
+          <option value="Ida e volta">Ida e volta</option>
+        </select>
+      </div>
 
-          <a id="btnTimes" class="btn btn-blue">
-            <i class="fa-solid fa-shield"></i> Times
-          </a>
+      <div>
+        <label>Fase final começa com</label>
+        <input id="faseFinalInicio" type="number" min="1" placeholder="Ex: 8">
+      </div>
+
+      <div>
+        <label>Zerar cartões em</label>
+        <select id="zerarCartoesEm">
+          <option value="nunca">Nunca</option>
+          <option value="fim-primeira-fase">Fim da primeira fase</option>
+          <option value="quartas">Quartas</option>
+          <option value="semi">Semifinal</option>
+          <option value="final">Final</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Logo URL</label>
+        <input id="logo" placeholder="logo-campeonato.png ou URL">
+      </div>
+
+      <div>
+        <label>Enviar logo do PC/Celular</label>
+        <input type="file" id="logoArquivo" accept="image/*" onchange="previewLogoArquivo()">
+      </div>
+
+      <div>
+        <label>Prévia</label>
+        <div class="preview-logo" id="previewLogoBox">
+          <img id="previewLogoImg" src="logo-liga.jfif">
+          <span id="previewLogoTexto">Pré-visualização da logo</span>
         </div>
       </div>
 
+      <div class="full">
+        <label>Descrição / observações</label>
+        <textarea id="descricao" placeholder="Descrição do campeonato"></textarea>
+      </div>
+
+      <div>
+        <label>Amarelos para suspensão</label>
+        <input id="amarelosParaSuspensao" type="number" min="1" value="3">
+      </div>
+
+      <div>
+        <label>Jogos suspenso por amarelo</label>
+        <input id="jogosSuspensaoAmarelos" type="number" min="1" value="1">
+      </div>
+
+      <div>
+        <label>Jogos por vermelho direto</label>
+        <input id="jogosSuspensaoVermelhoDireto" type="number" min="1" value="2">
+      </div>
+
+      <div class="full">
+        <label>Categorias do campeonato</label>
+        <div class="checkbox-grid" id="categoriasGrid"></div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-acao btn-ver" type="button" onclick="salvarCampeonato()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Campeonato
+      </button>
+
+      <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
+        <i class="fa-solid fa-broom"></i> Limpar
+      </button>
     </div>
   </section>
-<!-- GRID PRINCIPAL -->
-  <section class="grid">
 
-    <!-- RESUMO -->
-    <div class="card">
-      <h3>Resumo do Campeonato</h3>
+  <div class="filtros">
+    <input id="buscaCampeonato" placeholder="Pesquisar campeonato...">
 
-      <div class="info-grid">
-        <div class="info-item">
-          <strong>Nome</strong>
-          <span id="infoNome">-</span>
-        </div>
+    <select id="filtroStatus">
+      <option value="">Todos os status</option>
+      <option value="rascunho">Rascunho</option>
+      <option value="publicado">Publicado</option>
+      <option value="encerrado">Encerrado</option>
+    </select>
+  </div>
 
-        <div class="info-item">
-          <strong>Temporada</strong>
-          <span id="infoTemporada">-</span>
-        </div>
+  <div class="lista-grid" id="listaCampeonatos"></div>
 
-        <div class="info-item">
-          <strong>Status</strong>
-          <span id="infoStatus">-</span>
-        </div>
-
-        <div class="info-item">
-          <strong>Tipo</strong>
-          <span id="infoTipo">-</span>
-        </div>
-
-        <div class="info-item">
-          <strong>Início</strong>
-          <span id="infoInicio">-</span>
-        </div>
-
-        <div class="info-item">
-          <strong>Fim</strong>
-          <span id="infoFim">-</span>
-        </div>
-      </div>
-
-      <div style="margin-top:15px;">
-        <strong style="color:var(--gold);">Descrição</strong>
-        <p id="descricaoCompleta">-</p>
-      </div>
-    </div>
-
-    <!-- ESTATÍSTICAS -->
-    <div class="card">
-      <h3>Informações Gerais</h3>
-
-      <div class="stats-grid">
-        <div class="stat-card"><strong>Categorias</strong><span id="totalCategorias">0</span></div>
-        <div class="stat-card"><strong>Jogos</strong><span id="totalJogos">0</span></div>
-        <div class="stat-card"><strong>Finalizados</strong><span id="totalFinalizados">0</span></div>
-        <div class="stat-card"><strong>Times</strong><span id="totalTimes">0</span></div>
-        <div class="stat-card"><strong>Jogadores</strong><span id="totalJogadores">0</span></div>
-        <div class="stat-card"><strong>Técnicos</strong><span id="totalTecnicos">0</span></div>
-        <div class="stat-card"><strong>Gols</strong><span id="totalGols">0</span></div>
-      </div>
-
-      <div style="margin-top:15px;">
-        <strong style="color:var(--gold);">Categorias</strong>
-        <div class="tags" id="listaCategorias"></div>
-      </div>
-    </div>
-
-  </section>
-<!-- REGRAS -->
-  <section class="card" style="margin-bottom:15px;">
-    <h3>Regras Disciplinares</h3>
-
-    <div id="listaRegras" style="display:flex;flex-direction:column;gap:10px;"></div>
-  </section>
-
-  <!-- JOGOS -->
-  <section class="card" style="margin-bottom:15px;">
-    <h3>Próximos Jogos / Resultados</h3>
-
-    <div id="listaJogos" style="display:flex;flex-direction:column;gap:10px;"></div>
-  </section>
-
-  <!-- REGULAMENTO -->
-  <section class="card">
-    <h3>Regulamento</h3>
-    <p id="textoRegulamento">-</p>
-  </section>
-
-</main>
-
-<!-- LOADING -->
-<div class="wrap" id="loading">
-  <div class="card" style="text-align:center;">Carregando campeonato...</div>
 </div>
 
-<!-- ERRO -->
-<div class="wrap" id="erro" style="display:none;">
-  <div class="card" style="text-align:center;">Campeonato não encontrado.</div>
-</div>
 <script type="module">
 import { db } from "./firebase.js";
 import {
-  doc,
-  getDoc,
   collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-const conteudo = document.getElementById("conteudo");
-const loading = document.getElementById("loading");
-const erro = document.getElementById("erro");
+let campeonatosCache = [];
+let logoAtual = "";
 
-let campeonato = null;
-let jogos = [];
-let jogadores = [];
-let tecnicos = [];
-let sumulas = [];
+const categoriasFixas = [
+  "Sub-11","Sub-12","Sub-13","Sub-14","Sub-15","Sub-16",
+  "Sub-17","Sub-18","Sub-19","Sub-20","Sub-21"
+];
 
-/* VOLTAR */
-window.voltarPagina = function(){
-  if(document.referrer){
-    history.back();
-  }else{
-    location.href = "campeonatos.html";
-  }
-};
+function txt(v){return String(v || "").trim()}
 
-/* UTIL */
-function param(nome){
-  return new URLSearchParams(location.search).get(nome);
-}
-
-function normalizar(txt){
-  return String(txt||"")
+function normalizarTexto(texto){
+  return String(texto || "")
+    .trim()
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g,"");
 }
 
-function val(obj, chaves, f=""){
-  for(const c of chaves){
-    if(obj && obj[c]!==undefined && obj[c]!==null && obj[c]!== ""){
-      return obj[c];
-    }
-  }
-  return f;
-}
-function nomeCamp(c){
-  return val(c, ["nome", "campeonato", "titulo"], "");
+function montarCategorias(){
+  const grid = document.getElementById("categoriasGrid");
+  grid.innerHTML = categoriasFixas.map(c=>`
+    <label class="check-item">
+      <input type="checkbox" value="${c}">
+      <span>${c}</span>
+    </label>
+  `).join("");
 }
 
-function idCamp(c){
-  return val(c, ["id", "campeonatoId"], "");
+function categoriasSelecionadas(){
+  return Array.from(document.querySelectorAll('#categoriasGrid input[type="checkbox"]:checked'))
+    .map(i=>i.value);
 }
 
-function dataBR(valor){
-  if(!valor) return "-";
-
-  const d = new Date(valor);
-
-  if(isNaN(d.getTime())){
-    return String(valor);
-  }
-
-  return d.toLocaleString("pt-BR", {
-    day:"2-digit",
-    month:"2-digit",
-    year:"numeric",
-    hour:"2-digit",
-    minute:"2-digit"
+function marcarCategorias(categorias){
+  document.querySelectorAll('#categoriasGrid input[type="checkbox"]').forEach(item=>{
+    item.checked = (categorias || []).includes(item.value);
   });
 }
 
-/* DADOS EXEMPLO */
-const campeonatoExemplo = {
-  id:"copa-mundo-2002",
-  nome:"Copa do Mundo FIFA 2002",
-  temporada:"2002",
-  status:"Finalizado",
-  tipo:"Mata-mata",
-  logo:"logo-liga.jfif",
-  descricao:"Campeonato de exemplo com a final Brasil 2 x 0 Alemanha para demonstrar o funcionamento do sistema.",
-  regulamento:"Exemplo de regulamento da competição. Os dados podem ser removidos depois.",
-  categorias:["Seleção Principal"],
-  publicado:true,
-  publico:true,
-  exemplo:true,
-  regrasCartoes:{
-    amarelosParaSuspensao:2,
-    jogosSuspensaoAmarelos:1,
-    jogosSuspensaoVermelhoDireto:1,
-    jogosSuspensaoSegundoAmarelo:1
+window.previewLogoArquivo = function(){
+  const arquivo = document.getElementById("logoArquivo").files[0];
+  if(!arquivo) return;
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    document.getElementById("previewLogoBox").style.display = "flex";
+    document.getElementById("previewLogoImg").src = e.target.result;
+    document.getElementById("previewLogoTexto").textContent = arquivo.name;
+  };
+
+  leitor.readAsDataURL(arquivo);
+};
+
+function arquivoParaLogoBase64(arquivo){
+  return new Promise((resolve,reject)=>{
+    if(!arquivo){
+      resolve("");
+      return;
+    }
+
+    if(!arquivo.type || !arquivo.type.startsWith("image/")){
+      reject(new Error("O arquivo da logo precisa ser uma imagem."));
+      return;
+    }
+
+    const leitor = new FileReader();
+
+    leitor.onload = function(e){
+      const img = new Image();
+
+      img.onload = function(){
+        const max = 700;
+        let largura = img.width;
+        let altura = img.height;
+
+        if(largura > altura && largura > max){
+          altura = Math.round((altura * max) / largura);
+          largura = max;
+        }else if(altura >= largura && altura > max){
+          largura = Math.round((largura * max) / altura);
+          altura = max;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = largura;
+        canvas.height = altura;
+
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0,0,largura,altura);
+        ctx.drawImage(img,0,0,largura,altura);
+
+        const base64 = canvas.toDataURL("image/jpeg",0.86);
+        resolve(base64);
+      };
+
+      img.onerror = function(){
+        reject(new Error("Não foi possível ler a imagem da logo."));
+      };
+
+      img.src = e.target.result;
+    };
+
+    leitor.onerror = function(){
+      reject(new Error("Erro ao carregar o arquivo da logo."));
+    };
+
+    leitor.readAsDataURL(arquivo);
+  });
+}
+
+async function uploadLogoSeExistir(){
+  const arquivo = document.getElementById("logoArquivo").files[0];
+  const logoUrlManual = txt(document.getElementById("logo").value);
+
+  if(arquivo){
+    return await arquivoParaLogoBase64(arquivo);
+  }
+
+  if(logoUrlManual) return logoUrlManual;
+
+  return logoAtual || "logo-liga.jfif";
+}
+
+window.limparFormulario = function(){
+  document.getElementById("campeonatoId").value = "";
+  document.getElementById("nome").value = "";
+  document.getElementById("temporada").value = "";
+  document.getElementById("status").value = "rascunho";
+  document.getElementById("formato").value = "";
+  document.getElementById("turno").value = "";
+  document.getElementById("faseFinalInicio").value = "";
+  document.getElementById("zerarCartoesEm").value = "nunca";
+  document.getElementById("logo").value = "";
+  document.getElementById("logoArquivo").value = "";
+  document.getElementById("descricao").value = "";
+  document.getElementById("amarelosParaSuspensao").value = 3;
+  document.getElementById("jogosSuspensaoAmarelos").value = 1;
+  document.getElementById("jogosSuspensaoVermelhoDireto").value = 2;
+  document.getElementById("tituloFormulario").textContent = "Novo Campeonato";
+  document.getElementById("previewLogoBox").style.display = "none";
+  document.getElementById("previewLogoImg").src = "logo-liga.jfif";
+  document.getElementById("previewLogoTexto").textContent = "Pré-visualização da logo";
+  logoAtual = "";
+  marcarCategorias([]);
+};
+
+window.salvarCampeonato = async function(){
+  const botoesSalvar = document.querySelectorAll('button[onclick="salvarCampeonato()"]');
+
+  try{
+    botoesSalvar.forEach(btn=>{
+      btn.disabled = true;
+      btn.style.opacity = ".65";
+      btn.style.cursor = "not-allowed";
+    });
+
+    const id = document.getElementById("campeonatoId").value;
+
+    const nome = txt(document.getElementById("nome").value);
+    const temporada = txt(document.getElementById("temporada").value);
+    const status = document.getElementById("status").value;
+    const formato = document.getElementById("formato").value;
+    const turno = document.getElementById("turno").value;
+    const faseFinalInicio = Number(document.getElementById("faseFinalInicio").value || 0);
+    const zerarCartoesEm = document.getElementById("zerarCartoesEm").value;
+    const descricao = txt(document.getElementById("descricao").value);
+    const amarelosParaSuspensao = Number(document.getElementById("amarelosParaSuspensao").value || 3);
+    const jogosSuspensaoAmarelos = Number(document.getElementById("jogosSuspensaoAmarelos").value || 1);
+    const jogosSuspensaoVermelhoDireto = Number(document.getElementById("jogosSuspensaoVermelhoDireto").value || 2);
+    const categorias = categoriasSelecionadas();
+
+    if(!nome){
+      alert("Digite o nome do campeonato.");
+      return;
+    }
+
+    if(!temporada){
+      alert("Digite a temporada.");
+      return;
+    }
+
+    if(!formato){
+      alert("Selecione o formato.");
+      return;
+    }
+
+    if(!categorias.length){
+      alert("Selecione pelo menos uma categoria.");
+      return;
+    }
+
+    const logo = await uploadLogoSeExistir();
+
+    const dados = {
+      nome,
+      temporada,
+      status,
+      formato,
+      turno,
+      faseFinalInicio,
+      zerarCartoesEm,
+      descricao,
+      logo,
+      logoCampeonato:logo,
+      categorias,
+      publicado:status === "publicado",
+      publico:status === "publicado",
+      visivelPublico:status === "publicado",
+      regrasCartoes:{
+        amarelosParaSuspensao,
+        jogosSuspensaoAmarelos,
+        jogosSuspensaoVermelhoDireto
+      },
+      estatisticas:{
+        jogos:0,
+        gols:0,
+        cartoesAmarelos:0,
+        cartoesVermelhos:0,
+        times:0,
+        jogadores:0
+      },
+      atualizadoEm:serverTimestamp()
+    };
+
+    if(id){
+      await updateDoc(doc(db,"campeonatos",id),dados);
+      alert("Campeonato atualizado com logo salva!");
+    }else{
+      await addDoc(collection(db,"campeonatos"),{
+        ...dados,
+        criadoEm:serverTimestamp()
+      });
+      alert("Campeonato cadastrado com logo salva!");
+    }
+
+    limparFormulario();
+    await carregarCampeonatos();
+
+  }catch(e){
+    console.error("Erro ao salvar campeonato:", e);
+    alert("Erro ao salvar campeonato/logo: " + (e.message || e));
+  }finally{
+    botoesSalvar.forEach(btn=>{
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      btn.style.cursor = "pointer";
+    });
   }
 };
 
-const jogosExemplo = [
-  {
-    id:"final-copa-2002",
-    campeonatoId:"copa-mundo-2002",
-    campeonato:"Copa do Mundo FIFA 2002",
-    categoria:"Seleção Principal",
-    rodada:"Final",
-    data:"2002-06-30T08:00:00",
-    local:"International Stadium Yokohama",
-    timeA:"Brasil",
-    timeB:"Alemanha",
-    golsA:2,
-    golsB:0,
-    status:"finalizado",
-    exemplo:true
+window.editarCampeonato = function(id){
+  const c = campeonatosCache.find(x=>x.id === id);
+  if(!c) return;
+
+  document.getElementById("campeonatoId").value = c.id;
+  document.getElementById("nome").value = c.nome || "";
+  document.getElementById("temporada").value = c.temporada || "";
+  document.getElementById("status").value = c.status || "rascunho";
+  document.getElementById("formato").value = c.formato || "";
+  document.getElementById("turno").value = c.turno || "";
+  document.getElementById("faseFinalInicio").value = c.faseFinalInicio || "";
+  document.getElementById("zerarCartoesEm").value = c.zerarCartoesEm || "nunca";
+  document.getElementById("logo").value = (String(c.logo || "").startsWith("data:image/") ? "" : (c.logo || c.logoCampeonato || ""));
+  document.getElementById("logoArquivo").value = "";
+  document.getElementById("descricao").value = c.descricao || "";
+  document.getElementById("amarelosParaSuspensao").value = c.regrasCartoes?.amarelosParaSuspensao || 3;
+  document.getElementById("jogosSuspensaoAmarelos").value = c.regrasCartoes?.jogosSuspensaoAmarelos || 1;
+  document.getElementById("jogosSuspensaoVermelhoDireto").value = c.regrasCartoes?.jogosSuspensaoVermelhoDireto || 2;
+  document.getElementById("tituloFormulario").textContent = "Editar Campeonato";
+
+  logoAtual = c.logo || c.logoCampeonato || "";
+
+  if(logoAtual){
+    document.getElementById("previewLogoBox").style.display = "flex";
+    document.getElementById("previewLogoImg").src = logoAtual;
+    document.getElementById("previewLogoTexto").textContent = "Logo atual";
   }
-];
 
-const jogadoresExemplo = [
-  { id:"ronaldo-2002", nome:"Ronaldo", time:"Brasil", exemplo:true },
-  { id:"rivaldo-2002", nome:"Rivaldo", time:"Brasil", exemplo:true },
-  { id:"kahn-2002", nome:"Oliver Kahn", time:"Alemanha", exemplo:true }
-];
+  marcarCategorias(Array.isArray(c.categorias) ? c.categorias : []);
+  window.scrollTo({top:0,behavior:"smooth"});
+};
 
-const tecnicosExemplo = [
-  { id:"scolari-2002", nome:"Luiz Felipe Scolari", time:"Brasil", exemplo:true },
-  { id:"voller-2002", nome:"Rudi Völler", time:"Alemanha", exemplo:true }
-];
+window.excluirCampeonato = async function(id){
+  if(!confirm("Excluir campeonato?")) return;
+  await deleteDoc(doc(db,"campeonatos",id));
+  await carregarCampeonatos();
+};
 
-const sumulasExemplo = [
-  {
-    id:"final-copa-2002",
-    jogoId:"final-copa-2002",
-    campeonatoId:"copa-mundo-2002",
-    campeonato:"Copa do Mundo FIFA 2002",
-    categoria:"Seleção Principal",
-    timeA:"Brasil",
-    timeB:"Alemanha",
-    golsA:2,
-    golsB:0,
-    status:"finalizada",
-    exemplo:true
-  }
-];
+async function carregarCampeonatos(){
+  const lista = document.getElementById("listaCampeonatos");
+  lista.innerHTML = `<div class="vazio">Carregando campeonatos...</div>`;
 
-function pertenceAoCamp(item){
-  const campId = idCamp(campeonato);
-  const campNome = nomeCamp(campeonato);
+  const snap = await getDocs(collection(db,"campeonatos"));
 
-  const itemCampId = val(item, ["campeonatoId"], "");
-  const itemCampNome = val(item, ["campeonato", "nomeCampeonato"], "");
+  campeonatosCache = [];
+  snap.forEach(d=>campeonatosCache.push({id:d.id,...d.data()}));
 
-  return itemCampId === campId ||
-    normalizar(itemCampNome) === normalizar(campNome);
+  campeonatosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+
+  renderizarCampeonatos();
 }
 
-function jogosCamp(){
-  return jogos.filter(pertenceAoCamp);
-}
+function renderizarCampeonatos(){
+  const lista = document.getElementById("listaCampeonatos");
+  const busca = normalizarTexto(document.getElementById("buscaCampeonato").value);
+  const filtroStatus = document.getElementById("filtroStatus").value;
 
-function sumulasCamp(){
-  return sumulas.filter(pertenceAoCamp);
-}
+  let campeonatos = campeonatosCache.filter(c=>{
+    if(filtroStatus && c.status !== filtroStatus) return false;
 
-function calcularTotais(){
-  const listaJogos = jogosCamp();
-  const listaSumulas = sumulasCamp();
+    if(busca){
+      const texto = normalizarTexto(`
+        ${c.nome || ""}
+        ${c.temporada || ""}
+        ${c.formato || ""}
+        ${Array.isArray(c.categorias) ? c.categorias.join(" ") : ""}
+      `);
 
-  const categorias = new Set();
-  const times = new Set();
+      if(!texto.includes(busca)) return false;
+    }
 
-  listaJogos.forEach(j => {
-    if(j.categoria) categorias.add(j.categoria);
-    if(j.timeA) times.add(normalizar(j.timeA));
-    if(j.timeB) times.add(normalizar(j.timeB));
+    return true;
   });
 
-  const nomesTimes = Array.from(times);
-
-  const jogadoresDoCamp = jogadores.filter(j =>
-    nomesTimes.includes(normalizar(j.time))
-  );
-
-  const tecnicosDoCamp = tecnicos.filter(t =>
-    nomesTimes.includes(normalizar(t.time))
-  );
-
-  let gols = 0;
-
-  listaSumulas.forEach(s => {
-    gols += Number(s.golsA || 0);
-    gols += Number(s.golsB || 0);
-  });
-
-  if(gols === 0){
-    listaJogos.forEach(j => {
-      gols += Number(j.golsA || 0);
-      gols += Number(j.golsB || 0);
-    });
-  }
-
-  return {
-    jogos:listaJogos,
-    sumulas:listaSumulas,
-    categorias:categorias.size || (Array.isArray(campeonato.categorias) ? campeonato.categorias.length : 0),
-    times:times.size,
-    jogadores:jogadoresDoCamp.length,
-    tecnicos:tecnicosDoCamp.length,
-    gols
-  };
-}
-function preencherJogos(listaJogos){
-  const box = document.getElementById("listaJogos");
-
-  if(!listaJogos.length){
-    box.innerHTML = `<div class="vazio">Nenhum jogo cadastrado para este campeonato.</div>`;
+  if(!campeonatos.length){
+    lista.innerHTML = `<div class="vazio">Nenhum campeonato encontrado.</div>`;
     return;
   }
 
-  const ordenados = [...listaJogos].sort((a,b) =>
-    String(a.data || "").localeCompare(String(b.data || ""))
-  );
-
-  box.innerHTML = ordenados.slice(0,8).map(j => {
-    const finalizado = normalizar(j.status) === "finalizado" || normalizar(j.status) === "sumula_enviada";
-    const placar = finalizado ? `${Number(j.golsA || 0)} x ${Number(j.golsB || 0)}` : "x";
+  lista.innerHTML = campeonatos.map(c=>{
+    const categorias = Array.isArray(c.categorias) && c.categorias.length ? c.categorias : ["Sem categoria"];
 
     return `
-      <div class="game">
-        <strong>${j.timeA || "-"} ${placar} ${j.timeB || "-"}</strong>
-        <small>Categoria: ${j.categoria || "-"}</small>
-        <small>Data: ${dataBR(j.data)}</small>
-        <small>Local: ${j.local || "-"}</small>
+      <div class="card">
+        <div class="player">
+          <img
+            src="${c.logo || c.logoCampeonato || "logo-liga.jfif"}"
+            class="photo"
+            onerror="this.src='logo-liga.jfif'"
+          >
 
-        <div class="status ${finalizado ? "final" : "agendado"}">
-          ${finalizado ? "Finalizado" : "Agendado"}
+          <div class="player-info">
+            <div class="nome-jogador">${c.nome || "-"}</div>
+
+            <small>Temporada: ${c.temporada || "-"}</small>
+            <small>Status: ${c.status || "rascunho"}</small>
+            <small>Formato: ${c.formato || "-"}</small>
+            <small>Turno: ${c.turno || "-"}</small>
+            <small>Fase final: ${c.faseFinalInicio || "-"}</small>
+
+            <small>
+              Jogos: ${Number(c.estatisticas?.jogos || 0)} |
+              Gols: ${Number(c.estatisticas?.gols || 0)}
+            </small>
+
+            <small>
+              🟨 ${Number(c.estatisticas?.cartoesAmarelos || 0)} |
+              🟥 ${Number(c.estatisticas?.cartoesVermelhos || 0)}
+            </small>
+
+            <div class="tags">
+              <span class="tag">${c.status || "rascunho"}</span>
+              ${categorias.map(cat=>`<span class="tag">${cat}</span>`).join("")}
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="btn-acao btn-blue" href="campeonato-publico.html?id=${c.id}">
+            <i class="fa-solid fa-eye"></i> Ver
+          </a>
+
+          <button class="btn-acao btn-ver" onclick="editarCampeonato('${c.id}')">
+            <i class="fa-solid fa-pen"></i> Editar
+          </button>
+
+          <button class="btn-acao btn-danger" onclick="excluirCampeonato('${c.id}')">
+            <i class="fa-solid fa-trash"></i> Excluir
+          </button>
         </div>
       </div>
     `;
   }).join("");
 }
 
-function preencherTela(){
-  const totais = calcularTotais();
-  const nome = nomeCamp(campeonato);
+document.getElementById("buscaCampeonato").addEventListener("input",renderizarCampeonatos);
+document.getElementById("filtroStatus").addEventListener("change",renderizarCampeonatos);
 
-  document.title = `${nome || "Campeonato"} - LIGA GOIANA DE FUTEBOL DE BASE`;
-
-  document.getElementById("logoCampeonato").src = campeonato.logo || "logo-liga.jfif";
-  document.getElementById("logoCampeonato").onerror = function(){ this.src = "logo-liga.jfif"; };
-
-  document.getElementById("nomeCampeonato").textContent = nome || "Campeonato";
-  document.getElementById("descricaoCampeonato").textContent =
-    campeonato.descricao || campeonato.resumo || "Sem descrição cadastrada.";
-
-  document.getElementById("tagTemporada").textContent = `Temporada: ${campeonato.temporada || "-"}`;
-  document.getElementById("tagStatus").textContent = `Status: ${campeonato.status || "-"}`;
-  document.getElementById("tagCategorias").textContent = `Categorias: ${totais.categorias}`;
-  document.getElementById("tagJogos").textContent = `Jogos: ${totais.jogos.length}`;
-  document.getElementById("tagTimes").textContent = `Times: ${totais.times}`;
-  document.getElementById("tagGols").textContent = `Gols: ${totais.gols}`;
-
-  document.getElementById("infoNome").textContent = nome || "-";
-  document.getElementById("infoTemporada").textContent = campeonato.temporada || "-";
-  document.getElementById("infoStatus").textContent = campeonato.status || "-";
-  document.getElementById("infoTipo").textContent = campeonato.tipo || campeonato.formato || "-";
-  document.getElementById("infoInicio").textContent = campeonato.dataInicio || campeonato.inicio || "-";
-  document.getElementById("infoFim").textContent = campeonato.dataFim || campeonato.fim || "-";
-  document.getElementById("descricaoCompleta").textContent =
-    campeonato.descricao || campeonato.resumo || "Sem descrição cadastrada.";
-
-  document.getElementById("totalCategorias").textContent = totais.categorias;
-  document.getElementById("totalJogos").textContent = totais.jogos.length;
-  document.getElementById("totalFinalizados").textContent = totais.sumulas.length;
-  document.getElementById("totalTimes").textContent = totais.times;
-  document.getElementById("totalJogadores").textContent = totais.jogadores;
-  document.getElementById("totalTecnicos").textContent = totais.tecnicos;
-  document.getElementById("totalGols").textContent = totais.gols;
-
-  const categorias = Array.isArray(campeonato.categorias) ? campeonato.categorias : [];
-
-  document.getElementById("listaCategorias").innerHTML = categorias.length
-    ? categorias.map(c => `<span class="tag">${typeof c === "string" ? c : (c.nome || c.categoria || "")}</span>`).join("")
-    : `<span class="tag">Sem categorias</span>`;
-
-  const regras = campeonato.regrasCartoes || {};
-
-  document.getElementById("listaRegras").innerHTML = `
-    <div class="rule">
-      <strong style="color:var(--gold);">Suspensão por amarelos</strong><br>
-      ${Number(regras.amarelosParaSuspensao || 3)} amarelos = ${Number(regras.jogosSuspensaoAmarelos || 1)} jogo(s) de suspensão
-    </div>
-
-    <div class="rule">
-      <strong style="color:var(--gold);">Vermelho direto</strong><br>
-      Vermelho direto = ${Number(regras.jogosSuspensaoVermelhoDireto || 2)} jogo(s) de suspensão
-    </div>
-
-    <div class="rule">
-      <strong style="color:var(--gold);">Segundo amarelo</strong><br>
-      2º amarelo = ${Number(regras.jogosSuspensaoSegundoAmarelo || 1)} jogo(s) de suspensão
-    </div>
-  `;
-
-  document.getElementById("textoRegulamento").textContent =
-    campeonato.regulamento || campeonato.regulamentoTexto || campeonato.observacoes || "Sem regulamento cadastrado.";
-
-  document.getElementById("btnTabela").href = `tabela.html?campeonato=${encodeURIComponent(nome)}`;
-  document.getElementById("btnJogos").href = `jogos.html?campeonato=${encodeURIComponent(nome)}`;
-  document.getElementById("btnTimes").href = `times.html?campeonato=${encodeURIComponent(nome)}`;
-
-  preencherJogos(totais.jogos);
-}
-
-async function carregarRelacionados(){
-  const [snapJogos, snapJogadores, snapTecnicos, snapSumulas] = await Promise.all([
-    getDocs(collection(db, "jogos")),
-    getDocs(collection(db, "jogadores")),
-    getDocs(collection(db, "tecnicos")),
-    getDocs(collection(db, "sumulas"))
-  ]);
-
-  jogos = [];
-  jogadores = [];
-  tecnicos = [];
-  sumulas = [];
-
-  snapJogos.forEach(d => jogos.push({ id:d.id, ...d.data() }));
-  snapJogadores.forEach(d => jogadores.push({ id:d.id, ...d.data() }));
-  snapTecnicos.forEach(d => tecnicos.push({ id:d.id, ...d.data() }));
-  snapSumulas.forEach(d => sumulas.push({ id:d.id, ...d.data() }));
-}
-
-async function iniciar(){
-  try{
-    const id = param("id");
-
-    if(id === "copa-mundo-2002"){
-      campeonato = campeonatoExemplo;
-      jogos = jogosExemplo;
-      jogadores = jogadoresExemplo;
-      tecnicos = tecnicosExemplo;
-      sumulas = sumulasExemplo;
-      preencherTela();
-      loading.style.display = "none";
-      conteudo.style.display = "block";
-      return;
-    }
-
-    if(!id){
-      campeonato = campeonatoExemplo;
-      jogos = jogosExemplo;
-      jogadores = jogadoresExemplo;
-      tecnicos = tecnicosExemplo;
-      sumulas = sumulasExemplo;
-      preencherTela();
-      loading.style.display = "none";
-      conteudo.style.display = "block";
-      return;
-    }
-
-    const snap = await getDoc(doc(db, "campeonatos", id));
-
-    if(!snap.exists()){
-      throw new Error("Campeonato não encontrado");
-    }
-
-    campeonato = { id:snap.id, ...snap.data() };
-
-    await carregarRelacionados();
-
-    preencherTela();
-
-    loading.style.display = "none";
-    conteudo.style.display = "block";
-  }catch(e){
-    console.error(e);
-    loading.style.display = "none";
-    erro.style.display = "block";
-  }
-}
-
-iniciar();
+montarCategorias();
+carregarCampeonatos();
 </script>
 
 </body>
