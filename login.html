@@ -52,6 +52,7 @@ body{
 }
 
 .logo{
+  display:block;
   width:82px;
   height:82px;
   border-radius:50%;
@@ -218,6 +219,7 @@ input:focus{
 
 <script type="module">
 import { auth, db } from "./firebase.js";
+
 import {
   signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
@@ -261,6 +263,20 @@ function normalizarTipo(tipo){
     .replace(/\s+/g,"_");
 }
 
+function pegarTiposUsuario(dados){
+  const bruto = dados.tipoUsuario ?? dados.tipousuario ?? dados.tipo ?? dados.perfil ?? "torcedor";
+
+  if(Array.isArray(bruto)){
+    return bruto.map(t => normalizarTipo(t)).filter(Boolean);
+  }
+
+  return [normalizarTipo(bruto)].filter(Boolean);
+}
+
+function temTipo(tipos, tipo){
+  return tipos.includes(normalizarTipo(tipo));
+}
+
 async function garantirRegistroBasico(uid,email){
   const ref = doc(db,"usuarios",uid);
   const snap = await getDoc(ref);
@@ -277,7 +293,7 @@ async function garantirRegistroBasico(uid,email){
     telefone:"",
     dataNascimento:"",
     nascimento:"",
-    tipoUsuario:"torcedor",
+    tipoUsuario:["torcedor"],
     tipo:"torcedor",
     perfil:"torcedor",
     status:"pendente",
@@ -334,7 +350,8 @@ window.login = async function(){
     const userSnap = await garantirRegistroBasico(uid,email);
     const dados = userSnap.data();
 
-    const tipo = normalizarTipo(dados.tipoUsuario || dados.tipousuario || dados.tipo || dados.perfil || "");
+    const tiposUsuario = pegarTiposUsuario(dados);
+
     const status = normalizarTipo(dados.status || "ativo");
     const aprovado = dados.aprovado === true;
     const autorizado = dados.autorizado === true;
@@ -357,7 +374,7 @@ window.login = async function(){
       return;
     }
 
-    if(tipo === "admin"){
+    if(temTipo(tiposUsuario,"admin")){
       if(!aprovado || !autorizado){
         mostrarErro("Seu acesso de administrador ainda não está liberado.");
         btnLogin.disabled = false;
@@ -370,7 +387,7 @@ window.login = async function(){
       return;
     }
 
-    if(tipo === "arbitro"){
+    if(temTipo(tiposUsuario,"arbitro")){
       if(!aprovado || !autorizado){
         mostrarErro("Seu acesso de árbitro ainda está pendente de autorização.");
         btnLogin.disabled = false;
@@ -383,7 +400,7 @@ window.login = async function(){
       return;
     }
 
-    if(tipo === "fotografo" || tipo === "fotógrafo"){
+    if(temTipo(tiposUsuario,"fotografo") || temTipo(tiposUsuario,"fotógrafo")){
       if(!aprovado){
         mostrarErro("Seu cadastro de fotógrafo ainda está aguardando aprovação do ADM.");
         btnLogin.disabled = false;
@@ -396,7 +413,11 @@ window.login = async function(){
       return;
     }
 
-    if(tipo === "assistente" || tipo === "tecnico" || tipo === "jogador"){
+    if(
+      temTipo(tiposUsuario,"assistente") ||
+      temTipo(tiposUsuario,"tecnico") ||
+      temTipo(tiposUsuario,"jogador")
+    ){
       if(!aprovado){
         mostrarErro("Seu cadastro ainda está pendente de aprovação.");
         btnLogin.disabled = false;
