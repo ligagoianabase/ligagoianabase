@@ -474,6 +474,16 @@ input:focus,select:focus,textarea:focus{
       </div>
 
       <div>
+        <label>Data de início</label>
+        <input id="dataInicio" type="date">
+      </div>
+
+      <div>
+        <label>Data final</label>
+        <input id="dataFim" type="date">
+      </div>
+
+      <div>
         <label>Fase final começa com</label>
         <input id="faseFinalInicio" type="number" min="1" placeholder="Ex: 8">
       </div>
@@ -520,6 +530,11 @@ input:focus,select:focus,textarea:focus{
       <div>
         <label>Jogos suspenso por amarelo</label>
         <input id="jogosSuspensaoAmarelos" type="number" min="1" value="1">
+      </div>
+
+      <div>
+        <label>Jogos por segundo amarelo</label>
+        <input id="jogosSuspensaoSegundoAmarelo" type="number" min="1" value="1">
       </div>
 
       <div>
@@ -703,6 +718,8 @@ window.limparFormulario = function(){
   document.getElementById("status").value = "rascunho";
   document.getElementById("formato").value = "";
   document.getElementById("turno").value = "";
+  document.getElementById("dataInicio").value = "";
+  document.getElementById("dataFim").value = "";
   document.getElementById("faseFinalInicio").value = "";
   document.getElementById("zerarCartoesEm").value = "nunca";
   document.getElementById("logo").value = "";
@@ -736,11 +753,14 @@ window.salvarCampeonato = async function(){
     const status = document.getElementById("status").value;
     const formato = document.getElementById("formato").value;
     const turno = document.getElementById("turno").value;
+    const dataInicio = document.getElementById("dataInicio").value;
+    const dataFim = document.getElementById("dataFim").value;
     const faseFinalInicio = Number(document.getElementById("faseFinalInicio").value || 0);
     const zerarCartoesEm = document.getElementById("zerarCartoesEm").value;
     const descricao = txt(document.getElementById("descricao").value);
     const amarelosParaSuspensao = Number(document.getElementById("amarelosParaSuspensao").value || 3);
     const jogosSuspensaoAmarelos = Number(document.getElementById("jogosSuspensaoAmarelos").value || 1);
+    const jogosSuspensaoSegundoAmarelo = Number(document.getElementById("jogosSuspensaoSegundoAmarelo").value || 1);
     const jogosSuspensaoVermelhoDireto = Number(document.getElementById("jogosSuspensaoVermelhoDireto").value || 2);
     const categorias = categoriasSelecionadas();
 
@@ -772,6 +792,8 @@ window.salvarCampeonato = async function(){
       status,
       formato,
       turno,
+      dataInicio,
+      dataFim,
       faseFinalInicio,
       zerarCartoesEm,
       descricao,
@@ -784,6 +806,7 @@ window.salvarCampeonato = async function(){
       regrasCartoes:{
         amarelosParaSuspensao,
         jogosSuspensaoAmarelos,
+        jogosSuspensaoSegundoAmarelo,
         jogosSuspensaoVermelhoDireto
       },
       estatisticas:{
@@ -833,6 +856,8 @@ window.editarCampeonato = function(id){
   document.getElementById("status").value = c.status || "rascunho";
   document.getElementById("formato").value = c.formato || "";
   document.getElementById("turno").value = c.turno || "";
+  document.getElementById("dataInicio").value = c.dataInicio || "";
+  document.getElementById("dataFim").value = c.dataFim || "";
   document.getElementById("faseFinalInicio").value = c.faseFinalInicio || "";
   document.getElementById("zerarCartoesEm").value = c.zerarCartoesEm || "nunca";
   document.getElementById("logo").value = (String(c.logo || "").startsWith("data:image/") ? "" : (c.logo || c.logoCampeonato || ""));
@@ -840,6 +865,7 @@ window.editarCampeonato = function(id){
   document.getElementById("descricao").value = c.descricao || "";
   document.getElementById("amarelosParaSuspensao").value = c.regrasCartoes?.amarelosParaSuspensao || 3;
   document.getElementById("jogosSuspensaoAmarelos").value = c.regrasCartoes?.jogosSuspensaoAmarelos || 1;
+  document.getElementById("jogosSuspensaoSegundoAmarelo").value = c.regrasCartoes?.jogosSuspensaoSegundoAmarelo || 1;
   document.getElementById("jogosSuspensaoVermelhoDireto").value = c.regrasCartoes?.jogosSuspensaoVermelhoDireto || 2;
   document.getElementById("tituloFormulario").textContent = "Editar Campeonato";
 
