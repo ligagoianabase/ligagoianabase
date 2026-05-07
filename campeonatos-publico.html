@@ -197,9 +197,15 @@ img{
 /* BOTÕES */
 .actions{
   display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:12px;
+  gap:10px;
+  flex-wrap:nowrap;
+  margin-top:16px;
+  align-items:center;
+}
+
+.actions .btn{
+  flex:1;
+  min-width:0;
 }
 
 .btn{
@@ -369,6 +375,12 @@ img{
   .menu{
     justify-content:flex-start;
     padding:10px;
+    overflow-x:auto;
+    flex-wrap:nowrap;
+  }
+
+  .menu a{
+    flex:0 0 auto;
   }
 
   .hero{
@@ -385,11 +397,16 @@ img{
   }
 
   .actions{
-    flex-direction:column;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    gap:8px;
   }
 
-  .btn{
-    width:100%;
+  .actions .btn{
+    flex:1;
+    width:auto;
+    font-size:12px;
+    padding:10px 6px;
   }
 }
 </style>
@@ -862,13 +879,13 @@ function preencherTela(){
     </div>
 
     <div class="rule">
-      <strong style="color:var(--gold);">Vermelho direto</strong><br>
-      Vermelho direto = ${Number(regras.jogosSuspensaoVermelhoDireto || 2)} jogo(s) de suspensão
+      <strong style="color:var(--gold);">Vermelho pelo segundo amarelo</strong><br>
+      2º amarelo = ${Number(regras.jogosSuspensaoSegundoAmarelo || 1)} jogo(s) de suspensão
     </div>
 
     <div class="rule">
-      <strong style="color:var(--gold);">Segundo amarelo</strong><br>
-      2º amarelo = ${Number(regras.jogosSuspensaoSegundoAmarelo || 1)} jogo(s) de suspensão
+      <strong style="color:var(--gold);">Vermelho direto</strong><br>
+      Vermelho direto = ${Number(regras.jogosSuspensaoVermelhoDireto || 2)} jogo(s) de suspensão
     </div>
   `;
 
