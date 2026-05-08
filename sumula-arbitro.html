@@ -694,27 +694,115 @@ td:nth-child(4) input{min-width:110px}
   display:none;
 }
 
+
+
+/* AJUSTE: manter a súmula do árbitro no mesmo padrão da pública */
+.lineups-grid,
+.grid2,
+.events-grid,
+.lower-grid,
+.footer-grid,
+.comissao-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+.lineup-card,
+.event-box,
+.team-events,
+.panel,
+.comissao-card,
+.team-score,
+.team-name{
+  min-width:0;
+}
+
+.table-wrap{
+  width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+}
+
+.table-wrap table{
+  min-width:720px;
+}
+
+.lineup-head span,
+.team-name input.nome{
+  width:100%;
+  max-width:100%;
+}
+
+.team-name{
+  flex:1;
+}
+
+.team-name input.nome{
+  font-size:27px;
+  overflow:visible;
+  text-overflow:clip;
+}
+
+.comissao-lista{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+.comissao-item{
+  min-height:82px;
+  align-items:center;
+}
+
+.comissao-icone{
+  background:linear-gradient(135deg,#eef4ff,#ffffff);
+  color:var(--azul);
+  box-shadow:0 3px 9px rgba(6,29,68,.10);
+}
+
 @media(max-width:900px){
   body{background:#fff;}
-  .sumula-viewport{justify-content:flex-start;align-items:flex-start;padding:8px 0;}
+  .sumula-viewport{justify-content:flex-start;align-items:flex-start;padding:8px 0;overflow:hidden;}
   .sumula-scale{transform:scale(var(--escala-mobile,1));transform-origin:top left;}
   .page{border-radius:0;box-shadow:none;}
-  .topbar-inner,.header,.info-strip,.score-card,.match-strip,.grid2,
-  .event-columns,.lower-grid,.summary-grid,.footer-grid,.buttons,.comissao-grid,
-  .auth-box,.add-row,.event-form,.event-form.cartao-form,.busca-box{
+
+  .header,
+  .info-strip,
+  .score-card,
+  .match-strip,
+  .grid2,
+  .lineups-grid,
+  .events-grid,
+  .event-columns,
+  .lower-grid,
+  .summary-grid,
+  .footer-grid,
+  .buttons,
+  .comissao-grid,
+  .auth-box{
+    grid-template-columns:inherit;
+  }
+
+  .topbar-inner,
+  .add-row,
+  .event-form,
+  .event-form.cartao-form,
+  .busca-box{
     grid-template-columns:1fr;
   }
 
-  .header-title h1{font-size:36px}
-  .score-number{font-size:50px}
-  .team-score,.team-score.away{flex-direction:column}
+  .header{grid-template-columns:145px 1fr 145px 210px;}
+  .info-strip{grid-template-columns:1.1fr 1.45fr .86fr .72fr 1.05fr;}
+  .score-card{grid-template-columns:1fr 260px 1fr;}
+  .match-strip{grid-template-columns:1fr 1fr 1.2fr 1.1fr;}
+  .grid2,.lineups-grid,.events-grid,.lower-grid,.footer-grid,.comissao-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .event-columns{grid-template-columns:1fr 1fr;}
+  .summary-grid{grid-template-columns:1fr 1fr 1fr;}
+  .buttons{grid-template-columns:repeat(4,1fr);}
+  .auth-box{grid-template-columns:110px 1fr;}
+  .team-score.away{flex-direction:row-reverse;}
+  .team-score{flex-direction:row;}
+  .comissao-lista{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 
-@media(max-width:900px){
-  .comissao-lista{grid-template-columns:1fr;}
-  .header-title{text-align:center;}
-  .header-title input{text-align:center;}
-}
 </style>
 </head>
 
