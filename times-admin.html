@@ -1,41 +1,2123 @@
-<div class="uniforme-preview-area">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <button type="button" class="uniforme-seta esquerda" onclick="uniformeAnterior()">
-    <i class="fa-solid fa-chevron-left"></i>
-  </button>
+<title>Times ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
-  <div class="camisa-showcase">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <div class="camisa-3d" id="camisa3d">
+<style>
+:root{
+  --bg:#0b1f3a;
+  --bg-dark:#08172c;
+  --card:#102a52;
+  --card-hover:#153766;
+  --gold:#f7c600;
+  --gold-soft:rgba(247,198,0,.12);
+  --gold-line:rgba(247,198,0,.24);
+  --white:#ffffff;
+  --muted:#d8e1ef;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --transition:.25s ease;
+  --max:1240px;
+}
 
-      <div class="camisa-gola"></div>
+*{margin:0;padding:0;box-sizing:border-box}
 
-      <div class="camisa-manga manga-esq"></div>
-      <div class="camisa-manga manga-dir"></div>
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+}
 
-      <div class="camisa-corpo" id="camisaCorpo">
+a{text-decoration:none;color:inherit;transition:var(--transition)}
+button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
+input,select,textarea{font-family:inherit}
 
-        <div class="camisa-overlay" id="camisaOverlay"></div>
+.wrap{width:min(100% - 28px, var(--max));margin:0 auto}
 
-        <img
-          id="previewEscudoCamisa"
-          class="camisa-escudo"
-          src="logo-liga.jfif"
-        >
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
 
-      </div>
+.header-top{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
 
+.header-left,.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:700;
+}
+
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.btn-light{background:#fff4cf;color:#111}
+.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
+.btn-gold{background:var(--gold);color:#111}
+.btn-gold:hover{filter:brightness(1.04);transform:translateY(-2px)}
+
+.nav-bar{
+  background:rgba(16,42,82,.95);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.menu{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:12px 0;
+  flex-wrap:wrap;
+}
+
+.menu a{
+  color:white;
+  font-weight:700;
+  font-size:14px;
+  background:#0d2346;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+
+.menu a:hover{
+  color:var(--gold);
+  background:var(--gold-soft);
+  border-color:var(--gold-line);
+}
+
+.menu a.ativo{
+  background:var(--gold);
+  color:black;
+}
+
+.container{padding:24px 0 34px}
+
+.hero,.form-panel{
+  background:linear-gradient(135deg,#102a52,#0d2346);
+  border:1px solid var(--gold-line);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:var(--shadow);
+}
+
+.hero h2{
+  margin:0 0 8px;
+  color:var(--gold);
+  font-size:28px;
+}
+
+.hero p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
+  font-size:15px;
+}
+
+.form-title{
+  color:var(--gold);
+  font-size:20px;
+  margin-bottom:14px;
+  font-weight:900;
+}
+
+.status-msg{
+  display:none;
+  margin-bottom:14px;
+  padding:12px;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:900;
+  line-height:1.45;
+}
+
+.status-msg.ok{
+  display:block;
+  background:rgba(27,94,32,.22);
+  border:1px solid rgba(120,255,160,.25);
+  color:#b9ffd0;
+}
+
+.status-msg.erro{
+  display:block;
+  background:rgba(180,35,35,.22);
+  border:1px solid rgba(255,120,120,.25);
+  color:#ffb0b0;
+}
+
+.status-msg.info{
+  display:block;
+  background:rgba(26,63,115,.45);
+  border:1px solid rgba(255,255,255,.10);
+  color:#fff;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.full{grid-column:1/-1}
+
+label{
+  display:block;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:6px;
+  color:#fff;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+}
+
+textarea{
+  min-height:84px;
+  resize:vertical;
+}
+
+input:focus,select:focus,textarea:focus{
+  outline:2px solid rgba(247,198,0,.5);
+}
+
+.preview-logo{
+  display:none;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.preview-logo img{
+  width:78px;
+  height:78px;
+  object-fit:contain;
+  background:#fff;
+  border-radius:18px;
+  border:2px solid var(--gold);
+}
+
+.preview-logo span{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.checkbox-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(115px,1fr));
+  gap:8px;
+}
+
+.check-item{
+  background:#102a52;
+  padding:9px 10px;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:14px;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.08);
+  cursor:pointer;
+}
+
+.check-item:hover{
+  background:#153766;
+  border-color:var(--gold-line);
+}
+
+.check-item input{
+  width:auto;
+}
+
+.form-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:16px;
+  border-radius:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  border:1px solid rgba(255,230,0,.10);
+  box-shadow:var(--shadow);
+}
+
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold-line);
+}
+
+.player{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex:1;
+}
+
+.photo{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  object-fit:contain;
+  border:2px solid rgba(255,255,255,.15);
+  background:#fff;
+  flex-shrink:0;
+}
+
+.player-info{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.nome-jogador{
+  font-weight:700;
+  font-size:18px;
+  color:#fff;
+}
+
+.player-info small{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:4px;
+}
+
+.tag{
+  background:#1a3f73;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.btn-acao{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:11px 14px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:13px;
+  border:none;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.btn-ver{background:var(--gold);color:black}
+.btn-danger{background:#d94141;color:#fff}
+.btn-blue{background:#1a3f73;color:#fff}
+.btn-green{background:#1b5e20;color:#fff}
+
+.vazio{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:30px;
+  border-radius:14px;
+  text-align:center;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:var(--shadow);
+  grid-column:1/-1;
+}
+
+/* UNIFORMES */
+.uniforme-builder{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:16px;
+  align-items:start;
+}
+
+.uniforme-form{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:14px;
+}
+
+.uniforme-preview{
+  min-height:430px;
+  border-radius:18px;
+  border:1px solid rgba(247,198,0,.22);
+  background:
+    radial-gradient(circle at center,rgba(247,198,0,.20),transparent 43%),
+    linear-gradient(135deg,rgba(8,35,75,.82),rgba(5,18,43,.88));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  position:relative;
+  overflow:hidden;
+}
+
+.uniforme-preview:before{
+  content:"";
+  position:absolute;
+  inset:-60px;
+  background:
+    radial-gradient(circle at top left,rgba(255,255,255,.12),transparent 32%),
+    radial-gradient(circle at bottom right,rgba(247,198,0,.14),transparent 36%);
+  pointer-events:none;
+}
+
+.uniforme-preview-area{
+  position:relative;
+  width:100%;
+  min-height:390px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  z-index:2;
+}
+
+.camisa-showcase{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+}
+
+.camisa-3d{
+  position:relative;
+  width:255px;
+  height:325px;
+  filter:
+    drop-shadow(0 26px 38px rgba(0,0,0,.58))
+    drop-shadow(0 0 26px rgba(247,198,0,.20));
+  transform:
+    perspective(1200px)
+    rotateY(-12deg)
+    rotateX(8deg);
+  transition:.35s ease;
+}
+
+.camisa-3d:hover{
+  transform:
+    perspective(1200px)
+    rotateY(-6deg)
+    rotateX(4deg)
+    scale(1.03);
+}
+
+.camisa-corpo{
+  position:absolute;
+  inset:0;
+  border-radius:42px 42px 74px 74px;
+  overflow:hidden;
+  border:2px solid rgba(255,255,255,.14);
+  background:#111;
+  box-shadow:
+    inset 0 0 36px rgba(255,255,255,.12),
+    inset 0 -58px 70px rgba(0,0,0,.35);
+}
+
+.camisa-overlay{
+  position:absolute;
+  inset:0;
+  opacity:1;
+  pointer-events:none;
+}
+
+.camisa-textura{
+  position:absolute;
+  inset:0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.035) 0px,
+      rgba(255,255,255,.035) 1px,
+      transparent 1px,
+      transparent 7px
+    );
+  mix-blend-mode:soft-light;
+  opacity:.72;
+  z-index:5;
+  pointer-events:none;
+}
+
+.camisa-gola{
+  position:absolute;
+  top:-2px;
+  left:50%;
+  transform:translateX(-50%);
+  width:88px;
+  height:60px;
+  background:#0a0a0a;
+  border-radius:0 0 45px 45px;
+  z-index:20;
+  box-shadow:
+    inset 0 -8px 14px rgba(255,255,255,.08),
+    0 5px 14px rgba(0,0,0,.28);
+}
+
+.camisa-gola:after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:5px;
+  transform:translateX(-50%);
+  width:46px;
+  height:30px;
+  border-radius:0 0 24px 24px;
+  background:rgba(0,0,0,.52);
+}
+
+.camisa-manga{
+  position:absolute;
+  top:72px;
+  width:78px;
+  height:118px;
+  background:#111;
+  z-index:-1;
+  box-shadow:
+    inset 0 -25px 32px rgba(0,0,0,.34),
+    inset 0 18px 20px rgba(255,255,255,.08);
+}
+
+.manga-esq{
+  left:-52px;
+  border-radius:32px 0 0 34px;
+  transform:rotate(-13deg);
+}
+
+.manga-dir{
+  right:-52px;
+  border-radius:0 32px 34px 0;
+  transform:rotate(13deg);
+}
+
+.camisa-escudo{
+  position:absolute;
+  top:66px;
+  right:43px;
+  width:44px;
+  height:44px;
+  object-fit:contain;
+  border-radius:11px;
+  background:#fff;
+  padding:4px;
+  z-index:50;
+  box-shadow:0 7px 16px rgba(0,0,0,.42);
+}
+
+.camisa-numero{
+  position:absolute;
+  left:50%;
+  top:118px;
+  transform:translateX(-50%);
+  color:rgba(255,255,255,.28);
+  font-size:84px;
+  font-weight:1000;
+  letter-spacing:-5px;
+  z-index:22;
+  text-shadow:0 4px 8px rgba(0,0,0,.24);
+  pointer-events:none;
+}
+
+.uniforme-info{
+  margin-top:20px;
+  text-align:center;
+}
+
+.uniforme-info strong{
+  display:block;
+  color:#f7c600;
+  font-size:20px;
+  font-weight:900;
+}
+
+.uniforme-info span{
+  color:#c8d3ea;
+  font-size:14px;
+  text-transform:capitalize;
+}
+
+.uniforme-seta{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:46px;
+  height:46px;
+  border:none;
+  border-radius:50%;
+  background:#08285c;
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+  z-index:100;
+  transition:.25s;
+  border:1px solid rgba(247,198,0,.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.uniforme-seta:hover{
+  background:#f7c600;
+  color:#111;
+  transform:translateY(-50%) scale(1.08);
+}
+
+.uniforme-seta.esquerda{left:6px}
+.uniforme-seta.direita{right:6px}
+
+.modelo-mini-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px;
+  margin-top:12px;
+}
+
+.uniforme-chip{
+  background:#102a52;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:12px;
+  padding:10px;
+  cursor:pointer;
+}
+
+.uniforme-chip.ativo{
+  border-color:var(--gold);
+  background:rgba(247,198,0,.12);
+}
+
+.uniforme-chip strong{
+  color:#fff;
+  font-size:13px;
+}
+
+.uniforme-chip small{
+  display:block;
+  color:var(--muted);
+  margin-top:3px;
+}
+
+.jogadores-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+
+.jogador-card{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);
+  display:grid;
+  grid-template-columns:58px 1fr auto;
+  gap:12px;
+  align-items:center;
+}
+
+.jogador-card img{
+  width:58px;
+  height:58px;
+  object-fit:cover;
+  border-radius:50%;
+  background:#fff;
+  border:2px solid rgba(247,198,0,.35);
+}
+
+.jogador-card h4{
+  color:#fff;
+  margin-bottom:5px;
+}
+
+.jogador-card p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.4;
+}
+
+.badge{
+  display:inline-flex;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+  background:#1a3f73;
+  color:#fff;
+  margin-right:4px;
+  margin-top:5px;
+}
+
+.badge.ok{background:#1b5e20}
+.badge.pendente{background:#7a5a00}
+
+@media(max-width:900px){
+  .header-title{order:3;width:100%;text-align:center}
+  .header-left,.header-right{width:100%;justify-content:center}
+  .form-grid,.filtros,.uniforme-builder{grid-template-columns:1fr}
+  .card{flex-direction:column;align-items:flex-start}
+  .actions{width:100%;justify-content:flex-start}
+}
+
+@media(max-width:600px){
+  .top-btn,.btn-acao{width:100%;justify-content:center}
+  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
+  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
+  .menu{
+    justify-content:flex-start;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:14px;
+  }
+  .menu a{flex:0 0 auto}
+  .jogador-card{grid-template-columns:52px 1fr}
+  .jogador-card .actions{grid-column:1/-1}
+  .uniforme-preview{min-height:330px}
+  .uniforme-preview-area{min-height:300px}
+  .camisa-3d{width:185px;height:245px}
+  .camisa-gola{width:66px;height:44px}
+  .camisa-manga{width:54px;height:84px;top:56px}
+  .manga-esq{left:-36px}
+  .manga-dir{right:-36px}
+  .camisa-escudo{width:34px;height:34px;top:53px;right:30px}
+  .camisa-numero{font-size:58px;top:94px}
+  .uniforme-seta{width:38px;height:38px;font-size:15px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap header-top">
+    <div class="header-left">
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
+
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
     </div>
 
-    <div class="uniforme-info">
-      <strong id="nomeUniformePreview">Uniforme 1</strong>
-      <span id="modeloUniformePreview">Modelo Retrô</span>
-    </div>
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarTime()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Time
+      </button>
+    </div>
   </div>
 
-  <button type="button" class="uniforme-seta direita" onclick="uniformeProximo()">
-    <i class="fa-solid fa-chevron-right"></i>
-  </button>
+  <div class="nav-bar">
+    <div class="wrap">
+      <div class="menu">
+        <a href="admin.html">Painel</a>
+        <a href="campeonatos-admin.html">Campeonatos</a>
+        <a href="jogos-admin.html">Jogos</a>
+        <a href="times-admin.html" class="ativo">Times</a>
+        <a href="tecnicos-admin.html">Técnicos</a>
+        <a href="jogadores-admin.html">Jogadores</a>
+        <a href="arbitros-admin.html">Árbitros</a>
+        <a href="assistentes-admin.html">Assistentes</a>
+        <a href="sumulas-admin.html">Súmulas</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+  <div class="hero">
+    <h2>Times ADM / Técnico</h2>
+    <p>ADM controla todos os times. Técnico cria, edita e gerencia apenas o próprio time, jogadores e uniformes.</p>
+  </div>
+
+  <section class="form-panel">
+    <div class="form-title" id="tituloFormulario">Novo Time</div>
+
+    <input type="hidden" id="timeId">
+
+    <div id="statusTimeMsg" class="status-msg"></div>
+
+    <div class="form-grid">
+      <div>
+        <label>Nome do time</label>
+        <input id="nome" placeholder="Ex: Atlético GO">
+      </div>
+
+      <div>
+        <label>Nome completo</label>
+        <input id="nomeCompleto" placeholder="Nome completo do clube">
+      </div>
+
+      <div>
+        <label>Cidade</label>
+        <input id="cidade" placeholder="Ex: Goiânia - GO">
+      </div>
+
+      <div>
+        <label>Status</label>
+        <select id="status">
+          <option value="ativo">Ativo</option>
+          <option value="pendente">Pendente</option>
+          <option value="inativo">Inativo</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Estádio</label>
+        <input id="estadio" placeholder="Nome do estádio">
+      </div>
+
+      <div>
+        <label>Fundação</label>
+        <input id="fundacao" type="number" placeholder="Ex: 2022">
+      </div>
+
+      <div>
+        <label>Presidente / Responsável</label>
+        <input id="presidente" placeholder="Nome do responsável">
+      </div>
+
+      <div>
+        <label>Apelido</label>
+        <input id="apelido" placeholder="Ex: Goianiense">
+      </div>
+
+      <div>
+        <label>Cores do clube</label>
+        <input id="cores" placeholder="Ex: Amarelo e Preto">
+      </div>
+
+      <div>
+        <label>Instagram</label>
+        <input id="instagram" placeholder="@time">
+      </div>
+
+      <div>
+        <label>Facebook</label>
+        <input id="facebook" placeholder="facebook.com/time">
+      </div>
+
+      <div>
+        <label>YouTube</label>
+        <input id="youtube" placeholder="youtube.com/@time">
+      </div>
+
+      <div>
+        <label>Escudo / Logo URL</label>
+        <input id="logo" placeholder="logo-time.png ou URL">
+      </div>
+
+      <div>
+        <label>Enviar escudo do PC/Celular</label>
+        <input type="file" id="logoArquivo" accept="image/*" onchange="previewLogoArquivo()">
+      </div>
+
+      <div>
+        <label>Prévia</label>
+        <div class="preview-logo" id="previewLogoBox">
+          <img id="previewLogoImg" src="logo-liga.jfif">
+          <span id="previewLogoTexto">Pré-visualização do escudo</span>
+        </div>
+      </div>
+
+      <div class="full">
+        <label>Categorias do time</label>
+        <div class="checkbox-grid" id="categoriasGrid"></div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-acao btn-ver" type="button" onclick="salvarTime()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Time
+      </button>
+
+      <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
+        <i class="fa-solid fa-broom"></i> Limpar
+      </button>
+    </div>
+  </section>
+
+  <section class="form-panel">
+    <div class="form-title">Uniformes do Time</div>
+
+    <div class="uniforme-builder">
+      <div class="uniforme-form">
+        <div class="form-grid" style="grid-template-columns:1fr 1fr;">
+          <div>
+            <label>Nome do uniforme</label>
+            <input id="uniformeNome" placeholder="Uniforme 1">
+          </div>
+
+          <div>
+            <label>Tipo</label>
+            <select id="uniformeTipo">
+              <option value="jogo">Jogo</option>
+              <option value="goleiro">Goleiro</option>
+              <option value="treino">Treino</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Modelo</label>
+            <select id="uniformeModelo" onchange="atualizarPreviewUniforme()">
+              <option value="listrado-vertical">Listrado vertical</option>
+              <option value="listrado-horizontal">Listrado horizontal</option>
+              <option value="diagonal">Diagonal</option>
+              <option value="faixa-central">Faixa central</option>
+              <option value="metade-metade">Metade / metade</option>
+              <option value="degrade">Degradê</option>
+              <option value="liso">Liso</option>
+              <option value="retro">Retrô</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Cor principal</label>
+            <input id="uniformeCor1" type="color" value="#f7c600" onchange="atualizarPreviewUniforme()">
+          </div>
+
+          <div>
+            <label>Cor secundária</label>
+            <input id="uniformeCor2" type="color" value="#111111" onchange="atualizarPreviewUniforme()">
+          </div>
+
+          <div>
+            <label>Terceira cor</label>
+            <input id="uniformeCor3" type="color" value="#ffffff" onchange="atualizarPreviewUniforme()">
+          </div>
+
+          <div>
+            <label>Gola</label>
+            <input id="uniformeGola" type="color" value="#111111" onchange="atualizarPreviewUniforme()">
+          </div>
+
+          <div>
+            <label>Manga</label>
+            <input id="uniformeManga" type="color" value="#111111" onchange="atualizarPreviewUniforme()">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-acao btn-ver" type="button" onclick="adicionarUniforme()">
+            <i class="fa-solid fa-shirt"></i> Adicionar / Atualizar Uniforme
+          </button>
+
+          <button class="btn-acao btn-blue" type="button" onclick="limparUniformeForm()">
+            <i class="fa-solid fa-plus"></i> Novo Uniforme
+          </button>
+        </div>
+
+        <div class="modelo-mini-grid" id="listaUniformes"></div>
+      </div>
+
+      <div class="uniforme-preview">
+        <div class="uniforme-preview-area">
+
+          <button type="button" class="uniforme-seta esquerda" onclick="uniformeAnterior()">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+
+          <div class="camisa-showcase">
+
+            <div class="camisa-3d" id="previewCamisa3D">
+              <div class="camisa-gola"></div>
+
+              <div class="camisa-manga manga-esq"></div>
+              <div class="camisa-manga manga-dir"></div>
+
+              <div class="camisa-corpo" id="camisaCorpo">
+                <div class="camisa-overlay" id="camisaOverlay"></div>
+                <div class="camisa-textura"></div>
+
+                <img
+                  id="previewEscudoCamisa"
+                  class="camisa-escudo"
+                  src="logo-liga.jfif"
+                  onerror="this.src='logo-liga.jfif'"
+                >
+
+                <div class="camisa-numero">10</div>
+              </div>
+            </div>
+
+            <div class="uniforme-info">
+              <strong id="nomeUniformePreview">Uniforme 1</strong>
+              <span id="modeloUniformePreview">Listrado vertical</span>
+            </div>
+
+          </div>
+
+          <button type="button" class="uniforme-seta direita" onclick="uniformeProximo()">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-panel">
+    <div class="form-title">Cadastrar Jogador do Time</div>
+
+    <div id="statusJogadorMsg" class="status-msg"></div>
+
+    <input type="hidden" id="jogadorId">
+
+    <div class="form-grid">
+      <div>
+        <label>Time</label>
+        <select id="jogadorTimeId"></select>
+      </div>
+
+      <div>
+        <label>Nome completo *</label>
+        <input id="jogadorNome" placeholder="Nome completo">
+      </div>
+
+      <div>
+        <label>CPF *</label>
+        <input id="jogadorCpf" placeholder="000.000.000-00">
+      </div>
+
+      <div>
+        <label>Data de nascimento *</label>
+        <input id="jogadorNascimento" type="date">
+      </div>
+
+      <div>
+        <label>Categoria</label>
+        <select id="jogadorCategoria"></select>
+      </div>
+
+      <div>
+        <label>Posição</label>
+        <select id="jogadorPosicao">
+          <option value="">Selecione</option>
+          <option>Goleiro</option>
+          <option>Lateral</option>
+          <option>Zagueiro</option>
+          <option>Volante</option>
+          <option>Meia</option>
+          <option>Atacante</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Número da camisa</label>
+        <input id="jogadorNumero" type="number" min="0">
+      </div>
+
+      <div>
+        <label>Foto do jogador</label>
+        <input id="jogadorFoto" type="file" accept="image/*">
+      </div>
+
+      <div>
+        <label>Foto da identidade *</label>
+        <input id="jogadorIdentidade" type="file" accept="image/*">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-acao btn-ver" type="button" onclick="salvarJogador()">
+        <i class="fa-solid fa-user-plus"></i> Salvar Jogador
+      </button>
+
+      <button class="btn-acao btn-danger" type="button" onclick="limparJogadorForm()">
+        <i class="fa-solid fa-broom"></i> Limpar Jogador
+      </button>
+    </div>
+  </section>
+
+  <div class="filtros">
+    <input id="buscaTime" placeholder="Pesquisar time...">
+
+    <select id="filtroStatus">
+      <option value="">Todos os status</option>
+      <option value="ativo">Ativo</option>
+      <option value="pendente">Pendente</option>
+      <option value="inativo">Inativo</option>
+    </select>
+  </div>
+
+  <div class="lista-grid" id="listaTimes"></div>
+
+  <section class="form-panel">
+    <div class="form-title">Jogadores do Time</div>
+    <div class="jogadores-grid" id="listaJogadores"></div>
+  </section>
 
 </div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let timesCache = [];
+let jogadoresCache = [];
+let logoAtual = "";
+let usuarioLogado = null;
+let ehTecnico = false;
+let ehAdmin = false;
+let uniformeEditIndex = -1;
+let uniformesTemp = [];
+
+const categoriasFixas = [
+  "Sub-07","Sub-09","Sub-11","Sub-12","Sub-13","Sub-14","Sub-15","Sub-16",
+  "Sub-17","Sub-18","Sub-19","Sub-20","Sub-21"
+];
+
+function txt(v){return String(v || "").trim()}
+
+function normalizarTexto(texto){
+  return String(texto || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function carregarUsuario(){
+  const raw = localStorage.getItem("usuarioLogado") ||
+              localStorage.getItem("usuario") ||
+              sessionStorage.getItem("usuarioLogado") ||
+              sessionStorage.getItem("usuario");
+
+  try{
+    usuarioLogado = raw ? JSON.parse(raw) : null;
+  }catch(e){
+    usuarioLogado = null;
+  }
+
+  const tipo = normalizarTexto(usuarioLogado?.tipo || usuarioLogado?.perfil || "");
+  ehAdmin = tipo === "admin" || tipo === "administrador";
+  ehTecnico = tipo === "tecnico" || tipo === "técnico";
+
+  if(!usuarioLogado){
+    usuarioLogado = {
+      id:"",
+      uid:"",
+      nome:"",
+      email:"",
+      tipo:"admin"
+    };
+    ehAdmin = true;
+    ehTecnico = false;
+  }
+
+  if(ehTecnico){
+    document.getElementById("status").value = "pendente";
+    document.getElementById("status").disabled = true;
+  }
+}
+
+function usuarioId(){
+  return usuarioLogado?.uid || usuarioLogado?.id || usuarioLogado?.email || "";
+}
+
+function usuarioNome(){
+  return usuarioLogado?.nome || usuarioLogado?.displayName || usuarioLogado?.email || "";
+}
+
+function mostrarStatusTime(tipo, mensagem){
+  const box = document.getElementById("statusTimeMsg");
+  if(!box) return;
+  box.className = "status-msg " + tipo;
+  box.textContent = mensagem;
+}
+
+function mostrarStatusJogador(tipo, mensagem){
+  const box = document.getElementById("statusJogadorMsg");
+  if(!box) return;
+  box.className = "status-msg " + tipo;
+  box.textContent = mensagem;
+}
+
+function montarCategorias(){
+  const grid = document.getElementById("categoriasGrid");
+  grid.innerHTML = categoriasFixas.map(c=>`
+    <label class="check-item">
+      <input type="checkbox" value="${c}" onchange="atualizarSelectCategoriasJogador()">
+      <span>${c}</span>
+    </label>
+  `).join("");
+
+  atualizarSelectCategoriasJogador();
+}
+
+function categoriasSelecionadas(){
+  return Array.from(document.querySelectorAll('#categoriasGrid input[type="checkbox"]:checked'))
+    .map(i=>i.value);
+}
+
+function marcarCategorias(categorias){
+  document.querySelectorAll('#categoriasGrid input[type="checkbox"]').forEach(item=>{
+    item.checked = (categorias || []).includes(item.value);
+  });
+  atualizarSelectCategoriasJogador();
+}
+
+function atualizarSelectCategoriasJogador(){
+  const select = document.getElementById("jogadorCategoria");
+  const atual = select.value;
+  const cats = categoriasSelecionadas().length ? categoriasSelecionadas() : categoriasFixas;
+
+  select.innerHTML = `<option value="">Selecione</option>` + cats.map(c=>`
+    <option value="${c}">${c}</option>
+  `).join("");
+
+  if(cats.includes(atual)) select.value = atual;
+}
+
+window.previewLogoArquivo = function(){
+  const arquivo = document.getElementById("logoArquivo").files[0];
+  if(!arquivo) return;
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    document.getElementById("previewLogoBox").style.display = "flex";
+    document.getElementById("previewLogoImg").src = e.target.result;
+    document.getElementById("previewEscudoCamisa").src = e.target.result;
+    document.getElementById("previewLogoTexto").textContent = arquivo.name;
+    mostrarStatusTime("info","Escudo selecionado. Clique em Salvar Time para gravar.");
+  };
+
+  leitor.readAsDataURL(arquivo);
+};
+
+function arquivoParaBase64(arquivo,max=700,qualidade=.76){
+  return new Promise((resolve,reject)=>{
+    if(!arquivo){
+      resolve("");
+      return;
+    }
+
+    if(!arquivo.type || !arquivo.type.startsWith("image/")){
+      reject(new Error("O arquivo precisa ser uma imagem."));
+      return;
+    }
+
+    const leitor = new FileReader();
+
+    leitor.onload = function(e){
+      const img = new Image();
+
+      img.onload = function(){
+        let largura = img.width;
+        let altura = img.height;
+
+        if(largura > altura && largura > max){
+          altura = Math.round((altura * max) / largura);
+          largura = max;
+        }else if(altura >= largura && altura > max){
+          largura = Math.round((largura * max) / altura);
+          altura = max;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = largura;
+        canvas.height = altura;
+
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0,0,largura,altura);
+        ctx.drawImage(img,0,0,largura,altura);
+
+        resolve(canvas.toDataURL("image/jpeg",qualidade));
+      };
+
+      img.onerror = function(){
+        reject(new Error("Não foi possível ler a imagem."));
+      };
+
+      img.src = e.target.result;
+    };
+
+    leitor.onerror = function(){
+      reject(new Error("Erro ao carregar a imagem."));
+    };
+
+    leitor.readAsDataURL(arquivo);
+  });
+}
+
+async function uploadLogoSeExistir(){
+  const arquivo = document.getElementById("logoArquivo").files[0];
+  const logoUrlManual = txt(document.getElementById("logo").value);
+
+  if(arquivo){
+    return await arquivoParaBase64(arquivo,520,.74);
+  }
+
+  if(logoUrlManual) return logoUrlManual;
+
+  return logoAtual || "logo-liga.jfif";
+}
+
+function padraoModelo(modelo,cor1,cor2,cor3){
+  if(modelo === "listrado-horizontal"){
+    return `
+      repeating-linear-gradient(0deg,${cor1} 0 32px,${cor2} 32px 64px)
+    `;
+  }
+
+  if(modelo === "diagonal"){
+    return `
+      linear-gradient(135deg,${cor1} 0 36%,${cor2} 36% 58%,${cor1} 58% 100%)
+    `;
+  }
+
+  if(modelo === "faixa-central"){
+    return `
+      linear-gradient(90deg,${cor1} 0 34%,${cor2} 34% 66%,${cor1} 66% 100%)
+    `;
+  }
+
+  if(modelo === "metade-metade"){
+    return `
+      linear-gradient(90deg,${cor1} 0 50%,${cor2} 50% 100%)
+    `;
+  }
+
+  if(modelo === "degrade"){
+    return `
+      linear-gradient(155deg,${cor1} 0%,${cor2} 58%,${cor3} 100%)
+    `;
+  }
+
+  if(modelo === "liso"){
+    return `
+      linear-gradient(135deg,${cor1},${cor1})
+    `;
+  }
+
+  if(modelo === "retro"){
+    return `
+      linear-gradient(90deg,${cor1} 0 18%,${cor3} 18% 24%,${cor2} 24% 76%,${cor3} 76% 82%,${cor1} 82% 100%)
+    `;
+  }
+
+  return `
+    repeating-linear-gradient(90deg,${cor1} 0 34px,${cor2} 34px 68px)
+  `;
+}
+
+function atualizarPreviewUniforme(){
+  const modelo = document.getElementById("uniformeModelo").value;
+  const cor1 = document.getElementById("uniformeCor1").value;
+  const cor2 = document.getElementById("uniformeCor2").value;
+  const cor3 = document.getElementById("uniformeCor3").value;
+  const gola = document.getElementById("uniformeGola").value;
+  const manga = document.getElementById("uniformeManga").value;
+
+  const corpo = document.getElementById("camisaCorpo");
+  const overlay = document.getElementById("camisaOverlay");
+  const camisa = document.getElementById("previewCamisa3D");
+
+  if(corpo){
+    corpo.style.background = padraoModelo(modelo,cor1,cor2,cor3);
+  }
+
+  if(overlay){
+    overlay.style.background = `
+      radial-gradient(circle at 62% 14%,rgba(255,255,255,.27),transparent 18%),
+      linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,0) 32%,rgba(0,0,0,.20) 82%),
+      linear-gradient(110deg,rgba(255,255,255,.18),transparent 28%,rgba(0,0,0,.20) 72%,transparent)
+    `;
+  }
+
+  if(camisa){
+    camisa.style.setProperty("--gola", gola);
+    camisa.style.setProperty("--manga", manga);
+  }
+
+  document.querySelectorAll(".camisa-gola").forEach(el=>{
+    el.style.background = gola;
+  });
+
+  document.querySelectorAll(".camisa-manga").forEach(el=>{
+    el.style.background = manga;
+  });
+
+  const logo = logoAtual || document.getElementById("previewLogoImg")?.src || "logo-liga.jfif";
+  const escudo = document.getElementById("previewEscudoCamisa");
+  if(escudo) escudo.src = logo;
+
+  const nomePreview = document.getElementById("nomeUniformePreview");
+  if(nomePreview){
+    nomePreview.textContent = document.getElementById("uniformeNome").value || `Uniforme ${uniformesTemp.length + 1}`;
+  }
+
+  const modeloPreview = document.getElementById("modeloUniformePreview");
+  if(modeloPreview){
+    modeloPreview.textContent = modelo.replaceAll("-"," ");
+  }
+}
+
+window.atualizarPreviewUniforme = atualizarPreviewUniforme;
+
+window.uniformeProximo = function(){
+  if(!uniformesTemp.length){
+    atualizarPreviewUniforme();
+    return;
+  }
+
+  uniformeEditIndex++;
+  if(uniformeEditIndex >= uniformesTemp.length) uniformeEditIndex = 0;
+  editarUniforme(uniformeEditIndex);
+};
+
+window.uniformeAnterior = function(){
+  if(!uniformesTemp.length){
+    atualizarPreviewUniforme();
+    return;
+  }
+
+  uniformeEditIndex--;
+  if(uniformeEditIndex < 0) uniformeEditIndex = uniformesTemp.length - 1;
+  editarUniforme(uniformeEditIndex);
+};
+
+window.limparUniformeForm = function(){
+  uniformeEditIndex = -1;
+  document.getElementById("uniformeNome").value = `Uniforme ${uniformesTemp.length + 1}`;
+  document.getElementById("uniformeTipo").value = "jogo";
+  document.getElementById("uniformeModelo").value = "listrado-vertical";
+  document.getElementById("uniformeCor1").value = "#f7c600";
+  document.getElementById("uniformeCor2").value = "#111111";
+  document.getElementById("uniformeCor3").value = "#ffffff";
+  document.getElementById("uniformeGola").value = "#111111";
+  document.getElementById("uniformeManga").value = "#111111";
+  atualizarPreviewUniforme();
+};
+
+window.adicionarUniforme = function(){
+  const uniforme = {
+    nome:txt(document.getElementById("uniformeNome").value) || `Uniforme ${uniformesTemp.length + 1}`,
+    tipo:document.getElementById("uniformeTipo").value,
+    modelo:document.getElementById("uniformeModelo").value,
+    cor1:document.getElementById("uniformeCor1").value,
+    cor2:document.getElementById("uniformeCor2").value,
+    cor3:document.getElementById("uniformeCor3").value,
+    gola:document.getElementById("uniformeGola").value,
+    manga:document.getElementById("uniformeManga").value
+  };
+
+  if(uniformeEditIndex >= 0){
+    uniformesTemp[uniformeEditIndex] = uniforme;
+  }else{
+    uniformesTemp.push(uniforme);
+  }
+
+  renderizarUniformes();
+  limparUniformeForm();
+};
+
+window.editarUniforme = function(index){
+  const u = uniformesTemp[index];
+  if(!u) return;
+
+  uniformeEditIndex = index;
+  document.getElementById("uniformeNome").value = u.nome || "";
+  document.getElementById("uniformeTipo").value = u.tipo || "jogo";
+  document.getElementById("uniformeModelo").value = u.modelo || "listrado-vertical";
+  document.getElementById("uniformeCor1").value = u.cor1 || "#f7c600";
+  document.getElementById("uniformeCor2").value = u.cor2 || "#111111";
+  document.getElementById("uniformeCor3").value = u.cor3 || "#ffffff";
+  document.getElementById("uniformeGola").value = u.gola || "#111111";
+  document.getElementById("uniformeManga").value = u.manga || "#111111";
+  atualizarPreviewUniforme();
+};
+
+window.excluirUniforme = function(index){
+  if(!confirm("Excluir uniforme?")) return;
+  uniformesTemp.splice(index,1);
+  renderizarUniformes();
+  limparUniformeForm();
+};
+
+function renderizarUniformes(){
+  const box = document.getElementById("listaUniformes");
+
+  if(!uniformesTemp.length){
+    box.innerHTML = `<div class="uniforme-chip"><strong>Nenhum uniforme</strong><small>Adicione pelo menos um uniforme.</small></div>`;
+    return;
+  }
+
+  box.innerHTML = uniformesTemp.map((u,i)=>`
+    <div class="uniforme-chip" onclick="editarUniforme(${i})">
+      <strong>${u.nome}</strong>
+      <small>${u.tipo} • ${u.modelo}</small>
+      <small>${u.cor1} / ${u.cor2}</small>
+      <div class="form-actions" style="margin-top:8px;">
+        <button class="btn-acao btn-danger" type="button" onclick="event.stopPropagation();excluirUniforme(${i})">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
+
+window.limparFormulario = function(){
+  document.getElementById("timeId").value = "";
+  document.getElementById("nome").value = "";
+  document.getElementById("nomeCompleto").value = "";
+  document.getElementById("cidade").value = "";
+  document.getElementById("estadio").value = "";
+  document.getElementById("fundacao").value = "";
+  document.getElementById("presidente").value = "";
+  document.getElementById("apelido").value = "";
+  document.getElementById("cores").value = "";
+  document.getElementById("instagram").value = "";
+  document.getElementById("facebook").value = "";
+  document.getElementById("youtube").value = "";
+  document.getElementById("logo").value = "";
+  document.getElementById("logoArquivo").value = "";
+  document.getElementById("status").value = ehTecnico ? "pendente" : "ativo";
+  document.getElementById("tituloFormulario").textContent = "Novo Time";
+  document.getElementById("previewLogoBox").style.display = "none";
+  document.getElementById("previewLogoImg").src = "logo-liga.jfif";
+  document.getElementById("previewEscudoCamisa").src = "logo-liga.jfif";
+  document.getElementById("previewLogoTexto").textContent = "Pré-visualização do escudo";
+  logoAtual = "";
+  uniformesTemp = [];
+  marcarCategorias([]);
+  renderizarUniformes();
+  limparUniformeForm();
+};
+
+function podeEditarTime(t){
+  if(ehAdmin) return true;
+
+  const uid = usuarioId();
+  const email = usuarioLogado?.email || "";
+
+  return String(t.tecnicoId || t.criadoPor || t.usuarioId || "") === String(uid) ||
+         String(t.tecnicoEmail || t.emailTecnico || "") === String(email);
+}
+
+window.salvarTime = async function(){
+  const botoesSalvar = document.querySelectorAll('button[onclick="salvarTime()"]');
+
+  try{
+    mostrarStatusTime("info","Salvando time...");
+    botoesSalvar.forEach(btn=>{
+      btn.disabled = true;
+      btn.style.opacity = ".65";
+      btn.style.cursor = "not-allowed";
+    });
+
+    const id = document.getElementById("timeId").value;
+
+    if(id){
+      const existente = timesCache.find(t=>t.id === id);
+      if(existente && !podeEditarTime(existente)){
+        alert("Você só pode editar o próprio time.");
+        return;
+      }
+    }
+
+    if(ehTecnico && !id){
+      const jaTemTime = timesCache.some(t=>podeEditarTime(t));
+      if(jaTemTime){
+        alert("Você já tem um time vinculado. Edite o seu time atual.");
+        return;
+      }
+    }
+
+    const nome = txt(document.getElementById("nome").value);
+    const nomeCompleto = txt(document.getElementById("nomeCompleto").value);
+    const cidade = txt(document.getElementById("cidade").value);
+    const statusForm = document.getElementById("status").value;
+    const estadio = txt(document.getElementById("estadio").value);
+    const fundacao = txt(document.getElementById("fundacao").value);
+    const presidente = txt(document.getElementById("presidente").value);
+    const apelido = txt(document.getElementById("apelido").value);
+    const cores = txt(document.getElementById("cores").value);
+    const instagram = txt(document.getElementById("instagram").value);
+    const facebook = txt(document.getElementById("facebook").value);
+    const youtube = txt(document.getElementById("youtube").value);
+    const categorias = categoriasSelecionadas();
+
+    if(!nome) return alert("Digite o nome do time.");
+    if(!cidade) return alert("Digite a cidade do time.");
+    if(!categorias.length) return alert("Selecione pelo menos uma categoria.");
+    if(!uniformesTemp.length) return alert("Adicione pelo menos um uniforme.");
+
+    const logo = await uploadLogoSeExistir();
+
+    const dados = {
+      nome,
+      nomeCompleto:nomeCompleto || nome,
+      cidade,
+      logo,
+      escudo:logo,
+      status:ehTecnico ? "pendente" : statusForm,
+      aprovado:ehAdmin ? statusForm === "ativo" : false,
+      categorias,
+      categoria:categorias[0] || "",
+      categoriaNome:categorias[0] || "",
+      estadio,
+      fundacao,
+      presidente,
+      apelido,
+      cores,
+      instagram,
+      facebook,
+      youtube,
+      redesSociais:{
+        instagram,
+        facebook,
+        youtube
+      },
+      uniformes:uniformesTemp,
+      tecnicoId:id ? (timesCache.find(t=>t.id === id)?.tecnicoId || usuarioId()) : usuarioId(),
+      tecnicoNome:id ? (timesCache.find(t=>t.id === id)?.tecnicoNome || usuarioNome()) : usuarioNome(),
+      tecnicoEmail:id ? (timesCache.find(t=>t.id === id)?.tecnicoEmail || usuarioLogado?.email || "") : (usuarioLogado?.email || ""),
+      criadoPor:id ? (timesCache.find(t=>t.id === id)?.criadoPor || usuarioId()) : usuarioId(),
+      atualizadoEm:serverTimestamp()
+    };
+
+    if(id){
+      await updateDoc(doc(db,"times",id),dados);
+      mostrarStatusTime("ok","Time atualizado!");
+      alert("Time atualizado!");
+    }else{
+      await addDoc(collection(db,"times"),{
+        ...dados,
+        jogos:0,
+        pontos:0,
+        vitorias:0,
+        empates:0,
+        derrotas:0,
+        golsPro:0,
+        golsContra:0,
+        saldo:0,
+        criadoEm:serverTimestamp()
+      });
+      mostrarStatusTime("ok", ehTecnico ? "Time criado e enviado para aprovação!" : "Time cadastrado!");
+      alert(ehTecnico ? "Time criado e enviado para aprovação!" : "Time cadastrado!");
+    }
+
+    limparFormulario();
+    await carregarTudo();
+
+  }catch(e){
+    console.error("Erro ao salvar time:", e);
+    const msgErro = e && e.code === "permission-denied"
+      ? "Sem permissão no Firebase para salvar em times. Verifique as regras do Firestore."
+      : "Erro ao salvar time/escudo: " + (e.message || e);
+    mostrarStatusTime("erro", msgErro);
+    alert(msgErro);
+  }finally{
+    botoesSalvar.forEach(btn=>{
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      btn.style.cursor = "pointer";
+    });
+  }
+};
+
+window.editarTime = function(id){
+  const t = timesCache.find(x=>x.id === id);
+  if(!t) return;
+
+  if(!podeEditarTime(t)){
+    alert("Você só pode editar o próprio time.");
+    return;
+  }
+
+  document.getElementById("timeId").value = t.id;
+  document.getElementById("nome").value = t.nome || "";
+  document.getElementById("nomeCompleto").value = t.nomeCompleto || "";
+  document.getElementById("cidade").value = t.cidade || "";
+  document.getElementById("estadio").value = t.estadio || t.estádio || "";
+  document.getElementById("fundacao").value = t.fundacao || t.fundação || t.anoFundacao || "";
+  document.getElementById("presidente").value = t.presidente || "";
+  document.getElementById("apelido").value = t.apelido || "";
+  document.getElementById("cores").value = t.cores || "";
+  document.getElementById("instagram").value = t.instagram || t.redesSociais?.instagram || "";
+  document.getElementById("facebook").value = t.facebook || t.redesSociais?.facebook || "";
+  document.getElementById("youtube").value = t.youtube || t.redesSociais?.youtube || "";
+  document.getElementById("logo").value = (String(t.logo || t.escudo || "").startsWith("data:image/") ? "" : (t.logo || t.escudo || ""));
+  document.getElementById("logoArquivo").value = "";
+  document.getElementById("status").value = t.status || "ativo";
+  document.getElementById("tituloFormulario").textContent = "Editar Time";
+
+  logoAtual = t.logo || t.escudo || "";
+
+  if(logoAtual){
+    document.getElementById("previewLogoBox").style.display = "flex";
+    document.getElementById("previewLogoImg").src = logoAtual;
+    document.getElementById("previewEscudoCamisa").src = logoAtual;
+    document.getElementById("previewLogoTexto").textContent = "Escudo atual";
+  }
+
+  uniformesTemp = Array.isArray(t.uniformes) ? JSON.parse(JSON.stringify(t.uniformes)) : [];
+  marcarCategorias(Array.isArray(t.categorias) ? t.categorias : []);
+  renderizarUniformes();
+  limparUniformeForm();
+  carregarSelectTimesJogador();
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.excluirTime = async function(id){
+  const t = timesCache.find(x=>x.id === id);
+  if(!t) return;
+
+  if(!podeEditarTime(t)){
+    alert("Você só pode excluir o próprio time.");
+    return;
+  }
+
+  if(!confirm("Excluir time?")) return;
+  await deleteDoc(doc(db,"times",id));
+  await carregarTudo();
+};
+
+function timesPermitidos(){
+  return ehAdmin ? timesCache : timesCache.filter(podeEditarTime);
+}
+
+async function carregarTudo(){
+  const lista = document.getElementById("listaTimes");
+  lista.innerHTML = `<div class="vazio">Carregando times...</div>`;
+
+  try{
+    const [snapTimes, snapJogadores] = await Promise.all([
+      getDocs(collection(db,"times")),
+      getDocs(collection(db,"jogadores"))
+    ]);
+
+    timesCache = [];
+    jogadoresCache = [];
+
+    snapTimes.forEach(d=>timesCache.push({id:d.id,...d.data()}));
+    snapJogadores.forEach(d=>jogadoresCache.push({id:d.id,...d.data()}));
+
+    timesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+
+    renderizarTimes();
+    carregarSelectTimesJogador();
+    renderizarJogadores();
+
+  }catch(e){
+    console.error("Erro ao carregar dados:", e);
+    lista.innerHTML = `<div class="vazio">Erro ao carregar dados: ${e.message || e}</div>`;
+  }
+}
+
+function carregarSelectTimesJogador(){
+  const select = document.getElementById("jogadorTimeId");
+  const times = timesPermitidos();
+
+  select.innerHTML = times.length
+    ? times.map(t=>`<option value="${t.id}">${t.nome || "Time"}</option>`).join("")
+    : `<option value="">Nenhum time disponível</option>`;
+
+  atualizarSelectCategoriasPorTime();
+}
+
+function timeSelecionadoJogador(){
+  const idTime = document.getElementById("jogadorTimeId").value;
+  return timesCache.find(t=>t.id === idTime);
+}
+
+function atualizarSelectCategoriasPorTime(){
+  const time = timeSelecionadoJogador();
+  const select = document.getElementById("jogadorCategoria");
+  const atual = select.value;
+  const cats = Array.isArray(time?.categorias) && time.categorias.length ? time.categorias : categoriasFixas;
+
+  select.innerHTML = `<option value="">Selecione</option>` + cats.map(c=>`
+    <option value="${c}">${c}</option>
+  `).join("");
+
+  if(cats.includes(atual)) select.value = atual;
+}
+
+document.getElementById("jogadorTimeId").addEventListener("change", atualizarSelectCategoriasPorTime);
+
+function renderizarTimes(){
+  const lista = document.getElementById("listaTimes");
+  const busca = normalizarTexto(document.getElementById("buscaTime").value);
+  const filtroStatus = document.getElementById("filtroStatus").value;
+
+  let times = timesPermitidos().filter(t=>{
+    if(filtroStatus && t.status !== filtroStatus) return false;
+
+    if(busca){
+      const texto = normalizarTexto(`
+        ${t.nome || ""}
+        ${t.cidade || ""}
+        ${Array.isArray(t.categorias) ? t.categorias.join(" ") : ""}
+      `);
+
+      if(!texto.includes(busca)) return false;
+    }
+
+    return true;
+  });
+
+  if(!times.length){
+    lista.innerHTML = `<div class="vazio">Nenhum time encontrado.</div>`;
+    return;
+  }
+
+  lista.innerHTML = times.map(t=>{
+    const categorias = Array.isArray(t.categorias) && t.categorias.length ? t.categorias : ["Sem categoria"];
+    const uniformes = Array.isArray(t.uniformes) ? t.uniformes.length : 0;
+
+    return `
+      <div class="card">
+        <div class="player">
+          <img
+            src="${t.logo || t.escudo || "logo-liga.jfif"}"
+            class="photo"
+            onerror="this.src='logo-liga.jfif'"
+          >
+
+          <div class="player-info">
+            <div class="nome-jogador">${t.nome || "-"}</div>
+
+            <small>Cidade: ${t.cidade || "-"}</small>
+            <small>Técnico: ${t.tecnicoNome || "-"}</small>
+            <small>Uniformes: ${uniformes}</small>
+
+            <small>
+              Jogos: ${Number(t.jogos || 0)} |
+              Pontos: ${Number(t.pontos || 0)}
+            </small>
+
+            <small>
+              GP: ${Number(t.golsPro || 0)} |
+              GC: ${Number(t.golsContra || 0)} |
+              Saldo: ${Number(t.saldo || 0)}
+            </small>
+
+            <div class="tags">
+              <span class="tag">${t.status || "ativo"}</span>
+              ${categorias.map(c=>`<span class="tag">${c}</span>`).join("")}
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-acao btn-ver" onclick="editarTime('${t.id}')">
+            <i class="fa-solid fa-pen"></i> Editar
+          </button>
+
+          <a class="btn-acao btn-blue" href="time-detalhe.html?id=${t.id}" target="_blank">
+            <i class="fa-solid fa-eye"></i> Ver
+          </a>
+
+          <button class="btn-acao btn-danger" onclick="excluirTime('${t.id}')">
+            <i class="fa-solid fa-trash"></i> Excluir
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function cpfLimpo(v){
+  return String(v || "").replace(/\D/g,"");
+}
+
+window.limparJogadorForm = function(){
+  document.getElementById("jogadorId").value = "";
+  document.getElementById("jogadorNome").value = "";
+  document.getElementById("jogadorCpf").value = "";
+  document.getElementById("jogadorNascimento").value = "";
+  document.getElementById("jogadorCategoria").value = "";
+  document.getElementById("jogadorPosicao").value = "";
+  document.getElementById("jogadorNumero").value = "";
+  document.getElementById("jogadorFoto").value = "";
+  document.getElementById("jogadorIdentidade").value = "";
+};
+
+window.salvarJogador = async function(){
+  try{
+    const jogadorId = document.getElementById("jogadorId").value;
+    const timeId = document.getElementById("jogadorTimeId").value;
+    const time = timesCache.find(t=>t.id === timeId);
+
+    if(!time) return alert("Selecione um time.");
+    if(!podeEditarTime(time)) return alert("Você só pode cadastrar jogador no seu próprio time.");
+
+    const nome = txt(document.getElementById("jogadorNome").value);
+    const cpf = cpfLimpo(document.getElementById("jogadorCpf").value);
+    const dataNascimento = document.getElementById("jogadorNascimento").value;
+    const categoria = document.getElementById("jogadorCategoria").value;
+    const posicao = document.getElementById("jogadorPosicao").value;
+    const numero = txt(document.getElementById("jogadorNumero").value);
+    const fotoArquivo = document.getElementById("jogadorFoto").files[0];
+    const identidadeArquivo = document.getElementById("jogadorIdentidade").files[0];
+
+    if(!nome) return alert("Nome completo obrigatório.");
+    if(!cpf || cpf.length !== 11) return alert("CPF obrigatório com 11 números.");
+    if(!dataNascimento) return alert("Data de nascimento obrigatória.");
+    if(!categoria) return alert("Categoria obrigatória.");
+    if(!identidadeArquivo && !jogadorId) return alert("Foto da identidade obrigatória.");
+
+    const existenteCpf = jogadoresCache.find(j => cpfLimpo(j.cpf) === cpf && j.id !== jogadorId);
+    if(existenteCpf){
+      return alert("Já existe jogador cadastrado com esse CPF.");
+    }
+
+    mostrarStatusJogador("info","Salvando jogador...");
+
+    const foto = fotoArquivo ? await arquivoParaBase64(fotoArquivo,520,.72) : "";
+    const fotoIdentidade = identidadeArquivo ? await arquivoParaBase64(identidadeArquivo,900,.74) : "";
+
+    const dados = {
+      nome,
+      nomeCompleto:nome,
+      cpf,
+      dataNascimento,
+      nascimento:dataNascimento,
+      categoria,
+      categoriaNome:categoria,
+      posicao,
+      posição:posicao,
+      numero,
+      camisa:numero,
+      timeId,
+      time:time.nome || "",
+      nomeTime:time.nome || "",
+      tecnicoId:time.tecnicoId || usuarioId(),
+      tecnicoNome:time.tecnicoNome || usuarioNome(),
+      status:ehAdmin ? "ativo" : "pendente",
+      aprovado:ehAdmin,
+      atualizadoEm:serverTimestamp()
+    };
+
+    if(foto) dados.foto = foto;
+    if(fotoIdentidade) dados.fotoIdentidade = fotoIdentidade;
+
+    if(jogadorId){
+      await updateDoc(doc(db,"jogadores",jogadorId),dados);
+      mostrarStatusJogador("ok","Jogador atualizado!");
+      alert("Jogador atualizado!");
+    }else{
+      await addDoc(collection(db,"jogadores"),{
+        ...dados,
+        jogos:0,
+        gols:0,
+        titulos:0,
+        escalado:false,
+        criadoEm:serverTimestamp()
+      });
+      mostrarStatusJogador("ok", ehAdmin ? "Jogador cadastrado!" : "Jogador enviado para aprovação!");
+      alert(ehAdmin ? "Jogador cadastrado!" : "Jogador enviado para aprovação!");
+    }
+
+    limparJogadorForm();
+    await carregarTudo();
+
+  }catch(e){
+    console.error("Erro ao salvar jogador:", e);
+    const msg = "Erro ao salvar jogador: " + (e.message || e);
+    mostrarStatusJogador("erro", msg);
+    alert(msg);
+  }
+};
+
+window.editarJogador = function(id){
+  const j = jogadoresCache.find(x=>x.id === id);
+  if(!j) return;
+
+  const time = timesCache.find(t=>t.id === j.timeId);
+  if(time && !podeEditarTime(time)){
+    alert("Você só pode editar jogador do seu próprio time.");
+    return;
+  }
+
+  document.getElementById("jogadorId").value = j.id;
+  document.getElementById("jogadorTimeId").value = j.timeId || "";
+  atualizarSelectCategoriasPorTime();
+  document.getElementById("jogadorNome").value = j.nome || j.nomeCompleto || "";
+  document.getElementById("jogadorCpf").value = j.cpf || "";
+  document.getElementById("jogadorNascimento").value = j.dataNascimento || j.nascimento || "";
+  document.getElementById("jogadorCategoria").value = j.categoria || j.categoriaNome || "";
+  document.getElementById("jogadorPosicao").value = j.posicao || j.posição || "";
+  document.getElementById("jogadorNumero").value = j.numero || j.camisa || "";
+
+  window.scrollTo({top:document.getElementById("statusJogadorMsg").offsetTop - 80, behavior:"smooth"});
+};
+
+window.excluirJogador = async function(id){
+  const j = jogadoresCache.find(x=>x.id === id);
+  if(!j) return;
+
+  const time = timesCache.find(t=>t.id === j.timeId);
+  if(time && !podeEditarTime(time)){
+    alert("Você só pode excluir jogador do seu próprio time.");
+    return;
+  }
+
+  if(!confirm("Excluir jogador?")) return;
+  await deleteDoc(doc(db,"jogadores",id));
+  await carregarTudo();
+};
+
+window.toggleEscalado = async function(id){
+  const j = jogadoresCache.find(x=>x.id === id);
+  if(!j) return;
+
+  const time = timesCache.find(t=>t.id === j.timeId);
+  if(time && !podeEditarTime(time)){
+    alert("Você só pode escalar jogador do seu próprio time.");
+    return;
+  }
+
+  await updateDoc(doc(db,"jogadores",id),{
+    escalado:!Boolean(j.escalado),
+    atualizadoEm:serverTimestamp()
+  });
+
+  await carregarTudo();
+};
+
+function jogadoresPermitidos(){
+  const idsTimes = timesPermitidos().map(t=>t.id);
+  return jogadoresCache.filter(j=> idsTimes.includes(j.timeId));
+}
+
+function renderizarJogadores(){
+  const box = document.getElementById("listaJogadores");
+  const lista = jogadoresPermitidos();
+
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhum jogador cadastrado.</div>`;
+    return;
+  }
+
+  box.innerHTML = lista.map(j=>`
+    <div class="jogador-card">
+      <img src="${j.foto || "logo-liga.jfif"}" onerror="this.src='logo-liga.jfif'">
+
+      <div>
+        <h4>${j.nome || j.nomeCompleto || "-"}</h4>
+        <p>
+          CPF: ${j.cpf || "-"}<br>
+          Nascimento: ${j.dataNascimento || j.nascimento || "-"}<br>
+          Time: ${j.time || j.nomeTime || "-"} • Categoria: ${j.categoria || "-"} • Nº ${j.numero || j.camisa || "-"}
+        </p>
+        <span class="badge ${j.status === "ativo" ? "ok" : "pendente"}">${j.status || "pendente"}</span>
+        <span class="badge ${j.escalado ? "ok" : ""}">${j.escalado ? "Escalado" : "Fora da escalação"}</span>
+      </div>
+
+      <div class="actions">
+        <button class="btn-acao btn-green" onclick="toggleEscalado('${j.id}')">
+          <i class="fa-solid fa-list-check"></i> ${j.escalado ? "Tirar" : "Escalar"}
+        </button>
+
+        <button class="btn-acao btn-ver" onclick="editarJogador('${j.id}')">
+          <i class="fa-solid fa-pen"></i> Editar
+        </button>
+
+        <button class="btn-acao btn-danger" onclick="excluirJogador('${j.id}')">
+          <i class="fa-solid fa-trash"></i> Excluir
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
+
+document.getElementById("buscaTime").addEventListener("input",renderizarTimes);
+document.getElementById("filtroStatus").addEventListener("change",renderizarTimes);
+document.getElementById("uniformeNome").addEventListener("input", atualizarPreviewUniforme);
+
+carregarUsuario();
+montarCategorias();
+limparUniformeForm();
+renderizarUniformes();
+carregarTudo();
+</script>
+
+</body>
+</html>
