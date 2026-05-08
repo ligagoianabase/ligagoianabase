@@ -11,125 +11,143 @@
 
 <style>
 :root{
-  --bg:#071a33;
-  --dark:#081a35;
-  --card:#0d2345;
-  --card2:#13315c;
-  --line:rgba(255,255,255,.09);
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
   --gold:#f7c600;
-  --blue:#f7c600;
-  --white:#fff;
-  --muted:#9ca8b8;
-  --green:#39a852;
-  --red:#df3f5f;
-  --yellow:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --yellow:#7a5a00;
+  --red:#b42323;
+  --blue:#1a3f73;
   --shadow:0 14px 34px rgba(0,0,0,.38);
-  --max:980px;
+  --max:1240px;
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
 body{
   font-family:Arial, sans-serif;
   background:
-    linear-gradient(rgba(4,15,35,.92), rgba(4,15,35,.96)),
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
     url("fundo.png") center/cover fixed no-repeat;
-  color:#fff;
+  color:var(--white);
   min-height:100vh;
   overflow-x:hidden;
 }
 
 a{text-decoration:none;color:inherit}
-button{font-family:inherit;border:none;cursor:pointer;background:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 img{display:block;max-width:100%}
 
 .wrap{
-  width:min(100% - 26px, var(--max));
+  width:min(100% - 28px, var(--max));
   margin:0 auto;
 }
 
-.top-app{
-  position:relative;
-  padding:22px 0 0;
+.container{
+  padding:22px 0 34px;
+}
+
+.hero-time{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+  text-align:center;
 }
 
 .top-icons{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:8px;
+  margin-bottom:10px;
 }
 
 .icon-btn{
   width:42px;
   height:42px;
   border-radius:50%;
+  background:rgba(255,255,255,.06);
+  color:#fff;
   display:flex;
   align-items:center;
   justify-content:center;
-  color:#fff;
-  font-size:26px;
+  font-size:18px;
+  border:1px solid rgba(255,255,255,.08);
 }
 
 .top-right{
   display:flex;
-  gap:10px;
-}
-
-.team-head{
-  text-align:center;
-  padding:8px 0 20px;
+  gap:8px;
 }
 
 .team-logo{
   width:92px;
   height:92px;
-  border-radius:18px;
+  border-radius:50%;
   object-fit:contain;
-  background:rgba(255,255,255,.04);
-  margin:0 auto 8px;
+  background:#fff;
+  border:3px solid var(--gold);
+  margin:0 auto 10px;
+  box-shadow:0 10px 24px rgba(0,0,0,.28);
 }
 
 .team-name{
+  color:var(--gold);
   font-size:28px;
   font-weight:900;
+  text-transform:uppercase;
   line-height:1.15;
 }
 
 .team-sub{
-  color:#ddd;
-  font-size:16px;
+  color:var(--muted);
+  font-size:14px;
   margin-top:6px;
 }
 
 .main-tabs{
   display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  border-bottom:1px solid var(--line);
-  margin-bottom:0;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:18px;
 }
 
 .main-tabs button{
-  padding:16px 6px 13px;
-  font-size:22px;
-  font-weight:500;
+  background:rgba(13,35,70,.95);
   color:#fff;
-  border-bottom:3px solid transparent;
-  text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:12px 8px;
+  font-size:15px;
+  font-weight:900;
+  transition:.25s ease;
 }
 
 .main-tabs button.ativo{
-  font-weight:900;
-  border-bottom-color:var(--gold);
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
 }
 
 .sub-tabs{
   display:flex;
-  gap:18px;
+  gap:8px;
   overflow-x:auto;
-  background:var(--card);
-  padding:16px 14px;
-  margin:0 -13px 18px;
+  margin-bottom:14px;
+  padding-bottom:4px;
   scrollbar-width:none;
 }
 
@@ -137,278 +155,270 @@ img{display:block;max-width:100%}
 
 .sub-tabs button{
   flex:0 0 auto;
-  padding:8px 18px;
+  background:rgba(13,35,70,.95);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.08);
   border-radius:999px;
-  color:var(--muted);
-  font-size:19px;
+  padding:9px 14px;
+  font-size:13px;
+  font-weight:900;
   white-space:nowrap;
 }
 
 .sub-tabs button.ativo{
-  color:#fff;
-  border:2px solid var(--gold);
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
 }
 
 .card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:18px;
-  overflow:hidden;
-  margin-bottom:18px;
-  box-shadow:0 10px 28px rgba(0,0,0,.35);
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:16px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  margin-bottom:14px;
 }
 
 .card-title{
-  padding:14px 16px;
-  font-size:18px;
+  color:var(--gold);
+  font-size:20px;
   font-weight:900;
-  border-bottom:1px solid rgba(0,0,0,.5);
+  margin-bottom:12px;
 }
 
-.card-body{
-  padding:16px;
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.stat-box{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  padding:12px 8px;
+  text-align:center;
+}
+
+.stat-box strong{
+  display:block;
+  color:var(--gold);
+  font-size:23px;
+  margin-bottom:4px;
+}
+
+.stat-box span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
 }
 
 .details-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:16px;
-  align-items:center;
+  gap:12px;
 }
 
-.detail-person{
+.detail-box{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  padding:14px;
   text-align:center;
-  padding:10px;
 }
 
-.detail-person img{
-  width:76px;
-  height:76px;
+.detail-box img{
+  width:72px;
+  height:72px;
   border-radius:50%;
   object-fit:cover;
   background:#fff;
   margin:0 auto 8px;
+  border:2px solid var(--gold);
 }
 
-.detail-person strong{
+.detail-box strong{
   display:block;
-  font-size:22px;
+  color:#fff;
+  font-size:17px;
 }
 
-.detail-person span{
-  display:block;
+.detail-box span{
   color:var(--muted);
-  font-size:16px;
-  margin-top:3px;
+  font-size:13px;
+  display:block;
+  margin-top:4px;
 }
 
-.divider{
-  border-left:1px solid rgba(255,255,255,.18);
-  height:120px;
-  position:absolute;
-  left:50%;
-  top:28px;
-}
-
-.detail-wrap{position:relative}
-
-.bottom-stats{
+.list-row{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  border-top:1px solid rgba(255,255,255,.2);
-  margin-top:14px;
-  padding-top:14px;
-  text-align:center;
+  grid-template-columns:52px 1fr auto;
+  gap:10px;
+  align-items:center;
+  padding:12px 0;
+  border-top:1px solid rgba(255,255,255,.08);
 }
 
-.bottom-stats strong{
+.list-row:first-child{border-top:none}
+
+.list-row img{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#fff;
+  border:1px solid rgba(247,198,0,.45);
+}
+
+.list-main strong{
   display:block;
-  font-size:24px;
-}
-
-.bottom-stats span{
-  color:var(--muted);
+  color:#fff;
   font-size:15px;
 }
 
-.stats-row{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-}
-
-.stat{
-  background:rgba(255,255,255,.03);
-  border-radius:14px;
-  padding:14px 8px;
-  text-align:center;
-}
-
-.stat strong{
+.list-main span{
   display:block;
-  font-size:24px;
-  color:#fff;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:3px;
 }
 
-.stat span{
-  color:var(--muted);
-  font-size:13px;
+.list-value{
+  color:var(--gold);
+  font-size:18px;
+  font-weight:900;
 }
 
 .match-card{
-  background:var(--card);
-  border-radius:18px;
-  border:1px solid var(--line);
-  margin-bottom:16px;
-  overflow:hidden;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:10px;
 }
 
 .match-head{
-  padding:12px 14px;
-  border-bottom:1px solid rgba(0,0,0,.45);
-  font-weight:900;
   display:flex;
   justify-content:space-between;
   gap:10px;
-  color:#fff;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  margin-bottom:10px;
 }
 
 .match-line{
   display:grid;
   grid-template-columns:1fr auto 1fr;
   align-items:center;
-  gap:12px;
-  padding:18px 14px;
+  gap:10px;
   text-align:center;
-  font-size:18px;
+  color:#fff;
+  font-weight:900;
+  font-size:14px;
 }
 
 .score{
-  color:#ddd;
-  font-size:26px;
-  font-weight:900;
+  color:var(--gold);
+  font-size:22px;
 }
 
-.table{
+.tabela{
   width:100%;
   border-collapse:collapse;
+  overflow:hidden;
 }
 
-.table th,.table td{
-  padding:12px 8px;
-  border-bottom:1px solid rgba(0,0,0,.5);
-  color:#eee;
+.tabela th,
+.tabela td{
+  padding:10px 8px;
+  border-bottom:1px solid rgba(255,255,255,.08);
   text-align:left;
+  font-size:13px;
 }
 
-.table th{
-  color:var(--muted);
+.tabela th{
+  color:var(--gold);
   font-size:12px;
-  font-weight:900;
 }
 
-.table .team-cell{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.table img{
-  width:32px;
-  height:32px;
-  object-fit:contain;
-}
-
-.list-row{
-  display:grid;
-  grid-template-columns:58px 1fr auto;
-  gap:12px;
-  align-items:center;
-  padding:12px 14px;
-  border-top:1px solid rgba(0,0,0,.5);
-}
-
-.list-row img{
-  width:52px;
-  height:52px;
-  border-radius:50%;
-  object-fit:cover;
-  background:#fff;
-}
-
-.list-main strong{
-  display:block;
-  font-size:18px;
-}
-
-.list-main span{
-  display:block;
+.tabela td{
   color:var(--muted);
-  font-size:14px;
-  margin-top:2px;
-}
-
-.list-value{
-  font-size:20px;
-  font-weight:900;
 }
 
 .position-title{
-  padding:12px 14px;
-  background:var(--card2);
-  font-size:17px;
-  color:#fff;
-  border-bottom:1px solid rgba(0,0,0,.5);
-}
-
-.news-card{
-  background:var(--card);
-  border-radius:18px;
-  overflow:hidden;
-  margin-bottom:18px;
-}
-
-.news-img{
-  height:220px;
-  width:100%;
-  object-fit:cover;
-  background:#071d37;
-}
-
-.news-content{
-  padding:14px;
-}
-
-.news-content h3{
-  font-size:21px;
+  background:rgba(247,198,0,.12);
+  color:var(--gold);
+  padding:10px 12px;
+  border-radius:12px;
+  font-size:15px;
+  font-weight:900;
   margin-bottom:8px;
 }
 
-.news-actions{
-  display:flex;
-  justify-content:space-between;
-  color:#ddd;
-  margin-top:12px;
-}
-
 .empty{
-  padding:24px;
-  text-align:center;
   color:var(--muted);
+  text-align:center;
+  padding:18px;
 }
 
 @media(max-width:700px){
-  .wrap{width:min(100% - 24px, var(--max))}
-  .team-logo{width:78px;height:78px}
-  .team-name{font-size:24px}
-  .main-tabs button{font-size:22px}
-  .stats-row{grid-template-columns:repeat(2,1fr)}
-  .details-grid{grid-template-columns:1fr 1fr}
-  .detail-person strong{font-size:19px}
-  .bottom-stats strong{font-size:22px}
-  .match-line{font-size:16px}
-  .score{font-size:24px}
+  .wrap{
+    width:min(100% - 18px, var(--max));
+  }
+
+  .container{
+    padding:16px 0 28px;
+  }
+
+  .hero-time{
+    padding:14px;
+  }
+
+  .team-logo{
+    width:76px;
+    height:76px;
+  }
+
+  .team-name{
+    font-size:22px;
+  }
+
+  .main-tabs{
+    gap:6px;
+  }
+
+  .main-tabs button{
+    font-size:13px;
+    padding:10px 5px;
+  }
+
+  .stats-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .details-grid{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
+  .detail-box{
+    padding:10px 6px;
+  }
+
+  .detail-box img{
+    width:58px;
+    height:58px;
+  }
+
+  .match-line{
+    font-size:12px;
+    gap:6px;
+  }
+
+  .score{
+    font-size:19px;
+  }
 }
 </style>
 </head>
@@ -420,35 +430,35 @@ import { renderMenu } from "./menu.js";
 renderMenu("times");
 </script>
 
-<div class="wrap top-app">
-  <div class="top-icons">
-    <button class="icon-btn" onclick="history.back()">
-      <i class="fa-solid fa-arrow-left"></i>
-    </button>
+<main class="wrap container">
 
-    <div class="top-right">
-      <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
-      <button class="icon-btn"><i class="fa-regular fa-star"></i></button>
-      <button class="icon-btn" onclick="compartilharTime()"><i class="fa-solid fa-share-nodes"></i></button>
+  <section class="hero-time">
+    <div class="top-icons">
+      <button class="icon-btn" onclick="history.back()" title="Voltar">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+
+      <div class="top-right">
+        <button class="icon-btn" title="Notificações"><i class="fa-regular fa-bell"></i></button>
+        <button class="icon-btn" title="Favorito"><i class="fa-regular fa-star"></i></button>
+        <button class="icon-btn" onclick="compartilharTime()" title="Compartilhar"><i class="fa-solid fa-share-nodes"></i></button>
+      </div>
     </div>
-  </div>
 
-  <section class="team-head">
     <img id="logo" class="team-logo" src="logo-liga.jfif">
     <div class="team-name" id="nome">Carregando...</div>
     <div class="team-sub" id="info">Liga Goiana de Futebol de Base</div>
+
+    <nav class="main-tabs">
+      <button id="tabTemporada" class="ativo" onclick="trocarPrincipal('temporada')">Temporada</button>
+      <button id="tabBuzz" onclick="trocarPrincipal('buzz')">Buzz</button>
+      <button id="tabElenco" onclick="trocarPrincipal('elenco')">Elenco</button>
+    </nav>
   </section>
 
-  <nav class="main-tabs">
-    <button id="tabTemporada" class="ativo" onclick="trocarPrincipal('temporada')">Temporada</button>
-    <button id="tabBuzz" onclick="trocarPrincipal('buzz')">Buzz</button>
-    <button id="tabElenco" onclick="trocarPrincipal('elenco')">Elenco</button>
-  </nav>
-</div>
-
-<main class="wrap">
   <div id="subTabs" class="sub-tabs"></div>
   <div id="conteudo"></div>
+
 </main>
 
 <script type="module">
@@ -569,7 +579,7 @@ function dataBR(v){
   if(!v) return "-";
   const d = new Date(v);
   if(isNaN(d.getTime())) return String(v);
-  return d.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"2-digit"});
+  return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
 }
 
 function renderHeader(){
@@ -608,49 +618,31 @@ function cardDetalhes(){
 
   return `
     <section class="card">
-      <div class="card-title">Detalhes do time</div>
-      <div class="card-body detail-wrap">
-        <div class="details-grid">
-          <div class="detail-person">
-            <img src="${logoTime()}" onerror="this.src='logo-liga.jfif'">
-            <strong>${nomeTime()}</strong>
-            <span>${categoriasTime() || "Categoria"}</span>
-          </div>
+      <div class="card-title">Detalhes do Time</div>
 
-          <div class="detail-person">
-            <img src="logo-liga.jfif">
-            <strong>${tecnicoPrincipal()}</strong>
-            <span>Técnico</span>
-          </div>
+      <div class="details-grid">
+        <div class="detail-box">
+          <img src="${logoTime()}" onerror="this.src='logo-liga.jfif'">
+          <strong>${nomeTime()}</strong>
+          <span>${categoriasTime() || "Categoria"}</span>
         </div>
 
-        <div class="bottom-stats">
-          <div><strong>${elenco.length}</strong><span>Jogadores</span></div>
-          <div><strong>${st.jogos}</strong><span>Jogos</span></div>
-          <div><strong>${st.pontos}</strong><span>Pontos</span></div>
+        <div class="detail-box">
+          <img src="logo-liga.jfif">
+          <strong>${tecnicoPrincipal()}</strong>
+          <span>Técnico</span>
         </div>
       </div>
     </section>
 
     <section class="card">
-      <div class="card-title">Últimas Partidas</div>
-      <div class="stats-row">
-        ${jogosDoTime().slice(0,4).map(j=>`
-          <div class="stat">
-            <strong>${placarA(j)} x ${placarB(j)}</strong>
-            <span>${campo(j,["timeA","mandante"],"-")} x ${campo(j,["timeB","visitante"],"-")}</span>
-          </div>
-        `).join("") || `<div class="empty">Nenhuma partida cadastrada.</div>`}
-      </div>
-    </section>
+      <div class="card-title">Resumo da Temporada</div>
 
-    <section class="card">
-      <div class="card-title">Resumo</div>
-      <div class="stats-row">
-        <div class="stat"><strong>${st.vitorias}</strong><span>Vitórias</span></div>
-        <div class="stat"><strong>${st.empates}</strong><span>Empates</span></div>
-        <div class="stat"><strong>${st.derrotas}</strong><span>Derrotas</span></div>
-        <div class="stat"><strong>${st.saldo}</strong><span>Saldo</span></div>
+      <div class="stats-grid">
+        <div class="stat-box"><strong>${elenco.length}</strong><span>Jogadores</span></div>
+        <div class="stat-box"><strong>${st.jogos}</strong><span>Jogos</span></div>
+        <div class="stat-box"><strong>${st.vitorias}</strong><span>Vitórias</span></div>
+        <div class="stat-box"><strong>${st.pontos}</strong><span>Pontos</span></div>
       </div>
     </section>
   `;
@@ -663,19 +655,25 @@ function cardJogos(){
     return `<section class="card"><div class="empty">Nenhum jogo cadastrado para este time.</div></section>`;
   }
 
-  return lista.map(j=>`
-    <section class="match-card">
-      <div class="match-head">
-        <span>${campo(j,["campeonato","nomeCampeonato"],"Competição")}</span>
-        <span>${dataBR(campo(j,["data","dataJogo"],""))}</span>
-      </div>
-      <div class="match-line">
-        <div>${campo(j,["timeA","mandante"],"-")}</div>
-        <div class="score">${placarA(j)} - ${placarB(j)}</div>
-        <div>${campo(j,["timeB","visitante"],"-")}</div>
-      </div>
+  return `
+    <section class="card">
+      <div class="card-title">Jogos</div>
+      ${lista.map(j=>`
+        <div class="match-card">
+          <div class="match-head">
+            <span>${campo(j,["campeonato","nomeCampeonato"],"Competição")}</span>
+            <span>${dataBR(campo(j,["data","dataJogo"],""))}</span>
+          </div>
+
+          <div class="match-line">
+            <div>${campo(j,["timeA","mandante"],"-")}</div>
+            <div class="score">${placarA(j)} x ${placarB(j)}</div>
+            <div>${campo(j,["timeB","visitante"],"-")}</div>
+          </div>
+        </div>
+      `).join("")}
     </section>
-  `).join("");
+  `;
 }
 
 function cardClassificacao(){
@@ -683,15 +681,25 @@ function cardClassificacao(){
 
   return `
     <section class="card">
-      <div class="card-title">Classificação do time</div>
-      <table class="table">
+      <div class="card-title">Classificação</div>
+
+      <table class="tabela">
         <tr>
-          <th>Time</th><th>J</th><th>GP:GC</th><th>SG</th><th>P</th>
+          <th>Time</th>
+          <th>J</th>
+          <th>V</th>
+          <th>E</th>
+          <th>D</th>
+          <th>SG</th>
+          <th>P</th>
         </tr>
+
         <tr>
-          <td class="team-cell"><img src="${logoTime()}"> ${nomeTime()}</td>
+          <td>${nomeTime()}</td>
           <td>${st.jogos}</td>
-          <td>${st.gols}:${st.golsContra}</td>
+          <td>${st.vitorias}</td>
+          <td>${st.empates}</td>
+          <td>${st.derrotas}</td>
           <td>${st.saldo}</td>
           <td>${st.pontos}</td>
         </tr>
@@ -702,29 +710,16 @@ function cardClassificacao(){
 
 function cardEstatisticas(){
   const st = calcularStats();
-  const mediaGols = st.jogos ? (st.gols/st.jogos).toFixed(2) : "0";
 
   return `
     <section class="card">
-      <div class="card-title">Estatísticas dos times</div>
-      <div class="list-row">
-        <img src="${logoTime()}">
-        <div class="list-main"><strong>Gols por jogo</strong><span>Total de gols ${st.gols}</span></div>
-        <div class="list-value">${mediaGols}</div>
-      </div>
-      <div class="list-row">
-        <img src="${logoTime()}">
-        <div class="list-main"><strong>Gols sofridos</strong><span>Total sofrido ${st.golsContra}</span></div>
-        <div class="list-value">${st.jogos ? (st.golsContra/st.jogos).toFixed(2) : "0"}</div>
-      </div>
-      <div class="list-row">
-        <img src="${logoTime()}">
-        <div class="list-main"><strong>Não vazado</strong><span>Jogos sem sofrer gols</span></div>
-        <div class="list-value">${jogosDoTime().filter(j=>{
-          const nome = normalizar(nomeTime());
-          const ehA = normalizar(campo(j,["timeA","mandante"],"")) === nome;
-          return (ehA ? placarB(j) : placarA(j)) === 0;
-        }).length}</div>
+      <div class="card-title">Estatísticas</div>
+
+      <div class="stats-grid">
+        <div class="stat-box"><strong>${st.gols}</strong><span>Gols Pró</span></div>
+        <div class="stat-box"><strong>${st.golsContra}</strong><span>Gols Contra</span></div>
+        <div class="stat-box"><strong>${st.saldo}</strong><span>Saldo</span></div>
+        <div class="stat-box"><strong>${st.jogos ? (st.gols/st.jogos).toFixed(1) : "0"}</strong><span>Média de Gols</span></div>
       </div>
     </section>
   `;
@@ -743,18 +738,20 @@ function grupoPosicao(j){
   const pos = normalizar(campo(j,["posicao","posição","funcao"],""));
   if(pos.includes("goleiro")) return "Goleiros";
   if(pos.includes("zagueiro") || pos.includes("lateral") || pos.includes("defensor")) return "Defensores";
-  if(pos.includes("volante") || pos.includes("meia") || pos.includes("camp")) return "Meio Campistas";
+  if(pos.includes("volante") || pos.includes("meia") || pos.includes("camp")) return "Meio-campistas";
   if(pos.includes("atac") || pos.includes("ponta") || pos.includes("centroavante")) return "Atacantes";
   return "Elenco";
 }
 
 function cardElenco(){
   const lista = jogadoresDoTime();
+
   if(!lista.length){
     return `<section class="card"><div class="empty">Nenhum jogador cadastrado para este time.</div></section>`;
   }
 
   const grupos = {};
+
   lista.forEach(j=>{
     const g = grupoPosicao(j);
     if(!grupos[g]) grupos[g] = [];
@@ -764,13 +761,16 @@ function cardElenco(){
   return Object.keys(grupos).map(g=>`
     <section class="card">
       <div class="position-title">${g}</div>
+
       ${grupos[g].map(j=>`
         <div class="list-row">
           <img src="${campo(j,["foto","fotoPerfil","imagem"],"logo-liga.jfif")}" onerror="this.src='logo-liga.jfif'">
+
           <div class="list-main">
             <strong>${campo(j,["nome","nomeCompleto"],"Jogador")}</strong>
             <span>${campo(j,["posicao","posição","funcao"],"Jogador")}</span>
           </div>
+
           <div class="list-value">${campo(j,["numero","camisa"],"")}</div>
         </div>
       `).join("")}
@@ -782,9 +782,13 @@ function cardGestao(){
   return `
     <section class="card">
       <div class="card-title">Gestão</div>
+
       <div class="list-row">
         <img src="logo-liga.jfif">
-        <div class="list-main"><strong>${tecnicoPrincipal()}</strong><span>Técnico</span></div>
+        <div class="list-main">
+          <strong>${tecnicoPrincipal()}</strong>
+          <span>Técnico</span>
+        </div>
         <div></div>
       </div>
     </section>
@@ -793,15 +797,9 @@ function cardGestao(){
 
 function cardBuzz(){
   return `
-    <section class="news-card">
-      <div class="news-content">
-        <h3>Notícias do ${nomeTime()}</h3>
-        <p style="color:var(--muted)">Área preparada para notícias, chat e destaques do time.</p>
-        <div class="news-actions">
-          <span><i class="fa-regular fa-thumbs-up"></i> Curtir</span>
-          <span><i class="fa-solid fa-share-nodes"></i> Compartilhar</span>
-        </div>
-      </div>
+    <section class="card">
+      <div class="card-title">${sub === "chat" ? "Chat" : sub === "destaques" ? "Destaques" : "Notícias"}</div>
+      <div class="empty">Área preparada para ${sub === "chat" ? "chat do time" : sub === "destaques" ? "destaques do time" : "notícias do time"}.</div>
     </section>
   `;
 }
@@ -847,6 +845,7 @@ window.trocarSub = function(n){
 
 window.compartilharTime = function(){
   const url = location.href;
+
   if(navigator.share){
     navigator.share({title:nomeTime(),url});
   }else{
