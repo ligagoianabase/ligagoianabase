@@ -395,7 +395,7 @@ input:focus,select:focus,textarea:focus{
   grid-column:1/-1;
 }
 
-/* UNIFORMES */
+/* UNIFORMES COM FOTO REAL */
 .uniforme-builder{
   display:grid;
   grid-template-columns:1.05fr .95fr;
@@ -411,12 +411,11 @@ input:focus,select:focus,textarea:focus{
 }
 
 .uniforme-preview{
-  min-height:470px;
+  min-height:440px;
   border-radius:18px;
   border:1px solid rgba(247,198,0,.24);
   background:
-    radial-gradient(circle at 50% 28%,rgba(247,198,0,.16),transparent 36%),
-    radial-gradient(circle at 50% 72%,rgba(0,0,0,.42),transparent 42%),
+    radial-gradient(circle at center,rgba(247,198,0,.14),transparent 42%),
     linear-gradient(135deg,rgba(8,35,75,.86),rgba(5,18,43,.94));
   display:flex;
   align-items:center;
@@ -426,132 +425,97 @@ input:focus,select:focus,textarea:focus{
   overflow:hidden;
 }
 
-.uniforme-preview-area{
-  position:relative;
-  width:100%;
-  min-height:420px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:2;
-}
-
-.uniforme-showcase{
-  width:100%;
+.uniforme-preview-card{
+  width:min(100%,360px);
+  min-height:390px;
+  border-radius:22px;
+  background:linear-gradient(180deg,rgba(16,42,82,.95),rgba(7,24,49,.96));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 25px 50px rgba(0,0,0,.45);
+  padding:18px;
   display:flex;
   flex-direction:column;
+  justify-content:space-between;
+  gap:14px;
+}
+
+.uniforme-foto-box{
+  width:100%;
+  height:260px;
+  border-radius:18px;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),
+    rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.10);
+  display:flex;
   align-items:center;
   justify-content:center;
-}
-
-.uniforme-svg-box{
-  width:310px;
-  height:360px;
+  overflow:hidden;
   position:relative;
-  filter:
-    drop-shadow(0 28px 28px rgba(0,0,0,.58))
-    drop-shadow(0 0 22px rgba(247,198,0,.16));
-  transform:perspective(900px) rotateY(-4deg) rotateX(2deg);
-  transition:.28s ease;
 }
 
-.uniforme-svg-box:hover{
-  transform:perspective(900px) rotateY(-1deg) rotateX(1deg) scale(1.02);
-}
-
-.uniforme-svg-box svg{
+.uniforme-foto-box img{
   width:100%;
   height:100%;
-  display:block;
-}
-
-.kit-escudo-img{
-  position:absolute;
-  top:106px;
-  right:93px;
-  width:42px;
-  height:42px;
   object-fit:contain;
-  background:#fff;
-  border-radius:10px;
-  padding:3px;
-  border:2px solid rgba(255,255,255,.75);
-  box-shadow:0 7px 14px rgba(0,0,0,.38);
+  padding:10px;
 }
 
-.kit-marca{
-  position:absolute;
-  top:121px;
-  left:96px;
-  color:var(--cor3,#fff);
-  font-size:13px;
-  font-weight:1000;
-  text-shadow:0 2px 5px rgba(0,0,0,.45);
+.uniforme-foto-box.sem-foto{
+  color:#cbd6ea;
+  font-weight:900;
+  text-align:center;
+  padding:20px;
 }
 
-.kit-chao{
-  position:absolute;
-  bottom:24px;
-  left:50%;
-  transform:translateX(-50%);
-  width:220px;
-  height:32px;
-  background:rgba(0,0,0,.42);
-  border-radius:50%;
-  filter:blur(9px);
-  z-index:-1;
+.uniforme-foto-box.sem-foto:before{
+  content:"553";
+  font-family:"Font Awesome 6 Free";
+  font-weight:900;
+  font-size:54px;
+  color:rgba(247,198,0,.75);
+  display:block;
+  margin-bottom:12px;
 }
 
-.uniforme-info{
-  margin-top:12px;
+.uniforme-preview-info{
   text-align:center;
 }
 
-.uniforme-info strong{
+.uniforme-preview-info strong{
   display:block;
   color:#f7c600;
   font-size:22px;
   font-weight:1000;
 }
 
-.uniforme-info span{
+.uniforme-preview-info span{
+  display:block;
   color:#c8d3ea;
   font-size:14px;
+  margin-top:4px;
   text-transform:capitalize;
 }
 
-.uniforme-seta{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  width:46px;
-  height:46px;
-  border:none;
-  border-radius:50%;
-  background:#08285c;
-  color:#fff;
-  font-size:18px;
-  cursor:pointer;
-  z-index:100;
-  transition:.25s;
-  border:1px solid rgba(247,198,0,.35);
+.cores-preview{
   display:flex;
-  align-items:center;
   justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
 }
 
-.uniforme-seta:hover{
-  background:#f7c600;
-  color:#111;
-  transform:translateY(-50%) scale(1.08);
+.cor-bolinha{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.70);
+  box-shadow:0 6px 14px rgba(0,0,0,.35);
 }
-
-.uniforme-seta.esquerda{left:8px}
-.uniforme-seta.direita{right:8px}
 
 .modelo-mini-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
   gap:10px;
   margin-top:12px;
 }
@@ -578,6 +542,16 @@ input:focus,select:focus,textarea:focus{
   display:block;
   color:var(--muted);
   margin-top:3px;
+}
+
+.uniforme-chip-img{
+  width:100%;
+  height:92px;
+  border-radius:10px;
+  object-fit:contain;
+  background:rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.08);
+  margin-bottom:8px;
 }
 
 .jogadores-grid{
@@ -656,12 +630,10 @@ input:focus,select:focus,textarea:focus{
   .jogador-card .actions{grid-column:1/-1}
   .uniforme-preview{min-height:345px}
   .uniforme-preview-area{min-height:310px}
-  .uniforme-preview{min-height:350px}
-  .uniforme-preview-area{min-height:320px}
-  .uniforme-svg-box{width:230px;height:285px}
-  .kit-escudo-img{top:86px;right:68px;width:32px;height:32px}
-  .kit-marca{top:98px;left:72px;font-size:11px}
-  .uniforme-seta{width:38px;height:38px;font-size:15px}
+  .uniforme-preview{min-height:330px}
+  .uniforme-preview-card{min-height:300px}
+  .uniforme-foto-box{height:200px}
+
 }
 </style>
 </head>
@@ -833,25 +805,18 @@ input:focus,select:focus,textarea:focus{
 
           <div>
             <label>Tipo</label>
-            <select id="uniformeTipo">
+            <select id="uniformeTipo" onchange="atualizarPreviewUniforme()">
               <option value="jogo">Jogo</option>
+              <option value="principal">Principal</option>
+              <option value="reserva">Reserva</option>
               <option value="goleiro">Goleiro</option>
               <option value="treino">Treino</option>
             </select>
           </div>
 
-          <div>
-            <label>Modelo</label>
-            <select id="uniformeModelo" onchange="atualizarPreviewUniforme()">
-              <option value="listrado-vertical">Listrado vertical</option>
-              <option value="listrado-horizontal">Listrado horizontal</option>
-              <option value="diagonal">Diagonal</option>
-              <option value="faixa-central">Faixa central</option>
-              <option value="metade-metade">Metade / metade</option>
-              <option value="degrade">Degradê</option>
-              <option value="liso">Liso</option>
-              <option value="retro">Retrô</option>
-            </select>
+          <div class="full">
+            <label>Foto real do uniforme</label>
+            <input id="uniformeFotoArquivo" type="file" accept="image/*" onchange="previewFotoUniforme()">
           </div>
 
           <div>
@@ -870,13 +835,8 @@ input:focus,select:focus,textarea:focus{
           </div>
 
           <div>
-            <label>Gola</label>
-            <input id="uniformeGola" type="color" value="#111111" onchange="atualizarPreviewUniforme()">
-          </div>
-
-          <div>
-            <label>Manga</label>
-            <input id="uniformeManga" type="color" value="#111111" onchange="atualizarPreviewUniforme()">
+            <label>Observação</label>
+            <input id="uniformeObs" placeholder="Ex: usado em jogos fora">
           </div>
         </div>
 
@@ -894,89 +854,24 @@ input:focus,select:focus,textarea:focus{
       </div>
 
       <div class="uniforme-preview">
-        <div class="uniforme-preview-area">
-
-          <button type="button" class="uniforme-seta esquerda" onclick="uniformeAnterior()">
-            <i class="fa-solid fa-chevron-left"></i>
-          </button>
-
-          <div class="uniforme-showcase">
-
-            <div class="uniforme-svg-box" id="previewCamisa3D">
-              <div class="kit-chao"></div>
-
-              <svg viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg" aria-label="Camisa 3D">
-                <defs>
-                  <clipPath id="clipCamisa">
-                    <path d="M92 54 C111 41 130 35 160 35 C190 35 209 41 228 54 L282 89 C292 95 296 105 292 117 L268 188 C265 198 255 203 246 199 L232 193 L232 319 C232 333 222 342 208 342 L112 342 C98 342 88 333 88 319 L88 193 L74 199 C65 203 55 198 52 188 L28 117 C24 105 28 95 38 89 Z"/>
-                  </clipPath>
-
-                  <linearGradient id="luzCamisa" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="white" stop-opacity=".28"/>
-                    <stop offset="26%" stop-color="white" stop-opacity=".08"/>
-                    <stop offset="55%" stop-color="black" stop-opacity=".06"/>
-                    <stop offset="100%" stop-color="black" stop-opacity=".34"/>
-                  </linearGradient>
-
-                  <radialGradient id="peitoLuz" cx="50%" cy="18%" r="60%">
-                    <stop offset="0%" stop-color="white" stop-opacity=".23"/>
-                    <stop offset="38%" stop-color="white" stop-opacity=".04"/>
-                    <stop offset="100%" stop-color="black" stop-opacity=".20"/>
-                  </radialGradient>
-                </defs>
-
-                <path id="kitMangaEsq" d="M92 54 L38 89 C28 96 24 106 28 118 L52 188 C55 198 65 203 74 199 L96 189 L104 77 Z"/>
-                <path id="kitMangaDir" d="M228 54 L282 89 C292 96 296 106 292 118 L268 188 C265 198 255 203 246 199 L224 189 L216 77 Z"/>
-
-                <path id="kitCorpoBase" d="M92 54 C111 41 130 35 160 35 C190 35 209 41 228 54 L232 319 C232 333 222 342 208 342 L112 342 C98 342 88 333 88 319 Z"/>
-
-                <g clip-path="url(#clipCamisa)" id="grupoPadrao">
-                  <rect id="kitFundoPadrao" x="0" y="0" width="320" height="380"/>
-                  <g id="kitModeloDesenho"></g>
-                  <rect x="0" y="0" width="320" height="380" fill="url(#peitoLuz)"/>
-                  <rect x="0" y="0" width="320" height="380" fill="url(#luzCamisa)"/>
-                  <g opacity=".22">
-                    <path d="M105 58 C115 120 114 215 108 338" fill="none" stroke="#000" stroke-width="4"/>
-                    <path d="M215 58 C205 120 206 215 212 338" fill="none" stroke="#000" stroke-width="4"/>
-                    <path d="M160 43 C157 125 157 230 160 341" fill="none" stroke="#fff" stroke-width="2" opacity=".42"/>
-                  </g>
-                </g>
-
-                <path d="M92 54 C111 41 130 35 160 35 C190 35 209 41 228 54" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3"/>
-                <path d="M92 54 L88 319" fill="none" stroke="rgba(0,0,0,.28)" stroke-width="3"/>
-                <path d="M228 54 L232 319" fill="none" stroke="rgba(0,0,0,.28)" stroke-width="3"/>
-
-                <path id="kitGola" d="M124 40 C136 35 146 34 160 34 C174 34 184 35 196 40 L186 73 C178 84 169 90 160 93 C151 90 142 84 134 73 Z"/>
-                <path d="M139 43 C146 52 153 57 160 58 C167 57 174 52 181 43 L174 70 C169 76 164 80 160 82 C156 80 151 76 146 70 Z" fill="rgba(0,0,0,.55)"/>
-
-                <path d="M42 96 C59 104 72 126 82 185" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="8" stroke-linecap="round"/>
-                <path d="M278 96 C261 104 248 126 238 185" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="8" stroke-linecap="round"/>
-
-                <path d="M92 54 C111 41 130 35 160 35 C190 35 209 41 228 54 L282 89 C292 95 296 105 292 117 L268 188 C265 198 255 203 246 199 L232 193 L232 319 C232 333 222 342 208 342 L112 342 C98 342 88 333 88 319 L88 193 L74 199 C65 203 55 198 52 188 L28 117 C24 105 28 95 38 89 Z"
-                      fill="none" stroke="rgba(255,255,255,.16)" stroke-width="3"/>
-              </svg>
-
-              <span class="kit-marca">LG</span>
-
-              <img
-                id="previewEscudoCamisa"
-                class="kit-escudo-img"
-                src="logo-liga.jfif"
-                onerror="this.src='logo-liga.jfif'"
-              >
+        <div class="uniforme-preview-card">
+          <div class="uniforme-foto-box sem-foto" id="uniformePreviewBox">
+            <div>
+              Foto do uniforme<br>
+              <small>Escolha uma imagem do PC ou celular</small>
             </div>
-
-            <div class="uniforme-info">
-              <strong id="nomeUniformePreview">Uniforme 1</strong>
-              <span id="modeloUniformePreview">Listrado vertical</span>
-            </div>
-
           </div>
 
-          <button type="button" class="uniforme-seta direita" onclick="uniformeProximo()">
-            <i class="fa-solid fa-chevron-right"></i>
-          </button>
+          <div class="uniforme-preview-info">
+            <strong id="nomeUniformePreview">Uniforme 1</strong>
+            <span id="tipoUniformePreview">Jogo</span>
 
+            <div class="cores-preview">
+              <span class="cor-bolinha" id="bolinhaCor1"></span>
+              <span class="cor-bolinha" id="bolinhaCor2"></span>
+              <span class="cor-bolinha" id="bolinhaCor3"></span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1109,6 +1004,7 @@ let ehTecnico = false;
 let ehAdmin = false;
 let uniformeEditIndex = -1;
 let uniformesTemp = [];
+let uniformeFotoTemp = "";
 
 const categoriasFixas = [
   "Sub-07","Sub-09","Sub-11","Sub-12","Sub-13","Sub-14","Sub-15","Sub-16",
@@ -1303,178 +1199,65 @@ async function uploadLogoSeExistir(){
   return logoAtual || "logo-liga.jfif";
 }
 
-function padraoModelo(modelo,cor1,cor2,cor3){
-  const ns = "http://www.w3.org/2000/svg";
-  const grupo = document.getElementById("kitModeloDesenho");
-  const fundo = document.getElementById("kitFundoPadrao");
-
-  if(!grupo || !fundo) return;
-
-  grupo.innerHTML = "";
-  fundo.setAttribute("fill", cor1);
-
-  function rect(x,y,w,h,fill,opacity=1,rotate=null){
-    const r = document.createElementNS(ns,"rect");
-    r.setAttribute("x",x);
-    r.setAttribute("y",y);
-    r.setAttribute("width",w);
-    r.setAttribute("height",h);
-    r.setAttribute("fill",fill);
-    r.setAttribute("opacity",opacity);
-    if(rotate) r.setAttribute("transform",rotate);
-    grupo.appendChild(r);
-  }
-
-  function path(d,fill,opacity=1){
-    const p = document.createElementNS(ns,"path");
-    p.setAttribute("d",d);
-    p.setAttribute("fill",fill);
-    p.setAttribute("opacity",opacity);
-    grupo.appendChild(p);
-  }
-
-  if(modelo === "listrado-horizontal"){
-    for(let y=0;y<390;y+=48){
-      rect(0,y,320,24,cor2);
-    }
-    return;
-  }
-
-  if(modelo === "diagonal"){
-    path("M-20 260 L270 -20 L340 45 L40 350 Z", cor2);
-    path("M-15 232 L246 -25 L263 -8 L0 250 Z", cor3,.95);
-    return;
-  }
-
-  if(modelo === "faixa-central"){
-    rect(124,0,72,380,cor2);
-    rect(112,0,10,380,cor3,.95);
-    rect(198,0,10,380,cor3,.95);
-    return;
-  }
-
-  if(modelo === "metade-metade"){
-    rect(160,0,160,380,cor2);
-    path("M153 0 L167 0 L164 380 L151 380 Z", cor3,.9);
-    return;
-  }
-
-  if(modelo === "degrade"){
-    const antigo = document.getElementById("gradDinamico");
-    if(antigo) antigo.remove();
-
-    const defs = document.querySelector("svg defs");
-    const grad = document.createElementNS(ns,"linearGradient");
-    grad.setAttribute("id","gradDinamico");
-    grad.setAttribute("x1","0");
-    grad.setAttribute("y1","0");
-    grad.setAttribute("x2","1");
-    grad.setAttribute("y2","1");
-
-    [[0,cor1],[55,cor2],[100,cor3]].forEach(([off,c])=>{
-      const s = document.createElementNS(ns,"stop");
-      s.setAttribute("offset",off+"%");
-      s.setAttribute("stop-color",c);
-      grad.appendChild(s);
-    });
-
-    defs.appendChild(grad);
-    fundo.setAttribute("fill","url(#gradDinamico)");
-    return;
-  }
-
-  if(modelo === "liso"){
-    path("M96 50 C120 95 135 210 122 342 L88 342 L88 70 Z", "rgba(255,255,255,.16)", .7);
-    return;
-  }
-
-  if(modelo === "retro"){
-    rect(0,0,320,380,cor2);
-    rect(86,0,34,380,cor1);
-    rect(146,0,34,380,cor1);
-    rect(206,0,34,380,cor1);
-    rect(120,0,8,380,cor3,.95);
-    rect(180,0,8,380,cor3,.95);
-    return;
-  }
-
-  for(let x=-20;x<340;x+=56){
-    rect(x,0,28,380,cor2);
-  }
-}
+function padraoModelo(){ return ""; }
 
 function atualizarPreviewUniforme(){
-  const modelo = document.getElementById("uniformeModelo").value;
-  const cor1 = document.getElementById("uniformeCor1").value;
-  const cor2 = document.getElementById("uniformeCor2").value;
-  const cor3 = document.getElementById("uniformeCor3").value;
-  const gola = document.getElementById("uniformeGola").value;
-  const manga = document.getElementById("uniformeManga").value;
+  const nome = txt(document.getElementById("uniformeNome").value) || `Uniforme ${uniformesTemp.length + 1}`;
+  const tipo = document.getElementById("uniformeTipo").value || "jogo";
+  const cor1 = document.getElementById("uniformeCor1").value || "#f7c600";
+  const cor2 = document.getElementById("uniformeCor2").value || "#111111";
+  const cor3 = document.getElementById("uniformeCor3").value || "#ffffff";
 
-  const box = document.getElementById("previewCamisa3D");
-  if(box){
-    box.style.setProperty("--cor1", cor1);
-    box.style.setProperty("--cor2", cor2);
-    box.style.setProperty("--cor3", cor3);
-    box.style.setProperty("--gola", gola);
-    box.style.setProperty("--manga", manga);
-  }
+  document.getElementById("nomeUniformePreview").textContent = nome;
+  document.getElementById("tipoUniformePreview").textContent = tipo;
 
-  document.querySelectorAll("#kitGola").forEach(el=>el.style.fill = gola);
-  document.querySelectorAll("#kitMangaEsq,#kitMangaDir").forEach(el=>el.style.fill = manga);
-  document.querySelectorAll(".kit-marca").forEach(el=>el.style.color = cor3);
+  document.getElementById("bolinhaCor1").style.background = cor1;
+  document.getElementById("bolinhaCor2").style.background = cor2;
+  document.getElementById("bolinhaCor3").style.background = cor3;
 
-  padraoModelo(modelo,cor1,cor2,cor3);
+  const box = document.getElementById("uniformePreviewBox");
 
-  const logo = logoAtual || document.getElementById("previewLogoImg")?.src || "logo-liga.jfif";
-  const escudo = document.getElementById("previewEscudoCamisa");
-  if(escudo) escudo.src = logo;
-
-  const nomePreview = document.getElementById("nomeUniformePreview");
-  if(nomePreview){
-    nomePreview.textContent = document.getElementById("uniformeNome").value || `Uniforme ${uniformesTemp.length + 1}`;
-  }
-
-  const modeloPreview = document.getElementById("modeloUniformePreview");
-  if(modeloPreview){
-    modeloPreview.textContent = modelo.replaceAll("-"," ");
+  if(uniformeFotoTemp){
+    box.classList.remove("sem-foto");
+    box.innerHTML = `<img src="${uniformeFotoTemp}" alt="${nome}">`;
+  }else{
+    box.classList.add("sem-foto");
+    box.innerHTML = `<div>Foto do uniforme<br><small>Escolha uma imagem do PC ou celular</small></div>`;
   }
 }
 
 window.atualizarPreviewUniforme = atualizarPreviewUniforme;
 
-window.uniformeProximo = function(){
-  if(!uniformesTemp.length){
+window.previewFotoUniforme = function(){
+  const arquivo = document.getElementById("uniformeFotoArquivo").files[0];
+
+  if(!arquivo){
+    uniformeFotoTemp = "";
     atualizarPreviewUniforme();
     return;
   }
 
-  uniformeEditIndex++;
-  if(uniformeEditIndex >= uniformesTemp.length) uniformeEditIndex = 0;
-  editarUniforme(uniformeEditIndex);
-};
+  const leitor = new FileReader();
 
-window.uniformeAnterior = function(){
-  if(!uniformesTemp.length){
+  leitor.onload = function(e){
+    uniformeFotoTemp = e.target.result;
     atualizarPreviewUniforme();
-    return;
-  }
+  };
 
-  uniformeEditIndex--;
-  if(uniformeEditIndex < 0) uniformeEditIndex = uniformesTemp.length - 1;
-  editarUniforme(uniformeEditIndex);
+  leitor.readAsDataURL(arquivo);
 };
+
 
 window.limparUniformeForm = function(){
   uniformeEditIndex = -1;
+  uniformeFotoTemp = "";
   document.getElementById("uniformeNome").value = `Uniforme ${uniformesTemp.length + 1}`;
   document.getElementById("uniformeTipo").value = "jogo";
-  document.getElementById("uniformeModelo").value = "listrado-vertical";
+  document.getElementById("uniformeFotoArquivo").value = "";
   document.getElementById("uniformeCor1").value = "#f7c600";
   document.getElementById("uniformeCor2").value = "#111111";
   document.getElementById("uniformeCor3").value = "#ffffff";
-  document.getElementById("uniformeGola").value = "#111111";
-  document.getElementById("uniformeManga").value = "#111111";
+  document.getElementById("uniformeObs").value = "";
   atualizarPreviewUniforme();
 };
 
@@ -1482,13 +1265,17 @@ window.adicionarUniforme = function(){
   const uniforme = {
     nome:txt(document.getElementById("uniformeNome").value) || `Uniforme ${uniformesTemp.length + 1}`,
     tipo:document.getElementById("uniformeTipo").value,
-    modelo:document.getElementById("uniformeModelo").value,
+    foto:uniformeFotoTemp,
     cor1:document.getElementById("uniformeCor1").value,
     cor2:document.getElementById("uniformeCor2").value,
     cor3:document.getElementById("uniformeCor3").value,
-    gola:document.getElementById("uniformeGola").value,
-    manga:document.getElementById("uniformeManga").value
+    observacao:txt(document.getElementById("uniformeObs").value)
   };
+
+  if(!uniforme.foto){
+    alert("Escolha a foto real do uniforme.");
+    return;
+  }
 
   if(uniformeEditIndex >= 0){
     uniformesTemp[uniformeEditIndex] = uniforme;
@@ -1505,14 +1292,14 @@ window.editarUniforme = function(index){
   if(!u) return;
 
   uniformeEditIndex = index;
+  uniformeFotoTemp = u.foto || "";
   document.getElementById("uniformeNome").value = u.nome || "";
   document.getElementById("uniformeTipo").value = u.tipo || "jogo";
-  document.getElementById("uniformeModelo").value = u.modelo || "listrado-vertical";
+  document.getElementById("uniformeFotoArquivo").value = "";
   document.getElementById("uniformeCor1").value = u.cor1 || "#f7c600";
   document.getElementById("uniformeCor2").value = u.cor2 || "#111111";
   document.getElementById("uniformeCor3").value = u.cor3 || "#ffffff";
-  document.getElementById("uniformeGola").value = u.gola || "#111111";
-  document.getElementById("uniformeManga").value = u.manga || "#111111";
+  document.getElementById("uniformeObs").value = u.observacao || "";
   atualizarPreviewUniforme();
 };
 
@@ -1533,9 +1320,11 @@ function renderizarUniformes(){
 
   box.innerHTML = uniformesTemp.map((u,i)=>`
     <div class="uniforme-chip" onclick="editarUniforme(${i})">
+      ${u.foto ? `<img class="uniforme-chip-img" src="${u.foto}" onerror="this.style.display='none'">` : ""}
       <strong>${u.nome}</strong>
-      <small>${u.tipo} • ${u.modelo}</small>
-      <small>${u.cor1} / ${u.cor2}</small>
+      <small>${u.tipo}</small>
+      <small>${u.cor1 || ""} / ${u.cor2 || ""} / ${u.cor3 || ""}</small>
+      ${u.observacao ? `<small>${u.observacao}</small>` : ""}
       <div class="form-actions" style="margin-top:8px;">
         <button class="btn-acao btn-danger" type="button" onclick="event.stopPropagation();excluirUniforme(${i})">
           <i class="fa-solid fa-trash"></i>
@@ -1564,7 +1353,7 @@ window.limparFormulario = function(){
   document.getElementById("tituloFormulario").textContent = "Novo Time";
   document.getElementById("previewLogoBox").style.display = "none";
   document.getElementById("previewLogoImg").src = "logo-liga.jfif";
-  document.getElementById("previewEscudoCamisa").src = "logo-liga.jfif";
+  
   document.getElementById("previewLogoTexto").textContent = "Pré-visualização do escudo";
   logoAtual = "";
   uniformesTemp = [];
@@ -1629,7 +1418,7 @@ window.salvarTime = async function(){
     if(!nome) return alert("Digite o nome do time.");
     if(!cidade) return alert("Digite a cidade do time.");
     if(!categorias.length) return alert("Selecione pelo menos uma categoria.");
-    if(!uniformesTemp.length) return alert("Adicione pelo menos um uniforme.");
+    if(!uniformesTemp.length) return alert("Adicione pelo menos uma foto de uniforme.");
 
     const logo = await uploadLogoSeExistir();
 
@@ -2115,6 +1904,7 @@ function renderizarJogadores(){
 document.getElementById("buscaTime").addEventListener("input",renderizarTimes);
 document.getElementById("filtroStatus").addEventListener("change",renderizarTimes);
 document.getElementById("uniformeNome").addEventListener("input", atualizarPreviewUniforme);
+document.getElementById("uniformeObs").addEventListener("input", atualizarPreviewUniforme);
 
 carregarUsuario();
 montarCategorias();
