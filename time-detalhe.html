@@ -62,7 +62,7 @@ img{display:block;max-width:100%}
 
 .time-layout{
   display:grid;
-  grid-template-columns:minmax(0,1fr) 345px;
+  grid-template-columns:1fr;
   gap:22px;
   align-items:start;
 }
@@ -625,83 +625,6 @@ img{display:block;max-width:100%}
   padding:20px;
 }
 
-/* MOCK CELULAR DIREITA */
-.phone-preview{
-  position:sticky;
-  top:82px;
-  border:2px solid rgba(255,255,255,.65);
-  border-radius:30px;
-  background:
-    linear-gradient(rgba(4,16,38,.78), rgba(4,16,38,.96)),
-    url("fundo.png") center/cover no-repeat;
-  padding:14px;
-  min-height:720px;
-  max-height:calc(100vh - 100px);
-  overflow:auto;
-  box-shadow:var(--sombra);
-}
-
-.phone-preview::-webkit-scrollbar{width:4px}
-.phone-preview::-webkit-scrollbar-thumb{background:rgba(255,255,255,.28);border-radius:999px}
-
-.phone-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  color:#fff;
-  font-size:13px;
-  font-weight:900;
-  margin-bottom:12px;
-}
-
-.phone-preview .team-hero{border-radius:20px 20px 0 0}
-.phone-preview .team-hero-top{padding:22px 10px 16px}
-.phone-preview .team-logo{width:86px;height:86px;border-radius:20px}
-.phone-preview .team-name{font-size:26px}
-.phone-preview .team-city{font-size:13px}
-.phone-preview .main-tabs button{font-size:12px;padding:13px 3px 10px}
-.phone-preview .sub-tabs{padding:9px;gap:5px;border-radius:0 0 12px 12px}
-.phone-preview .sub-tabs button{min-width:auto;font-size:9px;padding:6px 7px}
-.phone-preview .card-time{border-radius:14px;margin-bottom:10px}
-.phone-preview .card-title{font-size:15px;padding:13px 13px 8px}
-.phone-preview .card-body{padding:12px}
-.phone-preview .details-main{display:block}
-.phone-preview .person-box{
-  border-right:0;
-  border-bottom:1px solid rgba(255,255,255,.12);
-  display:grid;
-  grid-template-columns:54px 1fr;
-  text-align:left;
-  gap:10px;
-  align-items:center;
-  padding:10px 0;
-}
-.phone-preview .person-box:last-child{border-bottom:0}
-.phone-preview .person-box img{width:52px;height:52px;margin:0;border-radius:12px}
-.phone-preview .person-box.round img{border-radius:50%}
-.phone-preview .person-box strong{font-size:13px}
-.phone-preview .person-box span{font-size:11px}
-.phone-preview .bottom-stats{grid-template-columns:repeat(3,1fr);gap:5px}
-.phone-preview .mini-stat{padding:8px 4px}
-.phone-preview .mini-stat strong{font-size:17px}
-.phone-preview .mini-stat span{font-size:9px}
-.phone-preview .matches-row{grid-template-columns:repeat(5,1fr);gap:5px;overflow:hidden}
-.phone-preview .match-mini{padding:6px 3px}
-.phone-preview .match-mini small{font-size:9px}
-.phone-preview .match-mini img{width:32px;height:32px}
-.phone-preview .match-mini strong{font-size:10px}
-.phone-preview .score-pill{min-width:34px;font-size:9px;padding:3px 4px}
-.phone-preview .two-col,
-.phone-preview .extra-details,
-.phone-preview .info-grid,
-.phone-preview .trophy-grid{grid-template-columns:1fr}
-.phone-preview .rank-row{grid-template-columns:20px 40px 1fr auto;gap:7px;padding:9px 0}
-.phone-preview .rank-row img{width:38px;height:38px}
-.phone-preview .rank-info strong{font-size:11px}
-.phone-preview .rank-info span{font-size:9px}
-.phone-preview .rank-value{font-size:15px}
-.phone-preview .shirt-box{display:none}
-
 /* RESPONSIVO REAL */
 @media(max-width:1100px){
   .time-layout{grid-template-columns:1fr}
@@ -749,14 +672,6 @@ renderMenu("times");
 <main class="time-page">
   <section class="time-layout">
     <div id="desktopArea"></div>
-
-    <aside class="phone-preview">
-      <div class="phone-top">
-        <span>21:45</span>
-        <span><i class="fa-solid fa-signal"></i> <i class="fa-solid fa-wifi"></i> <i class="fa-solid fa-battery-full"></i></span>
-      </div>
-      <div id="phoneArea"></div>
-    </aside>
   </section>
 </main>
 
@@ -798,13 +713,13 @@ function logoTime(){
 }
 
 function cidadeTime(){
-  return campo(time,["cidade","municipio","local"],"Goiânia - GO");
+  return campo(time,["cidade","municipio","local"],"");
 }
 
 function categoriasTime(){
   const arr = campo(time,["categorias"],[]);
   if(Array.isArray(arr) && arr.length) return arr.join(", ");
-  return campo(time,["categoria","categoriaNome"],"Liga Goianense");
+  return campo(time,["categoria","categoriaNome"],"");
 }
 
 function tecnicoPrincipal(){
@@ -813,7 +728,7 @@ function tecnicoPrincipal(){
     const tnome = normalizar(campo(t,["time","nomeTime","timeNome"],""));
     return tid === id || tnome === normalizar(nomeTime());
   });
-  return campo(tecnicoPorTime || time,["nome","tecnico","tecnicoNome","treinador"],"Técnico não cadastrado");
+  return campo(tecnicoPorTime || time,["nome","tecnico","tecnicoNome","treinador"],"");
 }
 
 function jogadoresDoTime(){
@@ -888,8 +803,7 @@ function submenus(){
       ["detalhes","Detalhes"],
       ["jogos","Jogos"],
       ["classificacao","Classificação"],
-      ["estatisticasJogador","Estatísticas do jogador"],
-      ["estatisticasTimes","Estatísticas dos times"],
+      ["estatisticas","Estatísticas"],
       ["titulos","Títulos"]
     ];
   }
@@ -915,7 +829,7 @@ function headerHtml(){
       <div class="team-hero-top">
         <img class="team-logo" src="${logoTime()}" onerror="this.src='logo-liga.jfif'">
         <div class="team-name">${nomeTime()}</div>
-        <div class="team-city">${cidadeTime()}</div>
+        <div class="team-city">${cidadeTime() || "Cidade não cadastrada"}</div>
       </div>
 
       <nav class="main-tabs">
@@ -945,28 +859,28 @@ function detalhesCard(){
           <div class="person-box">
             <img src="${logoTime()}" onerror="this.src='logo-liga.jfif'">
             <strong>${nomeTime()}</strong>
-            <span>${cidadeTime()}</span>
+            <span>${cidadeTime() || "Cidade não cadastrada"}</span>
           </div>
 
           <div class="person-box">
             <img src="logo-liga.jfif">
-            <strong>${categoriasTime()}</strong>
-            <span>Competição principal</span>
+            <strong>${categoriasTime() || "Categoria não cadastrada"}</strong>
+            <span>Categoria / competição</span>
           </div>
 
           <div class="person-box round">
             <img src="logo-liga.jfif">
-            <strong>${tecnicoPrincipal()}</strong>
-            <span>Técnico<br>Contratado em 28/05/2025</span>
+            <strong>${tecnicoPrincipal() || "Técnico não cadastrado"}</strong>
+            <span>Técnico</span>
           </div>
         </div>
 
         <div class="bottom-stats">
-          <div class="mini-stat"><strong>2022</strong><span>Fundação</span></div>
-          <div class="mini-stat"><strong>${cidadeTime().split("-")[0].trim() || "Goiânia"}</strong><span>Cidade</span></div>
-          <div class="mini-stat"><strong>Goianiense</strong><span>Apelido</span></div>
-          <div class="mini-stat"><strong>25.1</strong><span>Média de idade</span></div>
-          <div class="mini-stat"><strong>6</strong><span>Títulos</span></div>
+          <div class="mini-stat"><strong>${campo(time,["fundacao","fundação","anoFundacao"],"-")}</strong><span>Fundação</span></div>
+          <div class="mini-stat"><strong>${cidadeTime().split("-")[0].trim() || "-"}</strong><span>Cidade</span></div>
+          <div class="mini-stat"><strong>${campo(time,["apelido"],"-")}</strong><span>Apelido</span></div>
+          <div class="mini-stat"><strong>${campo(time,["mediaIdade"],"-")}</strong><span>Média de idade</span></div>
+          <div class="mini-stat"><strong>${campo(time,["titulos","totalTitulos"],0)}</strong><span>Títulos</span></div>
         </div>
       </div>
     </section>
@@ -1072,7 +986,7 @@ function destaqueTimesCard(){
           <div class="rank-value">${st.saldo}</div>
         </div>
 
-        <a class="link-more" href="#" onclick="trocarSub('estatisticasTimes');return false;">Ver todas as estatísticas</a>
+        <a class="link-more" href="#" onclick="trocarSub('estatisticas');return false;">Ver todas as estatísticas</a>
       </div>
     </section>
   `;
@@ -1085,14 +999,14 @@ function informacoesCard(){
       <div class="card-body">
         <div class="extra-details">
           <div class="info-grid">
-            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-key"></i></div><div><small>Nome completo</small><strong>${nomeTime()} FUTEBOL CLUBE</strong></div></div>
-            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-calendar-days"></i></div><div><small>Fundação</small><strong>2022</strong></div></div>
-            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-location-dot"></i></div><div><small>Cidade</small><strong>${cidadeTime()}</strong></div></div>
-            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-building-columns"></i></div><div><small>Estádio</small><strong>Estádio ${nomeTime()}</strong></div></div>
-            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-user"></i></div><div><small>Presidente</small><strong>João Victor</strong></div></div>
-            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-palette"></i></div><div><small>Cores</small><strong>Amarelo e Preto</strong></div></div>
-            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-globe"></i></div><div><small>Site</small><strong>www.institutoset.com.br</strong></div></div>
-            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-share-nodes"></i></div><div><small>Redes sociais</small><strong>Facebook • Instagram • YouTube</strong></div></div>
+            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-key"></i></div><div><small>Nome completo</small><strong>${campo(time,["nomeCompleto"],nomeTime())}</strong></div></div>
+            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-calendar-days"></i></div><div><small>Fundação</small><strong>${campo(time,["fundacao","fundação","anoFundacao"],"-")}</strong></div></div>
+            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-location-dot"></i></div><div><small>Cidade</small><strong>${cidadeTime() || "-"}</strong></div></div>
+            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-building-columns"></i></div><div><small>Estádio</small><strong>${campo(time,["estadio","estádio"],"-")}</strong></div></div>
+            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-user"></i></div><div><small>Presidente</small><strong>${campo(time,["presidente"],"-")}</strong></div></div>
+            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-palette"></i></div><div><small>Cores</small><strong>${campo(time,["cores"],"-")}</strong></div></div>
+            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-globe"></i></div><div><small>Site</small><strong>${campo(time,["site"],"-")}</strong></div></div>
+            <div class="info-item"><div class="info-icon"><i class="fa-solid fa-share-nodes"></i></div><div><small>Redes sociais</small><strong>${campo(time,["redesSociais"],"-")}</strong></div></div>
           </div>
 
           <div class="shirt-box">
@@ -1110,10 +1024,10 @@ function titulosCard(){
       <div class="card-title">Títulos conquistados</div>
       <div class="card-body">
         <div class="trophy-grid">
-          <div class="trophy-card"><i class="fa-solid fa-trophy"></i><small>Campeonato Goianiense</small><strong>0</strong></div>
-          <div class="trophy-card"><i class="fa-solid fa-medal"></i><small>Copa Goiás</small><strong>0</strong></div>
-          <div class="trophy-card"><i class="fa-solid fa-award"></i><small>Taça Mané Garrincha</small><strong>0</strong></div>
-          <div class="trophy-card"><i class="fa-solid fa-star"></i><small>Supercopa Goianiense</small><strong>0</strong></div>
+          <div class="trophy-card"><i class="fa-solid fa-trophy"></i><small>Campeonato Goianiense</small><strong>${Number(campo(time,["titulosCampeonato"],0))}</strong></div>
+          <div class="trophy-card"><i class="fa-solid fa-medal"></i><small>Copas</small><strong>${Number(campo(time,["titulosCopa"],0))}</strong></div>
+          <div class="trophy-card"><i class="fa-solid fa-award"></i><small>Taças</small><strong>${Number(campo(time,["titulosTaca"],0))}</strong></div>
+          <div class="trophy-card"><i class="fa-solid fa-star"></i><small>Outros</small><strong>${Number(campo(time,["titulosOutros"],0))}</strong></div>
         </div>
         <a class="link-more" href="#" onclick="trocarSub('titulos');return false;">Ver todos os títulos</a>
       </div>
@@ -1282,8 +1196,7 @@ function conteudoAtual(){
     if(sub === "detalhes") return temporadaDetalhes();
     if(sub === "jogos") return jogosCard();
     if(sub === "classificacao") return classificacaoCard();
-    if(sub === "estatisticasJogador") return estatisticasJogadorCard();
-    if(sub === "estatisticasTimes") return estatisticasTimesCard();
+    if(sub === "estatisticas") return estatisticasJogadorCard() + estatisticasTimesCard();
     if(sub === "titulos") return titulosCard();
   }
 
@@ -1313,7 +1226,6 @@ function render(){
   const html = montarTela();
 
   document.getElementById("desktopArea").innerHTML = html;
-  document.getElementById("phoneArea").innerHTML = html;
 }
 
 window.trocarPrincipal = function(n){
@@ -1329,26 +1241,14 @@ window.trocarSub = function(n){
 
 async function carregarTime(){
   if(!id){
-    time = {
-      nome:"Time",
-      cidade:"Goiânia - GO",
-      logo:"logo-liga.jfif",
-      categorias:["Liga Goianense"]
-    };
-    render();
+    document.getElementById("desktopArea").innerHTML = `<section class="card-time"><div class="empty-box">Time não encontrado.</div></section>`;
     return;
   }
 
   const snap = await getDoc(doc(db,"times",id));
 
   if(!snap.exists()){
-    time = {
-      nome:"Time",
-      cidade:"Goiânia - GO",
-      logo:"logo-liga.jfif",
-      categorias:["Liga Goianense"]
-    };
-    render();
+    document.getElementById("desktopArea").innerHTML = `<section class="card-time"><div class="empty-box">Time não encontrado.</div></section>`;
     return;
   }
 
