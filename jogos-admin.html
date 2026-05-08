@@ -553,6 +553,7 @@ let tecnicosCache = [];
 let arbitrosCache = [];
 let assistentesCache = [];
 let jogosCache = [];
+let classificacaoCache = [];
 
 const categoriasFixas = [
   "Sub-11","Sub-12","Sub-13","Sub-14","Sub-15","Sub-16",
@@ -728,20 +729,152 @@ function preencherSelect(select,lista,valor,texto){
   });
 }
 
+
+function formatarDataHoraPublicacao(valor){
+  if(!valor) return { data:"-", hora:"-" };
+  if(typeof valor.toDate === "function"){
+    const d = valor.toDate();
+    return {
+      data:d.toLocaleDateString("pt-BR"),
+      hora:d.toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"})
+    };
+  }
+  const texto = String(valor || "");
+  if(texto.includes("T")){
+    const d = new Date(texto);
+    if(!isNaN(d.getTime())){
+      return {
+        data:d.toLocaleDateString("pt-BR"),
+        hora:d.toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"})
+      };
+    }
+  }
+  return { data:texto || "-", hora:"-" };
+}
+
+function buscarClassificacaoTime(jogo,timeId,nome){
+  const nomeNorm = normalizar(nome);
+  return classificacaoCache.find(item=>{
+    const mesmoTime =
+      item.timeId === timeId ||
+      item.idTime === timeId ||
+      item.equipeId === timeId ||
+      normalizar(item.timeNome || item.nomeTime || item.nome || item.time || item.equipe) === nomeNorm;
+
+    const mesmoCampeonato =
+      !item.campeonatoId || !jogo.campeonatoId || item.campeonatoId === jogo.campeonatoId ||
+      normalizar(item.campeonato || item.campeonatoNome) === normalizar(jogo.campeonato || jogo.campeonatoNome);
+
+    const mesmaCategoria =
+      !item.categoria || !jogo.categoria || normalizar(item.categoria) === normalizar(jogo.categoria);
+
+    return mesmoTime && mesmoCampeonato && mesmaCategoria;
+  }) || null;
+}
+
+function resumoClassificacao(jogo,timeId,nome){
+  const c = buscarClassificacaoTime(jogo,timeId,nome);
+  if(!c) return "posição na tabela a confirmar";
+  const pos = c.posicao || c.classificacao || c.rank || c.colocacao || "-";
+  const pts = c.pontos ?? c.pts ?? c.P ?? "-";
+  const v = c.vitorias ?? c.v ?? c.V ?? "-";
+  const sg = c.saldo ?? c.saldoGols ?? c.sg ?? "-";
+  return `${pos}º colocado, com ${pts} ponto(s), ${v} vitória(s) e saldo de gols ${sg}`;
+}
+
+function montarTextoNoticiaProfissional(jogo){
+  const nomeA = jogo.timeA?.nome || jogo.timeMandanteNome || "Mandante";
+  const nomeB = jogo.timeB?.nome || jogo.timeVisitanteNome || "Visitante";
+  const dataInfo = formatarDataHoraPublicacao(jogo.dataHora || jogo.data);
+  const classA = resumoClassificacao(jogo,jogo.timeAId || jogo.mandanteId,nomeA);
+  const classB = resumoClassificacao(jogo,jogo.timeBId || jogo.visitanteId,nomeB);
+
+  return {
+    titulo:`Duelo confirmado: ${nomeA} x ${nomeB}`,
+    resumo:`${nomeA} e ${nomeB} têm confronto confirmado pela ${jogo.categoria || "categoria"} da ${jogo.campeonato || "Liga Goiana de Futebol de Base"}.`,
+    texto:`A Liga Goiana de Futebol de Base confirma mais um confronto oficial da competição. ${nomeA} e ${nomeB} entram em campo pela categoria ${jogo.categoria || "-"}, em partida válida por ${jogo.rodada || "rodada oficial"} da ${jogo.campeonato || "competição"}. O duelo será realizado no dia ${dataInfo.data}, às ${dataInfo.hora}, no ${jogo.local || jogo.campo || "local a confirmar"}. No momento da publicação, ${nomeA} aparece como ${classA}, enquanto ${nomeB} chega para o confronto como ${classB}. A expectativa é de um jogo competitivo, com organização, disciplina e alto nível técnico, reforçando o compromisso da Liga com a formação dos atletas e a valorização do futebol de base em Goiás.`
+  };
+}
+
+async function carregarClassificacao(){
+  classificacaoCache = [];
+  const colecoes = ["classificacao", "tabela", "tabelas"];
+  for(const nomeColecao of colecoes){
+    try{
+      const snap = await getDocs(collection(db,nomeColecao));
+      snap.forEach(d=>classificacaoCache.push({id:d.id,...d.data()}));
+      if(classificacaoCache.length) break;
+    }catch(e){
+      console.warn(`Não foi possível carregar ${nomeColecao}:`, e);
+    }
+  }
+}
+
+async function criarNoticiaAutomaticaJogo(jogoId,jogo,links){
+  const noticia = montarTextoNoticiaProfissional(jogo);
+  const nomeA = jogo.timeA?.nome || jogo.timeMandanteNome || "Mandante";
+  const nomeB = jogo.timeB?.nome || jogo.timeVisitanteNome || "Visitante";
+
+  await addDoc(collection(db,"noticias"),{
+    jogoId,
+    sumulaId:jogoId,
+    tipo:"jogo_automatico",
+    origem:"jogos-admin",
+    titulo:noticia.titulo,
+    resumo:noticia.resumo,
+    texto:noticia.texto,
+    conteudo:noticia.texto,
+    campeonatoId:jogo.campeonatoId || "",
+    campeonato:jogo.campeonato || "",
+    categoria:jogo.categoria || "",
+    rodada:jogo.rodada || "",
+    data:jogo.data || "",
+    dataHora:jogo.dataHora || "",
+    hora:jogo.hora || "",
+    local:jogo.local || jogo.campo || "",
+    timeAId:jogo.timeAId || "",
+    timeBId:jogo.timeBId || "",
+    timeA:jogo.timeA || null,
+    timeB:jogo.timeB || null,
+    timeMandanteNome:nomeA,
+    timeVisitanteNome:nomeB,
+    logoMandante:jogo.timeA?.logo || jogo.timeA?.escudo || "logo-liga.jfif",
+    logoVisitante:jogo.timeB?.logo || jogo.timeB?.escudo || "logo-liga.jfif",
+    linkJogo:`jogos.html?id=${jogoId}`,
+    linkSumula:links?.publica || "",
+    publicado:true,
+    publica:true,
+    status:"publicado",
+    destaque:true,
+    criadoAutomaticamente:true,
+    criadoEm:serverTimestamp(),
+    publicadaEm:serverTimestamp(),
+    atualizadoEm:serverTimestamp()
+  });
+}
+
 function montarMensagemJogo({jogoId,jogo,arbitroObj,tecnicoA,tecnicoB}){
   const nomeA = jogo.timeA?.nome || "Time A";
   const nomeB = jogo.timeB?.nome || "Time B";
+  const dataInfo = formatarDataHoraPublicacao(jogo.dataHora || jogo.data);
   const mensagem =
 `LIGA GOIANA DE FUTEBOL DE BASE
 
-Jogo criado e súmula vinculada.
+CONFRONTO OFICIAL CONFIRMADO
+
+${nomeA} x ${nomeB}
+
+A partida foi oficialmente cadastrada e a súmula digital já está vinculada ao jogo.
 
 Campeonato: ${jogo.campeonato || "-"}
 Categoria: ${jogo.categoria || "-"}
-Jogo: ${nomeA} x ${nomeB}
-Data/Hora: ${jogo.dataHora || jogo.data || "-"}
+Rodada: ${jogo.rodada || "-"}
+Data: ${dataInfo.data}
+Horário: ${dataInfo.hora}
 Local: ${jogo.local || "-"}
-Árbitro: ${jogo.arbitro || "-"}
+Árbitro principal: ${jogo.arbitro || "A definir"}
+
+A organização da Liga Goiana de Futebol de Base reforça a importância da pontualidade, disciplina e cumprimento das normas da competição.
 
 Link da súmula do árbitro:
 ${linkSumulaArbitro(jogoId)}
@@ -1226,6 +1359,12 @@ window.salvarJogo = async function(){
     console.warn("Jogo e súmula salvos, mas as notificações não foram registradas:", erroNotificacao);
   }
 
+  try{
+    await criarNoticiaAutomaticaJogo(ref.id,{...jogoBase,id:ref.id},links);
+  }catch(erroNoticia){
+    console.warn("Jogo e súmula salvos, mas a notícia automática não foi criada:", erroNoticia);
+  }
+
   alert(
     "Jogo e súmula criados com sucesso!\\n\\n" +
     "A súmula já foi vinculada ao jogo.\\n" +
@@ -1370,7 +1509,8 @@ async function iniciarPagina(){
     carregarTimes(),
     carregarJogadores(),
     carregarTecnicos(),
-    carregarArbitragem()
+    carregarArbitragem(),
+    carregarClassificacao()
   ]);
 
   preencherFiltrosCategorias();
