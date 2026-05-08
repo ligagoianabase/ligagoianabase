@@ -835,6 +835,23 @@ td:nth-child(4) input{min-width:110px}
   .comissao-lista{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 
+
+/* POSIÇÕES AUTOMÁTICAS — facilitar preenchimento do árbitro */
+.select-posicao,
+#novaPosA,
+#novaPosB{
+  cursor:pointer;
+  font-weight:800;
+  color:var(--azul);
+  background:#f8fafc;
+}
+
+.select-posicao:focus,
+#novaPosA:focus,
+#novaPosB:focus{
+  outline:2px solid rgba(247,198,0,.55);
+}
+
 </style>
 </head>
 
@@ -1248,7 +1265,20 @@ function criarTela(){
           <div class="add-row">
             <input id="novoNumA" placeholder="Nº">
             <input id="novoNomeA" placeholder="Jogador não cadastrado">
-            <input id="novaPosA" placeholder="Posição">
+            <select id="novaPosA">
+              <option value="">Posição</option>
+              <option value="Goleiro">Goleiro</option>
+              <option value="Zagueiro">Zagueiro</option>
+              <option value="Lateral Direito">Lateral Direito</option>
+              <option value="Lateral Esquerdo">Lateral Esquerdo</option>
+              <option value="Volante">Volante</option>
+              <option value="Meia">Meia</option>
+              <option value="Meia Atacante">Meia Atacante</option>
+              <option value="Ponta Direita">Ponta Direita</option>
+              <option value="Ponta Esquerda">Ponta Esquerda</option>
+              <option value="Atacante">Atacante</option>
+              <option value="Centroavante">Centroavante</option>
+            </select>
             <select id="novoTipoA"><option value="titular">Titular</option><option value="suplente">Suplente</option></select>
             <button class="btn btn-blue" onclick="adicionarJogador('A')">+</button>
           </div>
@@ -1281,7 +1311,20 @@ function criarTela(){
           <div class="add-row">
             <input id="novoNumB" placeholder="Nº">
             <input id="novoNomeB" placeholder="Jogador não cadastrado">
-            <input id="novaPosB" placeholder="Posição">
+            <select id="novaPosB">
+              <option value="">Posição</option>
+              <option value="Goleiro">Goleiro</option>
+              <option value="Zagueiro">Zagueiro</option>
+              <option value="Lateral Direito">Lateral Direito</option>
+              <option value="Lateral Esquerdo">Lateral Esquerdo</option>
+              <option value="Volante">Volante</option>
+              <option value="Meia">Meia</option>
+              <option value="Meia Atacante">Meia Atacante</option>
+              <option value="Ponta Direita">Ponta Direita</option>
+              <option value="Ponta Esquerda">Ponta Esquerda</option>
+              <option value="Atacante">Atacante</option>
+              <option value="Centroavante">Centroavante</option>
+            </select>
             <select id="novoTipoB"><option value="titular">Titular</option><option value="suplente">Suplente</option></select>
             <button class="btn btn-blue" onclick="adicionarJogador('B')">+</button>
           </div>
@@ -1581,6 +1624,32 @@ function renderJogadores(lista,time){
   `;
 }
 
+function opcoesPosicaoHtml(valorAtual){
+  const valor = String(valorAtual || "").trim();
+  const posicoes = [
+    "Goleiro",
+    "Zagueiro",
+    "Lateral Direito",
+    "Lateral Esquerdo",
+    "Volante",
+    "Meia",
+    "Meia Atacante",
+    "Ponta Direita",
+    "Ponta Esquerda",
+    "Atacante",
+    "Centroavante"
+  ];
+
+  const existe = posicoes.some(p => normalizarTexto(p) === normalizarTexto(valor));
+  const extra = valor && !existe ? `<option value="${valor}" selected>${valor}</option>` : "";
+
+  return `
+    <option value="" ${!valor ? "selected" : ""}>-</option>
+    ${extra}
+    ${posicoes.map(p => `<option value="${p}" ${normalizarTexto(valor) === normalizarTexto(p) ? "selected" : ""}>${p}</option>`).join("")}
+  `;
+}
+
 function linhaJogador(j,time){
   const lista = time === "A" ? jogadoresA : jogadoresB;
   const i = lista.indexOf(j);
@@ -1591,11 +1660,15 @@ function linhaJogador(j,time){
       <td><input value="${j.nome || ""}" onchange="editarJogador('${time}',${i},'nome',this.value)" placeholder="Nome"></td>
       <td><input value="${j.cpf || ""}" onchange="editarJogador('${time}',${i},'cpf',this.value)" placeholder="CPF"></td>
       <td><input value="${j.nascimento || ""}" onchange="editarJogador('${time}',${i},'nascimento',this.value)" placeholder="Nasc."></td>
-      <td><input value="${j.posicao || ""}" onchange="editarJogador('${time}',${i},'posicao',this.value)" placeholder="Posição"></td>
+      <td>
+        <select class="select-posicao" onchange="editarJogador('${time}',${i},'posicao',this.value)">
+          ${opcoesPosicaoHtml(j.posicao)}
+        </select>
+      </td>
       <td>
         <select onchange="editarJogador('${time}',${i},'tipo',this.value)">
-          <option value="titular" ${j.tipo !== "suplente" ? "selected" : ""}>Titular</option>
-          <option value="suplente" ${j.tipo === "suplente" ? "selected" : ""}>Suplente</option>
+          <option value="titular" ${j.tipo !== "suplente" ? "selected" : ""}>Tit.</option>
+          <option value="suplente" ${j.tipo === "suplente" ? "selected" : ""}>Sup.</option>
         </select>
       </td>
       <td><button class="btn btn-red" onclick="removerJogador('${time}',${i})">X</button></td>
