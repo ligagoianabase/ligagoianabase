@@ -28,7 +28,11 @@ body{
   background:var(--bg);
   color:var(--texto);
   min-height:100vh;
+  overflow-x:hidden;
 }
+
+.sumula-viewport{width:100%;overflow:hidden;display:flex;justify-content:center;padding:14px 8px;}
+.sumula-scale{width:1120px;max-width:1120px;transform-origin:top center;}
 
 button,input,select,textarea{font-family:inherit}
 button{cursor:pointer;border:none}
@@ -106,7 +110,8 @@ input:disabled,select:disabled,textarea:disabled,button:disabled{
 .alerta-erro{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
 
 .page{
-  width:min(100% - 20px,1180px);
+  width:1120px;
+  max-width:1120px;
   margin:14px auto;
   background:#fff;
   border:1px solid #b9c4d4;
@@ -117,10 +122,13 @@ input:disabled,select:disabled,textarea:disabled,button:disabled{
 
 .header{
   display:grid;
-  grid-template-columns:150px 1fr 210px;
+  grid-template-columns:145px 1fr 210px;
   align-items:center;
   gap:10px;
-  padding:16px 18px 8px;
+  padding:16px 18px;
+  background:linear-gradient(135deg,#061d44,#08285c);
+  color:#fff;
+  border-bottom:4px solid var(--dourado);
 }
 
 .header-logo{display:flex;justify-content:center}
@@ -134,7 +142,7 @@ input:disabled,select:disabled,textarea:disabled,button:disabled{
 .header-title{text-align:center}
 
 .header-title h1{
-  color:var(--azul);
+  color:#fff;
   font-size:56px;
   font-weight:900;
   letter-spacing:1px;
@@ -144,7 +152,7 @@ input:disabled,select:disabled,textarea:disabled,button:disabled{
 .header-title input{
   margin-top:8px;
   text-align:center;
-  color:var(--azul);
+  color:var(--dourado);
   font-size:20px;
   font-weight:900;
   text-transform:uppercase;
@@ -153,16 +161,17 @@ input:disabled,select:disabled,textarea:disabled,button:disabled{
 
 .header-right{
   text-align:center;
-  color:var(--azul);
+  color:#fff;
   font-weight:900;
-  font-size:22px;
+  font-size:18px;
   line-height:1.08;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 }
-
-.header-ball{
-  font-size:58px;
-  margin-top:6px;
-}
+.header-right img{width:92px;height:92px;object-fit:contain;background:#fff;border-radius:14px;border:2px solid var(--dourado);padding:4px;}
+.header-right small{color:var(--dourado);margin-top:6px;text-transform:uppercase;font-size:12px;}
 
 .info-strip{
   margin:8px 18px 14px;
@@ -378,10 +387,11 @@ input:disabled,select:disabled,textarea:disabled,button:disabled{
   object-fit:contain;
 }
 
-.table-wrap{overflow-x:auto}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 
 table{
   width:100%;
+  min-width:760px;
   border-collapse:collapse;
 }
 
@@ -402,10 +412,10 @@ td{
   border:1px solid #e5eaf1;
 }
 
-td input,td select{
-  border:none;
-  padding:5px;
-}
+td input,td select{border:none;padding:5px;min-width:100%;}
+td:nth-child(2) input{min-width:240px}
+td:nth-child(3) input{min-width:140px}
+td:nth-child(4) input{min-width:110px}
 
 .num{width:48px;text-align:center}
 
@@ -431,6 +441,16 @@ td input,td select{
   grid-template-columns:1fr auto;
   gap:6px;
 }
+
+
+.comissao-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.comissao-card{border:1px solid var(--linha);border-radius:8px;overflow:hidden;background:#fff;}
+.comissao-head{background:#f5f7fb;color:var(--azul);text-align:center;padding:8px;font-size:16px;font-weight:900;text-transform:uppercase;border-bottom:1px solid var(--linha);}
+.comissao-lista{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;}
+.comissao-item{border:1px solid #e5eaf1;border-radius:8px;padding:9px;background:#f8fafc;}
+.comissao-item small{display:block;color:var(--azul);font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:4px;}
+.comissao-item strong{color:#111;font-size:13px;line-height:1.25;}
+.comissao-vazio{grid-column:1/-1;color:#777;text-align:center;padding:10px;}
 
 .event-box{
   border:1px solid var(--linha);
@@ -660,8 +680,12 @@ td input,td select{
 }
 
 @media(max-width:900px){
+  body{background:#fff;}
+  .sumula-viewport{justify-content:flex-start;align-items:flex-start;padding:8px 0;}
+  .sumula-scale{transform:scale(var(--escala-mobile,1));transform-origin:top left;}
+  .page{border-radius:0;box-shadow:none;}
   .topbar-inner,.header,.info-strip,.score-card,.match-strip,.grid2,
-  .event-columns,.lower-grid,.summary-grid,.footer-grid,.buttons,
+  .event-columns,.lower-grid,.summary-grid,.footer-grid,.buttons,.comissao-grid,
   .auth-box,.add-row,.event-form,.event-form.cartao-form,.busca-box{
     grid-template-columns:1fr;
   }
@@ -898,6 +922,42 @@ function normalizarJogador(j){
   };
 }
 
+
+function normalizarComissao(t, timeNome=""){
+  return {
+    id: campo(t,["id","uid","tecnicoId"],""),
+    nome: campo(t,["nome","nomeCompleto","tecnico","profissional"],""),
+    funcao: campo(t,["funcao","cargo","tipo"],"Técnico"),
+    cpf: campo(t,["cpf","CPF"],""),
+    cref: campo(t,["cref","CREF","registro"],""),
+    timeNome
+  };
+}
+function listaComissao(time){
+  const timeNome = time === "A" ? getTimeA().nome : getTimeB().nome;
+  const base = time === "A" ? primeiroArray(sumulaSalva?.comissaoA, sumulaSalva?.tecnicosA, jogo.comissaoA, jogo.tecnicosA) : primeiroArray(sumulaSalva?.comissaoB, sumulaSalva?.tecnicosB, jogo.comissaoB, jogo.tecnicosB);
+  let lista = base.map(t=>normalizarComissao(t,timeNome)).filter(t=>t.nome);
+  if(!lista.length){
+    const nome = time === "A" ? campo(jogo,["tecnicoA"],"") : campo(jogo,["tecnicoB"],"");
+    if(nome) lista = [{nome,funcao:"Técnico",cpf:"",cref:"",timeNome}];
+  }
+  return lista;
+}
+function renderComissaoLista(lista){
+  if(!lista.length) return `<div class="comissao-vazio">Nenhum técnico informado.</div>`;
+  return lista.map(t=>`<div class="comissao-item"><small>${t.funcao || "Técnico"}</small><strong>${t.nome || "-"}</strong>${t.cpf ? `<small>CPF: ${t.cpf}</small>` : ""}${t.cref ? `<small>CREF: ${t.cref}</small>` : ""}</div>`).join("");
+}
+function renderComissao(){
+  if(!$("comissaoA") || !$("comissaoB")) return;
+  $("comissaoTituloA").innerText = getTimeA().nome;
+  $("comissaoTituloB").innerText = getTimeB().nome;
+  $("comissaoA").innerHTML = renderComissaoLista(listaComissao("A"));
+  $("comissaoB").innerHTML = renderComissaoLista(listaComissao("B"));
+}
+function opcoesTodosJogadores(){
+  return [...jogadoresA.map(j=>({...j,time:getTimeA().nome})), ...jogadoresB.map(j=>({...j,time:getTimeB().nome}))].filter(j=>j.nome);
+}
+
 function timeAObj(){
   return jogo?.timeA && typeof jogo.timeA === "object" ? jogo.timeA : {};
 }
@@ -924,7 +984,7 @@ function getTimeB(){
 
 function criarTela(){
   app.innerHTML = `
-  <div class="page" id="paginaSumula">
+  <div class="sumula-viewport"><div class="sumula-scale"><div class="page" id="paginaSumula">
 
     <header class="header">
       <div class="header-logo">
@@ -937,9 +997,8 @@ function criarTela(){
       </div>
 
       <div class="header-right">
-        <div>FUTEBOL<br>É PAIXÃO!</div>
-        <div style="color:var(--dourado);font-size:16px;margin-top:2px;">★★★</div>
-        <div class="header-ball">⚽</div>
+        <img id="logoCampeonatoTopo" src="logo-liga.jfif" alt="Logo do campeonato">
+        <small>Logo do campeonato</small>
       </div>
     </header>
 
@@ -1077,6 +1136,20 @@ function criarTela(){
     </section>
 
     <section class="section">
+      <div class="section-title">Comissão Técnica</div>
+      <div class="section-body comissao-grid">
+        <div class="comissao-card">
+          <div class="comissao-head" id="comissaoTituloA">TIME A</div>
+          <div class="comissao-lista" id="comissaoA"></div>
+        </div>
+        <div class="comissao-card">
+          <div class="comissao-head" id="comissaoTituloB">TIME B</div>
+          <div class="comissao-lista" id="comissaoB"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
       <div class="section-title">Gols e Cartões</div>
       <div class="section-body grid2">
 
@@ -1191,7 +1264,7 @@ function criarTela(){
         <div class="best-player">
           <div class="trophy">🏆</div>
           <div>
-            <input id="melhorJogador" placeholder="Melhor jogador">
+            <select id="melhorJogador"><option value="">Selecione o melhor jogador</option></select>
             <select id="melhorJogadorTime"></select>
             <input id="melhorDestaque" placeholder="Ex: 1 gol e 1 assistência">
           </div>
@@ -1242,7 +1315,7 @@ function criarTela(){
       Sistema Liga Goiana - Súmula Oficial
     </footer>
 
-  </div>
+  </div></div></div>
 `;
 }
 
@@ -1251,6 +1324,7 @@ function preencher(){
   const B = timeBObj();
 
   $("campeonato").value = campo(jogo,["campeonato","campeonatoNome"],"CAMPEONATO LIGA GOIANA");
+  if($("logoCampeonatoTopo")) $("logoCampeonatoTopo").src = campo(jogo,["logoCampeonato","campeonatoLogo","logo"], campo(sumulaSalva,["logoCampeonato","campeonatoLogo"],"logo-liga.jfif"));
   $("numeroSumula").value = campo(sumulaSalva,["numeroSumula"], campo(jogo,["numeroSumula"],`${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`));
   $("codigoPartida").value = campo(jogo,["codigoPartida","codigo"],jogoId);
   $("fase").value = campo(jogo,["fase"],"Primeira fase");
@@ -1306,6 +1380,7 @@ function preencher(){
 
   atualizarTitulos();
   renderEscalacoes();
+  renderComissao();
   montarSelects();
   renderEventos();
   atualizarResumo();
@@ -1488,6 +1563,17 @@ function montarSelects(){
   $("cartaoJogadorA").innerHTML = optA || `<option value="">Sem jogadores</option>`;
   $("golJogadorB").innerHTML = optB || `<option value="">Sem jogadores</option>`;
   $("cartaoJogadorB").innerHTML = optB || `<option value="">Sem jogadores</option>`;
+  if($("melhorJogador")){
+    const atual = campo(sumulaSalva,["melhorJogador"],"");
+    const opts = opcoesTodosJogadores().map(j=>`<option value="${j.nome}" data-time="${j.time}">${j.numero || "S/N"} - ${j.nome} (${j.time})</option>`).join("");
+    $("melhorJogador").innerHTML = `<option value="">Selecione o melhor jogador</option>` + opts;
+    if(atual) $("melhorJogador").value = atual;
+    $("melhorJogador").onchange = function(){
+      const opt = this.selectedOptions[0];
+      if(opt?.dataset?.time && $("melhorJogadorTime")) $("melhorJogadorTime").value = opt.dataset.time;
+      salvarRascunhoRapido();
+    };
+  }
 }
 
 window.toggleVermelhoExtra = function(time){
@@ -1661,6 +1747,8 @@ function montarDados(finalizar=false){
 
     jogadoresA,
     jogadoresB,
+    comissaoA:listaComissao("A"),
+    comissaoB:listaComissao("B"),
     escalacaoA:jogadoresA,
     escalacaoB:jogadoresB,
 
@@ -1822,6 +1910,7 @@ window.carregarJogo = async function(){
   }
 
   $("statusMsg").innerText = "Jogo carregado.";
+  setTimeout(ajustarEscalaSumula,100);
 };
 
 window.finalizarSumula = async function(){
@@ -2006,6 +2095,23 @@ window.copiarLink = async function(){
 window.baixarPDF = async function(){
   alert("Use imprimir/salvar como PDF pelo navegador. A função PDF avançada pode ser ligada depois.");
 };
+
+
+function ajustarEscalaSumula(){
+  const scaleBox = document.querySelector(".sumula-scale");
+  const viewport = document.querySelector(".sumula-viewport");
+  const page = document.querySelector(".page");
+  if(!scaleBox || !viewport || !page) return;
+  if(window.innerWidth <= 900){
+    const escala = window.innerWidth / 1120;
+    scaleBox.style.setProperty("--escala-mobile", escala);
+    viewport.style.height = (page.offsetHeight * escala + 16) + "px";
+  }else{
+    scaleBox.style.removeProperty("--escala-mobile");
+    viewport.style.height = "auto";
+  }
+}
+window.addEventListener("resize",ajustarEscalaSumula);
 
 onAuthStateChanged(auth, async (user)=>{
   usuarioAtual = user;
