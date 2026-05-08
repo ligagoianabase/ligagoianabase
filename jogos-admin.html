@@ -818,23 +818,111 @@ async function carregarTecnicos(){
   snap.forEach(d=>tecnicosCache.push({id:d.id,...d.data()}));
 }
 
+
 async function carregarArbitragem(){
-  const snapArbitros = await getDocs(collection(db,"arbitros"));
   arbitrosCache = [];
-  snapArbitros.forEach(d=>arbitrosCache.push({id:d.id,...d.data()}));
-
-  const snapAssistentes = await getDocs(collection(db,"assistentes"));
   assistentesCache = [];
-  snapAssistentes.forEach(d=>assistentesCache.push({id:d.id,...d.data()}));
 
-  arbitrosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
-  assistentesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+  try{
+    const snapArbitros = await getDocs(collection(db,"arbitros"));
 
-  preencherSelect(el("arbitro"),arbitrosCache,a=>a.id,a=>a.nome || "Árbitro");
-  preencherSelect(el("arbitroAuxiliar"),arbitrosCache,a=>a.id,a=>a.nome || "Árbitro");
-  preencherSelect(el("assistente1"),assistentesCache,a=>a.id,a=>a.nome || "Assistente");
-  preencherSelect(el("assistente2"),assistentesCache,a=>a.id,a=>a.nome || "Assistente");
+    snapArbitros.forEach(d=>{
+      arbitrosCache.push({
+        id:d.id,
+        ...d.data()
+      });
+    });
+  }catch(e){
+    console.log("Erro árbitros:", e);
+  }
+
+  try{
+    const snapAssistentes = await getDocs(collection(db,"assistentes"));
+
+    snapAssistentes.forEach(d=>{
+      assistentesCache.push({
+        id:d.id,
+        ...d.data()
+      });
+    });
+  }catch(e){
+    console.log("Erro assistentes:", e);
+  }
+
+  // fallback automático
+  try{
+    const snapUsuarios = await getDocs(collection(db,"usuarios"));
+
+    snapUsuarios.forEach(d=>{
+      const u = { id:d.id, ...d.data() };
+
+      const tipo = normalizar(
+        u.tipo ||
+        u.perfil ||
+        u.cargo ||
+        ""
+      );
+
+      if(
+        tipo.includes("arbitro") ||
+        tipo.includes("árbitro")
+      ){
+        const existe = arbitrosCache.some(a=>a.id === u.id);
+
+        if(!existe){
+          arbitrosCache.push(u);
+        }
+      }
+
+      if(tipo.includes("assistente")){
+        const existe = assistentesCache.some(a=>a.id === u.id);
+
+        if(!existe){
+          assistentesCache.push(u);
+        }
+      }
+    });
+  }catch(e){
+    console.log("Erro usuários:", e);
+  }
+
+  arbitrosCache.sort((a,b)=>
+    (a.nome || "").localeCompare(b.nome || "","pt-BR")
+  );
+
+  assistentesCache.sort((a,b)=>
+    (a.nome || "").localeCompare(b.nome || "","pt-BR")
+  );
+
+  preencherSelect(
+    el("arbitro"),
+    arbitrosCache,
+    a=>a.id,
+    a=>a.nome || "Árbitro"
+  );
+
+  preencherSelect(
+    el("arbitroAuxiliar"),
+    arbitrosCache,
+    a=>a.id,
+    a=>a.nome || "Árbitro"
+  );
+
+  preencherSelect(
+    el("assistente1"),
+    assistentesCache,
+    a=>a.id,
+    a=>a.nome || "Assistente"
+  );
+
+  preencherSelect(
+    el("assistente2"),
+    assistentesCache,
+    a=>a.id,
+    a=>a.nome || "Assistente"
+  );
 }
+
 
 window.aoSelecionarCampeonato = function(){
   const campeonato = buscarCampeonato(el("campeonato").value);
