@@ -139,24 +139,37 @@ input:disabled,select:disabled,textarea:disabled,button:disabled{
   object-fit:contain;
 }
 
-.header-title{text-align:center}
+.header-title{text-align:left}
 
 .header-title h1{
   color:#fff;
-  font-size:56px;
+  font-size:54px;
   font-weight:900;
   letter-spacing:1px;
   line-height:.95;
+  text-transform:uppercase;
 }
 
 .header-title input{
-  margin-top:8px;
-  text-align:center;
+  margin-top:6px;
+  text-align:left;
   color:var(--dourado);
-  font-size:20px;
+  font-size:22px;
   font-weight:900;
   text-transform:uppercase;
-  border:none;
+  border:none!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  outline:none!important;
+  padding:0!important;
+}
+.header-title .header-slogan{
+  display:block;
+  color:#fff;
+  font-size:14px;
+  font-weight:900;
+  margin-top:4px;
+  text-transform:uppercase;
 }
 
 .header-right{
@@ -446,10 +459,12 @@ td:nth-child(4) input{min-width:110px}
 .comissao-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .comissao-card{border:1px solid var(--linha);border-radius:8px;overflow:hidden;background:#fff;}
 .comissao-head{background:#f5f7fb;color:var(--azul);text-align:center;padding:8px;font-size:16px;font-weight:900;text-transform:uppercase;border-bottom:1px solid var(--linha);}
-.comissao-lista{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;}
-.comissao-item{border:1px solid #e5eaf1;border-radius:8px;padding:9px;background:#f8fafc;}
-.comissao-item small{display:block;color:var(--azul);font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:4px;}
-.comissao-item strong{color:#111;font-size:13px;line-height:1.25;}
+.comissao-lista{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:12px;}
+.comissao-item{border:1px solid #dbe3ef;border-radius:10px;padding:10px;background:linear-gradient(180deg,#fff,#f8fafc);display:grid;grid-template-columns:36px 1fr;gap:9px;align-items:center;min-height:72px;box-shadow:0 4px 10px rgba(6,29,68,.05);}
+.comissao-icone{width:34px;height:34px;border-radius:50%;background:#eef4ff;color:var(--azul);display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid #d7e2f0;}
+.comissao-info small{display:block;color:var(--azul);font-size:10px;font-weight:900;text-transform:uppercase;margin-bottom:4px;}
+.comissao-info strong{display:block;color:#111;font-size:13px;line-height:1.25;}
+.comissao-info em{display:block;color:#4b5563;font-style:normal;font-size:10px;margin-top:3px;}
 .comissao-vazio{grid-column:1/-1;color:#777;text-align:center;padding:10px;}
 
 .event-box{
@@ -693,6 +708,12 @@ td:nth-child(4) input{min-width:110px}
   .header-title h1{font-size:36px}
   .score-number{font-size:50px}
   .team-score,.team-score.away{flex-direction:column}
+}
+
+@media(max-width:900px){
+  .comissao-lista{grid-template-columns:1fr;}
+  .header-title{text-align:center;}
+  .header-title input{text-align:center;}
 }
 </style>
 </head>
@@ -945,7 +966,20 @@ function listaComissao(time){
 }
 function renderComissaoLista(lista){
   if(!lista.length) return `<div class="comissao-vazio">Nenhum técnico informado.</div>`;
-  return lista.map(t=>`<div class="comissao-item"><small>${t.funcao || "Técnico"}</small><strong>${t.nome || "-"}</strong>${t.cpf ? `<small>CPF: ${t.cpf}</small>` : ""}${t.cref ? `<small>CREF: ${t.cref}</small>` : ""}</div>`).join("");
+  return lista.map(t=>{
+    const f = String(t.funcao || "Técnico");
+    const nf = normalizarTexto(f);
+    const icon = nf.includes("mass") ? "fa-hand-holding-medical" : nf.includes("prepar") ? "fa-briefcase-medical" : nf.includes("aux") ? "fa-user-group" : "fa-user-tie";
+    return `<div class="comissao-item">
+      <div class="comissao-icone"><i class="fa-solid ${icon}"></i></div>
+      <div class="comissao-info">
+        <small>${f}</small>
+        <strong>${t.nome || "-"}</strong>
+        ${t.cpf ? `<em>CPF: ${t.cpf}</em>` : ""}
+        ${t.cref ? `<em>CREF: ${t.cref}</em>` : ""}
+      </div>
+    </div>`;
+  }).join("");
 }
 function renderComissao(){
   if(!$("comissaoA") || !$("comissaoB")) return;
@@ -994,6 +1028,7 @@ function criarTela(){
       <div class="header-title">
         <h1>SÚMULA OFICIAL</h1>
         <input id="campeonato" placeholder="CAMPEONATO LIGA GOIANA">
+        <span class="header-slogan">Onde o talento encontra o futuro</span>
       </div>
 
       <div class="header-right">
