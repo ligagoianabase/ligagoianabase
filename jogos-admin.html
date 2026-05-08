@@ -570,6 +570,26 @@ function normalizar(texto){
     .replace(/[\u0300-\u036f]/g,"");
 }
 
+function nomeCampeonato(c){
+  return c?.nome || c?.nomeCampeonato || c?.titulo || c?.campeonato || "Campeonato";
+}
+
+function nomeTime(t){
+  return t?.nome || t?.nomeTime || t?.nomeClube || t?.time || t?.equipe || t?.apelido || "Time";
+}
+
+function nomePessoa(p,padrao="Pessoa"){
+  return p?.nome || p?.nomeCompleto || p?.displayName || p?.name || p?.email || padrao;
+}
+
+function mostrarAvisoCarregamento(msg){
+  console.warn(msg);
+  const lista = el("listaJogos");
+  if(lista && lista.innerHTML.includes("Carregando jogos")){
+    lista.innerHTML = `<div class="vazio">${msg}</div>`;
+  }
+}
+
 function baseUrl(){
   return location.href.split("/").slice(0,-1).join("/");
 }
@@ -781,163 +801,136 @@ async function criarNotificacoesAutomaticas(jogoId,jogo,arbitroObj,tecnicoA,tecn
 }
 
 async function carregarCampeonatos(){
-  try{
-  const snap = await getDocs(collection(db,"campeonatos"));
   campeonatosCache = [];
-  snap.forEach(d=>campeonatosCache.push({id:d.id,...d.data()}));
-  campeonatosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+
+  try{
+    const snap = await getDocs(collection(db,"campeonatos"));
+    snap.forEach(d=>campeonatosCache.push({id:d.id,...d.data()}));
+  }catch(e){
+    console.error("Erro ao carregar campeonatos:", e);
+    mostrarAvisoCarregamento("Erro ao carregar campeonatos. Confira Firebase, regras do Firestore e a coleção campeonatos.");
+  }
+
+  campeonatosCache.sort((a,b)=>nomeCampeonato(a).localeCompare(nomeCampeonato(b),"pt-BR"));
 
   preencherSelect(
     el("campeonato"),
     campeonatosCache,
     c=>c.id,
-    c=>`${c.nome || "Campeonato"} ${c.temporada ? "- "+c.temporada : ""}`
+    c=>`${nomeCampeonato(c)} ${c.temporada ? "- "+c.temporada : ""}`
   );
 
   const filtro = el("filtroCampeonato");
   filtro.innerHTML = `<option value="">Todos os campeonatos</option>`;
   campeonatosCache.forEach(c=>{
-    filtro.innerHTML += `<option value="${c.id}">${c.nome || "Campeonato"}</option>`;
+    filtro.innerHTML += `<option value="${c.id}">${nomeCampeonato(c)}</option>`;
   });
-  }catch(e){
-    console.error("Erro em carregarCampeonatos", e);
-  }
 
+  if(!campeonatosCache.length){
+    el("campeonato").innerHTML = `<option value="">Nenhum campeonato cadastrado</option>`;
+  }
+}
 
 async function carregarTimes(){
-  try{
-  const snap = await getDocs(collection(db,"times"));
   timesCache = [];
-  snap.forEach(d=>timesCache.push({id:d.id,...d.data()}));
-  timesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+
+  try{
+    const snap = await getDocs(collection(db,"times"));
+    snap.forEach(d=>timesCache.push({id:d.id,...d.data()}));
   }catch(e){
-    console.error("Erro em carregarTimes", e);
+    console.error("Erro ao carregar times:", e);
+    mostrarAvisoCarregamento("Erro ao carregar times. Confira Firebase, regras do Firestore e a coleção times.");
   }
 
+  timesCache.sort((a,b)=>nomeTime(a).localeCompare(nomeTime(b),"pt-BR"));
+  preencherSelect(el("timeA"),timesCache,t=>t.id,t=>nomeTime(t));
+  preencherSelect(el("timeB"),timesCache,t=>t.id,t=>nomeTime(t));
+}
 
 async function carregarJogadores(){
-  try{
-  const snap = await getDocs(collection(db,"jogadores"));
   jogadoresCache = [];
-  snap.forEach(d=>jogadoresCache.push({id:d.id,...d.data()}));
-  }catch(e){
-    console.error("Erro em carregarJogadores", e);
-  }
 
+  try{
+    const snap = await getDocs(collection(db,"jogadores"));
+    snap.forEach(d=>jogadoresCache.push({id:d.id,...d.data()}));
+  }catch(e){
+    console.error("Erro ao carregar jogadores:", e);
+  }
+}
 
 async function carregarTecnicos(){
-  try{
-  const snap = await getDocs(collection(db,"tecnicos"));
   tecnicosCache = [];
-  snap.forEach(d=>tecnicosCache.push({id:d.id,...d.data()}));
+
+  try{
+    const snap = await getDocs(collection(db,"tecnicos"));
+    snap.forEach(d=>tecnicosCache.push({id:d.id,...d.data()}));
   }catch(e){
-    console.error("Erro em carregarTecnicos", e);
+    console.error("Erro ao carregar técnicos:", e);
   }
-
-
+}
 
 async function carregarArbitragem(){
   arbitrosCache = [];
   assistentesCache = [];
 
+  const adicionarUnico = (lista,item)=>{
+    if(!item || !item.id) return;
+    if(!lista.some(x=>x.id === item.id)) lista.push(item);
+  };
+
   try{
     const snapArbitros = await getDocs(collection(db,"arbitros"));
-
-    snapArbitros.forEach(d=>{
-      arbitrosCache.push({
-        id:d.id,
-        ...d.data()
-      });
-    });
+    snapArbitros.forEach(d=>adicionarUnico(arbitrosCache,{ id:d.id, ...d.data() }));
   }catch(e){
-    console.log("Erro árbitros:", e);
+    console.error("Erro árbitros:", e);
   }
 
   try{
     const snapAssistentes = await getDocs(collection(db,"assistentes"));
-
-    snapAssistentes.forEach(d=>{
-      assistentesCache.push({
-        id:d.id,
-        ...d.data()
-      });
-    });
+    snapAssistentes.forEach(d=>adicionarUnico(assistentesCache,{ id:d.id, ...d.data() }));
   }catch(e){
-    console.log("Erro assistentes:", e);
+    console.error("Erro assistentes:", e);
   }
 
-  // fallback automático
   try{
     const snapUsuarios = await getDocs(collection(db,"usuarios"));
-
     snapUsuarios.forEach(d=>{
       const u = { id:d.id, ...d.data() };
+      const tipo = normalizar(`${u.tipo || ""} ${u.perfil || ""} ${u.cargo || ""} ${u.funcao || ""} ${u.role || ""}`);
 
-      const tipo = normalizar(
-        u.tipo ||
-        u.perfil ||
-        u.cargo ||
-        ""
-      );
-
-      if(
-        tipo.includes("arbitro") ||
-        tipo.includes("árbitro")
-      ){
-        const existe = arbitrosCache.some(a=>a.id === u.id);
-
-        if(!existe){
-          arbitrosCache.push(u);
-        }
+      if(tipo.includes("arbitro") || tipo.includes("arbitragem")){
+        adicionarUnico(arbitrosCache,u);
       }
 
-      if(tipo.includes("assistente")){
-        const existe = assistentesCache.some(a=>a.id === u.id);
-
-        if(!existe){
-          assistentesCache.push(u);
-        }
+      if(tipo.includes("assistente") || tipo.includes("bandeira") || tipo.includes("auxiliar")){
+        adicionarUnico(assistentesCache,u);
       }
     });
   }catch(e){
-    console.log("Erro usuários:", e);
+    console.error("Erro usuários:", e);
   }
 
-  arbitrosCache.sort((a,b)=>
-    (a.nome || "").localeCompare(b.nome || "","pt-BR")
-  );
+  if(!assistentesCache.length){
+    assistentesCache = [...arbitrosCache];
+  }
 
-  assistentesCache.sort((a,b)=>
-    (a.nome || "").localeCompare(b.nome || "","pt-BR")
-  );
+  arbitrosCache.sort((a,b)=>nomePessoa(a,"Árbitro").localeCompare(nomePessoa(b,"Árbitro"),"pt-BR"));
+  assistentesCache.sort((a,b)=>nomePessoa(a,"Assistente").localeCompare(nomePessoa(b,"Assistente"),"pt-BR"));
 
-  preencherSelect(
-    el("arbitro"),
-    arbitrosCache,
-    a=>a.id,
-    a=>a.nome || "Árbitro"
-  );
+  preencherSelect(el("arbitro"), arbitrosCache, a=>a.id, a=>nomePessoa(a,"Árbitro"));
+  preencherSelect(el("arbitroAuxiliar"), arbitrosCache, a=>a.id, a=>nomePessoa(a,"Árbitro"));
+  preencherSelect(el("assistente1"), assistentesCache, a=>a.id, a=>nomePessoa(a,"Assistente"));
+  preencherSelect(el("assistente2"), assistentesCache, a=>a.id, a=>nomePessoa(a,"Assistente"));
 
-  preencherSelect(
-    el("arbitroAuxiliar"),
-    arbitrosCache,
-    a=>a.id,
-    a=>a.nome || "Árbitro"
-  );
+  if(!arbitrosCache.length){
+    el("arbitro").innerHTML = `<option value="">Nenhum árbitro cadastrado</option>`;
+    el("arbitroAuxiliar").innerHTML = `<option value="">Nenhum árbitro cadastrado</option>`;
+  }
 
-  preencherSelect(
-    el("assistente1"),
-    assistentesCache,
-    a=>a.id,
-    a=>a.nome || "Assistente"
-  );
-
-  preencherSelect(
-    el("assistente2"),
-    assistentesCache,
-    a=>a.id,
-    a=>a.nome || "Assistente"
-  );
+  if(!assistentesCache.length){
+    el("assistente1").innerHTML = `<option value="">Nenhum assistente cadastrado</option>`;
+    el("assistente2").innerHTML = `<option value="">Nenhum assistente cadastrado</option>`;
+  }
 }
 
 
@@ -962,8 +955,8 @@ window.filtrarTimesPorCategoria = function(){
     return t.categorias.some(c=>normalizar(c) === normalizar(categoria));
   });
 
-  preencherSelect(el("timeA"),timesFiltrados,t=>t.id,t=>t.nome || "Time");
-  preencherSelect(el("timeB"),timesFiltrados,t=>t.id,t=>t.nome || "Time");
+  preencherSelect(el("timeA"),timesFiltrados,t=>t.id,t=>nomeTime(t));
+  preencherSelect(el("timeB"),timesFiltrados,t=>t.id,t=>nomeTime(t));
 
   atualizarPreviewTimes();
 };
@@ -978,7 +971,7 @@ window.atualizarPreviewTimes = function(){
     const comissaoA = comissaoDoTime(timeA.id,categoria);
 
     el("previewA").innerHTML = `
-      <strong>${timeA.nome || "-"}</strong><br>
+      <strong>${nomeTime(timeA)}</strong><br>
       Jogadores encontrados: ${jogadoresA.length}<br>
       Comissão técnica: ${comissaoA.length}<br>
       Categorias: ${Array.isArray(timeA.categorias) ? timeA.categorias.join(", ") : "-"}
@@ -992,7 +985,7 @@ window.atualizarPreviewTimes = function(){
     const comissaoB = comissaoDoTime(timeB.id,categoria);
 
     el("previewB").innerHTML = `
-      <strong>${timeB.nome || "-"}</strong><br>
+      <strong>${nomeTime(timeB)}</strong><br>
       Jogadores encontrados: ${jogadoresB.length}<br>
       Comissão técnica: ${comissaoB.length}<br>
       Categorias: ${Array.isArray(timeB.categorias) ? timeB.categorias.join(", ") : "-"}
@@ -1066,8 +1059,8 @@ window.salvarJogo = async function(){
 
   const jogoBase = {
     campeonatoId,
-    campeonato:campeonatoObj?.nome || "",
-    campeonatoNome:campeonatoObj?.nome || "",
+    campeonato:campeonatoObj ? nomeCampeonato(campeonatoObj) : "",
+    campeonatoNome:campeonatoObj ? nomeCampeonato(campeonatoObj) : "",
     logoCampeonato:campeonatoObj?.logo || "logo-liga.jfif",
     temporada:campeonatoObj?.temporada || "",
     regrasCartoes:campeonatoObj?.regrasCartoes || {},
@@ -1091,20 +1084,20 @@ window.salvarJogo = async function(){
 
     timeA:{
       id:timeAObj.id,
-      nome:timeAObj.nome || "",
+      nome:nomeTime(timeAObj),
       logo:timeAObj.logo || timeAObj.escudo || "logo-liga.jfif",
       escudo:timeAObj.logo || timeAObj.escudo || "logo-liga.jfif",
       cidade:timeAObj.cidade || ""
     },
 
-    timeMandanteNome:timeAObj?.nome || "",
-    mandanteNome:timeAObj?.nome || "",
-    timeVisitanteNome:timeBObj?.nome || "",
-    visitanteNome:timeBObj?.nome || "",
+    timeMandanteNome:timeAObj ? nomeTime(timeAObj) : "",
+    mandanteNome:timeAObj ? nomeTime(timeAObj) : "",
+    timeVisitanteNome:timeBObj ? nomeTime(timeBObj) : "",
+    visitanteNome:timeBObj ? nomeTime(timeBObj) : "",
 
     timeB:{
       id:timeBObj.id,
-      nome:timeBObj.nome || "",
+      nome:nomeTime(timeBObj),
       logo:timeBObj.logo || timeBObj.escudo || "logo-liga.jfif",
       escudo:timeBObj.logo || timeBObj.escudo || "logo-liga.jfif",
       cidade:timeBObj.cidade || ""
@@ -1136,16 +1129,16 @@ window.salvarJogo = async function(){
     arbitroObj:arbitroObj ? formatarContato(arbitroObj) : null,
 
     assistente1Id:assistente1Id || "",
-    assistente1:assistente1Obj?.nome || "",
+    assistente1:assistente1Obj ? nomePessoa(assistente1Obj,"Assistente") : "",
     assistente1Obj:assistente1Obj ? formatarContato(assistente1Obj) : null,
 
     assistente2Id:assistente2Id || "",
-    assistente2:assistente2Obj?.nome || "",
+    assistente2:assistente2Obj ? nomePessoa(assistente2Obj,"Assistente") : "",
     assistente2Obj:assistente2Obj ? formatarContato(assistente2Obj) : null,
 
     arbitroAuxiliarId:arbitroAuxiliarId || "",
-    arbitroAuxiliar:arbitroAuxiliarObj?.nome || "",
-    quartoArbitro:arbitroAuxiliarObj?.nome || "",
+    arbitroAuxiliar:arbitroAuxiliarObj ? nomePessoa(arbitroAuxiliarObj,"Árbitro") : "",
+    quartoArbitro:arbitroAuxiliarObj ? nomePessoa(arbitroAuxiliarObj,"Árbitro") : "",
     quartoArbitroObj:arbitroAuxiliarObj ? formatarContato(arbitroAuxiliarObj) : null,
 
     golsA:0,
@@ -1355,6 +1348,14 @@ function preencherFiltrosCategorias(){
   categoriasFixas.forEach(c=>{
     filtro.innerHTML += `<option value="${c}">${c}</option>`;
   });
+
+  const categoriaSelect = el("categoria");
+  if(categoriaSelect && categoriaSelect.options.length <= 1){
+    categoriaSelect.innerHTML = `<option value="">Selecione</option>`;
+    categoriasFixas.forEach(c=>{
+      categoriaSelect.innerHTML += `<option value="${c}">${c}</option>`;
+    });
+  }
 }
 
 el("buscaJogo").addEventListener("input",renderizarJogos);
@@ -1362,13 +1363,23 @@ el("filtroCampeonato").addEventListener("change",renderizarJogos);
 el("filtroCategoria").addEventListener("change",renderizarJogos);
 
 async function iniciarPagina(){
-  await carregarCampeonatos();
-  await carregarTimes();
-  await carregarJogadores();
-  await carregarTecnicos();
-  await carregarArbitragem();
   preencherFiltrosCategorias();
-  await carregarJogos();
+
+  await Promise.allSettled([
+    carregarCampeonatos(),
+    carregarTimes(),
+    carregarJogadores(),
+    carregarTecnicos(),
+    carregarArbitragem()
+  ]);
+
+  preencherFiltrosCategorias();
+  filtrarTimesPorCategoria();
+
+  await carregarJogos().catch(e=>{
+    console.error("Erro ao carregar jogos:", e);
+    el("listaJogos").innerHTML = `<div class="vazio">Erro ao carregar jogos. Confira Firebase e regras do Firestore.</div>`;
+  });
 }
 
 window.addEventListener("unhandledrejection", function(e){
