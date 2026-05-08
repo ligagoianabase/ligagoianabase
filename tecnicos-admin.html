@@ -641,16 +641,9 @@ window.salvarTecnico = async function(){
   const categoria = document.getElementById("categoria").value;
   const funcao = document.getElementById("funcao").value;
 
+  // Por enquanto, somente o nome é obrigatório.
+  // CPF, nascimento, telefone, WhatsApp, e-mail, time, categoria e foto ficam opcionais.
   if(!nome) return alert("Digite o nome do técnico.");
-  if(!cpf) return alert("Digite o CPF.");
-  if(cpf.length !== 11) return alert("Digite um CPF válido com 11 números.");
-  if(!nascimento) return alert("Digite a data de nascimento.");
-  if(!telefone) return alert("Digite o telefone.");
-  if(!whatsapp) return alert("Digite o WhatsApp.");
-  if(whatsapp.length < 10) return alert("Digite um WhatsApp válido.");
-  if(!email) return alert("Digite o e-mail.");
-  if(!timeId) return alert("Selecione o time.");
-  if(!categoria) return alert("Selecione a categoria.");
 
   const time = buscarTime(timeId);
   const foto = await uploadFotoSeExistir();
