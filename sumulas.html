@@ -429,12 +429,30 @@ function campo(obj, chaves, fallback=""){
   return fallback;
 }
 
+function registroFinalizado(s){
+  const status = norm(s?.status);
+  const sumulaStatus = norm(s?.sumulaStatus);
+
+  return s?.sumulaFinalizada === true ||
+    s?.publica === true ||
+    s?.publico === true ||
+    s?.verSumula === true ||
+    status === "finalizado" ||
+    status === "finalizada" ||
+    status === "publicado" ||
+    status === "publicada" ||
+    sumulaStatus === "finalizado" ||
+    sumulaStatus === "finalizada" ||
+    sumulaStatus === "publicado" ||
+    sumulaStatus === "publicada";
+}
+
 function sumulaFinalizada(s){
-  return s.sumulaFinalizada === true ||
-    s.publica === true ||
-    s.publico === true ||
-    norm(s.status) === "finalizado" ||
-    norm(s.sumulaStatus) === "finalizada";
+  if(registroFinalizado(s)) return true;
+
+  const id = s?.jogoId || s?.id || s?.idJogo;
+  const j = pegarJogo(id);
+  return registroFinalizado(j);
 }
 
 function pegarJogo(id){
@@ -487,7 +505,42 @@ function itemCompleto(s){
 }
 
 function listaPublicada(){
-  return sumulas.filter(sumulaFinalizada).map(itemCompleto);
+  const mapa = new Map();
+
+  sumulas
+    .filter(sumulaFinalizada)
+    .map(itemCompleto)
+    .forEach(item=>{
+      if(item.id) mapa.set(String(item.id), item);
+    });
+
+  jogos
+    .filter(registroFinalizado)
+    .forEach(j=>{
+      const id = j.sumulaId || j.jogoId || j.id;
+      if(!id) return;
+
+      if(!mapa.has(String(id))){
+        const s = sumulas.find(x =>
+          String(x.id || "") === String(id) ||
+          String(x.jogoId || "") === String(id) ||
+          String(x.idJogo || "") === String(id)
+        );
+
+        mapa.set(String(id), itemCompleto({
+          ...(s || {}),
+          ...j,
+          id,
+          jogoId:id,
+          sumulaFinalizada:true,
+          publico:true,
+          publica:true,
+          status:"finalizado"
+        }));
+      }
+    });
+
+  return Array.from(mapa.values());
 }
 
 function preencherFiltros(){
