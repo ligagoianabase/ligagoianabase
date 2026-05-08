@@ -594,6 +594,7 @@ function buscarAssistente(id){
 }
 
 function formatarContato(pessoa){
+  pessoa = pessoa || {};
   return {
     id:pessoa?.id || "",
     nome:pessoa?.nome || "",
@@ -780,6 +781,7 @@ async function criarNotificacoesAutomaticas(jogoId,jogo,arbitroObj,tecnicoA,tecn
 }
 
 async function carregarCampeonatos(){
+  try{
   const snap = await getDocs(collection(db,"campeonatos"));
   campeonatosCache = [];
   snap.forEach(d=>campeonatosCache.push({id:d.id,...d.data()}));
@@ -797,26 +799,41 @@ async function carregarCampeonatos(){
   campeonatosCache.forEach(c=>{
     filtro.innerHTML += `<option value="${c.id}">${c.nome || "Campeonato"}</option>`;
   });
-}
+  }catch(e){
+    console.error("Erro em carregarCampeonatos", e);
+  }
+
 
 async function carregarTimes(){
+  try{
   const snap = await getDocs(collection(db,"times"));
   timesCache = [];
   snap.forEach(d=>timesCache.push({id:d.id,...d.data()}));
   timesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
-}
+  }catch(e){
+    console.error("Erro em carregarTimes", e);
+  }
+
 
 async function carregarJogadores(){
+  try{
   const snap = await getDocs(collection(db,"jogadores"));
   jogadoresCache = [];
   snap.forEach(d=>jogadoresCache.push({id:d.id,...d.data()}));
-}
+  }catch(e){
+    console.error("Erro em carregarJogadores", e);
+  }
+
 
 async function carregarTecnicos(){
+  try{
   const snap = await getDocs(collection(db,"tecnicos"));
   tecnicosCache = [];
   snap.forEach(d=>tecnicosCache.push({id:d.id,...d.data()}));
-}
+  }catch(e){
+    console.error("Erro em carregarTecnicos", e);
+  }
+
 
 
 async function carregarArbitragem(){
@@ -1027,15 +1044,13 @@ window.salvarJogo = async function(){
   if(!local) return alert("Digite o local.");
   if(!timeAId || !timeBId) return alert("Selecione os times.");
   if(timeAId === timeBId) return alert("Os times não podem ser iguais.");
-  if(!arbitroId) return alert("Selecione o árbitro principal.");
+  try{
+    const timeAObj = buscarTime(timeAId);
+    const timeBObj = buscarTime(timeBId);
 
-  const timeAObj = buscarTime(timeAId);
-  const timeBObj = buscarTime(timeBId);
+    if(!timeAObj || !timeBObj) return alert("Erro ao localizar os times selecionados.");
 
-  if(!timeAObj || !timeBObj) return alert("Erro ao localizar os times selecionados.");
-
-  const arbitroObj = buscarArbitro(arbitroId);
-  if(!arbitroObj) return alert("Erro ao localizar o árbitro principal selecionado.");
+  const arbitroObj = buscarArbitro(arbitroId) || null;
   const assistente1Obj = buscarAssistente(assistente1Id);
   const assistente2Obj = buscarAssistente(assistente2Id);
   const arbitroAuxiliarObj = buscarArbitro(arbitroAuxiliarId);
@@ -1112,13 +1127,13 @@ window.salvarJogo = async function(){
     tecnicoAObj:tecnicoAObj ? formatarContato(tecnicoAObj) : null,
     tecnicoBObj:tecnicoBObj ? formatarContato(tecnicoBObj) : null,
 
-    arbitroId,
-    arbitroUid:arbitroObj?.uid || arbitroObj?.usuarioId || arbitroId,
+    arbitroId:arbitroId || "",
+    arbitroUid:arbitroObj?.uid || arbitroObj?.usuarioId || arbitroId || "",
     arbitroUsuarioId:arbitroObj?.usuarioId || arbitroObj?.uid || arbitroId,
     arbitroEmail:arbitroObj?.email || "",
-    arbitro:arbitroObj?.nome || "",
-    arbitroNome:arbitroObj?.nome || "",
-    arbitroObj:formatarContato(arbitroObj),
+    arbitro:arbitroObj?.nome || "A definir",
+    arbitroNome:arbitroObj?.nome || "A definir",
+    arbitroObj:arbitroObj ? formatarContato(arbitroObj) : null,
 
     assistente1Id:assistente1Id || "",
     assistente1:assistente1Obj?.nome || "",
@@ -1212,7 +1227,11 @@ window.salvarJogo = async function(){
     atualizadoEm:serverTimestamp()
   },{merge:true});
 
-  await criarNotificacoesAutomaticas(ref.id,{...jogoBase,id:ref.id},arbitroObj,tecnicoAObj,tecnicoBObj);
+  try{
+    await criarNotificacoesAutomaticas(ref.id,{...jogoBase,id:ref.id},arbitroObj,tecnicoAObj,tecnicoBObj);
+  }catch(erroNotificacao){
+    console.warn("Jogo e súmula salvos, mas as notificações não foram registradas:", erroNotificacao);
+  }
 
   alert(
     "Jogo e súmula criados com sucesso!\\n\\n" +
@@ -1223,6 +1242,10 @@ window.salvarJogo = async function(){
 
   limparFormulario();
   await carregarJogos();
+  }catch(erro){
+    console.error("Erro ao salvar jogo e súmula:", erro);
+    alert("Erro ao salvar jogo e súmula. Abra o console e veja a mensagem: " + (erro?.message || erro));
+  }
 };
 
 window.excluirJogo = async function(id){
@@ -1347,6 +1370,10 @@ async function iniciarPagina(){
   preencherFiltrosCategorias();
   await carregarJogos();
 }
+
+window.addEventListener("unhandledrejection", function(e){
+  console.error("Erro não tratado:", e.reason || e);
+});
 
 iniciarPagina();
 </script>
