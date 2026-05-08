@@ -154,6 +154,37 @@ header{
   font-weight:900;
 }
 
+.status-msg{
+  display:none;
+  margin-bottom:14px;
+  padding:12px;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:900;
+  line-height:1.45;
+}
+
+.status-msg.ok{
+  display:block;
+  background:rgba(27,94,32,.22);
+  border:1px solid rgba(120,255,160,.25);
+  color:#b9ffd0;
+}
+
+.status-msg.erro{
+  display:block;
+  background:rgba(180,35,35,.22);
+  border:1px solid rgba(255,120,120,.25);
+  color:#ffb0b0;
+}
+
+.status-msg.info{
+  display:block;
+  background:rgba(26,63,115,.45);
+  border:1px solid rgba(255,255,255,.10);
+  color:#fff;
+}
+
 .form-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -432,6 +463,8 @@ input:focus,select:focus{
 
     <input type="hidden" id="timeId">
 
+    <div id="statusTimeMsg" class="status-msg"></div>
+
     <div class="form-grid">
       <div>
         <label>Nome do time</label>
@@ -530,6 +563,14 @@ function normalizarTexto(texto){
     .replace(/[\u0300-\u036f]/g,"");
 }
 
+function mostrarStatusTime(tipo, mensagem){
+  const box = document.getElementById("statusTimeMsg");
+  if(!box) return;
+
+  box.className = "status-msg " + tipo;
+  box.textContent = mensagem;
+}
+
 function montarCategorias(){
   const grid = document.getElementById("categoriasGrid");
   grid.innerHTML = categoriasFixas.map(c=>`
@@ -561,6 +602,7 @@ window.previewLogoArquivo = function(){
     document.getElementById("previewLogoBox").style.display = "flex";
     document.getElementById("previewLogoImg").src = e.target.result;
     document.getElementById("previewLogoTexto").textContent = arquivo.name;
+    mostrarStatusTime("info","Escudo selecionado. Clique em Salvar Time para gravar.");
   };
 
   leitor.readAsDataURL(arquivo);
@@ -584,7 +626,7 @@ function arquivoParaEscudoBase64(arquivo){
       const img = new Image();
 
       img.onload = function(){
-        const max = 700;
+        const max = 420;
         let largura = img.width;
         let altura = img.height;
 
@@ -605,7 +647,7 @@ function arquivoParaEscudoBase64(arquivo){
         ctx.fillRect(0,0,largura,altura);
         ctx.drawImage(img,0,0,largura,altura);
 
-        const base64 = canvas.toDataURL("image/jpeg",0.86);
+        const base64 = canvas.toDataURL("image/jpeg",0.68);
         resolve(base64);
       };
 
@@ -656,6 +698,7 @@ window.salvarTime = async function(){
   const botoesSalvar = document.querySelectorAll('button[onclick="salvarTime()"]');
 
   try{
+    mostrarStatusTime("info","Salvando time...");
     botoesSalvar.forEach(btn=>{
       btn.disabled = true;
       btn.style.opacity = ".65";
@@ -693,11 +736,14 @@ window.salvarTime = async function(){
       escudo:logo,
       status,
       categorias,
+      categoria:categorias[0] || "",
+      categoriaNome:categorias[0] || "",
       atualizadoEm:serverTimestamp()
     };
 
     if(id){
       await updateDoc(doc(db,"times",id),dados);
+      mostrarStatusTime("ok","Time atualizado com escudo salvo!");
       alert("Time atualizado com escudo salvo!");
     }else{
       await addDoc(collection(db,"times"),{
@@ -712,6 +758,7 @@ window.salvarTime = async function(){
         saldo:0,
         criadoEm:serverTimestamp()
       });
+      mostrarStatusTime("ok","Time cadastrado com escudo salvo!");
       alert("Time cadastrado com escudo salvo!");
     }
 
@@ -720,7 +767,11 @@ window.salvarTime = async function(){
 
   }catch(e){
     console.error("Erro ao salvar time:", e);
-    alert("Erro ao salvar time/escudo: " + (e.message || e));
+    const msgErro = e && e.code === "permission-denied"
+      ? "Sem permissão no Firebase para salvar em times. Verifique se você está logado como ADM e se a regra do Firestore permite gravar na coleção times."
+      : "Erro ao salvar time/escudo: " + (e.message || e);
+    mostrarStatusTime("erro", msgErro);
+    alert(msgErro);
   }finally{
     botoesSalvar.forEach(btn=>{
       btn.disabled = false;
@@ -764,14 +815,19 @@ async function carregarTimes(){
   const lista = document.getElementById("listaTimes");
   lista.innerHTML = `<div class="vazio">Carregando times...</div>`;
 
-  const snap = await getDocs(collection(db,"times"));
+  try{
+    const snap = await getDocs(collection(db,"times"));
 
-  timesCache = [];
-  snap.forEach(d=>timesCache.push({id:d.id,...d.data()}));
+    timesCache = [];
+    snap.forEach(d=>timesCache.push({id:d.id,...d.data()}));
 
-  timesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+    timesCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
 
-  renderizarTimes();
+    renderizarTimes();
+  }catch(e){
+    console.error("Erro ao carregar times:", e);
+    lista.innerHTML = `<div class="vazio">Erro ao carregar times: ${e.message || e}</div>`;
+  }
 }
 
 function renderizarTimes(){
