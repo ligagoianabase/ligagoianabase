@@ -462,13 +462,74 @@ function placarB(s){
 }
 
 function publicada(s){
+  const status = n(s?.status);
+  const sumulaStatus = n(s?.sumulaStatus);
+
   return (
-    s.sumulaFinalizada === true ||
-    s.finalizada === true ||
-    s.publica === true ||
-    s.publico === true ||
-    n(s.status) === "finalizado"
+    s?.sumulaFinalizada === true ||
+    s?.finalizada === true ||
+    s?.publica === true ||
+    s?.publico === true ||
+    s?.verSumula === true ||
+    status === "finalizado" ||
+    status === "finalizada" ||
+    status === "publicado" ||
+    status === "publicada" ||
+    sumulaStatus === "finalizado" ||
+    sumulaStatus === "finalizada" ||
+    sumulaStatus === "publicado" ||
+    sumulaStatus === "publicada"
   );
+}
+
+function idRegistro(item){
+  return String(item?.jogoId || item?.idJogo || item?.sumulaId || item?.id || "");
+}
+
+function jogoRelacionado(id){
+  return jogos.find(j => String(j.id) === String(id)) || {};
+}
+
+function combinarComJogo(item){
+  const id = idRegistro(item);
+  const j = jogoRelacionado(id);
+  return {
+    ...j,
+    ...item,
+    id:id || item?.id || j?.id || "",
+    jogoId:id || item?.jogoId || j?.id || "",
+    timeA:item?.timeA || j?.timeA || item?.timeMandante || j?.timeMandante || {},
+    timeB:item?.timeB || j?.timeB || item?.timeVisitante || j?.timeVisitante || {},
+    campeonato:campeonatoItem(item) || campeonatoItem(j),
+    campeonatoNome:campeonatoItem(item) || campeonatoItem(j),
+    categoria:categoriaItem(item) || categoriaItem(j),
+    data:item?.data || item?.dataJogo || item?.dataHora || j?.data || j?.dataJogo || j?.dataHora || "",
+    local:valor(item,["local","campo","estadio"],valor(j,["local","campo","estadio"],"")),
+    status:item?.status || j?.status || "finalizado"
+  };
+}
+
+function registrosFinalizados(){
+  const mapa = new Map();
+
+  sumulas.forEach(s=>{
+    const id = idRegistro(s);
+    const j = jogoRelacionado(id);
+    if(publicada(s) || publicada(j)){
+      mapa.set(id || s.id, combinarComJogo({...j,...s}));
+    }
+  });
+
+  jogos.forEach(j=>{
+    if(!publicada(j)) return;
+    const id = idRegistro(j);
+    if(!mapa.has(id)){
+      const s = sumulas.find(x => idRegistro(x) === id) || {};
+      mapa.set(id, combinarComJogo({...j,...s,status:j.status || s.status || "finalizado",sumulaFinalizada:true,publica:true,publico:true}));
+    }
+  });
+
+  return Array.from(mapa.values());
 }
 
 function campeonatoItem(item){
@@ -483,8 +544,7 @@ function sumulasFiltradas(){
   const campeonato = filtroCampeonato.value;
   const categoria = filtroCategoria.value;
 
-  return sumulas.filter(s=>{
-    if(!publicada(s)) return false;
+  return registrosFinalizados().filter(s=>{
     if(campeonato && campeonatoItem(s) !== campeonato) return false;
     if(categoria && categoriaItem(s) !== categoria) return false;
     return true;
@@ -622,7 +682,10 @@ function atualizarTopo(){
     timesSet.add(nomeVisitante(item));
   });
 
-  const gols = s.reduce((acc,item)=>acc + golsArray(item).length,0);
+  const gols = s.reduce((acc,item)=>{
+    const listaGols = golsArray(item);
+    return acc + (listaGols.length || placarA(item) + placarB(item));
+  },0);
   const cartoes = s.reduce((acc,item)=>acc + cartoesArray(item).length,0);
 
   document.getElementById("tagTimes").innerText = `Times: ${timesSet.size}`;
@@ -733,6 +796,7 @@ function renderJogos(){
             <th>Categoria</th>
             <th>Local</th>
             <th>Status</th>
+            <th>Placar</th>
           </tr>
         </thead>
         <tbody>
@@ -742,7 +806,8 @@ function renderJogos(){
               <td class="nome">${nomeTimeCampo(j.timeA || j.timeMandante || j.mandante || j.timeMandanteNome || j.mandanteNome,"Mandante")} x ${nomeTimeCampo(j.timeB || j.timeVisitante || j.visitante || j.timeVisitanteNome || j.visitanteNome,"Visitante")}</td>
               <td>${categoriaItem(j) || "-"}</td>
               <td>${valor(j,["local","campo","estadio"],"-")}</td>
-              <td><span class="badge">${valor(j,["status"],"Agendado")}</span></td>
+              <td><span class="badge">${publicada(j) ? "Finalizado" : valor(j,["status"],"Agendado")}</span></td>
+              <td><span class="badge gold">${publicada(j) ? placarA(j) + " x " + placarB(j) : "-"}</span></td>
             </tr>
           `).join("")}
         </tbody>
@@ -943,6 +1008,7 @@ function renderSuspensos(){
             <th>Time</th>
             <th>Motivo</th>
             <th>Status</th>
+            <th>Placar</th>
           </tr>
         </thead>
         <tbody>
