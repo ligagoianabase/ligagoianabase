@@ -801,24 +801,52 @@ function perfilEhAdmin(){
 function perfilEhArbitroDoJogo(){
   if(!usuarioAtual || !jogo) return false;
 
-  const uid = usuarioAtual.uid;
+  const uid = String(usuarioAtual.uid || "");
   const email = normalizarTexto(usuarioAtual.email || "");
+  const perfilId = String(usuarioPerfil?.id || "");
+  const perfilEmail = normalizarTexto(campo(usuarioPerfil,["email","gmail"],""));
+  const perfilCpf = normalizarTexto(campo(usuarioPerfil,["cpf","CPF"],""));
+
+  const idsDoUsuario = [
+    uid,
+    perfilId,
+    String(campo(usuarioPerfil,["uid","usuarioId","userId","authUid","arbitroId"],""))
+  ].map(String).filter(Boolean);
+
+  const emailsDoUsuario = [email, perfilEmail].filter(Boolean);
 
   const idsPermitidos = [
     campo(jogo,["arbitroId"],""),
     campo(jogo,["arbitroUid"],""),
+    campo(jogo,["arbitroUsuarioId"],""),
     campo(jogo,["arbitroPrincipalId"],""),
-    campo(jogo?.arbitroObj,["id","uid"],"")
-  ].filter(Boolean);
+    campo(jogo,["arbitroSelecionadoId"],""),
+    campo(jogo?.arbitroObj,["id","uid","usuarioId","userId","authUid"],""),
+    campo(sumulaSalva,["arbitroId"],""),
+    campo(sumulaSalva,["arbitroUid"],""),
+    campo(sumulaSalva,["arbitroUsuarioId"],""),
+    campo(sumulaSalva?.arbitroObj,["id","uid","usuarioId","userId","authUid"],"")
+  ].map(String).filter(Boolean);
 
-  if(idsPermitidos.includes(uid)) return true;
+  if(idsDoUsuario.some(id => idsPermitidos.includes(id))) return true;
 
   const emailsPermitidos = [
     campo(jogo,["arbitroEmail"],""),
-    campo(jogo?.arbitroObj,["email"],"")
+    campo(jogo?.arbitroObj,["email","gmail"],""),
+    campo(sumulaSalva,["arbitroEmail"],""),
+    campo(sumulaSalva?.arbitroObj,["email","gmail"],"")
   ].map(normalizarTexto).filter(Boolean);
 
-  if(email && emailsPermitidos.includes(email)) return true;
+  if(emailsDoUsuario.some(e => emailsPermitidos.includes(e))) return true;
+
+  const cpfPermitido = [
+    campo(jogo,["arbitroCpf"],""),
+    campo(jogo?.arbitroObj,["cpf","CPF"],""),
+    campo(sumulaSalva,["arbitroCpf"],""),
+    campo(sumulaSalva?.arbitroObj,["cpf","CPF"],"")
+  ].map(normalizarTexto).filter(Boolean);
+
+  if(perfilCpf && cpfPermitido.includes(perfilCpf)) return true;
 
   return false;
 }
@@ -1797,235 +1825,149 @@ window.carregarJogo = async function(){
 };
 
 window.finalizarSumula = async function(){
+  if(!podeEditar || finalizada){
+    alert("Você não tem permissão para finalizar esta súmula ou ela já está finalizada.");
+    return;
+  }
 
   if(!confirm("Tem certeza? Após finalizar não poderá editar.")) return;
 
-  const dados = montarDados();
+  try{
+    const dados = montarDados(true);
 
-  // 🔹 SALVAR SÚMULA
-  await setDoc(doc(db,"sumulas",jogoId), dados, {merge:true});
+    await setDoc(doc(db,"sumulas",jogoId), dados, {merge:true});
 
-  // 🔹 ATUALIZAR JOGO
-  await updateDoc(doc(db,"jogos",jogoId),{
-    status:"finalizado",
-    sumulaFinalizada:true,
-    placar:{
-      A:golsA.length,
-      B:golsB.length
-    },
-    golsA:golsA.length,
-    golsB:golsB.length,
-    linkSumula:linkPublico()
-  });
-
-  const timeA = jogo.timeA;
-  const timeB = jogo.timeB;
-
-  const golsTimeA = golsA.length;
-  const golsTimeB = golsB.length;
-
-  // ============================
-  // 🔥 ATUALIZAR CLASSIFICAÇÃO
-  // ============================
-
-  async function atualizarTimeTabela(time, golsPro, golsContra){
-    const ref = doc(db,"classificacao", `${jogo.campeonatoId}_${time.id}`);
-    const snap = await getDoc(ref);
-
-    let dadosTime = {
-      jogos:0,
-      vitorias:0,
-      empates:0,
-      derrotas:0,
-      golsPro:0,
-      golsContra:0,
-      saldo:0,
-      pontos:0
-    };
-
-    if(snap.exists()){
-      dadosTime = snap.data();
-    }
-
-    dadosTime.jogos += 1;
-    dadosTime.golsPro += golsPro;
-    dadosTime.golsContra += golsContra;
-    dadosTime.saldo = dadosTime.golsPro - dadosTime.golsContra;
-
-    if(golsPro > golsContra){
-      dadosTime.vitorias += 1;
-      dadosTime.pontos += 3;
-    }else if(golsPro === golsContra){
-      dadosTime.empates += 1;
-      dadosTime.pontos += 1;
-    }else{
-      dadosTime.derrotas += 1;
-    }
-
-    await setDoc(ref,{
-      ...dadosTime,
-      timeId:time.id,
-      timeNome:time.nome,
-      campeonatoId:jogo.campeonatoId,
+    await updateDoc(doc(db,"jogos",jogoId),{
+      status:"finalizado",
+      sumulaStatus:"finalizada",
+      sumulaFinalizada:true,
+      publico:true,
+      publica:true,
+      placar:`${golsA.length} x ${golsB.length}`,
+      golsA:golsA.length,
+      golsB:golsB.length,
+      linkSumula:linkPublico(),
+      sumulaPublica:linkPublico(),
       atualizadoEm:serverTimestamp()
     });
-  }
 
-  await atualizarTimeTabela(timeA, golsTimeA, golsTimeB);
-  await atualizarTimeTabela(timeB, golsTimeB, golsTimeA);
+    const timeA = jogo.timeA || {id:campo(jogo,["timeAId","mandanteId","timeMandanteId"],""),nome:getTimeA().nome};
+    const timeB = jogo.timeB || {id:campo(jogo,["timeBId","visitanteId","timeVisitanteId"],""),nome:getTimeB().nome};
 
-  // ============================
-  // 🔥 ATUALIZAR JOGADORES
-  // ============================
+    const golsTimeA = golsA.length;
+    const golsTimeB = golsB.length;
 
-  async function atualizarJogador(jogadorId, tipo){
-    if(!jogadorId) return;
+    async function atualizarTimeTabela(time, golsPro, golsContra){
+      if(!time?.id || !jogo.campeonatoId) return;
 
-    const ref = doc(db,"jogadores", jogadorId);
-    const snap = await getDoc(ref);
+      const ref = doc(db,"classificacao", `${jogo.campeonatoId}_${time.id}`);
+      const snap = await getDoc(ref);
 
-    if(!snap.exists()) return;
+      let dadosTime = {
+        jogos:0,
+        vitorias:0,
+        empates:0,
+        derrotas:0,
+        golsPro:0,
+        golsContra:0,
+        saldo:0,
+        pontos:0
+      };
 
-    const dadosJog = snap.data();
+      if(snap.exists()) dadosTime = {...dadosTime,...snap.data()};
 
-    let update = {
-      jogos:(dadosJog.jogos || 0) + 1
-    };
+      dadosTime.jogos = Number(dadosTime.jogos || 0) + 1;
+      dadosTime.golsPro = Number(dadosTime.golsPro || 0) + golsPro;
+      dadosTime.golsContra = Number(dadosTime.golsContra || 0) + golsContra;
+      dadosTime.saldo = dadosTime.golsPro - dadosTime.golsContra;
 
-    if(tipo === "gol"){
-      update.gols = (dadosJog.gols || 0) + 1;
+      if(golsPro > golsContra){
+        dadosTime.vitorias = Number(dadosTime.vitorias || 0) + 1;
+        dadosTime.pontos = Number(dadosTime.pontos || 0) + 3;
+      }else if(golsPro === golsContra){
+        dadosTime.empates = Number(dadosTime.empates || 0) + 1;
+        dadosTime.pontos = Number(dadosTime.pontos || 0) + 1;
+      }else{
+        dadosTime.derrotas = Number(dadosTime.derrotas || 0) + 1;
+      }
+
+      await setDoc(ref,{
+        ...dadosTime,
+        timeId:time.id,
+        timeNome:time.nome || time.nomeTime || "Time",
+        campeonatoId:jogo.campeonatoId,
+        categoria:campo(jogo,["categoria"],""),
+        atualizadoEm:serverTimestamp()
+      },{merge:true});
     }
 
-    if(tipo === "amarelo"){
-      update.amarelos = (dadosJog.amarelos || 0) + 1;
+    async function atualizarJogador(jogadorId, tipo){
+      if(!jogadorId) return;
+      const ref = doc(db,"jogadores", jogadorId);
+      const snap = await getDoc(ref);
+      if(!snap.exists()) return;
+      const dadosJog = snap.data();
+      const update = { jogos:Number(dadosJog.jogos || 0) + (tipo === "jogo" ? 1 : 0) };
+      if(tipo === "gol") update.gols = Number(dadosJog.gols || 0) + 1;
+      if(tipo === "amarelo") update.amarelos = Number(dadosJog.amarelos || 0) + 1;
+      if(tipo === "vermelho") update.vermelhos = Number(dadosJog.vermelhos || 0) + 1;
+      await updateDoc(ref, update);
     }
 
-    if(tipo === "vermelho"){
-      update.vermelhos = (dadosJog.vermelhos || 0) + 1;
-    }
+    async function aplicarSuspensaoAutomatica(cartao){
+      if(!cartao.id) return;
+      const refJogador = doc(db,"jogadores", cartao.id);
+      const snapJogador = await getDoc(refJogador);
+      if(!snapJogador.exists()) return;
 
-    await updateDoc(ref, update);
-  }
+      const dadosJogador = snapJogador.data();
+      let amarelos = Number(dadosJogador.amarelos || 0);
+      let vermelhos = Number(dadosJogador.vermelhos || 0);
+      const update = {};
 
-  // GOLS
-  for(const g of golsA){
-    await atualizarJogador(g.id, "gol");
-  }
-  for(const g of golsB){
-    await atualizarJogador(g.id, "gol");
-  }
+      if(cartao.tipo === "amarelo"){
+        amarelos += 1;
+        if(amarelos >= 3){
+          update.suspenso = true;
+          update.motivoSuspensao = "3 cartões amarelos";
+          update.jogosSuspensao = 1;
+          update.dataSuspensao = serverTimestamp();
+          amarelos = 0;
+        }
+        update.amarelos = amarelos;
+      }
 
-
-  // CARTÕES
-  for(const c of cartoesA){
-
-    await aplicarSuspensaoAutomatica(c);
-
-    if(c.tipo === "amarelo"){
-      await atualizarJogador(c.id, "amarelo");
-    }else{
-      await atualizarJogador(c.id, "vermelho");
-    }
-  }
-
-  for(const c of cartoesB){
-
-    await aplicarSuspensaoAutomatica(c);
-
-    if(c.tipo === "amarelo"){
-      await atualizarJogador(c.id, "amarelo");
-    }else{
-      await atualizarJogador(c.id, "vermelho");
-    }
-  }
-
-
-  // ============================
-  // 🔥 SUSPENSÕES AUTOMÁTICAS
-  // ============================
-
-  async function aplicarSuspensaoAutomatica(cartao){
-
-    if(!cartao.id) return;
-
-    const refJogador = doc(db,"jogadores", cartao.id);
-    const snapJogador = await getDoc(refJogador);
-
-    if(!snapJogador.exists()) return;
-
-    const dadosJogador = snapJogador.data();
-
-    let amarelos = Number(dadosJogador.amarelos || 0);
-    let vermelhos = Number(dadosJogador.vermelhos || 0);
-
-    let update = {};
-
-    // 🔸 3 amarelos
-    if(cartao.tipo === "amarelo"){
-
-      amarelos += 1;
-
-      if(amarelos >= 3){
-
+      if(cartao.tipo === "vermelho"){
+        vermelhos += 1;
+        update.vermelhos = vermelhos;
         update.suspenso = true;
-        update.motivoSuspensao = "3 cartões amarelos";
+        update.motivoSuspensao = cartao.vermelhoTipo === "segundo_amarelo" ? "Expulsão por segundo amarelo" : "Cartão vermelho direto";
         update.jogosSuspensao = 1;
         update.dataSuspensao = serverTimestamp();
-
-        amarelos = 0;
       }
 
-      update.amarelos = amarelos;
+      await updateDoc(refJogador, update);
     }
 
-    // 🔸 vermelho
-    if(cartao.tipo === "vermelho"){
+    await atualizarTimeTabela(timeA, golsTimeA, golsTimeB);
+    await atualizarTimeTabela(timeB, golsTimeB, golsTimeA);
 
-      vermelhos += 1;
+    for(const j of [...jogadoresA,...jogadoresB]) await atualizarJogador(j.id, "jogo");
+    for(const g of [...golsA,...golsB]) await atualizarJogador(g.id, "gol");
 
-      update.vermelhos = vermelhos;
+    for(const c of [...cartoesA,...cartoesB]){
+      await aplicarSuspensaoAutomatica(c);
+      await atualizarJogador(c.id, c.tipo === "amarelo" ? "amarelo" : "vermelho");
+    }
 
-      update.suspenso = true;
-
-      if(cartao.vermelhoTipo === "segundo_amarelo"){
-
-        update.motivoSuspensao = "Expulsão por segundo amarelo";
-
-      }else{
-
-        update.motivoSuspensao = "Cartão vermelho direto";
+    if(jogo.arbitroId){
+      const refArbitro = doc(db,"arbitros", jogo.arbitroId);
+      const snapArb = await getDoc(refArbitro);
+      if(snapArb.exists()){
+        const dadosArb = snapArb.data();
+        await updateDoc(refArbitro,{ jogos:Number(dadosArb.jogos || 0) + 1 });
       }
-
-      update.jogosSuspensao = 1;
-      update.dataSuspensao = serverTimestamp();
     }
-
-    await updateDoc(refJogador, update);
-  }
-
-
-
-  // ============================
-  // 🔥 ATUALIZAR ÁRBITRO
-  // ============================
-
-  if(jogo.arbitroId){
-    const refArbitro = doc(db,"arbitros", jogo.arbitroId);
-    const snapArb = await getDoc(refArbitro);
-
-    if(snapArb.exists()){
-      const dadosArb = snapArb.data();
-
-      await updateDoc(refArbitro,{
-        jogos:(dadosArb.jogos || 0) + 1
-      });
-    }
-  }
-
-  alert("Súmula finalizada + estatísticas atualizadas!");
-
-  location.href = linkPublico();
-};
 
     finalizada = true;
     podeEditar = false;
@@ -2036,12 +1978,12 @@ window.finalizarSumula = async function(){
     gerarQr(dados.linkPublico);
     atualizarStatusVisual();
 
-    alert("Súmula finalizada e publicada com sucesso.");
+    alert("Súmula finalizada, publicada e estatísticas atualizadas com sucesso.");
     location.href = dados.linkPublico;
 
   }catch(error){
     console.error("Erro ao finalizar súmula:", error);
-    alert("Erro ao finalizar súmula. Veja o console.");
+    alert("Erro ao finalizar súmula. Veja o console: " + (error?.message || error));
   }
 };
 
