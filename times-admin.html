@@ -815,7 +815,7 @@ input:focus,select:focus,textarea:focus{
           </div>
 
           <div class="full">
-            <label>Foto real do uniforme</label>
+            <label>Foto real do uniforme <small style="color:#cbd6ea;">(opcional)</small></label>
             <input id="uniformeFotoArquivo" type="file" accept="image/*" onchange="previewFotoUniforme()">
           </div>
 
@@ -858,7 +858,7 @@ input:focus,select:focus,textarea:focus{
           <div class="uniforme-foto-box sem-foto" id="uniformePreviewBox">
             <div>
               Foto do uniforme<br>
-              <small>Escolha uma imagem do PC ou celular</small>
+              <small>Opcional: escolha uma imagem do PC ou celular</small>
             </div>
           </div>
 
@@ -1222,7 +1222,7 @@ function atualizarPreviewUniforme(){
     box.innerHTML = `<img src="${uniformeFotoTemp}" alt="${nome}">`;
   }else{
     box.classList.add("sem-foto");
-    box.innerHTML = `<div>Foto do uniforme<br><small>Escolha uma imagem do PC ou celular</small></div>`;
+    box.innerHTML = `<div>Foto do uniforme<br><small>Opcional: escolha uma imagem do PC ou celular</small></div>`;
   }
 }
 
@@ -1272,10 +1272,8 @@ window.adicionarUniforme = function(){
     observacao:txt(document.getElementById("uniformeObs").value)
   };
 
-  if(!uniforme.foto){
-    alert("Escolha a foto real do uniforme.");
-    return;
-  }
+  // Foto do uniforme é opcional.
+  // Se não enviar, salva apenas nome, tipo e cores usadas.
 
   if(uniformeEditIndex >= 0){
     uniformesTemp[uniformeEditIndex] = uniforme;
@@ -1314,13 +1312,21 @@ function renderizarUniformes(){
   const box = document.getElementById("listaUniformes");
 
   if(!uniformesTemp.length){
-    box.innerHTML = `<div class="uniforme-chip"><strong>Nenhum uniforme</strong><small>Adicione pelo menos um uniforme.</small></div>`;
+    box.innerHTML = `<div class="uniforme-chip"><strong>Nenhum uniforme</strong><small>Opcional. Você pode cadastrar depois.</small></div>`;
     return;
   }
 
   box.innerHTML = uniformesTemp.map((u,i)=>`
     <div class="uniforme-chip" onclick="editarUniforme(${i})">
-      ${u.foto ? `<img class="uniforme-chip-img" src="${u.foto}" onerror="this.style.display='none'">` : ""}
+      ${
+        u.foto
+        ? `<img class="uniforme-chip-img" src="${u.foto}" onerror="this.style.display='none'">`
+        : `<div class="uniforme-chip-img" style="display:flex;align-items:center;justify-content:center;gap:6px;">
+             <span class="cor-bolinha" style="background:${u.cor1 || "#f7c600"}"></span>
+             <span class="cor-bolinha" style="background:${u.cor2 || "#111111"}"></span>
+             <span class="cor-bolinha" style="background:${u.cor3 || "#ffffff"}"></span>
+           </div>`
+      }
       <strong>${u.nome}</strong>
       <small>${u.tipo}</small>
       <small>${u.cor1 || ""} / ${u.cor2 || ""} / ${u.cor3 || ""}</small>
@@ -1418,7 +1424,7 @@ window.salvarTime = async function(){
     if(!nome) return alert("Digite o nome do time.");
     if(!cidade) return alert("Digite a cidade do time.");
     if(!categorias.length) return alert("Selecione pelo menos uma categoria.");
-    if(!uniformesTemp.length) return alert("Adicione pelo menos uma foto de uniforme.");
+    // Uniforme é opcional na criação/edição do time.
 
     const logo = await uploadLogoSeExistir();
 
