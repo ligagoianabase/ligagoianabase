@@ -34,15 +34,14 @@ select,input{font-family:inherit}
 .wrap{width:min(100% - 28px,var(--max));margin:0 auto}
 .container{padding:22px 0 34px}
 
-/* TOPO DA PÁGINA — APENAS APARÊNCIA */
 .topo{
-  background:linear-gradient(180deg,rgba(8,23,44,.98),rgba(6,20,39,.98));
+  background:linear-gradient(180deg, rgba(8,23,44,.98), rgba(6,20,39,.98));
   border-bottom:3px solid var(--gold);
   box-shadow:var(--shadow);
 }
 
 .topo-titulo{
-  min-height:72px;
+  min-height:78px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -55,7 +54,7 @@ select,input{font-family:inherit}
 }
 
 .menu-principal{
-  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.98));
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.98));
   border-top:1px solid rgba(255,255,255,.06);
 }
 
@@ -63,33 +62,36 @@ select,input{font-family:inherit}
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:8px;
+  gap:clamp(4px,.55vw,10px);
   padding:14px 6px;
   flex-wrap:nowrap;
-  overflow-x:auto;
-  scrollbar-width:none;
+  overflow:hidden;
 }
-.menu-tabs::-webkit-scrollbar{display:none}
 
 .menu-tabs button{
-  color:#fff;
   font-weight:900;
-  font-size:13px;
-  background:linear-gradient(180deg,rgba(16,42,82,.98),rgba(12,33,64,.98));
-  padding:10px 13px;
-  border-radius:13px;
+  font-size:clamp(11px,.92vw,15px);
+  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(12,33,64,.98));
+  color:#fff;
+  padding:clamp(8px,.75vw,12px) clamp(9px,1vw,18px);
+  border-radius:15px;
   border:1px solid rgba(255,255,255,.07);
   white-space:nowrap;
   box-shadow:0 10px 22px rgba(0,0,0,.24);
 }
 
-.menu-tabs button:hover{color:var(--gold);border-color:var(--gold-line)}
+.menu-tabs button:hover{
+  color:var(--gold);
+  border-color:var(--gold-line);
+}
 
 .menu-tabs button.ativo{
   background:linear-gradient(135deg,var(--gold),var(--gold2));
   color:#111;
   border-color:var(--gold);
 }
+
+.container{padding:22px 0 34px}
 
 .hero{
   background:radial-gradient(circle at top left,rgba(247,198,0,.16),transparent 34%),linear-gradient(135deg,rgba(16,42,82,.96),rgba(8,23,44,.96));
@@ -232,6 +234,11 @@ tbody tr:hover{background:rgba(247,198,0,.08)}
 @media(max-width:520px){
   .cards-resumo{grid-template-columns:1fr}
 }
+
+/* MENU ANTIGO DA CLASSIFICAÇÃO */
+.menu-tabs{justify-content:center;overflow:hidden;gap:clamp(4px,.55vw,10px);}
+.menu-tabs button{font-size:clamp(11px,.92vw,15px);padding:clamp(8px,.75vw,12px) clamp(9px,1vw,18px);border-radius:15px;}
+@media(max-width:900px){.menu-tabs{justify-content:flex-start;overflow-x:auto;padding:14px;scrollbar-width:none}.menu-tabs::-webkit-scrollbar{display:none}.menu-tabs button{flex:0 0 auto;font-size:15px;padding:12px 18px}}
 </style>
 </head>
 
