@@ -3,129 +3,621 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tabela - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Classificação - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="menu.css">
 
 <style>
-/* MANTÉM TODO SEU CSS ATUAL SEM ALTERAR */
+:root{
+  --bg:#061427;--card:#071d37;--card2:#0d2a52;--gold:#f7c600;--gold2:#ffe45c;
+  --white:#fff;--muted:#cbd6ea;--line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);--green:#1b5e20;--yellow:#7a5a00;
+  --red:#b42323;--blue:#1a3f73;--shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1240px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:Arial,sans-serif;
+  background:linear-gradient(rgba(2,8,20,.88),rgba(2,8,20,.96)),url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none}
+select,input{font-family:inherit}
+
+.wrap{width:min(100% - 28px,var(--max));margin:0 auto}
+.container{padding:22px 0 34px}
+
+.hero{
+  background:radial-gradient(circle at top left,rgba(247,198,0,.16),transparent 34%),linear-gradient(135deg,rgba(16,42,82,.96),rgba(8,23,44,.96));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+
+.hero-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+
+.hero-logo{
+  width:76px;height:76px;border-radius:20px;object-fit:cover;
+  border:2px solid var(--gold);background:#fff;
+}
+
+.hero-info{flex:1;min-width:260px}
+
+.hero h2{color:var(--gold);font-size:28px;font-weight:900;margin-bottom:6px}
+.hero p{color:var(--muted);font-size:14px}
+
+.hero-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+
+.hero-tag,.tag{
+  background:rgba(26,63,115,.9);
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+select,input{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
+}
+
+.titulo-secao{
+  color:var(--gold);
+  font-size:22px;
+  font-weight:900;
+  margin:0 0 12px;
+}
+
+.abas,.sub-abas{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  margin-bottom:14px;
+}
+
+.aba,.sub-aba{
+  color:#fff;
+  font-weight:900;
+  font-size:13px;
+  background:linear-gradient(180deg,rgba(16,42,82,.98),rgba(12,33,64,.98));
+  padding:10px 13px;
+  border-radius:13px;
+  border:1px solid rgba(255,255,255,.07);
+  white-space:nowrap;
+}
+
+.aba.ativa,.sub-aba.ativa{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.cards-resumo{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.card-resumo,.card-item,.ranking-card,.chart-card{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+.card-resumo{text-align:center;min-height:112px}
+
+.card-resumo-icon,.card-icon{
+  width:38px;height:38px;border-radius:12px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:17px;
+  margin:0 auto 8px;
+}
+
+.card-resumo strong{
+  display:block;
+  color:var(--gold);
+  font-size:12px;
+  margin-bottom:5px;
+}
+
+.card-resumo span{
+  display:block;
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+}
+
+.top3-list{display:grid;gap:3px;margin-top:4px}
+
+.top3-list div{
+  font-size:11px;
+  color:#fff;
+  background:rgba(255,255,255,.05);
+  border-radius:8px;
+  padding:3px 5px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* CONTROLE APP / COMPACTO / SWIPE */
+.modo-tabela{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+
+.modo-btn{
+  background:linear-gradient(180deg,rgba(16,42,82,.98),rgba(12,33,64,.98));
+  color:#fff;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  padding:9px 12px;
+  font-size:12px;
+  font-weight:900;
+}
+
+.modo-btn.ativo{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+/* TABELA DESKTOP / SWIPE */
+.box-tabela{
+  overflow-x:auto;
+  border-radius:15px;
+  -webkit-overflow-scrolling:touch;
+}
+
+.table{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.97));
+  border-radius:15px;
+  overflow:hidden;
+  border:1px solid rgba(247,198,0,.22);
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+.row{
+  display:flex;
+  align-items:center;
+  padding:10px 8px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  animation:fade .35s ease;
+  min-width:1100px;
+}
+
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.row.header{background:rgba(3,12,29,.78);color:var(--gold);font-weight:900}
+.row.top1{background:linear-gradient(90deg,rgba(247,198,0,.26),rgba(16,42,82,.96));border-left:5px solid var(--gold)}
+.row.top2{background:linear-gradient(90deg,rgba(192,192,192,.20),rgba(16,42,82,.96));border-left:5px solid #c0c0c0}
+.row.top3{background:linear-gradient(90deg,rgba(205,127,50,.20),rgba(16,42,82,.96));border-left:5px solid #cd7f32}
+
+.col-pos{width:45px;text-align:center;font-weight:900}
+.col-time{flex:1;padding:0 8px}
+.col{width:56px;text-align:center;font-weight:800}
+.col-wide{width:135px;text-align:center;font-weight:800}
+
+.team{display:flex;align-items:center;gap:8px;font-weight:900}
+
+.escudo,.photo{
+  width:32px;height:32px;object-fit:cover;border-radius:50%;
+  background:#fff;border:1px solid var(--gold-line);flex-shrink:0;
+}
+
+.forma{display:flex;justify-content:center;gap:3px}
+
+.forma span{
+  width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;
+}
+
+.f-v{background:var(--green)}
+.f-e{background:#777}
+.f-d{background:var(--red)}
+
+/* CLASSIFICAÇÃO TIPO APP */
+.classificacao-app{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.class-card{
+  position:relative;
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:18px;
+  padding:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  overflow:hidden;
+}
+
+.class-card.top1{border-color:var(--gold)}
+.class-card.top1::before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:5px;
+  background:var(--gold);
+}
+
+.class-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.class-pos{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;
+  flex-shrink:0;
+}
+
+.class-team{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+  flex:1;
+}
+
+.class-team strong{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:15px;
+}
+
+.class-pontos{
+  color:var(--gold);
+  font-size:24px;
+  font-weight:900;
+  text-align:right;
+}
+
+.class-pontos small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+}
+
+.metricas{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;
+}
+
+.metrica{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;
+  text-align:center;
+  padding:7px 4px;
+}
+
+.metrica span{
+  display:block;
+  color:var(--gold);
+  font-size:10px;
+  font-weight:900;
+  margin-bottom:3px;
+}
+
+.metrica strong{
+  display:block;
+  color:#fff;
+  font-size:14px;
+}
+
+.class-extra{
+  margin-top:10px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:center;
+}
+
+.aproveitamento{
+  color:#fff;
+  font-weight:900;
+  font-size:13px;
+}
+
+.lista-grid,.ranking-lista{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+}
+
+.ranking-lista.ranking-3{
+  grid-template-columns:repeat(3,1fr);
+}
+
+.card-item{text-align:center}
+
+.card-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:10px;
+}
+
+.status-tag{
+  color:#fff;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.status-finalizado{background:var(--green)}
+.status-agendado{background:var(--yellow)}
+.status-red{background:var(--red)}
+
+.times-linha{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:8px;
+  margin:8px 0 10px;
+}
+
+.time-box{display:flex;align-items:center;gap:6px;min-width:0;font-size:13px;font-weight:900}
+.time-box.visitante{justify-content:flex-end;text-align:right}
+.time-box span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.placar{
+  color:var(--gold);
+  font-size:17px;
+  font-weight:900;
+  background:rgba(2,10,24,.72);
+  border:1px solid var(--gold-line);
+  border-radius:10px;
+  padding:6px 9px;
+  white-space:nowrap;
+}
+
+.info-item{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  text-align:center;
+  margin:8px 0 10px;
+}
+
+.info-item strong{color:#fff}
+
+.btn-ver{
+  width:100%;
+  padding:9px 12px;
+  border-radius:11px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  font-size:13px;
+}
+
+.ranking-card.lider-ranking{
+  border-color:var(--gold);
+  background:radial-gradient(circle at top right,rgba(247,198,0,.18),transparent 35%),linear-gradient(180deg,rgba(16,42,82,.98),rgba(8,23,44,.98));
+}
+
+.ranking-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.player-box{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+
+.pos{width:28px;color:var(--gold);font-weight:900;text-align:center}
+.photo{width:44px;height:44px}
+
+.player-info{min-width:0}
+
+.player-info strong{
+  display:block;
+  color:#fff;
+  font-size:13px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.player-info small{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  margin-top:3px;
+}
+
+.numero-destaque{
+  color:var(--gold);
+  font-size:24px;
+  font-weight:900;
+  text-align:right;
+}
+
+.numero-destaque small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+}
+
+.cartao-card{
+  position:relative;
+  overflow:hidden;
+  min-height:112px;
+}
+
+.cartao-card::after{
+  content:"";
+  position:absolute;
+  right:-24px;
+  top:-18px;
+  width:68px;
+  height:96px;
+  border-radius:10px;
+  background:linear-gradient(180deg,#f7c600,#e30613);
+  opacity:.22;
+  transform:rotate(12deg);
+}
+
+.cartao-numeros{
+  display:flex;
+  gap:8px;
+  justify-content:flex-end;
+  align-items:center;
+  font-weight:900;
+  z-index:2;
+}
+
+.cartao-num{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  background:rgba(255,255,255,.07);
+  padding:6px 8px;
+  border-radius:10px;
+}
+
+.suspenso-badge{
+  background:rgba(180,35,35,.95);
+  color:#fff;
+  padding:7px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.duplo{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.vazio{
+  color:var(--muted);
+  text-align:center;
+  padding:18px;
+  background:rgba(7,29,55,.9);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+}
+
+@media(max-width:1100px){
+  .cards-resumo{grid-template-columns:repeat(3,1fr)}
+  .lista-grid,.ranking-lista,.ranking-lista.ranking-3{grid-template-columns:repeat(3,1fr)}
+  .classificacao-app{grid-template-columns:1fr}
+}
+
+@media(max-width:900px){
+  .filtros,.duplo{grid-template-columns:1fr}
+  .cards-resumo,.lista-grid,.ranking-lista,.ranking-lista.ranking-3{grid-template-columns:repeat(2,1fr)}
+  .hero-logo{width:64px;height:64px;border-radius:16px}
+  .classificacao-app{grid-template-columns:1fr}
+}
+
+@media(max-width:520px){
+  .cards-resumo,.lista-grid,.ranking-lista,.ranking-lista.ranking-3{grid-template-columns:1fr}
+}
 </style>
 </head>
 
 <body>
 
 <main class="wrap container">
-
   <section class="hero">
     <div class="hero-top">
       <img id="heroLogo" class="hero-logo" src="logo-liga.jfif">
-
       <div class="hero-info">
-        <h2 id="heroTitulo">Classificação da Competição</h2>
-
-        <p id="heroSub">
-          Classificação, jogos e estatísticas geradas automaticamente pelas súmulas finalizadas.
-        </p>
-
+        <h2 id="heroTitulo">Tabela da Competição</h2>
+        <p id="heroSub">Classificação, jogos e estatísticas geradas automaticamente pelas súmulas finalizadas.</p>
         <div class="hero-tags">
-          <div class="hero-tag" id="heroTagCategoria">
-            Categoria: -
-          </div>
-
-          <div class="hero-tag" id="heroTagJogos">
-            Jogos finalizados: 0
-          </div>
-
-          <div class="hero-tag" id="heroTagTimes">
-            Times: 0
-          </div>
-
-          <div class="hero-tag" id="heroTagGols">
-            Gols: 0
-          </div>
+          <div class="hero-tag" id="heroTagCategoria">Categoria: -</div>
+          <div class="hero-tag" id="heroTagJogos">Jogos finalizados: 0</div>
+          <div class="hero-tag" id="heroTagTimes">Times: 0</div>
+          <div class="hero-tag" id="heroTagGols">Gols: 0</div>
         </div>
       </div>
     </div>
   </section>
 
   <section class="filtros">
-    <select id="filtroCampeonato">
-      <option value="">Todos os campeonatos</option>
-    </select>
-
-    <select id="filtroCategoria">
-      <option value="">Todas categorias</option>
-    </select>
+    <select id="filtroCampeonato"><option value="">Todos os campeonatos</option></select>
+    <select id="filtroCategoria"><option value="">Todas categorias</option></select>
   </section>
 
-  <h2 class="titulo-secao" id="tituloTabela">
-    Tabela
-  </h2>
+  <h2 class="titulo-secao" id="tituloTabela">Tabela</h2>
 
   <div class="abas">
-
-    <button class="aba ativa"
-      onclick="trocarAba('detalhes',this)">
-      Detalhes
-    </button>
-
-    <button class="aba"
-      onclick="trocarAba('classificacao',this)">
-      Classificação
-    </button>
-
-    <button class="aba"
-      onclick="trocarAba('casaFora',this)">
-      Casa / Fora
-    </button>
-
-    <button class="aba"
-      onclick="trocarAba('jogos',this)">
-      Jogos
-    </button>
-
-    <button class="aba"
-      onclick="trocarAba('estatisticasTimes',this)">
-      Estatísticas dos Times
-    </button>
-
-    <button class="aba"
-      onclick="trocarAba('artilharia',this)">
-      Artilharia
-    </button>
-
-    <button class="aba"
-      onclick="trocarAba('assistencias',this)">
-      Assistências
-    </button>
-
-    <button class="aba"
-      onclick="trocarAba('cartoes',this)">
-      Cartões
-    </button>
-
-    <button class="aba"
-      onclick="trocarAba('suspensos',this)">
-      Suspensos
-    </button>
-
-    <button class="aba"
-      onclick="trocarAba('historico',this)">
-      Histórico
-    </button>
-
+    <button class="aba ativa" onclick="trocarAba('detalhes',this)">Detalhes</button>
+    <button class="aba" onclick="trocarAba('classificacao',this)">Classificação</button>
+    <button class="aba" onclick="trocarAba('casaFora',this)">Casa / Fora</button>
+    <button class="aba" onclick="trocarAba('jogos',this)">Jogos</button>
+    <button class="aba" onclick="trocarAba('estatisticasTimes',this)">Estatísticas dos Times</button>
+    <button class="aba" onclick="trocarAba('artilharia',this)">Artilharia</button>
+    <button class="aba" onclick="trocarAba('assistencias',this)">Assistências</button>
+    <button class="aba" onclick="trocarAba('cartoes',this)">Cartões</button>
+    <button class="aba" onclick="trocarAba('suspensos',this)">Suspensos</button>
+    <button class="aba" onclick="trocarAba('historico',this)">Histórico</button>
   </div>
 
   <div id="areaTabela">
-
     <div class="vazio">
-      <i class="fa-solid fa-spinner fa-spin"></i>
-      Carregando...
+      <i class="fa-solid fa-spinner fa-spin"></i> Carregando...
     </div>
-
   </div>
-
 </main>
 
 <script type="module" src="tabela.js"></script>
