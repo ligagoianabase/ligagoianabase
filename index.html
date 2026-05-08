@@ -1495,6 +1495,7 @@
       <div class="side-menu">
         <a href="login.html" id="sidebarLoginLink"><span class="side-icon"><i class="fa-solid fa-user"></i></span>Login / Cadastro</a>
         <a href="perfil.html" id="sidebarPerfilLink" style="display:none;"><span class="side-icon"><i class="fa-solid fa-id-badge"></i></span>Meu Perfil</a>
+        <a href="minhas-sumulas.html" id="sidebarMinhasSumulasLink" style="display:none;"><span class="side-icon"><i class="fa-solid fa-file-signature"></i></span>Minhas Súmulas</a>
         <a href="admin.html" id="menuAdmin"><span class="side-icon"><i class="fa-solid fa-gears"></i></span>Painel ADM</a>
       </div>
     </div>
@@ -1567,6 +1568,10 @@
             <a href="perfil.html">
               <i class="fa-solid fa-user-pen"></i>
               <span>Editar perfil</span>
+            </a>
+            <a href="minhas-sumulas.html" id="userMinhasSumulasLink" style="display:none;">
+              <i class="fa-solid fa-file-signature"></i>
+              <span>Minhas Súmulas</span>
             </a>
             <a href="admin.html" id="userAdminLink" style="display:none;">
               <i class="fa-solid fa-gears"></i>
@@ -1826,6 +1831,7 @@
     const loginChip = document.getElementById("loginChip");
     const sidebarLoginLink = document.getElementById("sidebarLoginLink");
     const sidebarPerfilLink = document.getElementById("sidebarPerfilLink");
+    const sidebarMinhasSumulasLink = document.getElementById("sidebarMinhasSumulasLink");
     const menuAdmin = document.getElementById("menuAdmin");
     const userChipEl = document.getElementById("userChip");
     const userDropdownEl = document.getElementById("userDropdown");
@@ -1841,6 +1847,7 @@
     const userCardTime = document.getElementById("userCardTime");
     const userCardCategoria = document.getElementById("userCardCategoria");
     const userAdminLink = document.getElementById("userAdminLink");
+    const userMinhasSumulasLink = document.getElementById("userMinhasSumulasLink");
     const logoutBtn = document.getElementById("logoutBtn");
 
     let sumulasCache = [];
@@ -2046,6 +2053,8 @@
       if(userDropdownEl) userDropdownEl.classList.remove("open");
       if(menuAdmin) menuAdmin.style.display = "none";
       if(userAdminLink) userAdminLink.style.display = "none";
+      if(userMinhasSumulasLink) userMinhasSumulasLink.style.display = "none";
+      if(sidebarMinhasSumulasLink) sidebarMinhasSumulasLink.style.display = "none";
       if(sidebarLoginLink) sidebarLoginLink.style.display = "flex";
       if(sidebarPerfilLink) sidebarPerfilLink.style.display = "none";
     }
@@ -2068,6 +2077,8 @@
       if(sidebarPerfilLink) sidebarPerfilLink.style.display = "flex";
       if(menuAdmin) menuAdmin.style.display = podePainel ? "flex" : "none";
       if(userAdminLink) userAdminLink.style.display = podePainel ? "flex" : "none";
+      if(sidebarMinhasSumulasLink) sidebarMinhasSumulasLink.style.display = ehArbitro ? "flex" : "none";
+      if(userMinhasSumulasLink) userMinhasSumulasLink.style.display = ehArbitro ? "flex" : "none";
 
       if(userChipName) userChipName.textContent = nome;
       if(userChipRole) userChipRole.textContent = labelPerfil;
