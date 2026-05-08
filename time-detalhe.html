@@ -4,127 +4,411 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Detalhe do Time - LIGA GOIANA</title>
+<title>Detalhe do Time - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="menu.css">
 
 <style>
 :root{
-  --bg:#061427;
-  --card:#071d37;
-  --card2:#0d2a52;
+  --bg:#071a33;
+  --dark:#081a35;
+  --card:#0d2345;
+  --card2:#13315c;
+  --line:rgba(255,255,255,.09);
   --gold:#f7c600;
+  --blue:#f7c600;
   --white:#fff;
-  --muted:#cbd6ea;
-  --line:rgba(255,255,255,.12);
+  --muted:#9ca8b8;
+  --green:#39a852;
+  --red:#df3f5f;
+  --yellow:#f7c600;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:980px;
 }
+
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
-  font-family:Arial;
+  font-family:Arial, sans-serif;
   background:
-    linear-gradient(rgba(2,8,20,.9), rgba(2,8,20,.96)),
+    linear-gradient(rgba(4,15,35,.92), rgba(4,15,35,.96)),
     url("fundo.png") center/cover fixed no-repeat;
   color:#fff;
+  min-height:100vh;
+  overflow-x:hidden;
 }
+
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;border:none;cursor:pointer;background:none;color:inherit}
+img{display:block;max-width:100%}
 
 .wrap{
-  width:min(100% - 28px, 1240px);
-  margin:auto;
+  width:min(100% - 26px, var(--max));
+  margin:0 auto;
 }
 
-.container{padding:20px}
+.top-app{
+  position:relative;
+  padding:22px 0 0;
+}
 
-/* TOPO */
-.topo{
+.top-icons{
   display:flex;
-  gap:20px;
+  justify-content:space-between;
   align-items:center;
-  background:linear-gradient(135deg,#0d2a52,#08172c);
-  border:1px solid rgba(247,198,0,.3);
-  border-radius:18px;
-  padding:20px;
-  margin-bottom:14px;
+  margin-bottom:8px;
 }
 
-.logo{
-  width:100px;
-  height:100px;
+.icon-btn{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:26px;
+}
+
+.top-right{
+  display:flex;
+  gap:10px;
+}
+
+.team-head{
+  text-align:center;
+  padding:8px 0 20px;
+}
+
+.team-logo{
+  width:92px;
+  height:92px;
+  border-radius:18px;
+  object-fit:contain;
+  background:rgba(255,255,255,.04);
+  margin:0 auto 8px;
+}
+
+.team-name{
+  font-size:28px;
+  font-weight:900;
+  line-height:1.15;
+}
+
+.team-sub{
+  color:#ddd;
+  font-size:16px;
+  margin-top:6px;
+}
+
+.main-tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  border-bottom:1px solid var(--line);
+  margin-bottom:0;
+}
+
+.main-tabs button{
+  padding:16px 6px 13px;
+  font-size:22px;
+  font-weight:500;
+  color:#fff;
+  border-bottom:3px solid transparent;
+  text-transform:uppercase;
+}
+
+.main-tabs button.ativo{
+  font-weight:900;
+  border-bottom-color:var(--gold);
+}
+
+.sub-tabs{
+  display:flex;
+  gap:18px;
+  overflow-x:auto;
+  background:var(--card);
+  padding:16px 14px;
+  margin:0 -13px 18px;
+  scrollbar-width:none;
+}
+
+.sub-tabs::-webkit-scrollbar{display:none}
+
+.sub-tabs button{
+  flex:0 0 auto;
+  padding:8px 18px;
+  border-radius:999px;
+  color:var(--muted);
+  font-size:19px;
+  white-space:nowrap;
+}
+
+.sub-tabs button.ativo{
+  color:#fff;
+  border:2px solid var(--gold);
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  overflow:hidden;
+  margin-bottom:18px;
+  box-shadow:0 10px 28px rgba(0,0,0,.35);
+}
+
+.card-title{
+  padding:14px 16px;
+  font-size:18px;
+  font-weight:900;
+  border-bottom:1px solid rgba(0,0,0,.5);
+}
+
+.card-body{
+  padding:16px;
+}
+
+.details-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  align-items:center;
+}
+
+.detail-person{
+  text-align:center;
+  padding:10px;
+}
+
+.detail-person img{
+  width:76px;
+  height:76px;
   border-radius:50%;
   object-fit:cover;
   background:#fff;
-  border:3px solid var(--gold);
+  margin:0 auto 8px;
 }
 
-.nome{
-  font-size:26px;
-  font-weight:900;
-  color:var(--gold);
+.detail-person strong{
+  display:block;
+  font-size:22px;
 }
 
-/* STATS */
-.stats{
+.detail-person span{
+  display:block;
+  color:var(--muted);
+  font-size:16px;
+  margin-top:3px;
+}
+
+.divider{
+  border-left:1px solid rgba(255,255,255,.18);
+  height:120px;
+  position:absolute;
+  left:50%;
+  top:28px;
+}
+
+.detail-wrap{position:relative}
+
+.bottom-stats{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  margin-bottom:14px;
-}
-
-.box{
-  background:#071d37;
-  padding:14px;
-  border-radius:12px;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  border-top:1px solid rgba(255,255,255,.2);
+  margin-top:14px;
+  padding-top:14px;
   text-align:center;
 }
 
-.box strong{
-  font-size:20px;
-  color:var(--gold);
+.bottom-stats strong{
+  display:block;
+  font-size:24px;
 }
 
-/* TABS */
-.tabs{
-  display:flex;
+.bottom-stats span{
+  color:var(--muted);
+  font-size:15px;
+}
+
+.stats-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
   gap:8px;
-  margin-bottom:10px;
 }
 
-.tabs button{
-  padding:10px 14px;
-  border-radius:10px;
-  background:#1a3f73;
+.stat{
+  background:rgba(255,255,255,.03);
+  border-radius:14px;
+  padding:14px 8px;
+  text-align:center;
+}
+
+.stat strong{
+  display:block;
+  font-size:24px;
   color:#fff;
-  font-weight:700;
 }
 
-.tabs .ativo{
-  background:var(--gold);
-  color:#111;
+.stat span{
+  color:var(--muted);
+  font-size:13px;
 }
 
-/* LISTAS */
-.card{
-  background:#071d37;
-  padding:14px;
-  border-radius:12px;
-  margin-bottom:10px;
+.match-card{
+  background:var(--card);
+  border-radius:18px;
+  border:1px solid var(--line);
+  margin-bottom:16px;
+  overflow:hidden;
 }
 
-.tabela{
+.match-head{
+  padding:12px 14px;
+  border-bottom:1px solid rgba(0,0,0,.45);
+  font-weight:900;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  color:#fff;
+}
+
+.match-line{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:12px;
+  padding:18px 14px;
+  text-align:center;
+  font-size:18px;
+}
+
+.score{
+  color:#ddd;
+  font-size:26px;
+  font-weight:900;
+}
+
+.table{
   width:100%;
   border-collapse:collapse;
 }
 
-.tabela th{
-  background:#123b7a;
-  color:var(--gold);
-  padding:10px;
+.table th,.table td{
+  padding:12px 8px;
+  border-bottom:1px solid rgba(0,0,0,.5);
+  color:#eee;
+  text-align:left;
 }
 
-.tabela td{
-  padding:10px;
-  border-top:1px solid var(--line);
+.table th{
   color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+}
+
+.table .team-cell{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.table img{
+  width:32px;
+  height:32px;
+  object-fit:contain;
+}
+
+.list-row{
+  display:grid;
+  grid-template-columns:58px 1fr auto;
+  gap:12px;
+  align-items:center;
+  padding:12px 14px;
+  border-top:1px solid rgba(0,0,0,.5);
+}
+
+.list-row img{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#fff;
+}
+
+.list-main strong{
+  display:block;
+  font-size:18px;
+}
+
+.list-main span{
+  display:block;
+  color:var(--muted);
+  font-size:14px;
+  margin-top:2px;
+}
+
+.list-value{
+  font-size:20px;
+  font-weight:900;
+}
+
+.position-title{
+  padding:12px 14px;
+  background:var(--card2);
+  font-size:17px;
+  color:#fff;
+  border-bottom:1px solid rgba(0,0,0,.5);
+}
+
+.news-card{
+  background:var(--card);
+  border-radius:18px;
+  overflow:hidden;
+  margin-bottom:18px;
+}
+
+.news-img{
+  height:220px;
+  width:100%;
+  object-fit:cover;
+  background:#071d37;
+}
+
+.news-content{
+  padding:14px;
+}
+
+.news-content h3{
+  font-size:21px;
+  margin-bottom:8px;
+}
+
+.news-actions{
+  display:flex;
+  justify-content:space-between;
+  color:#ddd;
+  margin-top:12px;
+}
+
+.empty{
+  padding:24px;
+  text-align:center;
+  color:var(--muted);
+}
+
+@media(max-width:700px){
+  .wrap{width:min(100% - 24px, var(--max))}
+  .team-logo{width:78px;height:78px}
+  .team-name{font-size:24px}
+  .main-tabs button{font-size:22px}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .details-grid{grid-template-columns:1fr 1fr}
+  .detail-person strong{font-size:19px}
+  .bottom-stats strong{font-size:22px}
+  .match-line{font-size:16px}
+  .score{font-size:24px}
 }
 </style>
 </head>
@@ -136,34 +420,35 @@ import { renderMenu } from "./menu.js";
 renderMenu("times");
 </script>
 
-<main class="wrap container">
+<div class="wrap top-app">
+  <div class="top-icons">
+    <button class="icon-btn" onclick="history.back()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
 
-<!-- TOPO -->
-<div class="topo">
-<img id="logo" class="logo">
-<div>
-<div class="nome" id="nome"></div>
-<div id="info"></div>
+    <div class="top-right">
+      <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+      <button class="icon-btn"><i class="fa-regular fa-star"></i></button>
+      <button class="icon-btn" onclick="compartilharTime()"><i class="fa-solid fa-share-nodes"></i></button>
+    </div>
+  </div>
+
+  <section class="team-head">
+    <img id="logo" class="team-logo" src="logo-liga.jfif">
+    <div class="team-name" id="nome">Carregando...</div>
+    <div class="team-sub" id="info">Liga Goiana de Futebol de Base</div>
+  </section>
+
+  <nav class="main-tabs">
+    <button id="tabTemporada" class="ativo" onclick="trocarPrincipal('temporada')">Temporada</button>
+    <button id="tabBuzz" onclick="trocarPrincipal('buzz')">Buzz</button>
+    <button id="tabElenco" onclick="trocarPrincipal('elenco')">Elenco</button>
+  </nav>
 </div>
-</div>
 
-<!-- STATS -->
-<div class="stats">
-<div class="box"><strong id="jogos">0</strong><br>Jogos</div>
-<div class="box"><strong id="vitorias">0</strong><br>Vitórias</div>
-<div class="box"><strong id="gols">0</strong><br>Gols</div>
-<div class="box"><strong id="saldo">0</strong><br>Saldo</div>
-</div>
-
-<!-- TABS -->
-<div class="tabs">
-<button class="ativo" onclick="trocar('elenco')">Elenco</button>
-<button onclick="trocar('jogos')">Jogos</button>
-<button onclick="trocar('estatisticas')">Estatísticas</button>
-</div>
-
-<div id="conteudo"></div>
-
+<main class="wrap">
+  <div id="subTabs" class="sub-tabs"></div>
+  <div id="conteudo"></div>
 </main>
 
 <script type="module">
@@ -180,107 +465,427 @@ const id = new URLSearchParams(location.search).get("id");
 let time = {};
 let jogadores = [];
 let jogos = [];
-let aba = "elenco";
+let tecnicos = [];
+let principal = "temporada";
+let sub = "detalhes";
 
-/* ================= TIME ================= */
-async function carregarTime(){
-  const snap = await getDoc(doc(db,"times",id));
-
-  if(!snap.exists()) return;
-
-  time = snap.data();
-
-  document.getElementById("nome").innerText = time.nome || "Time";
-  document.getElementById("logo").src = time.logo || "logo-liga.jfif";
-
-  document.getElementById("info").innerText =
-    `${time.cidade || ""} • ${time.categoria || ""}`;
+function campo(obj, chaves, padrao=""){
+  for(const c of chaves){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== "") return obj[c];
+  }
+  return padrao;
 }
 
-/* ================= JOGADORES ================= */
-onSnapshot(collection(db,"jogadores"), snap=>{
-  jogadores = snap.docs
-    .map(d=>d.data())
-    .filter(j=>j.timeId === id);
+function normalizar(t){
+  return String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+}
 
-  render();
-});
+function nomeTime(){
+  return campo(time,["nome","nomeTime","timeNome"],"Time");
+}
 
-/* ================= JOGOS ================= */
-onSnapshot(collection(db,"jogos"), snap=>{
-  jogos = snap.docs.map(d=>d.data());
-  render();
-});
+function logoTime(){
+  return campo(time,["logo","escudo","imagem","foto"],"logo-liga.jfif");
+}
 
-/* ================= STATS ================= */
+function cidadeTime(){
+  return campo(time,["cidade","municipio","local"],"");
+}
+
+function categoriasTime(){
+  const arr = campo(time,["categorias"],[]);
+  if(Array.isArray(arr) && arr.length) return arr.join(", ");
+  return campo(time,["categoria","categoriaNome"],"");
+}
+
+function tecnicoPrincipal(){
+  const tecnicoPorTime = tecnicos.find(t=>{
+    const tid = campo(t,["timeId"],"");
+    const tnome = normalizar(campo(t,["time","nomeTime","timeNome"],""));
+    return tid === id || tnome === normalizar(nomeTime());
+  });
+  return campo(tecnicoPorTime || time,["nome","tecnico","tecnicoNome","treinador"],"Técnico não cadastrado");
+}
+
+function jogadoresDoTime(){
+  const nome = normalizar(nomeTime());
+  return jogadores.filter(j=>{
+    return campo(j,["timeId"],"") === id ||
+      normalizar(campo(j,["time","nomeTime","timeNome"],"")) === nome;
+  });
+}
+
+function jogosDoTime(){
+  const nome = normalizar(nomeTime());
+  return jogos.filter(j=>{
+    const timeA = normalizar(campo(j,["timeA","mandante","timeMandante","nomeTimeA"],""));
+    const timeB = normalizar(campo(j,["timeB","visitante","timeVisitante","nomeTimeB"],""));
+    return timeA === nome || timeB === nome;
+  });
+}
+
+function placarA(j){
+  return Number(campo(j,["golsA","placarA","golsMandante","mandanteGols"],0));
+}
+
+function placarB(j){
+  return Number(campo(j,["golsB","placarB","golsVisitante","visitanteGols"],0));
+}
+
 function calcularStats(){
-  let j=0,v=0,gp=0,gc=0;
+  let jogosQtd = 0, vitorias = 0, empates = 0, derrotas = 0, gp = 0, gc = 0;
+  const nome = normalizar(nomeTime());
 
-  jogos.forEach(x=>{
-    if(x.timeA === time.nome || x.timeB === time.nome){
-      j++;
+  jogosDoTime().forEach(j=>{
+    jogosQtd++;
+    const a = placarA(j);
+    const b = placarB(j);
+    const ehA = normalizar(campo(j,["timeA","mandante","timeMandante","nomeTimeA"],"")) === nome;
 
-      const gm = x.golsMandante || 0;
-      const gv = x.golsVisitante || 0;
+    const golsPro = ehA ? a : b;
+    const golsContra = ehA ? b : a;
 
-      if(x.timeA === time.nome){
-        gp+=gm; gc+=gv;
-        if(gm>gv) v++;
-      }else{
-        gp+=gv; gc+=gm;
-        if(gv>gm) v++;
-      }
-    }
+    gp += golsPro;
+    gc += golsContra;
+
+    if(golsPro > golsContra) vitorias++;
+    else if(golsPro === golsContra) empates++;
+    else derrotas++;
   });
 
-  document.getElementById("jogos").innerText=j;
-  document.getElementById("vitorias").innerText=v;
-  document.getElementById("gols").innerText=gp;
-  document.getElementById("saldo").innerText=gp-gc;
+  return {
+    jogos:jogosQtd,
+    vitorias,
+    empates,
+    derrotas,
+    gols:gp,
+    golsContra:gc,
+    saldo:gp-gc,
+    pontos:vitorias*3+empates
+  };
 }
 
-/* ================= RENDER ================= */
-function render(){
-  calcularStats();
+function dataBR(v){
+  if(!v) return "-";
+  const d = new Date(v);
+  if(isNaN(d.getTime())) return String(v);
+  return d.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"2-digit"});
+}
 
-  if(aba==="elenco"){
-    document.getElementById("conteudo").innerHTML = jogadores.map(j=>`
-      <div class="card">
-        ${j.nome} - Nº ${j.numero}
+function renderHeader(){
+  document.getElementById("nome").textContent = nomeTime();
+  document.getElementById("logo").src = logoTime();
+  document.getElementById("logo").onerror = function(){this.src="logo-liga.jfif"};
+  document.getElementById("info").textContent = cidadeTime() || categoriasTime() || "Liga Goiana de Futebol de Base";
+  document.title = nomeTime() + " - Liga Goiana";
+}
+
+function setActive(){
+  document.getElementById("tabTemporada").classList.toggle("ativo",principal==="temporada");
+  document.getElementById("tabBuzz").classList.toggle("ativo",principal==="buzz");
+  document.getElementById("tabElenco").classList.toggle("ativo",principal==="elenco");
+}
+
+function montarSubtabs(){
+  const box = document.getElementById("subTabs");
+
+  const tabs = principal === "temporada"
+    ? [["detalhes","Detalhes"],["jogos","Jogos"],["classificacao","Classificação"],["estatisticas","Estatísticas"],["titulos","Títulos"]]
+    : principal === "buzz"
+      ? [["noticias","Notícias"],["chat","Chat"],["destaques","Destaques"]]
+      : [["elenco","Elenco"],["gestao","Gestão"],["estatisticasElenco","Estatísticas"]];
+
+  if(!tabs.some(t=>t[0] === sub)) sub = tabs[0][0];
+
+  box.innerHTML = tabs.map(t=>`
+    <button class="${sub===t[0]?"ativo":""}" onclick="trocarSub('${t[0]}')">${t[1]}</button>
+  `).join("");
+}
+
+function cardDetalhes(){
+  const st = calcularStats();
+  const elenco = jogadoresDoTime();
+
+  return `
+    <section class="card">
+      <div class="card-title">Detalhes do time</div>
+      <div class="card-body detail-wrap">
+        <div class="details-grid">
+          <div class="detail-person">
+            <img src="${logoTime()}" onerror="this.src='logo-liga.jfif'">
+            <strong>${nomeTime()}</strong>
+            <span>${categoriasTime() || "Categoria"}</span>
+          </div>
+
+          <div class="detail-person">
+            <img src="logo-liga.jfif">
+            <strong>${tecnicoPrincipal()}</strong>
+            <span>Técnico</span>
+          </div>
+        </div>
+
+        <div class="bottom-stats">
+          <div><strong>${elenco.length}</strong><span>Jogadores</span></div>
+          <div><strong>${st.jogos}</strong><span>Jogos</span></div>
+          <div><strong>${st.pontos}</strong><span>Pontos</span></div>
+        </div>
       </div>
-    `).join("");
-  }
+    </section>
 
-  if(aba==="jogos"){
-    document.getElementById("conteudo").innerHTML = `
-    <table class="tabela">
-    <tr><th>Jogo</th><th>Placar</th></tr>
-    ${jogos.map(j=>`
-      <tr>
-        <td>${j.timeA} x ${j.timeB}</td>
-        <td>${j.golsMandante || 0} x ${j.golsVisitante || 0}</td>
-      </tr>
-    `).join("")}
-    </table>`;
-  }
+    <section class="card">
+      <div class="card-title">Últimas Partidas</div>
+      <div class="stats-row">
+        ${jogosDoTime().slice(0,4).map(j=>`
+          <div class="stat">
+            <strong>${placarA(j)} x ${placarB(j)}</strong>
+            <span>${campo(j,["timeA","mandante"],"-")} x ${campo(j,["timeB","visitante"],"-")}</span>
+          </div>
+        `).join("") || `<div class="empty">Nenhuma partida cadastrada.</div>`}
+      </div>
+    </section>
 
-  if(aba==="estatisticas"){
-    document.getElementById("conteudo").innerHTML = `
-      <div class="card">Estatísticas automáticas baseadas nos jogos</div>
-    `;
-  }
+    <section class="card">
+      <div class="card-title">Resumo</div>
+      <div class="stats-row">
+        <div class="stat"><strong>${st.vitorias}</strong><span>Vitórias</span></div>
+        <div class="stat"><strong>${st.empates}</strong><span>Empates</span></div>
+        <div class="stat"><strong>${st.derrotas}</strong><span>Derrotas</span></div>
+        <div class="stat"><strong>${st.saldo}</strong><span>Saldo</span></div>
+      </div>
+    </section>
+  `;
 }
 
-window.trocar = function(n){
-  aba = n;
+function cardJogos(){
+  const lista = jogosDoTime();
 
-  document.querySelectorAll(".tabs button")
-    .forEach(b=>b.classList.remove("ativo"));
+  if(!lista.length){
+    return `<section class="card"><div class="empty">Nenhum jogo cadastrado para este time.</div></section>`;
+  }
 
-  event.target.classList.add("ativo");
+  return lista.map(j=>`
+    <section class="match-card">
+      <div class="match-head">
+        <span>${campo(j,["campeonato","nomeCampeonato"],"Competição")}</span>
+        <span>${dataBR(campo(j,["data","dataJogo"],""))}</span>
+      </div>
+      <div class="match-line">
+        <div>${campo(j,["timeA","mandante"],"-")}</div>
+        <div class="score">${placarA(j)} - ${placarB(j)}</div>
+        <div>${campo(j,["timeB","visitante"],"-")}</div>
+      </div>
+    </section>
+  `).join("");
+}
 
+function cardClassificacao(){
+  const st = calcularStats();
+
+  return `
+    <section class="card">
+      <div class="card-title">Classificação do time</div>
+      <table class="table">
+        <tr>
+          <th>Time</th><th>J</th><th>GP:GC</th><th>SG</th><th>P</th>
+        </tr>
+        <tr>
+          <td class="team-cell"><img src="${logoTime()}"> ${nomeTime()}</td>
+          <td>${st.jogos}</td>
+          <td>${st.gols}:${st.golsContra}</td>
+          <td>${st.saldo}</td>
+          <td>${st.pontos}</td>
+        </tr>
+      </table>
+    </section>
+  `;
+}
+
+function cardEstatisticas(){
+  const st = calcularStats();
+  const mediaGols = st.jogos ? (st.gols/st.jogos).toFixed(2) : "0";
+
+  return `
+    <section class="card">
+      <div class="card-title">Estatísticas dos times</div>
+      <div class="list-row">
+        <img src="${logoTime()}">
+        <div class="list-main"><strong>Gols por jogo</strong><span>Total de gols ${st.gols}</span></div>
+        <div class="list-value">${mediaGols}</div>
+      </div>
+      <div class="list-row">
+        <img src="${logoTime()}">
+        <div class="list-main"><strong>Gols sofridos</strong><span>Total sofrido ${st.golsContra}</span></div>
+        <div class="list-value">${st.jogos ? (st.golsContra/st.jogos).toFixed(2) : "0"}</div>
+      </div>
+      <div class="list-row">
+        <img src="${logoTime()}">
+        <div class="list-main"><strong>Não vazado</strong><span>Jogos sem sofrer gols</span></div>
+        <div class="list-value">${jogosDoTime().filter(j=>{
+          const nome = normalizar(nomeTime());
+          const ehA = normalizar(campo(j,["timeA","mandante"],"")) === nome;
+          return (ehA ? placarB(j) : placarA(j)) === 0;
+        }).length}</div>
+      </div>
+    </section>
+  `;
+}
+
+function cardTitulos(){
+  return `
+    <section class="card">
+      <div class="card-title">Títulos</div>
+      <div class="empty">Títulos ainda não cadastrados para este time.</div>
+    </section>
+  `;
+}
+
+function grupoPosicao(j){
+  const pos = normalizar(campo(j,["posicao","posição","funcao"],""));
+  if(pos.includes("goleiro")) return "Goleiros";
+  if(pos.includes("zagueiro") || pos.includes("lateral") || pos.includes("defensor")) return "Defensores";
+  if(pos.includes("volante") || pos.includes("meia") || pos.includes("camp")) return "Meio Campistas";
+  if(pos.includes("atac") || pos.includes("ponta") || pos.includes("centroavante")) return "Atacantes";
+  return "Elenco";
+}
+
+function cardElenco(){
+  const lista = jogadoresDoTime();
+  if(!lista.length){
+    return `<section class="card"><div class="empty">Nenhum jogador cadastrado para este time.</div></section>`;
+  }
+
+  const grupos = {};
+  lista.forEach(j=>{
+    const g = grupoPosicao(j);
+    if(!grupos[g]) grupos[g] = [];
+    grupos[g].push(j);
+  });
+
+  return Object.keys(grupos).map(g=>`
+    <section class="card">
+      <div class="position-title">${g}</div>
+      ${grupos[g].map(j=>`
+        <div class="list-row">
+          <img src="${campo(j,["foto","fotoPerfil","imagem"],"logo-liga.jfif")}" onerror="this.src='logo-liga.jfif'">
+          <div class="list-main">
+            <strong>${campo(j,["nome","nomeCompleto"],"Jogador")}</strong>
+            <span>${campo(j,["posicao","posição","funcao"],"Jogador")}</span>
+          </div>
+          <div class="list-value">${campo(j,["numero","camisa"],"")}</div>
+        </div>
+      `).join("")}
+    </section>
+  `).join("");
+}
+
+function cardGestao(){
+  return `
+    <section class="card">
+      <div class="card-title">Gestão</div>
+      <div class="list-row">
+        <img src="logo-liga.jfif">
+        <div class="list-main"><strong>${tecnicoPrincipal()}</strong><span>Técnico</span></div>
+        <div></div>
+      </div>
+    </section>
+  `;
+}
+
+function cardBuzz(){
+  return `
+    <section class="news-card">
+      <div class="news-content">
+        <h3>Notícias do ${nomeTime()}</h3>
+        <p style="color:var(--muted)">Área preparada para notícias, chat e destaques do time.</p>
+        <div class="news-actions">
+          <span><i class="fa-regular fa-thumbs-up"></i> Curtir</span>
+          <span><i class="fa-solid fa-share-nodes"></i> Compartilhar</span>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function render(){
+  renderHeader();
+  setActive();
+  montarSubtabs();
+
+  let html = "";
+
+  if(principal === "temporada"){
+    if(sub === "detalhes") html = cardDetalhes();
+    if(sub === "jogos") html = cardJogos();
+    if(sub === "classificacao") html = cardClassificacao();
+    if(sub === "estatisticas") html = cardEstatisticas();
+    if(sub === "titulos") html = cardTitulos();
+  }
+
+  if(principal === "buzz"){
+    html = cardBuzz();
+  }
+
+  if(principal === "elenco"){
+    if(sub === "gestao") html = cardGestao();
+    else if(sub === "estatisticasElenco") html = cardEstatisticas();
+    else html = cardGestao() + cardElenco();
+  }
+
+  document.getElementById("conteudo").innerHTML = html;
+}
+
+window.trocarPrincipal = function(n){
+  principal = n;
+  sub = n === "temporada" ? "detalhes" : n === "buzz" ? "noticias" : "elenco";
   render();
 };
+
+window.trocarSub = function(n){
+  sub = n;
+  render();
+};
+
+window.compartilharTime = function(){
+  const url = location.href;
+  if(navigator.share){
+    navigator.share({title:nomeTime(),url});
+  }else{
+    navigator.clipboard.writeText(url);
+    alert("Link copiado!");
+  }
+};
+
+async function carregarTime(){
+  if(!id){
+    document.getElementById("conteudo").innerHTML = `<section class="card"><div class="empty">Time não encontrado.</div></section>`;
+    return;
+  }
+
+  const snap = await getDoc(doc(db,"times",id));
+
+  if(!snap.exists()){
+    document.getElementById("conteudo").innerHTML = `<section class="card"><div class="empty">Time não encontrado.</div></section>`;
+    return;
+  }
+
+  time = {id:snap.id,...snap.data()};
+  render();
+}
+
+onSnapshot(collection(db,"jogadores"), snap=>{
+  jogadores = snap.docs.map(d=>({id:d.id,...d.data()}));
+  render();
+});
+
+onSnapshot(collection(db,"jogos"), snap=>{
+  jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
+  render();
+});
+
+onSnapshot(collection(db,"tecnicos"), snap=>{
+  tecnicos = snap.docs.map(d=>({id:d.id,...d.data()}));
+  render();
+});
 
 carregarTime();
 </script>
