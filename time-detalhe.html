@@ -1,31 +1,24 @@
+# time-detalhe.html
+
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Detalhe do Time - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Time Detalhe - Liga Goiana</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="menu.css">
 
 <style>
 :root{
-  --bg:#061427;
-  --card:#071d37;
-  --card2:#0d2a52;
-  --gold:#f7c600;
-  --gold2:#ffe45c;
-  --white:#ffffff;
-  --muted:#cbd6ea;
-  --line:rgba(255,255,255,.12);
-  --gold-line:rgba(247,198,0,.45);
-  --green:#1b5e20;
-  --yellow:#7a5a00;
-  --red:#b42323;
-  --blue:#1a3f73;
-  --shadow:0 14px 34px rgba(0,0,0,.38);
-  --max:1240px;
+  --azul:#061d44;
+  --azul2:#08285c;
+  --azul3:#0d3578;
+  --dourado:#f7c600;
+  --branco:#ffffff;
+  --linha:rgba(255,255,255,.08);
+  --texto:#dfe8f7;
 }
 
 *{
@@ -35,1096 +28,712 @@
 }
 
 body{
-  font-family:Arial, sans-serif;
+  font-family:Arial,Helvetica,sans-serif;
   background:
-    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
-    url("fundo.png") center/cover fixed no-repeat;
-  color:var(--white);
-  min-height:100vh;
-  overflow-x:hidden;
+    linear-gradient(rgba(3,10,25,.94),rgba(3,10,25,.96)),
+    url('https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?q=80&w=1600&auto=format&fit=crop') center/cover fixed;
+  color:var(--branco);
 }
 
-a{text-decoration:none;color:inherit}
-button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-img{display:block;max-width:100%}
+.topo{
+  background:linear-gradient(180deg,#04142f,#061d44);
+  border-bottom:2px solid var(--dourado);
+  position:sticky;
+  top:0;
+  z-index:999;
+}
 
-.wrap{
-  width:min(100% - 28px, var(--max));
-  margin:0 auto;
+.menu{
+  max-width:1400px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  overflow:auto;
+  padding:12px;
+}
+
+.menu::-webkit-scrollbar{
+  display:none;
+}
+
+.logoLiga{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+}
+
+.menu a{
+  color:#fff;
+  text-decoration:none;
+  font-weight:700;
+  font-size:14px;
+  white-space:nowrap;
+  padding:12px 16px;
+  border-radius:12px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.menu a.ativo{
+  background:var(--dourado);
+  color:#111;
 }
 
 .container{
-  padding:22px 0 34px;
+  width:min(96%,1450px);
+  margin:22px auto;
 }
 
-.team-hero{
-  background:
-    radial-gradient(circle at top left, rgba(247,198,0,.18), transparent 34%),
-    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
-  border:1px solid var(--gold-line);
-  border-radius:22px;
-  padding:26px 20px 0;
-  margin-bottom:14px;
-  box-shadow:var(--shadow);
+.layout{
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:18px;
+}
+
+.hero{
+  background:linear-gradient(180deg,rgba(8,40,92,.94),rgba(5,22,50,.96));
+  border:1px solid rgba(247,198,0,.25);
+  border-radius:26px;
   overflow:hidden;
-  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
 }
 
-.team-logo{
-  width:118px;
-  height:118px;
+.heroTopo{
+  padding:34px 20px 24px;
+  text-align:center;
+  background:
+    linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.5)),
+    url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1400&auto=format&fit=crop') center/cover;
+}
+
+.heroTopo img{
+  width:130px;
+  height:130px;
   object-fit:contain;
   background:#fff;
-  border:3px solid var(--gold);
-  border-radius:28px;
-  margin:0 auto 13px;
-  box-shadow:0 14px 30px rgba(0,0,0,.35);
+  border-radius:26px;
+  padding:10px;
+  border:3px solid var(--dourado);
 }
 
-.team-name{
-  font-size:34px;
+.heroTopo h1{
+  margin-top:18px;
+  font-size:54px;
   font-weight:900;
-  text-transform:uppercase;
-  color:#fff;
-  text-shadow:0 3px 0 rgba(0,0,0,.35);
-  line-height:1.1;
 }
 
-.team-sub{
-  color:var(--muted);
-  font-size:15px;
-  margin-top:6px;
-  margin-bottom:22px;
+.heroTopo p{
+  margin-top:8px;
+  color:#d7e3ff;
+  font-size:22px;
 }
 
-.main-tabs{
+.abasPrincipais{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:0;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:rgba(6,20,39,.35);
-  margin:0 -20px;
 }
 
-.main-tabs button{
-  padding:17px 8px 15px;
-  font-size:16px;
-  font-weight:900;
+.abasPrincipais button{
+  background:none;
+  border:none;
   color:#fff;
-  border-bottom:4px solid transparent;
-  text-transform:uppercase;
-}
-
-.main-tabs button.ativo{
-  color:var(--gold);
-  border-bottom-color:var(--gold);
-}
-
-.sub-tabs{
-  display:flex;
-  gap:10px;
-  overflow-x:auto;
-  padding:12px;
-  margin-bottom:16px;
-  border-radius:16px;
-  background:rgba(13,42,82,.96);
-  border:1px solid rgba(255,255,255,.08);
-  scrollbar-width:none;
-}
-
-.sub-tabs::-webkit-scrollbar{display:none}
-
-.sub-tabs button{
-  flex:0 0 auto;
-  padding:9px 18px;
-  border-radius:999px;
-  background:transparent;
-  color:var(--muted);
-  font-size:14px;
+  padding:22px 10px;
+  font-size:28px;
   font-weight:900;
-  border:1px solid transparent;
+  border-bottom:4px solid transparent;
 }
 
-.sub-tabs button.ativo{
+.abasPrincipais button.ativo{
+  color:var(--dourado);
+  border-bottom-color:var(--dourado);
+}
+
+.subAbas{
+  display:flex;
+  gap:12px;
+  padding:14px;
+  overflow:auto;
+  background:#092653;
+}
+
+.subAbas button{
+  border:none;
+  background:none;
+  color:#dbe6ff;
+  font-weight:700;
+  padding:12px 20px;
+  border-radius:999px;
+  white-space:nowrap;
+}
+
+.subAbas button.ativo{
+  background:var(--dourado);
   color:#111;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  border-color:var(--gold-line);
-}
-
-.grid-main{
-  display:grid;
-  grid-template-columns:1.15fr .85fr;
-  gap:14px;
-  align-items:start;
 }
 
 .card{
-  background:
-    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 34%),
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border:1px solid rgba(247,198,0,.22);
+  background:linear-gradient(180deg,#0b2958,#071d44);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:22px;
+  padding:22px;
+  margin-top:18px;
+}
+
+.card h2{
+  color:#fff;
+  margin-bottom:18px;
+  font-size:32px;
+}
+
+.infoGrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+
+.infoItem{
+  text-align:center;
+  border-right:1px solid rgba(255,255,255,.08);
+}
+
+.infoItem:last-child{
+  border-right:none;
+}
+
+.infoItem img{
+  width:90px;
+  height:90px;
+  object-fit:cover;
+  border-radius:50%;
+  margin:auto;
+  margin-bottom:10px;
+}
+
+.infoItem h3{
+  font-size:28px;
+}
+
+.infoItem p{
+  color:#c6d3ea;
+  margin-top:5px;
+}
+
+.statsLinha{
+  margin-top:24px;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+}
+
+.stat{
+  background:rgba(255,255,255,.04);
+  border-radius:16px;
+  padding:18px;
+  text-align:center;
+}
+
+.stat strong{
+  display:block;
+  color:var(--dourado);
+  font-size:34px;
+}
+
+.stat span{
+  color:#dce5f6;
+}
+
+.partidas{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+}
+
+.partida{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
   border-radius:18px;
   padding:16px;
-  box-shadow:0 8px 20px rgba(0,0,0,.25);
-  margin-bottom:14px;
-  overflow:hidden;
-}
-
-.card-title{
-  color:var(--gold);
-  font-size:20px;
-  font-weight:900;
-  margin-bottom:13px;
-}
-
-.details-main{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:12px;
-  padding:8px 0 16px;
-  border-bottom:1px solid rgba(255,255,255,.13);
-}
-
-.person-box{
   text-align:center;
-  padding:10px;
-  border-right:1px solid rgba(255,255,255,.13);
 }
 
-.person-box:last-child{border-right:none}
-
-.person-box img{
-  width:82px;
-  height:82px;
+.partida img{
+  width:54px;
+  height:54px;
   object-fit:contain;
-  background:#fff;
-  border-radius:22px;
-  border:2px solid var(--gold);
-  margin:0 auto 8px;
+  margin:auto;
+  margin-bottom:10px;
 }
 
-.person-box.round img{
-  border-radius:50%;
-  object-fit:cover;
-}
-
-.person-box strong{
-  display:block;
-  font-size:18px;
-  color:#fff;
-}
-
-.person-box span{
-  color:var(--muted);
-  display:block;
-  margin-top:4px;
-  font-size:13px;
-}
-
-.stats-grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:8px;
-  margin-top:14px;
-}
-
-.stat-box{
-  text-align:center;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;
-  padding:10px 6px;
-}
-
-.stat-box strong{
-  color:var(--gold);
-  display:block;
-  font-size:23px;
-}
-
-.stat-box span{
-  color:var(--muted);
-  display:block;
-  font-size:12px;
-  margin-top:3px;
-  font-weight:800;
-}
-
-.match-strip{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:8px;
-}
-
-.match-mini{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;
-  padding:10px 6px;
-  text-align:center;
-}
-
-.match-mini small{
-  color:var(--muted);
-  display:block;
-  font-size:11px;
-  margin-bottom:6px;
-}
-
-.match-mini strong{
-  color:#fff;
-  display:block;
-  font-size:14px;
-  margin-bottom:7px;
-}
-
-.badge-score{
-  display:inline-flex;
-  padding:5px 12px;
+.resultado{
+  display:inline-block;
+  margin-top:10px;
+  padding:7px 16px;
   border-radius:999px;
-  border:1px solid var(--gold-line);
-  color:var(--gold);
-  font-weight:900;
-  font-size:13px;
-}
-
-.link-more{
-  display:block;
-  text-align:center;
-  color:var(--gold);
-  font-weight:900;
-  font-size:13px;
-  margin-top:12px;
-}
-
-.list-row{
-  display:grid;
-  grid-template-columns:42px 52px 1fr auto;
-  gap:10px;
-  align-items:center;
-  padding:12px 0;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-
-.list-row:first-of-type{border-top:none}
-
-.rank{
-  color:var(--muted);
-  font-weight:900;
-  text-align:center;
-}
-
-.list-row img{
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  object-fit:cover;
-  background:#fff;
-  border:1px solid rgba(247,198,0,.45);
-}
-
-.list-main strong{
-  display:block;
-  color:#fff;
-  font-size:15px;
-}
-
-.list-main span{
-  display:block;
-  color:var(--muted);
-  font-size:12px;
-  margin-top:3px;
-}
-
-.list-value{
-  color:#fff;
-  font-size:20px;
+  border:2px solid #4caf50;
   font-weight:900;
 }
 
-.info-grid{
+.duplo{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px;
+  gap:18px;
 }
 
-.info-item{
-  display:flex;
-  gap:10px;
-  align-items:flex-start;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:13px;
-  padding:12px;
-}
-
-.info-icon{
-  width:34px;
-  height:34px;
-  border-radius:10px;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#111;
+.listaJogador{
   display:flex;
   align-items:center;
-  justify-content:center;
-  flex-shrink:0;
+  justify-content:space-between;
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
 }
 
-.info-item strong{
-  display:block;
-  font-size:12px;
-  color:var(--gold);
-  margin-bottom:4px;
+.listaJogadorEsq{
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
-.info-item span{
-  color:#fff;
+.listaJogador img{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+}
+
+.listaJogador h4{
+  font-size:18px;
+}
+
+.listaJogador p{
+  color:#c7d5ee;
   font-size:13px;
-  font-weight:800;
 }
 
-.trophy-grid{
+.listaJogador strong{
+  font-size:30px;
+  color:#fff;
+}
+
+.detalhesTime{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.boxDetalhe{
+  background:rgba(255,255,255,.04);
+  border-radius:18px;
+  padding:18px;
+}
+
+.boxDetalhe h5{
+  color:var(--dourado);
+  margin-bottom:6px;
+  font-size:16px;
+}
+
+.boxDetalhe p{
+  font-size:18px;
+  font-weight:700;
+}
+
+.titulos{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:10px;
+  gap:14px;
 }
 
-.trophy-card{
+.titulo{
   background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  padding:12px;
-  text-align:center;
-}
-
-.trophy-card i{
-  color:var(--gold);
-  font-size:27px;
-  margin-bottom:7px;
-}
-
-.trophy-card strong{
-  display:block;
-  color:#fff;
-  font-size:13px;
-}
-
-.trophy-card span{
-  color:var(--gold);
-  font-size:28px;
-  font-weight:900;
-}
-
-.match-card{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  padding:12px;
-  margin-bottom:10px;
-}
-
-.match-head{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  color:var(--muted);
-  font-size:12px;
-  font-weight:900;
-  margin-bottom:10px;
-}
-
-.match-line{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  align-items:center;
-  gap:10px;
-  text-align:center;
-  color:#fff;
-  font-weight:900;
-  font-size:14px;
-}
-
-.score{
-  color:var(--gold);
-  font-size:22px;
-}
-
-.tabela{
-  width:100%;
-  border-collapse:collapse;
-  min-width:620px;
-}
-
-.table-wrap{
-  overflow-x:auto;
-}
-
-.tabela th,
-.tabela td{
-  padding:11px 8px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  text-align:left;
-  font-size:13px;
-}
-
-.tabela th{
-  color:var(--gold);
-  font-size:12px;
-}
-
-.tabela td{
-  color:var(--muted);
-}
-
-.position-title{
-  background:rgba(247,198,0,.12);
-  color:var(--gold);
-  padding:10px 12px;
-  border-radius:12px;
-  font-size:15px;
-  font-weight:900;
-  margin-bottom:8px;
-}
-
-.news-card{
-  min-height:210px;
-  background:
-    linear-gradient(rgba(8,23,44,.22), rgba(8,23,44,.94)),
-    url("fundo.png") center/cover no-repeat;
   border-radius:18px;
-  border:1px solid var(--gold-line);
-  padding:18px;
-  display:flex;
-  align-items:flex-end;
-  box-shadow:var(--shadow);
-  margin-bottom:14px;
-}
-
-.news-card h3{
-  font-size:22px;
-  margin-bottom:8px;
-}
-
-.empty{
-  color:var(--muted);
+  padding:20px;
   text-align:center;
-  padding:18px;
 }
 
-@media(max-width:980px){
-  .grid-main{
+.titulo i{
+  font-size:42px;
+  color:var(--dourado);
+  margin-bottom:10px;
+}
+
+.titulo strong{
+  display:block;
+  font-size:38px;
+  color:var(--dourado);
+}
+
+.mobileMock{
+  position:sticky;
+  top:92px;
+  height:calc(100vh - 120px);
+  overflow:auto;
+  border-radius:34px;
+  border:3px solid rgba(255,255,255,.2);
+  background:#061d44;
+  padding:16px;
+}
+
+.mobileMock::-webkit-scrollbar{
+  width:5px;
+}
+
+@media(max-width:1200px){
+  .layout{
     grid-template-columns:1fr;
+  }
+
+  .mobileMock{
+    display:none;
   }
 }
 
-@media(max-width:700px){
-  .wrap{
-    width:min(100% - 18px, var(--max));
+@media(max-width:900px){
+  .heroTopo h1{
+    font-size:36px;
   }
 
-  .container{
-    padding:16px 0 28px;
+  .heroTopo p{
+    font-size:18px;
   }
 
-  .team-hero{
-    padding:16px 12px 0;
-    border-radius:18px;
+  .abasPrincipais button{
+    font-size:20px;
   }
 
-  .team-logo{
-    width:84px;
-    height:84px;
-    border-radius:20px;
-  }
-
-  .team-name{
-    font-size:24px;
-  }
-
-  .main-tabs button{
-    font-size:13px;
-    padding:13px 4px 11px;
-  }
-
-  .sub-tabs{
-    border-radius:14px;
-    padding:10px;
-  }
-
-  .details-main{
+  .infoGrid,
+  .statsLinha,
+  .partidas,
+  .duplo,
+  .detalhesTime,
+  .titulos{
     grid-template-columns:1fr;
-    border-bottom:none;
   }
 
-  .person-box{
+  .infoItem{
     border-right:none;
-    border-bottom:1px solid rgba(255,255,255,.12);
-  }
-
-  .person-box:last-child{
-    border-bottom:none;
-  }
-
-  .stats-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-  .match-strip{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .info-grid,
-  .trophy-grid{
-    grid-template-columns:1fr;
-  }
-
-  .list-row{
-    grid-template-columns:28px 48px 1fr auto;
-  }
-
-  .card{
-    padding:14px;
-    border-radius:16px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    padding-bottom:18px;
   }
 }
 </style>
 </head>
-
 <body>
 
-<script type="module">
-import { renderMenu } from "./menu.js";
-renderMenu("times");
-</script>
+<header class="topo">
+  <nav class="menu">
+    <img src="logo-liga.jfif" class="logoLiga">
 
-<main class="wrap container">
+    <a href="index.html">INÍCIO</a>
+    <a href="campeonatos.html">CAMPEONATOS</a>
+    <a href="tabela.html">TABELA</a>
+    <a href="jogos.html">JOGOS</a>
+    <a href="times.html" class="ativo">TIMES</a>
+    <a href="tecnicos.html">TÉCNICOS</a>
+    <a href="jogadores.html">JOGADORES</a>
+    <a href="arbitros.html">ÁRBITROS</a>
+    <a href="assistente.html">ASSISTENTE</a>
+    <a href="sumulas.html">SÚMULA</a>
+    <a href="noticias.html">NOTÍCIAS</a>
+    <a href="painel.html" class="ativo">PAINEL ADM</a>
+  </nav>
+</header>
 
-  <section class="team-hero">
-    <img id="logo" class="team-logo" src="logo-liga.jfif">
-    <div class="team-name" id="nome">Carregando...</div>
-    <div class="team-sub" id="info">Liga Goiana de Futebol de Base</div>
+<div class="container">
 
-    <nav class="main-tabs">
-      <button id="tabTemporada" class="ativo" onclick="trocarPrincipal('temporada')">Temporada</button>
-      <button id="tabBuzz" onclick="trocarPrincipal('buzz')">Buzz</button>
-      <button id="tabElenco" onclick="trocarPrincipal('elenco')">Elenco</button>
-    </nav>
-  </section>
+  <div class="layout">
 
-  <div id="subTabs" class="sub-tabs"></div>
-  <div id="conteudo"></div>
+    <div>
 
-</main>
+      <section class="hero">
 
-<script type="module">
-import { db } from "./firebase.js";
-import {
-  doc,
-  getDoc,
-  collection,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-
-const id = new URLSearchParams(location.search).get("id");
-
-let time = {};
-let jogadores = [];
-let jogos = [];
-let tecnicos = [];
-let principal = "temporada";
-let sub = "detalhes";
-
-function campo(obj, chaves, padrao=""){
-  for(const c of chaves){
-    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== "") return obj[c];
-  }
-  return padrao;
-}
-
-function normalizar(t){
-  return String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
-}
-
-function nomeTime(){
-  return campo(time,["nome","nomeTime","timeNome"],"Time");
-}
-
-function logoTime(){
-  return campo(time,["logo","escudo","imagem","foto"],"logo-liga.jfif");
-}
-
-function cidadeTime(){
-  return campo(time,["cidade","municipio","local"],"");
-}
-
-function categoriasTime(){
-  const arr = campo(time,["categorias"],[]);
-  if(Array.isArray(arr) && arr.length) return arr.join(", ");
-  return campo(time,["categoria","categoriaNome"],"");
-}
-
-function tecnicoPrincipal(){
-  const tecnicoPorTime = tecnicos.find(t=>{
-    const tid = campo(t,["timeId"],"");
-    const tnome = normalizar(campo(t,["time","nomeTime","timeNome"],""));
-    return tid === id || tnome === normalizar(nomeTime());
-  });
-  return campo(tecnicoPorTime || time,["nome","tecnico","tecnicoNome","treinador"],"Técnico não cadastrado");
-}
-
-function jogadoresDoTime(){
-  const nome = normalizar(nomeTime());
-  return jogadores.filter(j=>{
-    return campo(j,["timeId"],"") === id ||
-      normalizar(campo(j,["time","nomeTime","timeNome"],"")) === nome;
-  });
-}
-
-function jogosDoTime(){
-  const nome = normalizar(nomeTime());
-  return jogos.filter(j=>{
-    const timeA = normalizar(campo(j,["timeA","mandante","timeMandante","nomeTimeA"],""));
-    const timeB = normalizar(campo(j,["timeB","visitante","timeVisitante","nomeTimeB"],""));
-    return timeA === nome || timeB === nome;
-  });
-}
-
-function placarA(j){
-  return Number(campo(j,["golsA","placarA","golsMandante","mandanteGols"],0));
-}
-
-function placarB(j){
-  return Number(campo(j,["golsB","placarB","golsVisitante","visitanteGols"],0));
-}
-
-function calcularStats(){
-  let jogosQtd = 0, vitorias = 0, empates = 0, derrotas = 0, gp = 0, gc = 0;
-  const nome = normalizar(nomeTime());
-
-  jogosDoTime().forEach(j=>{
-    jogosQtd++;
-    const a = placarA(j);
-    const b = placarB(j);
-    const ehA = normalizar(campo(j,["timeA","mandante","timeMandante","nomeTimeA"],"")) === nome;
-
-    const golsPro = ehA ? a : b;
-    const golsContra = ehA ? b : a;
-
-    gp += golsPro;
-    gc += golsContra;
-
-    if(golsPro > golsContra) vitorias++;
-    else if(golsPro === golsContra) empates++;
-    else derrotas++;
-  });
-
-  return {
-    jogos:jogosQtd,
-    vitorias,
-    empates,
-    derrotas,
-    gols:gp,
-    golsContra:gc,
-    saldo:gp-gc,
-    pontos:vitorias*3+empates
-  };
-}
-
-function dataBR(v){
-  if(!v) return "-";
-  const d = new Date(v);
-  if(isNaN(d.getTime())) return String(v);
-  return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"});
-}
-
-function renderHeader(){
-  document.getElementById("nome").textContent = nomeTime();
-  document.getElementById("logo").src = logoTime();
-  document.getElementById("logo").onerror = function(){this.src="logo-liga.jfif"};
-  document.getElementById("info").textContent = cidadeTime() || categoriasTime() || "Liga Goiana de Futebol de Base";
-  document.title = nomeTime() + " - Liga Goiana";
-}
-
-function setActive(){
-  document.getElementById("tabTemporada").classList.toggle("ativo",principal==="temporada");
-  document.getElementById("tabBuzz").classList.toggle("ativo",principal==="buzz");
-  document.getElementById("tabElenco").classList.toggle("ativo",principal==="elenco");
-}
-
-function montarSubtabs(){
-  const box = document.getElementById("subTabs");
-
-  const tabs = principal === "temporada"
-    ? [["detalhes","Detalhes"],["jogos","Jogos"],["classificacao","Classificação"],["estatisticas","Estatísticas"],["titulos","Títulos"]]
-    : principal === "buzz"
-      ? [["noticias","Notícias"],["chat","Chat"],["destaques","Destaques"]]
-      : [["elenco","Elenco"],["gestao","Gestão"],["estatisticasElenco","Estatísticas"]];
-
-  if(!tabs.some(t=>t[0] === sub)) sub = tabs[0][0];
-
-  box.innerHTML = tabs.map(t=>`
-    <button class="${sub===t[0]?"ativo":""}" onclick="trocarSub('${t[0]}')">${t[1]}</button>
-  `).join("");
-}
-
-function cardDetalhes(){
-  const st = calcularStats();
-  const elenco = jogadoresDoTime();
-
-  return `
-    <div class="grid-main">
-      <section class="card">
-        <div class="card-title">Detalhes do time</div>
-
-        <div class="details-main">
-          <div class="person-box">
-            <img src="${logoTime()}" onerror="this.src='logo-liga.jfif'">
-            <strong>${nomeTime()}</strong>
-            <span>${cidadeTime() || "Cidade não cadastrada"}</span>
-          </div>
-
-          <div class="person-box">
-            <img src="logo-liga.jfif">
-            <strong>${categoriasTime() || "Categoria"}</strong>
-            <span>Competição principal</span>
-          </div>
-
-          <div class="person-box round">
-            <img src="logo-liga.jfif">
-            <strong>${tecnicoPrincipal()}</strong>
-            <span>Técnico</span>
-          </div>
+        <div class="heroTopo">
+          <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4b/S.C._Braga_logo.svg/800px-S.C._Braga_logo.svg.png">
+          <h1>INSTITUTO SET</h1>
+          <p>Goiânia - GO</p>
         </div>
 
-        <div class="stats-grid">
-          <div class="stat-box"><strong>${elenco.length}</strong><span>Jogadores</span></div>
-          <div class="stat-box"><strong>${st.jogos}</strong><span>Jogos</span></div>
-          <div class="stat-box"><strong>${st.vitorias}</strong><span>Vitórias</span></div>
-          <div class="stat-box"><strong>${st.saldo}</strong><span>Saldo</span></div>
-          <div class="stat-box"><strong>${st.pontos}</strong><span>Pontos</span></div>
+        <div class="abasPrincipais">
+          <button class="ativo">TEMPORADA</button>
+          <button>BUZZ</button>
+          <button>ELENCO</button>
+        </div>
+
+        <div class="subAbas">
+          <button class="ativo">Detalhes</button>
+          <button>Jogos</button>
+          <button>Classificação</button>
+          <button>Estatísticas</button>
+          <button>Títulos</button>
+        </div>
+
+      </section>
+
+      <section class="card">
+        <h2>Detalhes do time</h2>
+
+        <div class="infoGrid">
+
+          <div class="infoItem">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4b/S.C._Braga_logo.svg/800px-S.C._Braga_logo.svg.png">
+            <h3>INSTITUTO SET</h3>
+            <p>Goiânia - GO</p>
+          </div>
+
+          <div class="infoItem">
+            <img src="logo-liga.jfif">
+            <h3>Liga Goianense</h3>
+            <p>Competição principal</p>
+          </div>
+
+          <div class="infoItem">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg">
+            <h3>Carlos Vicens</h3>
+            <p>Técnico</p>
+          </div>
+
+        </div>
+
+        <div class="statsLinha">
+          <div class="stat"><strong>2022</strong><span>Fundação</span></div>
+          <div class="stat"><strong>GO</strong><span>Cidade</span></div>
+          <div class="stat"><strong>SET</strong><span>Apelido</span></div>
+          <div class="stat"><strong>25.1</strong><span>Média idade</span></div>
+          <div class="stat"><strong>6</strong><span>Títulos</span></div>
         </div>
       </section>
 
       <section class="card">
-        <div class="card-title">Últimas partidas</div>
-        <div class="match-strip">
-          ${jogosDoTime().slice(0,5).map(j=>`
-            <div class="match-mini">
-              <small>${dataBR(campo(j,["data","dataJogo"],""))}</small>
-              <strong>${campo(j,["timeB","visitante","timeA","mandante"],"-")}</strong>
-              <span class="badge-score">${placarA(j)} - ${placarB(j)}</span>
+        <h2>Últimas partidas</h2>
+
+        <div class="partidas">
+
+          <div class="partida">
+            <p>23/04</p>
+            <img src="https://upload.wikimedia.org/wikipedia/en/5/53/CSP.svg">
+            <h4>CSP</h4>
+            <div class="resultado">0 - 1</div>
+          </div>
+
+          <div class="partida">
+            <p>26/04</p>
+            <img src="https://upload.wikimedia.org/wikipedia/en/0/0c/SC_Internacional_logo.svg">
+            <h4>SCL</h4>
+            <div class="resultado">2 - 1</div>
+          </div>
+
+          <div class="partida">
+            <p>30/04</p>
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4b/S.C._Braga_logo.svg/800px-S.C._Braga_logo.svg.png">
+            <h4>SCF</h4>
+            <div class="resultado">2 - 1</div>
+          </div>
+
+          <div class="partida">
+            <p>03/05</p>
+            <img src="https://upload.wikimedia.org/wikipedia/en/7/79/GD_Estoril_Praia_logo.svg">
+            <h4>EST</h4>
+            <div class="resultado">1 - 1</div>
+          </div>
+
+          <div class="partida">
+            <p>07/05</p>
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4b/S.C._Braga_logo.svg/800px-S.C._Braga_logo.svg.png">
+            <h4>SCF</h4>
+            <div class="resultado">3 - 1</div>
+          </div>
+
+        </div>
+      </section>
+
+      <div class="duplo">
+
+        <section class="card">
+          <h2>Jogadores em destaque</h2>
+
+          <div class="listaJogador">
+            <div class="listaJogadorEsq">
+              <img src="https://randomuser.me/api/portraits/men/10.jpg">
+              <div>
+                <h4>Rodrigo Zalazar</h4>
+                <p>Meio de campo</p>
+              </div>
             </div>
-          `).join("") || `<div class="empty">Nenhum jogo.</div>`}
+            <strong>16</strong>
+          </div>
+
+          <div class="listaJogador">
+            <div class="listaJogadorEsq">
+              <img src="https://randomuser.me/api/portraits/men/20.jpg">
+              <div>
+                <h4>Ricardo Horta</h4>
+                <p>Ponta direita</p>
+              </div>
+            </div>
+            <strong>14</strong>
+          </div>
+
+          <div class="listaJogador">
+            <div class="listaJogadorEsq">
+              <img src="https://randomuser.me/api/portraits/men/30.jpg">
+              <div>
+                <h4>Pau Victor</h4>
+                <p>Centroavante</p>
+              </div>
+            </div>
+            <strong>8</strong>
+          </div>
+
+        </section>
+
+        <section class="card">
+          <h2>Times em destaque</h2>
+
+          <div class="listaJogador">
+            <div class="listaJogadorEsq">
+              <img src="https://upload.wikimedia.org/wikipedia/en/9/9f/Aston_Villa_FC_crest_%282016%29.svg">
+              <div>
+                <h4>Aston Villa</h4>
+                <p>Total de gols 28</p>
+              </div>
+            </div>
+            <strong>2</strong>
+          </div>
+
+          <div class="listaJogador">
+            <div class="listaJogadorEsq">
+              <img src="https://upload.wikimedia.org/wikipedia/en/7/79/FC_Midtjylland_logo.svg">
+              <div>
+                <h4>FC Midtjylland</h4>
+                <p>Total de gols 20</p>
+              </div>
+            </div>
+            <strong>2</strong>
+          </div>
+
+          <div class="listaJogador">
+            <div class="listaJogadorEsq">
+              <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4b/S.C._Braga_logo.svg/800px-S.C._Braga_logo.svg.png">
+              <div>
+                <h4>Instituto Set</h4>
+                <p>Total de gols 23</p>
+              </div>
+            </div>
+            <strong>1.64</strong>
+          </div>
+
+        </section>
+
+      </div>
+
+      <section class="card">
+        <h2>Detalhes do time</h2>
+
+        <div class="detalhesTime">
+
+          <div class="boxDetalhe">
+            <h5>Nome completo</h5>
+            <p>INSTITUTO SET FUTEBOL CLUBE</p>
+          </div>
+
+          <div class="boxDetalhe">
+            <h5>Fundação</h5>
+            <p>2022</p>
+          </div>
+
+          <div class="boxDetalhe">
+            <h5>Cidade</h5>
+            <p>Goiânia - GO</p>
+          </div>
+
+          <div class="boxDetalhe">
+            <h5>Estádio</h5>
+            <p>Estádio Instituto Set</p>
+          </div>
+
+          <div class="boxDetalhe">
+            <h5>Presidente</h5>
+            <p>João Victor</p>
+          </div>
+
+          <div class="boxDetalhe">
+            <h5>Cores</h5>
+            <p>Amarelo e Preto</p>
+          </div>
+
         </div>
-        <a class="link-more" href="#" onclick="trocarSub('jogos');return false;">Ver todos os jogos</a>
       </section>
+
+      <section class="card">
+        <h2>Títulos conquistados</h2>
+
+        <div class="titulos">
+
+          <div class="titulo">
+            <i class="fa-solid fa-trophy"></i>
+            <p>Campeonato Goianiense</p>
+            <strong>1</strong>
+          </div>
+
+          <div class="titulo">
+            <i class="fa-solid fa-medal"></i>
+            <p>Copa Goiás</p>
+            <strong>1</strong>
+          </div>
+
+          <div class="titulo">
+            <i class="fa-solid fa-award"></i>
+            <p>Taça Mané Garrincha</p>
+            <strong>2</strong>
+          </div>
+
+          <div class="titulo">
+            <i class="fa-solid fa-star"></i>
+            <p>Supercopa</p>
+            <strong>2</strong>
+          </div>
+
+        </div>
+      </section>
+
     </div>
 
-    <div class="grid-main">
-      ${cardEstatisticas(true)}
-      ${cardElencoDestaque()}
-    </div>
+    <aside class="mobileMock">
+      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4b/S.C._Braga_logo.svg/800px-S.C._Braga_logo.svg.png" style="width:90px;height:90px;object-fit:contain;background:#fff;border-radius:20px;padding:8px;margin:auto;display:block;">
 
-    <section class="card">
-      <div class="card-title">Informações do time</div>
-      <div class="info-grid">
-        <div class="info-item"><div class="info-icon"><i class="fa-solid fa-shield"></i></div><div><strong>Nome completo</strong><span>${nomeTime()}</span></div></div>
-        <div class="info-item"><div class="info-icon"><i class="fa-solid fa-location-dot"></i></div><div><strong>Cidade</strong><span>${cidadeTime() || "-"}</span></div></div>
-        <div class="info-item"><div class="info-icon"><i class="fa-solid fa-layer-group"></i></div><div><strong>Categorias</strong><span>${categoriasTime() || "-"}</span></div></div>
-        <div class="info-item"><div class="info-icon"><i class="fa-solid fa-user-tie"></i></div><div><strong>Técnico</strong><span>${tecnicoPrincipal()}</span></div></div>
-      </div>
-    </section>
+      <h2 style="text-align:center;margin-top:16px;font-size:38px;">INSTITUTO SET</h2>
+      <p style="text-align:center;color:#cdd7ee;margin-top:8px;">Goiânia - GO</p>
 
-    <section class="card">
-      <div class="card-title">Títulos conquistados</div>
-      <div class="trophy-grid">
-        <div class="trophy-card"><i class="fa-solid fa-trophy"></i><strong>Campeonatos</strong><span>0</span></div>
-        <div class="trophy-card"><i class="fa-solid fa-medal"></i><strong>Copas</strong><span>0</span></div>
-        <div class="trophy-card"><i class="fa-solid fa-award"></i><strong>Prêmios</strong><span>0</span></div>
-        <div class="trophy-card"><i class="fa-solid fa-star"></i><strong>Destaques</strong><span>0</span></div>
-      </div>
-    </section>
-  `;
-}
+      <section class="card">
+        <h2 style="font-size:24px;">Detalhes do time</h2>
 
-function cardJogos(){
-  const lista = jogosDoTime();
-
-  if(!lista.length){
-    return `<section class="card"><div class="empty">Nenhum jogo cadastrado para este time.</div></section>`;
-  }
-
-  return `
-    <section class="card">
-      <div class="card-title">Jogos</div>
-      ${lista.map(j=>`
-        <div class="match-card">
-          <div class="match-head">
-            <span>${campo(j,["campeonato","nomeCampeonato"],"Competição")}</span>
-            <span>${dataBR(campo(j,["data","dataJogo"],""))}</span>
-          </div>
-
-          <div class="match-line">
-            <div>${campo(j,["timeA","mandante"],"-")}</div>
-            <div class="score">${placarA(j)} x ${placarB(j)}</div>
-            <div>${campo(j,["timeB","visitante"],"-")}</div>
+        <div class="listaJogador">
+          <div class="listaJogadorEsq">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4b/S.C._Braga_logo.svg/800px-S.C._Braga_logo.svg.png">
+            <div>
+              <h4>Instituto Set</h4>
+              <p>Goiânia - GO</p>
+            </div>
           </div>
         </div>
-      `).join("")}
-    </section>
-  `;
-}
 
-function cardClassificacao(){
-  const st = calcularStats();
-
-  return `
-    <section class="card">
-      <div class="card-title">Classificação</div>
-      <div class="table-wrap">
-        <table class="tabela">
-          <tr>
-            <th>Time</th>
-            <th>J</th>
-            <th>V</th>
-            <th>E</th>
-            <th>D</th>
-            <th>GP</th>
-            <th>GC</th>
-            <th>SG</th>
-            <th>P</th>
-          </tr>
-
-          <tr>
-            <td>${nomeTime()}</td>
-            <td>${st.jogos}</td>
-            <td>${st.vitorias}</td>
-            <td>${st.empates}</td>
-            <td>${st.derrotas}</td>
-            <td>${st.gols}</td>
-            <td>${st.golsContra}</td>
-            <td>${st.saldo}</td>
-            <td>${st.pontos}</td>
-          </tr>
-        </table>
-      </div>
-    </section>
-  `;
-}
-
-function cardEstatisticas(compacto=false){
-  const st = calcularStats();
-
-  return `
-    <section class="card">
-      <div class="card-title">Estatísticas dos times</div>
-
-      <div class="list-row">
-        <div class="rank">1</div>
-        <img src="${logoTime()}" onerror="this.src='logo-liga.jfif'">
-        <div class="list-main"><strong>Gols por jogo</strong><span>Total de gols ${st.gols}</span></div>
-        <div class="list-value">${st.jogos ? (st.gols/st.jogos).toFixed(2) : "0"}</div>
-      </div>
-
-      <div class="list-row">
-        <div class="rank">2</div>
-        <img src="${logoTime()}" onerror="this.src='logo-liga.jfif'">
-        <div class="list-main"><strong>Gols sofridos</strong><span>Total sofrido ${st.golsContra}</span></div>
-        <div class="list-value">${st.jogos ? (st.golsContra/st.jogos).toFixed(2) : "0"}</div>
-      </div>
-
-      <div class="list-row">
-        <div class="rank">3</div>
-        <img src="${logoTime()}" onerror="this.src='logo-liga.jfif'">
-        <div class="list-main"><strong>Saldo de gols</strong><span>Gols pró - gols contra</span></div>
-        <div class="list-value">${st.saldo}</div>
-      </div>
-
-      ${compacto ? `<a class="link-more" href="#" onclick="trocarSub('estatisticas');return false;">Ver todas as estatísticas</a>` : ""}
-    </section>
-  `;
-}
-
-function cardTitulos(){
-  return `
-    <section class="card">
-      <div class="card-title">Títulos</div>
-      <div class="trophy-grid">
-        <div class="trophy-card"><i class="fa-solid fa-trophy"></i><strong>Campeonatos</strong><span>0</span></div>
-        <div class="trophy-card"><i class="fa-solid fa-medal"></i><strong>Copas</strong><span>0</span></div>
-        <div class="trophy-card"><i class="fa-solid fa-award"></i><strong>Prêmios</strong><span>0</span></div>
-        <div class="trophy-card"><i class="fa-solid fa-star"></i><strong>Destaques</strong><span>0</span></div>
-      </div>
-    </section>
-  `;
-}
-
-function grupoPosicao(j){
-  const pos = normalizar(campo(j,["posicao","posição","funcao"],""));
-  if(pos.includes("goleiro")) return "Goleiros";
-  if(pos.includes("zagueiro") || pos.includes("lateral") || pos.includes("defensor")) return "Defensores";
-  if(pos.includes("volante") || pos.includes("meia") || pos.includes("camp")) return "Meio-campistas";
-  if(pos.includes("atac") || pos.includes("ponta") || pos.includes("centroavante")) return "Atacantes";
-  return "Elenco";
-}
-
-function cardElenco(){
-  const lista = jogadoresDoTime();
-
-  if(!lista.length){
-    return `<section class="card"><div class="empty">Nenhum jogador cadastrado para este time.</div></section>`;
-  }
-
-  const grupos = {};
-
-  lista.forEach(j=>{
-    const g = grupoPosicao(j);
-    if(!grupos[g]) grupos[g] = [];
-    grupos[g].push(j);
-  });
-
-  return Object.keys(grupos).map(g=>`
-    <section class="card">
-      <div class="position-title">${g}</div>
-
-      ${grupos[g].map((j,idx)=>`
-        <div class="list-row">
-          <div class="rank">${campo(j,["numero","camisa"],idx+1)}</div>
-          <img src="${campo(j,["foto","fotoPerfil","imagem"],"logo-liga.jfif")}" onerror="this.src='logo-liga.jfif'">
-
-          <div class="list-main">
-            <strong>${campo(j,["nome","nomeCompleto"],"Jogador")}</strong>
-            <span>${campo(j,["posicao","posição","funcao"],"Jogador")}</span>
+        <div class="listaJogador">
+          <div class="listaJogadorEsq">
+            <img src="logo-liga.jfif">
+            <div>
+              <h4>Liga Goianense</h4>
+              <p>Competição principal</p>
+            </div>
           </div>
-
-          <div class="list-value">${Number(campo(j,["gols"],0))}</div>
         </div>
-      `).join("")}
-    </section>
-  `).join("");
-}
 
-function cardElencoDestaque(){
-  const lista = jogadoresDoTime().slice(0,3);
+      </section>
 
-  return `
-    <section class="card">
-      <div class="card-title">Jogadores em destaque</div>
-      ${lista.length ? lista.map((j,idx)=>`
-        <div class="list-row">
-          <div class="rank">${idx+1}</div>
-          <img src="${campo(j,["foto","fotoPerfil","imagem"],"logo-liga.jfif")}" onerror="this.src='logo-liga.jfif'">
-          <div class="list-main"><strong>${campo(j,["nome","nomeCompleto"],"Jogador")}</strong><span>${campo(j,["posicao","posição","funcao"],"Atleta")}</span></div>
-          <div class="list-value">${Number(campo(j,["gols"],0))}</div>
-        </div>
-      `).join("") : `<div class="empty">Nenhum jogador cadastrado.</div>`}
-      <a class="link-more" href="#" onclick="trocarPrincipal('elenco');return false;">Ver elenco completo</a>
-    </section>
-  `;
-}
+    </aside>
 
-function cardGestao(){
-  return `
-    <section class="card">
-      <div class="card-title">Gestão</div>
+  </div>
 
-      <div class="list-row">
-        <div class="rank"><i class="fa-solid fa-user-tie"></i></div>
-        <img src="logo-liga.jfif">
-        <div class="list-main">
-          <strong>${tecnicoPrincipal()}</strong>
-          <span>Técnico</span>
-        </div>
-        <div></div>
-      </div>
-    </section>
-  `;
-}
-
-function cardBuzz(){
-  return `
-    <section class="news-card">
-      <div>
-        <h3>${sub === "chat" ? "Chat do time" : sub === "destaques" ? "Destaques do time" : "Notícias do time"}</h3>
-        <p style="color:var(--muted);font-weight:800;">Área preparada para publicações e novidades do ${nomeTime()}.</p>
-      </div>
-    </section>
-  `;
-}
-
-function render(){
-  renderHeader();
-  setActive();
-  montarSubtabs();
-
-  let html = "";
-
-  if(principal === "temporada"){
-    if(sub === "detalhes") html = cardDetalhes();
-    if(sub === "jogos") html = cardJogos();
-    if(sub === "classificacao") html = cardClassificacao();
-    if(sub === "estatisticas") html = cardEstatisticas();
-    if(sub === "titulos") html = cardTitulos();
-  }
-
-  if(principal === "buzz"){
-    html = cardBuzz();
-  }
-
-  if(principal === "elenco"){
-    if(sub === "gestao") html = cardGestao();
-    else if(sub === "estatisticasElenco") html = cardEstatisticas();
-    else html = cardGestao() + cardElenco();
-  }
-
-  document.getElementById("conteudo").innerHTML = html;
-}
-
-window.trocarPrincipal = function(n){
-  principal = n;
-  sub = n === "temporada" ? "detalhes" : n === "buzz" ? "noticias" : "elenco";
-  render();
-};
-
-window.trocarSub = function(n){
-  sub = n;
-  render();
-};
-
-async function carregarTime(){
-  if(!id){
-    document.getElementById("conteudo").innerHTML = `<section class="card"><div class="empty">Time não encontrado.</div></section>`;
-    return;
-  }
-
-  const snap = await getDoc(doc(db,"times",id));
-
-  if(!snap.exists()){
-    document.getElementById("conteudo").innerHTML = `<section class="card"><div class="empty">Time não encontrado.</div></section>`;
-    return;
-  }
-
-  time = {id:snap.id,...snap.data()};
-  render();
-}
-
-onSnapshot(collection(db,"jogadores"), snap=>{
-  jogadores = snap.docs.map(d=>({id:d.id,...d.data()}));
-  render();
-});
-
-onSnapshot(collection(db,"jogos"), snap=>{
-  jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
-  render();
-});
-
-onSnapshot(collection(db,"tecnicos"), snap=>{
-  tecnicos = snap.docs.map(d=>({id:d.id,...d.data()}));
-  render();
-});
-
-carregarTime();
-</script>
+</div>
 
 </body>
 </html>
+```
