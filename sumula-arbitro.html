@@ -122,11 +122,11 @@ input:disabled,select:disabled,textarea:disabled,button:disabled{
 
 .header{
   display:grid;
-  grid-template-columns:145px 1fr 210px;
+  grid-template-columns:145px 1.35fr 145px 260px;
   align-items:center;
-  gap:10px;
-  padding:16px 18px;
-  background:linear-gradient(135deg,#061d44,#08285c);
+  gap:14px;
+  padding:16px 22px 18px;
+  background:radial-gradient(circle at top left,rgba(255,255,255,.10),transparent 32%),linear-gradient(135deg,#041b40 0%,#06265a 55%,#061d44 100%);
   color:#fff;
   border-bottom:4px solid var(--dourado);
 }
@@ -144,6 +144,7 @@ input:disabled,select:disabled,textarea:disabled,button:disabled{
 .header-title h1{
   color:#fff;
   font-size:54px;
+  white-space:nowrap;
   font-weight:900;
   letter-spacing:1px;
   line-height:.95;
@@ -151,10 +152,10 @@ input:disabled,select:disabled,textarea:disabled,button:disabled{
 }
 
 .header-title input{
-  margin-top:6px;
+  margin-top:8px;
   text-align:left;
   color:var(--dourado);
-  font-size:22px;
+  font-size:20px;
   font-weight:900;
   text-transform:uppercase;
   border:none!important;
@@ -172,15 +173,17 @@ input:disabled,select:disabled,textarea:disabled,button:disabled{
   text-transform:uppercase;
 }
 
+.header-campeonato-logo{display:flex;justify-content:center;align-items:center}
+.header-campeonato-logo img{width:102px;height:102px;object-fit:contain;border-radius:16px;background:#fff;padding:3px;}
 .header-right{
-  text-align:center;
+  text-align:left;
   color:#fff;
   font-weight:900;
   font-size:18px;
   line-height:1.08;
   display:flex;
   flex-direction:column;
-  align-items:center;
+  align-items:flex-start;
   justify-content:center;
 }
 .header-right img{width:92px;height:92px;object-fit:contain;background:#fff;border-radius:14px;border:2px solid var(--dourado);padding:4px;}
@@ -279,6 +282,7 @@ input:disabled,select:disabled,textarea:disabled,button:disabled{
 }
 
 .team-name input.cidade{
+  display:none;
   margin-top:6px;
   color:var(--azul);
   font-size:15px;
@@ -758,6 +762,34 @@ td:nth-child(4) input{min-width:110px}
   box-shadow:0 3px 9px rgba(6,29,68,.10);
 }
 
+
+/* AJUSTE FINAL: TABELA DO ÁRBITRO LEGÍVEL SEM CORTAR */
+.table-wrap{overflow:hidden !important;}
+.lineup-card{min-width:0;}
+.table-wrap table{width:100% !important;min-width:0 !important;table-layout:fixed;}
+.table-wrap th,.table-wrap td{font-size:10.5px;padding:4px 5px;vertical-align:middle;}
+.table-wrap td input,.table-wrap td select{font-size:10.5px;padding:4px 3px;white-space:normal;overflow:visible;text-overflow:clip;}
+.table-wrap td:nth-child(1),.table-wrap th:nth-child(1){width:32px;text-align:center;}
+.table-wrap td:nth-child(2),.table-wrap th:nth-child(2){width:220px;}
+.table-wrap td:nth-child(3),.table-wrap th:nth-child(3){width:112px;}
+.table-wrap td:nth-child(4),.table-wrap th:nth-child(4){width:82px;}
+.table-wrap td:nth-child(5),.table-wrap th:nth-child(5){width:58px;}
+.table-wrap td:nth-child(6),.table-wrap th:nth-child(6){width:42px;}
+.table-wrap td:nth-child(7),.table-wrap th:nth-child(7){width:42px;}
+.table-wrap td:nth-child(2) input{white-space:normal;line-height:1.15;min-height:28px;}
+.table-wrap .btn{padding:5px 7px;font-size:10px;border-radius:7px;}
+.comissao-grid{grid-template-columns:1fr 1fr !important;}
+.comissao-lista{grid-template-columns:repeat(2,minmax(0,1fr));}
+.comissao-item{border-radius:12px;min-height:74px;}
+@media(max-width:900px){
+  .header{grid-template-columns:145px 1.35fr 145px 260px !important;}
+  .header-title h1{font-size:52px;white-space:nowrap;}
+  .sumula-scale{transform:scale(var(--escala-mobile,1)) !important;transform-origin:top left;}
+  .sumula-viewport{justify-content:flex-start !important;overflow:hidden !important;}
+  .comissao-grid{grid-template-columns:1fr 1fr !important;}
+  .comissao-lista{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
+  .table-wrap table{min-width:0 !important;}
+}
 @media(max-width:900px){
   body{background:#fff;}
   .sumula-viewport{justify-content:flex-start;align-items:flex-start;padding:8px 0;overflow:hidden;}
@@ -789,7 +821,7 @@ td:nth-child(4) input{min-width:110px}
     grid-template-columns:1fr;
   }
 
-  .header{grid-template-columns:145px 1fr 145px 210px;}
+  .header{grid-template-columns:145px 1.35fr 145px 260px;}
   .info-strip{grid-template-columns:1.1fr 1.45fr .86fr .72fr 1.05fr;}
   .score-card{grid-template-columns:1fr 260px 1fr;}
   .match-strip{grid-template-columns:1fr 1fr 1.2fr 1.1fr;}
@@ -1115,13 +1147,17 @@ function criarTela(){
 
       <div class="header-title">
         <h1>SÚMULA OFICIAL</h1>
-        <input id="campeonato" placeholder="CAMPEONATO LIGA GOIANA">
+        <input id="campeonato" placeholder="LIGA GOIANA DE FUTEBOL DE BASE">
         <span class="header-slogan">Onde o talento encontra o futuro</span>
       </div>
 
-      <div class="header-right">
+      <div class="header-campeonato-logo">
         <img id="logoCampeonatoTopo" src="logo-liga.jfif" alt="Logo do campeonato">
-        <small>Logo do campeonato</small>
+      </div>
+
+      <div class="header-right">
+        <div id="campeonatoTopoNome">CAMPEONATO</div>
+        <small id="campeonatoTopoCategoria">CATEGORIA</small>
       </div>
     </header>
 
@@ -1446,7 +1482,9 @@ function preencher(){
   const A = timeAObj();
   const B = timeBObj();
 
-  $("campeonato").value = campo(jogo,["campeonato","campeonatoNome"],"CAMPEONATO LIGA GOIANA");
+  $("campeonato").value = "LIGA GOIANA DE FUTEBOL DE BASE";
+  if($("campeonatoTopoNome")) $("campeonatoTopoNome").innerText = campo(jogo,["campeonato","campeonatoNome"],"CAMPEONATO");
+  if($("campeonatoTopoCategoria")) $("campeonatoTopoCategoria").innerText = campo(jogo,["categoria"],"");
   if($("logoCampeonatoTopo")) $("logoCampeonatoTopo").src = campo(jogo,["logoCampeonato","campeonatoLogo","logo"], campo(sumulaSalva,["logoCampeonato","campeonatoLogo"],"logo-liga.jfif"));
   $("numeroSumula").value = campo(sumulaSalva,["numeroSumula"], campo(jogo,["numeroSumula"],`${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`));
   $("codigoPartida").value = campo(jogo,["codigoPartida","codigo"],jogoId);
@@ -1461,6 +1499,7 @@ function preencher(){
   $("logoB").src = campo(B,["logo","escudo","imagem"],"logo-liga.jfif");
   $("miniLogoA").src = $("logoA").src;
   $("miniLogoB").src = $("logoB").src;
+  if($("logoCampeonatoTopo")) $("logoCampeonatoTopo").src = campo(jogo,["logoCampeonato","campeonatoLogo","logo"], campo(sumulaSalva,["logoCampeonato","campeonatoLogo","logo"],"logo-liga.jfif"));
 
   $("dataJogo").value = campo(jogo,["data","dataJogo","dataHora"],"");
   $("horaJogo").value = campo(jogo,["hora","horario"],"");
@@ -1842,7 +1881,7 @@ function montarDados(finalizar=false){
     jogoId,
     id:jogoId,
 
-    campeonato:$("campeonato").value,
+    campeonato:campo(jogo,["campeonato","campeonatoNome"],$("campeonato").value),
     categoria:campo(jogo,["categoria"],""),
     numeroSumula:$("numeroSumula").value,
     codigoPartida:$("codigoPartida").value || jogoId,
