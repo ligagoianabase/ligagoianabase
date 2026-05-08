@@ -512,15 +512,6 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
-
-const storage = getStorage();
-
 let timesCache = [];
 let logoAtual = "";
 
@@ -575,15 +566,70 @@ window.previewLogoArquivo = function(){
   leitor.readAsDataURL(arquivo);
 };
 
+function arquivoParaEscudoBase64(arquivo){
+  return new Promise((resolve,reject)=>{
+    if(!arquivo){
+      resolve("");
+      return;
+    }
+
+    if(!arquivo.type || !arquivo.type.startsWith("image/")){
+      reject(new Error("O arquivo do escudo precisa ser uma imagem."));
+      return;
+    }
+
+    const leitor = new FileReader();
+
+    leitor.onload = function(e){
+      const img = new Image();
+
+      img.onload = function(){
+        const max = 700;
+        let largura = img.width;
+        let altura = img.height;
+
+        if(largura > altura && largura > max){
+          altura = Math.round((altura * max) / largura);
+          largura = max;
+        }else if(altura >= largura && altura > max){
+          largura = Math.round((largura * max) / altura);
+          altura = max;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = largura;
+        canvas.height = altura;
+
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0,0,largura,altura);
+        ctx.drawImage(img,0,0,largura,altura);
+
+        const base64 = canvas.toDataURL("image/jpeg",0.86);
+        resolve(base64);
+      };
+
+      img.onerror = function(){
+        reject(new Error("Não foi possível ler a imagem do escudo."));
+      };
+
+      img.src = e.target.result;
+    };
+
+    leitor.onerror = function(){
+      reject(new Error("Erro ao carregar o arquivo do escudo."));
+    };
+
+    leitor.readAsDataURL(arquivo);
+  });
+}
+
 async function uploadLogoSeExistir(){
   const arquivo = document.getElementById("logoArquivo").files[0];
   const logoUrlManual = txt(document.getElementById("logo").value);
 
   if(arquivo){
-    const nomeArquivo = `times/${Date.now()}-${arquivo.name}`;
-    const referencia = ref(storage,nomeArquivo);
-    await uploadBytes(referencia,arquivo);
-    return await getDownloadURL(referencia);
+    return await arquivoParaEscudoBase64(arquivo);
   }
 
   if(logoUrlManual) return logoUrlManual;
@@ -607,50 +653,81 @@ window.limparFormulario = function(){
 };
 
 window.salvarTime = async function(){
-  const id = document.getElementById("timeId").value;
+  const botoesSalvar = document.querySelectorAll('button[onclick="salvarTime()"]');
 
-  const nome = txt(document.getElementById("nome").value);
-  const cidade = txt(document.getElementById("cidade").value);
-  const status = document.getElementById("status").value;
-  const categorias = categoriasSelecionadas();
-
-  if(!nome) return alert("Digite o nome do time.");
-  if(!cidade) return alert("Digite a cidade do time.");
-  if(!categorias.length) return alert("Selecione pelo menos uma categoria.");
-
-  const logo = await uploadLogoSeExistir();
-
-  const dados = {
-    nome,
-    cidade,
-    logo,
-    escudo:logo,
-    status,
-    categorias,
-    atualizadoEm:serverTimestamp()
-  };
-
-  if(id){
-    await updateDoc(doc(db,"times",id),dados);
-    alert("Time atualizado!");
-  }else{
-    await addDoc(collection(db,"times"),{
-      ...dados,
-      jogos:0,
-      pontos:0,
-      vitorias:0,
-      empates:0,
-      derrotas:0,
-      golsPro:0,
-      golsContra:0,
-      saldo:0,
-      criadoEm:serverTimestamp()
+  try{
+    botoesSalvar.forEach(btn=>{
+      btn.disabled = true;
+      btn.style.opacity = ".65";
+      btn.style.cursor = "not-allowed";
     });
-    alert("Time cadastrado!");
-  }
 
-  limparFormulario();
-  await carregarTimes();
+    const id = document.getElementById("timeId").value;
+
+    const nome = txt(document.getElementById("nome").value);
+    const cidade = txt(document.getElementById("cidade").value);
+    const status = document.getElementById("status").value;
+    const categorias = categoriasSelecionadas();
+
+    if(!nome){
+      alert("Digite o nome do time.");
+      return;
+    }
+
+    if(!cidade){
+      alert("Digite a cidade do time.");
+      return;
+    }
+
+    if(!categorias.length){
+      alert("Selecione pelo menos uma categoria.");
+      return;
+    }
+
+    const logo = await uploadLogoSeExistir();
+
+    const dados = {
+      nome,
+      cidade,
+      logo,
+      escudo:logo,
+      status,
+      categorias,
+      atualizadoEm:serverTimestamp()
+    };
+
+    if(id){
+      await updateDoc(doc(db,"times",id),dados);
+      alert("Time atualizado com escudo salvo!");
+    }else{
+      await addDoc(collection(db,"times"),{
+        ...dados,
+        jogos:0,
+        pontos:0,
+        vitorias:0,
+        empates:0,
+        derrotas:0,
+        golsPro:0,
+        golsContra:0,
+        saldo:0,
+        criadoEm:serverTimestamp()
+      });
+      alert("Time cadastrado com escudo salvo!");
+    }
+
+    limparFormulario();
+    await carregarTimes();
+
+  }catch(e){
+    console.error("Erro ao salvar time:", e);
+    alert("Erro ao salvar time/escudo: " + (e.message || e));
+  }finally{
+    botoesSalvar.forEach(btn=>{
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      btn.style.cursor = "pointer";
+    });
+  }
 };
 
 window.editarTime = function(id){
@@ -660,7 +737,7 @@ window.editarTime = function(id){
   document.getElementById("timeId").value = t.id;
   document.getElementById("nome").value = t.nome || "";
   document.getElementById("cidade").value = t.cidade || "";
-  document.getElementById("logo").value = t.logo || t.escudo || "";
+  document.getElementById("logo").value = (String(t.logo || t.escudo || "").startsWith("data:image/") ? "" : (t.logo || t.escudo || ""));
   document.getElementById("logoArquivo").value = "";
   document.getElementById("status").value = t.status || "ativo";
   document.getElementById("tituloFormulario").textContent = "Editar Time";
