@@ -307,6 +307,64 @@ input:focus,select:focus,textarea:focus{
   line-height:1.5;
 }
 
+
+
+.envios-panel{
+  display:none;
+  margin-top:16px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--gold-line);
+  border-radius:16px;
+  padding:14px;
+}
+
+.envios-panel h4{
+  color:var(--gold);
+  margin-bottom:8px;
+  font-size:16px;
+}
+
+.envios-panel p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  margin-bottom:12px;
+}
+
+.envios-lista{
+  display:grid;
+  gap:10px;
+}
+
+.envio-card{
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:12px;
+}
+
+.envio-card strong{
+  color:#fff;
+  display:block;
+  margin-bottom:4px;
+}
+
+.envio-card small{
+  display:block;
+  color:var(--muted);
+  line-height:1.45;
+  margin-bottom:10px;
+}
+
+.envio-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.btn-whats{background:#1fa855;color:#fff}
+.btn-email{background:#1a3f73;color:#fff}
+
 @media(max-width:900px){
   .header-title{
     order:3;
@@ -511,6 +569,12 @@ input:focus,select:focus,textarea:focus{
       <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
         <i class="fa-solid fa-broom"></i> Limpar
       </button>
+    </div>
+
+    <div class="envios-panel" id="painelEnvios">
+      <h4><i class="fa-solid fa-paper-plane"></i> Envio de avisos</h4>
+      <p>Depois de salvar o jogo, os links de WhatsApp e e-mail aparecem aqui para enviar a mensagem real ao árbitro e aos técnicos.</p>
+      <div class="envios-lista" id="listaEnvios"></div>
     </div>
   </section>
 
@@ -885,6 +949,78 @@ ${linkSumulaAdmin(jogoId)}`;
   return mensagem;
 }
 
+
+function limparTelefone(numero){
+  return String(numero || "").replace(/\D/g,"");
+}
+
+function montarDestinatariosEnvio(jogo,arbitroObj,tecnicoA,tecnicoB){
+  return [
+    {
+      tipo:"Árbitro",
+      nome:arbitroObj?.nome || arbitroObj?.nomeCompleto || jogo.arbitro || "Árbitro",
+      email:arbitroObj?.email || jogo.arbitroEmail || "",
+      whatsapp:arbitroObj?.whatsapp || arbitroObj?.telefone || arbitroObj?.celular || ""
+    },
+    {
+      tipo:"Técnico mandante",
+      nome:tecnicoA?.nome || tecnicoA?.nomeCompleto || jogo.tecnicoA || "Técnico mandante",
+      email:tecnicoA?.email || "",
+      whatsapp:tecnicoA?.whatsapp || tecnicoA?.telefone || tecnicoA?.celular || ""
+    },
+    {
+      tipo:"Técnico visitante",
+      nome:tecnicoB?.nome || tecnicoB?.nomeCompleto || jogo.tecnicoB || "Técnico visitante",
+      email:tecnicoB?.email || "",
+      whatsapp:tecnicoB?.whatsapp || tecnicoB?.telefone || tecnicoB?.celular || ""
+    }
+  ];
+}
+
+function linkWhatsApp(numero,mensagem){
+  const tel = limparTelefone(numero);
+  if(!tel) return "";
+  const numeroFinal = tel.startsWith("55") ? tel : "55" + tel;
+  return `https://wa.me/${numeroFinal}?text=${encodeURIComponent(mensagem)}`;
+}
+
+function linkEmail(email,assunto,mensagem){
+  if(!email) return "";
+  return `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(mensagem)}`;
+}
+
+function gerarPainelEnvios(jogoId,jogo,arbitroObj,tecnicoA,tecnicoB){
+  const painel = el("painelEnvios");
+  const lista = el("listaEnvios");
+  if(!painel || !lista) return;
+
+  const mensagem = montarMensagemJogo({jogoId,jogo,arbitroObj,tecnicoA,tecnicoB});
+  const assunto = `Liga Goiana - ${jogo.timeA?.nome || "Time A"} x ${jogo.timeB?.nome || "Time B"}`;
+  const destinatarios = montarDestinatariosEnvio(jogo,arbitroObj,tecnicoA,tecnicoB);
+
+  painel.style.display = "block";
+  lista.innerHTML = destinatarios.map((dest,idx)=>{
+    const whats = linkWhatsApp(dest.whatsapp,mensagem);
+    const email = linkEmail(dest.email,assunto,mensagem);
+
+    return `
+      <div class="envio-card">
+        <strong>${dest.tipo}: ${dest.nome || "-"}</strong>
+        <small>
+          WhatsApp: ${dest.whatsapp || "não informado"}<br>
+          Email: ${dest.email || "não informado"}
+        </small>
+        <div class="envio-actions">
+          ${whats ? `<a class="btn-acao btn-whats" target="_blank" href="${whats}"><i class="fa-brands fa-whatsapp"></i> Enviar WhatsApp</a>` : `<button class="btn-acao btn-danger" type="button" disabled><i class="fa-brands fa-whatsapp"></i> Sem WhatsApp</button>`}
+          ${email ? `<a class="btn-acao btn-email" href="${email}"><i class="fa-solid fa-envelope"></i> Enviar Email</a>` : `<button class="btn-acao btn-danger" type="button" disabled><i class="fa-solid fa-envelope"></i> Sem Email</button>`}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  painel.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
 async function criarNotificacoesAutomaticas(jogoId,jogo,arbitroObj,tecnicoA,tecnicoB){
   const mensagem = montarMensagemJogo({jogoId,jogo,arbitroObj,tecnicoA,tecnicoB});
 
@@ -918,7 +1054,10 @@ async function criarNotificacoesAutomaticas(jogoId,jogo,arbitroObj,tecnicoA,tecn
       destinatarioNome:dest.nome,
       email:dest.email || "",
       whatsapp:dest.whatsapp || "",
+      titulo:`Novo jogo: ${jogo.timeA?.nome || "Time A"} x ${jogo.timeB?.nome || "Time B"}`,
       mensagem,
+      link:linkSumulaArbitro(jogoId),
+      lida:false,
       statusEmail:dest.email ? "pendente" : "sem_email",
       statusWhatsApp:dest.whatsapp ? "pendente" : "sem_whatsapp",
       criadoEm:serverTimestamp()
@@ -1143,6 +1282,8 @@ window.limparFormulario = function(){
   el("arbitroAuxiliar").value = "";
   el("previewA").innerHTML = "Selecione o time mandante.";
   el("previewB").innerHTML = "Selecione o time visitante.";
+  if(el("painelEnvios")) el("painelEnvios").style.display = "none";
+  if(el("listaEnvios")) el("listaEnvios").innerHTML = "";
 };
 
 window.salvarJogo = async function(){
@@ -1364,6 +1505,8 @@ window.salvarJogo = async function(){
   }catch(erroNoticia){
     console.warn("Jogo e súmula salvos, mas a notícia automática não foi criada:", erroNoticia);
   }
+
+  gerarPainelEnvios(ref.id,{...jogoBase,id:ref.id},arbitroObj,tecnicoAObj,tecnicoBObj);
 
   alert(
     "Jogo e súmula criados com sucesso!\\n\\n" +
