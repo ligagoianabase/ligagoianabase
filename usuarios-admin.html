@@ -46,7 +46,63 @@ window.voltarPagina=function(){if(window.history.length>1){window.history.back()
 window.limparEdicao=function(){usuarioSelecionadoId="";document.getElementById("editNome").value="";document.getElementById("editEmail").value="";document.getElementById("editCpf").value="";document.getElementById("editNascimento").value="";document.getElementById("editWhatsapp").value="";document.getElementById("editTime").value="";document.getElementById("editTipo").value="torcedor";document.getElementById("editStatus").value="ativo";document.getElementById("editAprovado").value="true";document.getElementById("editAutorizado").value="false";limparMensagens()};
 window.selecionarUsuario=function(id){const u=usuariosCache.find(x=>x.id===id);if(!u)return;usuarioSelecionadoId=id;document.getElementById("editNome").value=u.nome||u.nomeCompleto||"";document.getElementById("editEmail").value=u.email||"";document.getElementById("editCpf").value=u.cpf||"";document.getElementById("editNascimento").value=u.dataNascimento||u.nascimento||"";document.getElementById("editWhatsapp").value=u.whatsapp||u.telefone||"";document.getElementById("editTime").value=u.time||u.timeNome||"";document.getElementById("editTipo").value=normalizarTipo(u.tipoUsuario||u.tipo||"torcedor");document.getElementById("editStatus").value=u.status||"ativo";document.getElementById("editAprovado").value=u.aprovado===true?"true":"false";document.getElementById("editAutorizado").value=u.autorizado===true?"true":"false";mostrarSucesso("Cadastro carregado para edição.");window.scrollTo({top:0,behavior:"smooth"})};
 function dadosFormulario(){const tipo=normalizarTipo(document.getElementById("editTipo").value);return{nome:document.getElementById("editNome").value.trim(),nomeCompleto:document.getElementById("editNome").value.trim(),email:document.getElementById("editEmail").value.trim().toLowerCase(),cpf:limparCPF(document.getElementById("editCpf").value),dataNascimento:document.getElementById("editNascimento").value,nascimento:document.getElementById("editNascimento").value,whatsapp:document.getElementById("editWhatsapp").value.trim(),telefone:document.getElementById("editWhatsapp").value.trim(),time:document.getElementById("editTime").value.trim(),timeNome:document.getElementById("editTime").value.trim(),tipoUsuario:tipo,tipo,perfil:tipo,status:document.getElementById("editStatus").value,aprovado:document.getElementById("editAprovado").value==="true",autorizado:document.getElementById("editAutorizado").value==="true",atualizadoEm:serverTimestamp()}}
-window.salvarEdicao=async function(){limparMensagens();if(!usuarioSelecionadoId){mostrarErro("Selecione um cadastro da lista para editar.");return}const dados=dadosFormulario();if(!dados.nome){mostrarErro("Digite o nome do cadastro.");return}if(!dados.email){mostrarErro("Digite o email.");return}try{await setDoc(doc(db,"usuarios",usuarioSelecionadoId),dados,{merge:true});const u={id:usuarioSelecionadoId,...usuariosCache.find(x=>x.id===usuarioSelecionadoId),...dados};await sincronizarColecaoPublica(usuarioSelecionadoId,u);await registrarLog(adminAtual?.uid,"editar_cadastro",u,{alteracoes:dados});await carregarUsuarios();mostrarSucesso("Cadastro atualizado e sincronizado.")}catch(e){console.error(e);mostrarErro("Erro ao atualizar cadastro.")}};
+window.salvarEdicao=async function(){
+  limparMensagens();
+
+  if(!usuarioSelecionadoId){
+    mostrarErro("Selecione um cadastro da lista para editar.");
+    return;
+  }
+
+  const dados=dadosFormulario();
+
+  if(!dados.nome){
+    mostrarErro("Digite o nome do cadastro.");
+    return;
+  }
+
+  if(!dados.email){
+    mostrarErro("Digite o email.");
+    return;
+  }
+
+  try{
+    const usuarioAntigo=usuariosCache.find(x=>x.id===usuarioSelecionadoId)||{};
+
+    const tipoAntigo=normalizarTipo(
+      usuarioAntigo.tipoUsuario||usuarioAntigo.tipo||usuarioAntigo.perfil||"torcedor"
+    );
+
+    const tipoNovo=normalizarTipo(dados.tipoUsuario);
+
+    await setDoc(doc(db,"usuarios",usuarioSelecionadoId),dados,{merge:true});
+
+    for(const col of COLECOES_PUBLICAS){
+      await deleteDoc(doc(db,col,usuarioSelecionadoId)).catch(()=>{});
+    }
+
+    const usuarioAtualizado={
+      id:usuarioSelecionadoId,
+      ...usuarioAntigo,
+      ...dados
+    };
+
+    await sincronizarColecaoPublica(usuarioSelecionadoId,usuarioAtualizado);
+
+    await registrarLog(adminAtual?.uid,"editar_cadastro",usuarioAtualizado,{
+      tipoAntigo,
+      tipoNovo
+    });
+
+    await carregarUsuarios();
+
+    mostrarSucesso("Cadastro atualizado e sincronizado.");
+  }catch(e){
+    console.error(e);
+    mostrarErro("Erro ao atualizar cadastro. Confira as regras do Firestore.");
+  }
+};
+
 window.sincronizarSelecionado=async function(){
   limparMensagens();
 
@@ -71,6 +127,169 @@ window.sincronizarSelecionado=async function(){
     mostrarErro("Erro ao sincronizar cadastro. Verifique as regras do Firestore.");
   }
 };
+
+window.sincronizarTodos=async function(){
+  limparMensagens();
+
+  const confirmar=confirm("Sincronizar todos os cadastros agora?");
+  if(!confirmar) return;
+
+  try{
+    let total=0;
+
+    for(const usuario of usuariosCache){
+      const id=usuario.id;
+      if(!id) continue;
+
+      await sincronizarColecaoPublica(id,usuario);
+      total++;
+    }
+
+    await carregarUsuarios();
+    mostrarSucesso(`Sincronização concluída. ${total} cadastro(s) verificado(s).`);
+  }catch(e){
+    console.error(e);
+    mostrarErro("Erro ao sincronizar todos. Confira as regras do Firestore.");
+  }
+};
+
+window.aprovarUsuario=async function(id){
+  limparMensagens();
+
+  try{
+    const usuario=usuariosCache.find(u=>u.id===id);
+    if(!usuario){
+      mostrarErro("Cadastro não encontrado.");
+      return;
+    }
+
+    const regra=regraAprovacao(usuario.tipoUsuario||usuario.tipo||usuario.perfil||"");
+    const dados={...regra,atualizadoEm:serverTimestamp()};
+
+    await setDoc(doc(db,"usuarios",id),dados,{merge:true});
+
+    await sincronizarColecaoPublica(id,{...usuario,...dados});
+
+    await registrarLog(adminAtual?.uid,"aprovar_cadastro",usuario,{statusNovo:"ativo"});
+
+    await carregarUsuarios();
+    mostrarSucesso("Cadastro aprovado e sincronizado.");
+  }catch(e){
+    console.error(e);
+    mostrarErro("Erro ao aprovar cadastro.");
+  }
+};
+
+window.reprovarUsuario=async function(id){
+  limparMensagens();
+
+  try{
+    const usuario=usuariosCache.find(u=>u.id===id);
+    if(!usuario){
+      mostrarErro("Cadastro não encontrado.");
+      return;
+    }
+
+    const dados={
+      aprovado:false,
+      autorizado:false,
+      status:"pendente",
+      atualizadoEm:serverTimestamp()
+    };
+
+    await setDoc(doc(db,"usuarios",id),dados,{merge:true});
+    await sincronizarColecaoPublica(id,{...usuario,...dados});
+
+    await carregarUsuarios();
+    mostrarSucesso("Cadastro voltou para pendente.");
+  }catch(e){
+    console.error(e);
+    mostrarErro("Erro ao colocar como pendente.");
+  }
+};
+
+window.aplicarRegraPadrao=async function(id){
+  limparMensagens();
+
+  try{
+    const usuario=usuariosCache.find(u=>u.id===id);
+    if(!usuario){
+      mostrarErro("Cadastro não encontrado.");
+      return;
+    }
+
+    const regra=regraPadrao(usuario.tipoUsuario||usuario.tipo||usuario.perfil||"");
+    const dados={...regra,atualizadoEm:serverTimestamp()};
+
+    await setDoc(doc(db,"usuarios",id),dados,{merge:true});
+    await sincronizarColecaoPublica(id,{...usuario,...dados});
+
+    await carregarUsuarios();
+    mostrarSucesso("Regra padrão aplicada e sincronizada.");
+  }catch(e){
+    console.error(e);
+    mostrarErro("Erro ao aplicar regra padrão.");
+  }
+};
+
+window.bloquearUsuario=async function(id){
+  limparMensagens();
+
+  try{
+    const usuario=usuariosCache.find(u=>u.id===id);
+    if(!usuario){
+      mostrarErro("Cadastro não encontrado.");
+      return;
+    }
+
+    const dados={
+      status:"bloqueado",
+      aprovado:false,
+      autorizado:false,
+      atualizadoEm:serverTimestamp()
+    };
+
+    await setDoc(doc(db,"usuarios",id),dados,{merge:true});
+    await sincronizarColecaoPublica(id,{...usuario,...dados});
+
+    await carregarUsuarios();
+    mostrarSucesso("Cadastro bloqueado.");
+  }catch(e){
+    console.error(e);
+    mostrarErro("Erro ao bloquear cadastro.");
+  }
+};
+
+window.ativarUsuario=async function(id){
+  limparMensagens();
+
+  try{
+    const usuario=usuariosCache.find(u=>u.id===id);
+    if(!usuario){
+      mostrarErro("Cadastro não encontrado.");
+      return;
+    }
+
+    const tipo=normalizarTipo(usuario.tipoUsuario||usuario.tipo||usuario.perfil||"");
+
+    const dados={
+      status:"ativo",
+      aprovado:true,
+      autorizado:["admin","arbitro","assistente","tecnico","jogador"].includes(tipo),
+      atualizadoEm:serverTimestamp()
+    };
+
+    await setDoc(doc(db,"usuarios",id),dados,{merge:true});
+    await sincronizarColecaoPublica(id,{...usuario,...dados});
+
+    await carregarUsuarios();
+    mostrarSucesso("Cadastro ativado e sincronizado.");
+  }catch(e){
+    console.error(e);
+    mostrarErro("Erro ao ativar cadastro.");
+  }
+};
+
 window.excluirUsuario=async function(id){
   limparMensagens();
 
