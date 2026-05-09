@@ -1,1043 +1,1358 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Perfil - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu Perfil - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <style>
-    :root{
-      --bg:#0b1f3a;
-      --card:#102a52;
-      --card-hover:#153766;
-      --gold:#f7c600;
-      --gold-line:rgba(247,198,0,.30);
-      --white:#ffffff;
-      --muted:#d6def0;
-      --success:#1f8b4c;
-      --danger:#c62828;
-      --shadow:0 8px 22px rgba(0,0,0,.28);
-      --transition:.25s ease;
-      --max:1200px;
-    }
+<style>
+:root{
+  --bg:#0b1f3a;
+  --card:#102a52;
+  --gold:#f7c600;
+  --gold-line:rgba(247,198,0,.30);
+  --white:#ffffff;
+  --muted:#d6def0;
+  --success:#1f8b4c;
+  --danger:#c62828;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --transition:.25s ease;
+  --max:1200px;
+}
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
+*{margin:0;padding:0;box-sizing:border-box}
 
-    body{
-      font-family:Arial, sans-serif;
-      background:
-        linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
-        url("fundo.png") center/cover fixed no-repeat;
-      color:var(--white);
-      min-height:100vh;
-    }
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+}
 
-    a{
-      text-decoration:none;
-      color:inherit;
-    }
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font-family:inherit}
 
-    button,input,select,textarea{
-      font-family:inherit;
-    }
+.wrap{
+  width:min(100% - 30px, var(--max));
+  margin:0 auto;
+}
 
-    .wrap{
-      width:min(100% - 30px, var(--max));
-      margin:0 auto;
-    }
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
 
-    header{
-      background:rgba(8,23,44,.96);
-      border-bottom:3px solid var(--gold);
-      box-shadow:var(--shadow);
-      margin-bottom:20px;
-    }
+.header-inner{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
 
-    .header-inner{
-      min-height:82px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-      padding:14px 0;
-    }
+.header-left,
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
 
-    .header-left,
-    .header-right{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:22px;
+  font-weight:700;
+  color:var(--white);
+}
 
-    .header-title{
-      flex:1;
-      text-align:center;
-      font-size:22px;
-      font-weight:700;
-      color:var(--white);
-    }
+.top-btn{
+  border:none;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:bold;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  cursor:pointer;
+  transition:var(--transition);
+}
 
-    .top-btn{
-      border:none;
-      padding:10px 16px;
-      border-radius:10px;
-      font-weight:bold;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      cursor:pointer;
-      transition:var(--transition);
-    }
+.btn-light{background:#fff4cf;color:#111}
+.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
+.btn-gold{background:var(--gold);color:#111}
+.btn-gold:hover{filter:brightness(1.05);transform:translateY(-2px)}
+.btn-red{background:var(--danger);color:#fff}
 
-    .btn-light{
-      background:#fff4cf;
-      color:#111;
-    }
+.container{padding-bottom:30px}
 
-    .btn-light:hover{
-      background:var(--gold);
-      transform:translateY(-2px);
-    }
+.panel{
+  background:linear-gradient(180deg, rgba(16,42,82,.95), rgba(10,28,56,.96));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:22px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
 
-    .btn-gold{
-      background:var(--gold);
-      color:#111;
-    }
+.perfil-topo{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:20px;
+  align-items:start;
+}
 
-    .btn-gold:hover{
-      filter:brightness(1.05);
-      transform:translateY(-2px);
-    }
+.foto-box{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  padding:18px;
+  text-align:center;
+}
 
-    .container{
-      padding-bottom:30px;
-    }
+.foto-preview,
+.foto-placeholder{
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid var(--gold);
+  background:#0f274c;
+  margin:0 auto 14px;
+}
 
-    .panel{
-      background:linear-gradient(180deg, rgba(16,42,82,.95), rgba(10,28,56,.96));
-      border:1px solid var(--gold-line);
-      border-radius:20px;
-      padding:22px;
-      box-shadow:var(--shadow);
-      margin-bottom:20px;
-    }
+.foto-placeholder{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:64px;
+  color:var(--gold);
+}
 
-    .perfil-topo{
-      display:grid;
-      grid-template-columns:280px 1fr;
-      gap:20px;
-      align-items:start;
-    }
+.foto-actions{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
 
-    .foto-box{
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:18px;
-      padding:18px;
-      text-align:center;
-    }
+.btn-sec{
+  border:none;
+  padding:12px 14px;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+  transition:var(--transition);
+  background:#d9e2f2;
+  color:#111;
+}
 
-    .foto-preview{
-      width:180px;
-      height:180px;
-      border-radius:50%;
-      object-fit:cover;
-      border:3px solid var(--gold);
-      background:#0f274c;
-      margin:0 auto 14px;
-      display:block;
-    }
+.btn-sec:hover{transform:translateY(-2px)}
 
-    .foto-placeholder{
-      width:180px;
-      height:180px;
-      border-radius:50%;
-      margin:0 auto 14px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:64px;
-      color:var(--gold);
-      background:#0f274c;
-      border:3px solid var(--gold);
-    }
+.perfil-info h2{
+  color:var(--gold);
+  font-size:30px;
+  margin-bottom:8px;
+}
 
-    .foto-actions{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
+.perfil-info p{
+  color:var(--muted);
+  line-height:1.6;
+  margin-bottom:12px;
+}
 
-    .btn-sec{
-      border:none;
-      padding:12px 14px;
-      border-radius:10px;
-      font-weight:700;
-      cursor:pointer;
-      transition:var(--transition);
-      background:#d9e2f2;
-      color:#111;
-    }
+.tags{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
 
-    .btn-sec:hover{
-      transform:translateY(-2px);
-    }
+.tag{
+  padding:7px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  border:1px solid rgba(255,255,255,.08);
+  background:#14335f;
+  color:#fff;
+}
 
-    .perfil-info h2{
-      color:var(--gold);
-      font-size:30px;
-      margin-bottom:8px;
-    }
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:12px;
+  margin-top:18px;
+}
 
-    .perfil-info p{
-      color:var(--muted);
-      line-height:1.6;
-      margin-bottom:12px;
-    }
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
 
-    .tags{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:8px;
-    }
+.field.full{grid-column:1 / -1}
+.campo-oculto{display:none !important}
 
-    .tag{
-      padding:7px 12px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:700;
-      border:1px solid rgba(255,255,255,.08);
-      background:#14335f;
-      color:#fff;
-    }
+.field label{
+  font-size:14px;
+  font-weight:700;
+  color:#fff;
+}
 
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(3, 1fr);
-      gap:12px;
-      margin-top:18px;
-    }
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#f4f7fb;
+  color:#111;
+  font-size:14px;
+  resize:vertical;
+}
 
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
+.acoes{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
 
-    .field.full{
-      grid-column:1 / -1;
-    }
+.msg{
+  margin-top:14px;
+  padding:12px;
+  border-radius:12px;
+  font-weight:700;
+  display:none;
+}
 
-    .campo-oculto{
-      display:none !important;
-    }
+.msg.error{
+  background:rgba(198,40,40,.18);
+  color:#ffb7b7;
+  border:1px solid rgba(198,40,40,.35);
+}
 
-    .field label{
-      font-size:14px;
-      font-weight:700;
-      color:#fff;
-    }
+.msg.success{
+  background:rgba(31,139,76,.18);
+  color:#a8ffd0;
+  border:1px solid rgba(31,139,76,.35);
+}
 
-    .field input,
-    .field select,
-    .field textarea{
-      width:100%;
-      padding:12px;
-      border:none;
-      border-radius:10px;
-      background:#f4f7fb;
-      color:#111;
-      font-size:14px;
-      resize:vertical;
-    }
+.mini-grid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:12px;
+  margin-top:10px;
+}
 
-    .acoes{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:18px;
-    }
+.mini-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;
+  padding:16px;
+  text-align:center;
+}
 
-    .msg{
-      margin-top:14px;
-      padding:12px;
-      border-radius:12px;
-      font-weight:700;
-      display:none;
-    }
+.mini-card strong{
+  display:block;
+  color:var(--gold);
+  font-size:26px;
+  margin-bottom:8px;
+}
 
-    .msg.error{
-      background:rgba(198,40,40,.18);
-      color:#ffb7b7;
-      border:1px solid rgba(198,40,40,.35);
-    }
+.mini-card span{
+  color:var(--muted);
+  font-size:14px;
+  font-weight:700;
+}
 
-    .msg.success{
-      background:rgba(31,139,76,.18);
-      color:#a8ffd0;
-      border:1px solid rgba(31,139,76,.35);
-    }
+@media (max-width:980px){
+  .perfil-topo{grid-template-columns:1fr}
+  .grid,.mini-grid{grid-template-columns:1fr 1fr}
+  .header-title{order:3;width:100%}
+  .header-left,.header-right{width:100%;justify-content:center}
+}
 
-    .mini-grid{
-      display:grid;
-      grid-template-columns:repeat(4, 1fr);
-      gap:12px;
-      margin-top:10px;
-    }
-
-    .mini-card{
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:16px;
-      padding:16px;
-      text-align:center;
-    }
-
-    .mini-card strong{
-      display:block;
-      color:var(--gold);
-      font-size:26px;
-      margin-bottom:8px;
-    }
-
-    .mini-card span{
-      color:var(--muted);
-      font-size:14px;
-      font-weight:700;
-    }
-
-    @media (max-width: 980px){
-      .perfil-topo{
-        grid-template-columns:1fr;
-      }
-
-      .grid,
-      .mini-grid{
-        grid-template-columns:1fr 1fr;
-      }
-
-      .header-title{
-        order:3;
-        width:100%;
-      }
-
-      .header-left,
-      .header-right{
-        width:100%;
-        justify-content:center;
-      }
-    }
-
-    @media (max-width: 600px){
-      .grid,
-      .mini-grid{
-        grid-template-columns:1fr;
-      }
-
-      .acoes,
-      .header-left,
-      .header-right{
-        flex-direction:column;
-        align-items:stretch;
-      }
-
-      .top-btn,
-      .btn-sec{
-        width:100%;
-        justify-content:center;
-      }
-    }
-  </style>
+@media (max-width:600px){
+  .grid,.mini-grid{grid-template-columns:1fr}
+  .acoes,.header-left,.header-right{flex-direction:column;align-items:stretch}
+  .top-btn,.btn-sec{width:100%;justify-content:center}
+}
+</style>
 </head>
+
 <body>
 
-  <header>
-    <div class="wrap header-inner">
-      <div class="header-left">
-        <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
-          <i class="fa-solid fa-arrow-left"></i> Voltar
-        </button>
+<header>
+  <div class="wrap header-inner">
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
 
-        <a href="index.html" class="top-btn btn-light">
-          <i class="fa-solid fa-house"></i> Página Inicial
-        </a>
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
+    </div>
+
+    <div class="header-title">Meu Perfil</div>
+
+    <div class="header-right">
+      <button class="top-btn btn-gold" onclick="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+  <section class="panel">
+    <div class="perfil-topo">
+      <div class="foto-box">
+        <img id="fotoPreview" class="foto-preview" style="display:none;" alt="Foto do perfil">
+        <div id="fotoPlaceholder" class="foto-placeholder">
+          <i class="fa-solid fa-user"></i>
+        </div>
+
+        <div class="foto-actions">
+          <input type="file" id="fotoInput" accept="image/*" style="display:none;">
+          <button class="btn-sec" type="button" onclick="document.getElementById('fotoInput').click()">
+            <i class="fa-solid fa-camera"></i> Escolher foto
+          </button>
+          <button class="btn-sec" type="button" onclick="removerFoto()">
+            <i class="fa-solid fa-trash"></i> Remover foto
+          </button>
+        </div>
       </div>
 
-      <div class="header-title">Meu Perfil</div>
+      <div class="perfil-info">
+        <h2 id="tituloNome">Meu Perfil</h2>
+        <p>Edite aqui seu nome, foto, dados do cadastro e acompanhe suas estatísticas automáticas.</p>
 
-      <div class="header-right">
-        <button class="top-btn btn-gold" onclick="logout()">
-          <i class="fa-solid fa-right-from-bracket"></i> Sair
-        </button>
+        <div class="tags">
+          <span class="tag" id="tagTipoUsuario">Tipo: -</span>
+          <span class="tag" id="tagStatusUsuario">Status: -</span>
+          <span class="tag" id="tagAprovacao">Aprovação: -</span>
+          <span class="tag" id="tagAutorizacao">Autorização: -</span>
+        </div>
+
+        <div id="msgErro" class="msg error"></div>
+        <div id="msgSucesso" class="msg success"></div>
       </div>
     </div>
-  </header>
+  </section>
 
-  <div class="wrap container">
-    <section class="panel">
-      <div class="perfil-topo">
-        <div class="foto-box">
-          <img id="fotoPreview" class="foto-preview" style="display:none;" alt="Foto do perfil">
-          <div id="fotoPlaceholder" class="foto-placeholder">
-            <i class="fa-solid fa-user"></i>
-          </div>
+  <section class="panel">
+    <h2 style="color:var(--gold); margin-bottom:10px;">Dados do usuário</h2>
 
-          <div class="foto-actions">
-            <input type="file" id="fotoInput" accept="image/*" style="display:none;">
-            <button class="btn-sec" type="button" onclick="document.getElementById('fotoInput').click()">
-              <i class="fa-solid fa-camera"></i> Escolher foto
-            </button>
-            <button class="btn-sec" type="button" onclick="removerFoto()">
-              <i class="fa-solid fa-trash"></i> Remover foto
-            </button>
-          </div>
-        </div>
-
-        <div class="perfil-info">
-          <h2 id="tituloNome">Meu Perfil</h2>
-          <p>Edite aqui seu nome, foto e todos os dados do seu cadastro no sistema.</p>
-
-          <div class="tags">
-            <span class="tag" id="tagTipoUsuario">Tipo: -</span>
-            <span class="tag" id="tagStatusUsuario">Status: -</span>
-            <span class="tag" id="tagAprovacao">Aprovação: -</span>
-            <span class="tag" id="tagAutorizacao">Autorização: -</span>
-          </div>
-
-          <div id="msgErro" class="msg error"></div>
-          <div id="msgSucesso" class="msg success"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2 style="color:var(--gold); margin-bottom:10px;">Dados do usuário</h2>
-
-      <div class="grid">
-        <div class="field campo-basico">
-          <label for="nome">Nome completo</label>
-          <input type="text" id="nome" placeholder="Seu nome completo">
-        </div>
-
-        <div class="field campo-basico">
-          <label for="nomeExibicao">Nome que quer usar</label>
-          <input type="text" id="nomeExibicao" placeholder="Nome de exibição">
-        </div>
-
-        <div class="field campo-basico">
-          <label for="tipoUsuario">Tipo de usuário</label>
-          <input type="text" id="tipoUsuario" readonly>
-        </div>
-
-        <div class="field campo-basico">
-          <label for="email">Email</label>
-          <input type="email" id="email" readonly>
-        </div>
-
-        <div class="field campo-basico">
-          <label for="cpf">CPF</label>
-          <input type="text" id="cpf" placeholder="CPF">
-        </div>
-
-        <div class="field campo-basico">
-          <label for="telefone">WhatsApp</label>
-          <input type="text" id="telefone" placeholder="WhatsApp com DDD">
-        </div>
-
-        <div class="field campo-basico">
-          <label for="dataNascimento">Data de nascimento</label>
-          <input type="date" id="dataNascimento">
-        </div>
-
-        <div class="field campo-jogador campo-tecnico campo-assistente">
-          <label for="time">Time</label>
-          <input type="text" id="time" placeholder="Nome do time">
-        </div>
-
-        <div class="field campo-jogador campo-tecnico campo-assistente">
-          <label for="categoria">Categoria</label>
-          <select id="categoria">
-            <option value="">Selecione</option>
-            <option value="Sub-11">Sub-11</option>
-            <option value="Sub-12">Sub-12</option>
-            <option value="Sub-13">Sub-13</option>
-            <option value="Sub-14">Sub-14</option>
-            <option value="Sub-15">Sub-15</option>
-            <option value="Sub-16">Sub-16</option>
-            <option value="Sub-17">Sub-17</option>
-            <option value="Sub-18">Sub-18</option>
-          </select>
-        </div>
-
-        <div class="field campo-jogador campo-tecnico campo-arbitro campo-assistente">
-          <label for="funcao">Função / Cargo</label>
-          <input type="text" id="funcao" placeholder="Ex.: Goleiro, Técnico principal, Árbitro central">
-        </div>
-
-        <div class="field campo-jogador">
-          <label for="numeroCamisa">Número</label>
-          <input type="text" id="numeroCamisa" placeholder="Número da camisa">
-        </div>
-
-        <div class="field campo-basico">
-          <label for="genero">Gênero</label>
-          <select id="genero">
-            <option value="">Selecione</option>
-            <option value="masculino">Masculino</option>
-            <option value="feminino">Feminino</option>
-            <option value="outro">Outro</option>
-          </select>
-        </div>
-
-        <div class="field campo-fotografo">
-          <label for="cidade">Cidade</label>
-          <input type="text" id="cidade" placeholder="Ex.: Goiânia - GO">
-        </div>
-
-        <div class="field campo-fotografo">
-          <label for="instagram">Instagram</label>
-          <input type="text" id="instagram" placeholder="@seuinstagram">
-        </div>
-
-        <div class="field campo-fotografo">
-          <label for="portfolio">Site / Portfólio</label>
-          <input type="text" id="portfolio" placeholder="https://...">
-        </div>
-
-        <div class="field campo-fotografo">
-          <label for="especialidade">Especialidade</label>
-          <input type="text" id="especialidade" placeholder="Ex.: fotografia esportiva">
-        </div>
-
-        <div class="field full campo-basico campo-fotografo">
-          <label for="bio">Observações / Biografia</label>
-          <textarea id="bio" rows="4" placeholder="Escreva algo sobre você"></textarea>
-        </div>
+    <div class="grid">
+      <div class="field campo-basico">
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" placeholder="Seu nome completo">
       </div>
 
-      <div class="acoes">
-        <button class="top-btn btn-gold" type="button" onclick="salvarPerfil()">
-          <i class="fa-solid fa-floppy-disk"></i> Salvar perfil
-        </button>
-
-        <button class="top-btn btn-light" type="button" onclick="recarregarDados()">
-          <i class="fa-solid fa-rotate"></i> Recarregar
-        </button>
+      <div class="field campo-basico">
+        <label for="nomeExibicao">Nome que quer usar</label>
+        <input type="text" id="nomeExibicao" placeholder="Nome de exibição">
       </div>
-    </section>
 
-    <section class="panel">
-      <h2 style="color:var(--gold); margin-bottom:10px;">Resumo</h2>
-      <div class="mini-grid">
-        <div class="mini-card">
-          <strong id="resumoTipo">-</strong>
-          <span>Tipo de usuário</span>
-        </div>
-
-        <div class="mini-card">
-          <strong id="resumoTime">-</strong>
-          <span>Time</span>
-        </div>
-
-        <div class="mini-card">
-          <strong id="resumoCategoria">-</strong>
-          <span>Categoria</span>
-        </div>
-
-        <div class="mini-card">
-          <strong id="resumoStatus">-</strong>
-          <span>Status</span>
-        </div>
+      <div class="field campo-basico">
+        <label for="tipoUsuario">Tipo de usuário</label>
+        <input type="text" id="tipoUsuario" readonly>
       </div>
-    </section>
-  </div>
 
-  <script type="module">
-    import { auth, db, storage } from "./firebase.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-    import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+      <div class="field campo-basico">
+        <label for="email">Email</label>
+        <input type="email" id="email" readonly>
+      </div>
+
+      <div class="field campo-basico">
+        <label for="cpf">CPF</label>
+        <input type="text" id="cpf" placeholder="CPF">
+      </div>
+
+      <div class="field campo-basico">
+        <label for="telefone">WhatsApp</label>
+        <input type="text" id="telefone" placeholder="WhatsApp com DDD">
+      </div>
+
+      <div class="field campo-basico">
+        <label for="dataNascimento">Data de nascimento</label>
+        <input type="date" id="dataNascimento">
+      </div>
+
+      <div class="field campo-jogador campo-tecnico campo-assistente">
+        <label for="time">Time</label>
+        <input type="text" id="time" placeholder="Nome do time">
+      </div>
+
+      <div class="field campo-jogador campo-tecnico campo-assistente">
+        <label for="categoria">Categoria</label>
+        <select id="categoria">
+          <option value="">Selecione</option>
+          <option value="Sub-11">Sub-11</option>
+          <option value="Sub-12">Sub-12</option>
+          <option value="Sub-13">Sub-13</option>
+          <option value="Sub-14">Sub-14</option>
+          <option value="Sub-15">Sub-15</option>
+          <option value="Sub-16">Sub-16</option>
+          <option value="Sub-17">Sub-17</option>
+          <option value="Sub-18">Sub-18</option>
+        </select>
+      </div>
+
+      <div class="field campo-jogador campo-tecnico campo-arbitro campo-assistente">
+        <label for="funcao">Função / Cargo</label>
+        <input type="text" id="funcao" placeholder="Ex.: Goleiro, Técnico principal, Árbitro central">
+      </div>
+
+      <div class="field campo-jogador">
+        <label for="numeroCamisa">Número</label>
+        <input type="text" id="numeroCamisa" placeholder="Número da camisa">
+      </div>
+
+      <div class="field campo-basico">
+        <label for="genero">Gênero</label>
+        <select id="genero">
+          <option value="">Selecione</option>
+          <option value="masculino">Masculino</option>
+          <option value="feminino">Feminino</option>
+          <option value="outro">Outro</option>
+        </select>
+      </div>
+
+      <div class="field campo-fotografo campo-arbitro campo-assistente campo-tecnico">
+        <label for="cidade">Cidade</label>
+        <input type="text" id="cidade" placeholder="Ex.: Goiânia - GO">
+      </div>
+
+      <div class="field campo-fotografo">
+        <label for="instagram">Instagram</label>
+        <input type="text" id="instagram" placeholder="@seuinstagram">
+      </div>
+
+      <div class="field campo-fotografo">
+        <label for="portfolio">Site / Portfólio</label>
+        <input type="text" id="portfolio" placeholder="https://...">
+      </div>
+
+      <div class="field campo-fotografo">
+        <label for="especialidade">Especialidade</label>
+        <input type="text" id="especialidade" placeholder="Ex.: fotografia esportiva">
+      </div>
+
+      <div class="field full campo-basico campo-fotografo">
+        <label for="bio">Observações / Biografia</label>
+        <textarea id="bio" rows="4" placeholder="Escreva algo sobre você"></textarea>
+      </div>
+    </div>
+
+    <div class="acoes">
+      <button class="top-btn btn-gold" type="button" onclick="salvarPerfil()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar perfil
+      </button>
+
+      <button class="top-btn btn-light" type="button" onclick="recarregarDados()">
+        <i class="fa-solid fa-rotate"></i> Recarregar
+      </button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 style="color:var(--gold); margin-bottom:10px;">Resumo</h2>
+    <div class="mini-grid">
+      <div class="mini-card">
+        <strong id="resumoTipo">-</strong>
+        <span>Tipo de usuário</span>
+      </div>
+
+      <div class="mini-card">
+        <strong id="resumoTime">-</strong>
+        <span>Time / Cidade</span>
+      </div>
+
+      <div class="mini-card">
+        <strong id="resumoCategoria">-</strong>
+        <span>Categoria / Função</span>
+      </div>
+
+      <div class="mini-card">
+        <strong id="resumoStatus">-</strong>
+        <span>Status</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 style="color:var(--gold); margin-bottom:10px;">Estatísticas automáticas</h2>
+    <div class="mini-grid">
+      <div class="mini-card">
+        <strong id="stat1Valor">0</strong>
+        <span id="stat1Label">Jogos</span>
+      </div>
+
+      <div class="mini-card">
+        <strong id="stat2Valor">0</strong>
+        <span id="stat2Label">Gols</span>
+      </div>
+
+      <div class="mini-card">
+        <strong id="stat3Valor">0</strong>
+        <span id="stat3Label">Assistências</span>
+      </div>
+
+      <div class="mini-card">
+        <strong id="stat4Valor">0</strong>
+        <span id="stat4Label">Cartões</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script type="module">
+import { auth, db, storage } from "./firebase.js";
+
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 import {
   ref,
   uploadBytes,
-  getDownloadURL,
-  deleteObject
+  getDownloadURL
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
 
-    let usuarioAtualId = "";
-    let fotoAtualUrl = "";
-    let arquivoFotoSelecionado = null;
+let usuarioAtualId = "";
+let fotoAtualUrl = "";
+let arquivoFotoSelecionado = null;
+let dadosPerfilAtual = {};
 
-    const msgErro = document.getElementById("msgErro");
-    const msgSucesso = document.getElementById("msgSucesso");
-    const fotoInput = document.getElementById("fotoInput");
-    const fotoPreview = document.getElementById("fotoPreview");
-    const fotoPlaceholder = document.getElementById("fotoPlaceholder");
+const msgErro = document.getElementById("msgErro");
+const msgSucesso = document.getElementById("msgSucesso");
+const fotoInput = document.getElementById("fotoInput");
+const fotoPreview = document.getElementById("fotoPreview");
+const fotoPlaceholder = document.getElementById("fotoPlaceholder");
 
-    function mostrarErro(texto){
-      msgSucesso.style.display = "none";
-      msgErro.style.display = "block";
-      msgErro.innerText = texto;
-    }
+function mostrarErro(texto){
+  msgSucesso.style.display = "none";
+  msgErro.style.display = "block";
+  msgErro.innerText = texto;
+}
 
-    function mostrarSucesso(texto){
-      msgErro.style.display = "none";
-      msgSucesso.style.display = "block";
-      msgSucesso.innerText = texto;
-    }
+function mostrarSucesso(texto){
+  msgErro.style.display = "none";
+  msgSucesso.style.display = "block";
+  msgSucesso.innerText = texto;
+}
 
-    function limparMensagens(){
-      msgErro.style.display = "none";
-      msgSucesso.style.display = "none";
-      msgErro.innerText = "";
-      msgSucesso.innerText = "";
-    }
+function limparMensagens(){
+  msgErro.style.display = "none";
+  msgSucesso.style.display = "none";
+  msgErro.innerText = "";
+  msgSucesso.innerText = "";
+}
 
-    function normalizarTexto(texto){
-      return String(texto || "")
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-    }
+function normalizarTexto(texto){
+  return String(texto || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
 
-    function tipoNormalizado(tipo){
-      return normalizarTexto(tipo)
-        .replace(/\s+/g,"_")
-        .replace("fotografo","fotografo")
-        .replace("fotógrafo","fotografo");
-    }
+function limparCPF(cpf){
+  return String(cpf || "").replace(/\D/g,"");
+}
 
-    function tipoLabel(tipo){
-      const valor = tipoNormalizado(tipo);
-      if(valor === "admin" || valor === "administrador") return "Administrador";
-      if(valor === "arbitro") return "Árbitro";
-      if(valor === "assistente") return "Assistente";
-      if(valor === "tecnico") return "Técnico";
-      if(valor === "jogador") return "Jogador";
-      if(valor === "fotografo") return "Fotógrafo";
-      if(valor === "pai_atleta") return "Pai de Atleta";
-      return "Torcedor";
-    }
+function tipoNormalizado(tipo){
+  const valor = normalizarTexto(tipo).replace(/\s+/g,"_");
 
-    function aplicarCamposPorTipo(tipo){
-      const valor = tipoNormalizado(tipo);
+  if(valor === "fotógrafo") return "fotografo";
+  if(valor === "arbitro") return "arbitro";
+  if(valor === "árbitro") return "arbitro";
+  if(valor === "tecnico") return "tecnico";
+  if(valor === "técnico") return "tecnico";
+  if(valor === "pai_de_atleta") return "pai_atleta";
 
-      document
-        .querySelectorAll(".campo-jogador,.campo-tecnico,.campo-arbitro,.campo-assistente,.campo-fotografo")
-        .forEach(campo => campo.classList.add("campo-oculto"));
+  return valor || "torcedor";
+}
 
-      if(valor === "jogador"){
-        document.querySelectorAll(".campo-jogador").forEach(campo => campo.classList.remove("campo-oculto"));
-      }
+function tipoLabel(tipo){
+  const valor = tipoNormalizado(tipo);
 
-      if(valor === "tecnico"){
-        document.querySelectorAll(".campo-tecnico").forEach(campo => campo.classList.remove("campo-oculto"));
-      }
+  if(valor === "admin" || valor === "administrador") return "Administrador";
+  if(valor === "arbitro") return "Árbitro";
+  if(valor === "assistente") return "Assistente";
+  if(valor === "tecnico") return "Técnico";
+  if(valor === "jogador") return "Jogador";
+  if(valor === "fotografo") return "Fotógrafo";
+  if(valor === "pai_atleta") return "Pai de Atleta";
 
-      if(valor === "arbitro"){
-        document.querySelectorAll(".campo-arbitro").forEach(campo => campo.classList.remove("campo-oculto"));
-      }
+  return "Torcedor";
+}
 
-      if(valor === "assistente"){
-        document.querySelectorAll(".campo-assistente").forEach(campo => campo.classList.remove("campo-oculto"));
-      }
+function numero(valor){
+  const n = Number(valor || 0);
+  return Number.isFinite(n) ? n : 0;
+}
 
-      if(valor === "fotografo"){
-        document.querySelectorAll(".campo-fotografo").forEach(campo => campo.classList.remove("campo-oculto"));
-      }
-    }
+function colecaoPorTipo(tipo){
+  const valor = tipoNormalizado(tipo);
 
-    function preencherFoto(src){
-      if(src){
-        fotoAtualUrl = src;
-        fotoPreview.src = src;
-        fotoPreview.style.display = "block";
-        fotoPlaceholder.style.display = "none";
-      }else{
-        fotoAtualUrl = "";
-        fotoPreview.src = "";
-        fotoPreview.style.display = "none";
-        fotoPlaceholder.style.display = "flex";
-      }
-    }
+  if(valor === "jogador") return "jogadores";
+  if(valor === "tecnico") return "tecnicos";
+  if(valor === "arbitro") return "arbitros";
+  if(valor === "assistente") return "assistentes";
+  if(valor === "fotografo") return "fotografos";
 
-    async function uploadFotoPerfil(uid,arquivo){
-      if(!arquivo) return fotoAtualUrl || "";
+  return "";
+}
 
-      const nomeSeguro = arquivo.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+function aplicarCamposPorTipo(tipo){
+  const valor = tipoNormalizado(tipo);
 
-      const caminho = `usuarios/${uid}/perfil-${Date.now()}-${nomeSeguro}`;
+  document
+    .querySelectorAll(".campo-jogador,.campo-tecnico,.campo-arbitro,.campo-assistente,.campo-fotografo")
+    .forEach(campo => campo.classList.add("campo-oculto"));
 
-      const storageRef = ref(storage,caminho);
+  if(valor === "jogador"){
+    document.querySelectorAll(".campo-jogador").forEach(campo => campo.classList.remove("campo-oculto"));
+  }
 
-      await uploadBytes(storageRef,arquivo);
+  if(valor === "tecnico"){
+    document.querySelectorAll(".campo-tecnico").forEach(campo => campo.classList.remove("campo-oculto"));
+  }
 
-      return await getDownloadURL(storageRef);
-    }
+  if(valor === "arbitro"){
+    document.querySelectorAll(".campo-arbitro").forEach(campo => campo.classList.remove("campo-oculto"));
+  }
 
-    function preencherResumo(dados){
-      const tipo = tipoNormalizado(dados.tipoUsuario || dados.tipo || dados.perfil || "");
-      document.getElementById("resumoTipo").textContent = tipoLabel(dados.tipoUsuario || dados.tipo || dados.perfil || "");
+  if(valor === "assistente"){
+    document.querySelectorAll(".campo-assistente").forEach(campo => campo.classList.remove("campo-oculto"));
+  }
 
-      if(tipo === "fotografo"){
-        document.getElementById("resumoTime").textContent = dados.cidade || "-";
-        document.getElementById("resumoCategoria").textContent = dados.especialidade || "-";
-      }else if(tipo === "arbitro"){
-        document.getElementById("resumoTime").textContent = dados.funcao || "Árbitro";
-        document.getElementById("resumoCategoria").textContent = "-";
-      }else{
-        document.getElementById("resumoTime").textContent = dados.time || "-";
-        document.getElementById("resumoCategoria").textContent = dados.categoria || "-";
-      }
+  if(valor === "fotografo"){
+    document.querySelectorAll(".campo-fotografo").forEach(campo => campo.classList.remove("campo-oculto"));
+  }
+}
 
-      document.getElementById("resumoStatus").textContent = dados.status || "-";
-    }
+function preencherFoto(src){
+  if(src){
+    fotoAtualUrl = src;
+    fotoPreview.src = src;
+    fotoPreview.style.display = "block";
+    fotoPlaceholder.style.display = "none";
+  }else{
+    fotoAtualUrl = "";
+    fotoPreview.src = "";
+    fotoPreview.style.display = "none";
+    fotoPlaceholder.style.display = "flex";
+  }
+}
 
-    function preencherTela(dados){
-      const tipoOriginal = dados.tipoUsuario || dados.tipo || dados.perfil || "torcedor";
-      aplicarCamposPorTipo(tipoOriginal);
+async function uploadFotoPerfil(uid,arquivo){
+  if(!arquivo) return fotoAtualUrl || "";
 
-      document.getElementById("tituloNome").textContent = dados.nomeExibicao || dados.nome || "Meu Perfil";
+  const nomeSeguro = arquivo.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+  const caminho = `usuarios/${uid}/perfil-${Date.now()}-${nomeSeguro}`;
+  const storageRef = ref(storage,caminho);
 
-      document.getElementById("nome").value = dados.nome || "";
-      document.getElementById("nomeExibicao").value = dados.nomeExibicao || "";
-      document.getElementById("tipoUsuario").value = tipoLabel(tipoOriginal);
-      document.getElementById("email").value = dados.email || auth.currentUser?.email || "";
-      document.getElementById("cpf").value = dados.cpf || "";
-      document.getElementById("telefone").value = dados.telefone || dados.whatsapp || "";
-      document.getElementById("dataNascimento").value = dados.dataNascimento || dados.nascimento || "";
-      document.getElementById("time").value = dados.time || dados.timeNome || "";
-      document.getElementById("categoria").value = dados.categoria || "";
-      document.getElementById("funcao").value = dados.funcao || dados.posicao || dados.cargo || "";
-      document.getElementById("numeroCamisa").value = dados.numeroCamisa || dados.numero || "";
-      document.getElementById("genero").value = dados.genero || "";
-      document.getElementById("cidade").value = dados.cidade || "";
-      document.getElementById("instagram").value = dados.instagram || "";
-      document.getElementById("portfolio").value = dados.portfolio || dados.site || dados.link || "";
-      document.getElementById("especialidade").value = dados.especialidade || "";
-      document.getElementById("bio").value = dados.bio || dados.observacoes || dados.descricao || "";
+  await uploadBytes(storageRef,arquivo);
 
-      document.getElementById("tagTipoUsuario").textContent = `Tipo: ${tipoLabel(tipoOriginal)}`;
-      document.getElementById("tagStatusUsuario").textContent = `Status: ${dados.status || "-"}`;
-      document.getElementById("tagAprovacao").textContent = `Aprovação: ${dados.aprovado === true ? "Aprovado" : "Pendente"}`;
-      document.getElementById("tagAutorizacao").textContent = `Autorização: ${dados.autorizado === true ? "Autorizado" : "Não autorizado"}`;
+  return await getDownloadURL(storageRef);
+}
 
-      preencherFoto(dados.fotoPerfil || "");
-      preencherResumo(dados);
-    }
+function setStats(a,b,c,d){
+  document.getElementById("stat1Valor").textContent = a.valor ?? 0;
+  document.getElementById("stat1Label").textContent = a.label || "Jogos";
 
-    async function carregarOuCriarPerfil(user){
-      usuarioAtualId = user.uid;
+  document.getElementById("stat2Valor").textContent = b.valor ?? 0;
+  document.getElementById("stat2Label").textContent = b.label || "Gols";
 
-      const ref = doc(db, "usuarios", user.uid);
-      const snap = await getDoc(ref);
+  document.getElementById("stat3Valor").textContent = c.valor ?? 0;
+  document.getElementById("stat3Label").textContent = c.label || "Assistências";
 
-      if(!snap.exists()){
-        const base = {
-          nome: "",
-          nomeExibicao: "",
-          email: user.email || "",
-          cpf: "",
-          telefone: "",
-          dataNascimento: "",
-          time: "",
-          categoria: "",
-          funcao: "",
-          numeroCamisa: "",
-          genero: "",
-          cidade: "",
-          instagram: "",
-          portfolio: "",
-          especialidade: "",
-          bio: "",
-          fotoPerfil: "",
-          tipoUsuario: "torcedor",
-          aprovado: true,
-          autorizado: false,
-          status: "ativo",
-          criadoEm: new Date().toISOString(),
-          atualizadoEm: new Date().toISOString()
-        };
+  document.getElementById("stat4Valor").textContent = d.valor ?? 0;
+  document.getElementById("stat4Label").textContent = d.label || "Cartões";
+}
 
-        await setDoc(ref, base);
-        preencherTela(base);
-        return;
-      }
+function zerarStats(tipo){
+  const valor = tipoNormalizado(tipo);
 
-      preencherTela(snap.data());
-    }
+  if(valor === "arbitro"){
+    setStats(
+      {valor:0,label:"Jogos apitados"},
+      {valor:0,label:"Amarelos"},
+      {valor:0,label:"Vermelhos"},
+      {valor:0,label:"Súmulas"}
+    );
+    return;
+  }
 
-    window.recarregarDados = async function(){
-      limparMensagens();
+  if(valor === "tecnico"){
+    setStats(
+      {valor:0,label:"Jogos"},
+      {valor:0,label:"Vitórias"},
+      {valor:0,label:"Derrotas"},
+      {valor:"0%",label:"Aproveitamento"}
+    );
+    return;
+  }
 
-      if(!auth.currentUser || !usuarioAtualId) return;
+  if(valor === "fotografo"){
+    setStats(
+      {valor:0,label:"Galerias"},
+      {valor:0,label:"Jogos cobertos"},
+      {valor:0,label:"Fotos"},
+      {valor:"-",label:"Oficial"}
+    );
+    return;
+  }
 
-      try{
-        const ref = doc(db, "usuarios", usuarioAtualId);
-        const snap = await getDoc(ref);
+  setStats(
+    {valor:0,label:"Jogos"},
+    {valor:0,label:"Gols"},
+    {valor:0,label:"Assistências"},
+    {valor:0,label:"Cartões"}
+  );
+}
 
-        if(!snap.exists()){
-          mostrarErro("Perfil não encontrado.");
-          return;
-        }
+function eventoPertenceAoUsuario(evento,dados){
+  if(!evento) return false;
 
-        preencherTela(snap.data());
-        mostrarSucesso("Dados recarregados com sucesso.");
-      }catch(erro){
-        console.error(erro);
-        mostrarErro("Erro ao recarregar perfil.");
-      }
-    };
+  const ids = [
+    evento.uid,
+    evento.usuarioId,
+    evento.jogadorId,
+    evento.atletaId,
+    evento.arbitroId,
+    evento.tecnicoId,
+    evento.fotografoId
+  ].filter(Boolean);
 
-    window.salvarPerfil = async function(){
-      limparMensagens();
+  if(ids.includes(usuarioAtualId)) return true;
 
-      if(!auth.currentUser || !usuarioAtualId){
-        mostrarErro("Usuário não identificado.");
-        return;
-      }
+  const cpfEvento = limparCPF(evento.cpf || evento.jogadorCpf || evento.cpfJogador || "");
+  const cpfUsuario = limparCPF(dados.cpf || "");
+  if(cpfEvento && cpfUsuario && cpfEvento === cpfUsuario) return true;
 
-      const nome = document.getElementById("nome").value.trim();
-      const nomeExibicao = document.getElementById("nomeExibicao").value.trim();
-      const cpf = document.getElementById("cpf").value.trim();
-      const telefone = document.getElementById("telefone").value.trim();
-      const dataNascimento = document.getElementById("dataNascimento").value;
-      const time = document.getElementById("time").value.trim();
-      const categoria = document.getElementById("categoria").value;
-      const funcao = document.getElementById("funcao").value.trim();
-      const numeroCamisa = document.getElementById("numeroCamisa").value.trim();
-      const genero = document.getElementById("genero").value;
-      const cidade = document.getElementById("cidade").value.trim();
-      const instagram = document.getElementById("instagram").value.trim();
-      const portfolio = document.getElementById("portfolio").value.trim();
-      const especialidade = document.getElementById("especialidade").value.trim();
-      const bio = document.getElementById("bio").value.trim();
+  const nomeEvento = normalizarTexto(
+    evento.nome ||
+    evento.jogador ||
+    evento.jogadorNome ||
+    evento.nomeJogador ||
+    evento.atleta ||
+    evento.atletaNome ||
+    evento.arbitro ||
+    evento.tecnico ||
+    ""
+  );
 
-      if(!nome){
-        mostrarErro("Digite seu nome.");
-        return;
-      }
+  const nomeUsuario = normalizarTexto(dados.nome || dados.nomeCompleto || "");
+  return !!nomeEvento && !!nomeUsuario && nomeEvento === nomeUsuario;
+}
 
-      if(!cpf){
-        mostrarErro("CPF obrigatório.");
-        return;
-      }
+function registroPertenceAoUsuario(reg,dados){
+  if(!reg) return false;
 
-      if(String(cpf).replace(/\D/g,"").length !== 11){
-        mostrarErro("Digite um CPF válido.");
-        return;
-      }
+  const ids = [
+    reg.id,
+    reg.uid,
+    reg.usuarioId,
+    reg.cadastroUid,
+    reg.jogadorId,
+    reg.arbitroId,
+    reg.tecnicoId,
+    reg.fotografoId
+  ].filter(Boolean);
 
-      if(!telefone){
-        mostrarErro("WhatsApp obrigatório.");
-        return;
-      }
+  if(ids.includes(usuarioAtualId)) return true;
 
-      if(!dataNascimento){
-        mostrarErro("Data de nascimento obrigatória.");
-        return;
-      }
+  const emailReg = normalizarTexto(reg.email || "");
+  const emailUser = normalizarTexto(dados.email || auth.currentUser?.email || "");
+  if(emailReg && emailUser && emailReg === emailUser) return true;
 
-      const snapAtual = await getDoc(doc(db, "usuarios", usuarioAtualId));
-      const dadosAtuais = snapAtual.exists() ? snapAtual.data() : {};
-      const tipoAtual = tipoNormalizado(dadosAtuais.tipoUsuario || dadosAtuais.tipo || dadosAtuais.perfil || "torcedor");
+  const cpfReg = limparCPF(reg.cpf || "");
+  const cpfUser = limparCPF(dados.cpf || "");
+  if(cpfReg && cpfUser && cpfReg === cpfUser) return true;
 
-      if(tipoAtual === "jogador"){
-        if(!time){
-          mostrarErro("Informe o time do jogador.");
-          return;
-        }
+  const nomeReg = normalizarTexto(reg.nome || reg.nomeCompleto || "");
+  const nomeUser = normalizarTexto(dados.nome || dados.nomeCompleto || "");
+  return !!nomeReg && !!nomeUser && nomeReg === nomeUser;
+}
 
-        if(!categoria){
-          mostrarErro("Informe a categoria do jogador.");
-          return;
-        }
+async function carregarColecao(nome){
+  const snap = await getDocs(collection(db,nome));
+  return snap.docs.map(d=>({id:d.id,...d.data()}));
+}
 
-        if(!numeroCamisa){
-          mostrarErro("Informe o número da camisa do jogador.");
-          return;
-        }
-      }
+async function carregarRegistroPublico(tipo,dados){
+  const colecao = colecaoPorTipo(tipo);
+  if(!colecao) return null;
 
-      if(tipoAtual === "tecnico" || tipoAtual === "assistente"){
-        if(!time){
-          mostrarErro("Informe o time.");
-          return;
-        }
-      }
+  const direto = await getDoc(doc(db,colecao,usuarioAtualId)).catch(()=>null);
+  if(direto && direto.exists()){
+    return {id:direto.id,...direto.data()};
+  }
 
-      if(tipoAtual === "fotografo"){
-        if(!cidade){
-          mostrarErro("Informe a cidade do fotógrafo.");
-          return;
-        }
+  const lista = await carregarColecao(colecao).catch(()=>[]);
+  return lista.find(reg=>registroPertenceAoUsuario(reg,dados)) || null;
+}
 
-        if(!especialidade){
-          mostrarErro("Informe a especialidade do fotógrafo.");
-          return;
-        }
-      }
+async function carregarEstatisticas(dados){
+  const tipo = tipoNormalizado(dados.tipoUsuario || dados.tipo || dados.perfil || "");
 
-      try{
-        const ref = doc(db, "usuarios", usuarioAtualId);
+  zerarStats(tipo);
 
-        const fotoUrlFinal = await uploadFotoPerfil(
-          usuarioAtualId,
-          arquivoFotoSelecionado
-        );
+  try{
+    const publico = await carregarRegistroPublico(tipo,dados);
 
-        await updateDoc(ref, {
-          nome,
-          nomeExibicao,
-          cpf,
-          telefone,
-          whatsapp:telefone,
-          dataNascimento,
-          nascimento:dataNascimento,
-          time,
-          categoria,
-          funcao,
-          numeroCamisa,
-          numero:numeroCamisa,
-          genero,
-          cidade,
-          instagram,
-          portfolio,
-          site:portfolio,
-          especialidade,
-          bio,
-          descricao:bio,
-          cadastroIncompleto:false,
-          fotoPerfil: fotoUrlFinal,
-          foto: fotoUrlFinal,
-          atualizadoEm: new Date().toISOString()
+    if(tipo === "jogador"){
+      const sumulas = await carregarColecao("sumulas").catch(()=>[]);
+
+      let golsEventos = 0;
+      let assistEventos = 0;
+      let amarelosEventos = 0;
+      let vermelhosEventos = 0;
+      const jogosSet = new Set();
+
+      sumulas.forEach(s=>{
+        const gols = Array.isArray(s.gols) ? s.gols : [];
+        const assistencias = Array.isArray(s.assistencias) ? s.assistencias : [];
+        const cartoes = Array.isArray(s.cartoes) ? s.cartoes : [];
+
+        gols.forEach(g=>{
+          if(eventoPertenceAoUsuario(g,dados)){
+            golsEventos += numero(g.quantidade || g.qtd || g.gols || 1);
+            jogosSet.add(s.jogoId || s.id || JSON.stringify(s.data || ""));
+          }
+
+          const assistente = {
+            nome:g.assistencia || g.assistente || g.nomeAssistente || g.jogadorAssistencia || g.assistenciaNome || "",
+            uid:g.assistenteId || g.assistenciaId || ""
+          };
+
+          if(eventoPertenceAoUsuario(assistente,dados)){
+            assistEventos++;
+            jogosSet.add(s.jogoId || s.id || JSON.stringify(s.data || ""));
+          }
         });
 
-        if(tipoAtual === "fotografo"){
-          await setDoc(doc(db, "fotografos", usuarioAtualId), {
-            uid:usuarioAtualId,
-            nome,
-            nomeExibicao,
-            email:auth.currentUser?.email || "",
-            cpf,
-            telefone,
-            whatsapp:telefone,
-            dataNascimento,
-            nascimento:dataNascimento,
-            cidade,
-            instagram,
-            portfolio,
-            site:portfolio,
-            especialidade,
-            bio,
-            descricao:bio,
-            fotoPerfil:fotoUrlFinal,
-            foto:fotoUrlFinal,
-            tipoUsuario:"fotografo",
-            tipo:"fotografo",
-            perfil:"fotografo",
-            aprovado:dadosAtuais.aprovado === true,
-            autorizado:dadosAtuais.autorizado === true,
-            status:dadosAtuais.status || "pendente",
-            atualizadoEm:new Date().toISOString()
-          }, {merge:true});
-        }
+        assistencias.forEach(a=>{
+          if(eventoPertenceAoUsuario(a,dados)){
+            assistEventos += numero(a.quantidade || a.qtd || a.assistencias || 1);
+            jogosSet.add(s.jogoId || s.id || JSON.stringify(s.data || ""));
+          }
+        });
 
-        mostrarSucesso("Perfil salvo com sucesso.");
-        await window.recarregarDados();
-      }catch(erro){
-        console.error(erro);
-        mostrarErro("Erro ao salvar perfil.");
-      }
-    };
-
-    window.removerFoto = async function(){
-      try{
-        preencherFoto("");
-        arquivoFotoSelecionado = null;
-
-        if(usuarioAtualId){
-          await updateDoc(doc(db,"usuarios",usuarioAtualId),{
-            foto:"",
-            fotoPerfil:"",
-            atualizadoEm:new Date().toISOString()
-          }).catch(()=>{});
-
-          await updateDoc(doc(db,"fotografos",usuarioAtualId),{
-            foto:"",
-            fotoPerfil:"",
-            atualizadoEm:new Date().toISOString()
-          }).catch(()=>{});
-        }
-
-        mostrarSucesso("Foto removida com sucesso.");
-      }catch(e){
-        console.error(e);
-        mostrarErro("Erro ao remover foto.");
-      }
-    };
-
-    fotoInput.addEventListener("change", function(event){
-      const arquivo = event.target.files?.[0];
-
-      if(!arquivo) return;
-
-      arquivoFotoSelecionado = arquivo;
-
-      const leitor = new FileReader();
-
-      leitor.onload = function(e){
-        fotoPreview.src = e.target.result;
-        fotoPreview.style.display = "block";
-        fotoPlaceholder.style.display = "none";
-
-        mostrarSucesso("Foto carregada. Agora clique em salvar perfil.");
-      };
-
-      leitor.readAsDataURL(arquivo);
-    });
-
-    window.logout = function(){
-      signOut(auth).then(() => {
-        window.location.href = "login.html";
-      }).catch((erro) => {
-        console.error(erro);
-        mostrarErro("Erro ao sair.");
+        cartoes.forEach(c=>{
+          if(eventoPertenceAoUsuario(c,dados)){
+            const tipoCartao = normalizarTexto(c.tipo || c.cartao || c.cor || "");
+            if(tipoCartao.includes("vermelho") || tipoCartao === "v") vermelhosEventos++;
+            else amarelosEventos++;
+            jogosSet.add(s.jogoId || s.id || JSON.stringify(s.data || ""));
+          }
+        });
       });
+
+      const jogos = Math.max(numero(publico?.jogos), jogosSet.size);
+      const gols = Math.max(numero(publico?.gols), golsEventos);
+      const assist = Math.max(numero(publico?.assistencias), assistEventos);
+      const cartoes = Math.max(
+        numero(publico?.amarelos || publico?.cartoesAmarelos) + numero(publico?.vermelhos || publico?.cartoesVermelhos),
+        amarelosEventos + vermelhosEventos
+      );
+
+      setStats(
+        {valor:jogos,label:"Jogos"},
+        {valor:gols,label:"Gols"},
+        {valor:assist,label:"Assistências"},
+        {valor:cartoes,label:"Cartões"}
+      );
+
+      return;
+    }
+
+    if(tipo === "arbitro"){
+      const jogos = await carregarColecao("jogos").catch(()=>[]);
+      const sumulas = await carregarColecao("sumulas").catch(()=>[]);
+
+      const jogosApitados = new Set();
+
+      [...jogos,...sumulas].forEach(j=>{
+        const alvo = {
+          uid:j.arbitroId || j.arbitroUid || j.uid || "",
+          nome:j.arbitroNome || j.nomeArbitro || j.arbitro || "",
+          cpf:j.arbitroCpf || ""
+        };
+
+        const arbitroObj = typeof j.arbitro === "object" ? j.arbitro : null;
+
+        if(
+          eventoPertenceAoUsuario(alvo,dados) ||
+          eventoPertenceAoUsuario(arbitroObj,dados)
+        ){
+          jogosApitados.add(j.jogoId || j.id || JSON.stringify(j.data || ""));
+        }
+      });
+
+      setStats(
+        {valor:Math.max(numero(publico?.jogos), jogosApitados.size),label:"Jogos apitados"},
+        {valor:numero(publico?.amarelos || publico?.cartoesAmarelos),label:"Amarelos"},
+        {valor:numero(publico?.vermelhos || publico?.cartoesVermelhos),label:"Vermelhos"},
+        {valor:jogosApitados.size,label:"Súmulas"}
+      );
+
+      return;
+    }
+
+    if(tipo === "tecnico"){
+      const jogos = numero(publico?.jogos);
+      const vitorias = numero(publico?.vitorias);
+      const derrotas = numero(publico?.derrotas);
+      const empates = numero(publico?.empates);
+      const aproveitamento = jogos ? Math.round(((vitorias * 3 + empates) / (jogos * 3)) * 100) : 0;
+
+      setStats(
+        {valor:jogos,label:"Jogos"},
+        {valor:vitorias,label:"Vitórias"},
+        {valor:derrotas,label:"Derrotas"},
+        {valor:`${aproveitamento}%`,label:"Aproveitamento"}
+      );
+
+      return;
+    }
+
+    if(tipo === "assistente"){
+      setStats(
+        {valor:numero(publico?.jogos),label:"Jogos"},
+        {valor:numero(publico?.assistencias),label:"Assistências"},
+        {valor:numero(publico?.amarelos),label:"Amarelos"},
+        {valor:numero(publico?.vermelhos),label:"Vermelhos"}
+      );
+
+      return;
+    }
+
+    if(tipo === "fotografo"){
+      const galerias = await carregarColecao("galeria").catch(()=>[]);
+      const minhasGalerias = galerias.filter(g=>registroPertenceAoUsuario(g,dados));
+
+      const fotosPublicadas = minhasGalerias.reduce((total,g)=>{
+        if(Array.isArray(g.fotos)) return total + g.fotos.length;
+        if(Array.isArray(g.imagens)) return total + g.imagens.length;
+        if(g.imagem || g.foto || g.url) return total + 1;
+        return total;
+      },0);
+
+      setStats(
+        {valor:Math.max(numero(publico?.galerias), minhasGalerias.length),label:"Galerias"},
+        {valor:numero(publico?.jogos),label:"Jogos cobertos"},
+        {valor:Math.max(numero(publico?.fotos), fotosPublicadas),label:"Fotos"},
+        {valor:publico?.fotografoOficial === true ? "Sim" : "Não",label:"Oficial"}
+      );
+
+      return;
+    }
+
+    setStats(
+      {valor:0,label:"Jogos"},
+      {valor:0,label:"Gols"},
+      {valor:0,label:"Assistências"},
+      {valor:0,label:"Cartões"}
+    );
+
+  }catch(erro){
+    console.error("Erro ao carregar estatísticas:",erro);
+  }
+}
+
+function preencherResumo(dados){
+  const tipo = tipoNormalizado(dados.tipoUsuario || dados.tipo || dados.perfil || "");
+
+  document.getElementById("resumoTipo").textContent = tipoLabel(dados.tipoUsuario || dados.tipo || dados.perfil || "");
+
+  if(tipo === "fotografo"){
+    document.getElementById("resumoTime").textContent = dados.cidade || "-";
+    document.getElementById("resumoCategoria").textContent = dados.especialidade || "-";
+  }else if(tipo === "arbitro"){
+    document.getElementById("resumoTime").textContent = dados.cidade || "Árbitro";
+    document.getElementById("resumoCategoria").textContent = dados.categoria || dados.funcao || "-";
+  }else{
+    document.getElementById("resumoTime").textContent = dados.time || dados.timeNome || "-";
+    document.getElementById("resumoCategoria").textContent = dados.categoria || "-";
+  }
+
+  document.getElementById("resumoStatus").textContent = dados.status || "-";
+}
+
+function preencherTela(dados){
+  dadosPerfilAtual = dados || {};
+
+  const tipoOriginal = dados.tipoUsuario || dados.tipo || dados.perfil || "torcedor";
+  aplicarCamposPorTipo(tipoOriginal);
+
+  document.getElementById("tituloNome").textContent = dados.nomeExibicao || dados.nome || "Meu Perfil";
+
+  document.getElementById("nome").value = dados.nome || "";
+  document.getElementById("nomeExibicao").value = dados.nomeExibicao || "";
+  document.getElementById("tipoUsuario").value = tipoLabel(tipoOriginal);
+  document.getElementById("email").value = dados.email || auth.currentUser?.email || "";
+  document.getElementById("cpf").value = dados.cpf || "";
+  document.getElementById("telefone").value = dados.telefone || dados.whatsapp || "";
+  document.getElementById("dataNascimento").value = dados.dataNascimento || dados.nascimento || "";
+  document.getElementById("time").value = dados.time || dados.timeNome || "";
+  document.getElementById("categoria").value = dados.categoria || "";
+  document.getElementById("funcao").value = dados.funcao || dados.posicao || dados.cargo || "";
+  document.getElementById("numeroCamisa").value = dados.numeroCamisa || dados.numero || "";
+  document.getElementById("genero").value = dados.genero || "";
+  document.getElementById("cidade").value = dados.cidade || "";
+  document.getElementById("instagram").value = dados.instagram || "";
+  document.getElementById("portfolio").value = dados.portfolio || dados.site || dados.link || "";
+  document.getElementById("especialidade").value = dados.especialidade || "";
+  document.getElementById("bio").value = dados.bio || dados.observacoes || dados.descricao || "";
+
+  document.getElementById("tagTipoUsuario").textContent = `Tipo: ${tipoLabel(tipoOriginal)}`;
+  document.getElementById("tagStatusUsuario").textContent = `Status: ${dados.status || "-"}`;
+  document.getElementById("tagAprovacao").textContent = `Aprovação: ${dados.aprovado === true ? "Aprovado" : "Pendente"}`;
+  document.getElementById("tagAutorizacao").textContent = `Autorização: ${dados.autorizado === true ? "Autorizado" : "Não autorizado"}`;
+
+  preencherFoto(dados.fotoPerfil || dados.foto || "");
+  preencherResumo(dados);
+  carregarEstatisticas(dados);
+}
+
+async function carregarOuCriarPerfil(user){
+  usuarioAtualId = user.uid;
+
+  const refUser = doc(db,"usuarios",user.uid);
+  const snap = await getDoc(refUser);
+
+  if(!snap.exists()){
+    await signOut(auth);
+    window.location.href = "login.html";
+    return;
+  }
+
+  preencherTela(snap.data());
+}
+
+function montarDadosPublicos(dadosUsuario){
+  const tipo = tipoNormalizado(dadosUsuario.tipoUsuario || dadosUsuario.tipo || dadosUsuario.perfil || "");
+
+  return {
+    uid:usuarioAtualId,
+    usuarioId:usuarioAtualId,
+    cadastroUid:usuarioAtualId,
+    nome:dadosUsuario.nome || "",
+    nomeCompleto:dadosUsuario.nome || "",
+    nomeExibicao:dadosUsuario.nomeExibicao || "",
+    email:dadosUsuario.email || auth.currentUser?.email || "",
+    cpf:dadosUsuario.cpf || "",
+    telefone:dadosUsuario.telefone || dadosUsuario.whatsapp || "",
+    whatsapp:dadosUsuario.whatsapp || dadosUsuario.telefone || "",
+    dataNascimento:dadosUsuario.dataNascimento || dadosUsuario.nascimento || "",
+    nascimento:dadosUsuario.dataNascimento || dadosUsuario.nascimento || "",
+    time:dadosUsuario.time || "",
+    timeNome:dadosUsuario.time || "",
+    categoria:dadosUsuario.categoria || "",
+    categorias:dadosUsuario.categoria ? [dadosUsuario.categoria] : [],
+    funcao:dadosUsuario.funcao || "",
+    posicao:dadosUsuario.funcao || "",
+    numero:dadosUsuario.numeroCamisa || dadosUsuario.numero || "",
+    numeroCamisa:dadosUsuario.numeroCamisa || dadosUsuario.numero || "",
+    genero:dadosUsuario.genero || "",
+    cidade:dadosUsuario.cidade || "",
+    instagram:dadosUsuario.instagram || "",
+    portfolio:dadosUsuario.portfolio || "",
+    site:dadosUsuario.portfolio || "",
+    especialidade:dadosUsuario.especialidade || "",
+    bio:dadosUsuario.bio || "",
+    descricao:dadosUsuario.bio || "",
+    foto:dadosUsuario.foto || dadosUsuario.fotoPerfil || "",
+    fotoPerfil:dadosUsuario.fotoPerfil || dadosUsuario.foto || "",
+    tipoUsuario:tipo,
+    tipo,
+    perfil:tipo,
+    aprovado:dadosUsuario.aprovado === true,
+    autorizado:dadosUsuario.autorizado === true,
+    status:dadosUsuario.status || "pendente",
+    atualizadoEm:new Date().toISOString()
+  };
+}
+
+async function sincronizarPerfilPublico(tipo,dadosUsuario){
+  const colecao = colecaoPorTipo(tipo);
+  if(!colecao) return;
+
+  await setDoc(
+    doc(db,colecao,usuarioAtualId),
+    montarDadosPublicos(dadosUsuario),
+    {merge:true}
+  );
+}
+
+window.recarregarDados = async function(){
+  limparMensagens();
+
+  if(!auth.currentUser || !usuarioAtualId) return;
+
+  try{
+    const refUser = doc(db,"usuarios",usuarioAtualId);
+    const snap = await getDoc(refUser);
+
+    if(!snap.exists()){
+      mostrarErro("Perfil não encontrado.");
+      return;
+    }
+
+    preencherTela(snap.data());
+    mostrarSucesso("Dados recarregados com sucesso.");
+  }catch(erro){
+    console.error(erro);
+    mostrarErro("Erro ao recarregar perfil.");
+  }
+};
+
+window.salvarPerfil = async function(){
+  limparMensagens();
+
+  if(!auth.currentUser || !usuarioAtualId){
+    mostrarErro("Usuário não identificado.");
+    return;
+  }
+
+  const nome = document.getElementById("nome").value.trim();
+  const nomeExibicao = document.getElementById("nomeExibicao").value.trim();
+  const cpf = limparCPF(document.getElementById("cpf").value);
+  const telefone = document.getElementById("telefone").value.trim();
+  const dataNascimento = document.getElementById("dataNascimento").value;
+  const time = document.getElementById("time").value.trim();
+  const categoria = document.getElementById("categoria").value;
+  const funcao = document.getElementById("funcao").value.trim();
+  const numeroCamisa = document.getElementById("numeroCamisa").value.trim();
+  const genero = document.getElementById("genero").value;
+  const cidade = document.getElementById("cidade").value.trim();
+  const instagram = document.getElementById("instagram").value.trim();
+  const portfolio = document.getElementById("portfolio").value.trim();
+  const especialidade = document.getElementById("especialidade").value.trim();
+  const bio = document.getElementById("bio").value.trim();
+
+  if(!nome){
+    mostrarErro("Digite seu nome.");
+    return;
+  }
+
+  if(!cpf){
+    mostrarErro("CPF obrigatório.");
+    return;
+  }
+
+  if(cpf.length !== 11){
+    mostrarErro("Digite um CPF válido.");
+    return;
+  }
+
+  if(!telefone){
+    mostrarErro("WhatsApp obrigatório.");
+    return;
+  }
+
+  if(!dataNascimento){
+    mostrarErro("Data de nascimento obrigatória.");
+    return;
+  }
+
+  const snapAtual = await getDoc(doc(db,"usuarios",usuarioAtualId));
+  const dadosAtuais = snapAtual.exists() ? snapAtual.data() : {};
+  const tipoAtual = tipoNormalizado(dadosAtuais.tipoUsuario || dadosAtuais.tipo || dadosAtuais.perfil || "torcedor");
+
+  if(tipoAtual === "jogador"){
+    if(!time){
+      mostrarErro("Informe o time do jogador.");
+      return;
+    }
+
+    if(!categoria){
+      mostrarErro("Informe a categoria do jogador.");
+      return;
+    }
+
+    if(!numeroCamisa){
+      mostrarErro("Informe o número da camisa do jogador.");
+      return;
+    }
+  }
+
+  if(tipoAtual === "tecnico" || tipoAtual === "assistente"){
+    if(!time){
+      mostrarErro("Informe o time.");
+      return;
+    }
+  }
+
+  if(tipoAtual === "fotografo"){
+    if(!cidade){
+      mostrarErro("Informe a cidade do fotógrafo.");
+      return;
+    }
+
+    if(!especialidade){
+      mostrarErro("Informe a especialidade do fotógrafo.");
+      return;
+    }
+  }
+
+  try{
+    const fotoUrlFinal = await uploadFotoPerfil(usuarioAtualId,arquivoFotoSelecionado);
+
+    const dadosAtualizados = {
+      ...dadosAtuais,
+      nome,
+      nomeCompleto:nome,
+      nomeExibicao,
+      cpf,
+      telefone,
+      whatsapp:telefone,
+      dataNascimento,
+      nascimento:dataNascimento,
+      time,
+      timeNome:time,
+      categoria,
+      funcao,
+      numeroCamisa,
+      numero:numeroCamisa,
+      genero,
+      cidade,
+      instagram,
+      portfolio,
+      site:portfolio,
+      especialidade,
+      bio,
+      descricao:bio,
+      cadastroIncompleto:false,
+      fotoPerfil:fotoUrlFinal,
+      foto:fotoUrlFinal,
+      atualizadoEm:new Date().toISOString()
     };
 
-    window.voltarPagina = function(){
-      if(window.history.length > 1){
-        window.history.back();
-      }else{
-        window.location.href = "index.html";
-      }
-    };
+    await updateDoc(doc(db,"usuarios",usuarioAtualId),dadosAtualizados);
+    await sincronizarPerfilPublico(tipoAtual,dadosAtualizados);
 
-    onAuthStateChanged(auth, async (user) => {
-      if(!user){
-        window.location.href = "login.html";
-        return;
-      }
+    arquivoFotoSelecionado = null;
 
-      try{
-        await carregarOuCriarPerfil(user);
-      }catch(erro){
-        console.error(erro);
-        mostrarErro("Erro ao carregar perfil.");
+    mostrarSucesso("Perfil salvo e sincronizado com sucesso.");
+    await window.recarregarDados();
+  }catch(erro){
+    console.error(erro);
+    mostrarErro("Erro ao salvar perfil.");
+  }
+};
+
+window.removerFoto = async function(){
+  try{
+    preencherFoto("");
+    arquivoFotoSelecionado = null;
+
+    if(usuarioAtualId){
+      const tipoAtual = tipoNormalizado(dadosPerfilAtual.tipoUsuario || dadosPerfilAtual.tipo || dadosPerfilAtual.perfil || "");
+      const colecao = colecaoPorTipo(tipoAtual);
+
+      await updateDoc(doc(db,"usuarios",usuarioAtualId),{
+        foto:"",
+        fotoPerfil:"",
+        atualizadoEm:new Date().toISOString()
+      }).catch(()=>{});
+
+      if(colecao){
+        await updateDoc(doc(db,colecao,usuarioAtualId),{
+          foto:"",
+          fotoPerfil:"",
+          atualizadoEm:new Date().toISOString()
+        }).catch(()=>{});
       }
-    });
-  </script>
+    }
+
+    mostrarSucesso("Foto removida com sucesso.");
+  }catch(e){
+    console.error(e);
+    mostrarErro("Erro ao remover foto.");
+  }
+};
+
+fotoInput.addEventListener("change",function(event){
+  const arquivo = event.target.files?.[0];
+
+  if(!arquivo) return;
+
+  arquivoFotoSelecionado = arquivo;
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    fotoPreview.src = e.target.result;
+    fotoPreview.style.display = "block";
+    fotoPlaceholder.style.display = "none";
+
+    mostrarSucesso("Foto carregada. Agora clique em salvar perfil.");
+  };
+
+  leitor.readAsDataURL(arquivo);
+});
+
+window.logout = function(){
+  signOut(auth).then(()=>{
+    window.location.href = "login.html";
+  }).catch((erro)=>{
+    console.error(erro);
+    mostrarErro("Erro ao sair.");
+  });
+};
+
+window.voltarPagina = function(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = "index.html";
+  }
+};
+
+onAuthStateChanged(auth,async(user)=>{
+  if(!user){
+    window.location.href = "login.html";
+    return;
+  }
+
+  try{
+    await carregarOuCriarPerfil(user);
+  }catch(erro){
+    console.error(erro);
+    mostrarErro("Erro ao carregar perfil.");
+  }
+});
+</script>
 
 </body>
 </html>
