@@ -47,94 +47,15 @@ window.limparEdicao=function(){usuarioSelecionadoId="";document.getElementById("
 window.selecionarUsuario=function(id){const u=usuariosCache.find(x=>x.id===id);if(!u)return;usuarioSelecionadoId=id;document.getElementById("editNome").value=u.nome||u.nomeCompleto||"";document.getElementById("editEmail").value=u.email||"";document.getElementById("editCpf").value=u.cpf||"";document.getElementById("editNascimento").value=u.dataNascimento||u.nascimento||"";document.getElementById("editWhatsapp").value=u.whatsapp||u.telefone||"";document.getElementById("editTime").value=u.time||u.timeNome||"";document.getElementById("editTipo").value=normalizarTipo(u.tipoUsuario||u.tipo||"torcedor");document.getElementById("editStatus").value=u.status||"ativo";document.getElementById("editAprovado").value=u.aprovado===true?"true":"false";document.getElementById("editAutorizado").value=u.autorizado===true?"true":"false";mostrarSucesso("Cadastro carregado para edição.");window.scrollTo({top:0,behavior:"smooth"})};
 function dadosFormulario(){const tipo=normalizarTipo(document.getElementById("editTipo").value);return{nome:document.getElementById("editNome").value.trim(),nomeCompleto:document.getElementById("editNome").value.trim(),email:document.getElementById("editEmail").value.trim().toLowerCase(),cpf:limparCPF(document.getElementById("editCpf").value),dataNascimento:document.getElementById("editNascimento").value,nascimento:document.getElementById("editNascimento").value,whatsapp:document.getElementById("editWhatsapp").value.trim(),telefone:document.getElementById("editWhatsapp").value.trim(),time:document.getElementById("editTime").value.trim(),timeNome:document.getElementById("editTime").value.trim(),tipoUsuario:tipo,tipo,perfil:tipo,status:document.getElementById("editStatus").value,aprovado:document.getElementById("editAprovado").value==="true",autorizado:document.getElementById("editAutorizado").value==="true",atualizadoEm:serverTimestamp()}}
 window.salvarEdicao=async function(){limparMensagens();if(!usuarioSelecionadoId){mostrarErro("Selecione um cadastro da lista para editar.");return}const dados=dadosFormulario();if(!dados.nome){mostrarErro("Digite o nome do cadastro.");return}if(!dados.email){mostrarErro("Digite o email.");return}try{await setDoc(doc(db,"usuarios",usuarioSelecionadoId),dados,{merge:true});const u={id:usuarioSelecionadoId,...usuariosCache.find(x=>x.id===usuarioSelecionadoId),...dados};await sincronizarColecaoPublica(usuarioSelecionadoId,u);await registrarLog(adminAtual?.uid,"editar_cadastro",u,{alteracoes:dados});await carregarUsuarios();mostrarSucesso("Cadastro atualizado e sincronizado.")}catch(e){console.error(e);mostrarErro("Erro ao atualizar cadastro.")}};
-window.sincronizarSelecionado=async function(){
-  limparMensagens();
-
-  if(!usuarioSelecionadoId){
-    mostrarErro("Clique primeiro no botão EDITAR de um cadastro da lista.");
-    return;
-  }
-
-  const usuario=usuariosCache.find(u=>u.id===usuarioSelecionadoId);
-
-  if(!usuario){
-    mostrarErro("Cadastro selecionado não encontrado. Atualize a página e tente novamente.");
-    return;
-  }
-
-  try{
-    await sincronizarColecaoPublica(usuarioSelecionadoId,usuario);
-    await carregarUsuarios();
-    mostrarSucesso("Cadastro sincronizado com sucesso.");
-  }catch(erro){
-    console.error(erro);
-    mostrarErro("Erro ao sincronizar cadastro. Verifique as regras do Firestore.");
-  }
-};
-window.excluirSelecionado=async function(){
-  limparMensagens();
-
-  if(!usuarioSelecionadoId){
-    mostrarErro("Clique primeiro no botão EDITAR de um cadastro da lista.");
-    return;
-  }
-
-  await window.excluirUsuario=async function(id){
-  limparMensagens();
-
-  const usuario=usuariosCache.find(u=>u.id===id);
-
-  const confirmar=prompt(
-    "Digite EXCLUIR para apagar este cadastro do Firestore.\n\nDepois apague também o email no Firebase Authentication para liberar novo cadastro."
-  );
-
-  if(confirmar!=="EXCLUIR") return;
-
-  try{
-    const emailOriginal=usuario?.email || "";
-    const cpfOriginal=usuario?.cpf || "";
-    const nomeOriginal=usuario?.nome || usuario?.nomeCompleto || "";
-    const tipoOriginal=usuario?.tipoUsuario || usuario?.tipo || usuario?.perfil || "";
-
-    await setDoc(doc(db,"usuarios_excluidos",id),{
-      uid:id,
-      nome:nomeOriginal,
-      emailOriginal,
-      cpfOriginal,
-      tipoUsuario:tipoOriginal,
-      status:"excluido",
-      observacao:"Cadastro removido do Firestore. Apagar manualmente no Firebase Authentication para liberar o email.",
-      excluidoEm:serverTimestamp(),
-      excluidoPor:adminAtual?.uid || ""
-    },{merge:true});
-
-    await apagarDeTodasColecoes(id);
-
-    await registrarLog(adminAtual?.uid,"excluir_cadastro",usuario || {id,nome:"Cadastro removido"},{
-      emailOriginal,
-      aviso:"Apagar também no Firebase Authentication"
-    });
-
-    if(usuarioSelecionadoId===id){
-      window.limparEdicao();
-    }
-
-    await carregarUsuarios();
-
-    mostrarSucesso("Cadastro excluído do Firestore. Agora apague o email no Firebase Authentication para ele poder cadastrar de novo.");
-
-    alert(
-      "IMPORTANTE:\n\nAgora vá em Firebase Console → Authentication → Users.\nProcure o email:\n\n" +
-      (emailOriginal || "email não encontrado") +
-      "\n\nClique em Delete user para liberar esse email para novo cadastro."
-    );
-
-  }catch(erro){
-    console.error(erro);
-    mostrarErro("Erro ao excluir cadastro. Confira se a regra usuarios_excluidos existe no Firestore.");
-  }
-};
-window.toggleFotografoOficialwindow.toggleFotografoOficial=async function(id){try{const u=usuariosCache.find(x=>x.id===id);if(!u)return;const novo=u.fotografoOficial===true?false:true;await setDoc(doc(db,"usuarios",id),{fotografoOficial:novo,atualizadoEm:serverTimestamp()},{merge:true});await setDoc(doc(db,"fotografos",id),{fotografoOficial:novo,atualizadoEm:serverTimestamp()},{merge:true});await carregarUsuarios();mostrarSucesso("Status de fotógrafo oficial atualizado.")}catch(e){console.error(e);mostrarErro("Erro ao atualizar fotógrafo oficial.")}};
+window.sincronizarSelecionado=async function(){limparMensagens();if(!usuarioSelecionadoId){mostrarErro("Selecione um cadastro primeiro.");return}const u=usuariosCache.find(x=>x.id===usuarioSelecionadoId);if(!u){mostrarErro("Cadastro não encontrado.");return}await sincronizarColecaoPublica(usuarioSelecionadoId,u);await carregarUsuarios();mostrarSucesso("Cadastro sincronizado com a coleção pública.")};
+window.excluirSelecionado=async function(){if(!usuarioSelecionadoId){mostrarErro("Selecione um cadastro primeiro.");return}await excluirUsuario(usuarioSelecionadoId)};
+window.aplicarRegraPadrao=async function(id){limparMensagens();try{const u=usuariosCache.find(x=>x.id===id);if(!u)return;const r=regraPadrao(u.tipoUsuario||u.tipo||"");const dados={aprovado:r.aprovado,autorizado:r.autorizado,status:r.status,atualizadoEm:serverTimestamp()};await setDoc(doc(db,"usuarios",id),dados,{merge:true});await sincronizarColecaoPublica(id,{...u,...dados});await carregarUsuarios();mostrarSucesso("Regra padrão aplicada.")}catch(e){console.error(e);mostrarErro("Erro ao aplicar regra padrão.")}};
+window.aprovarUsuario=async function(id){limparMensagens();try{const u=usuariosCache.find(x=>x.id===id);if(!u)return;const r=regraAprovacao(u.tipoUsuario||u.tipo||"");const dados={aprovado:r.aprovado,autorizado:r.autorizado,status:r.status,atualizadoEm:serverTimestamp()};await setDoc(doc(db,"usuarios",id),dados,{merge:true});await sincronizarColecaoPublica(id,{...u,...dados});await registrarLog(adminAtual?.uid,"aprovar_cadastro",u,{statusNovo:"ativo"});await carregarUsuarios();mostrarSucesso("Cadastro aprovado e sincronizado.")}catch(e){console.error(e);mostrarErro("Erro ao aprovar cadastro.")}};
+window.reprovarUsuario=async function(id){limparMensagens();try{const u=usuariosCache.find(x=>x.id===id);if(!u)return;const dados={aprovado:false,autorizado:false,status:"pendente",atualizadoEm:serverTimestamp()};await setDoc(doc(db,"usuarios",id),dados,{merge:true});await sincronizarColecaoPublica(id,{...u,...dados});await carregarUsuarios();mostrarSucesso("Cadastro voltou para pendente.")}catch(e){console.error(e);mostrarErro("Erro ao colocar como pendente.")}};
+window.bloquearUsuario=async function(id){limparMensagens();try{const u=usuariosCache.find(x=>x.id===id);if(!u)return;const dados={status:"bloqueado",aprovado:false,autorizado:false,atualizadoEm:serverTimestamp()};await setDoc(doc(db,"usuarios",id),dados,{merge:true});await sincronizarColecaoPublica(id,{...u,...dados});await carregarUsuarios();mostrarSucesso("Cadastro bloqueado.")}catch(e){console.error(e);mostrarErro("Erro ao bloquear cadastro.")}};
+window.ativarUsuario=async function(id){limparMensagens();try{const u=usuariosCache.find(x=>x.id===id);if(!u)return;const tipo=normalizarTipo(u.tipoUsuario||u.tipo||"");const dados={status:"ativo",aprovado:true,autorizado:["admin","arbitro","assistente","tecnico","jogador"].includes(tipo),atualizadoEm:serverTimestamp()};await setDoc(doc(db,"usuarios",id),dados,{merge:true});await sincronizarColecaoPublica(id,{...u,...dados});await carregarUsuarios();mostrarSucesso("Cadastro ativado.")}catch(e){console.error(e);mostrarErro("Erro ao ativar cadastro.")}};
+window.excluirUsuario=async function(id){limparMensagens();const usuario=usuariosCache.find(u=>u.id===id);const confirmar=prompt("Digite EXCLUIR para apagar este cadastro do Firestore. Depois apague também o email no Firebase Authentication.");if(confirmar!=="EXCLUIR")return;try{const emailOriginal=usuario?.email||"";const cpfOriginal=usuario?.cpf||"";const nomeOriginal=usuario?.nome||usuario?.nomeCompleto||"";await setDoc(doc(db,"usuarios_excluidos",id),{uid:id,nome:nomeOriginal,emailOriginal,cpfOriginal,tipoUsuario:usuario?.tipoUsuario||usuario?.tipo||usuario?.perfil||"",status:"excluido",observacao:"Cadastro removido do Firestore. Apagar manualmente no Firebase Authentication para liberar o email.",excluidoEm:serverTimestamp(),excluidoPor:adminAtual?.uid||""},{merge:true});await apagarDeTodasColecoes(id);await registrarLog(adminAtual?.uid,"excluir_cadastro",usuario||{id,nome:"Cadastro removido"},{emailOriginal,aviso:"Apagar também no Firebase Authentication"});if(usuarioSelecionadoId===id){limparEdicao()}await carregarUsuarios();mostrarSucesso("Cadastro excluído do Firestore. Agora apague o email no Firebase Authentication para ele poder cadastrar de novo.");alert("IMPORTANTE:\n\nAgora vá em Firebase Console → Authentication → Users.\nProcure o email:\n\n"+emailOriginal+"\n\nClique em Delete user para liberar esse email para novo cadastro.")}catch(e){console.error(e);mostrarErro("Erro ao excluir cadastro.")}};
+window.toggleFotografoOficial=async function(id){try{const u=usuariosCache.find(x=>x.id===id);if(!u)return;const novo=u.fotografoOficial===true?false:true;await setDoc(doc(db,"usuarios",id),{fotografoOficial:novo,atualizadoEm:serverTimestamp()},{merge:true});await setDoc(doc(db,"fotografos",id),{fotografoOficial:novo,atualizadoEm:serverTimestamp()},{merge:true});await carregarUsuarios();mostrarSucesso("Status de fotógrafo oficial atualizado.")}catch(e){console.error(e);mostrarErro("Erro ao atualizar fotógrafo oficial.")}};
 window.abrirPerfilPublico=function(id,tipo){if(tipo==="fotografo"){window.open("fotografos.html?id="+encodeURIComponent(id),"_blank");return}if(tipo==="arbitro"){window.open("arbitros.html?id="+encodeURIComponent(id),"_blank");return}if(tipo==="jogador"){window.open("jogadores.html?id="+encodeURIComponent(id),"_blank");return}if(tipo==="tecnico"){window.open("tecnicos.html?id="+encodeURIComponent(id),"_blank");return}window.open("perfil.html?id="+encodeURIComponent(id),"_blank")};
 function atualizarResumo(){document.getElementById("resTotal").innerText=usuariosCache.length;document.getElementById("resUsuarios").innerText=usuariosCache.filter(u=>u.origens?.includes("usuarios")).length;document.getElementById("resArbitros").innerText=usuariosCache.filter(u=>normalizarTipo(u.tipoUsuario||u.tipo||u.perfil)==="arbitro").length;document.getElementById("resJogadores").innerText=usuariosCache.filter(u=>normalizarTipo(u.tipoUsuario||u.tipo||u.perfil)==="jogador").length;document.getElementById("resTecnicos").innerText=usuariosCache.filter(u=>normalizarTipo(u.tipoUsuario||u.tipo||u.perfil)==="tecnico").length;document.getElementById("resFotografos").innerText=usuariosCache.filter(u=>normalizarTipo(u.tipoUsuario||u.tipo||u.perfil)==="fotografo").length}
 window.renderUsuarios=function(){const lista=document.getElementById("listaUsuarios");const busca=normalizarTexto(document.getElementById("buscaUsuario").value);const filtroTipo=normalizarTipo(document.getElementById("filtroTipo").value);const filtroStatus=normalizarTexto(document.getElementById("filtroStatus").value);const filtroAutorizado=document.getElementById("filtroAutorizado").value;const filtroOrigem=document.getElementById("filtroOrigem").value;let usuarios=[...usuariosCache];if(busca){usuarios=usuarios.filter(u=>normalizarTexto(u.nome||u.nomeCompleto).includes(busca)||normalizarTexto(u.email).includes(busca)||normalizarTexto(u.cpf).includes(busca)||normalizarTexto(u.whatsapp||u.telefone).includes(busca)||normalizarTexto(u.time||u.timeNome).includes(busca))}if(filtroTipo){usuarios=usuarios.filter(u=>normalizarTipo(u.tipoUsuario||u.tipo||u.perfil)===filtroTipo)}if(filtroStatus){usuarios=usuarios.filter(u=>normalizarTexto(u.status)===filtroStatus)}if(filtroAutorizado==="sim"){usuarios=usuarios.filter(u=>u.autorizado===true)}if(filtroAutorizado==="nao"){usuarios=usuarios.filter(u=>u.autorizado!==true)}if(filtroOrigem){usuarios=usuarios.filter(u=>(u.origens||[]).includes(filtroOrigem))}usuarios.sort((a,b)=>String(a.nome||a.nomeCompleto||"").localeCompare(String(b.nome||b.nomeCompleto||""),"pt-BR"));if(!usuarios.length){lista.innerHTML=`<div class="vazio">Nenhum cadastro encontrado.</div>`;return}lista.innerHTML=usuarios.map(usuario=>{const tipo=normalizarTipo(usuario.tipoUsuario||usuario.tipo||usuario.perfil||"");const autorizado=usuario.autorizado===true;const aprovado=usuario.aprovado===true;const status=usuario.status||"ativo";const origens=(usuario.origens||[]).join(", ");return `<div class="user-card"><div class="user-top"><div class="user-main"><img class="user-photo" src="${fotoUsuario(usuario)}" onerror="this.src='logo-liga.jfif'"><div class="user-info"><h3>${usuario.nome||usuario.nomeCompleto||"Sem nome"}</h3><p><strong>Email:</strong> ${usuario.email||"-"}</p><p><strong>CPF:</strong> ${usuario.cpf||"-"}</p><p><strong>Nascimento:</strong> ${usuario.dataNascimento||usuario.nascimento||"-"}</p><p><strong>WhatsApp:</strong> ${usuario.whatsapp||usuario.telefone||"-"}</p><p><strong>Time:</strong> ${usuario.time||usuario.timeNome||"-"}</p><p><strong>ID:</strong> ${usuario.id}</p><p><strong>Origem:</strong> ${origens||"-"}</p></div></div></div><div class="tags"><span class="tag gold">${tipoLabel(tipo)}</span><span class="tag ${aprovado?"success":"warning"}">${aprovado?"Aprovado":"Pendente"}</span><span class="tag ${autorizado?"success":"danger"}">${autorizado?"Autorizado":"Não autorizado"}</span><span class="tag ${status==="ativo"?"success":status==="bloqueado"?"danger":"warning"}">${status}</span>${usuario.fotografoOficial===true?`<span class="tag gold">Fotógrafo Oficial</span>`:""}</div><div class="user-actions"><button class="mini-btn mini-edit" onclick="selecionarUsuario('${usuario.id}')"><i class="fa-solid fa-pen"></i> Editar</button><button class="mini-btn mini-approve" onclick="aprovarUsuario('${usuario.id}')"><i class="fa-solid fa-user-check"></i> Aprovar</button><button class="mini-btn mini-block" onclick="reprovarUsuario('${usuario.id}')"><i class="fa-solid fa-user-clock"></i> Pendente</button><button class="mini-btn mini-admin" onclick="aplicarRegraPadrao('${usuario.id}')"><i class="fa-solid fa-repeat"></i> Regra padrão</button><button class="mini-btn mini-block" onclick="bloquearUsuario('${usuario.id}')"><i class="fa-solid fa-ban"></i> Bloquear</button><button class="mini-btn mini-approve" onclick="ativarUsuario('${usuario.id}')"><i class="fa-solid fa-check"></i> Ativar</button><button class="mini-btn mini-blue" onclick="sincronizarCadastroDireto('${usuario.id}')"><i class="fa-solid fa-rotate"></i> Sincronizar</button>${tipo==="fotografo"?`<button class="mini-btn mini-admin" onclick="toggleFotografoOficial('${usuario.id}')"><i class="fa-solid fa-camera"></i> Oficial</button>`:""}${tipo!=="torcedor"&&tipo!=="pai_atleta"?`<button class="mini-btn mini-edit" onclick="abrirPerfilPublico('${usuario.id}','${tipo}')"><i class="fa-solid fa-user"></i> Perfil Público</button>`:""}<button class="mini-btn mini-delete" onclick="excluirUsuario('${usuario.id}')"><i class="fa-solid fa-trash"></i> Excluir</button></div></div>`}).join("")};
