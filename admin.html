@@ -65,7 +65,6 @@ button{
   margin:0 auto;
 }
 
-/* SIDEBAR */
 .sidebar-overlay{
   position:fixed;
   inset:0;
@@ -152,7 +151,6 @@ button{
   color:var(--gold);
 }
 
-/* HEADER */
 header{
   background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
   border-bottom:3px solid var(--gold);
@@ -218,7 +216,6 @@ header{
   color:#fff;
 }
 
-/* PAGE */
 .container{
   padding:22px 0 30px;
 }
@@ -273,7 +270,6 @@ header{
   display:none;
 }
 
-/* DASHBOARD */
 .grid{
   display:grid;
   grid-template-columns:repeat(6,minmax(0,1fr));
@@ -560,11 +556,11 @@ textarea:focus{
     <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Fases / Mata-Mata</a>
     <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
     <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria</a>
-        <a href="fotografos.html"><i class="fa-solid fa-camera"></i> Fotógrafos</a>
     <a href="fotografos.html"><i class="fa-solid fa-camera"></i> Fotógrafos</a>
     <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios Gerais</a>
   </div>
 </aside>
+
 <header>
   <div class="wrap header-inner">
     <button class="menu-toggle" id="menuToggle">☰</button>
@@ -592,7 +588,6 @@ textarea:focus{
 
   <div id="painelConteudo">
 
-    <!-- DASHBOARD -->
     <div class="grid">
       <div class="card"><h3 id="totalTimes">0</h3><p>Times</p></div>
       <div class="card"><h3 id="totalJogadores">0</h3><p>Jogadores</p></div>
@@ -602,7 +597,6 @@ textarea:focus{
       <div class="card"><h3 id="totalSumulas">0</h3><p>Súmulas</p></div>
     </div>
 
-    <!-- MENU ADM -->
     <div class="admin-block">
       <h3 class="section-title">Menus ADM</h3>
 
@@ -615,7 +609,6 @@ textarea:focus{
         <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros</a>
         <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes</a>
         <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Súmulas</a>
-
         <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Editar Súmula</a>
         <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Editar Tabelas</a>
         <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação</a>
@@ -628,10 +621,8 @@ textarea:focus{
       </div>
     </div>
 
-    <!-- BLOCO PRINCIPAL -->
     <div class="duplo">
 
-      <!-- APROVAÇÃO DE USUÁRIOS -->
       <div class="admin-block">
         <h3 class="section-title">
           <i class="fa-solid fa-user-check"></i> Usuários Pendentes
@@ -642,7 +633,6 @@ textarea:focus{
         </div>
       </div>
 
-      <!-- FOTÓGRAFOS PENDENTES -->
       <div class="admin-block">
         <h3 class="section-title">
           <i class="fa-solid fa-camera"></i> Fotógrafos Pendentes
@@ -662,9 +652,7 @@ textarea:focus{
 
       <div class="form-grid">
         <input id="tituloNoticia" placeholder="Título da notícia">
-
         <textarea id="textoNoticia" placeholder="Conteúdo da notícia"></textarea>
-
         <input id="imagemNoticia" placeholder="URL da imagem (opcional)">
 
         <button class="btn-full btn-gold" onclick="postarNoticia()">
@@ -680,6 +668,7 @@ textarea:focus{
   </div>
 
 </div>
+
 <script>
 const sidebar = document.getElementById("sidebar");
 const sidebarOverlay = document.getElementById("sidebarOverlay");
@@ -702,6 +691,7 @@ function fecharSidebar(){
 
 <script type="module">
 import { auth, db } from "./firebase.js";
+
 import {
   onAuthStateChanged,
   signOut
@@ -713,7 +703,9 @@ import {
   doc,
   getDoc,
   updateDoc,
-  addDoc
+  addDoc,
+  setDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const statusInfo = document.getElementById("statusInfo");
@@ -734,12 +726,9 @@ function erro(t){
 
 function normalizar(t){
   return String(t||"").toLowerCase().trim()
-  .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 }
 
-/* =========================
-   VALIDAÇÃO DE ACESSO
-=========================*/
 async function validar(user){
   const snap = await getDoc(doc(db,"usuarios",user.uid));
 
@@ -747,18 +736,13 @@ async function validar(user){
 
   const d = snap.data();
 
-  const tipo = normalizar(d.tipoUsuario);
+  const tipo = normalizar(d.tipoUsuario || d.tipo || d.perfil);
   const aprovado = d.aprovado === true;
   const autorizado = d.autorizado === true;
 
-  if(tipo === "admin" && aprovado && autorizado) return true;
-
-  return false;
+  return tipo === "admin" && aprovado && autorizado;
 }
 
-/* =========================
-   DASHBOARD
-=========================*/
 async function carregarTotais(){
   const [
     times,
@@ -784,9 +768,6 @@ async function carregarTotais(){
   document.getElementById("totalSumulas").innerText = sumulas.size;
 }
 
-/* =========================
-   USUÁRIOS PENDENTES
-=========================*/
 function tipoUsuario(u){
   return normalizar(u.tipoUsuario || u.tipo || u.perfil || u.funcao || "");
 }
@@ -818,10 +799,10 @@ async function carregarUsuarios(){
       <div class="usuario-card">
         <div class="usuario-top">
           <div>
-            <div class="usuario-nome">${u.nome || "-"}</div>
+            <div class="usuario-nome">${u.nome || u.nomeCompleto || "-"}</div>
             <div class="usuario-info">
               ${u.email || "-"}<br>
-              ${u.tipoUsuario || u.tipo || ""}
+              ${u.tipoUsuario || u.tipo || u.perfil || ""}
             </div>
           </div>
           <span class="tag">Pendente</span>
@@ -900,18 +881,77 @@ async function carregarFotografos(){
   lista.innerHTML = html || "<div class='vazio'>Nenhum fotógrafo pendente</div>";
 }
 
-/* =========================
-   APROVAR / REPROVAR
-=========================*/
+async function sincronizarArbitro(id, usuario, dadosExtras={}){
+  await setDoc(doc(db,"arbitros",id),{
+    usuarioId:id,
+    uid:id,
+
+    nome:usuario.nome || usuario.nomeCompleto || "",
+    nomeCompleto:usuario.nomeCompleto || usuario.nome || "",
+
+    email:usuario.email || "",
+    cpf:usuario.cpf || "",
+
+    cidade:usuario.cidade || "",
+    telefone:usuario.telefone || usuario.whatsapp || "",
+    whatsapp:usuario.whatsapp || usuario.telefone || "",
+
+    nascimento:usuario.nascimento || usuario.dataNascimento || "",
+    dataNascimento:usuario.dataNascimento || usuario.nascimento || "",
+
+    foto:usuario.foto || usuario.fotoPerfil || "logo-liga.jfif",
+
+    categoria:usuario.categoria || usuario.categoriaFuncao || "",
+    categorias:usuario.categoria ? [usuario.categoria] : (usuario.categorias || ["Todas"]),
+
+    tipo:"arbitro",
+    perfil:"arbitro",
+    tipoUsuario:"arbitro",
+
+    aprovado:true,
+    autorizado:true,
+    status:"ativo",
+
+    jogos:usuario.jogos || 0,
+    amarelos:usuario.amarelos || 0,
+    vermelhos:usuario.vermelhos || 0,
+
+    criadoEm:usuario.criadoEm || serverTimestamp(),
+    atualizadoEm:serverTimestamp(),
+
+    ...dadosExtras
+  },{merge:true});
+}
+
 window.aprovar = async function(id){
-  await updateDoc(doc(db,"usuarios",id),{
+  const snap = await getDoc(doc(db,"usuarios",id));
+
+  if(!snap.exists()) return;
+
+  const usuario = snap.data();
+
+  const tipo = normalizar(
+    usuario.tipoUsuario ||
+    usuario.tipo ||
+    usuario.perfil ||
+    ""
+  );
+
+  const dadosAtualizados = {
     aprovado:true,
     autorizado:true,
     status:"ativo"
-  });
+  };
 
-  carregarUsuarios();
-}
+  await updateDoc(doc(db,"usuarios",id),dadosAtualizados);
+
+  if(tipo === "arbitro"){
+    await sincronizarArbitro(id,usuario,dadosAtualizados);
+  }
+
+  await carregarUsuarios();
+  await carregarTotais();
+};
 
 window.reprovar = async function(id){
   await updateDoc(doc(db,"usuarios",id),{
@@ -921,7 +961,7 @@ window.reprovar = async function(id){
   });
 
   carregarUsuarios();
-}
+};
 
 async function sincronizarFotografo(id, dadosExtras={}){
   const userSnap = await getDoc(doc(db,"usuarios",id));
@@ -929,7 +969,7 @@ async function sincronizarFotografo(id, dadosExtras={}){
 
   await updateDoc(doc(db,"usuarios",id),dadosExtras);
 
-  await updateDoc(doc(db,"fotografos",id),{
+  await setDoc(doc(db,"fotografos",id),{
     uid:id,
     nome:base.nome || base.nomeCompleto || "",
     email:base.email || "",
@@ -947,28 +987,7 @@ async function sincronizarFotografo(id, dadosExtras={}){
     tipo:"fotografo",
     perfil:"fotografo",
     ...dadosExtras
-  }).catch(async ()=>{
-    const { setDoc } = await import("https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js");
-    await setDoc(doc(db,"fotografos",id),{
-      uid:id,
-      nome:base.nome || base.nomeCompleto || "",
-      email:base.email || "",
-      cpf:base.cpf || "",
-      whatsapp:base.whatsapp || base.telefone || "",
-      telefone:base.telefone || base.whatsapp || "",
-      cidade:base.cidade || "",
-      instagram:base.instagram || "",
-      portfolio:base.portfolio || base.site || "",
-      site:base.site || base.portfolio || "",
-      especialidade:base.especialidade || "",
-      fotoPerfil:base.fotoPerfil || base.foto || "",
-      foto:base.foto || base.fotoPerfil || "",
-      tipoUsuario:"fotografo",
-      tipo:"fotografo",
-      perfil:"fotografo",
-      ...dadosExtras
-    },{merge:true});
-  });
+  },{merge:true});
 }
 
 window.aprovarFotografo = async function(id){
@@ -981,7 +1000,7 @@ window.aprovarFotografo = async function(id){
   });
 
   await carregarFotografos();
-}
+};
 
 window.fotografoOficial = async function(id){
   await sincronizarFotografo(id,{
@@ -993,7 +1012,7 @@ window.fotografoOficial = async function(id){
   });
 
   await carregarFotografos();
-}
+};
 
 window.reprovarFotografo = async function(id){
   await sincronizarFotografo(id,{
@@ -1005,7 +1024,7 @@ window.reprovarFotografo = async function(id){
   });
 
   await carregarFotografos();
-}
+};
 
 window.bloquearFotografo = async function(id){
   await sincronizarFotografo(id,{
@@ -1017,15 +1036,12 @@ window.bloquearFotografo = async function(id){
   });
 
   await carregarFotografos();
-}
+};
 
 window.abrirPerfilFotografo = function(id){
   window.open("fotografos.html?id="+encodeURIComponent(id),"_blank");
-}
+};
 
-/* =========================
-   POSTAR NOTÍCIA
-=========================*/
 window.postarNoticia = async function(){
   const titulo = document.getElementById("tituloNoticia").value.trim();
   const texto = document.getElementById("textoNoticia").value.trim();
@@ -1048,20 +1064,14 @@ window.postarNoticia = async function(){
   document.getElementById("tituloNoticia").value="";
   document.getElementById("textoNoticia").value="";
   document.getElementById("imagemNoticia").value="";
-}
+};
 
-/* =========================
-   LOGOUT
-=========================*/
 window.logout = function(){
   signOut(auth).then(()=>{
     window.location.href="login.html";
   });
-}
+};
 
-/* =========================
-   INIT
-=========================*/
 onAuthStateChanged(auth, async user=>{
   if(!user){
     location.href="login.html";
