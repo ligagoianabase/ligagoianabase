@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Usuários ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Todos os Cadastros - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -92,19 +92,13 @@ header{
   gap:8px;
 }
 
-.btn-light{
-  background:#fff4cf;
-  color:#111;
-}
+.btn-light{background:#fff4cf;color:#111}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
+.btn-red{background:var(--red);color:#fff}
+.btn-green{background:var(--green);color:#fff}
+.btn-blue{background:var(--blue);color:#fff}
 
-.btn-gold{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#111;
-}
-
-.container{
-  padding-bottom:30px;
-}
+.container{padding-bottom:30px}
 
 .hero-panel,
 .admin-block{
@@ -133,7 +127,7 @@ header{
 
 .filtros{
   display:grid;
-  grid-template-columns:1.2fr .8fr .8fr .8fr;
+  grid-template-columns:1.2fr .8fr .8fr .8fr .8fr;
   gap:12px;
   margin-top:16px;
 }
@@ -183,6 +177,35 @@ header{
   background:rgba(27,94,32,.22);
   color:#b8ffd1;
   border:1px solid rgba(120,255,170,.25);
+}
+
+.resumo-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
+  margin-top:16px;
+}
+
+.resumo-card{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(247,198,0,.20);
+  border-radius:14px;
+  padding:14px;
+  text-align:center;
+}
+
+.resumo-card strong{
+  display:block;
+  color:var(--gold);
+  font-size:22px;
+}
+
+.resumo-card span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  margin-top:5px;
 }
 
 .lista{
@@ -298,6 +321,7 @@ header{
 .mini-delete{background:var(--red)}
 .mini-edit{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
 .mini-admin{background:var(--purple)}
+.mini-blue{background:var(--blue)}
 
 .form-edicao{
   display:grid;
@@ -324,7 +348,8 @@ header{
 
 @media(max-width:980px){
   .filtros,
-  .form-edicao{
+  .form-edicao,
+  .resumo-grid{
     grid-template-columns:1fr;
   }
 
@@ -378,7 +403,7 @@ header{
       </a>
     </div>
 
-    <div class="header-title">Usuários e Permissões</div>
+    <div class="header-title">Todos os Cadastros</div>
 
     <div class="header-right">
       <button class="top-btn btn-gold" type="button" onclick="limparEdicao()">
@@ -391,13 +416,22 @@ header{
 <div class="wrap container">
 
   <section class="hero-panel">
-    <h2>Controle de Usuários</h2>
+    <h2>Central de Cadastros</h2>
     <p>
-      Aqui o administrador aprova, autoriza, bloqueia, edita e sincroniza usuários com as coleções públicas do sistema.
+      Área exclusiva do ADM para ver, editar, aprovar, bloquear, ativar e excluir qualquer cadastro do sistema.
     </p>
 
     <div id="msgErro" class="msg error"></div>
     <div id="msgSucesso" class="msg success"></div>
+
+    <div class="resumo-grid">
+      <div class="resumo-card"><strong id="resTotal">0</strong><span>Total</span></div>
+      <div class="resumo-card"><strong id="resUsuarios">0</strong><span>Usuários</span></div>
+      <div class="resumo-card"><strong id="resArbitros">0</strong><span>Árbitros</span></div>
+      <div class="resumo-card"><strong id="resJogadores">0</strong><span>Jogadores</span></div>
+      <div class="resumo-card"><strong id="resTecnicos">0</strong><span>Técnicos</span></div>
+      <div class="resumo-card"><strong id="resFotografos">0</strong><span>Fotógrafos</span></div>
+    </div>
 
     <div class="filtros">
       <div class="field">
@@ -414,6 +448,7 @@ header{
           <option value="assistente">Assistente</option>
           <option value="tecnico">Técnico</option>
           <option value="jogador">Jogador</option>
+          <option value="fotografo">Fotógrafo</option>
           <option value="pai_atleta">Pai de Atleta</option>
           <option value="torcedor">Torcedor</option>
         </select>
@@ -426,6 +461,7 @@ header{
           <option value="ativo">Ativo</option>
           <option value="pendente">Pendente</option>
           <option value="bloqueado">Bloqueado</option>
+          <option value="reprovado">Reprovado</option>
         </select>
       </div>
 
@@ -439,18 +475,22 @@ header{
       </div>
 
       <div class="field">
-        <label for="filtroFotografoOficial">Fotógrafo Oficial</label>
-        <select id="filtroFotografoOficial" onchange="renderUsuarios()">
-          <option value="">Todos</option>
-          <option value="sim">Somente oficiais</option>
-          <option value="nao">Não oficiais</option>
+        <label for="filtroOrigem">Origem</label>
+        <select id="filtroOrigem" onchange="renderUsuarios()">
+          <option value="">Todas</option>
+          <option value="usuarios">Usuários</option>
+          <option value="arbitros">Árbitros</option>
+          <option value="jogadores">Jogadores</option>
+          <option value="tecnicos">Técnicos</option>
+          <option value="assistentes">Assistentes</option>
+          <option value="fotografos">Fotógrafos</option>
         </select>
       </div>
     </div>
   </section>
 
   <section class="admin-block">
-    <h3 class="section-title">Editar usuário selecionado</h3>
+    <h3 class="section-title">Editar cadastro selecionado</h3>
 
     <div class="form-edicao">
       <div class="field">
@@ -503,6 +543,7 @@ header{
           <option value="ativo">Ativo</option>
           <option value="pendente">Pendente</option>
           <option value="bloqueado">Bloqueado</option>
+          <option value="reprovado">Reprovado</option>
         </select>
       </div>
 
@@ -527,20 +568,30 @@ header{
       <button class="mini-btn mini-edit" onclick="salvarEdicao()">
         <i class="fa-solid fa-floppy-disk"></i> Salvar edição
       </button>
+
+      <button class="mini-btn mini-admin" onclick="sincronizarSelecionado()">
+        <i class="fa-solid fa-rotate"></i> Sincronizar cadastro
+      </button>
+
+      <button class="mini-btn mini-delete" onclick="excluirSelecionado()">
+        <i class="fa-solid fa-trash"></i> Excluir selecionado
+      </button>
     </div>
   </section>
 
   <section class="admin-block">
-    <h3 class="section-title">Lista de usuários</h3>
+    <h3 class="section-title">Lista completa de cadastros</h3>
 
     <div class="lista" id="listaUsuarios">
-      <div class="vazio">Carregando usuários...</div>
+      <div class="vazio">Carregando cadastros...</div>
     </div>
   </section>
 
 </div>
+
 <script type="module">
 import { auth, db } from "./firebase.js";
+
 import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
@@ -560,6 +611,14 @@ import {
 let usuariosCache = [];
 let usuarioSelecionadoId = "";
 let adminAtual = null;
+
+const COLECOES_PUBLICAS = [
+  "arbitros",
+  "jogadores",
+  "tecnicos",
+  "assistentes",
+  "fotografos"
+];
 
 const msgErro = document.getElementById("msgErro");
 const msgSucesso = document.getElementById("msgSucesso");
@@ -599,38 +658,16 @@ function normalizarTipo(tipo){
   const valor = normalizarTexto(tipo).replace(/\s+/g,"_");
 
   if(valor === "publico" || valor === "publico_geral" || valor === "torcedor") return "torcedor";
-  if(valor === "pai_atleta") return "pai_atleta";
+  if(valor === "pai_atleta" || valor === "pai_de_atleta") return "pai_atleta";
   if(valor === "jogador") return "jogador";
   if(valor === "tecnico") return "tecnico";
   if(valor === "assistente") return "assistente";
   if(valor === "arbitro") return "arbitro";
-  if(valor === "fotografo" || valor === "fotógrafo") return "fotografo";
+  if(valor === "fotografo") return "fotografo";
   if(valor === "admin" || valor === "administrador") return "admin";
 
   return valor || "torcedor";
 }
-
-
-
-async function registrarLog(adminUid,acao,usuarioAlvo,dadosExtras={}){
-
-  try{
-
-    await addDoc(collection(db,"logs_admin"),{
-      adminUid,
-      acao,
-      usuarioAlvoId:usuarioAlvo?.id || "",
-      usuarioAlvoNome:usuarioAlvo?.nome || usuarioAlvo?.nomeCompleto || "",
-      usuarioAlvoTipo:usuarioAlvo?.tipoUsuario || usuarioAlvo?.tipo || "",
-      data:serverTimestamp(),
-      ...dadosExtras
-    });
-
-  }catch(e){
-    console.error("Erro ao registrar log:",e);
-  }
-}
-
 
 function tipoLabel(tipo){
   const valor = normalizarTipo(tipo);
@@ -646,13 +683,52 @@ function tipoLabel(tipo){
   return "Torcedor";
 }
 
-window.voltarPagina = function(){
-  if(window.history.length > 1){
-    window.history.back();
-  }else{
-    window.location.href = "admin.html";
+function colecaoPorTipo(tipo){
+  const valor = normalizarTipo(tipo);
+
+  if(valor === "arbitro") return "arbitros";
+  if(valor === "jogador") return "jogadores";
+  if(valor === "tecnico") return "tecnicos";
+  if(valor === "assistente") return "assistentes";
+  if(valor === "fotografo") return "fotografos";
+
+  return "";
+}
+
+function idPrincipal(dados,id){
+  return dados.uid || dados.usuarioId || id || dados.id || "";
+}
+
+function chaveCadastro(dados,id){
+  return (
+    dados.uid ||
+    dados.usuarioId ||
+    id ||
+    dados.email ||
+    limparCPF(dados.cpf || "") ||
+    ""
+  );
+}
+
+function fotoUsuario(u){
+  return u.foto || u.fotoPerfil || u.avatar || "logo-liga.jfif";
+}
+
+async function registrarLog(adminUid,acao,usuarioAlvo,dadosExtras={}){
+  try{
+    await addDoc(collection(db,"logs_admin"),{
+      adminUid:adminUid || "",
+      acao,
+      usuarioAlvoId:usuarioAlvo?.id || "",
+      usuarioAlvoNome:usuarioAlvo?.nome || usuarioAlvo?.nomeCompleto || "",
+      usuarioAlvoTipo:usuarioAlvo?.tipoUsuario || usuarioAlvo?.tipo || "",
+      data:serverTimestamp(),
+      ...dadosExtras
+    });
+  }catch(e){
+    console.error("Erro ao registrar log:",e);
   }
-};
+}
 
 async function validarAcessoAdmin(user){
   if(!user) return false;
@@ -670,71 +746,37 @@ async function validarAcessoAdmin(user){
   return tipo === "admin" && aprovado && autorizado && status !== "bloqueado";
 }
 
-function aplicarRegrasPorTipo(tipo){
-  const valor = normalizarTipo(tipo);
-
-  if(valor === "admin"){
-    return { aprovado:true, autorizado:true, status:"ativo" };
-  }
-
-  if(valor === "arbitro"){
-    return { aprovado:false, autorizado:false, status:"pendente" };
-  }
-
-  if(valor === "assistente"){
-    return { aprovado:false, autorizado:false, status:"pendente" };
-  }
-
-  if(valor === "tecnico"){
-    return { aprovado:false, autorizado:false, status:"pendente" };
-  }
-
-  if(valor === "jogador"){
-    return { aprovado:false, autorizado:false, status:"pendente" };
-  }
-
-  if(valor === "fotografo"){
-    return { aprovado:false, autorizado:false, status:"pendente" };
-  }
-
-  if(valor === "pai_atleta"){
-    return { aprovado:true, autorizado:false, status:"ativo" };
-  }
-
-  return { aprovado:true, autorizado:false, status:"ativo" };
-}
-
 function regraAprovacao(tipo){
   const valor = normalizarTipo(tipo);
 
-  if(valor === "admin"){
-    return { aprovado:true, autorizado:true, status:"ativo" };
-  }
+  if(valor === "admin") return { aprovado:true, autorizado:true, status:"ativo" };
+  if(valor === "arbitro") return { aprovado:true, autorizado:true, status:"ativo" };
+  if(valor === "assistente") return { aprovado:true, autorizado:true, status:"ativo" };
+  if(valor === "tecnico") return { aprovado:true, autorizado:true, status:"ativo" };
+  if(valor === "jogador") return { aprovado:true, autorizado:true, status:"ativo" };
+  if(valor === "fotografo") return { aprovado:true, autorizado:true, status:"ativo" };
 
-  if(valor === "arbitro"){
-    return { aprovado:true, autorizado:true, status:"ativo" };
-  }
+  return { aprovado:true, autorizado:false, status:"ativo" };
+}
 
-  if(valor === "assistente"){
-    return { aprovado:true, autorizado:false, status:"ativo" };
-  }
+function regraPadrao(tipo){
+  const valor = normalizarTipo(tipo);
 
-  if(valor === "tecnico"){
-    return { aprovado:true, autorizado:false, status:"ativo" };
-  }
+  if(valor === "admin") return { aprovado:true, autorizado:true, status:"ativo" };
 
-  if(valor === "jogador"){
-    return { aprovado:true, autorizado:false, status:"ativo" };
-  }
-
-  if(valor === "fotografo"){
-    return { aprovado:true, autorizado:false, status:"ativo" };
+  if(
+    valor === "arbitro" ||
+    valor === "assistente" ||
+    valor === "tecnico" ||
+    valor === "jogador"
+  ){
+    return { aprovado:false, autorizado:false, status:"pendente" };
   }
 
   return { aprovado:true, autorizado:false, status:"ativo" };
 }
 
-async function sincronizarColecaoPublica(id, usuario){
+function montarBasePublica(id, usuario){
   const tipo = normalizarTipo(usuario.tipoUsuario || usuario.tipo || usuario.perfil || "");
   const nome = usuario.nome || usuario.nomeCompleto || "";
   const email = usuario.email || "";
@@ -743,7 +785,8 @@ async function sincronizarColecaoPublica(id, usuario){
   const categoria = usuario.categoria || usuario.categoriaFuncao || "";
   const cidade = usuario.cidade || "";
 
-  const base = {
+  return {
+    uid:id,
     usuarioId:id,
     nome,
     nomeCompleto:nome,
@@ -756,81 +799,68 @@ async function sincronizarColecaoPublica(id, usuario){
     time,
     timeNome:time,
     categoria,
-    categorias:categoria ? [categoria] : [],
+    categorias:categoria ? [categoria] : (usuario.categorias || []),
+    cidade,
+    foto:usuario.foto || usuario.fotoPerfil || "logo-liga.jfif",
+    fotoPerfil:usuario.fotoPerfil || usuario.foto || "logo-liga.jfif",
+    tipoUsuario:tipo,
+    tipo,
+    perfil:tipo,
     aprovado:usuario.aprovado === true,
     autorizado:usuario.autorizado === true,
     status:usuario.status || "ativo",
-    atualizadoEm:serverTimestamp()
+    jogos:usuario.jogos || 0,
+    gols:usuario.gols || 0,
+    assistencias:usuario.assistencias || 0,
+    amarelos:usuario.amarelos || 0,
+    vermelhos:usuario.vermelhos || 0,
+    atualizadoEm:serverTimestamp(),
+    criadoEm:usuario.criadoEm || serverTimestamp()
   };
+}
+
+async function sincronizarColecaoPublica(id, usuario){
+  const tipo = normalizarTipo(usuario.tipoUsuario || usuario.tipo || usuario.perfil || "");
+  const colecao = colecaoPorTipo(tipo);
+
+  if(!colecao) return;
+
+  const base = montarBasePublica(id,usuario);
 
   if(tipo === "jogador"){
-    await setDoc(doc(db,"jogadores",id),{
-      ...base,
-      numero:usuario.numero || usuario.camisa || "",
-      camisa:usuario.numero || usuario.camisa || "",
-      posicao:usuario.posicao || "",
-      instagram:usuario.instagram || "",
-      facebook:usuario.facebook || "",
-      foto:usuario.foto || "logo-liga.jfif",
-      jogos:usuario.jogos || 0,
-      gols:usuario.gols || 0,
-      assistencias:usuario.assistencias || 0,
-      amarelos:usuario.amarelos || 0,
-      vermelhos:usuario.vermelhos || 0,
-      criadoEm:usuario.criadoEm || serverTimestamp()
-    },{merge:true});
-  }
-
-  if(tipo === "tecnico"){
-    await setDoc(doc(db,"tecnicos",id),{
-      ...base,
-      cidade,
-      foto:usuario.foto || "logo-liga.jfif",
-      criadoEm:usuario.criadoEm || serverTimestamp()
-    },{merge:true});
-  }
-
-  if(tipo === "arbitro"){
-    await setDoc(doc(db,"arbitros",id),{
-      ...base,
-      cidade,
-      foto:usuario.foto || "logo-liga.jfif",
-      jogos:usuario.jogos || 0,
-      amarelos:usuario.amarelos || 0,
-      vermelhos:usuario.vermelhos || 0,
-      criadoEm:usuario.criadoEm || serverTimestamp()
-    },{merge:true});
+    base.numero = usuario.numero || usuario.camisa || "";
+    base.camisa = usuario.numero || usuario.camisa || "";
+    base.posicao = usuario.posicao || "";
   }
 
   if(tipo === "fotografo"){
-    await setDoc(doc(db,"fotografos",id),{
-      ...base,
-      cidade,
-      instagram:usuario.instagram || "",
-      portfolio:usuario.portfolio || usuario.site || "",
-      site:usuario.site || usuario.portfolio || "",
-      especialidade:usuario.especialidade || "",
-      bio:usuario.bio || usuario.descricao || "",
-      foto:usuario.foto || usuario.fotoPerfil || "logo-liga.jfif",
-      fotoPerfil:usuario.fotoPerfil || usuario.foto || "logo-liga.jfif",
-      fotografo:true,
-      fotografoOficial:usuario.fotografoOficial === true,
-      jogos:usuario.jogos || 0,
-      galerias:usuario.galerias || 0,
-      criadoEm:usuario.criadoEm || serverTimestamp()
-    },{merge:true});
+    base.instagram = usuario.instagram || "";
+    base.portfolio = usuario.portfolio || usuario.site || "";
+    base.site = usuario.site || usuario.portfolio || "";
+    base.especialidade = usuario.especialidade || "";
+    base.bio = usuario.bio || usuario.descricao || "";
+    base.fotografo = true;
+    base.fotografoOficial = usuario.fotografoOficial === true;
   }
 
-  if(tipo === "assistente"){
-    await setDoc(doc(db,"assistentes",id),{
-      ...base,
-      cidade,
-      foto:usuario.foto || "logo-liga.jfif",
-      jogos:usuario.jogos || 0,
-      criadoEm:usuario.criadoEm || serverTimestamp()
-    },{merge:true});
+  await setDoc(doc(db,colecao,id),base,{merge:true});
+}
+
+async function apagarDeTodasColecoes(id){
+  await deleteDoc(doc(db,"usuarios",id)).catch(()=>{});
+
+  for(const col of COLECOES_PUBLICAS){
+    await deleteDoc(doc(db,col,id)).catch(()=>{});
   }
 }
+
+window.voltarPagina = function(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = "admin.html";
+  }
+};
 
 window.limparEdicao = function(){
   usuarioSelecionadoId = "";
@@ -866,7 +896,7 @@ window.selecionarUsuario = function(id){
   document.getElementById("editAprovado").value = usuario.aprovado === true ? "true" : "false";
   document.getElementById("editAutorizado").value = usuario.autorizado === true ? "true" : "false";
 
-  mostrarSucesso("Usuário carregado para edição.");
+  mostrarSucesso("Cadastro carregado para edição.");
   window.scrollTo({ top:0, behavior:"smooth" });
 };
 
@@ -874,7 +904,7 @@ window.salvarEdicao = async function(){
   limparMensagens();
 
   if(!usuarioSelecionadoId){
-    mostrarErro("Selecione um usuário da lista para editar.");
+    mostrarErro("Selecione um cadastro da lista para editar.");
     return;
   }
 
@@ -901,32 +931,17 @@ window.salvarEdicao = async function(){
   };
 
   if(!dados.nome){
-    mostrarErro("Digite o nome do usuário.");
+    mostrarErro("Digite o nome do cadastro.");
     return;
   }
 
   if(!dados.email){
-    mostrarErro("Digite o email do usuário.");
-    return;
-  }
-
-  if(!dados.cpf || dados.cpf.length !== 11){
-    mostrarErro("Digite um CPF válido.");
-    return;
-  }
-
-  if(!dados.dataNascimento){
-    mostrarErro("Digite a data de nascimento.");
-    return;
-  }
-
-  if(!dados.whatsapp){
-    mostrarErro("Digite o WhatsApp.");
+    mostrarErro("Digite o email.");
     return;
   }
 
   try{
-    await updateDoc(doc(db,"usuarios",usuarioSelecionadoId),dados);
+    await setDoc(doc(db,"usuarios",usuarioSelecionadoId),dados,{merge:true});
 
     const usuarioAtualizado = {
       id:usuarioSelecionadoId,
@@ -936,16 +951,45 @@ window.salvarEdicao = async function(){
 
     await sincronizarColecaoPublica(usuarioSelecionadoId,usuarioAtualizado);
 
-    await registrarLog(adminAtual?.uid,"editar_usuario",usuarioAtualizado,{
+    await registrarLog(adminAtual?.uid,"editar_cadastro",usuarioAtualizado,{
       alteracoes:dados
     });
 
     await carregarUsuarios();
-    mostrarSucesso("Usuário atualizado e sincronizado com sucesso.");
+    mostrarSucesso("Cadastro atualizado e sincronizado.");
   }catch(erro){
     console.error(erro);
-    mostrarErro("Erro ao atualizar usuário.");
+    mostrarErro("Erro ao atualizar cadastro.");
   }
+};
+
+window.sincronizarSelecionado = async function(){
+  limparMensagens();
+
+  if(!usuarioSelecionadoId){
+    mostrarErro("Selecione um cadastro primeiro.");
+    return;
+  }
+
+  const usuario = usuariosCache.find(u => u.id === usuarioSelecionadoId);
+  if(!usuario){
+    mostrarErro("Cadastro não encontrado.");
+    return;
+  }
+
+  await sincronizarColecaoPublica(usuarioSelecionadoId,usuario);
+  await carregarUsuarios();
+
+  mostrarSucesso("Cadastro sincronizado com a coleção pública.");
+};
+
+window.excluirSelecionado = async function(){
+  if(!usuarioSelecionadoId){
+    mostrarErro("Selecione um cadastro primeiro.");
+    return;
+  }
+
+  await excluirUsuario(usuarioSelecionadoId);
 };
 
 window.aplicarRegraPadrao = async function(id){
@@ -955,7 +999,7 @@ window.aplicarRegraPadrao = async function(id){
     const usuario = usuariosCache.find(u => u.id === id);
     if(!usuario) return;
 
-    const regra = aplicarRegrasPorTipo(usuario.tipoUsuario || usuario.tipo || "");
+    const regra = regraPadrao(usuario.tipoUsuario || usuario.tipo || "");
 
     const dados = {
       aprovado:regra.aprovado,
@@ -964,7 +1008,7 @@ window.aplicarRegraPadrao = async function(id){
       atualizadoEm:serverTimestamp()
     };
 
-    await updateDoc(doc(db,"usuarios",id),dados);
+    await setDoc(doc(db,"usuarios",id),dados,{merge:true});
 
     await sincronizarColecaoPublica(id,{
       ...usuario,
@@ -972,7 +1016,7 @@ window.aplicarRegraPadrao = async function(id){
     });
 
     await carregarUsuarios();
-    mostrarSucesso("Regra padrão aplicada e sincronizada.");
+    mostrarSucesso("Regra padrão aplicada.");
   }catch(erro){
     console.error(erro);
     mostrarErro("Erro ao aplicar regra padrão.");
@@ -995,22 +1039,22 @@ window.aprovarUsuario = async function(id){
       atualizadoEm:serverTimestamp()
     };
 
-    await updateDoc(doc(db,"usuarios",id),dados);
+    await setDoc(doc(db,"usuarios",id),dados,{merge:true});
 
     await sincronizarColecaoPublica(id,{
       ...usuario,
       ...dados
     });
 
-    await registrarLog(adminAtual?.uid,"aprovar_usuario",usuario,{
+    await registrarLog(adminAtual?.uid,"aprovar_cadastro",usuario,{
       statusNovo:"ativo"
     });
 
     await carregarUsuarios();
-    mostrarSucesso("Usuário aprovado e sincronizado com sucesso.");
+    mostrarSucesso("Cadastro aprovado e sincronizado.");
   }catch(erro){
     console.error(erro);
-    mostrarErro("Erro ao aprovar usuário.");
+    mostrarErro("Erro ao aprovar cadastro.");
   }
 };
 
@@ -1021,32 +1065,25 @@ window.reprovarUsuario = async function(id){
     const usuario = usuariosCache.find(u => u.id === id);
     if(!usuario) return;
 
-    const tipo = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "");
-    const regra = aplicarRegrasPorTipo(tipo);
-
     const dados = {
       aprovado:false,
       autorizado:false,
-      status:regra.status === "ativo" ? "pendente" : regra.status,
+      status:"pendente",
       atualizadoEm:serverTimestamp()
     };
 
-    await updateDoc(doc(db,"usuarios",id),dados);
+    await setDoc(doc(db,"usuarios",id),dados,{merge:true});
 
     await sincronizarColecaoPublica(id,{
       ...usuario,
       ...dados
     });
 
-    await registrarLog(adminAtual?.uid,"usuario_pendente",usuario,{
-      statusNovo:"pendente"
-    });
-
     await carregarUsuarios();
-    mostrarSucesso("Usuário voltou para pendente.");
+    mostrarSucesso("Cadastro voltou para pendente.");
   }catch(erro){
     console.error(erro);
-    mostrarErro("Erro ao colocar usuário como pendente.");
+    mostrarErro("Erro ao colocar como pendente.");
   }
 };
 
@@ -1064,22 +1101,18 @@ window.bloquearUsuario = async function(id){
       atualizadoEm:serverTimestamp()
     };
 
-    await updateDoc(doc(db,"usuarios",id),dados);
+    await setDoc(doc(db,"usuarios",id),dados,{merge:true});
 
     await sincronizarColecaoPublica(id,{
       ...usuario,
       ...dados
     });
 
-    await registrarLog(adminAtual?.uid,"bloquear_usuario",usuario,{
-      statusNovo:"bloqueado"
-    });
-
     await carregarUsuarios();
-    mostrarSucesso("Usuário bloqueado com sucesso.");
+    mostrarSucesso("Cadastro bloqueado.");
   }catch(erro){
     console.error(erro);
-    mostrarErro("Erro ao bloquear usuário.");
+    mostrarErro("Erro ao bloquear cadastro.");
   }
 };
 
@@ -1090,61 +1123,55 @@ window.ativarUsuario = async function(id){
     const usuario = usuariosCache.find(u => u.id === id);
     if(!usuario) return;
 
+    const tipo = normalizarTipo(usuario.tipoUsuario || usuario.tipo || "");
+
     const dados = {
       status:"ativo",
       aprovado:true,
+      autorizado:tipo === "admin" || tipo === "arbitro" || tipo === "assistente" || tipo === "tecnico" || tipo === "jogador",
       atualizadoEm:serverTimestamp()
     };
 
-    if(normalizarTipo(usuario.tipoUsuario || usuario.tipo || "") === "admin"){
-      dados.autorizado = true;
-    }
-
-    if(normalizarTipo(usuario.tipoUsuario || usuario.tipo || "") === "arbitro"){
-      dados.autorizado = true;
-    }
-
-    await updateDoc(doc(db,"usuarios",id),dados);
+    await setDoc(doc(db,"usuarios",id),dados,{merge:true});
 
     await sincronizarColecaoPublica(id,{
       ...usuario,
       ...dados
     });
 
-    await registrarLog(adminAtual?.uid,"ativar_usuario",usuario,{
-      statusNovo:"ativo"
-    });
-
     await carregarUsuarios();
-    mostrarSucesso("Usuário ativado com sucesso.");
+    mostrarSucesso("Cadastro ativado.");
   }catch(erro){
     console.error(erro);
-    mostrarErro("Erro ao ativar usuário.");
+    mostrarErro("Erro ao ativar cadastro.");
   }
 };
 
 window.excluirUsuario = async function(id){
   limparMensagens();
 
-  const confirmar = prompt("Digite EXCLUIR para confirmar:");
+  const usuario = usuariosCache.find(u => u.id === id);
+
+  const confirmar = prompt("Digite EXCLUIR para apagar este cadastro de usuários, árbitros, jogadores, técnicos, assistentes e fotógrafos:");
 
   if(confirmar !== "EXCLUIR") return;
 
   try{
-    await deleteDoc(doc(db,"usuarios",id));
-    await registrarLog(adminAtual?.uid,"excluir_usuario",{
-      id,
-      nome:"Usuário removido"
-    });
+    await apagarDeTodasColecoes(id);
+
+    await registrarLog(adminAtual?.uid,"excluir_cadastro",usuario || {id,nome:"Cadastro removido"});
+
+    if(usuarioSelecionadoId === id){
+      limparEdicao();
+    }
 
     await carregarUsuarios();
-    mostrarSucesso("Usuário excluído da coleção usuarios.");
+    mostrarSucesso("Cadastro excluído de todas as coleções do sistema.");
   }catch(erro){
     console.error(erro);
-    mostrarErro("Erro ao excluir usuário.");
+    mostrarErro("Erro ao excluir cadastro.");
   }
 };
-
 
 window.toggleFotografoOficial = async function(id){
   try{
@@ -1153,19 +1180,15 @@ window.toggleFotografoOficial = async function(id){
 
     const novoValor = usuario.fotografoOficial === true ? false : true;
 
-    await updateDoc(doc(db,"usuarios",id),{
+    await setDoc(doc(db,"usuarios",id),{
       fotografoOficial:novoValor,
       atualizadoEm:serverTimestamp()
-    });
+    },{merge:true});
 
     await setDoc(doc(db,"fotografos",id),{
       fotografoOficial:novoValor,
       atualizadoEm:serverTimestamp()
     },{merge:true});
-
-    await registrarLog(adminAtual?.uid,"fotografo_oficial",usuario,{
-      fotografoOficial:novoValor
-    });
 
     await carregarUsuarios();
     mostrarSucesso("Status de fotógrafo oficial atualizado.");
@@ -1181,8 +1204,32 @@ window.abrirPerfilPublico = function(id,tipo){
     return;
   }
 
+  if(tipo === "arbitro"){
+    window.open("arbitros.html?id="+encodeURIComponent(id),"_blank");
+    return;
+  }
+
+  if(tipo === "jogador"){
+    window.open("jogadores.html?id="+encodeURIComponent(id),"_blank");
+    return;
+  }
+
+  if(tipo === "tecnico"){
+    window.open("tecnicos.html?id="+encodeURIComponent(id),"_blank");
+    return;
+  }
+
   window.open("perfil.html?id="+encodeURIComponent(id),"_blank");
 };
+
+function atualizarResumo(){
+  document.getElementById("resTotal").innerText = usuariosCache.length;
+  document.getElementById("resUsuarios").innerText = usuariosCache.filter(u => u.origens?.includes("usuarios")).length;
+  document.getElementById("resArbitros").innerText = usuariosCache.filter(u => normalizarTipo(u.tipoUsuario || u.tipo || u.perfil) === "arbitro").length;
+  document.getElementById("resJogadores").innerText = usuariosCache.filter(u => normalizarTipo(u.tipoUsuario || u.tipo || u.perfil) === "jogador").length;
+  document.getElementById("resTecnicos").innerText = usuariosCache.filter(u => normalizarTipo(u.tipoUsuario || u.tipo || u.perfil) === "tecnico").length;
+  document.getElementById("resFotografos").innerText = usuariosCache.filter(u => normalizarTipo(u.tipoUsuario || u.tipo || u.perfil) === "fotografo").length;
+}
 
 window.renderUsuarios = function(){
   const lista = document.getElementById("listaUsuarios");
@@ -1190,7 +1237,7 @@ window.renderUsuarios = function(){
   const filtroTipo = normalizarTipo(document.getElementById("filtroTipo").value);
   const filtroStatus = normalizarTexto(document.getElementById("filtroStatus").value);
   const filtroAutorizado = document.getElementById("filtroAutorizado").value;
-  const filtroFotografoOficial = document.getElementById("filtroFotografoOficial").value;
+  const filtroOrigem = document.getElementById("filtroOrigem").value;
 
   let usuarios = [...usuariosCache];
 
@@ -1220,18 +1267,14 @@ window.renderUsuarios = function(){
     usuarios = usuarios.filter(u => u.autorizado !== true);
   }
 
-  if(filtroFotografoOficial === "sim"){
-    usuarios = usuarios.filter(u => u.fotografoOficial === true);
-  }
-
-  if(filtroFotografoOficial === "nao"){
-    usuarios = usuarios.filter(u => u.fotografoOficial !== true);
+  if(filtroOrigem){
+    usuarios = usuarios.filter(u => (u.origens || []).includes(filtroOrigem));
   }
 
   usuarios.sort((a,b)=>String(a.nome || a.nomeCompleto || "").localeCompare(String(b.nome || b.nomeCompleto || ""),"pt-BR"));
 
   if(!usuarios.length){
-    lista.innerHTML = `<div class="vazio">Nenhum usuário encontrado.</div>`;
+    lista.innerHTML = `<div class="vazio">Nenhum cadastro encontrado.</div>`;
     return;
   }
 
@@ -1240,12 +1283,13 @@ window.renderUsuarios = function(){
     const autorizado = usuario.autorizado === true;
     const aprovado = usuario.aprovado === true;
     const status = usuario.status || "ativo";
+    const origens = (usuario.origens || []).join(", ");
 
     return `
       <div class="user-card">
         <div class="user-top">
           <div class="user-main">
-            <img class="user-photo" src="${usuario.foto || usuario.fotoPerfil || 'logo-liga.jfif'}" onerror="this.src='logo-liga.jfif'">
+            <img class="user-photo" src="${fotoUsuario(usuario)}" onerror="this.src='logo-liga.jfif'">
 
             <div class="user-info">
               <h3>${usuario.nome || usuario.nomeCompleto || "Sem nome"}</h3>
@@ -1254,13 +1298,8 @@ window.renderUsuarios = function(){
               <p><strong>Nascimento:</strong> ${usuario.dataNascimento || usuario.nascimento || "-"}</p>
               <p><strong>WhatsApp:</strong> ${usuario.whatsapp || usuario.telefone || "-"}</p>
               <p><strong>Time:</strong> ${usuario.time || usuario.timeNome || "-"}</p>
-              ${tipo === "fotografo" ? `
-                <p><strong>Cidade:</strong> ${usuario.cidade || "-"}</p>
-                <p><strong>Instagram:</strong> ${usuario.instagram || "-"}</p>
-                <p><strong>Portfólio:</strong> ${usuario.portfolio || usuario.site || "-"}</p>
-                <p><strong>Especialidade:</strong> ${usuario.especialidade || "-"}</p>
-              ` : ""}
               <p><strong>ID:</strong> ${usuario.id}</p>
+              <p><strong>Origem:</strong> ${origens || "-"}</p>
             </div>
           </div>
         </div>
@@ -1298,14 +1337,20 @@ window.renderUsuarios = function(){
             <i class="fa-solid fa-check"></i> Ativar
           </button>
 
-          ${tipo === "fotografo" ? `
-          <button class="mini-btn mini-admin" onclick="toggleFotografoOficial('${usuario.id}')">
-            <i class="fa-solid fa-camera"></i> Oficial
+          <button class="mini-btn mini-blue" onclick="sincronizarCadastroDireto('${usuario.id}')">
+            <i class="fa-solid fa-rotate"></i> Sincronizar
           </button>
 
-          <button class="mini-btn mini-edit" onclick="abrirPerfilPublico('${usuario.id}','fotografo')">
-            <i class="fa-solid fa-user"></i> Perfil Público
-          </button>
+          ${tipo === "fotografo" ? `
+            <button class="mini-btn mini-admin" onclick="toggleFotografoOficial('${usuario.id}')">
+              <i class="fa-solid fa-camera"></i> Oficial
+            </button>
+          ` : ""}
+
+          ${tipo !== "torcedor" && tipo !== "pai_atleta" ? `
+            <button class="mini-btn mini-edit" onclick="abrirPerfilPublico('${usuario.id}','${tipo}')">
+              <i class="fa-solid fa-user"></i> Perfil Público
+            </button>
           ` : ""}
 
           <button class="mini-btn mini-delete" onclick="excluirUsuario('${usuario.id}')">
@@ -1317,30 +1362,91 @@ window.renderUsuarios = function(){
   }).join("");
 };
 
+window.sincronizarCadastroDireto = async function(id){
+  const usuario = usuariosCache.find(u => u.id === id);
+  if(!usuario) return;
+
+  await sincronizarColecaoPublica(id,usuario);
+  await carregarUsuarios();
+  mostrarSucesso("Cadastro sincronizado.");
+};
+
+async function carregarColecao(nome){
+  const snap = await getDocs(collection(db,nome));
+  return snap.docs.map(d=>({
+    id:d.id,
+    origem:nome,
+    ...d.data()
+  }));
+}
+
 async function carregarUsuarios(){
   const lista = document.getElementById("listaUsuarios");
-  lista.innerHTML = `<div class="vazio">Carregando usuários...</div>`;
+  lista.innerHTML = `<div class="vazio">Carregando cadastros...</div>`;
 
   try{
-    const snap = await getDocs(collection(db,"usuarios"));
-    usuariosCache = [];
+    const [
+      usuarios,
+      arbitros,
+      jogadores,
+      tecnicos,
+      assistentes,
+      fotografos
+    ] = await Promise.all([
+      carregarColecao("usuarios"),
+      carregarColecao("arbitros"),
+      carregarColecao("jogadores"),
+      carregarColecao("tecnicos"),
+      carregarColecao("assistentes"),
+      carregarColecao("fotografos")
+    ]);
 
-    snap.forEach(docSnap=>{
-      usuariosCache.push({
-        id:docSnap.id,
-        ...docSnap.data()
+    const mapa = new Map();
+
+    [...usuarios,...arbitros,...jogadores,...tecnicos,...assistentes,...fotografos].forEach(item=>{
+      const chave = chaveCadastro(item,item.id);
+      if(!chave) return;
+
+      const anterior = mapa.get(chave) || {
+        id:idPrincipal(item,item.id),
+        origens:[]
+      };
+
+      const novoId = anterior.id || idPrincipal(item,item.id);
+
+      mapa.set(chave,{
+        ...anterior,
+        ...item,
+        id:novoId,
+        uid:novoId,
+        usuarioId:novoId,
+        origens:[...new Set([...(anterior.origens || []),item.origem])]
       });
     });
 
+    usuariosCache = [...mapa.values()].map(u=>{
+      const tipo = normalizarTipo(u.tipoUsuario || u.tipo || u.perfil || "");
+
+      return {
+        ...u,
+        tipoUsuario:tipo,
+        tipo,
+        perfil:tipo
+      };
+    });
+
+    atualizarResumo();
     window.renderUsuarios();
+
   }catch(erro){
     console.error(erro);
-    lista.innerHTML = `<div class="vazio">Erro ao carregar usuários.</div>`;
+    lista.innerHTML = `<div class="vazio">Erro ao carregar cadastros.</div>`;
   }
 }
 
 onAuthStateChanged(auth, async(user)=>{
   adminAtual = user;
+
   if(!user){
     window.location.href = "login.html";
     return;
