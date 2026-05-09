@@ -22,11 +22,7 @@
   --shadow:0 14px 34px rgba(0,0,0,.38);
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   font-family:Arial, sans-serif;
@@ -102,13 +98,9 @@ input:focus{
   outline:2px solid rgba(247,198,0,.65);
 }
 
-.senha-wrap{
-  position:relative;
-}
+.senha-wrap{position:relative}
 
-.senha-wrap input{
-  padding-right:48px;
-}
+.senha-wrap input{padding-right:48px}
 
 .toggle-senha{
   position:absolute;
@@ -155,9 +147,7 @@ input:focus{
   text-decoration:none;
 }
 
-.links a:hover{
-  text-decoration:underline;
-}
+.links a:hover{text-decoration:underline}
 
 .msg{
   margin-top:14px;
@@ -203,9 +193,7 @@ input:focus{
     </button>
   </div>
 
-  <button class="btn-principal" id="btnLogin" onclick="login()">
-    Entrar
-  </button>
+  <button class="btn-principal" id="btnLogin" onclick="login()">Entrar</button>
 
   <div id="msgErro" class="msg erro"></div>
   <div id="msgSucesso" class="msg sucesso"></div>
@@ -221,14 +209,13 @@ input:focus{
 import { auth, db } from "./firebase.js";
 
 import {
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  signOut
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
 import {
   doc,
-  getDoc,
-  setDoc,
-  serverTimestamp
+  getDoc
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const msgErro = document.getElementById("msgErro");
@@ -264,7 +251,7 @@ function normalizarTipo(tipo){
 }
 
 function pegarTiposUsuario(dados){
-  const bruto = dados.tipoUsuario ?? dados.tipousuario ?? dados.tipo ?? dados.perfil ?? "torcedor";
+  const bruto = dados.tipoUsuario ?? dados.tipousuario ?? dados.tipo ?? dados.perfil ?? "";
 
   if(Array.isArray(bruto)){
     return bruto.map(t => normalizarTipo(t)).filter(Boolean);
@@ -273,38 +260,29 @@ function pegarTiposUsuario(dados){
   return [normalizarTipo(bruto)].filter(Boolean);
 }
 
-function temTipo(tipos, tipo){
+function temTipo(tipos,tipo){
   return tipos.includes(normalizarTipo(tipo));
 }
 
-async function garantirRegistroBasico(uid,email){
-  const ref = doc(db,"usuarios",uid);
-  const snap = await getDoc(ref);
+function aprovadoAutomatico(tipos){
+  return (
+    temTipo(tipos,"torcedor") ||
+    temTipo(tipos,"pai_de_atleta") ||
+    temTipo(tipos,"pai de atleta") ||
+    temTipo(tipos,"fotografo") ||
+    temTipo(tipos,"fotógrafo")
+  );
+}
 
-  if(snap.exists()){
-    return snap;
-  }
-
-  await setDoc(ref,{
-    nome:"",
-    email,
-    cpf:"",
-    whatsapp:"",
-    telefone:"",
-    dataNascimento:"",
-    nascimento:"",
-    tipoUsuario:["torcedor"],
-    tipo:"torcedor",
-    perfil:"torcedor",
-    status:"pendente",
-    autorizado:false,
-    aprovado:false,
-    cadastroIncompleto:true,
-    criadoEm:serverTimestamp(),
-    atualizadoEm:serverTimestamp()
-  });
-
-  return await getDoc(ref);
+function precisaAprovacao(tipos){
+  return (
+    temTipo(tipos,"jogador") ||
+    temTipo(tipos,"tecnico") ||
+    temTipo(tipos,"técnico") ||
+    temTipo(tipos,"assistente") ||
+    temTipo(tipos,"arbitro") ||
+    temTipo(tipos,"árbitro")
+  );
 }
 
 window.alternarSenha = function(){
@@ -322,6 +300,11 @@ window.alternarSenha = function(){
 
 function redirecionar(){
   window.location.href = "index.html";
+}
+
+function liberarBotao(){
+  btnLogin.disabled = false;
+  btnLogin.innerText = "Entrar";
 }
 
 window.login = async function(){
@@ -347,38 +330,42 @@ window.login = async function(){
     const cred = await signInWithEmailAndPassword(auth,email,senha);
     const uid = cred.user.uid;
 
-    const userSnap = await garantirRegistroBasico(uid,email);
-    const dados = userSnap.data();
+    const userRef = doc(db,"usuarios",uid);
+    const userSnap = await getDoc(userRef);
 
+    if(!userSnap.exists()){
+      await signOut(auth);
+      mostrarErro("Você não possui cadastro no sistema. Faça seu cadastro primeiro.");
+      liberarBotao();
+      return;
+    }
+
+    const dados = userSnap.data();
     const tiposUsuario = pegarTiposUsuario(dados);
 
-    const status = normalizarTipo(dados.status || "ativo");
-    const aprovado = dados.aprovado === true;
-    const autorizado = dados.autorizado === true;
-    const cadastroIncompleto = dados.cadastroIncompleto === true;
-    const cpf = String(dados.cpf || "").replace(/\D/g,"");
-    const whatsapp = String(dados.whatsapp || dados.telefone || "").replace(/\D/g,"");
-    const dataNascimento = dados.dataNascimento || dados.nascimento || "";
-
-    if(cadastroIncompleto || !cpf || !whatsapp || !dataNascimento){
-      mostrarErro("Cadastro incompleto. Complete CPF, WhatsApp e data de nascimento no cadastro.");
-      btnLogin.disabled = false;
-      btnLogin.innerText = "Entrar";
+    if(!tiposUsuario.length){
+      await signOut(auth);
+      mostrarErro("Seu cadastro está sem tipo de usuário. Procure o ADM.");
+      liberarBotao();
       return;
     }
+
+    const status = normalizarTipo(dados.status || "ativo");
+    const aprovado = dados.aprovado === true || dados.autorizado === true;
+    const autorizado = dados.autorizado === true || dados.aprovado === true;
 
     if(status === "bloqueado" || status === "inativo"){
+      await signOut(auth);
       mostrarErro("Seu acesso está bloqueado.");
-      btnLogin.disabled = false;
-      btnLogin.innerText = "Entrar";
+      liberarBotao();
       return;
     }
 
-    if(temTipo(tiposUsuario,"admin")){
+    if(temTipo(tiposUsuario,"admin") || temTipo(tiposUsuario,"administrador")){
       if(!aprovado || !autorizado){
+        await signOut(auth);
         mostrarErro("Seu acesso de administrador ainda não está liberado.");
-        btnLogin.disabled = false;
-        btnLogin.innerText = "Entrar";
+        liberarBotao();
         return;
       }
 
@@ -387,11 +374,11 @@ window.login = async function(){
       return;
     }
 
-    if(temTipo(tiposUsuario,"arbitro")){
-      if(!aprovado || !autorizado){
-        mostrarErro("Seu acesso de árbitro ainda está pendente de autorização.");
-        btnLogin.disabled = false;
-        btnLogin.innerText = "Entrar";
+    if(precisaAprovacao(tiposUsuario)){
+      if(!aprovado || status === "pendente"){
+        await signOut(auth);
+        mostrarErro("Seu cadastro ainda está pendente de aprovação do ADM.");
+        liberarBotao();
         return;
       }
 
@@ -400,31 +387,7 @@ window.login = async function(){
       return;
     }
 
-    if(temTipo(tiposUsuario,"fotografo") || temTipo(tiposUsuario,"fotógrafo")){
-      if(!aprovado){
-        mostrarErro("Seu cadastro de fotógrafo ainda está aguardando aprovação do ADM.");
-        btnLogin.disabled = false;
-        btnLogin.innerText = "Entrar";
-        return;
-      }
-
-      mostrarSucesso("Login realizado com sucesso.");
-      setTimeout(redirecionar,600);
-      return;
-    }
-
-    if(
-      temTipo(tiposUsuario,"assistente") ||
-      temTipo(tiposUsuario,"tecnico") ||
-      temTipo(tiposUsuario,"jogador")
-    ){
-      if(!aprovado){
-        mostrarErro("Seu cadastro ainda está pendente de aprovação.");
-        btnLogin.disabled = false;
-        btnLogin.innerText = "Entrar";
-        return;
-      }
-
+    if(aprovadoAutomatico(tiposUsuario)){
       mostrarSucesso("Login realizado com sucesso.");
       setTimeout(redirecionar,600);
       return;
@@ -446,8 +409,7 @@ window.login = async function(){
       mostrarErro("Erro ao entrar. Tente novamente.");
     }
 
-    btnLogin.disabled = false;
-    btnLogin.innerText = "Entrar";
+    liberarBotao();
   }
 };
 
