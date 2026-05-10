@@ -887,7 +887,8 @@ import {
   updateDoc,
   serverTimestamp,
   collection,
-  getDocs
+  getDocs,
+  increment
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
@@ -1786,12 +1787,12 @@ window.buscarOutroJogador = async function(time){
 function montarSelects(){
   const optA = jogadoresA
     .filter(j=>j.nome)
-    .map(j=>`<option value="${j.nome}" data-num="${j.numero || ""}">${j.numero || "S/N"} - ${j.nome}</option>`)
+    .map(j=>`<option value="${j.nome}" data-id="${j.id || ""}" data-num="${j.numero || ""}">${j.numero || "S/N"} - ${j.nome}</option>`)
     .join("");
 
   const optB = jogadoresB
     .filter(j=>j.nome)
-    .map(j=>`<option value="${j.nome}" data-num="${j.numero || ""}">${j.numero || "S/N"} - ${j.nome}</option>`)
+    .map(j=>`<option value="${j.nome}" data-id="${j.id || ""}" data-num="${j.numero || ""}">${j.numero || "S/N"} - ${j.nome}</option>`)
     .join("");
 
   $("golJogadorA").innerHTML = optA || `<option value="">Sem jogadores</option>`;
@@ -1829,6 +1830,10 @@ window.adicionarGol = function(time){
     timeNome: time === "A" ? getTimeA().nome : getTimeB().nome,
     nome:sel.value,
     jogador:sel.value,
+    id:sel.selectedOptions[0]?.dataset?.id || "",
+    jogadorId:sel.selectedOptions[0]?.dataset?.id || "",
+    id:sel.selectedOptions[0]?.dataset?.id || "",
+    jogadorId:sel.selectedOptions[0]?.dataset?.id || "",
     numero:sel.selectedOptions[0]?.dataset?.num || "",
     minuto,
     tempo:minuto,
@@ -2028,6 +2033,19 @@ function montarDados(finalizar=false){
     sumulaFinalizada:finalizar,
     finalizadaEm:finalizar ? serverTimestamp() : null,
 
+    estatisticasProcessadas:finalizar ? {
+      golsA:golsA.length,
+      golsB:golsB.length,
+      jogadoresA:jogadoresA.map(j=>j.id).filter(Boolean),
+      jogadoresB:jogadoresB.map(j=>j.id).filter(Boolean),
+      gols:gols.map(g=>g.id || g.jogadorId).filter(Boolean),
+      cartoes:cartoes.map(c=>({id:c.id || c.jogadorId,tipo:c.tipo})).filter(c=>c.id),
+      tecnicosA:listaComissao("A").map(t=>t.id).filter(Boolean),
+      tecnicosB:listaComissao("B").map(t=>t.id).filter(Boolean),
+      times:[campo(jogo.timeA,["id","timeId","uid"],campo(jogo,["timeAId"],"")), campo(jogo.timeB,["id","timeId","uid"],campo(jogo,["timeBId"],""))].filter(Boolean),
+      processadoEm:new Date().toISOString()
+    } : campo(sumulaSalva,["estatisticasProcessadas"],null),
+
     removidoSubstituicoes:true,
     atualizadoEm:serverTimestamp()
   };
@@ -2148,6 +2166,61 @@ window.carregarJogo = async function(){
   setTimeout(ajustarEscalaSumula,100);
 };
 
+
+async function atualizarTimeCadastro(time, golsPro, golsContra){
+  const timeId = campo(time,["id","timeId","uid"],"");
+  if(!timeId) return;
+
+  const venceu = golsPro > golsContra;
+  const empatou = golsPro === golsContra;
+  const perdeu = golsPro < golsContra;
+
+  await setDoc(doc(db,"times",timeId),{
+    jogos:increment(1),
+    vitorias:increment(venceu ? 1 : 0),
+    empates:increment(empatou ? 1 : 0),
+    derrotas:increment(perdeu ? 1 : 0),
+    golsPro:increment(golsPro),
+    golsContra:increment(golsContra),
+    saldo:increment(golsPro - golsContra),
+    pontos:increment(venceu ? 3 : empatou ? 1 : 0),
+    atualizadoEm:serverTimestamp()
+  },{merge:true});
+}
+
+async function atualizarTecnicosTime(listaTecnicos, resultadoTexto){
+  for(const tecnico of listaTecnicos){
+    const tecnicoId = campo(tecnico,["id","uid","tecnicoId"],"");
+    if(!tecnicoId) continue;
+
+    await setDoc(doc(db,"tecnicos",tecnicoId),{
+      jogos:increment(1),
+      vitorias:increment(resultadoTexto === "vitoria" ? 1 : 0),
+      empates:increment(resultadoTexto === "empate" ? 1 : 0),
+      derrotas:increment(resultadoTexto === "derrota" ? 1 : 0),
+      atualizadoEm:serverTimestamp()
+    },{merge:true});
+  }
+}
+
+async function atualizarJogadorSeguro(jogadorId, tipo){
+  if(!jogadorId) return;
+
+  const dados = { atualizadoEm:serverTimestamp() };
+  if(tipo === "jogo") dados.jogos = increment(1);
+  if(tipo === "gol") dados.gols = increment(1);
+  if(tipo === "amarelo") dados.amarelos = increment(1);
+  if(tipo === "vermelho") dados.vermelhos = increment(1);
+
+  await setDoc(doc(db,"jogadores",jogadorId),dados,{merge:true});
+}
+
+function resultadoTexto(gp,gc){
+  if(gp > gc) return "vitoria";
+  if(gp < gc) return "derrota";
+  return "empate";
+}
+
 window.finalizarSumula = async function(){
   if(!podeEditar || finalizada){
     alert("Você não tem permissão para finalizar esta súmula ou ela já está finalizada.");
@@ -2168,6 +2241,9 @@ window.finalizarSumula = async function(){
       publico:true,
       publica:true,
       placar:`${golsA.length} x ${golsB.length}`,
+      placarA:golsA.length,
+      placarB:golsB.length,
+      placarTexto:`${golsA.length} x ${golsB.length}`,
       golsA:golsA.length,
       golsB:golsB.length,
       linkSumula:linkPublico(),
@@ -2175,8 +2251,17 @@ window.finalizarSumula = async function(){
       atualizadoEm:serverTimestamp()
     });
 
-    const timeA = jogo.timeA || {id:campo(jogo,["timeAId","mandanteId","timeMandanteId"],""),nome:getTimeA().nome};
-    const timeB = jogo.timeB || {id:campo(jogo,["timeBId","visitanteId","timeVisitanteId"],""),nome:getTimeB().nome};
+    const timeA = {
+      ...(jogo.timeA || {}),
+      id:campo(jogo.timeA,["id","timeId","uid"], campo(jogo,["timeAId","mandanteId","timeMandanteId"],"")),
+      nome:campo(jogo.timeA,["nome","nomeTime","time","equipe"], getTimeA().nome)
+    };
+
+    const timeB = {
+      ...(jogo.timeB || {}),
+      id:campo(jogo.timeB,["id","timeId","uid"], campo(jogo,["timeBId","visitanteId","timeVisitanteId"],"")),
+      nome:campo(jogo.timeB,["nome","nomeTime","time","equipe"], getTimeB().nome)
+    };
 
     const golsTimeA = golsA.length;
     const golsTimeB = golsB.length;
@@ -2276,12 +2361,18 @@ window.finalizarSumula = async function(){
     await atualizarTimeTabela(timeA, golsTimeA, golsTimeB);
     await atualizarTimeTabela(timeB, golsTimeB, golsTimeA);
 
-    for(const j of [...jogadoresA,...jogadoresB]) await atualizarJogador(j.id, "jogo");
-    for(const g of [...golsA,...golsB]) await atualizarJogador(g.id, "gol");
+    await atualizarTimeCadastro(timeA, golsTimeA, golsTimeB);
+    await atualizarTimeCadastro(timeB, golsTimeB, golsTimeA);
+
+    await atualizarTecnicosTime(listaComissao("A"), resultadoTexto(golsTimeA, golsTimeB));
+    await atualizarTecnicosTime(listaComissao("B"), resultadoTexto(golsTimeB, golsTimeA));
+
+    for(const j of [...jogadoresA,...jogadoresB]) await atualizarJogadorSeguro(j.id, "jogo");
+    for(const g of [...golsA,...golsB]) await atualizarJogadorSeguro(g.id || g.jogadorId, "gol");
 
     for(const c of [...cartoesA,...cartoesB]){
       await aplicarSuspensaoAutomatica(c);
-      await atualizarJogador(c.id, c.tipo === "amarelo" ? "amarelo" : "vermelho");
+      await atualizarJogadorSeguro(c.id || c.jogadorId, c.tipo === "amarelo" ? "amarelo" : "vermelho");
     }
 
     if(jogo.arbitroId){
