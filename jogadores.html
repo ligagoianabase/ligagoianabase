@@ -541,10 +541,12 @@ function listaEscalacaoSumula(s){
 function listaEventosSumula(s){
   return [
     ...(Array.isArray(val(s,["eventos"],[])) ? val(s,["eventos"],[]) : []),
-    ...(Array.isArray(val(s,["gols"],[])) ? val(s,["gols"],[]) : []),
-    ...(Array.isArray(val(s,["golsLista"],[])) ? val(s,["golsLista"],[]) : []),
-    ...(Array.isArray(val(s,["golsA"],[])) ? val(s,["golsA"],[]).map(g=>({...g,time:"A"})) : []),
-    ...(Array.isArray(val(s,["golsB"],[])) ? val(s,["golsB"],[]).map(g=>({...g,time:"B"})) : []),
+    ...(Array.isArray(val(s,["gols"],[])) ? val(s,["gols"],[]).map(g=>({...g,evento:g.evento || "gol",acao:g.acao || "gol"})) : []),
+    ...(Array.isArray(val(s,["golsLista"],[])) ? val(s,["golsLista"],[]).map(g=>({...g,evento:g.evento || "gol",acao:g.acao || "gol"})) : []),
+    ...(Array.isArray(val(s,["golsEventosA"],[])) ? val(s,["golsEventosA"],[]).map(g=>({...g,time:"A",evento:g.evento || "gol",acao:g.acao || "gol"})) : []),
+    ...(Array.isArray(val(s,["golsEventosB"],[])) ? val(s,["golsEventosB"],[]).map(g=>({...g,time:"B",evento:g.evento || "gol",acao:g.acao || "gol"})) : []),
+    ...(Array.isArray(val(s,["golsA"],[])) ? val(s,["golsA"],[]).filter(g=>typeof g === "object").map(g=>({...g,time:"A",evento:g.evento || "gol",acao:g.acao || "gol"})) : []),
+    ...(Array.isArray(val(s,["golsB"],[])) ? val(s,["golsB"],[]).filter(g=>typeof g === "object").map(g=>({...g,time:"B",evento:g.evento || "gol",acao:g.acao || "gol"})) : []),
     ...(Array.isArray(val(s,["eventosA"],[])) ? val(s,["eventosA"],[]).map(g=>({...g,time:"A"})) : []),
     ...(Array.isArray(val(s,["eventosB"],[])) ? val(s,["eventosB"],[]).map(g=>({...g,time:"B"})) : []),
     ...(Array.isArray(val(s,["cartoes"],[])) ? val(s,["cartoes"],[]) : []),
@@ -877,10 +879,18 @@ function calcularStats(jogador){
 
       const tipo = n(val(ev,["tipo","evento","acao","categoria"]));
 
-      if(tipo.includes("gol") && !tipo.includes("contra")) gols++;
+      const ehGol = val(ev,["evento","acao"],"") === "gol" ||
+        ["normal","penalti","pênalti","gol"].includes(tipo) ||
+        tipo.includes("gol");
+
+      const ehCartao = val(ev,["evento","acao"],"") === "cartao" ||
+        tipo.includes("amarelo") ||
+        tipo.includes("vermelho");
+
+      if(ehGol && !tipo.includes("contra")) gols++;
       if(tipo.includes("assist")) assistencias++;
-      if(tipo.includes("amarelo")) amarelos++;
-      if(tipo.includes("vermelho")) vermelhos++;
+      if(ehCartao && tipo.includes("amarelo")) amarelos++;
+      if(ehCartao && tipo.includes("vermelho")) vermelhos++;
     });
   });
 
