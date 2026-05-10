@@ -649,21 +649,29 @@ function eventosUnicos(lista,tipoEvento,s){
 }
 
 function listasGolsUnicas(s){
-  return eventosUnicos([
-    ...(Array.isArray(val(s,["gols"],[])) ? val(s,["gols"],[]).map(g=>({...g,evento:"gol",acao:"gol"})) : []),
-    ...(Array.isArray(val(s,["golsLista"],[])) ? val(s,["golsLista"],[]).map(g=>({...g,evento:"gol",acao:"gol"})) : []),
-    ...(Array.isArray(val(s,["golsEventosA"],[])) ? val(s,["golsEventosA"],[]).map(g=>({...g,time:"A",evento:"gol",acao:"gol"})) : []),
-    ...(Array.isArray(val(s,["golsEventosB"],[])) ? val(s,["golsEventosB"],[]).map(g=>({...g,time:"B",evento:"gol",acao:"gol"})) : [])
-  ],"gol",s);
+  const principal = Array.isArray(val(s,["gols"],[])) ? val(s,["gols"],[]) : [];
+  const lista = principal.length
+    ? principal.map(g=>({...g,evento:"gol",acao:"gol"}))
+    : [
+        ...(Array.isArray(val(s,["golsLista"],[])) ? val(s,["golsLista"],[]).map(g=>({...g,evento:"gol",acao:"gol"})) : []),
+        ...(Array.isArray(val(s,["golsEventosA"],[])) ? val(s,["golsEventosA"],[]).map(g=>({...g,time:"A",evento:"gol",acao:"gol"})) : []),
+        ...(Array.isArray(val(s,["golsEventosB"],[])) ? val(s,["golsEventosB"],[]).map(g=>({...g,time:"B",evento:"gol",acao:"gol"})) : [])
+      ];
+
+  return eventosUnicos(lista,"gol",s);
 }
 
 function listasCartoesUnicos(s){
-  return eventosUnicos([
-    ...(Array.isArray(val(s,["cartoes"],[])) ? val(s,["cartoes"],[]).map(c=>({...c,evento:"cartao",acao:"cartao"})) : []),
-    ...(Array.isArray(val(s,["cartoesLista"],[])) ? val(s,["cartoesLista"],[]).map(c=>({...c,evento:"cartao",acao:"cartao"})) : []),
-    ...(Array.isArray(val(s,["cartoesA"],[])) ? val(s,["cartoesA"],[]).map(c=>({...c,time:"A",evento:"cartao",acao:"cartao"})) : []),
-    ...(Array.isArray(val(s,["cartoesB"],[])) ? val(s,["cartoesB"],[]).map(c=>({...c,time:"B",evento:"cartao",acao:"cartao"})) : [])
-  ],"cartao",s);
+  const principal = Array.isArray(val(s,["cartoes"],[])) ? val(s,["cartoes"],[]) : [];
+  const lista = principal.length
+    ? principal.map(c=>({...c,evento:"cartao",acao:"cartao"}))
+    : [
+        ...(Array.isArray(val(s,["cartoesLista"],[])) ? val(s,["cartoesLista"],[]).map(c=>({...c,evento:"cartao",acao:"cartao"})) : []),
+        ...(Array.isArray(val(s,["cartoesA"],[])) ? val(s,["cartoesA"],[]).map(c=>({...c,time:"A",evento:"cartao",acao:"cartao"})) : []),
+        ...(Array.isArray(val(s,["cartoesB"],[])) ? val(s,["cartoesB"],[]).map(c=>({...c,time:"B",evento:"cartao",acao:"cartao"})) : [])
+      ];
+
+  return eventosUnicos(lista,"cartao",s);
 }
 
 function mesmoJogador(jogador, item){
@@ -886,6 +894,17 @@ function jogoFinalizado(j){
   );
 }
 
+
+function sumulaEstaFinalizada(s){
+  const status = n(val(s,["status","sumulaStatus"],""));
+  return s?.sumulaFinalizada === true ||
+    s?.finalizada === true ||
+    s?.publica === true ||
+    s?.publico === true ||
+    status.includes("final") ||
+    status.includes("publicad");
+}
+
 function calcularStats(jogador){
   let jogosCount = 0;
   let participacoesSumula = 0;
@@ -906,6 +925,8 @@ function calcularStats(jogador){
   const cartoesUnicos = new Set();
 
   sumulas.forEach(s=>{
+    if(!sumulaEstaFinalizada(s)) return;
+
     const jogoChave = String(val(s,["jogoId","id"], s.id || "") || "");
 
     const escalacao = listaEscalacaoSumula(s);
@@ -1317,7 +1338,6 @@ async function carregarDados(){
   times = await carregarColecao("times");
   sumulas = await carregarColecao("sumulas");
 
-  incluirJogadoresDaSumula();
   deduplicarJogadores();
 
   preencherTimes();
