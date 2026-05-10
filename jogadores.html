@@ -540,23 +540,12 @@ function listaEscalacaoSumula(s){
 
 function listaEventosSumula(s){
   return [
-    ...(Array.isArray(val(s,["eventos"],[])) ? val(s,["eventos"],[]) : []),
-    ...(Array.isArray(val(s,["gols"],[])) ? val(s,["gols"],[]).map(g=>({...g,evento:g.evento || "gol",acao:g.acao || "gol"})) : []),
-    ...(Array.isArray(val(s,["golsLista"],[])) ? val(s,["golsLista"],[]).map(g=>({...g,evento:g.evento || "gol",acao:g.acao || "gol"})) : []),
-    ...(Array.isArray(val(s,["golsEventosA"],[])) ? val(s,["golsEventosA"],[]).map(g=>({...g,time:"A",evento:g.evento || "gol",acao:g.acao || "gol"})) : []),
-    ...(Array.isArray(val(s,["golsEventosB"],[])) ? val(s,["golsEventosB"],[]).map(g=>({...g,time:"B",evento:g.evento || "gol",acao:g.acao || "gol"})) : []),
-    ...(Array.isArray(val(s,["golsA"],[])) ? val(s,["golsA"],[]).filter(g=>typeof g === "object").map(g=>({...g,time:"A",evento:g.evento || "gol",acao:g.acao || "gol"})) : []),
-    ...(Array.isArray(val(s,["golsB"],[])) ? val(s,["golsB"],[]).filter(g=>typeof g === "object").map(g=>({...g,time:"B",evento:g.evento || "gol",acao:g.acao || "gol"})) : []),
-    ...(Array.isArray(val(s,["eventosA"],[])) ? val(s,["eventosA"],[]).map(g=>({...g,time:"A"})) : []),
-    ...(Array.isArray(val(s,["eventosB"],[])) ? val(s,["eventosB"],[]).map(g=>({...g,time:"B"})) : []),
-    ...(Array.isArray(val(s,["cartoes"],[])) ? val(s,["cartoes"],[]) : []),
-    ...(Array.isArray(val(s,["cartoesLista"],[])) ? val(s,["cartoesLista"],[]) : []),
-    ...(Array.isArray(val(s,["cartoesA"],[])) ? val(s,["cartoesA"],[]).map(g=>({...g,time:"A"})) : []),
-    ...(Array.isArray(val(s,["cartoesB"],[])) ? val(s,["cartoesB"],[]).map(g=>({...g,time:"B"})) : []),
-    ...(Array.isArray(val(s,["assistencias"],[])) ? val(s,["assistencias"],[]) : []),
-    ...(Array.isArray(val(s,["assistenciasLista"],[])) ? val(s,["assistenciasLista"],[]) : []),
-    ...(Array.isArray(val(s,["assistenciasA"],[])) ? val(s,["assistenciasA"],[]).map(g=>({...g,time:"A"})) : []),
-    ...(Array.isArray(val(s,["assistenciasB"],[])) ? val(s,["assistenciasB"],[]).map(g=>({...g,time:"B"})) : [])
+    ...listasGolsUnicas(s),
+    ...listasCartoesUnicos(s),
+    ...(Array.isArray(val(s,["assistencias"],[])) ? val(s,["assistencias"],[]).map(a=>({...a,evento:"assistencia",acao:"assistencia"})) : []),
+    ...(Array.isArray(val(s,["assistenciasLista"],[])) ? val(s,["assistenciasLista"],[]).map(a=>({...a,evento:"assistencia",acao:"assistencia"})) : []),
+    ...(Array.isArray(val(s,["assistenciasA"],[])) ? val(s,["assistenciasA"],[]).map(a=>({...a,time:"A",evento:"assistencia",acao:"assistencia"})) : []),
+    ...(Array.isArray(val(s,["assistenciasB"],[])) ? val(s,["assistenciasB"],[]).map(a=>({...a,time:"B",evento:"assistencia",acao:"assistencia"})) : [])
   ];
 }
 
@@ -626,6 +615,55 @@ function incluirJogadoresDaSumula(){
 function numero(v){
   const n = Number(v);
   return Number.isFinite(n) ? n : 0;
+}
+
+
+function chaveEventoUnico(ev,tipoEvento,index,s){
+  const jogoId = String(val(s,["jogoId","id"], s?.id || "") || "");
+  const jogadorId = String(val(ev,["id","uid","jogadorId","idJogador","atletaId"],"") || "");
+  const nome = n(val(ev,["nome","jogador","nomeJogador","jogadorNome","atleta"],""));
+  const numero = String(val(ev,["numero","camisa","numeroCamisa"],"")).trim();
+  const minuto = String(val(ev,["minuto","tempo"],"")).trim();
+  const time = n(val(ev,["time","lado","equipe","timeNome","nomeTime"],""));
+  const tipo = n(val(ev,["tipo","evento","acao","cartao","cor","tipoGol"],tipoEvento));
+
+  if(jogadorId){
+    return `${jogoId}|${tipoEvento}|id:${jogadorId}|${minuto}|${tipo}|${time}`;
+  }
+
+  return `${jogoId}|${tipoEvento}|nome:${nome}|num:${numero}|${minuto}|${tipo}|${time}`;
+}
+
+function eventosUnicos(lista,tipoEvento,s){
+  const mapa = new Map();
+
+  lista.forEach((ev,index)=>{
+    if(!ev || typeof ev !== "object") return;
+    const chave = chaveEventoUnico(ev,tipoEvento,index,s);
+    if(!mapa.has(chave)){
+      mapa.set(chave,ev);
+    }
+  });
+
+  return Array.from(mapa.values());
+}
+
+function listasGolsUnicas(s){
+  return eventosUnicos([
+    ...(Array.isArray(val(s,["gols"],[])) ? val(s,["gols"],[]).map(g=>({...g,evento:"gol",acao:"gol"})) : []),
+    ...(Array.isArray(val(s,["golsLista"],[])) ? val(s,["golsLista"],[]).map(g=>({...g,evento:"gol",acao:"gol"})) : []),
+    ...(Array.isArray(val(s,["golsEventosA"],[])) ? val(s,["golsEventosA"],[]).map(g=>({...g,time:"A",evento:"gol",acao:"gol"})) : []),
+    ...(Array.isArray(val(s,["golsEventosB"],[])) ? val(s,["golsEventosB"],[]).map(g=>({...g,time:"B",evento:"gol",acao:"gol"})) : [])
+  ],"gol",s);
+}
+
+function listasCartoesUnicos(s){
+  return eventosUnicos([
+    ...(Array.isArray(val(s,["cartoes"],[])) ? val(s,["cartoes"],[]).map(c=>({...c,evento:"cartao",acao:"cartao"})) : []),
+    ...(Array.isArray(val(s,["cartoesLista"],[])) ? val(s,["cartoesLista"],[]).map(c=>({...c,evento:"cartao",acao:"cartao"})) : []),
+    ...(Array.isArray(val(s,["cartoesA"],[])) ? val(s,["cartoesA"],[]).map(c=>({...c,time:"A",evento:"cartao",acao:"cartao"})) : []),
+    ...(Array.isArray(val(s,["cartoesB"],[])) ? val(s,["cartoesB"],[]).map(c=>({...c,time:"B",evento:"cartao",acao:"cartao"})) : [])
+  ],"cartao",s);
 }
 
 function mesmoJogador(jogador, item){
@@ -849,48 +887,74 @@ function jogoFinalizado(j){
 }
 
 function calcularStats(jogador){
-  let jogosCount = numero(val(jogador,["jogos","jogosDisputados"],0));
+  let jogosCount = 0;
   let participacoesSumula = 0;
-  let gols = numero(val(jogador,["gols"],0));
-  let assistencias = numero(val(jogador,["assistencias"],0));
-  let amarelos = numero(val(jogador,["amarelos","cartoesAmarelos"],0));
-  let vermelhos = numero(val(jogador,["vermelhos","cartoesVermelhos"],0));
+  let gols = 0;
+  let assistencias = 0;
+  let amarelos = 0;
+  let vermelhos = 0;
   let vitorias = 0;
   let empates = 0;
   let derrotas = 0;
   let golsProTime = 0;
   let golsContraTime = 0;
 
-  const nomeTime = n(timeJogador(jogador));
+  const nomeTime = n(typeof nomeTimeAtual === "function" ? nomeTimeAtual(jogador) : timeJogador(jogador));
+  const jogosUnicos = new Set();
+  const golsUnicos = new Set();
+  const assistenciasUnicas = new Set();
+  const cartoesUnicos = new Set();
 
   sumulas.forEach(s=>{
-    const escalacao = listaEscalacaoSumula(s);
+    const jogoChave = String(val(s,["jogoId","id"], s.id || "") || "");
 
+    const escalacao = listaEscalacaoSumula(s);
     const participou = escalacao.some(p=>mesmoJogador(jogador,p));
 
     if(participou){
+      jogosUnicos.add(jogoChave || `sumula-${sumulas.indexOf(s)}`);
       participacoesSumula++;
     }
 
-    const eventos = listaEventosSumula(s);
-
-    eventos.forEach(ev=>{
+    listasGolsUnicas(s).forEach((ev,index)=>{
       if(!mesmoJogador(jogador,ev)) return;
 
-      const tipo = n(val(ev,["tipo","evento","acao","categoria"]));
+      const tipo = n(val(ev,["tipo","tipoGol","evento","acao"],"gol"));
+      if(tipo.includes("contra")) return;
 
-      const ehGol = val(ev,["evento","acao"],"") === "gol" ||
-        ["normal","penalti","pênalti","gol"].includes(tipo) ||
-        tipo.includes("gol");
+      const chave = chaveEventoUnico(ev,"gol",index,s);
+      if(!golsUnicos.has(chave)){
+        golsUnicos.add(chave);
+        gols++;
+      }
+    });
 
-      const ehCartao = val(ev,["evento","acao"],"") === "cartao" ||
-        tipo.includes("amarelo") ||
-        tipo.includes("vermelho");
+    listaEventosSumula(s).forEach((ev,index)=>{
+      if(!mesmoJogador(jogador,ev)) return;
 
-      if(ehGol && !tipo.includes("contra")) gols++;
-      if(tipo.includes("assist")) assistencias++;
-      if(ehCartao && tipo.includes("amarelo")) amarelos++;
-      if(ehCartao && tipo.includes("vermelho")) vermelhos++;
+      const tipo = n(val(ev,["tipo","evento","acao","cartao","cor","categoria"],""));
+      const evento = n(val(ev,["evento","acao"],""));
+
+      if(evento.includes("assist") || tipo.includes("assist")){
+        const chave = chaveEventoUnico(ev,"assistencia",index,s);
+        if(!assistenciasUnicas.has(chave)){
+          assistenciasUnicas.add(chave);
+          assistencias++;
+        }
+      }
+    });
+
+    listasCartoesUnicos(s).forEach((ev,index)=>{
+      if(!mesmoJogador(jogador,ev)) return;
+
+      const tipo = n(val(ev,["tipo","cartao","cor"],"amarelo"));
+      const chave = chaveEventoUnico(ev,"cartao",index,s);
+
+      if(cartoesUnicos.has(chave)) return;
+      cartoesUnicos.add(chave);
+
+      if(tipo.includes("vermelho") || tipo.includes("verm")) vermelhos++;
+      else amarelos++;
     });
   });
 
@@ -899,7 +963,7 @@ function calcularStats(jogador){
     const b = n(timeB(j));
 
     if(nomeTime && (a === nomeTime || b === nomeTime)){
-      const finalizado = jogoFinalizado(j) || sumulas.some(s => s.jogoId === j.id && n(s.status) === "finalizado");
+      const finalizado = jogoFinalizado(j) || sumulas.some(s => String(s.jogoId || s.id || "") === String(j.id || "") && n(s.status || s.sumulaStatus).includes("final"));
 
       if(finalizado){
         const ga = placarA(j);
@@ -926,7 +990,7 @@ function calcularStats(jogador){
     }
   });
 
-  jogosCount = Math.max(jogosCount, participacoesSumula);
+  jogosCount = Math.max(jogosUnicos.size, numero(val(jogador,["jogos","jogosDisputados"],0)));
 
   const totalResultados = vitorias + empates + derrotas;
   const pontos = (vitorias * 3) + empates;
