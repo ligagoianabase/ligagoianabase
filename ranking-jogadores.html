@@ -249,6 +249,78 @@ function sumulaFinalizada(s){
     normalizar(s.sumulaStatus) === "finalizada";
 }
 
+
+function val(obj,chaves,f=""){
+  for(const c of chaves){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== "") return obj[c];
+  }
+  return f;
+}
+
+function jogadorChave(item){
+  const id = val(item,["id","uid","jogadorId","idJogador","atletaId"],"");
+  const cpf = val(item,["cpf","CPF"],"");
+  const nome = normalizar(val(item,["nome","nomeCompleto","jogador","jogadorNome","atleta"],""));
+  const numero = String(val(item,["numero","camisa","numeroCamisa"],"")).trim();
+  if(id) return "id:" + id;
+  if(cpf) return "cpf:" + cpf;
+  return `nome:${nome}|num:${numero}`;
+}
+
+function listaEscalacaoSumula(s){
+  return [
+    ...(Array.isArray(s.escalacao) ? s.escalacao : []),
+    ...(Array.isArray(s.jogadores) ? s.jogadores : []),
+    ...(Array.isArray(s.jogadoresA) ? s.jogadoresA.map(p=>({...p,time:"A"})) : []),
+    ...(Array.isArray(s.jogadoresB) ? s.jogadoresB.map(p=>({...p,time:"B"})) : []),
+    ...(Array.isArray(s.escalacaoA) ? s.escalacaoA.map(p=>({...p,time:"A"})) : []),
+    ...(Array.isArray(s.escalacaoB) ? s.escalacaoB.map(p=>({...p,time:"B"})) : [])
+  ];
+}
+
+function listaGolsSumula(s){
+  return [
+    ...(Array.isArray(s.gols) ? s.gols : []),
+    ...(Array.isArray(s.golsLista) ? s.golsLista : []),
+    ...(Array.isArray(s.golsA) ? s.golsA.map(g=>({...g,time:"A"})) : []),
+    ...(Array.isArray(s.golsB) ? s.golsB.map(g=>({...g,time:"B"})) : [])
+  ];
+}
+
+function listaCartoesSumula(s){
+  return [
+    ...(Array.isArray(s.cartoes) ? s.cartoes : []),
+    ...(Array.isArray(s.cartoesLista) ? s.cartoesLista : []),
+    ...(Array.isArray(s.cartoesA) ? s.cartoesA.map(c=>({...c,time:"A"})) : []),
+    ...(Array.isArray(s.cartoesB) ? s.cartoesB.map(c=>({...c,time:"B"})) : [])
+  ];
+}
+
+function garantirNoMapa(mapa,item,s){
+  const chave = jogadorChave(item);
+  if(!chave) return null;
+
+  if(!mapa[chave]){
+    mapa[chave] = {
+      id:val(item,["id","uid","jogadorId","idJogador","atletaId"],chave),
+      nome:val(item,["nome","nomeCompleto","jogador","jogadorNome","atleta"],"-"),
+      foto:foto(item),
+      time:val(item,["timeNome","nomeTime","time","equipe"],"-"),
+      categoria:val(item,["categoria","categoriaNome"], s?.categoria || "-"),
+      gols:0,
+      assistencias:0,
+      amarelos:0,
+      vermelhos:0,
+      jogos:0,
+      defesas:0,
+      golsSofridos:0,
+      melhorJogador:0
+    };
+  }
+
+  return mapa[chave];
+}
+
 function foto(j){
   return j.foto || j.imagem || j.avatar || "logo-liga.jfif";
 }
@@ -258,20 +330,19 @@ function criarMapa(){
   const mapa = {};
 
   jogadores.forEach(j=>{
+    const chave = jogadorChave(j);
 
-    const id = j.id;
-
-    mapa[id] = {
-      id,
-      nome:j.nome || "-",
+    mapa[chave] = {
+      id:j.id,
+      nome:j.nome || j.nomeCompleto || "-",
       foto:foto(j),
       time:j.timeNome || j.time || "-",
       categoria:j.categoria || "-",
       gols:Number(j.gols || 0),
       assistencias:Number(j.assistencias || 0),
-      amarelos:Number(j.amarelos || 0),
-      vermelhos:Number(j.vermelhos || 0),
-      jogos:Number(j.jogos || 0),
+      amarelos:Number(j.amarelos || j.cartoesAmarelos || 0),
+      vermelhos:Number(j.vermelhos || j.cartoesVermelhos || 0),
+      jogos:Number(j.jogos || j.partidas || j.participacoes || 0),
       defesas:Number(j.defesas || 0),
       golsSofridos:Number(j.golsSofridos || 0),
       melhorJogador:Number(j.melhorJogador || 0)
@@ -280,69 +351,56 @@ function criarMapa(){
 
   sumulas.filter(sumulaFinalizada).forEach(s=>{
 
-    (s.gols || []).forEach(g=>{
+    const jogosContados = new Set();
 
-      const id = g.id || g.jogadorId;
-      if(!id) return;
-
-      if(!mapa[id]){
-        mapa[id] = {
-          id,
-          nome:g.nome || "-",
-          foto:"logo-liga.jfif",
-          time:g.time || "-",
-          categoria:s.categoria || "-",
-          gols:0,
-          assistencias:0,
-          amarelos:0,
-          vermelhos:0,
-          jogos:0,
-          defesas:0,
-          golsSofridos:0,
-          melhorJogador:0
-        };
+    listaEscalacaoSumula(s).forEach(p=>{
+      const item = garantirNoMapa(mapa,p,s);
+      if(!item) return;
+      const chave = jogadorChave(p);
+      const jogoId = s.jogoId || s.id || "";
+      const marcador = `${chave}|${jogoId}`;
+      if(!jogosContados.has(marcador)){
+        jogosContados.add(marcador);
+        item.jogos++;
       }
+    });
 
-      mapa[id].gols++;
+    listaGolsSumula(s).forEach(g=>{
+      const tipo = normalizar(val(g,["tipo","evento","acao"],"gol"));
+      if(tipo.includes("contra")) return;
+
+      const item = garantirNoMapa(mapa,g,s);
+      if(!item) return;
+      item.gols++;
 
       if(g.assistenciaId){
-
-        if(!mapa[g.assistenciaId]){
-          mapa[g.assistenciaId] = {
-            id:g.assistenciaId,
-            nome:g.assistenciaNome || "-",
-            foto:"logo-liga.jfif",
-            time:g.time || "-",
-            categoria:s.categoria || "-",
-            gols:0,
-            assistencias:0,
-            amarelos:0,
-            vermelhos:0,
-            jogos:0,
-            defesas:0,
-            golsSofridos:0,
-            melhorJogador:0
-          };
-        }
-
-        mapa[g.assistenciaId].assistencias++;
+        const ass = garantirNoMapa(mapa,{
+          id:g.assistenciaId,
+          nome:g.assistenciaNome,
+          time:g.time || g.timeNome
+        },s);
+        if(ass) ass.assistencias++;
       }
     });
 
-    (s.cartoes || []).forEach(c=>{
+    listaCartoesSumula(s).forEach(c=>{
+      const item = garantirNoMapa(mapa,c,s);
+      if(!item) return;
 
-      const id = c.id || c.jogadorId;
-      if(!id || !mapa[id]) return;
+      const tipo = normalizar(val(c,["tipo","cartao","cor"],""));
 
-      if(c.tipo === "amarelo"){
-        mapa[id].amarelos++;
-      }
-
-      if(c.tipo === "vermelho"){
-        mapa[id].vermelhos++;
+      if(tipo.includes("verm")){
+        item.vermelhos++;
+      }else{
+        item.amarelos++;
       }
     });
 
+    const melhorNome = s.melhorJogador || "";
+    if(melhorNome){
+      const achado = Object.values(mapa).find(j=>normalizar(j.nome) === normalizar(melhorNome));
+      if(achado) achado.melhorJogador++;
+    }
   });
 
   return Object.values(mapa);
