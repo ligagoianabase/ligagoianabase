@@ -865,18 +865,46 @@ function categoriasTime(){
 
 function tecnicoPrincipal(){
   const tecnicoPorTime = tecnicos.find(t=>{
-    const tid = campo(t,["timeId"],"");
-    const tnome = normalizar(campo(t,["time","nomeTime","timeNome"],""));
-    return tid === id || tnome === normalizar(nomeTime());
+    const tid = String(campo(t,["timeId","equipeId","clubeId","idTime"],""));
+    const tidObj = String(timeIdRegistro(campo(t,["time","timeObj","equipe","clube"],null)) || "");
+    const tnome = normalizar(nomeTimeRegistro(campo(t,["time","timeObj","equipe","clube"],null), campo(t,["nomeTime","timeNome","equipeNome","clubeNome"],"")));
+    return tid === String(id || "") || tidObj === String(id || "") || tnome === normalizar(nomeTime());
   });
+
   return campo(tecnicoPorTime || time,["nome","tecnico","tecnicoNome","treinador"],"");
 }
 
 function jogadoresDoTime(){
   const nome = normalizar(nomeTime());
+  const timeIdAtual = String(id || "");
+
   return jogadores.filter(j=>{
-    const okTime = campo(j,["timeId"],"") === id ||
-      normalizar(campo(j,["time","nomeTime","timeNome"],"")) === nome;
+    const ids = [
+      campo(j,["timeId"],""),
+      campo(j,["equipeId"],""),
+      campo(j,["clubeId"],""),
+      campo(j,["idTime"],""),
+      campo(j,["time_id"],""),
+      timeIdRegistro(campo(j,["time"],null)),
+      timeIdRegistro(campo(j,["timeObj"],null)),
+      timeIdRegistro(campo(j,["equipe"],null)),
+      timeIdRegistro(campo(j,["clube"],null))
+    ].map(v=>String(v || "")).filter(Boolean);
+
+    const nomes = [
+      campo(j,["time"],""),
+      campo(j,["nomeTime"],""),
+      campo(j,["timeNome"],""),
+      campo(j,["equipe"],""),
+      campo(j,["clube"],""),
+      campo(j,["nomeEquipe"],""),
+      nomeTimeRegistro(campo(j,["time"],null),""),
+      nomeTimeRegistro(campo(j,["timeObj"],null),""),
+      nomeTimeRegistro(campo(j,["equipe"],null),""),
+      nomeTimeRegistro(campo(j,["clube"],null),"")
+    ].map(v=>normalizar(v)).filter(Boolean);
+
+    const okTime = ids.includes(timeIdAtual) || nomes.includes(nome);
 
     const cat = campo(j,["categoria","categoriaNome"],"");
     const okCat = !filtroCategoria || cat === filtroCategoria || (Array.isArray(j.categorias) && j.categorias.includes(filtroCategoria));
@@ -1159,12 +1187,12 @@ function ultimasPartidasCard(){
   `;
 }
 
-function topList(titulo, lista, valorFn, subtituloFn){
+function topList(titulo, lista, valorFn, subtituloFn, rotulo="Gols"){
   return `
     <section class="card-time">
       <div class="card-title">${titulo}</div>
       <div class="card-body">
-        <div class="small-tabs"><span>Gols</span></div>
+        <div class="small-tabs"><span>${rotulo}</span></div>
         ${lista.length ? lista.map((j,idx)=>`
           <div class="rank-row">
             <div class="rank-number">${idx+1}</div>
@@ -1192,13 +1220,13 @@ function estatisticasCard(){
 
   return `
     <div class="two-col">
-      ${topList("Artilheiros do clube", porGols, golsJogador, j=>campo(j,["posicao","posição","funcao"],"Atleta"))}
-      ${topList("Jogadores que mais jogaram", porJogos, partidasJogador, j=>"Partidas pelo time")}
+      ${topList("Artilheiros do clube", porGols, golsJogador, j=>campo(j,["posicao","posição","funcao"],"Atleta"), "Gols")}
+      ${topList("Jogadores que mais jogaram", porJogos, partidasJogador, j=>"Partidas pelo time", "Jogos")}
     </div>
 
     <div class="two-col">
-      ${topList("Mais campeonatos vencidos", porTitulos, titulosJogador, j=>"Títulos pelo clube")}
-      ${topList("Goleiros que menos sofreram gols", goleiros, j=>golsSofridosGoleiro(j) === 999999 ? 0 : golsSofridosGoleiro(j), j=>"Gols sofridos")}
+      ${topList("Mais campeonatos vencidos", porTitulos, titulosJogador, j=>"Títulos pelo clube", "Títulos")}
+      ${topList("Goleiros que menos sofreram gols", goleiros, j=>golsSofridosGoleiro(j) === 999999 ? 0 : golsSofridosGoleiro(j), j=>"Gols sofridos", "Gols sofridos")}
     </div>
   `;
 }
@@ -1543,22 +1571,30 @@ async function carregarTime(){
   render();
 }
 
-onSnapshot(collection(db,"jogadores"), snap=>{
-  jogadores = snap.docs.map(d=>({id:d.id,...d.data()}));
-  render();
-});
+async function carregarColecoes(){
+  try{
+    const [jogSnap, jogosSnap, tecSnap] = await Promise.all([
+      getDocs(collection(db,"jogadores")),
+      getDocs(collection(db,"jogos")),
+      getDocs(collection(db,"tecnicos"))
+    ]);
 
-onSnapshot(collection(db,"jogos"), snap=>{
-  jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
-  render();
-});
+    jogadores = jogSnap.docs.map(d=>({id:d.id,...d.data()}));
+    jogos = jogosSnap.docs.map(d=>({id:d.id,...d.data()}));
+    tecnicos = tecSnap.docs.map(d=>({id:d.id,...d.data()}));
 
-onSnapshot(collection(db,"tecnicos"), snap=>{
-  tecnicos = snap.docs.map(d=>({id:d.id,...d.data()}));
-  render();
-});
+    render();
+  }catch(e){
+    console.warn("Erro ao carregar dados do time:", e);
+  }
+}
 
-carregarTime();
+async function iniciarPagina(){
+  await carregarTime();
+  await carregarColecoes();
+}
+
+iniciarPagina();
 </script>
 
 </body>
