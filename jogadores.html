@@ -550,18 +550,27 @@ function listaEventosSumula(s){
 }
 
 function jogadorDaSumulaParaCadastro(item,s){
-  const timeLetra = val(item,["time","lado","timeLetra"],"");
+  const timeLetra = String(val(item,["time","lado","timeLetra"],"")).toUpperCase();
   const nomeTime = val(item,["timeNome","nomeTime","equipe"],"") ||
-    (String(timeLetra).toUpperCase() === "A" ? nomeTimeRegistroJogo(s,"A") : String(timeLetra).toUpperCase() === "B" ? nomeTimeRegistroJogo(s,"B") : "-");
+    (timeLetra === "A" ? nomeTimeRegistroJogo(s,"A") : timeLetra === "B" ? nomeTimeRegistroJogo(s,"B") : "-");
 
   const timeId = val(item,["timeId","equipeId","clubeId"],"") ||
-    (String(timeLetra).toUpperCase() === "A" ? idTimeRegistroJogo(s,"A") : String(timeLetra).toUpperCase() === "B" ? idTimeRegistroJogo(s,"B") : "");
+    (timeLetra === "A" ? idTimeRegistroJogo(s,"A") : timeLetra === "B" ? idTimeRegistroJogo(s,"B") : "");
+
+  const nome = val(item,["nome","nomeCompleto","jogador","jogadorNome","atleta"],"Sem nome");
+  const numero = val(item,["numero","camisa","numeroCamisa"],"-");
+  const idOriginal = val(item,["id","uid","jogadorId","idJogador","atletaId"],"");
+  const jogoId = val(s,["jogoId","id"],s.id || "");
+  const idManual = idOriginal || `sumula_${jogoId}_${timeLetra || "T"}_${String(numero).replace(/[^a-zA-Z0-9]/g,"")}_${n(nome).replace(/[^a-z0-9]/g,"_")}`;
 
   return {
-    id:val(item,["id","uid","jogadorId","idJogador","atletaId"],""),
-    nome:val(item,["nome","nomeCompleto","jogador","jogadorNome","atleta"],"Sem nome"),
-    numero:val(item,["numero","camisa","numeroCamisa"],"-"),
-    posicao:val(item,["posicao","função","funcao"],"-"),
+    id:idManual,
+    uid:idManual,
+    jogadorId:idManual,
+    nome,
+    numero,
+    camisa:numero,
+    posicao:val(item,["posicao","posição","função","funcao"],"-"),
     categoria:val(item,["categoria","categoriaNome"], val(s,["categoria","categoriaNome"],"Sem categoria")),
     categorias:[val(item,["categoria","categoriaNome"], val(s,["categoria","categoriaNome"],"Sem categoria"))],
     time: nomeTime,
@@ -570,7 +579,7 @@ function jogadorDaSumulaParaCadastro(item,s){
     timeId: timeId,
     foto:val(item,["foto","imagem","fotoUrl","avatar"],"logo-liga.jfif"),
     status:"aprovado",
-    origem:"sumula"
+    origem:idOriginal ? "cadastro" : "sumula"
   };
 }
 
@@ -621,7 +630,7 @@ function numero(v){
 function chaveEventoUnico(ev,tipoEvento,index,s){
   const jogoId = String(val(s,["jogoId","id"], s?.id || "") || "");
   const jogadorId = String(val(ev,["id","uid","jogadorId","idJogador","atletaId"],"") || "");
-  const nome = n(val(ev,["nome","jogador","nomeJogador","jogadorNome","atleta"],""));
+  const nome = n(val(ev,["nome","jogador","nomeJogador","jogadorNome","nomeCompleto","atleta"],""));
   const numero = String(val(ev,["numero","camisa","numeroCamisa"],"")).trim();
   const minuto = String(val(ev,["minuto","tempo"],"")).trim();
   const time = n(val(ev,["time","lado","equipe","timeNome","nomeTime"],""));
@@ -655,7 +664,6 @@ function listasGolsUnicas(s){
     ...(Array.isArray(val(s,["golsEventosA"],[])) ? val(s,["golsEventosA"],[]).map(g=>({...g,time:"A",evento:"gol",acao:"gol"})) : []),
     ...(Array.isArray(val(s,["golsEventosB"],[])) ? val(s,["golsEventosB"],[]).map(g=>({...g,time:"B",evento:"gol",acao:"gol"})) : [])
   ];
-
   return eventosUnicos(lista,"gol",s);
 }
 
@@ -666,24 +674,27 @@ function listasCartoesUnicos(s){
     ...(Array.isArray(val(s,["cartoesA"],[])) ? val(s,["cartoesA"],[]).map(c=>({...c,time:"A",evento:"cartao",acao:"cartao"})) : []),
     ...(Array.isArray(val(s,["cartoesB"],[])) ? val(s,["cartoesB"],[]).map(c=>({...c,time:"B",evento:"cartao",acao:"cartao"})) : [])
   ];
-
   return eventosUnicos(lista,"cartao",s);
 }
 
 function mesmoJogador(jogador, item){
-  const jogadorId = val(jogador,["id"]);
-  const jogadorCpf = val(jogador,["cpf","cpfJogador","documento"]);
-  const jogadorNome = n(val(jogador,["nome"]));
+  const jogadorId = String(val(jogador,["id","uid","jogadorId","idJogador","atletaId"],"")).trim();
+  const jogadorCpf = String(val(jogador,["cpf","cpfJogador","documento","CPF"],"")).trim();
+  const jogadorNome = n(val(jogador,["nome","nomeCompleto","jogador","jogadorNome"],""));
+  const jogadorNumero = String(val(jogador,["numero","camisa","numeroCamisa"],"")).trim();
 
-  const itemId = val(item,["jogadorId","idJogador","id","atletaId"]);
-  const itemCpf = val(item,["cpf","cpfJogador","documento"]);
-  const itemNome = n(val(item,["nome","jogador","nomeJogador","atleta"]));
+  const itemId = String(val(item,["jogadorId","idJogador","id","uid","atletaId"],"")).trim();
+  const itemCpf = String(val(item,["cpf","cpfJogador","documento","CPF"],"")).trim();
+  const itemNome = n(val(item,["nome","jogador","nomeJogador","jogadorNome","nomeCompleto","atleta"],""));
+  const itemNumero = String(val(item,["numero","camisa","numeroCamisa"],"")).trim();
 
-  return (
-    (jogadorId && itemId && jogadorId === itemId) ||
-    (jogadorCpf && itemCpf && jogadorCpf === itemCpf) ||
-    (jogadorNome && itemNome && jogadorNome === itemNome)
-  );
+  if(jogadorId && itemId && jogadorId === itemId) return true;
+  if(jogadorCpf && itemCpf && jogadorCpf === itemCpf) return true;
+  if(jogadorNome && itemNome && jogadorNome === itemNome) return true;
+  if(jogadorNome && itemNome && (jogadorNome.includes(itemNome) || itemNome.includes(jogadorNome))) return true;
+  if(jogadorNumero && itemNumero && jogadorNumero === itemNumero && jogadorNome && itemNome) return true;
+
+  return false;
 }
 
 function nomeJogador(j){
@@ -980,7 +991,7 @@ function calcularStats(jogador){
     const b = n(timeB(j));
 
     if(nomeTime && (a === nomeTime || b === nomeTime)){
-      const finalizado = jogoFinalizado(j) || sumulas.some(s => String(s.jogoId || s.id || "") === String(j.id || "") && n(s.status || s.sumulaStatus).includes("final"));
+      const finalizado = jogoFinalizado(j) || sumulas.some(s => String(s.jogoId || s.id || "") === String(j.id || "") && sumulaEstaFinalizada(s));
 
       if(finalizado){
         const ga = placarA(j);
@@ -1009,24 +1020,29 @@ function calcularStats(jogador){
 
   jogosCount = Math.max(jogosUnicos.size, numero(val(jogador,["jogos","jogosDisputados"],0)));
 
+  const golsFinal = gols || numero(val(jogador,["gols","totalGols"],0));
+  const assistenciasFinal = assistencias || numero(val(jogador,["assistencias","totalAssistencias"],0));
+  const amarelosFinal = amarelos || numero(val(jogador,["amarelos","cartoesAmarelos"],0));
+  const vermelhosFinal = vermelhos || numero(val(jogador,["vermelhos","cartoesVermelhos"],0));
+
   const totalResultados = vitorias + empates + derrotas;
   const pontos = (vitorias * 3) + empates;
   const aproveitamento = totalResultados ? Math.round((pontos / (totalResultados * 3)) * 100) : 0;
-  const mediaGols = jogosCount ? (gols / jogosCount).toFixed(2) : "0.00";
+  const mediaGols = jogosCount ? (golsFinal / jogosCount).toFixed(2) : "0.00";
   const saldoTime = golsProTime - golsContraTime;
 
   const suspenso =
     val(jogador,["suspenso"],false) === true ||
-    vermelhos > 0 ||
-    amarelos >= 3;
+    vermelhosFinal > 0 ||
+    amarelosFinal >= 3;
 
   return {
     jogosCount,
     participacoesSumula,
-    gols,
-    assistencias,
-    amarelos,
-    vermelhos,
+    gols:golsFinal,
+    assistencias:assistenciasFinal,
+    amarelos:amarelosFinal,
+    vermelhos:vermelhosFinal,
     vitorias,
     empates,
     derrotas,
@@ -1329,18 +1345,12 @@ async function carregarDados(){
   const box = document.getElementById("lista");
   box.innerHTML = `<div class="vazio">Carregando jogadores...</div>`;
 
-  jogadores = (await carregarColecao("jogadores")).filter(j=>{
-    const origem = n(val(j,["origem","fonte"],""));
-    const idDoc = String(val(j,["id"],""));
-
-    return origem !== "sumula" &&
-      origem !== "súmula" &&
-      !idDoc.startsWith("sumula_");
-  });
-
+  jogadores = await carregarColecao("jogadores");
   jogos = await carregarColecao("jogos");
   times = await carregarColecao("times");
   sumulas = await carregarColecao("sumulas");
+
+  incluirJogadoresDaSumula();
 
   deduplicarJogadores();
 
