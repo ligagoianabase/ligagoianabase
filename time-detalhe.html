@@ -887,11 +887,154 @@ function tecnicoPrincipal(){
   return campo(tecnicoPorTime || time,["nome","tecnico","tecnicoNome","treinador"],"");
 }
 
+
+function jogadorChave(j){
+  const idJ = String(campo(j,["id","uid","jogadorId","idJogador","atletaId"],"")).trim();
+  const cpf = String(campo(j,["cpf","CPF"],"")).trim();
+  const nome = normalizar(campo(j,["nome","nomeCompleto","jogador","jogadorNome","atleta"],""));
+  const numero = String(campo(j,["numero","camisa","numeroCamisa"],"")).trim();
+
+  if(idJ) return "id:" + idJ;
+  if(cpf) return "cpf:" + cpf;
+  return "nome:" + nome + "|num:" + numero;
+}
+
+function normalizarJogadorDaSumula(j,timeLetra,timeNome){
+  return {
+    id:campo(j,["id","uid","jogadorId","idJogador","atletaId"],""),
+    cpf:campo(j,["cpf","CPF"],""),
+    nome:campo(j,["nome","nomeCompleto","jogador","jogadorNome","atleta"],"Jogador"),
+    numero:campo(j,["numero","camisa","numeroCamisa"],""),
+    foto:campo(j,["foto","fotoPerfil","imagem"],"logo-liga.jfif"),
+    posicao:campo(j,["posicao","posição","funcao"],"Atleta"),
+    categoria:campo(j,["categoria","categoriaNome"],""),
+    time:timeNome,
+    timeNome:timeNome,
+    timeLetra:timeLetra,
+    manual:j.manual === true || !campo(j,["id","uid","jogadorId","idJogador","atletaId"],""),
+    jogos:0,
+    gols:0,
+    assistencias:0,
+    amarelos:0,
+    vermelhos:0
+  };
+}
+
+function jogadoresDasSumulasDoTime(){
+  const mapa = new Map();
+
+  sumulasDoTime().forEach(s=>{
+    const timeEhA = timeBateRegistro(s,"A");
+    const timeLetra = timeEhA ? "A" : "B";
+    const timeNome = nomeTimeDoRegistro(s,timeLetra,nomeTime());
+
+    const listas = timeLetra === "A"
+      ? [
+          ...(Array.isArray(s.jogadoresA) ? s.jogadoresA : []),
+          ...(Array.isArray(s.escalacaoA) ? s.escalacaoA : [])
+        ]
+      : [
+          ...(Array.isArray(s.jogadoresB) ? s.jogadoresB : []),
+          ...(Array.isArray(s.escalacaoB) ? s.escalacaoB : [])
+        ];
+
+    listas.forEach(j=>{
+      const base = normalizarJogadorDaSumula(j,timeLetra,timeNome);
+      if(!base.categoria) base.categoria = campo(s,["categoria","categoriaNome"],"");
+      const chave = jogadorChave(base);
+
+      if(!mapa.has(chave)){
+        mapa.set(chave,base);
+      }
+
+      mapa.get(chave).jogos += 1;
+    });
+
+    const gols = Array.isArray(s.gols) ? s.gols : [];
+    gols.forEach(g=>{
+      const ladoGol = campo(g,["time","lado","equipe"],"");
+      const bateLado = normalizar(ladoGol) === normalizar(timeLetra) ||
+        normalizar(ladoGol) === normalizar(timeNome) ||
+        normalizar(campo(g,["timeNome","equipeNome"],"")) === normalizar(timeNome);
+
+      if(!bateLado) return;
+
+      const tipo = normalizar(campo(g,["tipo","evento","acao"],"gol"));
+      if(tipo.includes("contra")) return;
+
+      const base = normalizarJogadorDaSumula(g,timeLetra,timeNome);
+      const chave = jogadorChave(base);
+
+      if(!mapa.has(chave)){
+        mapa.set(chave,base);
+      }
+
+      mapa.get(chave).gols += 1;
+    });
+
+    const cartoes = Array.isArray(s.cartoes) ? s.cartoes : [];
+    cartoes.forEach(c=>{
+      const ladoCartao = campo(c,["time","lado","equipe"],"");
+      const bateLado = normalizar(ladoCartao) === normalizar(timeLetra) ||
+        normalizar(ladoCartao) === normalizar(timeNome) ||
+        normalizar(campo(c,["timeNome","equipeNome"],"")) === normalizar(timeNome);
+
+      if(!bateLado) return;
+
+      const base = normalizarJogadorDaSumula(c,timeLetra,timeNome);
+      const chave = jogadorChave(base);
+
+      if(!mapa.has(chave)){
+        mapa.set(chave,base);
+      }
+
+      const tipo = normalizar(campo(c,["tipo","cartao","cor"],""));
+      if(tipo.includes("verm")) mapa.get(chave).vermelhos += 1;
+      else mapa.get(chave).amarelos += 1;
+    });
+  });
+
+  return Array.from(mapa.values());
+}
+
+function mesclarJogadoresDoCadastroESumula(cadastrados,sumulaJogadores){
+  const mapa = new Map();
+
+  cadastrados.forEach(j=>{
+    const item = {...j};
+    const chave = jogadorChave(item);
+    mapa.set(chave,item);
+  });
+
+  sumulaJogadores.forEach(j=>{
+    const chave = jogadorChave(j);
+
+    if(!mapa.has(chave)){
+      mapa.set(chave,j);
+      return;
+    }
+
+    const atual = mapa.get(chave);
+
+    atual.jogos = Math.max(Number(campo(atual,["jogos","partidas","participacoes"],0)), Number(j.jogos || 0));
+    atual.gols = Math.max(Number(campo(atual,["gols","totalGols"],0)), Number(j.gols || 0));
+    atual.assistencias = Math.max(Number(campo(atual,["assistencias"],0)), Number(j.assistencias || 0));
+    atual.amarelos = Math.max(Number(campo(atual,["amarelos","cartoesAmarelos"],0)), Number(j.amarelos || 0));
+    atual.vermelhos = Math.max(Number(campo(atual,["vermelhos","cartoesVermelhos"],0)), Number(j.vermelhos || 0));
+
+    if(!campo(atual,["posicao","posição","funcao"],"") && j.posicao) atual.posicao = j.posicao;
+    if(!campo(atual,["numero","camisa","numeroCamisa"],"") && j.numero) atual.numero = j.numero;
+  });
+
+  return Array.from(mapa.values());
+}
+
+
 function jogadoresDoTime(){
   const nome = normalizar(nomeTime());
   const timeIdAtual = String(id || "");
 
-  return jogadores.filter(j=>{
+  const cadastrados = jogadores.filter(j=>{
     const ids = [
       campo(j,["timeId"],""),
       campo(j,["equipeId"],""),
@@ -924,6 +1067,13 @@ function jogadoresDoTime(){
 
     return okTime && okCat;
   });
+
+  const daSumula = jogadoresDasSumulasDoTime().filter(j=>{
+    const cat = campo(j,["categoria","categoriaNome"],"");
+    return !filtroCategoria || !cat || cat === filtroCategoria;
+  });
+
+  return mesclarJogadoresDoCadastroESumula(cadastrados, daSumula);
 }
 
 function jogosDoTime(){
