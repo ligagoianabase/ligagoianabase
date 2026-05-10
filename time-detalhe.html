@@ -1,58 +1,84 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Correção Time Detalhe</title>
-</head>
-<body style="font-family:Arial;padding:40px;background:#061d44;color:white">
-<h1>ARQUIVO CORRIGIDO</h1>
-
-<p>Substitua estas funções no seu <strong>time-detalhe.html</strong>.</p>
-
-<pre style="white-space:pre-wrap;background:#0d2a52;padding:20px;border-radius:12px;">
 function extrairNomeTime(valor){
   if(typeof valor === "object" && valor){
     return normalizar(campo(valor,["nome","nomeTime","time","equipe"],""));
   }
+
   return normalizar(valor);
 }
 
+
 function jogosDoTime(){
+
   const nome = normalizar(nomeTime());
 
   return jogos.filter(j=>{
-    const timeA = extrairNomeTime(campo(j,["timeA","mandante","timeMandante","nomeTimeA"],""));
-    const timeB = extrairNomeTime(campo(j,["timeB","visitante","timeVisitante","nomeTimeB"],""));
+
+    const timeA = extrairNomeTime(
+      campo(j,["timeA","mandante","timeMandante","nomeTimeA"],"")
+    );
+
+    const timeB = extrairNomeTime(
+      campo(j,["timeB","visitante","timeVisitante","nomeTimeB"],"")
+    );
 
     const okTime = timeA === nome || timeB === nome;
 
     const cat = campo(j,["categoria","categoriaNome"],"");
     const camp = campo(j,["campeonato","nomeCampeonato","campeonatoNome"],"");
     const campId = campo(j,["campeonatoId"],"");
-    const ano = String(campo(j,["temporada","ano"], campo(j,["data","dataJogo"],"").slice(0,4)));
 
-    const okCat = !filtroCategoria || cat === filtroCategoria;
-    const okCamp = !filtroCampeonato || camp === filtroCampeonato || campId === filtroCampeonato;
-    const okAno = !filtroAno || ano === filtroAno;
+    const ano = String(
+      campo(
+        j,
+        ["temporada","ano"],
+        campo(j,["data","dataJogo"],"").slice(0,4)
+      )
+    );
+
+    const okCat =
+      !filtroCategoria || cat === filtroCategoria;
+
+    const okCamp =
+      !filtroCampeonato ||
+      camp === filtroCampeonato ||
+      campId === filtroCampeonato;
+
+    const okAno =
+      !filtroAno || ano === filtroAno;
 
     return okTime && okCat && okCamp && okAno;
   });
 }
 
+
+
 function sumulasDoTime(){
+
   const nome = normalizar(nomeTime());
 
   return sumulas.filter(s=>{
-    const timeA = extrairNomeTime(campo(s,["timeA","mandante","timeMandante","nomeTimeA"],""));
-    const timeB = extrairNomeTime(campo(s,["timeB","visitante","timeVisitante","nomeTimeB"],""));
+
+    const timeA = extrairNomeTime(
+      campo(s,["timeA","mandante","timeMandante","nomeTimeA"],"")
+    );
+
+    const timeB = extrairNomeTime(
+      campo(s,["timeB","visitante","timeVisitante","nomeTimeB"],"")
+    );
 
     const okTime = timeA === nome || timeB === nome;
 
     const cat = campo(s,["categoria","categoriaNome"],"");
     const camp = campo(s,["campeonato","nomeCampeonato","campeonatoNome"],"");
     const campId = campo(s,["campeonatoId"],"");
-    const ano = String(campo(s,["temporada","ano"], campo(s,["data","dataJogo"],"").slice(0,4)));
+
+    const ano = String(
+      campo(
+        s,
+        ["temporada","ano"],
+        campo(s,["data","dataJogo"],"").slice(0,4)
+      )
+    );
 
     return okTime &&
       (!filtroCategoria || cat === filtroCategoria) &&
@@ -61,17 +87,29 @@ function sumulasDoTime(){
   });
 }
 
+
+
 function calcularStats(){
-  let jogosQtd = 0, vitorias = 0, empates = 0, derrotas = 0, gp = 0, gc = 0;
+
+  let jogosQtd = 0;
+  let vitorias = 0;
+  let empates = 0;
+  let derrotas = 0;
+  let gp = 0;
+  let gc = 0;
+
   const nome = normalizar(nomeTime());
 
   jogosDoTime().forEach(j=>{
+
     jogosQtd++;
 
     const a = placarA(j);
     const b = placarB(j);
 
-    const timeA = extrairNomeTime(campo(j,["timeA","mandante","timeMandante","nomeTimeA"],""));
+    const timeA = extrairNomeTime(
+      campo(j,["timeA","mandante","timeMandante","nomeTimeA"],"")
+    );
 
     const ehA = timeA === nome;
 
@@ -81,9 +119,16 @@ function calcularStats(){
     gp += golsPro;
     gc += golsContra;
 
-    if(golsPro > golsContra) vitorias++;
-    else if(golsPro === golsContra) empates++;
-    else derrotas++;
+    if(golsPro > golsContra){
+      vitorias++;
+    }
+    else if(golsPro === golsContra){
+      empates++;
+    }
+    else{
+      derrotas++;
+    }
+
   });
 
   return {
@@ -94,10 +139,6 @@ function calcularStats(){
     gols:gp,
     golsContra:gc,
     saldo:gp-gc,
-    pontos:vitorias*3+empates
+    pontos:(vitorias * 3) + empates
   };
 }
-</pre>
-
-</body>
-</html>
