@@ -430,6 +430,80 @@ function statusFinalizadoRegistro(j){
   return finalizado(j) || st.includes("final");
 }
 
+
+function ladoDoJogadorNaSumula(s){
+  const listasA = [
+    ...(Array.isArray(s.jogadoresA) ? s.jogadoresA : []),
+    ...(Array.isArray(s.escalacaoA) ? s.escalacaoA : [])
+  ];
+
+  const listasB = [
+    ...(Array.isArray(s.jogadoresB) ? s.jogadoresB : []),
+    ...(Array.isArray(s.escalacaoB) ? s.escalacaoB : [])
+  ];
+
+  if(listasA.some(p=>mesmoJogador(p))) return "A";
+  if(listasB.some(p=>mesmoJogador(p))) return "B";
+
+  const meuTime = n(timeJogador(jogador));
+  const timeA = n(nomeTimeRegistroJogo(s,"A"));
+  const timeB = n(nomeTimeRegistroJogo(s,"B"));
+
+  if(meuTime && timeA === meuTime) return "A";
+  if(meuTime && timeB === meuTime) return "B";
+
+  return "";
+}
+
+function eventoEhDoLado(ev,lado,timeNome){
+  const ladoEv = n(val(ev,["time","lado","equipe"],""));
+  const timeEv = n(val(ev,["timeNome","equipeNome"],""));
+
+  return ladoEv === n(lado) ||
+    ladoEv === n(timeNome) ||
+    timeEv === n(timeNome);
+}
+
+function todasListasDeGols(s){
+  return [
+    ...(Array.isArray(s.gols) ? s.gols : []),
+    ...(Array.isArray(s.golsLista) ? s.golsLista : []),
+    ...(Array.isArray(s.golsA) ? s.golsA.map(g=>({...g,time:"A"})) : []),
+    ...(Array.isArray(s.golsB) ? s.golsB.map(g=>({...g,time:"B"})) : [])
+  ];
+}
+
+function todasListasDeCartoes(s){
+  return [
+    ...(Array.isArray(s.cartoes) ? s.cartoes : []),
+    ...(Array.isArray(s.cartoesLista) ? s.cartoesLista : []),
+    ...(Array.isArray(s.cartoesA) ? s.cartoesA.map(c=>({...c,time:"A"})) : []),
+    ...(Array.isArray(s.cartoesB) ? s.cartoesB.map(c=>({...c,time:"B"})) : [])
+  ];
+}
+
+function todasListasDeAssistencias(s){
+  return [
+    ...(Array.isArray(s.assistencias) ? s.assistencias : []),
+    ...(Array.isArray(s.assistenciasLista) ? s.assistenciasLista : []),
+    ...(Array.isArray(s.assistenciasA) ? s.assistenciasA.map(a=>({...a,time:"A"})) : []),
+    ...(Array.isArray(s.assistenciasB) ? s.assistenciasB.map(a=>({...a,time:"B"})) : [])
+  ];
+}
+
+function golsPlacarA(reg){
+  return Number(val(reg,["golsA","placarA","golsMandante"],0));
+}
+
+function golsPlacarB(reg){
+  return Number(val(reg,["golsB","placarB","golsVisitante"],0));
+}
+
+function jogoIdRegistro(reg){
+  return String(val(reg,["jogoId","id"], reg.id || ""));
+}
+
+
 function calcular(){
 
   let jogosCount = 0;
@@ -443,8 +517,11 @@ function calcular(){
 
   const recentesMap = new Map();
   const partidasContadas = new Set();
+  const resultadosContados = new Set();
 
   sumulas.forEach(s=>{
+
+    const ladoJogador = ladoDoJogadorNaSumula(s);
 
     const elenco = [
       ...(Array.isArray(s.escalacao) ? s.escalacao : []),
@@ -458,44 +535,59 @@ function calcular(){
     const participou = elenco.some(p=>mesmoJogador(p));
 
     if(participou){
-      const partidaId = String(val(s,["jogoId","id"], s.id || ""));
+      const partidaId = jogoIdRegistro(s);
       if(partidaId && !partidasContadas.has(partidaId)){
         partidasContadas.add(partidaId);
         jogosCount++;
       }
+      recentesMap.set(partidaId || s.id || Math.random(), s);
     }
 
-    const golsLista = [
-      ...(Array.isArray(s.gols) ? s.gols : []),
-      ...(Array.isArray(s.golsLista) ? s.golsLista : [])
-    ];
-
-    golsLista.forEach(ev=>{
+    todasListasDeGols(s).forEach(ev=>{
       if(!mesmoJogador(ev)) return;
+
       const tipo = n(val(ev,["tipo","evento","acao"],"gol"));
-      if(!tipo.includes("contra")) gols++;
+
+      if(!tipo.includes("contra")){
+        gols++;
+      }
     });
 
-    const assistenciasLista = [
-      ...(Array.isArray(s.assistencias) ? s.assistencias : []),
-      ...(Array.isArray(s.assistenciasLista) ? s.assistenciasLista : [])
-    ];
-
-    assistenciasLista.forEach(ev=>{
+    todasListasDeAssistencias(s).forEach(ev=>{
       if(mesmoJogador(ev)) assistencias++;
     });
 
-    const cartoesLista = [
-      ...(Array.isArray(s.cartoes) ? s.cartoes : []),
-      ...(Array.isArray(s.cartoesLista) ? s.cartoesLista : [])
-    ];
-
-    cartoesLista.forEach(ev=>{
+    todasListasDeCartoes(s).forEach(ev=>{
       if(!mesmoJogador(ev)) return;
+
       const tipo = n(val(ev,["tipo","cartao","cor"],""));
+
       if(tipo.includes("verm")) vermelhos++;
       else amarelos++;
     });
+
+    if(ladoJogador && statusFinalizadoRegistro(s)){
+      const partidaId = jogoIdRegistro(s);
+
+      if(partidaId && !resultadosContados.has(partidaId)){
+        resultadosContados.add(partidaId);
+
+        const ga = golsPlacarA(s);
+        const gb = golsPlacarB(s);
+
+        if(ladoJogador === "A"){
+          if(ga > gb) v++;
+          else if(ga === gb) e++;
+          else d++;
+        }
+
+        if(ladoJogador === "B"){
+          if(gb > ga) v++;
+          else if(gb === ga) e++;
+          else d++;
+        }
+      }
+    }
   });
 
   jogos.forEach(j=>{
@@ -506,8 +598,13 @@ function calcular(){
 
     if(statusFinalizadoRegistro(j)){
 
-      const ga = Number(val(j,["golsA","placarA"],0));
-      const gb = Number(val(j,["golsB","placarB"],0));
+      const partidaId = jogoIdRegistro(j);
+
+      if(partidaId && resultadosContados.has(partidaId)) return;
+      if(partidaId) resultadosContados.add(partidaId);
+
+      const ga = golsPlacarA(j);
+      const gb = golsPlacarB(j);
 
       if(jogadorEhDoLado(j,"A")){
         if(ga > gb) v++;
@@ -529,7 +626,7 @@ function calcular(){
     : 0;
 
   const recentes = Array.from(recentesMap.values())
-    .sort((a,b)=>dataMs(val(b,["dataHora","data","dataJogo"],"")) - dataMs(val(a,["dataHora","data","dataJogo"],"")))
+    .sort((a,b)=>dataMs(val(b,["dataHora","data","dataJogo","finalizadaEm"],"")) - dataMs(val(a,["dataHora","data","dataJogo","finalizadaEm"],"")))
     .slice(0,8);
 
   return {
@@ -692,7 +789,7 @@ function render(){
                   Campeonato: ${val(j,["campeonato","campeonatoNome"],"-")}<br>
                   Categoria: ${val(j,["categoria"],"-")}<br>
                   Data: ${dataBR(val(j,["dataHora","data","dataJogo"],""))}<br>
-                  Status: ${val(j,["status"],"-")}
+                  Status: ${val(j,["status","sumulaStatus"],"-")}
                 </p>
 
               </div>
