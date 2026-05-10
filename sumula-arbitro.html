@@ -1825,16 +1825,28 @@ window.adicionarGol = function(time){
   const minuto = $(time === "A" ? "golMinutoA" : "golMinutoB").value;
   const tipo = $(time === "A" ? "golTipoA" : "golTipoB").value;
 
+  const timeId = time === "A"
+    ? campo(jogo,["timeAId","mandanteId","timeMandanteId"], campo(jogo?.timeA,["id","timeId","uid"],""))
+    : campo(jogo,["timeBId","visitanteId","timeVisitanteId"], campo(jogo?.timeB,["id","timeId","uid"],""));
+
+  const jogadorId = sel.selectedOptions[0]?.dataset?.id || "";
+  const numero = sel.selectedOptions[0]?.dataset?.num || "";
+
   const obj = {
     time,
     timeNome: time === "A" ? getTimeA().nome : getTimeB().nome,
+    nomeTime: time === "A" ? getTimeA().nome : getTimeB().nome,
+    timeId,
     nome:sel.value,
     jogador:sel.value,
-    id:sel.selectedOptions[0]?.dataset?.id || "",
-    jogadorId:sel.selectedOptions[0]?.dataset?.id || "",
-    id:sel.selectedOptions[0]?.dataset?.id || "",
-    jogadorId:sel.selectedOptions[0]?.dataset?.id || "",
-    numero:sel.selectedOptions[0]?.dataset?.num || "",
+    jogadorNome:sel.value,
+    id:jogadorId,
+    uid:jogadorId,
+    jogadorId,
+    idJogador:jogadorId,
+    atletaId:jogadorId,
+    numero,
+    camisa:numero,
     minuto,
     tempo:minuto,
     tipo
@@ -1858,12 +1870,28 @@ window.adicionarCartao = function(time){
   const tipo = $(time === "A" ? "cartaoTipoA" : "cartaoTipoB").value;
   const vermelhoTipo = tipo === "vermelho" ? $(time === "A" ? "cartaoVermelhoTipoA" : "cartaoVermelhoTipoB").value : "";
 
+  const timeId = time === "A"
+    ? campo(jogo,["timeAId","mandanteId","timeMandanteId"], campo(jogo?.timeA,["id","timeId","uid"],""))
+    : campo(jogo,["timeBId","visitanteId","timeVisitanteId"], campo(jogo?.timeB,["id","timeId","uid"],""));
+
+  const jogadorId = sel.selectedOptions[0]?.dataset?.id || "";
+  const numero = sel.selectedOptions[0]?.dataset?.num || "";
+
   const obj = {
     time,
     timeNome: time === "A" ? getTimeA().nome : getTimeB().nome,
+    nomeTime: time === "A" ? getTimeA().nome : getTimeB().nome,
+    timeId,
     nome:sel.value,
     jogador:sel.value,
-    numero:sel.selectedOptions[0]?.dataset?.num || "",
+    jogadorNome:sel.value,
+    id:jogadorId,
+    uid:jogadorId,
+    jogadorId,
+    idJogador:jogadorId,
+    atletaId:jogadorId,
+    numero,
+    camisa:numero,
     minuto,
     tempo:minuto,
     tipo,
@@ -1946,6 +1974,153 @@ function gerarQr(link){
   }
 }
 
+
+function limparIdSeguro(txt){
+  return String(txt || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-zA-Z0-9_-]/g,"_")
+    .replace(/_+/g,"_")
+    .slice(0,80);
+}
+
+function chaveJogadorEvento(j){
+  const id = String(campo(j,["id","uid","jogadorId","idJogador","atletaId"],"")).trim();
+  const cpf = String(campo(j,["cpf","CPF"],"")).trim();
+  const nome = normalizarTexto(campo(j,["nome","jogador","jogadorNome","atleta"],""));
+  const numero = String(campo(j,["numero","camisa","n"],"")).trim();
+
+  if(id) return "id:" + id;
+  if(cpf) return "cpf:" + cpf;
+  return "nome:" + nome + "|num:" + numero;
+}
+
+function completarJogadorParaSalvar(j,time){
+  const timeObj = time === "A" ? getTimeA() : getTimeB();
+  const timeId = time === "A"
+    ? campo(jogo,["timeAId","mandanteId","timeMandanteId"], campo(jogo?.timeA,["id","timeId","uid"],""))
+    : campo(jogo,["timeBId","visitanteId","timeVisitanteId"], campo(jogo?.timeB,["id","timeId","uid"],""));
+
+  return {
+    ...j,
+    uid:j.id || "",
+    jogadorId:j.id || "",
+    nome:j.nome || campo(j,["jogador","jogadorNome","atleta"],""),
+    jogador:j.nome || campo(j,["jogador","jogadorNome","atleta"],""),
+    jogadorNome:j.nome || campo(j,["jogador","jogadorNome","atleta"],""),
+    numero:j.numero || campo(j,["camisa","n"],""),
+    camisa:j.numero || campo(j,["camisa","n"],""),
+    posicao:j.posicao || campo(j,["posição","funcao"],"Atleta"),
+    categoria:j.categoria || campo(jogo,["categoria","categoriaNome"],""),
+    timeLetra:time,
+    time:timeObj.nome,
+    timeNome:timeObj.nome,
+    nomeTime:timeObj.nome,
+    equipe:timeObj.nome,
+    timeId,
+    equipeId:timeId,
+    clubeId:timeId
+  };
+}
+
+function encontrarJogadorPorEvento(ev,lista){
+  const idEv = String(campo(ev,["id","jogadorId","uid"],"")).trim();
+  const nomeEv = normalizarTexto(campo(ev,["nome","jogador","jogadorNome","atleta"],""));
+  const numeroEv = String(campo(ev,["numero","camisa","n"],"")).trim();
+
+  return lista.find(j=>{
+    const idJ = String(campo(j,["id","jogadorId","uid"],"")).trim();
+    const nomeJ = normalizarTexto(campo(j,["nome","jogador","jogadorNome","atleta"],""));
+    const numeroJ = String(campo(j,["numero","camisa","n"],"")).trim();
+
+    if(idEv && idJ && idEv === idJ) return true;
+    if(nomeEv && nomeJ && nomeEv === nomeJ && (!numeroEv || !numeroJ || numeroEv === numeroJ)) return true;
+    return false;
+  });
+}
+
+async function garantirJogadoresDaSumulaNoFirebase(){
+  const listas = [
+    {time:"A", lista:jogadoresA},
+    {time:"B", lista:jogadoresB}
+  ];
+
+  for(const grupo of listas){
+    const timeObj = grupo.time === "A" ? getTimeA() : getTimeB();
+    const timeId = grupo.time === "A"
+      ? campo(jogo,["timeAId","mandanteId","timeMandanteId"], campo(jogo?.timeA,["id","timeId","uid"],""))
+      : campo(jogo,["timeBId","visitanteId","timeVisitanteId"], campo(jogo?.timeB,["id","timeId","uid"],""));
+
+    for(let i=0;i<grupo.lista.length;i++){
+      let j = grupo.lista[i];
+
+      if(!j.nome) continue;
+
+      let jogadorId = campo(j,["id","uid","jogadorId"],"");
+
+      if(!jogadorId){
+        const baseId = limparIdSeguro(`${jogoId}_${grupo.time}_${j.numero || i}_${j.nome}`);
+        jogadorId = `sumula_${baseId}`;
+      }
+
+      const dadosJogador = completarJogadorParaSalvar({
+        ...j,
+        id:jogadorId,
+        uid:jogadorId,
+        jogadorId:jogadorId,
+        manual:j.manual === true || !campo(j,["id","uid","jogadorId"],"")
+      }, grupo.time);
+
+      await setDoc(doc(db,"jogadores",jogadorId),{
+        ...dadosJogador,
+        ativo:true,
+        aprovado:true,
+        origem:"sumula",
+        origemSumulaId:jogoId,
+        ultimoJogoId:jogoId,
+        atualizadoEm:serverTimestamp()
+      },{merge:true});
+
+      grupo.lista[i] = dadosJogador;
+    }
+  }
+
+  function vincularEventos(listaEventos,listaJogadores,time){
+    listaEventos.forEach(ev=>{
+      const achado = encontrarJogadorPorEvento(ev,listaJogadores);
+      const timeObj = time === "A" ? getTimeA() : getTimeB();
+      const timeId = time === "A"
+        ? campo(jogo,["timeAId","mandanteId","timeMandanteId"], campo(jogo?.timeA,["id","timeId","uid"],""))
+        : campo(jogo,["timeBId","visitanteId","timeVisitanteId"], campo(jogo?.timeB,["id","timeId","uid"],""));
+
+      ev.time = time;
+      ev.timeNome = timeObj.nome;
+      ev.nomeTime = timeObj.nome;
+      ev.timeId = timeId;
+
+      if(achado){
+        ev.id = achado.id;
+        ev.uid = achado.id;
+        ev.jogadorId = achado.id;
+        ev.idJogador = achado.id;
+        ev.atletaId = achado.id;
+        ev.nome = achado.nome;
+        ev.jogador = achado.nome;
+        ev.jogadorNome = achado.nome;
+        ev.numero = achado.numero || ev.numero || "";
+        ev.camisa = achado.numero || ev.numero || "";
+        ev.cpf = achado.cpf || ev.cpf || "";
+      }
+    });
+  }
+
+  vincularEventos(golsA,jogadoresA,"A");
+  vincularEventos(golsB,jogadoresB,"B");
+  vincularEventos(cartoesA,jogadoresA,"A");
+  vincularEventos(cartoesB,jogadoresB,"B");
+}
+
+
 function montarDados(finalizar=false){
   const timeA = getTimeA();
   const timeB = getTimeB();
@@ -1985,12 +2160,12 @@ function montarDados(finalizar=false){
     golsB:golsB.length,
     placar:`${golsA.length} x ${golsB.length}`,
 
-    jogadoresA,
-    jogadoresB,
+    jogadoresA:jogadoresA.map(j=>completarJogadorParaSalvar(j,"A")),
+    jogadoresB:jogadoresB.map(j=>completarJogadorParaSalvar(j,"B")),
     comissaoA:listaComissao("A"),
     comissaoB:listaComissao("B"),
-    escalacaoA:jogadoresA,
-    escalacaoB:jogadoresB,
+    escalacaoA:jogadoresA.map(j=>completarJogadorParaSalvar(j,"A")),
+    escalacaoB:jogadoresB.map(j=>completarJogadorParaSalvar(j,"B")),
 
     gols,
     cartoes,
@@ -2036,8 +2211,8 @@ function montarDados(finalizar=false){
     estatisticasProcessadas:finalizar ? {
       golsA:golsA.length,
       golsB:golsB.length,
-      jogadoresA:jogadoresA.map(j=>j.id).filter(Boolean),
-      jogadoresB:jogadoresB.map(j=>j.id).filter(Boolean),
+      jogadoresA:jogadoresA.map(j=>j.id || j.jogadorId).filter(Boolean),
+      jogadoresB:jogadoresB.map(j=>j.id || j.jogadorId).filter(Boolean),
       gols:gols.map(g=>g.id || g.jogadorId).filter(Boolean),
       cartoes:cartoes.map(c=>({id:c.id || c.jogadorId,tipo:c.tipo})).filter(c=>c.id),
       tecnicosA:listaComissao("A").map(t=>t.id).filter(Boolean),
@@ -2230,6 +2405,8 @@ window.finalizarSumula = async function(){
   if(!confirm("Tem certeza? Após finalizar não poderá editar.")) return;
 
   try{
+    await garantirJogadoresDaSumulaNoFirebase();
+
     const dados = montarDados(true);
 
     await setDoc(doc(db,"sumulas",jogoId), dados, {merge:true});
