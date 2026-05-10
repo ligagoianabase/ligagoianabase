@@ -587,30 +587,38 @@ function incluirJogadoresDaSumula(){
   const mapa = new Map();
 
   jogadores.forEach(j=>{
-    const chave = val(j,["id"],"") || `${n(nomeJogador(j))}|${n(timeJogador(j))}|${numeroCamisa(j)}`;
+    const chave = chaveJogadorUnica(j);
     mapa.set(chave,j);
   });
 
   sumulas.forEach(s=>{
     listaEscalacaoSumula(s).forEach(item=>{
       const j = jogadorDaSumulaParaCadastro(item,s);
-      const chave = j.id || `${n(j.nome)}|${n(j.time)}|${j.numero}`;
+      const chave = chaveJogadorUnica(j);
+
       if(!mapa.has(chave)){
         mapa.set(chave,j);
+      }else{
+        mapa.set(chave,preferirJogador(mapa.get(chave),j));
       }
     });
 
     listaEventosSumula(s).forEach(item=>{
       const j = jogadorDaSumulaParaCadastro(item,s);
       if(!j.nome || j.nome === "Sem nome") return;
-      const chave = j.id || `${n(j.nome)}|${n(j.time)}|${j.numero}`;
+
+      const chave = chaveJogadorUnica(j);
+
       if(!mapa.has(chave)){
         mapa.set(chave,j);
+      }else{
+        mapa.set(chave,preferirJogador(mapa.get(chave),j));
       }
     });
   });
 
   jogadores = Array.from(mapa.values());
+  deduplicarJogadores();
 }
 
 function numero(v){
@@ -646,6 +654,82 @@ function nomeTimeDoc(t){
   return val(t,["nome","timeNome","nomeTime","equipe"],"");
 }
 
+
+function timeDocPorId(id){
+  if(!id) return null;
+  return times.find(t => String(t.id || "") === String(id || "")) || null;
+}
+
+function nomeTimeAtual(j){
+  const tid = timeIdJogador(j);
+  const timeDoc = timeDocPorId(tid);
+
+  if(timeDoc){
+    return nomeTimeDoc(timeDoc) || "-";
+  }
+
+  return timeJogador(j);
+}
+
+function escudoTimeAtual(j){
+  const tid = timeIdJogador(j);
+  const timeDoc = timeDocPorId(tid);
+
+  if(timeDoc){
+    return val(timeDoc,["logo","escudo","imagem","foto"],"logo-liga.jfif");
+  }
+
+  return escudoPorTime(timeJogador(j));
+}
+
+function chaveJogadorUnica(j){
+  const id = String(val(j,["id","uid","jogadorId","idJogador","atletaId"],"")).trim();
+  const cpf = String(val(j,["cpf","cpfJogador","documento","CPF"],"")).trim();
+  const nome = n(nomeJogador(j));
+  const numero = String(numeroCamisa(j)).trim();
+  const timeId = String(timeIdJogador(j)).trim();
+  const timeNome = n(nomeTimeAtual(j));
+
+  if(id) return "id:" + id;
+  if(cpf) return "cpf:" + cpf;
+  if(timeId) return `nome:${nome}|timeId:${timeId}|num:${numero}`;
+  return `nome:${nome}|time:${timeNome}|num:${numero}`;
+}
+
+function preferirJogador(a,b){
+  const origemA = val(a,["origem"],"");
+  const origemB = val(b,["origem"],"");
+
+  if(origemA !== "sumula" && origemB === "sumula") return a;
+  if(origemA === "sumula" && origemB !== "sumula") return b;
+
+  return {
+    ...a,
+    ...b,
+    jogos:Math.max(numero(val(a,["jogos","jogosDisputados"],0)), numero(val(b,["jogos","jogosDisputados"],0))),
+    gols:Math.max(numero(val(a,["gols"],0)), numero(val(b,["gols"],0))),
+    assistencias:Math.max(numero(val(a,["assistencias"],0)), numero(val(b,["assistencias"],0))),
+    amarelos:Math.max(numero(val(a,["amarelos","cartoesAmarelos"],0)), numero(val(b,["amarelos","cartoesAmarelos"],0))),
+    vermelhos:Math.max(numero(val(a,["vermelhos","cartoesVermelhos"],0)), numero(val(b,["vermelhos","cartoesVermelhos"],0)))
+  };
+}
+
+function deduplicarJogadores(){
+  const mapa = new Map();
+
+  jogadores.forEach(j=>{
+    const chave = chaveJogadorUnica(j);
+    if(!mapa.has(chave)){
+      mapa.set(chave,j);
+    }else{
+      mapa.set(chave,preferirJogador(mapa.get(chave),j));
+    }
+  });
+
+  jogadores = Array.from(mapa.values());
+}
+
+
 function escudoPorTime(nome){
   const encontrado = times.find(t => n(nomeTimeDoc(t)) === n(nome));
   return val(encontrado,["logo","escudo","imagem","foto"],"logo-liga.jfif");
@@ -654,7 +738,7 @@ function escudoPorTime(nome){
 function escudoJogador(j){
   const direto = val(j,["escudo","logoTime","timeLogo","logo"],"");
   if(direto) return direto;
-  return escudoPorTime(timeJogador(j));
+  return escudoTimeAtual(j);
 }
 
 function timeJogador(j){
@@ -867,32 +951,30 @@ function calcularStats(jogador){
 
 function preencherTimes(){
   const select = document.getElementById("filtroTime");
-  const nomes = new Set();
-
-  jogadores.forEach(j=>{
-    const time = timeJogador(j);
-    if(time && time !== "-") nomes.add(time);
-  });
-
-  jogos.forEach(j=>{
-    const a = timeA(j);
-    const b = timeB(j);
-
-    if(a) nomes.add(a);
-    if(b) nomes.add(b);
-  });
+  const mapa = new Map();
 
   times.forEach(t=>{
     const nome = nomeTimeDoc(t);
-    if(nome) nomes.add(nome);
+    if(nome){
+      mapa.set(String(t.id || nome), nome);
+    }
+  });
+
+  jogadores.forEach(j=>{
+    const tid = timeIdJogador(j);
+    const nome = nomeTimeAtual(j);
+
+    if(nome && nome !== "-"){
+      mapa.set(String(tid || nome), nome);
+    }
   });
 
   select.innerHTML = `<option value="">Todos os times</option>`;
 
-  Array.from(nomes)
-    .sort((a,b)=>String(a).localeCompare(String(b),"pt-BR"))
-    .forEach(time=>{
-      select.innerHTML += `<option value="${time}">${time}</option>`;
+  Array.from(mapa.entries())
+    .sort((a,b)=>String(a[1]).localeCompare(String(b[1]),"pt-BR"))
+    .forEach(([id,nome])=>{
+      select.innerHTML += `<option value="${id}">${nome}</option>`;
     });
 }
 
@@ -926,10 +1008,11 @@ function filtrarJogadores(){
 
   return jogadores.filter(j=>{
     const nome = nomeJogador(j);
-    const time = timeJogador(j);
+    const time = nomeTimeAtual(j);
     const posicao = posicaoJogador(j);
+    const tid = timeIdJogador(j);
 
-    if(timeSelecionado && n(time) !== n(timeSelecionado)){
+    if(timeSelecionado && String(tid || time) !== String(timeSelecionado) && n(time) !== n(timeSelecionado)){
       return false;
     }
 
@@ -951,6 +1034,14 @@ function filtrarJogadores(){
 
     if(comparaCategoria !== 0){
       return comparaCategoria;
+    }
+
+    const timeAOrdenar = nomeTimeAtual(a);
+    const timeBOrdenar = nomeTimeAtual(b);
+    const comparaTime = String(timeAOrdenar).localeCompare(String(timeBOrdenar),"pt-BR");
+
+    if(comparaTime !== 0){
+      return comparaTime;
     }
 
     return nomeJogador(a).localeCompare(nomeJogador(b),"pt-BR");
@@ -987,7 +1078,8 @@ function atualizarTopo(lista){
   document.getElementById("tagCartoes").innerText = `Cartões: ${cartoes}`;
 
   const categoria = document.getElementById("filtroCategoria").value;
-  const time = document.getElementById("filtroTime").value;
+  const timeSelect = document.getElementById("filtroTime");
+  const time = timeSelect.value ? timeSelect.options[timeSelect.selectedIndex].text : "";
 
   document.getElementById("tituloPagina").innerText =
     `Jogadores${categoria ? " - " + categoria : ""}${time ? " | " + time : ""}`;
@@ -1012,7 +1104,7 @@ function render(){
   box.innerHTML = lista.map(j=>{
     const nome = nomeJogador(j);
     const numero = numeroCamisa(j);
-    const time = timeJogador(j);
+    const time = nomeTimeAtual(j);
     const posicao = posicaoJogador(j);
     const foto = fotoJogador(j);
     const cats = categoriasJogador(j);
@@ -1152,6 +1244,7 @@ async function carregarDados(){
   sumulas = await carregarColecao("sumulas");
 
   incluirJogadoresDaSumula();
+  deduplicarJogadores();
 
   preencherTimes();
   preencherCategorias();
