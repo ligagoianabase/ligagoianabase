@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Perfil Público - Liga Goiana</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#071a33;
+  --card:#0d274b;
+  --gold:#f7c600;
+  --goldSoft:rgba(247,198,0,.18);
+  --line:rgba(255,255,255,.08);
+  --text:#ffffff;
+  --muted:#c9d4e7;
+  --danger:#c62828;
+  --success:#14824a;
+  --shadow:0 10px 30px rgba(0,0,0,.30);
+  --radius:22px;
+  --max:1350px;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    linear-gradient(rgba(7,26,51,.92),rgba(7,26,51,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--text);
+  min-height:100vh;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+.wrap{
+  width:min(calc(100% - 28px),var(--max));
+  margin:auto;
+}
+
+.topo{
+  background:rgba(5,16,32,.95);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+  position:sticky;
+  top:0;
+  z-index:100;
+  backdrop-filter:blur(12px);
+}
+
+.topo-inner{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
+
+.left-topo,
+.right-topo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.logo-area{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo-area img{
+  width:60px;
+  height:60px;
+  object-fit:cover;
+  border-radius:50%;
+  border:2px solid var(--gold);
+  background:#fff;
+}
+
+.logo-area h1{
+  font-size:22px;
+  color:var(--gold);
+}
+
+.top-btn{
+  border:none;
+  background:#fff4cf;
+  color:#111;
+  padding:12px 16px;
+  border-radius:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.25s ease;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.top-btn:hover{
+  transform:translateY(-2px);
+}
+
+.hero{
+  padding:26px 0;
+}
+
+.hero-card{
+  background:
+    linear-gradient(180deg,rgba(13,39,75,.96),rgba(7,24,47,.96));
+  border:1px solid var(--goldSoft);
+  border-radius:var(--radius);
+  padding:26px;
+  box-shadow:var(--shadow);
+}
+
+.hero-grid{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:24px;
+  align-items:center;
+}
+
+.foto-lateral{
+  text-align:center;
+}
+
+.foto-lateral img{
+  width:230px;
+  height:230px;
+  object-fit:cover;
+  border-radius:50%;
+  border:4px solid var(--gold);
+  background:#fff;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+.sem-foto{
+  width:230px;
+  height:230px;
+  border-radius:50%;
+  background:#163867;
+  border:4px solid var(--gold);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:80px;
+  color:var(--gold);
+  margin:auto;
+}
+
+.tipo-badge{
+  margin-top:14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:var(--gold);
+  color:#111;
+  font-weight:800;
+  padding:10px 18px;
+  border-radius:999px;
+}
+
+.hero-info h2{
+  font-size:40px;
+  color:var(--gold);
+  margin-bottom:10px;
+}
+
+.hero-info p{
+  color:var(--muted);
+  line-height:1.7;
+  margin-bottom:18px;
+}
+
+.tags{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.tag{
+  padding:10px 14px;
+  border-radius:999px;
+  background:#14335f;
+  border:1px solid rgba(255,255,255,.08);
+  color:#fff;
+  font-weight:700;
+  font-size:13px;
+}
+
+.stats{
+  margin-top:24px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+
+.stat{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:18px;
+  padding:18px;
+  text-align:center;
+}
+
+.stat strong{
+  display:block;
+  font-size:34px;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-weight:700;
+}
+
+.section{
+  margin-top:22px;
+}
+
+.section-card{
+  background:
+    linear-gradient(180deg,rgba(13,39,75,.96),rgba(7,24,47,.96));
+  border:1px solid var(--goldSoft);
+  border-radius:var(--radius);
+  padding:24px;
+  box-shadow:var(--shadow);
+}
+
+.section-title{
+  color:var(--gold);
+  font-size:24px;
+  margin-bottom:18px;
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.info-box{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;
+  padding:16px;
+}
+
+.info-box small{
+  display:block;
+  color:#a9bad8;
+  margin-bottom:6px;
+}
+
+.info-box strong{
+  font-size:16px;
+}
+
+.lista-jogos{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+}
+
+.jogo-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:18px;
+  padding:18px;
+}
+
+.jogo-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.status{
+  padding:7px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.finalizado{
+  background:rgba(20,130,74,.18);
+  color:#a8ffd1;
+}
+
+.placar{
+  font-size:26px;
+  color:var(--gold);
+  font-weight:800;
+  text-align:center;
+  margin:12px 0;
+}
+
+.times{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.time{
+  flex:1;
+  text-align:center;
+}
+
+.time img{
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#fff;
+  border:2px solid var(--gold);
+  margin-bottom:8px;
+}
+
+.vazio{
+  text-align:center;
+  color:#d4deef;
+  padding:30px;
+  background:rgba(255,255,255,.04);
+  border-radius:18px;
+}
+
+.loading{
+  min-height:70vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:14px;
+}
+
+.loading i{
+  font-size:60px;
+  color:var(--gold);
+  animation:gira 1s linear infinite;
+}
+
+@keyframes gira{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+
+@media(max-width:1100px){
+
+  .hero-grid{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .info-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .lista-jogos{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:700px){
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .info-grid{
+    grid-template-columns:1fr;
+  }
+
+  .hero-info h2{
+    font-size:30px;
+  }
+
+  .foto-lateral img,
+  .sem-foto{
+    width:180px;
+    height:180px;
+  }
+
+  .topo-inner{
+    justify-content:center;
+  }
+
+  .left-topo,
+  .right-topo{
+    width:100%;
+    justify-content:center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topo">
+  <div class="wrap topo-inner">
+
+    <div class="left-topo">
+      <button class="top-btn" onclick="history.back()">
+        <i class="fa-solid fa-arrow-left"></i>
+        Voltar
+      </button>
+
+      <a href="index.html" class="top-btn">
+        <i class="fa-solid fa-house"></i>
+        Página Inicial
+      </a>
+    </div>
+
+    <div class="logo-area">
+      <img src="logo-liga.jfif" alt="">
+      <h1>Perfil Público</h1>
+    </div>
+
+    <div class="right-topo">
+      <a href="classificacao.html" class="top-btn">
+        <i class="fa-solid fa-ranking-star"></i>
+        Classificação
+      </a>
+    </div>
+
+  </div>
+</header>
+
+<div id="loading" class="loading">
+  <i class="fa-solid fa-futbol"></i>
+  <h2>Carregando perfil...</h2>
+</div>
+
+<main id="conteudo" style="display:none">
+
+  <section class="hero">
+    <div class="wrap">
+
+      <div class="hero-card">
+
+        <div class="hero-grid">
+
+          <div class="foto-lateral">
+
+            <div id="fotoArea"></div>
+
+            <div class="tipo-badge">
+              <i class="fa-solid fa-user"></i>
+              <span id="tipoUsuario">Usuário</span>
+            </div>
+
+          </div>
+
+          <div class="hero-info">
+
+            <h2 id="nome">Perfil</h2>
+
+            <p id="descricao">
+              Perfil oficial da Liga Goiana de Futebol de Base.
+            </p>
+
+            <div class="tags">
+
+              <span class="tag" id="tagTime">
+                Time
+              </span>
+
+              <span class="tag" id="tagCategoria">
+                Categoria
+              </span>
+
+              <span class="tag" id="tagCidade">
+                Cidade
+              </span>
+
+              <span class="tag" id="tagStatus">
+                Status
+              </span>
+
+            </div>
+
+            <div class="stats">
+
+              <div class="stat">
+                <strong id="stat1">0</strong>
+                <span id="label1">Jogos</span>
+              </div>
+
+              <div class="stat">
+                <strong id="stat2">0</strong>
+                <span id="label2">Gols</span>
+              </div>
+
+              <div class="stat">
+                <strong id="stat3">0</strong>
+                <span id="label3">Assistências</span>
+              </div>
+
+              <div class="stat">
+                <strong id="stat4">0</strong>
+                <span id="label4">Cartões</span>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+
+      <div class="section-card">
+
+        <h2 class="section-title">
+          Informações
+        </h2>
+
+        <div class="info-grid" id="infoGrid"></div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+
+      <div class="section-card">
+
+        <h2 class="section-title">
+          Últimos Jogos
+        </h2>
+
+        <div class="lista-jogos" id="listaJogos"></div>
+
+      </div>
+
+    </div>
+  </section>
+
+</main>
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+  doc,
+  getDoc,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const params = new URLSearchParams(window.location.search);
+
+const tipo =
+  (params.get("tipo") || "").toLowerCase();
+
+const id =
+  params.get("id") || "";
+
+const $ = id => document.getElementById(id);
+
+const norm = txt =>
+  String(txt || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+
+let perfil = null;
+let jogos = [];
+let sumulas = [];
+
+async function carregar(){
+
+  try{
+
+    if(!tipo || !id){
+
+      erro("Perfil não encontrado.");
+      return;
+    }
+
+    const ref =
+      doc(db,tipo,id);
+
+    const snap =
+      await getDoc(ref);
+
+    if(!snap.exists()){
+
+      erro("Perfil não encontrado.");
+      return;
+    }
+
+    perfil = {
+      id:snap.id,
+      ...snap.data()
+    };
+
+    const jogosSnap =
+      await getDocs(
+        collection(db,"jogos")
+      );
+
+    jogos =
+      jogosSnap.docs.map(d=>({
+        id:d.id,
+        ...d.data()
+      }));
+
+    const sumulasSnap =
+      await getDocs(
+        collection(db,"sumulas")
+      );
+
+    sumulas =
+      sumulasSnap.docs.map(d=>({
+        id:d.id,
+        ...d.data()
+      }));
+
+    montar();
+
+  }catch(e){
+
+    console.error(e);
+
+    erro("Erro ao carregar perfil.");
+  }
+}
+
+function erro(msg){
+
+  $("loading").innerHTML = `
+    <div class="vazio">
+      ${msg}
+    </div>
+  `;
+}
+
+function foto(){
+
+  return (
+    perfil?.foto ||
+    perfil?.imagem ||
+    perfil?.avatar ||
+    perfil?.logo ||
+    perfil?.escudo ||
+    ""
+  );
+}
+
+function nome(){
+
+  return (
+    perfil?.nome ||
+    perfil?.nomeCompleto ||
+    perfil?.timeNome ||
+    "Perfil"
+  );
+}
+
+function tipoNome(){
+
+  if(tipo === "jogadores"){
+    return "Jogador";
+  }
+
+  if(tipo === "tecnicos"){
+    return "Técnico";
+  }
+
+  if(tipo === "arbitros"){
+    return "Árbitro";
+  }
+
+  if(tipo === "times"){
+    return "Time";
+  }
+
+  if(tipo === "assistentes"){
+    return "Assistente";
+  }
+
+  if(tipo === "fotografos"){
+    return "Fotógrafo";
+  }
+
+  return "Usuário";
+}
+
+function jogosRelacionados(){
+
+  const n = norm(nome());
+
+  return jogos.filter(j=>{
+
+    const a =
+      norm(
+        typeof j.timeA === "object"
+          ? j.timeA.nome
+          : j.timeA
+      );
+
+    const b =
+      norm(
+        typeof j.timeB === "object"
+          ? j.timeB.nome
+          : j.timeB
+      );
+
+    return (
+      a.includes(n) ||
+      b.includes(n)
+    );
+  });
+}
+
+function golsJogador(){
+
+  if(tipo !== "jogadores"){
+    return 0;
+  }
+
+  let total = 0;
+
+  sumulas.forEach(s=>{
+
+    (s.gols || []).forEach(g=>{
+
+      const nomeGol =
+        norm(
+          g.nome ||
+          g.jogador ||
+          g.nomeJogador
+        );
+
+      if(nomeGol === norm(nome())){
+        total++;
+      }
+    });
+  });
+
+  return total;
+}
+
+function assistenciasJogador(){
+
+  if(tipo !== "jogadores"){
+    return 0;
+  }
+
+  let total = 0;
+
+  sumulas.forEach(s=>{
+
+    (s.assistencias || []).forEach(a=>{
+
+      const nomeAssist =
+        norm(
+          a.nome ||
+          a.jogador ||
+          a.nomeJogador
+        );
+
+      if(nomeAssist === norm(nome())){
+        total++;
+      }
+    });
+  });
+
+  return total;
+}
+
+function cartoesJogador(){
+
+  if(tipo !== "jogadores"){
+    return 0;
+  }
+
+  let total = 0;
+
+  sumulas.forEach(s=>{
+
+    (s.cartoes || []).forEach(c=>{
+
+      const nomeCartao =
+        norm(
+          c.nome ||
+          c.jogador ||
+          c.nomeJogador
+        );
+
+      if(nomeCartao === norm(nome())){
+        total++;
+      }
+    });
+  });
+
+  return total;
+}
+
+function info(label,valor){
+
+  return `
+    <div class="info-box">
+      <small>${label}</small>
+      <strong>${valor || "-"}</strong>
+    </div>
+  `;
+}
+
+function montar(){
+
+  $("loading").style.display = "none";
+  $("conteudo").style.display = "block";
+
+  $("nome").innerText = nome();
+
+  $("tipoUsuario").innerText =
+    tipoNome();
+
+  $("descricao").innerText =
+    perfil?.descricao ||
+    perfil?.bio ||
+    "Perfil oficial da Liga Goiana de Futebol de Base.";
+
+  $("tagTime").innerText =
+    perfil?.time ||
+    perfil?.nomeTime ||
+    perfil?.clube ||
+    "Liga Goiana";
+
+  $("tagCategoria").innerText =
+    perfil?.categoria ||
+    "Categoria";
+
+  $("tagCidade").innerText =
+    perfil?.cidade ||
+    perfil?.estado ||
+    "Goiás";
+
+  $("tagStatus").innerText =
+    perfil?.status ||
+    "Ativo";
+
+  if(foto()){
+
+    $("fotoArea").innerHTML = `
+      <img
+        src="${foto()}"
+        onerror="this.onerror=null;this.src='logo-liga.jfif'"
+      >
+    `;
+
+  }else{
+
+    $("fotoArea").innerHTML = `
+      <div class="sem-foto">
+        <i class="fa-solid fa-user"></i>
+      </div>
+    `;
+  }
+
+  const jogosPerfil =
+    jogosRelacionados();
+
+  $("stat1").innerText =
+    jogosPerfil.length;
+
+  $("stat2").innerText =
+    golsJogador();
+
+  $("stat3").innerText =
+    assistenciasJogador();
+
+  $("stat4").innerText =
+    cartoesJogador();
+
+  if(tipo === "times"){
+
+    $("label2").innerText = "Vitórias";
+    $("label3").innerText = "Empates";
+    $("label4").innerText = "Derrotas";
+
+    let v = 0;
+    let e = 0;
+    let d = 0;
+
+    jogosPerfil.forEach(j=>{
+
+      const nomeTime =
+        norm(nome());
+
+      const a =
+        typeof j.timeA === "object"
+          ? j.timeA.nome
+          : j.timeA;
+
+      const b =
+        typeof j.timeB === "object"
+          ? j.timeB.nome
+          : j.timeB;
+
+      const golsA =
+        Number(j.golsA || 0);
+
+      const golsB =
+        Number(j.golsB || 0);
+
+      if(norm(a) === nomeTime){
+
+        if(golsA > golsB) v++;
+        else if(golsA < golsB) d++;
+        else e++;
+      }
+
+      if(norm(b) === nomeTime){
+
+        if(golsB > golsA) v++;
+        else if(golsB < golsA) d++;
+        else e++;
+      }
+    });
+
+    $("stat2").innerText = v;
+    $("stat3").innerText = e;
+    $("stat4").innerText = d;
+  }
+
+  $("infoGrid").innerHTML = `
+
+    ${info("Nome",nome())}
+
+    ${info(
+      "Categoria",
+      perfil?.categoria
+    )}
+
+    ${info(
+      "Cidade",
+      perfil?.cidade
+    )}
+
+    ${info(
+      "Status",
+      perfil?.status
+    )}
+
+    ${info(
+      "Time",
+      perfil?.time ||
+      perfil?.nomeTime
+    )}
+
+    ${info(
+      "Posição",
+      perfil?.posicao
+    )}
+
+    ${info(
+      "Número",
+      perfil?.numero
+    )}
+
+    ${info(
+      "Telefone",
+      perfil?.telefone
+    )}
+
+    ${info(
+      "Instagram",
+      perfil?.instagram
+    )}
+
+  `;
+
+  if(!jogosPerfil.length){
+
+    $("listaJogos").innerHTML = `
+      <div class="vazio">
+        Nenhum jogo encontrado.
+      </div>
+    `;
+
+    return;
+  }
+
+  $("listaJogos").innerHTML =
+    jogosPerfil
+      .slice(0,20)
+      .reverse()
+      .map(j=>{
+
+        const timeA =
+          typeof j.timeA === "object"
+            ? j.timeA.nome
+            : j.timeA;
+
+        const timeB =
+          typeof j.timeB === "object"
+            ? j.timeB.nome
+            : j.timeB;
+
+        const logoA =
+          typeof j.timeA === "object"
+            ? j.timeA.logo
+            : "logo-liga.jfif";
+
+        const logoB =
+          typeof j.timeB === "object"
+            ? j.timeB.logo
+            : "logo-liga.jfif";
+
+        return `
+
+          <article class="jogo-card">
+
+            <div class="jogo-top">
+
+              <strong>
+                ${j.campeonato || "-"}
+              </strong>
+
+              <div class="status finalizado">
+                Finalizado
+              </div>
+
+            </div>
+
+            <div class="times">
+
+              <div class="time">
+                <img
+                  src="${logoA || "logo-liga.jfif"}"
+                  onerror="this.src='logo-liga.jfif'"
+                >
+
+                <div>${timeA}</div>
+              </div>
+
+              <div class="placar">
+                ${j.golsA || 0}
+                x
+                ${j.golsB || 0}
+              </div>
+
+              <div class="time">
+                <img
+                  src="${logoB || "logo-liga.jfif"}"
+                  onerror="this.src='logo-liga.jfif'"
+                >
+
+                <div>${timeB}</div>
+              </div>
+
+            </div>
+
+          </article>
+
+        `;
+      })
+      .join("");
+}
+
+carregar();
+
+</script>
+
+</body>
+</html>
