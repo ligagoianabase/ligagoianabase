@@ -683,6 +683,19 @@ img{display:block;max-width:100%}
   font-size:14px;
 }
 
+.class-table tr.time-atual td{
+  background:rgba(247,198,0,.12);
+  color:#fff;
+  font-weight:900;
+}
+
+.posicao-tabela{
+  color:var(--dourado);
+  font-weight:1000;
+  margin-right:8px;
+}
+
+
 .position-title{
   background:rgba(247,198,0,.12);
   color:var(--dourado);
@@ -1391,8 +1404,166 @@ function jogosCard(){
   `;
 }
 
+
+function chaveTimeTabela(registro,lado){
+  const obj = lado === "A"
+    ? campo(registro,["timeA","mandante","timeMandante"],null)
+    : campo(registro,["timeB","visitante","timeVisitante"],null);
+
+  const idDireto = lado === "A"
+    ? campo(registro,["timeAId","mandanteId","timeMandanteId"],"")
+    : campo(registro,["timeBId","visitanteId","timeVisitanteId"],"");
+
+  const idObj = timeIdRegistro(obj);
+  const nome = nomeTimeDoRegistro(registro,lado,lado === "A" ? "Time A" : "Time B");
+
+  return String(idDireto || idObj || normalizar(nome));
+}
+
+function logoTimeDoRegistro(registro,lado){
+  const obj = lado === "A"
+    ? campo(registro,["timeA","mandante","timeMandante"],null)
+    : campo(registro,["timeB","visitante","timeVisitante"],null);
+
+  if(obj && typeof obj === "object"){
+    return campo(obj,["logo","escudo","imagem","foto"],"logo-liga.jfif");
+  }
+
+  return "logo-liga.jfif";
+}
+
+function resultadoTimeTabela(gp,gc){
+  if(gp > gc) return "vitoria";
+  if(gp < gc) return "derrota";
+  return "empate";
+}
+
+function montarClassificacaoCompleta(){
+  const tabela = new Map();
+
+  jogos.forEach(j=>{
+    const cat = campo(j,["categoria","categoriaNome"],"");
+    const camp = campo(j,["campeonato","nomeCampeonato","campeonatoNome"],"");
+    const campId = campo(j,["campeonatoId"],"");
+    const dataBase = String(campo(j,["data","dataJogo","dataHora"],""));
+    const ano = String(campo(j,["temporada","ano"], dataBase.slice(0,4)));
+
+    if(filtroCategoria && cat !== filtroCategoria) return;
+    if(filtroCampeonato && camp !== filtroCampeonato && campId !== filtroCampeonato) return;
+    if(filtroAno && ano !== filtroAno) return;
+
+    const golsA = placarA(j);
+    const golsB = placarB(j);
+
+    const times = [
+      {
+        chave:chaveTimeTabela(j,"A"),
+        id:campo(j,["timeAId","mandanteId","timeMandanteId"], timeIdRegistro(campo(j,["timeA","mandante","timeMandante"],null))),
+        nome:nomeTimeDoRegistro(j,"A","Time A"),
+        logo:logoTimeDoRegistro(j,"A"),
+        gp:golsA,
+        gc:golsB
+      },
+      {
+        chave:chaveTimeTabela(j,"B"),
+        id:campo(j,["timeBId","visitanteId","timeVisitanteId"], timeIdRegistro(campo(j,["timeB","visitante","timeVisitante"],null))),
+        nome:nomeTimeDoRegistro(j,"B","Time B"),
+        logo:logoTimeDoRegistro(j,"B"),
+        gp:golsB,
+        gc:golsA
+      }
+    ];
+
+    times.forEach(t=>{
+      if(!t.chave) return;
+
+      if(!tabela.has(t.chave)){
+        tabela.set(t.chave,{
+          chave:t.chave,
+          id:String(t.id || ""),
+          nome:t.nome,
+          logo:t.logo,
+          jogos:0,
+          vitorias:0,
+          empates:0,
+          derrotas:0,
+          gols:0,
+          golsContra:0,
+          saldo:0,
+          pontos:0
+        });
+      }
+
+      const item = tabela.get(t.chave);
+      const res = resultadoTimeTabela(t.gp,t.gc);
+
+      item.jogos += 1;
+      item.gols += t.gp;
+      item.golsContra += t.gc;
+      item.saldo = item.gols - item.golsContra;
+
+      if(res === "vitoria"){
+        item.vitorias += 1;
+        item.pontos += 3;
+      }else if(res === "empate"){
+        item.empates += 1;
+        item.pontos += 1;
+      }else{
+        item.derrotas += 1;
+      }
+    });
+  });
+
+  return Array.from(tabela.values()).sort((a,b)=>{
+    if(b.pontos !== a.pontos) return b.pontos - a.pontos;
+    if(b.vitorias !== a.vitorias) return b.vitorias - a.vitorias;
+    if(b.saldo !== a.saldo) return b.saldo - a.saldo;
+    if(b.gols !== a.gols) return b.gols - a.gols;
+    return a.nome.localeCompare(b.nome);
+  });
+}
+
+function timeAtualNaTabela(item){
+  const nomeAtual = normalizar(nomeTime());
+  const idAtual = String(id || "");
+
+  return String(item.id || "") === idAtual ||
+    String(item.chave || "") === idAtual ||
+    normalizar(item.nome) === nomeAtual;
+}
+
+
 function classificacaoCard(){
-  const st = calcularStats();
+  const tabela = montarClassificacaoCompleta();
+
+  if(!tabela.length){
+    const st = calcularStats();
+
+    return `
+      <section class="card-time">
+        <div class="card-title">Classificação</div>
+        <div class="card-body table-wrap">
+          <table class="class-table">
+            <tr>
+              <th>Pos</th><th>Time</th><th>J</th><th>V</th><th>E</th><th>D</th><th>GP</th><th>GC</th><th>SG</th><th>P</th>
+            </tr>
+            <tr class="time-atual">
+              <td>1º</td>
+              <td>${nomeTime()}</td>
+              <td>${st.jogos}</td>
+              <td>${st.vitorias}</td>
+              <td>${st.empates}</td>
+              <td>${st.derrotas}</td>
+              <td>${st.gols}</td>
+              <td>${st.golsContra}</td>
+              <td>${st.saldo}</td>
+              <td>${st.pontos}</td>
+            </tr>
+          </table>
+        </div>
+      </section>
+    `;
+  }
 
   return `
     <section class="card-time">
@@ -1400,19 +1571,32 @@ function classificacaoCard(){
       <div class="card-body table-wrap">
         <table class="class-table">
           <tr>
-            <th>Time</th><th>J</th><th>V</th><th>E</th><th>D</th><th>GP</th><th>GC</th><th>SG</th><th>P</th>
+            <th>Pos</th>
+            <th>Time</th>
+            <th>J</th>
+            <th>V</th>
+            <th>E</th>
+            <th>D</th>
+            <th>GP</th>
+            <th>GC</th>
+            <th>SG</th>
+            <th>P</th>
           </tr>
-          <tr>
-            <td>${nomeTime()}</td>
-            <td>${st.jogos}</td>
-            <td>${st.vitorias}</td>
-            <td>${st.empates}</td>
-            <td>${st.derrotas}</td>
-            <td>${st.gols}</td>
-            <td>${st.golsContra}</td>
-            <td>${st.saldo}</td>
-            <td>${st.pontos}</td>
-          </tr>
+
+          ${tabela.map((t,idx)=>`
+            <tr class="${timeAtualNaTabela(t) ? "time-atual" : ""}">
+              <td><span class="posicao-tabela">${idx+1}º</span></td>
+              <td>${t.nome}</td>
+              <td>${t.jogos}</td>
+              <td>${t.vitorias}</td>
+              <td>${t.empates}</td>
+              <td>${t.derrotas}</td>
+              <td>${t.gols}</td>
+              <td>${t.golsContra}</td>
+              <td>${t.saldo}</td>
+              <td>${t.pontos}</td>
+            </tr>
+          `).join("")}
         </table>
       </div>
     </section>
