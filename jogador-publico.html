@@ -298,8 +298,69 @@ function fotoJogador(j){
   return val(j,["foto","imagem","avatar","fotoUrl"],"logo-liga.jfif");
 }
 
+function textoRegistro(v,f="-"){
+  if(v && typeof v === "object"){
+    return val(v,["nome","nomeTime","time","equipe","clube"],f);
+  }
+  return v || f;
+}
+
 function timeJogador(j){
-  return val(j,["time","timeNome","nomeTime","equipe"],"-");
+  return textoRegistro(val(j,["time","timeObj","equipe","clube"],""), val(j,["timeNome","nomeTime","equipeNome","clubeNome"],"-"));
+}
+
+function timeIdJogador(j){
+  return String(
+    val(j,["timeId","equipeId","clubeId","idTime"],"") ||
+    (val(j,["time","timeObj","equipe","clube"],null)?.id || "") ||
+    (val(j,["time","timeObj","equipe","clube"],null)?.timeId || "")
+  );
+}
+
+function nomeTimeRegistroJogo(j,lado){
+  const obj = lado === "A"
+    ? val(j,["timeA","mandante","timeMandante"],null)
+    : val(j,["timeB","visitante","timeVisitante"],null);
+
+  const direto = lado === "A"
+    ? val(j,["timeANome","nomeTimeA","mandanteNome","timeMandanteNome"],"")
+    : val(j,["timeBNome","nomeTimeB","visitanteNome","timeVisitanteNome"],"");
+
+  return textoRegistro(obj,direto || (lado === "A" ? "Time A" : "Time B"));
+}
+
+function idTimeRegistroJogo(j,lado){
+  const obj = lado === "A"
+    ? val(j,["timeA","mandante","timeMandante"],null)
+    : val(j,["timeB","visitante","timeVisitante"],null);
+
+  const direto = lado === "A"
+    ? val(j,["timeAId","mandanteId","timeMandanteId"],"")
+    : val(j,["timeBId","visitanteId","timeVisitanteId"],"");
+
+  return String(direto || obj?.id || obj?.timeId || "");
+}
+
+function jogoDoTimeDoJogador(j){
+  const meuNome = n(timeJogador(jogador));
+  const meuId = timeIdJogador(jogador);
+
+  const idA = idTimeRegistroJogo(j,"A");
+  const idB = idTimeRegistroJogo(j,"B");
+  const nomeA = n(nomeTimeRegistroJogo(j,"A"));
+  const nomeB = n(nomeTimeRegistroJogo(j,"B"));
+
+  return (meuId && (idA === meuId || idB === meuId)) || nomeA === meuNome || nomeB === meuNome;
+}
+
+function jogadorEhDoLado(j,lado){
+  const meuNome = n(timeJogador(jogador));
+  const meuId = timeIdJogador(jogador);
+
+  const idLado = idTimeRegistroJogo(j,lado);
+  const nomeLado = n(nomeTimeRegistroJogo(j,lado));
+
+  return (meuId && idLado === meuId) || nomeLado === meuNome;
 }
 
 function posicao(j){
@@ -314,15 +375,29 @@ function categorias(j){
 }
 
 function mesmoJogador(item){
+  if(!item || !jogador) return false;
 
   const ids = [
-    val(item,["jogadorId","idJogador","atletaId"],"")
-  ];
+    val(item,["id","uid"],""),
+    val(item,["jogadorId","idJogador","atletaId","playerId"],"")
+  ].map(v=>String(v || "")).filter(Boolean);
 
-  if(ids.includes(id)) return true;
+  if(ids.includes(String(id || ""))) return true;
 
-  return n(val(item,["nome","jogador","nomeJogador"],"")) ===
-    n(nomeJogador(jogador));
+  const cpfItem = n(val(item,["cpf","CPF"],""));
+  const cpfJogador = n(val(jogador,["cpf","CPF"],""));
+
+  if(cpfItem && cpfJogador && cpfItem === cpfJogador) return true;
+
+  const numeroItem = String(val(item,["numero","camisa","numeroCamisa"],"")).trim();
+  const numeroJogador = String(val(jogador,["numero","camisa","numeroCamisa"],"")).trim();
+
+  const nomeItem = n(val(item,["nome","jogador","nomeJogador","jogadorNome","atleta"],""));
+  const nomeBase = n(nomeJogador(jogador));
+
+  if(nomeItem && nomeBase && nomeItem === nomeBase) return true;
+
+  return false;
 }
 
 function finalizado(j){
@@ -330,6 +405,29 @@ function finalizado(j){
     j.encerrado === true ||
     j.sumulaFinalizada === true ||
     n(val(j,["status"],"")) === "finalizado";
+}
+
+
+function dataMs(v){
+  if(!v) return 0;
+  if(typeof v.toDate === "function") return v.toDate().getTime();
+  const d = new Date(v).getTime();
+  return Number.isFinite(d) ? d : 0;
+}
+
+function dataBR(v){
+  if(!v) return "-";
+  if(typeof v.toDate === "function") v = v.toDate();
+  const d = new Date(v);
+  if(!isNaN(d.getTime())){
+    return d.toLocaleDateString("pt-BR");
+  }
+  return String(v);
+}
+
+function statusFinalizadoRegistro(j){
+  const st = n(val(j,["status","sumulaStatus"],""));
+  return finalizado(j) || st.includes("final");
 }
 
 function calcular(){
@@ -343,76 +441,79 @@ function calcular(){
   let e = 0;
   let d = 0;
 
-  const recentes = [];
+  const recentesMap = new Map();
+  const partidasContadas = new Set();
 
   sumulas.forEach(s=>{
 
     const elenco = [
-      ...(s.escalacao || []),
-      ...(s.jogadores || [])
+      ...(Array.isArray(s.escalacao) ? s.escalacao : []),
+      ...(Array.isArray(s.jogadores) ? s.jogadores : []),
+      ...(Array.isArray(s.jogadoresA) ? s.jogadoresA.map(p=>({...p,time:"A"})) : []),
+      ...(Array.isArray(s.jogadoresB) ? s.jogadoresB.map(p=>({...p,time:"B"})) : []),
+      ...(Array.isArray(s.escalacaoA) ? s.escalacaoA.map(p=>({...p,time:"A"})) : []),
+      ...(Array.isArray(s.escalacaoB) ? s.escalacaoB.map(p=>({...p,time:"B"})) : [])
     ];
 
     const participou = elenco.some(p=>mesmoJogador(p));
 
     if(participou){
-      jogosCount++;
+      const partidaId = String(val(s,["jogoId","id"], s.id || ""));
+      if(partidaId && !partidasContadas.has(partidaId)){
+        partidasContadas.add(partidaId);
+        jogosCount++;
+      }
     }
 
-    const eventos = [
-      ...(s.eventos || []),
-      ...(s.gols || []),
-      ...(s.cartoes || []),
-      ...(s.assistencias || [])
+    const golsLista = [
+      ...(Array.isArray(s.gols) ? s.gols : []),
+      ...(Array.isArray(s.golsLista) ? s.golsLista : [])
     ];
 
-    eventos.forEach(ev=>{
-
+    golsLista.forEach(ev=>{
       if(!mesmoJogador(ev)) return;
+      const tipo = n(val(ev,["tipo","evento","acao"],"gol"));
+      if(!tipo.includes("contra")) gols++;
+    });
 
-      const tipo = n(val(ev,["tipo","evento","acao"],""));
+    const assistenciasLista = [
+      ...(Array.isArray(s.assistencias) ? s.assistencias : []),
+      ...(Array.isArray(s.assistenciasLista) ? s.assistenciasLista : [])
+    ];
 
-      if(tipo.includes("gol") && !tipo.includes("contra")){
-        gols++;
-      }
+    assistenciasLista.forEach(ev=>{
+      if(mesmoJogador(ev)) assistencias++;
+    });
 
-      if(tipo.includes("assist")){
-        assistencias++;
-      }
+    const cartoesLista = [
+      ...(Array.isArray(s.cartoes) ? s.cartoes : []),
+      ...(Array.isArray(s.cartoesLista) ? s.cartoesLista : [])
+    ];
 
-      if(tipo.includes("amarelo")){
-        amarelos++;
-      }
-
-      if(tipo.includes("vermelho")){
-        vermelhos++;
-      }
+    cartoesLista.forEach(ev=>{
+      if(!mesmoJogador(ev)) return;
+      const tipo = n(val(ev,["tipo","cartao","cor"],""));
+      if(tipo.includes("verm")) vermelhos++;
+      else amarelos++;
     });
   });
 
   jogos.forEach(j=>{
 
-    const a = n(val(j,["timeA","timeANome"],""));
-    const b = n(val(j,["timeB","timeBNome"],""));
-    const meu = n(timeJogador(jogador));
+    if(!jogoDoTimeDoJogador(j)) return;
 
-    if(a !== meu && b !== meu) return;
+    recentesMap.set(j.id || Math.random(), j);
 
-    recentes.push(j);
-
-    if(finalizado(j)){
+    if(statusFinalizadoRegistro(j)){
 
       const ga = Number(val(j,["golsA","placarA"],0));
       const gb = Number(val(j,["golsB","placarB"],0));
 
-      if(a === meu){
-
+      if(jogadorEhDoLado(j,"A")){
         if(ga > gb) v++;
         else if(ga === gb) e++;
         else d++;
-      }
-
-      if(b === meu){
-
+      }else if(jogadorEhDoLado(j,"B")){
         if(gb > ga) v++;
         else if(gb === ga) e++;
         else d++;
@@ -427,25 +528,29 @@ function calcular(){
     ? Math.round((pontos / (total * 3)) * 100)
     : 0;
 
+  const recentes = Array.from(recentesMap.values())
+    .sort((a,b)=>dataMs(val(b,["dataHora","data","dataJogo"],"")) - dataMs(val(a,["dataHora","data","dataJogo"],"")))
+    .slice(0,8);
+
   return {
-    jogos:jogosCount,
-    gols,
-    assistencias,
-    amarelos,
-    vermelhos,
+    jogos:jogosCount || Number(val(jogador,["jogos","partidas","participacoes"],0)),
+    gols:gols || Number(val(jogador,["gols","totalGols"],0)),
+    assistencias:assistencias || Number(val(jogador,["assistencias","totalAssistencias"],0)),
+    amarelos:amarelos || Number(val(jogador,["amarelos","cartoesAmarelos"],0)),
+    vermelhos:vermelhos || Number(val(jogador,["vermelhos","cartoesVermelhos"],0)),
     v,e,d,
     aproveitamento,
     suspenso:
       vermelhos > 0 ||
       amarelos >= 3 ||
       jogador.suspenso === true,
-    recentes:recentes.reverse().slice(0,8)
+    recentes
   };
 }
 
 function jogoNome(j){
-  const a = val(j,["timeANome"], j.timeA?.nome || j.timeA || "Time A");
-  const b = val(j,["timeBNome"], j.timeB?.nome || j.timeB || "Time B");
+  const a = nomeTimeRegistroJogo(j,"A");
+  const b = nomeTimeRegistroJogo(j,"B");
   return `${a} x ${b}`;
 }
 
@@ -586,7 +691,7 @@ function render(){
                 <p>
                   Campeonato: ${val(j,["campeonato","campeonatoNome"],"-")}<br>
                   Categoria: ${val(j,["categoria"],"-")}<br>
-                  Data: ${val(j,["data","dataJogo","dataHora"],"-")}<br>
+                  Data: ${dataBR(val(j,["dataHora","data","dataJogo"],""))}<br>
                   Status: ${val(j,["status"],"-")}
                 </p>
 
