@@ -540,12 +540,9 @@ function listaEscalacaoSumula(s){
 
 function listaEventosSumula(s){
   return [
-    ...listasGolsUnicas(s),
-    ...listasCartoesUnicos(s),
-    ...(Array.isArray(val(s,["assistencias"],[])) ? val(s,["assistencias"],[]).map(a=>({...a,evento:"assistencia",acao:"assistencia"})) : []),
-    ...(Array.isArray(val(s,["assistenciasLista"],[])) ? val(s,["assistenciasLista"],[]).map(a=>({...a,evento:"assistencia",acao:"assistencia"})) : []),
-    ...(Array.isArray(val(s,["assistenciasA"],[])) ? val(s,["assistenciasA"],[]).map(a=>({...a,time:"A",evento:"assistencia",acao:"assistencia"})) : []),
-    ...(Array.isArray(val(s,["assistenciasB"],[])) ? val(s,["assistenciasB"],[]).map(a=>({...a,time:"B",evento:"assistencia",acao:"assistencia"})) : [])
+    ...golsDaSumula(s),
+    ...cartoesDaSumula(s),
+    ...assistenciasDaSumula(s)
   ];
 }
 
@@ -557,16 +554,12 @@ function jogadorDaSumulaParaCadastro(item,s){
   const timeId = val(item,["timeId","equipeId","clubeId"],"") ||
     (timeLetra === "A" ? idTimeRegistroJogo(s,"A") : timeLetra === "B" ? idTimeRegistroJogo(s,"B") : "");
 
-  const nome = val(item,["nome","nomeCompleto","jogador","jogadorNome","atleta"],"Sem nome");
-  const numero = val(item,["numero","camisa","numeroCamisa"],"-");
-  const idOriginal = val(item,["id","uid","jogadorId","idJogador","atletaId"],"");
-  const jogoId = val(s,["jogoId","id"],s.id || "");
-  const idManual = idOriginal || `sumula_${jogoId}_${timeLetra || "T"}_${String(numero).replace(/[^a-zA-Z0-9]/g,"")}_${n(nome).replace(/[^a-z0-9]/g,"_")}`;
+  const nome = val(item,["nome","nomeCompleto","jogador","jogadorNome","nomeJogador","atleta"],"Sem nome");
+  const numero = val(item,["numero","camisa","numeroCamisa","n"],"-");
+  const chave = chaveJogadorSumula(item,s).replace(/[^a-zA-Z0-9_-]/g,"_");
 
   return {
-    id:idManual,
-    uid:idManual,
-    jogadorId:idManual,
+    id:idRealJogador(item) || chave,
     nome,
     numero,
     camisa:numero,
@@ -579,7 +572,7 @@ function jogadorDaSumulaParaCadastro(item,s){
     timeId: timeId,
     foto:val(item,["foto","imagem","fotoUrl","avatar"],"logo-liga.jfif"),
     status:"aprovado",
-    origem:idOriginal ? "cadastro" : "sumula"
+    origem:idRealJogador(item) ? "cadastro" : "sumula"
   };
 }
 
@@ -591,19 +584,17 @@ function incluirJogadoresDaSumula(){
     mapa.set(chave,j);
   });
 
-  sumulas.forEach(s=>{
-    listaEscalacaoSumula(s).forEach(item=>{
-      const j = jogadorDaSumulaParaCadastro(item,s);
-      const chave = chaveJogadorUnica(j);
+  sumulas.filter(sumulaFinalizadaOK).forEach(s=>{
+    const candidatos = [
+      ...listaEscalacaoSumula(s),
+      ...golsDaSumula(s),
+      ...cartoesDaSumula(s),
+      ...assistenciasDaSumula(s)
+    ];
 
-      if(!mapa.has(chave)){
-        mapa.set(chave,j);
-      }else{
-        mapa.set(chave,preferirJogador(mapa.get(chave),j));
-      }
-    });
+    candidatos.forEach(item=>{
+      if(!ehJogadorManualSumula(item)) return;
 
-    listaEventosSumula(s).forEach(item=>{
       const j = jogadorDaSumulaParaCadastro(item,s);
       if(!j.nome || j.nome === "Sem nome") return;
 
@@ -611,8 +602,6 @@ function incluirJogadoresDaSumula(){
 
       if(!mapa.has(chave)){
         mapa.set(chave,j);
-      }else{
-        mapa.set(chave,preferirJogador(mapa.get(chave),j));
       }
     });
   });
@@ -621,78 +610,162 @@ function incluirJogadoresDaSumula(){
   deduplicarJogadores();
 }
 
+
+function sumulaFinalizadaOK(s){
+  const st = n(val(s,["status","sumulaStatus"],""));
+  return s?.sumulaFinalizada === true ||
+    s?.finalizada === true ||
+    s?.publica === true ||
+    s?.publico === true ||
+    st.includes("final") ||
+    st.includes("publicad");
+}
+
+function idRealJogador(item){
+  return String(val(item,["id","uid","jogadorId","idJogador","atletaId","playerId"],"")).trim();
+}
+
+function nomeEvento(item){
+  return n(val(item,["nome","nomeCompleto","jogador","nomeJogador","jogadorNome","atleta"],""));
+}
+
+function numeroEvento(item){
+  return String(val(item,["numero","camisa","numeroCamisa","n"],"")).trim();
+}
+
+function timeEvento(item,s){
+  const direto = val(item,["timeNome","nomeTime","equipe"],"");
+  if(direto) return n(direto);
+
+  const lado = String(val(item,["time","lado","timeLetra"],"")).toUpperCase();
+  if(lado === "A") return n(nomeTimeRegistroJogo(s,"A"));
+  if(lado === "B") return n(nomeTimeRegistroJogo(s,"B"));
+
+  return n(val(item,["time"],""));
+}
+
+function ehJogadorManualSumula(item){
+  const origem = n(val(item,["origem","fonte","criadoPor"],""));
+  const id = idRealJogador(item);
+
+  return item?.manual === true ||
+    origem.includes("sumula") ||
+    origem.includes("súmula") ||
+    !id ||
+    id.startsWith("sumula_");
+}
+
+function chaveJogadorSumula(item,s){
+  const id = idRealJogador(item);
+  if(id && !id.startsWith("sumula_")) return "id:" + id;
+
+  return `manual:${nomeEvento(item)}|${numeroEvento(item)}|${timeEvento(item,s)}`;
+}
+
+function eventoUnicoKey(ev,tipo,s){
+  const jogoId = String(val(s,["jogoId","id"],s.id || ""));
+  const id = idRealJogador(ev);
+  const nome = nomeEvento(ev);
+  const numero = numeroEvento(ev);
+  const minuto = String(val(ev,["minuto","tempo"],"")).trim();
+  const time = timeEvento(ev,s);
+  const subtipo = n(val(ev,["tipo","tipoGol","cartao","cor"],""));
+
+  if(id && !id.startsWith("sumula_")){
+    return `${jogoId}|${tipo}|id:${id}|${minuto}|${subtipo}|${time}`;
+  }
+
+  return `${jogoId}|${tipo}|${nome}|${numero}|${minuto}|${subtipo}|${time}`;
+}
+
+function arrayObjetos(v){
+  return Array.isArray(v) ? v.filter(x=>x && typeof x === "object") : [];
+}
+
+function unicosEventos(lista,tipo,s){
+  const mapa = new Map();
+  lista.forEach(ev=>{
+    if(!ev || typeof ev !== "object") return;
+    const k = eventoUnicoKey(ev,tipo,s);
+    if(!mapa.has(k)) mapa.set(k,ev);
+  });
+  return [...mapa.values()];
+}
+
+function golsDaSumula(s){
+  let lista = arrayObjetos(val(s,["gols"],[]));
+  if(!lista.length) lista = arrayObjetos(val(s,["golsLista"],[]));
+  if(!lista.length) lista = [
+    ...arrayObjetos(val(s,["golsEventosA"],[])).map(g=>({...g,time:"A"})),
+    ...arrayObjetos(val(s,["golsEventosB"],[])).map(g=>({...g,time:"B"}))
+  ];
+  if(!lista.length) lista = [
+    ...arrayObjetos(val(s,["eventos"],[])),
+    ...arrayObjetos(val(s,["eventosA"],[])).map(g=>({...g,time:"A"})),
+    ...arrayObjetos(val(s,["eventosB"],[])).map(g=>({...g,time:"B"}))
+  ].filter(ev=>{
+    const t = n(val(ev,["evento","acao","tipo","categoria"],""));
+    return t.includes("gol");
+  });
+
+  return unicosEventos(lista.map(g=>({...g,evento:"gol",acao:"gol"})),"gol",s);
+}
+
+function cartoesDaSumula(s){
+  let lista = arrayObjetos(val(s,["cartoes"],[]));
+  if(!lista.length) lista = arrayObjetos(val(s,["cartoesLista"],[]));
+  if(!lista.length) lista = [
+    ...arrayObjetos(val(s,["cartoesA"],[])).map(c=>({...c,time:"A"})),
+    ...arrayObjetos(val(s,["cartoesB"],[])).map(c=>({...c,time:"B"}))
+  ];
+  if(!lista.length) lista = [
+    ...arrayObjetos(val(s,["eventos"],[])),
+    ...arrayObjetos(val(s,["eventosA"],[])).map(c=>({...c,time:"A"})),
+    ...arrayObjetos(val(s,["eventosB"],[])).map(c=>({...c,time:"B"}))
+  ].filter(ev=>{
+    const t = n(val(ev,["evento","acao","tipo","cartao","cor","categoria"],""));
+    return t.includes("cartao") || t.includes("cartão") || t.includes("amarelo") || t.includes("vermelho");
+  });
+
+  return unicosEventos(lista.map(c=>({...c,evento:"cartao",acao:"cartao"})),"cartao",s);
+}
+
+function assistenciasDaSumula(s){
+  let lista = arrayObjetos(val(s,["assistencias"],[]));
+  if(!lista.length) lista = arrayObjetos(val(s,["assistenciasLista"],[]));
+  if(!lista.length) lista = [
+    ...arrayObjetos(val(s,["assistenciasA"],[])).map(a=>({...a,time:"A"})),
+    ...arrayObjetos(val(s,["assistenciasB"],[])).map(a=>({...a,time:"B"}))
+  ];
+
+  return unicosEventos(lista.map(a=>({...a,evento:"assistencia",acao:"assistencia"})),"assistencia",s);
+}
+
 function numero(v){
   const n = Number(v);
   return Number.isFinite(n) ? n : 0;
 }
 
-
-function chaveEventoUnico(ev,tipoEvento,index,s){
-  const jogoId = String(val(s,["jogoId","id"], s?.id || "") || "");
-  const jogadorId = String(val(ev,["id","uid","jogadorId","idJogador","atletaId"],"") || "");
-  const nome = n(val(ev,["nome","jogador","nomeJogador","jogadorNome","nomeCompleto","atleta"],""));
-  const numero = String(val(ev,["numero","camisa","numeroCamisa"],"")).trim();
-  const minuto = String(val(ev,["minuto","tempo"],"")).trim();
-  const time = n(val(ev,["time","lado","equipe","timeNome","nomeTime"],""));
-  const tipo = n(val(ev,["tipo","evento","acao","cartao","cor","tipoGol"],tipoEvento));
-
-  if(jogadorId){
-    return `${jogoId}|${tipoEvento}|id:${jogadorId}|${minuto}|${tipo}|${time}`;
-  }
-
-  return `${jogoId}|${tipoEvento}|nome:${nome}|num:${numero}|${minuto}|${tipo}|${time}`;
-}
-
-function eventosUnicos(lista,tipoEvento,s){
-  const mapa = new Map();
-
-  lista.forEach((ev,index)=>{
-    if(!ev || typeof ev !== "object") return;
-    const chave = chaveEventoUnico(ev,tipoEvento,index,s);
-    if(!mapa.has(chave)){
-      mapa.set(chave,ev);
-    }
-  });
-
-  return Array.from(mapa.values());
-}
-
-function listasGolsUnicas(s){
-  const lista = [
-    ...(Array.isArray(val(s,["gols"],[])) ? val(s,["gols"],[]).map(g=>({...g,evento:"gol",acao:"gol"})) : []),
-    ...(Array.isArray(val(s,["golsLista"],[])) ? val(s,["golsLista"],[]).map(g=>({...g,evento:"gol",acao:"gol"})) : []),
-    ...(Array.isArray(val(s,["golsEventosA"],[])) ? val(s,["golsEventosA"],[]).map(g=>({...g,time:"A",evento:"gol",acao:"gol"})) : []),
-    ...(Array.isArray(val(s,["golsEventosB"],[])) ? val(s,["golsEventosB"],[]).map(g=>({...g,time:"B",evento:"gol",acao:"gol"})) : [])
-  ];
-  return eventosUnicos(lista,"gol",s);
-}
-
-function listasCartoesUnicos(s){
-  const lista = [
-    ...(Array.isArray(val(s,["cartoes"],[])) ? val(s,["cartoes"],[]).map(c=>({...c,evento:"cartao",acao:"cartao"})) : []),
-    ...(Array.isArray(val(s,["cartoesLista"],[])) ? val(s,["cartoesLista"],[]).map(c=>({...c,evento:"cartao",acao:"cartao"})) : []),
-    ...(Array.isArray(val(s,["cartoesA"],[])) ? val(s,["cartoesA"],[]).map(c=>({...c,time:"A",evento:"cartao",acao:"cartao"})) : []),
-    ...(Array.isArray(val(s,["cartoesB"],[])) ? val(s,["cartoesB"],[]).map(c=>({...c,time:"B",evento:"cartao",acao:"cartao"})) : [])
-  ];
-  return eventosUnicos(lista,"cartao",s);
-}
-
 function mesmoJogador(jogador, item){
-  const jogadorId = String(val(jogador,["id","uid","jogadorId","idJogador","atletaId"],"")).trim();
+  if(!jogador || !item) return false;
+
+  const jogadorId = idRealJogador(jogador);
   const jogadorCpf = String(val(jogador,["cpf","cpfJogador","documento","CPF"],"")).trim();
   const jogadorNome = n(val(jogador,["nome","nomeCompleto","jogador","jogadorNome"],""));
-  const jogadorNumero = String(val(jogador,["numero","camisa","numeroCamisa"],"")).trim();
+  const jogadorNumero = String(val(jogador,["numero","camisa","numeroCamisa","n"],"")).trim();
 
-  const itemId = String(val(item,["jogadorId","idJogador","id","uid","atletaId"],"")).trim();
+  const itemId = idRealJogador(item);
   const itemCpf = String(val(item,["cpf","cpfJogador","documento","CPF"],"")).trim();
-  const itemNome = n(val(item,["nome","jogador","nomeJogador","jogadorNome","nomeCompleto","atleta"],""));
-  const itemNumero = String(val(item,["numero","camisa","numeroCamisa"],"")).trim();
+  const itemNome = nomeEvento(item);
+  const itemNumero = numeroEvento(item);
 
   if(jogadorId && itemId && jogadorId === itemId) return true;
   if(jogadorCpf && itemCpf && jogadorCpf === itemCpf) return true;
   if(jogadorNome && itemNome && jogadorNome === itemNome) return true;
-  if(jogadorNome && itemNome && (jogadorNome.includes(itemNome) || itemNome.includes(jogadorNome))) return true;
-  if(jogadorNumero && itemNumero && jogadorNumero === itemNumero && jogadorNome && itemNome) return true;
+
+  if(jogadorNome && itemNome && jogadorNumero && itemNumero && jogadorNumero === itemNumero){
+    return jogadorNome.includes(itemNome) || itemNome.includes(jogadorNome);
+  }
 
   return false;
 }
@@ -901,17 +974,6 @@ function jogoFinalizado(j){
   );
 }
 
-
-function sumulaEstaFinalizada(s){
-  const status = n(val(s,["status","sumulaStatus"],""));
-  return s?.sumulaFinalizada === true ||
-    s?.finalizada === true ||
-    s?.publica === true ||
-    s?.publico === true ||
-    status.includes("final") ||
-    status.includes("publicad");
-}
-
 function calcularStats(jogador){
   let jogosCount = 0;
   let participacoesSumula = 0;
@@ -925,63 +987,34 @@ function calcularStats(jogador){
   let golsProTime = 0;
   let golsContraTime = 0;
 
-  const nomeTime = n(typeof nomeTimeAtual === "function" ? nomeTimeAtual(jogador) : timeJogador(jogador));
+  const nomeTime = n(nomeTimeAtual(jogador));
   const jogosUnicos = new Set();
-  const golsUnicos = new Set();
-  const assistenciasUnicas = new Set();
-  const cartoesUnicos = new Set();
 
-  sumulas.forEach(s=>{
-    if(!sumulaEstaFinalizada(s)) return;
-
-    const jogoChave = String(val(s,["jogoId","id"], s.id || "") || "");
-
+  sumulas.filter(sumulaFinalizadaOK).forEach(s=>{
+    const jogoKey = String(val(s,["jogoId","id"],s.id || ""));
     const escalacao = listaEscalacaoSumula(s);
     const participou = escalacao.some(p=>mesmoJogador(jogador,p));
 
     if(participou){
-      jogosUnicos.add(jogoChave || `sumula-${sumulas.indexOf(s)}`);
       participacoesSumula++;
+      jogosUnicos.add(jogoKey || `sumula_${sumulas.indexOf(s)}`);
     }
 
-    listasGolsUnicas(s).forEach((ev,index)=>{
+    golsDaSumula(s).forEach(ev=>{
       if(!mesmoJogador(jogador,ev)) return;
-
-      const tipo = n(val(ev,["tipo","tipoGol","evento","acao"],"gol"));
+      const tipo = n(val(ev,["tipo","tipoGol"],""));
       if(tipo.includes("contra")) return;
-
-      const chave = chaveEventoUnico(ev,"gol",index,s);
-      if(!golsUnicos.has(chave)){
-        golsUnicos.add(chave);
-        gols++;
-      }
+      gols++;
     });
 
-    listaEventosSumula(s).forEach((ev,index)=>{
-      if(!mesmoJogador(jogador,ev)) return;
-
-      const tipo = n(val(ev,["tipo","evento","acao","cartao","cor","categoria"],""));
-      const evento = n(val(ev,["evento","acao"],""));
-
-      if(evento.includes("assist") || tipo.includes("assist")){
-        const chave = chaveEventoUnico(ev,"assistencia",index,s);
-        if(!assistenciasUnicas.has(chave)){
-          assistenciasUnicas.add(chave);
-          assistencias++;
-        }
-      }
+    assistenciasDaSumula(s).forEach(ev=>{
+      if(mesmoJogador(jogador,ev)) assistencias++;
     });
 
-    listasCartoesUnicos(s).forEach((ev,index)=>{
+    cartoesDaSumula(s).forEach(ev=>{
       if(!mesmoJogador(jogador,ev)) return;
-
       const tipo = n(val(ev,["tipo","cartao","cor"],"amarelo"));
-      const chave = chaveEventoUnico(ev,"cartao",index,s);
-
-      if(cartoesUnicos.has(chave)) return;
-      cartoesUnicos.add(chave);
-
-      if(tipo.includes("vermelho") || tipo.includes("verm")) vermelhos++;
+      if(tipo.includes("verm")) vermelhos++;
       else amarelos++;
     });
   });
@@ -991,7 +1024,7 @@ function calcularStats(jogador){
     const b = n(timeB(j));
 
     if(nomeTime && (a === nomeTime || b === nomeTime)){
-      const finalizado = jogoFinalizado(j) || sumulas.some(s => String(s.jogoId || s.id || "") === String(j.id || "") && sumulaEstaFinalizada(s));
+      const finalizado = jogoFinalizado(j) || sumulas.some(s => String(s.jogoId || s.id || "") === String(j.id || "") && sumulaFinalizadaOK(s));
 
       if(finalizado){
         const ga = placarA(j);
@@ -1020,29 +1053,29 @@ function calcularStats(jogador){
 
   jogosCount = Math.max(jogosUnicos.size, numero(val(jogador,["jogos","jogosDisputados"],0)));
 
-  const golsFinal = gols || numero(val(jogador,["gols","totalGols"],0));
-  const assistenciasFinal = assistencias || numero(val(jogador,["assistencias","totalAssistencias"],0));
-  const amarelosFinal = amarelos || numero(val(jogador,["amarelos","cartoesAmarelos"],0));
-  const vermelhosFinal = vermelhos || numero(val(jogador,["vermelhos","cartoesVermelhos"],0));
+  if(gols === 0) gols = numero(val(jogador,["gols","totalGols"],0));
+  if(assistencias === 0) assistencias = numero(val(jogador,["assistencias","totalAssistencias"],0));
+  if(amarelos === 0) amarelos = numero(val(jogador,["amarelos","cartoesAmarelos"],0));
+  if(vermelhos === 0) vermelhos = numero(val(jogador,["vermelhos","cartoesVermelhos"],0));
 
   const totalResultados = vitorias + empates + derrotas;
   const pontos = (vitorias * 3) + empates;
   const aproveitamento = totalResultados ? Math.round((pontos / (totalResultados * 3)) * 100) : 0;
-  const mediaGols = jogosCount ? (golsFinal / jogosCount).toFixed(2) : "0.00";
+  const mediaGols = jogosCount ? (gols / jogosCount).toFixed(2) : "0.00";
   const saldoTime = golsProTime - golsContraTime;
 
   const suspenso =
     val(jogador,["suspenso"],false) === true ||
-    vermelhosFinal > 0 ||
-    amarelosFinal >= 3;
+    vermelhos > 0 ||
+    amarelos >= 3;
 
   return {
     jogosCount,
     participacoesSumula,
-    gols:golsFinal,
-    assistencias:assistenciasFinal,
-    amarelos:amarelosFinal,
-    vermelhos:vermelhosFinal,
+    gols,
+    assistencias,
+    amarelos,
+    vermelhos,
     vitorias,
     empates,
     derrotas,
@@ -1351,7 +1384,6 @@ async function carregarDados(){
   sumulas = await carregarColecao("sumulas");
 
   incluirJogadoresDaSumula();
-
   deduplicarJogadores();
 
   preencherTimes();
