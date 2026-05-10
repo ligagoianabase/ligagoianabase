@@ -314,6 +314,7 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
 
 .btn-ver{background:var(--gold);color:black}
 .btn-danger{background:#d94141;color:#fff}
+.btn-sync{background:#2563eb;color:#fff}
 
 .vazio{
   background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
@@ -504,6 +505,10 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
       <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
         <i class="fa-solid fa-broom"></i> Limpar
       </button>
+
+      <button class="btn-acao btn-sync" type="button" onclick="sincronizarTimesJogadores()">
+        <i class="fa-solid fa-rotate"></i> Corrigir nomes dos times
+      </button>
     </div>
   </section>
 
@@ -575,6 +580,18 @@ function boolSimNao(v){
 function buscarTime(id){
   return timesCache.find(t => t.id === id) || null;
 }
+
+
+function nomeTimePorId(id){
+  const t = buscarTime(id);
+  return t?.nome || t?.nomeTime || t?.timeNome || "";
+}
+
+function escudoTimePorId(id){
+  const t = buscarTime(id);
+  return t?.logo || t?.escudo || t?.imagem || t?.foto || "";
+}
+
 
 function carregarCategorias(){
   const categoria = document.getElementById("categoria");
@@ -662,6 +679,8 @@ window.salvarJogador = async function(){
   if(!nome) return alert("Digite o nome do jogador.");
 
   const time = buscarTime(timeId);
+  const nomeTimeAtual = nomeTimePorId(timeId);
+  const escudoTimeAtual = escudoTimePorId(timeId);
   const foto = await uploadFotoSeExistir();
 
   const dados = {
@@ -678,8 +697,13 @@ window.salvarJogador = async function(){
     capitao,
     goleiro:normalizarTexto(posicao) === "goleiro",
     timeId,
-    timeNome:time?.nome || "",
-    time:time?.nome || "",
+    timeNome:nomeTimeAtual,
+    nomeTime:nomeTimeAtual,
+    time:nomeTimeAtual,
+    equipe:nomeTimeAtual,
+    clube:nomeTimeAtual,
+    logoTime:escudoTimeAtual,
+    escudoTime:escudoTimeAtual,
     categoria,
     categorias:[categoria],
     foto,
@@ -707,6 +731,48 @@ window.salvarJogador = async function(){
   }
 
   limparFormulario();
+  await carregarJogadores();
+};
+
+
+window.sincronizarTimesJogadores = async function(){
+  if(!confirm("Corrigir o nome do time em todos os jogadores usando o timeId?")) return;
+
+  let corrigidos = 0;
+
+  for(const j of jogadoresCache){
+    if(!j.timeId) continue;
+
+    const nomeTimeAtual = nomeTimePorId(j.timeId);
+    const escudoTimeAtual = escudoTimePorId(j.timeId);
+
+    if(!nomeTimeAtual) continue;
+
+    const precisaCorrigir =
+      j.timeNome !== nomeTimeAtual ||
+      j.nomeTime !== nomeTimeAtual ||
+      j.time !== nomeTimeAtual ||
+      j.equipe !== nomeTimeAtual ||
+      j.clube !== nomeTimeAtual ||
+      (escudoTimeAtual && j.logoTime !== escudoTimeAtual);
+
+    if(!precisaCorrigir) continue;
+
+    await updateDoc(doc(db,"jogadores",j.id),{
+      timeNome:nomeTimeAtual,
+      nomeTime:nomeTimeAtual,
+      time:nomeTimeAtual,
+      equipe:nomeTimeAtual,
+      clube:nomeTimeAtual,
+      logoTime:escudoTimeAtual,
+      escudoTime:escudoTimeAtual,
+      atualizadoEm:serverTimestamp()
+    });
+
+    corrigidos++;
+  }
+
+  alert(`Correção finalizada. Jogadores corrigidos: ${corrigidos}`);
   await carregarJogadores();
 };
 
@@ -777,7 +843,7 @@ async function carregarJogadores(){
   snap.forEach(d => jogadoresCache.push({id:d.id,...d.data()}));
 
   jogadoresCache.sort((a,b)=>{
-    const ta = (a.timeNome || a.time || "").localeCompare(b.timeNome || b.time || "","pt-BR");
+    const ta = (nomeTimePorId(a.timeId) || a.timeNome || a.time || "").localeCompare(nomeTimePorId(b.timeId) || b.timeNome || b.time || "","pt-BR");
     if(ta !== 0) return ta;
 
     const na = Number(a.numero || 999);
@@ -848,7 +914,7 @@ function renderizarJogadores(){
             <small>Nascimento: ${j.nascimento || j.dataNascimento || "-"}</small>
             <small>Email: ${j.email || "-"}</small>
             <small>WhatsApp: ${j.whatsapp || j.telefone || "-"}</small>
-            <small>Time: ${j.timeNome || j.time || "-"}</small>
+            <small>Time: ${nomeTimePorId(j.timeId) || j.timeNome || j.time || "-"}</small>
             <small>Posição: ${j.posicao || "-"}</small>
 
             <small>
