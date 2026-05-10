@@ -649,27 +649,23 @@ function eventosUnicos(lista,tipoEvento,s){
 }
 
 function listasGolsUnicas(s){
-  const principal = Array.isArray(val(s,["gols"],[])) ? val(s,["gols"],[]) : [];
-  const lista = principal.length
-    ? principal.map(g=>({...g,evento:"gol",acao:"gol"}))
-    : [
-        ...(Array.isArray(val(s,["golsLista"],[])) ? val(s,["golsLista"],[]).map(g=>({...g,evento:"gol",acao:"gol"})) : []),
-        ...(Array.isArray(val(s,["golsEventosA"],[])) ? val(s,["golsEventosA"],[]).map(g=>({...g,time:"A",evento:"gol",acao:"gol"})) : []),
-        ...(Array.isArray(val(s,["golsEventosB"],[])) ? val(s,["golsEventosB"],[]).map(g=>({...g,time:"B",evento:"gol",acao:"gol"})) : [])
-      ];
+  const lista = [
+    ...(Array.isArray(val(s,["gols"],[])) ? val(s,["gols"],[]).map(g=>({...g,evento:"gol",acao:"gol"})) : []),
+    ...(Array.isArray(val(s,["golsLista"],[])) ? val(s,["golsLista"],[]).map(g=>({...g,evento:"gol",acao:"gol"})) : []),
+    ...(Array.isArray(val(s,["golsEventosA"],[])) ? val(s,["golsEventosA"],[]).map(g=>({...g,time:"A",evento:"gol",acao:"gol"})) : []),
+    ...(Array.isArray(val(s,["golsEventosB"],[])) ? val(s,["golsEventosB"],[]).map(g=>({...g,time:"B",evento:"gol",acao:"gol"})) : [])
+  ];
 
   return eventosUnicos(lista,"gol",s);
 }
 
 function listasCartoesUnicos(s){
-  const principal = Array.isArray(val(s,["cartoes"],[])) ? val(s,["cartoes"],[]) : [];
-  const lista = principal.length
-    ? principal.map(c=>({...c,evento:"cartao",acao:"cartao"}))
-    : [
-        ...(Array.isArray(val(s,["cartoesLista"],[])) ? val(s,["cartoesLista"],[]).map(c=>({...c,evento:"cartao",acao:"cartao"})) : []),
-        ...(Array.isArray(val(s,["cartoesA"],[])) ? val(s,["cartoesA"],[]).map(c=>({...c,time:"A",evento:"cartao",acao:"cartao"})) : []),
-        ...(Array.isArray(val(s,["cartoesB"],[])) ? val(s,["cartoesB"],[]).map(c=>({...c,time:"B",evento:"cartao",acao:"cartao"})) : [])
-      ];
+  const lista = [
+    ...(Array.isArray(val(s,["cartoes"],[])) ? val(s,["cartoes"],[]).map(c=>({...c,evento:"cartao",acao:"cartao"})) : []),
+    ...(Array.isArray(val(s,["cartoesLista"],[])) ? val(s,["cartoesLista"],[]).map(c=>({...c,evento:"cartao",acao:"cartao"})) : []),
+    ...(Array.isArray(val(s,["cartoesA"],[])) ? val(s,["cartoesA"],[]).map(c=>({...c,time:"A",evento:"cartao",acao:"cartao"})) : []),
+    ...(Array.isArray(val(s,["cartoesB"],[])) ? val(s,["cartoesB"],[]).map(c=>({...c,time:"B",evento:"cartao",acao:"cartao"})) : [])
+  ];
 
   return eventosUnicos(lista,"cartao",s);
 }
