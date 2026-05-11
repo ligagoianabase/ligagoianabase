@@ -3,67 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Súmulas - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Súmulas - Liga Goiana de Futebol de Base</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="menu.css">
 
 <style>
 :root{
-  --bg:#061427;
-  --card:#071d37;
-  --card2:#0d2a52;
-  --gold:#f7c600;
-  --gold2:#ffe45c;
-  --white:#ffffff;
-  --muted:#cbd6ea;
-  --line:rgba(255,255,255,.12);
-  --gold-line:rgba(247,198,0,.45);
-  --green:#1b5e20;
-  --yellow:#7a5a00;
-  --red:#b42323;
-  --blue:#1a3f73;
-  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --azul:#061d44;
+  --azul2:#08285c;
+  --azul3:#0a2b63;
+  --verde:#069447;
+  --dourado:#f7c600;
+  --dourado2:#ffe45c;
+  --linha:#cfd7e3;
+  --texto:#071833;
+  --muted:#4b5563;
+  --bg:#dfe6ef;
+  --white:#fff;
+  --cinza:#f5f7fb;
+  --shadow:0 8px 24px rgba(0,0,0,.16);
   --max:1240px;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
-body{
-  font-family:Arial, sans-serif;
-  background:
-    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
-    url("fundo.png") center/cover fixed no-repeat;
-  color:var(--white);
-  min-height:100vh;
+html,body{
+  width:100%;
+  min-height:100%;
   overflow-x:hidden;
 }
 
-a{
-  text-decoration:none;
-  color:inherit;
+body{
+  font-family:Arial, Helvetica, sans-serif;
+  background:var(--bg);
+  color:var(--texto);
 }
 
-button{
-  font-family:inherit;
-  cursor:pointer;
-  border:none;
-}
-
-input,
-select{
-  font-family:inherit;
-}
-
-img{
-  display:block;
-  max-width:100%;
-}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none}
+input,select{font-family:inherit}
+img{display:block;max-width:100%}
 
 .wrap{
   width:min(100% - 28px, var(--max));
@@ -71,131 +51,223 @@ img{
 }
 
 .container{
-  padding:22px 0 34px;
+  padding:16px 0 34px;
 }
 
-.hero{
-  background:
-    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
-    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
-  border:1px solid var(--gold-line);
-  border-radius:20px;
-  padding:20px;
-  margin-bottom:14px;
+.page-shell{
+  background:#fff;
+  border:1px solid #b9c4d4;
+  border-radius:7px;
+  overflow:hidden;
   box-shadow:var(--shadow);
 }
 
-.hero h2{
-  color:var(--gold);
-  font-size:28px;
-  font-weight:900;
-  margin-bottom:6px;
+.page-header{
+  display:grid;
+  grid-template-columns:110px 1fr 215px;
+  align-items:center;
+  gap:14px;
+  padding:16px 22px 18px;
+  background:
+    radial-gradient(circle at top left,rgba(255,255,255,.10),transparent 32%),
+    linear-gradient(135deg,#041b40 0%,#06265a 55%,#061d44 100%);
+  color:#fff;
+  border-bottom:4px solid var(--dourado);
+  position:relative;
+  overflow:hidden;
 }
 
-.hero p{
-  color:var(--muted);
-  line-height:1.5;
-  font-size:14px;
+.page-header:after{
+  content:"";
+  position:absolute;
+  right:-70px;
+  bottom:-28px;
+  width:310px;
+  height:70px;
+  border-top:5px solid var(--dourado);
+  transform:rotate(-12deg);
+  opacity:.95;
 }
 
-.hero-tags{
+.header-logo,
+.header-right,
+.header-title{
+  position:relative;
+  z-index:1;
+}
+
+.header-logo{
   display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  margin-top:12px;
+  justify-content:center;
+  align-items:center;
 }
 
-.hero-tag{
-  background:rgba(26,63,115,.9);
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:11px;
-  border:1px solid rgba(255,255,255,.08);
-  font-weight:800;
+.header-logo img{
+  width:86px;
+  height:86px;
+  object-fit:contain;
+}
+
+.header-title h1{
+  color:#fff;
+  font-size:42px;
+  font-weight:900;
+  letter-spacing:1px;
+  line-height:.96;
+  text-transform:uppercase;
+}
+
+.header-title p{
+  margin-top:8px;
+  color:var(--dourado);
+  font-size:18px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.header-title span{
+  display:block;
+  margin-top:6px;
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.header-right{
+  text-align:left;
+  color:#fff;
+  font-weight:900;
+  line-height:1.12;
+  text-transform:uppercase;
+}
+
+.header-right .liga-nome{
+  font-size:18px;
+}
+
+.header-right .liga-slogan{
+  margin-top:8px;
+  color:var(--dourado);
+  font-size:15px;
+}
+
+.info-strip{
+  margin:10px 16px 12px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr;
+  border:1px solid var(--linha);
+  border-radius:5px;
+  overflow:hidden;
+}
+
+.info-box{
+  min-height:70px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:9px 12px;
+  border-right:1px solid var(--linha);
+  background:#fff;
+}
+
+.info-box:last-child{border-right:none}
+
+.info-box i{
+  width:36px;
+  color:var(--azul);
+  font-size:30px;
+  text-align:center;
+  flex-shrink:0;
+}
+
+.info-box small{
+  display:block;
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  color:#111;
+  margin-bottom:4px;
+}
+
+.info-box strong{
+  display:block;
+  color:var(--azul);
+  font-size:16px;
+  font-weight:900;
 }
 
 .filtros{
+  margin:0 16px 12px;
   display:grid;
-  grid-template-columns:1fr 1fr 1fr;
+  grid-template-columns:1.5fr 1fr 1fr;
   gap:10px;
-  margin-bottom:14px;
 }
 
 input,
 select{
   width:100%;
-  padding:12px;
-  border:none;
-  border-radius:12px;
+  min-height:48px;
+  padding:11px 12px;
+  border:1px solid var(--linha);
+  border-radius:5px;
   font-size:14px;
-  background:#f5f7fb;
+  background:#fff;
   color:#111;
   outline:none;
-  box-shadow:0 8px 18px rgba(0,0,0,.22);
+  font-weight:800;
 }
 
 input:focus,
 select:focus{
-  outline:2px solid rgba(247,198,0,.65);
+  border-color:var(--dourado);
+  box-shadow:0 0 0 3px rgba(247,198,0,.16);
 }
 
-.titulo-secao{
-  color:var(--gold);
-  font-size:22px;
+.section-title{
+  margin:0 16px;
+  background:linear-gradient(135deg,var(--azul),var(--azul2));
+  color:#fff;
+  text-align:center;
+  padding:8px 10px;
+  font-size:20px;
   font-weight:900;
-  margin:0 0 12px;
+  text-transform:uppercase;
+  border-radius:5px 5px 0 0;
 }
 
-/* GRID PADRÃO — MÁXIMO 5 POR LINHA */
 .lista-grid{
+  margin:0 16px 16px;
   display:grid;
-  grid-template-columns:repeat(5, 1fr);
-  gap:12px;
-}
-
-@media(max-width:1100px){
-  .lista-grid{
-    grid-template-columns:repeat(4, 1fr);
-  }
-}
-
-@media(max-width:900px){
-  .lista-grid{
-    grid-template-columns:repeat(3, 1fr);
-  }
-}
-
-@media(max-width:650px){
-  .lista-grid{
-    grid-template-columns:repeat(2, 1fr);
-  }
-}
-
-@media(max-width:430px){
-  .lista-grid{
-    grid-template-columns:1fr;
-  }
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  padding:14px;
+  border:1px solid var(--linha);
+  border-top:none;
+  border-radius:0 0 5px 5px;
+  background:#fff;
 }
 
 .card-sumula{
   background:
-    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border:1px solid rgba(247,198,0,.22);
-  border-radius:15px;
-  padding:12px;
-  box-shadow:0 8px 20px rgba(0,0,0,.25);
-  transition:.25s ease;
-  text-align:center;
-  min-height:285px;
+    radial-gradient(circle at top right,rgba(247,198,0,.16),transparent 34%),
+    linear-gradient(180deg,#ffffff,#f8fafc);
+  border:1px solid var(--linha);
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 4px 12px rgba(6,29,68,.08);
+  transition:.22s ease;
+  min-height:295px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+  cursor:pointer;
 }
 
 .card-sumula:hover{
   transform:translateY(-2px);
-  border-color:var(--gold);
+  border-color:var(--dourado);
+  box-shadow:0 8px 18px rgba(6,29,68,.14);
 }
 
 .card-top{
@@ -203,19 +275,22 @@ select:focus{
   align-items:center;
   justify-content:space-between;
   gap:8px;
-  margin-bottom:10px;
+  padding:10px;
+  background:linear-gradient(135deg,var(--azul),var(--azul2));
+  color:#fff;
+  border-bottom:3px solid var(--dourado);
 }
 
 .card-icon{
-  width:34px;
-  height:34px;
+  width:36px;
+  height:36px;
   border-radius:10px;
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  background:linear-gradient(135deg,var(--dourado),var(--dourado2));
   color:#111;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:16px;
+  font-size:17px;
   flex-shrink:0;
 }
 
@@ -227,35 +302,46 @@ select:focus{
 }
 
 .status-tag{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   color:#fff;
   padding:5px 8px;
   border-radius:999px;
-  font-size:11px;
+  font-size:10px;
   font-weight:900;
-  background:var(--green);
+  background:var(--verde);
+  text-transform:uppercase;
 }
 
 .status-nova{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  background:linear-gradient(135deg,var(--dourado),var(--dourado2));
   color:#111;
+}
+
+.card-body{
+  padding:12px 10px 10px;
+  text-align:center;
 }
 
 .times-linha{
   display:grid;
-  grid-template-columns:1fr 58px 1fr;
+  grid-template-columns:1fr 62px 1fr;
   align-items:center;
-  gap:6px;
-  margin:8px 0 10px;
+  gap:7px;
+  margin-bottom:10px;
 }
 
 .time-box{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:5px;
+  gap:6px;
   min-width:0;
+  color:var(--azul);
   font-size:12px;
   font-weight:900;
+  text-transform:uppercase;
 }
 
 .time-box span{
@@ -266,39 +352,44 @@ select:focus{
 }
 
 .escudo{
-  width:42px;
-  height:42px;
+  width:48px;
+  height:48px;
   border-radius:50%;
-  border:2px solid var(--gold);
-  object-fit:cover;
+  border:2px solid var(--dourado);
+  object-fit:contain;
   background:#fff;
   flex-shrink:0;
+  padding:2px;
 }
 
 .placar{
-  color:var(--gold);
-  font-size:15px;
+  color:#fff;
+  font-size:16px;
   font-weight:900;
-  background:rgba(2,10,24,.9);
-  border:1px solid var(--gold-line);
+  background:linear-gradient(135deg,var(--azul),var(--azul2));
+  border:1px solid var(--dourado);
   border-radius:9px;
-  width:58px;
-  min-height:32px;
+  width:62px;
+  min-height:36px;
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
 .info-jogo{
-  color:var(--muted);
-  font-size:11px;
-  line-height:1.4;
-  text-align:center;
+  color:#111;
+  font-size:12px;
+  line-height:1.45;
   margin:8px 0 10px;
 }
 
 .info-jogo strong{
-  color:#fff;
+  display:block;
+  color:var(--azul);
+  font-size:13px;
+  font-weight:900;
+  text-transform:uppercase;
+  margin-bottom:2px;
 }
 
 .tags{
@@ -306,29 +397,35 @@ select:focus{
   justify-content:center;
   gap:5px;
   flex-wrap:wrap;
-  margin-bottom:10px;
+  margin-top:8px;
 }
 
 .tag{
-  background:rgba(26,63,115,.9);
-  padding:4px 7px;
+  background:#eef4ff;
+  color:var(--azul);
+  padding:5px 7px;
   border-radius:999px;
   font-size:10px;
-  border:1px solid rgba(255,255,255,.08);
-  font-weight:800;
+  border:1px solid #d7e2f0;
+  font-weight:900;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 .card-actions{
   display:grid;
-  grid-template-columns:1fr 42px;
+  grid-template-columns:1fr 44px;
   gap:8px;
+  padding:0 10px 12px;
 }
 
 .btn-ver,
 .btn-wpp{
   width:100%;
-  padding:9px 8px;
-  border-radius:11px;
+  min-height:42px;
+  border-radius:8px;
   font-weight:900;
   display:flex;
   align-items:center;
@@ -338,12 +435,14 @@ select:focus{
 }
 
 .btn-ver{
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
-  color:#111;
+  background:linear-gradient(135deg,var(--azul),var(--azul2));
+  color:#fff;
 }
 
+.btn-ver:hover{filter:brightness(1.08)}
+
 .btn-wpp{
-  background:#25d366;
+  background:#0ca84a;
   color:#fff;
 }
 
@@ -351,20 +450,55 @@ select:focus{
   color:var(--muted);
   text-align:center;
   padding:18px;
-  background:rgba(7,29,55,.9);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
+  background:#f8fafc;
+  border:1px dashed var(--linha);
+  border-radius:10px;
   grid-column:1/-1;
+  font-weight:900;
+}
+
+.final-footer{
+  margin-top:0;
+  background:linear-gradient(135deg,var(--azul),var(--azul2));
+  color:#fff;
+  text-align:center;
+  padding:9px;
+  font-size:13px;
+  line-height:1.35;
+}
+
+@media(max-width:1100px){
+  .lista-grid{grid-template-columns:repeat(3,1fr)}
 }
 
 @media(max-width:900px){
-  .filtros{
-    grid-template-columns:1fr;
-  }
+  body{background:#fff}
+  .wrap{width:100%}
+  .container{padding:0}
+  .page-shell{border-radius:0;box-shadow:none;border-left:none;border-right:none}
+  .page-header{grid-template-columns:1fr;text-align:center;padding:16px 14px}
+  .header-logo img{width:78px;height:78px}
+  .header-title h1{font-size:31px}
+  .header-title p{font-size:15px}
+  .header-title span{font-size:11px}
+  .header-right{text-align:center}
+  .header-right .liga-nome{font-size:15px}
+  .header-right .liga-slogan{font-size:12px}
+  .info-strip{grid-template-columns:1fr 1fr;margin:10px 10px}
+  .info-box{min-height:62px;padding:8px 9px}
+  .info-box:nth-child(2){border-right:none}
+  .info-box:nth-child(1),
+  .info-box:nth-child(2){border-bottom:1px solid var(--linha)}
+  .info-box i{font-size:24px;width:28px}
+  .info-box strong{font-size:13px}
+  .filtros{grid-template-columns:1fr;margin:0 10px 10px}
+  .section-title{margin:0 10px;font-size:17px}
+  .lista-grid{margin:0 10px 12px;padding:10px;grid-template-columns:repeat(2,1fr);gap:10px}
+}
 
-  .hero h2{
-    font-size:22px;
-  }
+@media(max-width:560px){
+  .lista-grid{grid-template-columns:1fr}
+  .card-sumula{min-height:auto}
 }
 </style>
 </head>
@@ -372,38 +506,83 @@ select:focus{
 <body>
 
 <main class="wrap container">
+  <div class="page-shell">
+    <header class="page-header">
+      <div class="header-logo">
+        <img src="logo-liga.jfif" alt="Liga Goiana">
+      </div>
 
-  <section class="hero">
-    <h2>Súmulas</h2>
-    <p>Súmulas oficiais publicadas automaticamente após a finalização pelo árbitro.</p>
+      <div class="header-title">
+        <h1>SÚMULAS</h1>
+        <p>Liga Goiana de Futebol de Base</p>
+        <span>Documentos oficiais das partidas finalizadas</span>
+      </div>
 
-    <div class="hero-tags">
-      <div class="hero-tag" id="tagTotal">Publicadas: 0</div>
-      <div class="hero-tag" id="tagCampeonato">Campeonato: Todos</div>
-      <div class="hero-tag" id="tagCategoria">Categoria: Todas</div>
-      <div class="hero-tag" id="tagAtualizacao">Tempo real</div>
-    </div>
-  </section>
+      <div class="header-right">
+        <div class="liga-nome">Súmulas Oficiais</div>
+        <div class="liga-slogan">Publicação automática</div>
+      </div>
+    </header>
 
-  <section class="filtros">
-    <input id="busca" placeholder="Pesquisar time, campeonato, categoria, árbitro ou local...">
+    <section class="info-strip">
+      <div class="info-box">
+        <i class="fa-regular fa-file-lines"></i>
+        <div>
+          <small>Publicadas</small>
+          <strong id="tagTotal">0</strong>
+        </div>
+      </div>
 
-    <select id="filtroCampeonato">
-      <option value="">Todos os campeonatos</option>
-    </select>
+      <div class="info-box">
+        <i class="fa-solid fa-trophy"></i>
+        <div>
+          <small>Campeonato</small>
+          <strong id="tagCampeonato">Todos</strong>
+        </div>
+      </div>
 
-    <select id="filtroCategoria">
-      <option value="">Todas categorias</option>
-    </select>
-  </section>
+      <div class="info-box">
+        <i class="fa-solid fa-list"></i>
+        <div>
+          <small>Categoria</small>
+          <strong id="tagCategoria">Todas</strong>
+        </div>
+      </div>
 
-  <h2 class="titulo-secao" id="tituloPagina">Súmulas</h2>
+      <div class="info-box">
+        <i class="fa-solid fa-signal"></i>
+        <div>
+          <small>Status</small>
+          <strong id="tagAtualizacao">Tempo real</strong>
+        </div>
+      </div>
+    </section>
 
-  <section class="lista-grid" id="listaSumulas">
-    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando súmulas...</div>
-  </section>
+    <section class="filtros">
+      <input id="busca" placeholder="Pesquisar time, campeonato, categoria, árbitro ou local...">
 
+      <select id="filtroCampeonato">
+        <option value="">Todos os campeonatos</option>
+      </select>
+
+      <select id="filtroCategoria">
+        <option value="">Todas categorias</option>
+      </select>
+    </section>
+
+    <h2 class="section-title" id="tituloPagina">Súmulas</h2>
+
+    <section class="lista-grid" id="listaSumulas">
+      <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando súmulas...</div>
+    </section>
+
+    <footer class="final-footer">
+      <div>Documentos oficiais gerados pelo sistema Liga Goiana</div>
+      <div>Todos os direitos reservados © 2026</div>
+    </footer>
+  </div>
 </main>
+
 <script type="module">
 import { renderMenu } from "./menu.js";
 import { db } from "./firebase.js";
@@ -465,7 +644,7 @@ function nomeTime(obj, fallback){
 }
 
 function logoTime(obj){
-  if(obj && typeof obj === "object") return campo(obj,["logo","escudo","imagem"],"logo-liga.jfif");
+  if(obj && typeof obj === "object") return campo(obj,["logo","escudo","imagem","foto"],"logo-liga.jfif");
   return "logo-liga.jfif";
 }
 
@@ -485,7 +664,7 @@ function dataBR(v){
 }
 
 function itemCompleto(s){
-  const id = s.jogoId || s.id;
+  const id = s.jogoId || s.id || s.idJogo;
   const j = pegarJogo(id);
 
   return {
@@ -498,8 +677,8 @@ function itemCompleto(s){
     arbitro: campo(s,["arbitro","arbitroNome"], campo(j,["arbitro","arbitroNome"],"Árbitro")),
     timeA: s.timeA || j.timeA || {},
     timeB: s.timeB || j.timeB || {},
-    golsA: Number(campo(s,["golsA","placarA"], campo(j,["golsA","placarA"],0))),
-    golsB: Number(campo(s,["golsB","placarB"], campo(j,["golsB","placarB"],0))),
+    golsA: Number(campo(s,["golsA","placarA","golsMandante"], campo(j,["golsA","placarA","golsMandante"],0))),
+    golsB: Number(campo(s,["golsB","placarB","golsVisitante"], campo(j,["golsB","placarB","golsVisitante"],0))),
     raw:s
   };
 }
@@ -585,9 +764,9 @@ function filtradas(){
 
 function atualizarTopo(){
   const lista = filtradas();
-  $("tagTotal").innerText = `Publicadas: ${lista.length}`;
-  $("tagCampeonato").innerText = `Campeonato: ${$("filtroCampeonato").value || "Todos"}`;
-  $("tagCategoria").innerText = `Categoria: ${$("filtroCategoria").value || "Todas"}`;
+  $("tagTotal").innerText = lista.length;
+  $("tagCampeonato").innerText = $("filtroCampeonato").value || "Todos";
+  $("tagCategoria").innerText = $("filtroCategoria").value || "Todas";
   $("tituloPagina").innerText = `Súmulas${$("filtroCategoria").value ? " - " + $("filtroCategoria").value : ""}`;
 }
 
@@ -616,7 +795,6 @@ function renderizar(){
     const nomeB = nomeTime(x.timeB,"Time B");
     const logoA = logoTime(x.timeA);
     const logoB = logoTime(x.timeB);
-
     const nova = (Date.now() - dataMs(x.data)) / 86400000 <= 3;
 
     return `
@@ -630,30 +808,32 @@ function renderizar(){
             </div>
           </div>
 
-          <div class="times-linha">
-            <div class="time-box">
-              <img src="${logoA}" class="escudo" onerror="this.src='logo-liga.jfif'">
-              <span>${nomeA}</span>
+          <div class="card-body">
+            <div class="times-linha">
+              <div class="time-box">
+                <img src="${logoA}" class="escudo" onerror="this.src='logo-liga.jfif'" alt="${nomeA}">
+                <span>${nomeA}</span>
+              </div>
+
+              <div class="placar">${x.golsA} x ${x.golsB}</div>
+
+              <div class="time-box">
+                <img src="${logoB}" class="escudo" onerror="this.src='logo-liga.jfif'" alt="${nomeB}">
+                <span>${nomeB}</span>
+              </div>
             </div>
 
-            <div class="placar">${x.golsA} x ${x.golsB}</div>
-
-            <div class="time-box">
-              <img src="${logoB}" class="escudo" onerror="this.src='logo-liga.jfif'">
-              <span>${nomeB}</span>
+            <div class="info-jogo">
+              <strong>${x.campeonato}</strong>
+              ${x.categoria}<br>
+              ${dataBR(x.data)}<br>
+              ${x.local}
             </div>
-          </div>
 
-          <div class="info-jogo">
-            <strong>${x.campeonato}</strong><br>
-            ${x.categoria}<br>
-            ${dataBR(x.data)}<br>
-            ${x.local}
-          </div>
-
-          <div class="tags">
-            <span class="tag">${x.rodada}</span>
-            <span class="tag">${x.arbitro}</span>
+            <div class="tags">
+              <span class="tag">${x.rodada}</span>
+              <span class="tag">${x.arbitro}</span>
+            </div>
           </div>
         </div>
 
