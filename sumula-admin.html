@@ -4,188 +4,416 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ADM Súmulas - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <link rel="stylesheet" href="menu.css" />
+
 <style>
 :root{
-  --azul:#061d44;
-  --azul2:#08285c;
-  --azul3:#0a2b63;
-  --dourado:#f7c600;
-  --dourado2:#ffe45c;
-  --verde:#069447;
-  --vermelho:#dc2626;
-  --laranja:#f59e0b;
-  --texto:#071833;
-  --muted:#4b5563;
-  --bg:#dfe6ef;
-  --white:#fff;
-  --cinza:#f5f7fb;
-  --linha:#cfd7e3;
-  --sombra:0 12px 30px rgba(0,0,0,.20);
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --yellow:#7a5a00;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
   --max:1240px;
 }
+
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;min-height:100%;overflow-x:hidden}
+
 body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:var(--bg);
-  color:var(--texto);
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
 }
+
 a{text-decoration:none;color:inherit}
-button,input,select,textarea{font-family:inherit}
-button{cursor:pointer;border:none}
+button{font-family:inherit;cursor:pointer;border:none}
+input,select,textarea{font-family:inherit}
 img{display:block;max-width:100%}
-.wrap{width:min(100% - 28px,var(--max));margin:0 auto}
-.container{padding:18px 0 36px}
+
+.wrap{width:min(100% - 28px, var(--max));margin:0 auto}
+.container{padding:22px 0 34px}
+
 .hero{
-  background:radial-gradient(circle at top left,rgba(255,255,255,.10),transparent 32%),linear-gradient(135deg,#041b40 0%,#06265a 55%,#061d44 100%);
-  color:#fff;
-  border:1px solid rgba(247,198,0,.55);
-  border-bottom:4px solid var(--dourado);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:var(--sombra);
-  overflow:hidden;
-  position:relative;
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
 }
-.hero:after{
-  content:"";
-  position:absolute;
-  right:-78px;
-  bottom:-30px;
-  width:320px;
-  height:76px;
-  border-top:5px solid var(--dourado);
-  transform:rotate(-12deg);
-  opacity:.9;
+
+.hero h2{
+  color:var(--gold);
+  font-size:28px;
+  font-weight:900;
+  margin-bottom:6px;
 }
-.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:74px 1fr;gap:14px;align-items:center}
-.hero-logo{width:74px;height:74px;border-radius:18px;background:#fff;padding:6px;display:flex;align-items:center;justify-content:center}
-.hero-logo img{width:100%;height:100%;object-fit:contain}
-.hero h1{font-size:28px;line-height:1.05;text-transform:uppercase;color:#fff;font-weight:900;letter-spacing:.4px}
-.hero p{margin-top:6px;color:var(--dourado);font-size:14px;font-weight:900;text-transform:uppercase}
-.hero-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;position:relative;z-index:1}
-.hero-tag{background:rgba(255,255,255,.10);border:1px solid rgba(247,198,0,.30);color:#fff;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:900;text-transform:uppercase}
+
+.hero p{
+  color:var(--muted);
+  line-height:1.5;
+  font-size:14px;
+}
+
+.hero-tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.hero-tag{
+  background:rgba(26,63,115,.9);
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+
 .filtros{
   display:grid;
   grid-template-columns:1.5fr 1fr 1fr 1fr;
   gap:10px;
-  margin:14px 0;
+  margin-bottom:14px;
 }
+
 input,select,textarea{
   width:100%;
-  border:1px solid var(--linha);
+  padding:12px;
+  border:none;
   border-radius:12px;
-  background:#fff;
+  font-size:14px;
+  background:#f5f7fb;
   color:#111;
   outline:none;
-  padding:12px;
-  font-size:14px;
-  box-shadow:0 5px 14px rgba(6,29,68,.08);
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
 }
+
 textarea{min-height:90px;resize:vertical;line-height:1.35}
-input:focus,select:focus,textarea:focus{border-color:var(--dourado);box-shadow:0 0 0 3px rgba(247,198,0,.18)}
-.top-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-.titulo-secao{color:var(--azul);font-size:22px;font-weight:900;text-transform:uppercase}
-.btn-mini,.btn-main,.btn-danger,.btn-gray,.btn-blue,.btn-green{
-  min-height:38px;
-  padding:9px 12px;
-  border-radius:10px;
-  font-weight:900;
-  display:inline-flex;
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(247,198,0,.65)}
+
+.top-actions{
+  display:flex;
+  justify-content:space-between;
   align-items:center;
-  justify-content:center;
-  gap:7px;
-  font-size:12px;
-  transition:.2s ease;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
 }
-.btn-mini:hover,.btn-main:hover,.btn-danger:hover,.btn-gray:hover,.btn-blue:hover,.btn-green:hover{transform:translateY(-1px)}
-.btn-main{background:linear-gradient(135deg,var(--dourado),var(--dourado2));color:#111}
-.btn-danger{background:var(--vermelho);color:#fff}
-.btn-gray{background:#4b5563;color:#fff}
-.btn-blue{background:linear-gradient(135deg,var(--azul),var(--azul2));color:#fff}
-.btn-green{background:var(--verde);color:#fff}
-.lista-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
+.titulo-secao{
+  color:var(--gold);
+  font-size:22px;
+  font-weight:900;
+  margin:0 0 2px;
+}
+
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(5, 1fr);
+  gap:12px;
+}
+
 .card{
-  background:#fff;
-  border:1px solid #b9c4d4;
-  border-radius:16px;
-  box-shadow:0 8px 22px rgba(6,29,68,.12);
-  overflow:hidden;
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  transition:.25s ease;
+  text-align:center;
+  min-height:265px;
   display:flex;
   flex-direction:column;
-  min-height:315px;
+  justify-content:space-between;
 }
-.card-head{
-  background:linear-gradient(135deg,var(--azul),var(--azul2));
-  color:#fff;
-  padding:10px 12px;
-  border-bottom:3px solid var(--dourado);
+
+.card:hover{transform:translateY(-1px);border-color:var(--gold)}
+
+.card-top{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:8px;
+  gap:6px;
+  margin-bottom:8px;
 }
-.card-title{font-size:13px;font-weight:900;text-transform:uppercase;line-height:1.25;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.status{border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase;white-space:nowrap;color:#fff;background:#64748b}
-.status.finalizada,.status.publicada{background:var(--verde)}
-.status.pendente{background:var(--laranja);color:#111}
-.status.andamento{background:#2563eb}
-.status.cancelada{background:var(--vermelho)}
-.card-body{padding:12px;flex:1;display:flex;flex-direction:column;gap:10px}
-.teams{display:grid;grid-template-columns:1fr 58px 1fr;align-items:center;gap:7px}
-.team{text-align:center;min-width:0;color:var(--azul);font-size:12px;font-weight:900;text-transform:uppercase}
-.team img{width:46px;height:46px;border-radius:50%;object-fit:contain;background:#fff;border:2px solid var(--dourado);margin:0 auto 5px}
-.team span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.score{height:36px;border-radius:10px;background:linear-gradient(135deg,var(--azul),var(--azul2));color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;border:1px solid var(--dourado)}
-.info{background:#f8fafc;border:1px solid #e5eaf1;border-radius:12px;padding:9px;color:#111;font-size:12px;line-height:1.45}
-.info strong{color:var(--azul)}
-.card-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto}
-.vazio{grid-column:1/-1;background:#fff;border:1px solid var(--linha);border-radius:16px;color:var(--muted);padding:20px;text-align:center;font-weight:800}
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:flex-start;justify-content:center;padding:18px 10px;z-index:9999;overflow:auto}
+
+.card-icon{
+  width:30px;
+  height:30px;
+  border-radius:9px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  flex-shrink:0;
+}
+
+.status-area{display:flex;justify-content:flex-end;gap:5px;flex-wrap:wrap}
+.status{
+  color:#fff;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+  background:var(--blue);
+}
+.status.finalizada,.status.publicada{background:var(--green)}
+.status.pendente{background:var(--yellow)}
+.status.andamento{background:var(--blue)}
+.status.cancelada{background:var(--red)}
+
+.times-linha{
+  display:grid;
+  grid-template-columns:1fr 58px 1fr;
+  align-items:center;
+  gap:6px;
+  margin:6px 0 8px;
+}
+
+.time-box{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  min-width:0;
+  font-size:12px;
+  font-weight:900;
+}
+
+.time-box.visitante{justify-content:flex-end;text-align:right;flex-direction:row-reverse}
+.time-box span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.escudo{
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  border:1px solid var(--gold);
+  object-fit:cover;
+  background:#fff;
+  flex-shrink:0;
+}
+
+.placar{
+  color:var(--gold);
+  font-size:15px;
+  font-weight:900;
+  background:rgba(2,10,24,.9);
+  border:1px solid var(--gold-line);
+  border-radius:8px;
+  width:58px;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.info-jogo{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.3;
+  text-align:center;
+  margin:6px 0 8px;
+}
+.info-jogo strong{color:#fff}
+
+.tags{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.tag{
+  background:rgba(26,63,115,.9);
+  padding:4px 6px;
+  border-radius:999px;
+  font-size:10px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+
+.card-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:auto}
+
+.btn-mini,.btn-main,.btn-danger,.btn-gray,.btn-blue,.btn-green,.btn-acao{
+  width:100%;
+  min-height:36px;
+  padding:8px 8px;
+  border-radius:9px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  font-size:12px;
+}
+
+.btn-main{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
+.btn-danger{background:var(--red);color:#fff}
+.btn-gray{background:#4b5563;color:#fff}
+.btn-blue{background:#1a3f73;color:#fff;border:1px solid rgba(255,255,255,.08)}
+.btn-green{background:#25d366;color:#fff}
+.btn-mini:hover,.btn-main:hover,.btn-danger:hover,.btn-gray:hover,.btn-blue:hover,.btn-green:hover,.btn-acao:hover{transform:translateY(-1px)}
+.top-actions .btn-blue{width:auto}
+
+.vazio{
+  color:var(--muted);
+  text-align:center;
+  padding:18px;
+  background:rgba(7,29,55,.9);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  grid-column:1/-1;
+}
+
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  display:none;
+  align-items:flex-start;
+  justify-content:center;
+  padding:18px 10px;
+  z-index:9999;
+  overflow:auto;
+}
 .modal-bg.ativo{display:flex}
-.modal{width:min(100%,1060px);background:#fff;border-radius:18px;border:1px solid #b9c4d4;box-shadow:0 20px 60px rgba(0,0,0,.38);overflow:hidden}
-.modal-head{background:linear-gradient(135deg,var(--azul),var(--azul2));color:#fff;border-bottom:4px solid var(--dourado);padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.modal-head h2{font-size:20px;font-weight:900;text-transform:uppercase}
+
+.modal{
+  width:min(100%,1060px);
+  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(8,23,44,.99));
+  border-radius:18px;
+  border:1px solid var(--gold-line);
+  box-shadow:0 20px 60px rgba(0,0,0,.48);
+  overflow:hidden;
+  color:#fff;
+}
+
+.modal-head{
+  background:linear-gradient(135deg, rgba(16,42,82,.98), rgba(8,23,44,.98));
+  color:#fff;
+  border-bottom:3px solid var(--gold);
+  padding:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.modal-head h2{font-size:20px;font-weight:900;text-transform:uppercase;color:var(--gold)}
 .modal-close{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.12);color:#fff;font-size:18px}
-.modal-body{padding:14px;background:#f5f7fb}
+.modal-body{padding:14px;background:rgba(2,8,20,.38)}
+
 .form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
 .form-grid .full{grid-column:1/-1}
 .form-grid .half{grid-column:span 2}
-.label{display:block;color:var(--azul);font-size:11px;font-weight:900;text-transform:uppercase;margin:0 0 5px 2px}
-.editor-box{background:#fff;border:1px solid var(--linha);border-radius:14px;padding:12px;margin-bottom:12px}
-.editor-title{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--azul);font-size:15px;font-weight:900;text-transform:uppercase;margin-bottom:10px}
-.table-wrap{overflow:auto;border:1px solid var(--linha);border-radius:12px;background:#fff}
+.label{display:block;color:var(--gold);font-size:11px;font-weight:900;text-transform:uppercase;margin:0 0 5px 2px}
+
+.editor-box{
+  background:rgba(7,29,55,.92);
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:12px;
+}
+.editor-title{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--gold);font-size:15px;font-weight:900;text-transform:uppercase;margin-bottom:10px}
+.editor-title .btn-main{width:auto}
+
+.table-wrap{overflow:auto;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:#fff}
 table{width:100%;border-collapse:collapse;min-width:760px}
-th{background:var(--azul);color:#fff;font-size:11px;text-transform:uppercase;padding:8px;text-align:left}
+th{background:#061d44;color:#fff;font-size:11px;text-transform:uppercase;padding:8px;text-align:left}
 td{border-bottom:1px solid #e5eaf1;padding:6px;font-size:12px;color:#111;vertical-align:middle}
 tr:last-child td{border-bottom:none}
 td input,td select{padding:8px;border-radius:8px;font-size:12px;box-shadow:none}
 .row-actions{display:flex;gap:5px;justify-content:center}
-.del{width:32px;height:32px;border-radius:8px;background:var(--vermelho);color:#fff}
-.modal-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding:14px;background:#fff;border-top:1px solid var(--linha)}
-.alerta{background:#fff7d6;color:#5f4400;border:1px solid #f7d77a;border-radius:12px;padding:10px;font-size:12px;line-height:1.4;margin-bottom:12px;font-weight:800}
-.toast{position:fixed;right:14px;bottom:14px;background:var(--azul);color:#fff;border:1px solid var(--dourado);border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.30);z-index:10000;display:none;font-weight:900;font-size:13px}.toast.ativo{display:block}
-@media(max-width:1100px){.lista-grid{grid-template-columns:repeat(3,1fr)}.filtros{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:760px){.wrap{width:min(100% - 18px,var(--max))}.container{padding-top:10px}.hero-inner{grid-template-columns:58px 1fr}.hero-logo{width:58px;height:58px;border-radius:14px}.hero h1{font-size:21px}.hero p{font-size:12px}.filtros,.lista-grid,.form-grid{grid-template-columns:1fr}.form-grid .half{grid-column:1/-1}.card-actions{grid-template-columns:1fr}.modal-bg{padding:8px 0}.modal{border-radius:0}.modal-body{padding:10px}.modal-actions{justify-content:stretch}.modal-actions button{width:100%}}
+.del{width:32px;height:32px;border-radius:8px;background:var(--red);color:#fff}
+
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding:14px;background:rgba(7,29,55,.96);border-top:1px solid rgba(255,255,255,.12)}
+.modal-actions button{width:auto}
+
+.alerta{
+  background:rgba(247,198,0,.12);
+  color:#ffe45c;
+  border:1px solid rgba(247,198,0,.35);
+  border-radius:12px;
+  padding:10px;
+  font-size:12px;
+  line-height:1.4;
+  margin-bottom:12px;
+  font-weight:800;
+}
+
+.toast{
+  position:fixed;
+  right:14px;
+  bottom:14px;
+  background:#071d37;
+  color:#fff;
+  border:1px solid var(--gold);
+  border-radius:14px;
+  padding:12px 14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.30);
+  z-index:10000;
+  display:none;
+  font-weight:900;
+  font-size:13px;
+}
+.toast.ativo{display:block}
+
+@media(max-width:1100px){
+  .lista-grid{grid-template-columns:repeat(4, 1fr)}
+  .filtros{grid-template-columns:1fr 1fr}
+  .form-grid{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:900px){
+  .filtros{grid-template-columns:1fr}
+  .lista-grid{grid-template-columns:repeat(3, 1fr)}
+  .hero h2{font-size:22px}
+}
+
+@media(max-width:650px){
+  .lista-grid{grid-template-columns:repeat(2, 1fr)}
+  .card-actions{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .form-grid .half{grid-column:1/-1}
+  .modal-bg{padding:8px 0}
+  .modal{border-radius:0}
+  .modal-body{padding:10px}
+  .modal-actions{justify-content:stretch}
+  .modal-actions button{width:100%}
+}
+
+@media(max-width:430px){
+  .lista-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
+
 <main class="wrap container">
   <section class="hero">
-    <div class="hero-inner">
-      <div class="hero-logo"><img src="logo-liga.jfif" onerror="this.style.display='none'" alt="Liga Goiana"></div>
-      <div>
-        <h1>Administração de Súmulas</h1>
-        <p>Controle, publicação e correção oficial após finalização</p>
-      </div>
-    </div>
+    <h2>Administração de Súmulas</h2>
+    <p>Controle, publicação e correção oficial depois da finalização pelo árbitro.</p>
+
     <div class="hero-tags">
       <div class="hero-tag" id="tagTotal">Súmulas: 0</div>
       <div class="hero-tag" id="tagFinalizadas">Finalizadas: 0</div>
       <div class="hero-tag" id="tagPendentes">Pendentes: 0</div>
-      <div class="hero-tag">Padrão Liga Goiana</div>
+      <div class="hero-tag">Correção ADM</div>
     </div>
   </section>
 
@@ -217,11 +445,13 @@ td input,td select{padding:8px;border-radius:8px;font-size:12px;box-shadow:none}
       <h2 id="modalTitulo">Editar Súmula</h2>
       <button class="modal-close" onclick="fecharEditor()"><i class="fa-solid fa-xmark"></i></button>
     </div>
+
     <div class="modal-body">
       <div class="alerta">
         <i class="fa-solid fa-triangle-exclamation"></i>
         Correção ADM: ao salvar, a súmula pública continua publicada/finalizada e os dados principais são atualizados no Firebase.
       </div>
+
       <div class="form-grid">
         <div class="half"><label class="label">Campeonato</label><input id="edCampeonato"></div>
         <div><label class="label">Categoria</label><input id="edCategoria"></div>
@@ -241,15 +471,32 @@ td input,td select{padding:8px;border-radius:8px;font-size:12px;box-shadow:none}
       </div>
 
       <div class="editor-box">
-        <div class="editor-title"><span><i class="fa-solid fa-futbol"></i> Gols</span><button class="btn-main" onclick="adicionarGol()"><i class="fa-solid fa-plus"></i> Adicionar Gol</button></div>
-        <div class="table-wrap"><table><thead><tr><th>Time</th><th>Jogador</th><th>Nº</th><th>Minuto</th><th>Tipo</th><th>Ação</th></tr></thead><tbody id="tbodyGols"></tbody></table></div>
+        <div class="editor-title">
+          <span><i class="fa-solid fa-futbol"></i> Gols</span>
+          <button class="btn-main" onclick="adicionarGol()"><i class="fa-solid fa-plus"></i> Adicionar Gol</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Time</th><th>Jogador</th><th>Nº</th><th>Minuto</th><th>Tipo</th><th>Ação</th></tr></thead>
+            <tbody id="tbodyGols"></tbody>
+          </table>
+        </div>
       </div>
 
       <div class="editor-box">
-        <div class="editor-title"><span><i class="fa-solid fa-square"></i> Cartões</span><button class="btn-main" onclick="adicionarCartao()"><i class="fa-solid fa-plus"></i> Adicionar Cartão</button></div>
-        <div class="table-wrap"><table><thead><tr><th>Time</th><th>Jogador</th><th>Nº</th><th>Minuto</th><th>Cartão</th><th>Vermelho</th><th>Ação</th></tr></thead><tbody id="tbodyCartoes"></tbody></table></div>
+        <div class="editor-title">
+          <span><i class="fa-solid fa-square"></i> Cartões</span>
+          <button class="btn-main" onclick="adicionarCartao()"><i class="fa-solid fa-plus"></i> Adicionar Cartão</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Time</th><th>Jogador</th><th>Nº</th><th>Minuto</th><th>Cartão</th><th>Vermelho</th><th>Ação</th></tr></thead>
+            <tbody id="tbodyCartoes"></tbody>
+          </table>
+        </div>
       </div>
     </div>
+
     <div class="modal-actions">
       <button class="btn-gray" onclick="fecharEditor()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
       <button class="btn-blue" onclick="abrirPublicaAtual()"><i class="fa-solid fa-eye"></i> Ver Pública</button>
@@ -257,12 +504,13 @@ td input,td select{padding:8px;border-radius:8px;font-size:12px;box-shadow:none}
     </div>
   </div>
 </div>
+
 <div class="toast" id="toast"></div>
 
 <script type="module">
 import { renderMenu } from "./menu.js";
 import { db } from "./firebase.js";
-import { collection, doc, onSnapshot, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { collection, doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 try{ renderMenu("sumula-admin"); }catch(e){ console.warn("Menu não carregado", e); }
 
@@ -276,28 +524,85 @@ const $ = id => document.getElementById(id);
 const norm = txt => String(txt || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 
 function campo(obj,chaves,fallback=""){
-  for(const c of chaves){ if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== "") return obj[c]; }
+  for(const c of chaves){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== "") return obj[c];
+  }
   return fallback;
 }
+
 function nomeTime(obj,fallback="TIME"){
   if(obj && typeof obj === "object") return campo(obj,["nome","nomeTime","time","equipe"],fallback);
   return obj || fallback;
 }
-function logoTime(obj){ if(obj && typeof obj === "object") return campo(obj,["logo","escudo","imagem","foto"],"logo-liga.jfif"); return "logo-liga.jfif"; }
-function dataMs(v){ if(!v) return 0; if(typeof v.toDate === "function") return v.toDate().getTime(); const d = new Date(v).getTime(); return isNaN(d)?0:d; }
-function dataBR(v){ if(!v) return "-"; if(typeof v.toDate === "function") v=v.toDate(); const d=new Date(v); if(isNaN(d.getTime())) return String(v); return d.toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}); }
-function toDateInput(v){ if(!v) return ""; if(typeof v.toDate === "function") v=v.toDate(); const d=new Date(v); if(isNaN(d.getTime())) return ""; return d.toISOString().slice(0,10); }
-function statusFinalizado(s){ const st=norm(s?.status); const ss=norm(s?.sumulaStatus); return s?.sumulaFinalizada===true || s?.publica===true || s?.publico===true || s?.verSumula===true || ["finalizado","finalizada","publicado","publicada"].includes(st) || ["finalizado","finalizada","publicado","publicada"].includes(ss); }
-function statusClasse(item){ if(statusFinalizado(item.raw)) return "finalizada"; const st=norm(item.status); if(st.includes("andamento")) return "andamento"; if(st.includes("cancel")) return "cancelada"; return "pendente"; }
-function statusTexto(item){ const c=statusClasse(item); if(c==="finalizada") return "Finalizada"; if(c==="andamento") return "Em andamento"; if(c==="cancelada") return "Cancelada"; return "Pendente"; }
-function pegarJogo(id){ return jogos.find(j => String(j.id) === String(id) || String(j.sumulaId||"") === String(id)) || {}; }
+
+function logoTime(obj){
+  if(obj && typeof obj === "object") return campo(obj,["logo","escudo","imagem","foto"],"logo-liga.jfif");
+  return "logo-liga.jfif";
+}
+
+function dataMs(v){
+  if(!v) return 0;
+  if(typeof v.toDate === "function") return v.toDate().getTime();
+  const d = new Date(v).getTime();
+  return isNaN(d) ? 0 : d;
+}
+
+function dataBR(v){
+  if(!v) return "-";
+  if(typeof v.toDate === "function") v = v.toDate();
+  const d = new Date(v);
+  if(isNaN(d.getTime())) return String(v);
+  return d.toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+}
+
+function toDateInput(v){
+  if(!v) return "";
+  if(typeof v.toDate === "function") v = v.toDate();
+  const d = new Date(v);
+  if(isNaN(d.getTime())) return "";
+  return d.toISOString().slice(0,10);
+}
+
+function statusFinalizado(s){
+  const st = norm(s?.status);
+  const ss = norm(s?.sumulaStatus);
+  return s?.sumulaFinalizada === true ||
+    s?.publica === true ||
+    s?.publico === true ||
+    s?.verSumula === true ||
+    ["finalizado","finalizada","publicado","publicada"].includes(st) ||
+    ["finalizado","finalizada","publicado","publicada"].includes(ss);
+}
+
+function statusClasse(item){
+  if(statusFinalizado(item.raw)) return "finalizada";
+  const st = norm(item.status);
+  if(st.includes("andamento")) return "andamento";
+  if(st.includes("cancel")) return "cancelada";
+  return "pendente";
+}
+
+function statusTexto(item){
+  const c = statusClasse(item);
+  if(c === "finalizada") return "Finalizada";
+  if(c === "andamento") return "Em andamento";
+  if(c === "cancelada") return "Cancelada";
+  return "Pendente";
+}
+
+function pegarJogo(id){
+  return jogos.find(j => String(j.id) === String(id) || String(j.sumulaId || "") === String(id)) || {};
+}
+
 function itemCompleto(s){
   const id = s.id || s.jogoId || s.idJogo;
   const j = pegarJogo(s.jogoId || s.idJogo || s.id);
   const timeA = s.timeA || j.timeA || {nome:campo(s,["timeANome","mandante"],"Time A"), logo:campo(s,["logoA","escudoTimeA"],"logo-liga.jfif")};
   const timeB = s.timeB || j.timeB || {nome:campo(s,["timeBNome","visitante"],"Time B"), logo:campo(s,["logoB","escudoTimeB"],"logo-liga.jfif")};
+
   return {
-    id:String(id || ""), jogoId:String(s.jogoId || s.idJogo || j.id || id || ""),
+    id:String(id || ""),
+    jogoId:String(s.jogoId || s.idJogo || j.id || id || ""),
     campeonato:campo(s,["campeonato","campeonatoNome"],campo(j,["campeonato","campeonatoNome"],"Campeonato")),
     categoria:campo(s,["categoria"],campo(j,["categoria"],"-")),
     rodada:campo(s,["rodada","fase"],campo(j,["rodada","fase"],"-")),
@@ -308,123 +613,319 @@ function itemCompleto(s){
     assistente1:campo(s,["assistente1"],campo(j,["assistente1"],"")),
     assistente2:campo(s,["assistente2"],campo(j,["assistente2"],"")),
     quartoArbitro:campo(s,["quartoArbitro","quarto_arbitro"],campo(j,["quartoArbitro","quarto_arbitro"],"")),
-    timeA, timeB,
+    timeA,
+    timeB,
     golsA:Number(campo(s,["golsA","placarA","golsMandante"],campo(j,["golsA","placarA"],0))),
     golsB:Number(campo(s,["golsB","placarB","golsVisitante"],campo(j,["golsB","placarB"],0))),
     status:campo(s,["status","sumulaStatus"],campo(j,["status","sumulaStatus"],"pendente")),
     raw:s
   };
 }
+
 function baseLista(){
   const mapa = new Map();
-  sumulas.forEach(s=>{ const item=itemCompleto(s); if(item.id) mapa.set(item.id,item); });
+  sumulas.forEach(s=>{
+    const item = itemCompleto(s);
+    if(item.id) mapa.set(item.id,item);
+  });
+
   jogos.forEach(j=>{
-    const id = String(j.sumulaId || j.jogoId || j.id || ""); if(!id || mapa.has(id)) return;
+    const id = String(j.sumulaId || j.jogoId || j.id || "");
+    if(!id || mapa.has(id)) return;
     mapa.set(id,itemCompleto({...j,id,jogoId:j.id}));
   });
+
   return Array.from(mapa.values());
 }
+
 function listaFiltrada(){
-  const busca=norm($("busca").value), st=$("filtroStatus").value, camp=$("filtroCampeonato").value, cat=$("filtroCategoria").value;
+  const busca = norm($("busca").value);
+  const st = $("filtroStatus").value;
+  const camp = $("filtroCampeonato").value;
+  const cat = $("filtroCategoria").value;
+
   return baseLista().filter(x=>{
-    if(st && statusClasse(x)!==st) return false;
-    if(camp && x.campeonato!==camp) return false;
-    if(cat && x.categoria!==cat) return false;
-    if(busca){ const txt=norm(`${nomeTime(x.timeA)} ${nomeTime(x.timeB)} ${x.campeonato} ${x.categoria} ${x.local} ${x.arbitro} ${x.rodada}`); if(!txt.includes(busca)) return false; }
+    if(st && statusClasse(x) !== st) return false;
+    if(camp && x.campeonato !== camp) return false;
+    if(cat && x.categoria !== cat) return false;
+
+    if(busca){
+      const txt = norm(`${nomeTime(x.timeA)} ${nomeTime(x.timeB)} ${x.campeonato} ${x.categoria} ${x.local} ${x.arbitro} ${x.rodada}`);
+      if(!txt.includes(busca)) return false;
+    }
+
     return true;
   }).sort((a,b)=>dataMs(b.data)-dataMs(a.data));
 }
+
 function preencherFiltros(){
-  const campAtual=$("filtroCampeonato").value, catAtual=$("filtroCategoria").value;
-  const lista=baseLista();
-  const camps=[...new Set(lista.map(x=>x.campeonato).filter(Boolean))].sort();
-  $("filtroCampeonato").innerHTML=`<option value="">Todos os campeonatos</option>`+camps.map(c=>`<option value="${c}">${c}</option>`).join("");
-  if(camps.includes(campAtual)) $("filtroCampeonato").value=campAtual;
-  const cats=[...new Set(lista.filter(x=>!$("filtroCampeonato").value || x.campeonato===$("filtroCampeonato").value).map(x=>x.categoria).filter(Boolean))].sort();
-  $("filtroCategoria").innerHTML=`<option value="">Todas categorias</option>`+cats.map(c=>`<option value="${c}">${c}</option>`).join("");
-  if(cats.includes(catAtual)) $("filtroCategoria").value=catAtual;
+  const campAtual = $("filtroCampeonato").value;
+  const catAtual = $("filtroCategoria").value;
+  const lista = baseLista();
+
+  const camps = [...new Set(lista.map(x=>x.campeonato).filter(Boolean))].sort();
+  $("filtroCampeonato").innerHTML = `<option value="">Todos os campeonatos</option>` + camps.map(c=>`<option value="${c}">${c}</option>`).join("");
+  if(camps.includes(campAtual)) $("filtroCampeonato").value = campAtual;
+
+  const cats = [...new Set(lista.filter(x=>!$("filtroCampeonato").value || x.campeonato === $("filtroCampeonato").value).map(x=>x.categoria).filter(Boolean))].sort();
+  $("filtroCategoria").innerHTML = `<option value="">Todas categorias</option>` + cats.map(c=>`<option value="${c}">${c}</option>`).join("");
+  if(cats.includes(catAtual)) $("filtroCategoria").value = catAtual;
 }
+
 function atualizarTags(){
-  const lista=baseLista();
-  $("tagTotal").innerText=`Súmulas: ${lista.length}`;
-  $("tagFinalizadas").innerText=`Finalizadas: ${lista.filter(x=>statusClasse(x)==="finalizada").length}`;
-  $("tagPendentes").innerText=`Pendentes: ${lista.filter(x=>statusClasse(x)==="pendente").length}`;
+  const lista = baseLista();
+  $("tagTotal").innerText = `Súmulas: ${lista.length}`;
+  $("tagFinalizadas").innerText = `Finalizadas: ${lista.filter(x=>statusClasse(x)==="finalizada").length}`;
+  $("tagPendentes").innerText = `Pendentes: ${lista.filter(x=>statusClasse(x)==="pendente").length}`;
 }
+
 function renderizar(){
   atualizarTags();
-  const lista=listaFiltrada(); const box=$("listaSumulas");
-  if(!lista.length){ box.innerHTML=`<div class="vazio">Nenhuma súmula encontrada.</div>`; return; }
-  box.innerHTML=lista.map(x=>{
-    const nomeA=nomeTime(x.timeA,"Time A"), nomeB=nomeTime(x.timeB,"Time B"), logoA=logoTime(x.timeA), logoB=logoTime(x.timeB), cls=statusClasse(x);
-    return `<article class="card">
-      <div class="card-head"><div class="card-title">${x.campeonato}</div><div class="status ${cls}">${statusTexto(x)}</div></div>
-      <div class="card-body">
-        <div class="teams"><div class="team"><img src="${logoA}" onerror="this.src='logo-liga.jfif'"><span>${nomeA}</span></div><div class="score">${x.golsA} x ${x.golsB}</div><div class="team"><img src="${logoB}" onerror="this.src='logo-liga.jfif'"><span>${nomeB}</span></div></div>
-        <div class="info"><strong>${x.categoria}</strong> • ${x.rodada}<br>${dataBR(x.data)}<br>${x.local}<br>Árbitro: <strong>${x.arbitro}</strong></div>
+  const lista = listaFiltrada();
+  const box = $("listaSumulas");
+
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhuma súmula encontrada.</div>`;
+    return;
+  }
+
+  box.innerHTML = lista.map(x=>{
+    const nomeA = nomeTime(x.timeA,"Time A");
+    const nomeB = nomeTime(x.timeB,"Time B");
+    const logoA = logoTime(x.timeA);
+    const logoB = logoTime(x.timeB);
+    const cls = statusClasse(x);
+
+    return `
+      <article class="card">
+        <div>
+          <div class="card-top">
+            <div class="card-icon"><i class="fa-solid fa-file-pen"></i></div>
+            <div class="status-area"><div class="status ${cls}">${statusTexto(x)}</div></div>
+          </div>
+
+          <div class="times-linha">
+            <div class="time-box">
+              <img src="${logoA}" class="escudo" onerror="this.src='logo-liga.jfif'">
+              <span>${nomeA}</span>
+            </div>
+
+            <div class="placar">${x.golsA} x ${x.golsB}</div>
+
+            <div class="time-box visitante">
+              <span>${nomeB}</span>
+              <img src="${logoB}" class="escudo" onerror="this.src='logo-liga.jfif'">
+            </div>
+          </div>
+
+          <div class="info-jogo">
+            <strong>${x.campeonato}</strong><br>
+            ${x.categoria}<br>
+            ${dataBR(x.data)}<br>
+            ${x.local}
+          </div>
+
+          <div class="tags">
+            <span class="tag">${x.rodada}</span>
+            <span class="tag">${x.arbitro}</span>
+          </div>
+        </div>
+
         <div class="card-actions">
           <button class="btn-blue" onclick="abrirPublica('${x.id}')"><i class="fa-solid fa-eye"></i> Pública</button>
           <button class="btn-main" onclick="abrirEditor('${x.id}')"><i class="fa-solid fa-pen-to-square"></i> Corrigir</button>
         </div>
-      </div>
-    </article>`;
+      </article>
+    `;
   }).join("");
 }
+
 window.abrirPublica = id => window.open(`sumula-publica.html?id=${encodeURIComponent(id)}`,"_blank");
 window.recarregarTela = () => { preencherFiltros(); renderizar(); toast("Tela atualizada."); };
-window.fecharEditor = () => { $("modalEditor").classList.remove("ativo"); editando=null; };
+window.fecharEditor = () => { $("modalEditor").classList.remove("ativo"); editando = null; };
 window.abrirPublicaAtual = () => { if(editando?.id) abrirPublica(editando.id); };
-function toast(msg){ const t=$("toast"); t.innerText=msg; t.classList.add("ativo"); setTimeout(()=>t.classList.remove("ativo"),2600); }
+
+function toast(msg){
+  const t = $("toast");
+  t.innerText = msg;
+  t.classList.add("ativo");
+  setTimeout(()=>t.classList.remove("ativo"),2600);
+}
+
 window.abrirEditor = async id => {
-  let item=baseLista().find(x=>String(x.id)===String(id)); if(!item) return toast("Súmula não encontrada.");
-  editando=item;
-  $("modalTitulo").innerText=`Correção ADM - ${nomeTime(item.timeA)} x ${nomeTime(item.timeB)}`;
-  $("edCampeonato").value=item.campeonato; $("edCategoria").value=item.categoria; $("edRodada").value=item.rodada;
-  $("edTimeA").value=nomeTime(item.timeA,"Time A"); $("edTimeB").value=nomeTime(item.timeB,"Time B");
-  $("edGolsA").value=item.golsA; $("edGolsB").value=item.golsB; $("edData").value=toDateInput(item.data); $("edHora").value=item.hora || "";
-  $("edLocal").value=item.local; $("edArbitro").value=item.arbitro; $("edAssistente1").value=item.assistente1; $("edAssistente2").value=item.assistente2; $("edQuarto").value=item.quartoArbitro; $("edObs").value=campo(item.raw,["observacoesAdmin","correcaoAdmin","observacoes"],"");
+  const item = baseLista().find(x=>String(x.id) === String(id));
+  if(!item) return toast("Súmula não encontrada.");
+
+  editando = item;
+  $("modalTitulo").innerText = `Correção ADM - ${nomeTime(item.timeA)} x ${nomeTime(item.timeB)}`;
+  $("edCampeonato").value = item.campeonato;
+  $("edCategoria").value = item.categoria;
+  $("edRodada").value = item.rodada;
+  $("edTimeA").value = nomeTime(item.timeA,"Time A");
+  $("edTimeB").value = nomeTime(item.timeB,"Time B");
+  $("edGolsA").value = item.golsA;
+  $("edGolsB").value = item.golsB;
+  $("edData").value = toDateInput(item.data);
+  $("edHora").value = item.hora || "";
+  $("edLocal").value = item.local;
+  $("edArbitro").value = item.arbitro;
+  $("edAssistente1").value = item.assistente1;
+  $("edAssistente2").value = item.assistente2;
+  $("edQuarto").value = item.quartoArbitro;
+  $("edObs").value = campo(item.raw,["observacoesAdmin","correcaoAdmin","observacoes"],"");
+
   golsEdit = Array.isArray(item.raw.gols) ? JSON.parse(JSON.stringify(item.raw.gols)) : [];
   cartoesEdit = Array.isArray(item.raw.cartoes) ? JSON.parse(JSON.stringify(item.raw.cartoes)) : [];
-  renderGolsEditor(); renderCartoesEditor(); $("modalEditor").classList.add("ativo");
+  renderGolsEditor();
+  renderCartoesEditor();
+  $("modalEditor").classList.add("ativo");
 };
-function linhaTimeSelect(valor){ return `<select class="ev-time"><option value="A" ${String(valor)==="A"||norm(valor).includes("mand")?"selected":""}>Time A</option><option value="B" ${String(valor)==="B"||norm(valor).includes("visit")?"selected":""}>Time B</option></select>`; }
+
+function linhaTimeSelect(valor){
+  return `<select class="ev-time"><option value="A" ${String(valor)==="A" || norm(valor).includes("mand") ? "selected" : ""}>Time A</option><option value="B" ${String(valor)==="B" || norm(valor).includes("visit") ? "selected" : ""}>Time B</option></select>`;
+}
+
 window.adicionarGol = () => { golsEdit.push({time:"A",nome:"",numero:"",minuto:"",tipo:"normal"}); renderGolsEditor(); };
 window.adicionarCartao = () => { cartoesEdit.push({time:"A",nome:"",numero:"",minuto:"",tipo:"amarelo",vermelhoTipo:""}); renderCartoesEditor(); };
 window.removerGol = i => { golsEdit.splice(i,1); renderGolsEditor(); };
 window.removerCartao = i => { cartoesEdit.splice(i,1); renderCartoesEditor(); };
+
 window.renderGolsEditor = function(){
-  $("tbodyGols").innerHTML = golsEdit.length ? golsEdit.map((g,i)=>`<tr><td>${linhaTimeSelect(g.time||g.lado||"A")}</td><td><input class="ev-nome" value="${campo(g,["nome","jogador","jogadorNome","atleta"],"")}"></td><td><input class="ev-numero" value="${campo(g,["numero","camisa","n"],"")}"></td><td><input class="ev-minuto" value="${campo(g,["minuto","tempo"],"")}"></td><td><select class="ev-tipo"><option value="normal" ${campo(g,["tipo"],"")==="normal"?"selected":""}>Normal</option><option value="penalti" ${campo(g,["tipo"],"")==="penalti"?"selected":""}>Pênalti</option><option value="contra" ${campo(g,["tipo"],"")==="contra"?"selected":""}>Contra</option></select></td><td><button class="del" onclick="removerGol(${i})"><i class="fa-solid fa-trash"></i></button></td></tr>`).join("") : `<tr><td colspan="6">Nenhum gol cadastrado.</td></tr>`;
+  $("tbodyGols").innerHTML = golsEdit.length ? golsEdit.map((g,i)=>`
+    <tr>
+      <td>${linhaTimeSelect(g.time || g.lado || "A")}</td>
+      <td><input class="ev-nome" value="${campo(g,["nome","jogador","jogadorNome","atleta"],"")}"></td>
+      <td><input class="ev-numero" value="${campo(g,["numero","camisa","n"],"")}"></td>
+      <td><input class="ev-minuto" value="${campo(g,["minuto","tempo"],"")}"></td>
+      <td><select class="ev-tipo"><option value="normal" ${campo(g,["tipo"],"")==="normal" ? "selected" : ""}>Normal</option><option value="penalti" ${campo(g,["tipo"],"")==="penalti" ? "selected" : ""}>Pênalti</option><option value="contra" ${campo(g,["tipo"],"")==="contra" ? "selected" : ""}>Contra</option></select></td>
+      <td><button class="del" onclick="removerGol(${i})"><i class="fa-solid fa-trash"></i></button></td>
+    </tr>`).join("") : `<tr><td colspan="6">Nenhum gol cadastrado.</td></tr>`;
 };
+
 window.renderCartoesEditor = function(){
-  $("tbodyCartoes").innerHTML = cartoesEdit.length ? cartoesEdit.map((c,i)=>`<tr><td>${linhaTimeSelect(c.time||c.lado||"A")}</td><td><input class="ev-nome" value="${campo(c,["nome","jogador","jogadorNome","atleta"],"")}"></td><td><input class="ev-numero" value="${campo(c,["numero","camisa","n"],"")}"></td><td><input class="ev-minuto" value="${campo(c,["minuto","tempo"],"")}"></td><td><select class="ev-cor"><option value="amarelo" ${!norm(campo(c,["tipo","cartao","cor"],"amarelo")).includes("verm")?"selected":""}>Amarelo</option><option value="vermelho" ${norm(campo(c,["tipo","cartao","cor"],"")).includes("verm")?"selected":""}>Vermelho</option></select></td><td><select class="ev-vermelho"><option value="direto" ${campo(c,["vermelhoTipo"],"")!=="segundo_amarelo"?"selected":""}>Direto</option><option value="segundo_amarelo" ${campo(c,["vermelhoTipo"],"")==="segundo_amarelo"?"selected":""}>2º amarelo</option></select></td><td><button class="del" onclick="removerCartao(${i})"><i class="fa-solid fa-trash"></i></button></td></tr>`).join("") : `<tr><td colspan="7">Nenhum cartão cadastrado.</td></tr>`;
+  $("tbodyCartoes").innerHTML = cartoesEdit.length ? cartoesEdit.map((c,i)=>`
+    <tr>
+      <td>${linhaTimeSelect(c.time || c.lado || "A")}</td>
+      <td><input class="ev-nome" value="${campo(c,["nome","jogador","jogadorNome","atleta"],"")}"></td>
+      <td><input class="ev-numero" value="${campo(c,["numero","camisa","n"],"")}"></td>
+      <td><input class="ev-minuto" value="${campo(c,["minuto","tempo"],"")}"></td>
+      <td><select class="ev-cor"><option value="amarelo" ${!norm(campo(c,["tipo","cartao","cor"],"amarelo")).includes("verm") ? "selected" : ""}>Amarelo</option><option value="vermelho" ${norm(campo(c,["tipo","cartao","cor"],"")).includes("verm") ? "selected" : ""}>Vermelho</option></select></td>
+      <td><select class="ev-vermelho"><option value="direto" ${campo(c,["vermelhoTipo"],"") !== "segundo_amarelo" ? "selected" : ""}>Direto</option><option value="segundo_amarelo" ${campo(c,["vermelhoTipo"],"") === "segundo_amarelo" ? "selected" : ""}>2º amarelo</option></select></td>
+      <td><button class="del" onclick="removerCartao(${i})"><i class="fa-solid fa-trash"></i></button></td>
+    </tr>`).join("") : `<tr><td colspan="7">Nenhum cartão cadastrado.</td></tr>`;
 };
-function coletarGols(){ return [...$("tbodyGols").querySelectorAll("tr")].filter(tr=>tr.querySelector(".ev-time")).map(tr=>({time:tr.querySelector(".ev-time").value,nome:tr.querySelector(".ev-nome").value.trim(),numero:tr.querySelector(".ev-numero").value.trim(),minuto:tr.querySelector(".ev-minuto").value.trim(),tipo:tr.querySelector(".ev-tipo").value})).filter(x=>x.nome||x.minuto); }
-function coletarCartoes(){ return [...$("tbodyCartoes").querySelectorAll("tr")].filter(tr=>tr.querySelector(".ev-time")).map(tr=>({time:tr.querySelector(".ev-time").value,nome:tr.querySelector(".ev-nome").value.trim(),numero:tr.querySelector(".ev-numero").value.trim(),minuto:tr.querySelector(".ev-minuto").value.trim(),tipo:tr.querySelector(".ev-cor").value,cor:tr.querySelector(".ev-cor").value,vermelhoTipo:tr.querySelector(".ev-cor").value==="vermelho"?tr.querySelector(".ev-vermelho").value:""})).filter(x=>x.nome||x.minuto); }
+
+function coletarGols(){
+  return [...$("tbodyGols").querySelectorAll("tr")]
+    .filter(tr=>tr.querySelector(".ev-time"))
+    .map(tr=>({
+      time:tr.querySelector(".ev-time").value,
+      nome:tr.querySelector(".ev-nome").value.trim(),
+      numero:tr.querySelector(".ev-numero").value.trim(),
+      minuto:tr.querySelector(".ev-minuto").value.trim(),
+      tipo:tr.querySelector(".ev-tipo").value
+    })).filter(x=>x.nome || x.minuto);
+}
+
+function coletarCartoes(){
+  return [...$("tbodyCartoes").querySelectorAll("tr")]
+    .filter(tr=>tr.querySelector(".ev-time"))
+    .map(tr=>({
+      time:tr.querySelector(".ev-time").value,
+      nome:tr.querySelector(".ev-nome").value.trim(),
+      numero:tr.querySelector(".ev-numero").value.trim(),
+      minuto:tr.querySelector(".ev-minuto").value.trim(),
+      tipo:tr.querySelector(".ev-cor").value,
+      cor:tr.querySelector(".ev-cor").value,
+      vermelhoTipo:tr.querySelector(".ev-cor").value === "vermelho" ? tr.querySelector(".ev-vermelho").value : ""
+    })).filter(x=>x.nome || x.minuto);
+}
+
 window.salvarCorrecaoAdmin = async function(){
   if(!editando?.id) return toast("Nenhuma súmula aberta.");
-  const nomeA=$("edTimeA").value.trim()||"Time A", nomeB=$("edTimeB").value.trim()||"Time B";
-  const dataValor=$("edData").value || "";
-  const payload={
-    campeonato:$("edCampeonato").value.trim(), campeonatoNome:$("edCampeonato").value.trim(), categoria:$("edCategoria").value.trim(), rodada:$("edRodada").value.trim(), fase:$("edRodada").value.trim(),
-    timeA:{...(editando.timeA&&typeof editando.timeA==="object"?editando.timeA:{}),nome:nomeA}, timeB:{...(editando.timeB&&typeof editando.timeB==="object"?editando.timeB:{}),nome:nomeB}, timeANome:nomeA, timeBNome:nomeB,
-    golsA:Number($("edGolsA").value||0), placarA:Number($("edGolsA").value||0), golsB:Number($("edGolsB").value||0), placarB:Number($("edGolsB").value||0),
-    data:dataValor, hora:$("edHora").value, local:$("edLocal").value.trim(), campo:$("edLocal").value.trim(), arbitro:$("edArbitro").value.trim(), arbitroNome:$("edArbitro").value.trim(), assistente1:$("edAssistente1").value.trim(), assistente2:$("edAssistente2").value.trim(), quartoArbitro:$("edQuarto").value.trim(),
-    observacoesAdmin:$("edObs").value.trim(), correcaoAdmin:$("edObs").value.trim(), gols:coletarGols(), cartoes:coletarCartoes(),
-    sumulaFinalizada:true, publica:true, publico:true, verSumula:true, status:"finalizado", sumulaStatus:"publicada", corrigidaPorAdmin:true, corrigidaEm:serverTimestamp(), atualizadaEm:serverTimestamp()
+
+  const nomeA = $("edTimeA").value.trim() || "Time A";
+  const nomeB = $("edTimeB").value.trim() || "Time B";
+  const dataValor = $("edData").value || "";
+
+  const payload = {
+    campeonato:$("edCampeonato").value.trim(),
+    campeonatoNome:$("edCampeonato").value.trim(),
+    categoria:$("edCategoria").value.trim(),
+    rodada:$("edRodada").value.trim(),
+    fase:$("edRodada").value.trim(),
+    timeA:{...(editando.timeA && typeof editando.timeA === "object" ? editando.timeA : {}),nome:nomeA},
+    timeB:{...(editando.timeB && typeof editando.timeB === "object" ? editando.timeB : {}),nome:nomeB},
+    timeANome:nomeA,
+    timeBNome:nomeB,
+    golsA:Number($("edGolsA").value || 0),
+    placarA:Number($("edGolsA").value || 0),
+    golsB:Number($("edGolsB").value || 0),
+    placarB:Number($("edGolsB").value || 0),
+    data:dataValor,
+    hora:$("edHora").value,
+    local:$("edLocal").value.trim(),
+    campo:$("edLocal").value.trim(),
+    arbitro:$("edArbitro").value.trim(),
+    arbitroNome:$("edArbitro").value.trim(),
+    assistente1:$("edAssistente1").value.trim(),
+    assistente2:$("edAssistente2").value.trim(),
+    quartoArbitro:$("edQuarto").value.trim(),
+    observacoesAdmin:$("edObs").value.trim(),
+    correcaoAdmin:$("edObs").value.trim(),
+    gols:coletarGols(),
+    cartoes:coletarCartoes(),
+    sumulaFinalizada:true,
+    publica:true,
+    publico:true,
+    verSumula:true,
+    status:"finalizado",
+    sumulaStatus:"publicada",
+    corrigidaPorAdmin:true,
+    corrigidaEm:serverTimestamp(),
+    atualizadaEm:serverTimestamp()
   };
+
   try{
     await setDoc(doc(db,"sumulas",editando.id), payload, {merge:true});
+
     if(editando.jogoId){
-      await setDoc(doc(db,"jogos",editando.jogoId), {golsA:payload.golsA,placarA:payload.placarA,golsB:payload.golsB,placarB:payload.placarB,status:"finalizado",sumulaStatus:"publicada",sumulaFinalizada:true,verSumula:true,atualizadoPorAdmin:true,atualizadoEm:serverTimestamp()}, {merge:true});
+      await setDoc(doc(db,"jogos",editando.jogoId), {
+        golsA:payload.golsA,
+        placarA:payload.placarA,
+        golsB:payload.golsB,
+        placarB:payload.placarB,
+        status:"finalizado",
+        sumulaStatus:"publicada",
+        sumulaFinalizada:true,
+        verSumula:true,
+        atualizadoPorAdmin:true,
+        atualizadoEm:serverTimestamp()
+      }, {merge:true});
     }
-    toast("Correção salva e súmula pública atualizada."); fecharEditor();
-  }catch(e){ console.error(e); toast("Erro ao salvar correção."); }
+
+    toast("Correção salva e súmula pública atualizada.");
+    fecharEditor();
+  }catch(e){
+    console.error(e);
+    toast("Erro ao salvar correção.");
+  }
 };
 
 ["busca","filtroStatus","filtroCategoria"].forEach(id=>$(id).addEventListener("input",renderizar));
-$("filtroCampeonato").addEventListener("change",()=>{preencherFiltros();$("filtroCategoria").value="";renderizar();});
+$("filtroCampeonato").addEventListener("change",()=>{ preencherFiltros(); $("filtroCategoria").value=""; renderizar(); });
 
-onSnapshot(collection(db,"jogos"),snap=>{ jogos=snap.docs.map(d=>({id:d.id,...d.data()})); preencherFiltros(); renderizar(); });
-onSnapshot(collection(db,"sumulas"),snap=>{ sumulas=snap.docs.map(d=>({id:d.id,...d.data()})); preencherFiltros(); renderizar(); });
+onSnapshot(collection(db,"jogos"),snap=>{
+  jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
+  preencherFiltros();
+  renderizar();
+});
+
+onSnapshot(collection(db,"sumulas"),snap=>{
+  sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
+  preencherFiltros();
+  renderizar();
+});
 </script>
 </body>
 </html>
