@@ -620,6 +620,7 @@ import {
 let usuarioAtual = null;
 let perfilAtual = null;
 let sumulasCache = [];
+let jogosCache = [];
 let sumulaAtual = null;
 let jogoAtual = null;
 let gols = [];
@@ -654,6 +655,76 @@ function logoTime(t){
   if(t && typeof t === "object") return campo(t,["logo","escudo","imagem"],"logo-liga.jfif");
   return "logo-liga.jfif";
 }
+
+function registroFinalizado(obj){
+  const status = normalizar(campo(obj,["status"],""));
+  const sumulaStatus = normalizar(campo(obj,["sumulaStatus"],""));
+
+  return obj?.sumulaFinalizada === true ||
+    obj?.finalizada === true ||
+    obj?.publica === true ||
+    obj?.publico === true ||
+    obj?.publicada === true ||
+    obj?.verSumula === true ||
+    status.includes("final") ||
+    status.includes("publicad") ||
+    sumulaStatus.includes("final") ||
+    sumulaStatus.includes("publicad");
+}
+
+function idPrincipal(item){
+  return String(campo(item,["jogoId","idJogo","sumulaId","id"],"")).trim();
+}
+
+function dataOrdenacao(item){
+  const v = campo(item,["finalizadaEm","publicadaEm","dataHora","data","dataJogo","criadoEm"],"");
+  if(v && typeof v.toDate === "function") return v.toDate().getTime();
+  const d = new Date(v).getTime();
+  return Number.isFinite(d) ? d : 0;
+}
+
+function juntarSumulasEJogos(){
+  const mapa = new Map();
+
+  sumulasCache.forEach(s=>{
+    const id = idPrincipal(s);
+    if(!id) return;
+
+    mapa.set(id,{
+      ...s,
+      id:s.id,
+      jogoId:campo(s,["jogoId","idJogo"],id),
+      origemRegistro:"sumulas"
+    });
+  });
+
+  jogosCache
+    .filter(registroFinalizado)
+    .forEach(j=>{
+      const id = idPrincipal(j);
+      if(!id) return;
+
+      const existente = mapa.get(id) || {};
+
+      mapa.set(id,{
+        ...j,
+        ...existente,
+        id:id,
+        jogoId:id,
+        origemRegistro:existente.origemRegistro || "jogos",
+        status:campo(existente,["status"],campo(j,["status"],"finalizado")),
+        sumulaStatus:campo(existente,["sumulaStatus"],campo(j,["sumulaStatus"],"finalizada")),
+        sumulaFinalizada:true,
+        publica:true,
+        publico:true
+      });
+    });
+
+  return [...mapa.values()]
+    .filter(s=>registroFinalizado(s) || s.origemRegistro === "sumulas")
+    .sort((a,b)=>dataOrdenacao(b)-dataOrdenacao(a));
+}
+
 
 function mostrarStatus(msg,tipo="ok"){
   const box = el("statusBox");
@@ -702,47 +773,120 @@ window.carregarListaSumulas = async function(){
   select.innerHTML = `<option value="">Carregando súmulas...</option>`;
 
   try{
-    const snap = await getDocs(collection(db,"sumulas"));
+    const [sumulasSnap, jogosSnap] = await Promise.all([
+      getDocs(collection(db,"sumulas")),
+      getDocs(collection(db,"jogos"))
+    ]);
+
     sumulasCache = [];
-    snap.forEach(d=>sumulasCache.push({id:d.id,...d.data()}));
+    jogosCache = [];
 
-    sumulasCache.sort((a,b)=>String(b.finalizadaEm || b.data || "").localeCompare(String(a.finalizadaEm || a.data || "")));
+    sumulasSnap.forEach(d=>sumulasCache.push({id:d.id,...d.data()}));
+    jogosSnap.forEach(d=>jogosCache.push({id:d.id,...d.data()}));
 
-    select.innerHTML = `<option value="">Selecione uma súmula</option>` + sumulasCache.map(s=>{
-      const status = s.sumulaFinalizada || s.status === "finalizado" ? "FINALIZADA" : "RASCUNHO";
-      return `<option value="${s.id}">${nomeJogo(s)} — ${status}</option>`;
+    const lista = juntarSumulasEJogos();
+
+    if(!lista.length){
+      select.innerHTML = `<option value="">Nenhuma súmula encontrada</option>`;
+      mostrarStatus("Nenhuma súmula foi encontrada em sumulas ou jogos finalizados.","aviso");
+      return;
+    }
+
+    select.innerHTML = `<option value="">Selecione uma súmula</option>` + lista.map(s=>{
+      const id = idPrincipal(s);
+      const status = registroFinalizado(s) ? "FINALIZADA" : "RASCUNHO";
+      const origem = s.origemRegistro === "jogos" ? "JOGO" : "SÚMULA";
+      return `<option value="${id}">${nomeJogo(s)} — ${status} — ${origem}</option>`;
     }).join("");
 
     const idUrl = new URLSearchParams(location.search).get("id");
     if(idUrl){
       select.value = idUrl;
-      carregarSumulaSelecionada();
+      if(select.value) carregarSumulaSelecionada();
     }
+
+    mostrarStatus(`${lista.length} súmula(s) carregada(s).`,"ok");
   }catch(e){
     console.error(e);
-    mostrarStatus("Erro ao carregar súmulas.","erro");
+    select.innerHTML = `<option value="">Erro ao carregar súmulas</option>`;
+    mostrarStatus("Erro ao carregar súmulas. Confira as regras do Firebase e se existem as coleções sumulas/jogos.","erro");
   }
 };
 
-window.carregarSumulaSelecionada = async function(){
+window.carregarSumulaSelecionadawindow.carregarSumulaSelecionada = async function(){
   const id = el("sumulaSelect").value;
   if(!id) return;
 
-  const sumulaSnap = await getDoc(doc(db,"sumulas",id));
-  if(!sumulaSnap.exists()) return mostrarStatus("Súmula não encontrada.","erro");
+  try{
+    const sumulaSnap = await getDoc(doc(db,"sumulas",id));
+    const jogoSnap = await getDoc(doc(db,"jogos",id));
 
-  sumulaAtual = {id:sumulaSnap.id,...sumulaSnap.data()};
+    const sumulaCache = sumulasCache.find(s =>
+      String(s.id) === String(id) ||
+      String(s.jogoId || "") === String(id) ||
+      String(s.idJogo || "") === String(id)
+    );
 
-  const jogoSnap = await getDoc(doc(db,"jogos",id));
-  jogoAtual = jogoSnap.exists() ? {id:jogoSnap.id,...jogoSnap.data()} : {};
+    const jogoCache = jogosCache.find(j =>
+      String(j.id) === String(id) ||
+      String(j.jogoId || "") === String(id) ||
+      String(j.sumulaId || "") === String(id)
+    );
 
-  gols = Array.isArray(sumulaAtual.gols) ? [...sumulaAtual.gols] : [];
-  cartoes = Array.isArray(sumulaAtual.cartoes) ? [...sumulaAtual.cartoes] : [];
+    if(sumulaSnap.exists()){
+      sumulaAtual = {id:sumulaSnap.id,...sumulaSnap.data()};
+    }else if(sumulaCache){
+      sumulaAtual = {...sumulaCache};
+    }else if(jogoSnap.exists()){
+      sumulaAtual = {
+        id:jogoSnap.id,
+        jogoId:jogoSnap.id,
+        ...jogoSnap.data(),
+        status:"finalizado",
+        sumulaStatus:"finalizada",
+        sumulaFinalizada:true,
+        publica:true,
+        publico:true
+      };
+    }else if(jogoCache){
+      sumulaAtual = {
+        ...jogoCache,
+        id:jogoCache.id,
+        jogoId:jogoCache.id,
+        status:"finalizado",
+        sumulaStatus:"finalizada",
+        sumulaFinalizada:true,
+        publica:true,
+        publico:true
+      };
+    }else{
+      return mostrarStatus("Súmula/Jogo não encontrado.","erro");
+    }
 
-  preencherTela();
+    if(jogoSnap.exists()){
+      jogoAtual = {id:jogoSnap.id,...jogoSnap.data()};
+    }else if(jogoCache){
+      jogoAtual = {...jogoCache};
+    }else{
+      const jogoId = campo(sumulaAtual,["jogoId","idJogo"],id);
+      const jogoPorId = await getDoc(doc(db,"jogos",jogoId));
+      jogoAtual = jogoPorId.exists() ? {id:jogoPorId.id,...jogoPorId.data()} : {};
+    }
+
+    gols = Array.isArray(sumulaAtual.gols) ? [...sumulaAtual.gols] :
+      Array.isArray(jogoAtual.gols) ? [...jogoAtual.gols] : [];
+
+    cartoes = Array.isArray(sumulaAtual.cartoes) ? [...sumulaAtual.cartoes] :
+      Array.isArray(jogoAtual.cartoes) ? [...jogoAtual.cartoes] : [];
+
+    preencherTela();
+  }catch(e){
+    console.error(e);
+    mostrarStatus("Erro ao abrir a súmula selecionada.","erro");
+  }
 };
 
-function preencherTela(){
+function preencherTelafunction preencherTela(){
   const timeA = sumulaAtual.timeA || jogoAtual.timeA || {};
   const timeB = sumulaAtual.timeB || jogoAtual.timeB || {};
 
@@ -972,7 +1116,7 @@ window.salvarEReprocessar = async function(){
 
   if(!confirm("Salvar correção e reprocessar estatísticas da tabela?")) return;
 
-  const id = sumulaAtual.id;
+  const id = idPrincipal(sumulaAtual) || sumulaAtual.id;
   const golsA = n(el("placarA").value);
   const golsB = n(el("placarB").value);
 
