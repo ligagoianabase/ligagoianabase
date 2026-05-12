@@ -4,27 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Painel Admin - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Jogador Público - Liga Goiana</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="menu.css">
 
 <style>
 :root{
-  --bg:#061427;
-  --card:#071d37;
-  --card2:#0d2a52;
   --gold:#f7c600;
   --gold2:#ffe45c;
-  --white:#ffffff;
   --muted:#cbd6ea;
-  --line:rgba(255,255,255,.12);
   --gold-line:rgba(247,198,0,.45);
-  --green:#1b5e20;
-  --yellow:#7a5a00;
-  --red:#b42323;
-  --blue:#1a3f73;
-  --shadow:0 14px 34px rgba(0,0,0,.38);
-  --max:1280px;
 }
 
 *{
@@ -34,494 +24,218 @@
 }
 
 body{
-  font-family:Arial, sans-serif;
+  font-family:Arial,sans-serif;
   background:
     linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
     url("fundo.png") center/cover fixed no-repeat;
-  color:var(--white);
+  color:#fff;
   min-height:100vh;
-  overflow-x:hidden;
-}
-
-a{
-  text-decoration:none;
-  color:inherit;
-}
-
-button,
-input,
-select,
-textarea{
-  font-family:inherit;
-}
-
-button{
-  cursor:pointer;
-  border:none;
 }
 
 .wrap{
-  width:min(100% - 28px, var(--max));
-  margin:0 auto;
+  width:min(100% - 24px,1280px);
+  margin:auto;
+  padding:22px 0 40px;
 }
 
-.sidebar-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.55);
-  opacity:0;
-  visibility:hidden;
-  transition:.25s ease;
-  z-index:998;
-}
-
-.sidebar-overlay.show{
-  opacity:1;
-  visibility:visible;
-}
-
-.sidebar{
-  position:fixed;
-  top:0;
-  left:0;
-  width:320px;
-  max-width:88%;
-  height:100vh;
-  background:linear-gradient(180deg,#04132d,#021022);
-  border-right:1px solid var(--gold-line);
-  box-shadow:var(--shadow);
-  padding:22px 18px;
-  transform:translateX(-105%);
-  transition:.25s ease;
-  z-index:999;
-  overflow-y:auto;
-}
-
-.sidebar.open{
-  transform:translateX(0);
-}
-
-.sidebar-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  color:var(--gold);
-  font-size:18px;
-  font-weight:900;
-  padding-bottom:16px;
-  margin-bottom:16px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-.sidebar-close{
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  background:rgba(255,255,255,.08);
-  color:#fff;
-  font-size:24px;
-}
-
-.side-menu{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.side-menu a{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:12px;
-  border-radius:12px;
-  color:var(--muted);
-  font-weight:900;
-  font-size:14px;
-  transition:.2s;
-}
-
-.side-menu a i{
-  color:var(--gold);
-  width:20px;
-  text-align:center;
-}
-
-.side-menu a:hover{
-  background:rgba(247,198,0,.12);
-  color:var(--gold);
-}
-
-header{
-  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(8,23,44,.96));
-  border-bottom:3px solid var(--gold);
-  box-shadow:var(--shadow);
-}
-
-.header-inner{
-  min-height:82px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  padding:14px 0;
-}
-
-.menu-toggle{
-  width:46px;
-  height:46px;
-  border-radius:14px;
-  border:1px solid var(--gold-line);
-  background:rgba(247,198,0,.12);
-  color:var(--gold);
-  font-size:20px;
-  flex-shrink:0;
-}
-
-.header-title{
-  flex:1;
-  text-align:center;
-  font-size:22px;
-  font-weight:900;
-  color:var(--white);
-  text-transform:uppercase;
-}
-
-.top-btn{
-  padding:10px 16px;
-  border-radius:10px;
-  font-weight:900;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-
-.btn-gold{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#111;
-}
-
-.btn-red{
-  background:var(--red);
-  color:#fff;
-}
-
-.btn-green{
-  background:var(--green);
-  color:#fff;
-}
-
-.btn-blue{
-  background:var(--blue);
-  color:#fff;
-}
-
-.container{
-  padding:22px 0 30px;
-}
-
-.hero-panel{
+.hero{
   background:
-    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
-    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+    radial-gradient(circle at top left, rgba(247,198,0,.18), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.97), rgba(8,23,44,.98));
   border:1px solid var(--gold-line);
-  border-radius:20px;
+  border-radius:22px;
   padding:22px;
-  box-shadow:var(--shadow);
-  margin-bottom:18px;
+  display:grid;
+  grid-template-columns:180px 1fr;
+  gap:22px;
+  align-items:center;
+  margin-bottom:16px;
 }
 
-.hero-panel h2{
-  font-size:28px;
+.foto{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid var(--gold);
+  background:#fff;
+}
+
+.hero h1{
   color:var(--gold);
+  font-size:38px;
   margin-bottom:8px;
 }
 
-.hero-panel p{
+.hero p{
   color:var(--muted);
   line-height:1.6;
-  max-width:900px;
-  font-size:14px;
 }
 
-.status-box{
-  margin-top:14px;
-  padding:14px;
-  border-radius:12px;
-  display:none;
+.tags{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.tag{
+  background:#1a3f73;
+  padding:7px 12px;
+  border-radius:999px;
+  font-size:11px;
   font-weight:900;
-  font-size:13px;
-  line-height:1.45;
 }
 
-.status-info{
-  background:rgba(255,255,255,.06);
-  color:#fff;
-  border:1px solid rgba(255,255,255,.08);
+.tag.ok{
+  background:#1b5e20;
 }
 
-.status-erro{
-  background:rgba(180,35,35,.22);
-  color:#ffb0b0;
-  border:1px solid rgba(255,120,120,.25);
+.tag.red{
+  background:#b42323;
 }
 
-#painelConteudo{
-  display:none;
+.stats{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.stat{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 35%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:16px;
+  padding:15px;
+  text-align:center;
+}
+
+.stat strong{
+  display:block;
+  color:var(--gold);
+  font-size:26px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:900;
 }
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(6,minmax(0,1fr));
-  gap:12px;
-  margin-bottom:18px;
-}
-
-.card{
-  background:
-    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 34%),
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
-  border-radius:16px;
-  padding:12px;
-  text-align:center;
-  box-shadow:0 8px 20px rgba(0,0,0,.25);
-  border:1px solid rgba(247,198,0,.18);
-}
-
-.card h3{
-  font-size:24px;
-  color:var(--gold);
-  font-weight:900;
-}
-
-.card p{
-  margin-top:8px;
-  font-size:13px;
-  color:var(--muted);
-  font-weight:900;
-}
-
-.admin-block{
-  background:rgba(16,42,82,.45);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:18px;
-  box-shadow:0 8px 20px rgba(0,0,0,.18);
-}
-
-.section-title{
-  font-size:20px;
-  color:var(--gold);
-  margin-bottom:14px;
-  font-weight:900;
-}
-
-.menu{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-  gap:12px;
-}
-
-.menu a{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
-  color:white;
-  padding:15px 16px;
-  border-radius:14px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  box-shadow:0 8px 20px rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.06);
-  font-size:14px;
-}
-
-.menu a i{
-  color:var(--gold);
-  width:20px;
-  text-align:center;
-}
-
-.menu a:hover{
-  border-color:var(--gold-line);
-  color:var(--gold);
-}
-
-.duplo{
-  display:grid;
   grid-template-columns:1fr 1fr;
-  gap:18px;
+  gap:14px;
 }
 
-.form-grid{
-  display:grid;
-  gap:10px;
+.panel{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 35%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:18px;
+  overflow:hidden;
 }
 
-input,
-select,
-textarea{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:12px;
-  font-size:14px;
-  background:#f5f7fb;
-  color:#111;
-  outline:none;
+.panel h2{
+  color:var(--gold);
+  padding:16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
 
-textarea{
-  min-height:110px;
-  resize:vertical;
+.panel-body{
+  padding:14px;
 }
 
-input:focus,
-select:focus,
-textarea:focus{
-  outline:2px solid rgba(247,198,0,.65);
-}
-
-.btn-full{
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-
-.lista-pendentes{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  max-height:520px;
-  overflow:auto;
-  padding-right:4px;
-}
-
-.usuario-card{
-  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
-  border:1px solid rgba(247,198,0,.18);
-  border-radius:14px;
-  padding:12px;
-}
-
-.usuario-top{
+.item{
   display:flex;
   justify-content:space-between;
   gap:10px;
-  align-items:flex-start;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
 
-.usuario-nome{
-  font-weight:900;
-  color:#fff;
-  font-size:14px;
+.item:last-child{
+  border-bottom:none;
 }
 
-.usuario-info{
+.item span{
   color:var(--muted);
-  font-size:12px;
-  line-height:1.45;
-  margin-top:4px;
 }
 
-.tag{
-  display:inline-flex;
-  background:rgba(26,63,115,.9);
-  border:1px solid rgba(255,255,255,.08);
-  padding:4px 7px;
-  border-radius:999px;
-  font-size:10px;
-  font-weight:900;
+.item strong{
   color:#fff;
 }
 
-.usuario-acoes{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:10px;
-}
-
-.usuario-acoes.acoes-3{
-  grid-template-columns:1fr 1fr 1fr;
-}
-
-.usuario-foto{
-  width:54px;
-  height:54px;
-  border-radius:50%;
-  object-fit:cover;
-  background:#fff;
-  border:2px solid var(--gold);
-  flex:0 0 auto;
-}
-
-.usuario-top-left{
-  display:flex;
-  gap:10px;
-  align-items:flex-start;
-}
-
-.usuario-acoes button{
-  padding:9px;
-  border-radius:10px;
-  font-weight:900;
-  font-size:12px;
-}
-
-.vazio{
-  color:var(--muted);
-  text-align:center;
-  padding:18px;
-  background:rgba(7,29,55,.9);
+.jogo{
+  background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:10px;
 }
 
-.footer-note{
-  margin-top:20px;
+.jogo strong{
+  display:block;
+  margin-bottom:6px;
+}
+
+.jogo p{
   color:var(--muted);
-  font-size:14px;
-  line-height:1.6;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.loading{
+  max-width:700px;
+  margin:80px auto;
+  background:rgba(16,42,82,.96);
+  border:1px solid var(--gold-line);
+  color:var(--gold);
+  padding:24px;
+  border-radius:18px;
   text-align:center;
+  font-weight:900;
 }
 
 @media(max-width:1100px){
-  .grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-  .duplo{
-    grid-template-columns:1fr;
+  .stats{
+    grid-template-columns:repeat(4,1fr);
   }
 }
 
-@media(max-width:650px){
-  .header-title{
-    font-size:16px;
-    line-height:1.2;
+@media(max-width:700px){
+  .hero{
+    grid-template-columns:1fr;
+    text-align:center;
   }
 
-  .top-btn span{
-    display:none;
+  .foto{
+    margin:auto;
   }
 
   .grid{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .menu{
     grid-template-columns:1fr;
   }
 
-  .hero-panel h2{
-    font-size:23px;
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .hero h1{
+    font-size:30px;
+  }
+
+  .tags{
+    justify-content:center;
+  }
+}
+
+@media(max-width:500px){
+  .stats{
+    grid-template-columns:1fr;
   }
 }
 </style>
@@ -529,572 +243,604 @@ textarea:focus{
 
 <body>
 
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="wrap" id="app">
 
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <span>Painel ADM</span>
-    <button class="sidebar-close" id="sidebarClose" type="button">×</button>
-  </div>
-
-  <div class="side-menu">
-    <a href="admin.html"><i class="fa-solid fa-house-user"></i> Painel ADM</a>
-    <a href="index.html"><i class="fa-solid fa-house"></i> Página Inicial</a>
-    <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos</a>
-    <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
-    <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times</a>
-    <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos</a>
-    <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores</a>
-    <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros</a>
-    <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes</a>
-    <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Súmulas</a>
-    <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários e Permissões</a>
-    <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Editar Tabelas</a>
-    <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação</a>
-    <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas</a>
-    <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Editar Súmula</a>
-    <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Fases / Mata-Mata</a>
-    <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
-    <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria</a>
-    <a href="fotografos.html"><i class="fa-solid fa-camera"></i> Fotógrafos</a>
-    <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios Gerais</a>
-  </div>
-</aside>
-
-<header>
-  <div class="wrap header-inner">
-    <button class="menu-toggle" id="menuToggle">☰</button>
-
-    <div class="header-title">Painel do Administrador</div>
-
-    <button class="top-btn btn-red" onclick="logout()">
-      <i class="fa-solid fa-right-from-bracket"></i>
-      <span>Sair</span>
-    </button>
-  </div>
-</header>
-
-<div class="wrap container">
-
-  <section class="hero-panel">
-    <h2>Gestão Geral da Liga</h2>
-    <p>
-      Aqui você controla tudo: usuários, jogos, súmulas, estatísticas e notícias.
-    </p>
-
-    <div id="statusInfo" class="status-box status-info">Carregando painel...</div>
-    <div id="statusErro" class="status-box status-erro"></div>
-  </section>
-
-  <div id="painelConteudo">
-
-    <div class="grid">
-      <div class="card"><h3 id="totalTimes">0</h3><p>Times</p></div>
-      <div class="card"><h3 id="totalJogadores">0</h3><p>Jogadores</p></div>
-      <div class="card"><h3 id="totalTecnicos">0</h3><p>Técnicos</p></div>
-      <div class="card"><h3 id="totalArbitros">0</h3><p>Árbitros</p></div>
-      <div class="card"><h3 id="totalJogos">0</h3><p>Jogos</p></div>
-      <div class="card"><h3 id="totalSumulas">0</h3><p>Súmulas</p></div>
-    </div>
-
-    <div class="admin-block">
-      <h3 class="section-title">Menus ADM</h3>
-
-      <div class="menu">
-        <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos</a>
-        <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
-        <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times</a>
-        <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos</a>
-        <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores</a>
-        <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros</a>
-        <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes</a>
-        <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Súmulas</a>
-        <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Editar Súmula</a>
-        <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Editar Tabelas</a>
-        <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação</a>
-        <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Fases / Mata-Mata</a>
-        <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas</a>
-        <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários</a>
-        <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
-        <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria</a>
-        <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios Gerais</a>
-      </div>
-    </div>
-
-    <div class="duplo">
-
-      <div class="admin-block">
-        <h3 class="section-title">
-          <i class="fa-solid fa-user-check"></i> Usuários Pendentes
-        </h3>
-
-        <div class="lista-pendentes" id="listaUsuarios">
-          <div class="vazio">Carregando usuários...</div>
-        </div>
-      </div>
-
-      <div class="admin-block">
-        <h3 class="section-title">
-          <i class="fa-solid fa-camera"></i> Fotógrafos Pendentes
-        </h3>
-
-        <div class="lista-pendentes" id="listaFotografos">
-          <div class="vazio">Carregando fotógrafos...</div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="admin-block">
-      <h3 class="section-title">
-        <i class="fa-solid fa-newspaper"></i> Nova Notícia
-      </h3>
-
-      <div class="form-grid">
-        <input id="tituloNoticia" placeholder="Título da notícia">
-        <textarea id="textoNoticia" placeholder="Conteúdo da notícia"></textarea>
-        <input id="imagemNoticia" placeholder="URL da imagem (opcional)">
-
-        <button class="btn-full btn-gold" onclick="postarNoticia()">
-          <i class="fa-solid fa-paper-plane"></i> Publicar Notícia
-        </button>
-      </div>
-    </div>
-
-    <div class="footer-note">
-      Painel administrativo da Liga Goiana de Futebol de Base
-    </div>
-
+  <div class="loading">
+    <i class="fa-solid fa-spinner fa-spin"></i><br>
+    Carregando jogador...
   </div>
 
 </div>
 
-<script>
-const sidebar = document.getElementById("sidebar");
-const sidebarOverlay = document.getElementById("sidebarOverlay");
-const menuToggle = document.getElementById("menuToggle");
-const sidebarClose = document.getElementById("sidebarClose");
-
-menuToggle.onclick = () => {
-  sidebar.classList.add("open");
-  sidebarOverlay.classList.add("show");
-};
-
-sidebarClose.onclick = fecharSidebar;
-sidebarOverlay.onclick = fecharSidebar;
-
-function fecharSidebar(){
-  sidebar.classList.remove("open");
-  sidebarOverlay.classList.remove("show");
-}
-</script>
-
 <script type="module">
-import { auth, db } from "./firebase.js";
 
-import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { renderMenu } from "./menu.js";
+import { db } from "./firebase.js";
 
 import {
   collection,
   getDocs,
-  doc,
   getDoc,
-  updateDoc,
-  addDoc,
-  setDoc,
-  serverTimestamp
+  doc
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-const statusInfo = document.getElementById("statusInfo");
-const statusErro = document.getElementById("statusErro");
-const painel = document.getElementById("painelConteudo");
+renderMenu("jogadores");
 
-function info(t){
-  statusInfo.style.display="block";
-  statusInfo.innerText=t;
-  statusErro.style.display="none";
+const app = document.getElementById("app");
+const id = new URLSearchParams(location.search).get("id");
+
+let jogador = null;
+let jogos = [];
+let sumulas = [];
+
+function val(obj,chaves,f=""){
+  for(const c of chaves){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== ""){
+      return obj[c];
+    }
+  }
+  return f;
 }
 
-function erro(t){
-  statusInfo.style.display="none";
-  statusErro.style.display="block";
-  statusErro.innerText=t;
+function n(t){
+  return String(t || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .trim();
 }
 
-function normalizar(t){
-  return String(t||"").toLowerCase().trim()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+function nomeJogador(j){
+  return val(j,["nome","nomeCompleto","jogador"],"Jogador");
 }
 
-async function validar(user){
-  const snap = await getDoc(doc(db,"usuarios",user.uid));
-
-  if(!snap.exists()) return false;
-
-  const d = snap.data();
-
-  const tipo = normalizar(d.tipoUsuario || d.tipo || d.perfil);
-  const aprovado = d.aprovado === true;
-  const autorizado = d.autorizado === true;
-
-  return tipo === "admin" && aprovado && autorizado;
+function fotoJogador(j){
+  return val(j,["foto","imagem","avatar","fotoUrl"],"logo-liga.jfif");
 }
 
-async function carregarTotais(){
-  const [
-    times,
-    jogadores,
-    tecnicos,
-    arbitros,
-    jogos,
-    sumulas
-  ] = await Promise.all([
-    getDocs(collection(db,"times")),
-    getDocs(collection(db,"jogadores")),
-    getDocs(collection(db,"tecnicos")),
-    getDocs(collection(db,"arbitros")),
-    getDocs(collection(db,"jogos")),
-    getDocs(collection(db,"sumulas"))
-  ]);
-
-  document.getElementById("totalTimes").innerText = times.size;
-  document.getElementById("totalJogadores").innerText = jogadores.size;
-  document.getElementById("totalTecnicos").innerText = tecnicos.size;
-  document.getElementById("totalArbitros").innerText = arbitros.size;
-  document.getElementById("totalJogos").innerText = jogos.size;
-  document.getElementById("totalSumulas").innerText = sumulas.size;
+function textoRegistro(v,f="-"){
+  if(v && typeof v === "object"){
+    return val(v,["nome","nomeTime","time","equipe","clube"],f);
+  }
+  return v || f;
 }
 
-function tipoUsuario(u){
-  return normalizar(u.tipoUsuario || u.tipo || u.perfil || u.funcao || "");
+function timeJogador(j){
+  return textoRegistro(val(j,["time","timeObj","equipe","clube"],""), val(j,["timeNome","nomeTime","equipeNome","clubeNome"],"-"));
 }
 
-function ehFotografo(u){
-  const tipo = tipoUsuario(u);
-  return tipo.includes("fotografo") || tipo.includes("fotógrafo") || u.fotografo === true;
-}
-
-function fotoUsuario(u){
-  return u.fotoPerfil || u.foto || u.avatar || "logo-liga.jfif";
-}
-
-async function carregarUsuarios(){
-  const lista = document.getElementById("listaUsuarios");
-  lista.innerHTML = "Carregando...";
-
-  const snap = await getDocs(collection(db,"usuarios"));
-
-  let html = "";
-
-  snap.forEach(d=>{
-    const u = d.data();
-
-    if(u.aprovado === true) return;
-    if(ehFotografo(u)) return;
-
-    html += `
-      <div class="usuario-card">
-        <div class="usuario-top">
-          <div>
-            <div class="usuario-nome">${u.nome || u.nomeCompleto || "-"}</div>
-            <div class="usuario-info">
-              ${u.email || "-"}<br>
-              ${u.tipoUsuario || u.tipo || u.perfil || ""}
-            </div>
-          </div>
-          <span class="tag">Pendente</span>
-        </div>
-
-        <div class="usuario-acoes">
-          <button class="btn-green" onclick="aprovar('${d.id}')">Aprovar</button>
-          <button class="btn-red" onclick="reprovar('${d.id}')">Reprovar</button>
-        </div>
-      </div>
-    `;
-  });
-
-  lista.innerHTML = html || "<div class='vazio'>Nenhum usuário pendente</div>";
-}
-
-async function carregarFotografos(){
-  const lista = document.getElementById("listaFotografos");
-  lista.innerHTML = "Carregando...";
-
-  const snapUsuarios = await getDocs(collection(db,"usuarios"));
-  const snapFotografos = await getDocs(collection(db,"fotografos"));
-
-  const mapa = new Map();
-
-  snapUsuarios.forEach(d=>{
-    const u = {id:d.id,...d.data()};
-    if(ehFotografo(u)) mapa.set(d.id,u);
-  });
-
-  snapFotografos.forEach(d=>{
-    const f = {id:d.id,...d.data()};
-    mapa.set(d.id,{...(mapa.get(d.id) || {}),...f,id:d.id});
-  });
-
-  let html = "";
-
-  [...mapa.values()].forEach(f=>{
-    const aprovado = f.aprovado === true || f.status === "ativo" || f.status === "aprovado";
-    const bloqueado = f.status === "bloqueado" || f.status === "reprovado";
-    const pendente = !aprovado && !bloqueado;
-
-    if(!pendente) return;
-
-    html += `
-      <div class="usuario-card">
-        <div class="usuario-top">
-          <div class="usuario-top-left">
-            <img class="usuario-foto" src="${fotoUsuario(f)}" onerror="this.src='logo-liga.jfif'">
-            <div>
-              <div class="usuario-nome">${f.nome || f.nomeCompleto || "-"}</div>
-              <div class="usuario-info">
-                ${f.email || "-"}<br>
-                Cidade: ${f.cidade || "-"}<br>
-                WhatsApp: ${f.whatsapp || f.telefone || "-"}<br>
-                Instagram: ${f.instagram || "-"}<br>
-                Portfólio: ${f.portfolio || f.site || "-"}<br>
-                Especialidade: ${f.especialidade || "-"}
-              </div>
-            </div>
-          </div>
-          <span class="tag">Fotógrafo pendente</span>
-        </div>
-
-        <div class="usuario-acoes acoes-3">
-          <button class="btn-green" onclick="aprovarFotografo('${f.id}')">Aprovar</button>
-          <button class="btn-blue" onclick="fotografoOficial('${f.id}')">Oficial</button>
-          <button class="btn-red" onclick="reprovarFotografo('${f.id}')">Reprovar</button>
-          <button class="btn-red" onclick="bloquearFotografo('${f.id}')">Bloquear</button>
-          <button class="btn-blue" onclick="abrirPerfilFotografo('${f.id}')">Perfil</button>
-        </div>
-      </div>
-    `;
-  });
-
-  lista.innerHTML = html || "<div class='vazio'>Nenhum fotógrafo pendente</div>";
-}
-
-async function sincronizarArbitro(id, usuario, dadosExtras={}){
-  await setDoc(doc(db,"arbitros",id),{
-    usuarioId:id,
-    uid:id,
-
-    nome:usuario.nome || usuario.nomeCompleto || "",
-    nomeCompleto:usuario.nomeCompleto || usuario.nome || "",
-
-    email:usuario.email || "",
-    cpf:usuario.cpf || "",
-
-    cidade:usuario.cidade || "",
-    telefone:usuario.telefone || usuario.whatsapp || "",
-    whatsapp:usuario.whatsapp || usuario.telefone || "",
-
-    nascimento:usuario.nascimento || usuario.dataNascimento || "",
-    dataNascimento:usuario.dataNascimento || usuario.nascimento || "",
-
-    foto:usuario.foto || usuario.fotoPerfil || "logo-liga.jfif",
-
-    categoria:usuario.categoria || usuario.categoriaFuncao || "",
-    categorias:usuario.categoria ? [usuario.categoria] : (usuario.categorias || ["Todas"]),
-
-    tipo:"arbitro",
-    perfil:"arbitro",
-    tipoUsuario:"arbitro",
-
-    aprovado:true,
-    autorizado:true,
-    status:"ativo",
-
-    jogos:usuario.jogos || 0,
-    amarelos:usuario.amarelos || 0,
-    vermelhos:usuario.vermelhos || 0,
-
-    criadoEm:usuario.criadoEm || serverTimestamp(),
-    atualizadoEm:serverTimestamp(),
-
-    ...dadosExtras
-  },{merge:true});
-}
-
-window.aprovar = async function(id){
-  const snap = await getDoc(doc(db,"usuarios",id));
-
-  if(!snap.exists()) return;
-
-  const usuario = snap.data();
-
-  const tipo = normalizar(
-    usuario.tipoUsuario ||
-    usuario.tipo ||
-    usuario.perfil ||
-    ""
+function timeIdJogador(j){
+  return String(
+    val(j,["timeId","equipeId","clubeId","idTime"],"") ||
+    (val(j,["time","timeObj","equipe","clube"],null)?.id || "") ||
+    (val(j,["time","timeObj","equipe","clube"],null)?.timeId || "")
   );
-
-  const dadosAtualizados = {
-    aprovado:true,
-    autorizado:true,
-    status:"ativo"
-  };
-
-  await updateDoc(doc(db,"usuarios",id),dadosAtualizados);
-
-  if(tipo === "arbitro"){
-    await sincronizarArbitro(id,usuario,dadosAtualizados);
-  }
-
-  await carregarUsuarios();
-  await carregarTotais();
-};
-
-window.reprovar = async function(id){
-  await updateDoc(doc(db,"usuarios",id),{
-    aprovado:false,
-    autorizado:false,
-    status:"bloqueado"
-  });
-
-  carregarUsuarios();
-};
-
-async function sincronizarFotografo(id, dadosExtras={}){
-  const userSnap = await getDoc(doc(db,"usuarios",id));
-  const base = userSnap.exists() ? userSnap.data() : {};
-
-  await updateDoc(doc(db,"usuarios",id),dadosExtras);
-
-  await setDoc(doc(db,"fotografos",id),{
-    uid:id,
-    nome:base.nome || base.nomeCompleto || "",
-    email:base.email || "",
-    cpf:base.cpf || "",
-    whatsapp:base.whatsapp || base.telefone || "",
-    telefone:base.telefone || base.whatsapp || "",
-    cidade:base.cidade || "",
-    instagram:base.instagram || "",
-    portfolio:base.portfolio || base.site || "",
-    site:base.site || base.portfolio || "",
-    especialidade:base.especialidade || "",
-    fotoPerfil:base.fotoPerfil || base.foto || "",
-    foto:base.foto || base.fotoPerfil || "",
-    tipoUsuario:"fotografo",
-    tipo:"fotografo",
-    perfil:"fotografo",
-    ...dadosExtras
-  },{merge:true});
 }
 
-window.aprovarFotografo = async function(id){
-  await sincronizarFotografo(id,{
-    aprovado:true,
-    autorizado:true,
-    status:"ativo",
-    fotografo:true,
-    fotografoOficial:false
+function nomeTimeRegistroJogo(j,lado){
+  const obj = lado === "A"
+    ? val(j,["timeA","mandante","timeMandante"],null)
+    : val(j,["timeB","visitante","timeVisitante"],null);
+
+  const direto = lado === "A"
+    ? val(j,["timeANome","nomeTimeA","mandanteNome","timeMandanteNome"],"")
+    : val(j,["timeBNome","nomeTimeB","visitanteNome","timeVisitanteNome"],"");
+
+  return textoRegistro(obj,direto || (lado === "A" ? "Time A" : "Time B"));
+}
+
+function idTimeRegistroJogo(j,lado){
+  const obj = lado === "A"
+    ? val(j,["timeA","mandante","timeMandante"],null)
+    : val(j,["timeB","visitante","timeVisitante"],null);
+
+  const direto = lado === "A"
+    ? val(j,["timeAId","mandanteId","timeMandanteId"],"")
+    : val(j,["timeBId","visitanteId","timeVisitanteId"],"");
+
+  return String(direto || obj?.id || obj?.timeId || "");
+}
+
+function jogoDoTimeDoJogador(j){
+  const meuNome = n(timeJogador(jogador));
+  const meuId = timeIdJogador(jogador);
+
+  const idA = idTimeRegistroJogo(j,"A");
+  const idB = idTimeRegistroJogo(j,"B");
+  const nomeA = n(nomeTimeRegistroJogo(j,"A"));
+  const nomeB = n(nomeTimeRegistroJogo(j,"B"));
+
+  return (meuId && (idA === meuId || idB === meuId)) || nomeA === meuNome || nomeB === meuNome;
+}
+
+function jogadorEhDoLado(j,lado){
+  const meuNome = n(timeJogador(jogador));
+  const meuId = timeIdJogador(jogador);
+
+  const idLado = idTimeRegistroJogo(j,lado);
+  const nomeLado = n(nomeTimeRegistroJogo(j,lado));
+
+  return (meuId && idLado === meuId) || nomeLado === meuNome;
+}
+
+function posicao(j){
+  return val(j,["posicao","funcao","função"],"-");
+}
+
+function categorias(j){
+  const cats = val(j,["categorias"],[]);
+  if(Array.isArray(cats) && cats.length) return cats;
+  const cat = val(j,["categoria","categoriaNome"],"");
+  return cat ? [cat] : [];
+}
+
+function mesmoJogador(item){
+  if(!item || !jogador) return false;
+
+  const ids = [
+    val(item,["id","uid"],""),
+    val(item,["jogadorId","idJogador","atletaId","playerId"],"")
+  ].map(v=>String(v || "")).filter(Boolean);
+
+  if(ids.includes(String(id || ""))) return true;
+
+  const cpfItem = n(val(item,["cpf","CPF"],""));
+  const cpfJogador = n(val(jogador,["cpf","CPF"],""));
+
+  if(cpfItem && cpfJogador && cpfItem === cpfJogador) return true;
+
+  const numeroItem = String(val(item,["numero","camisa","numeroCamisa"],"")).trim();
+  const numeroJogador = String(val(jogador,["numero","camisa","numeroCamisa"],"")).trim();
+
+  const nomeItem = n(val(item,["nome","jogador","nomeJogador","jogadorNome","atleta"],""));
+  const nomeBase = n(nomeJogador(jogador));
+
+  if(nomeItem && nomeBase && nomeItem === nomeBase) return true;
+
+  return false;
+}
+
+function finalizado(j){
+  return j.finalizado === true ||
+    j.encerrado === true ||
+    j.sumulaFinalizada === true ||
+    n(val(j,["status"],"")) === "finalizado";
+}
+
+
+function dataMs(v){
+  if(!v) return 0;
+  if(typeof v.toDate === "function") return v.toDate().getTime();
+  const d = new Date(v).getTime();
+  return Number.isFinite(d) ? d : 0;
+}
+
+function dataBR(v){
+  if(!v) return "-";
+  if(typeof v.toDate === "function") v = v.toDate();
+  const d = new Date(v);
+  if(!isNaN(d.getTime())){
+    return d.toLocaleDateString("pt-BR");
+  }
+  return String(v);
+}
+
+function statusFinalizadoRegistro(j){
+  const st = n(val(j,["status","sumulaStatus"],""));
+  return finalizado(j) || st.includes("final");
+}
+
+
+function ladoDoJogadorNaSumula(s){
+  const listasA = [
+    ...(Array.isArray(s.jogadoresA) ? s.jogadoresA : []),
+    ...(Array.isArray(s.escalacaoA) ? s.escalacaoA : [])
+  ];
+
+  const listasB = [
+    ...(Array.isArray(s.jogadoresB) ? s.jogadoresB : []),
+    ...(Array.isArray(s.escalacaoB) ? s.escalacaoB : [])
+  ];
+
+  if(listasA.some(p=>mesmoJogador(p))) return "A";
+  if(listasB.some(p=>mesmoJogador(p))) return "B";
+
+  const meuTime = n(timeJogador(jogador));
+  const timeA = n(nomeTimeRegistroJogo(s,"A"));
+  const timeB = n(nomeTimeRegistroJogo(s,"B"));
+
+  if(meuTime && timeA === meuTime) return "A";
+  if(meuTime && timeB === meuTime) return "B";
+
+  return "";
+}
+
+function eventoEhDoLado(ev,lado,timeNome){
+  const ladoEv = n(val(ev,["time","lado","equipe"],""));
+  const timeEv = n(val(ev,["timeNome","equipeNome"],""));
+
+  return ladoEv === n(lado) ||
+    ladoEv === n(timeNome) ||
+    timeEv === n(timeNome);
+}
+
+function todasListasDeGols(s){
+  return [
+    ...(Array.isArray(s.gols) ? s.gols : []),
+    ...(Array.isArray(s.golsLista) ? s.golsLista : []),
+    ...(Array.isArray(s.golsA) ? s.golsA.map(g=>({...g,time:"A"})) : []),
+    ...(Array.isArray(s.golsB) ? s.golsB.map(g=>({...g,time:"B"})) : [])
+  ];
+}
+
+function todasListasDeCartoes(s){
+  return [
+    ...(Array.isArray(s.cartoes) ? s.cartoes : []),
+    ...(Array.isArray(s.cartoesLista) ? s.cartoesLista : []),
+    ...(Array.isArray(s.cartoesA) ? s.cartoesA.map(c=>({...c,time:"A"})) : []),
+    ...(Array.isArray(s.cartoesB) ? s.cartoesB.map(c=>({...c,time:"B"})) : [])
+  ];
+}
+
+function todasListasDeAssistencias(s){
+  return [
+    ...(Array.isArray(s.assistencias) ? s.assistencias : []),
+    ...(Array.isArray(s.assistenciasLista) ? s.assistenciasLista : []),
+    ...(Array.isArray(s.assistenciasA) ? s.assistenciasA.map(a=>({...a,time:"A"})) : []),
+    ...(Array.isArray(s.assistenciasB) ? s.assistenciasB.map(a=>({...a,time:"B"})) : [])
+  ];
+}
+
+function golsPlacarA(reg){
+  return Number(val(reg,["golsA","placarA","golsMandante"],0));
+}
+
+function golsPlacarB(reg){
+  return Number(val(reg,["golsB","placarB","golsVisitante"],0));
+}
+
+function jogoIdRegistro(reg){
+  return String(val(reg,["jogoId","id"], reg.id || ""));
+}
+
+
+function calcular(){
+
+  let jogosCount = 0;
+  let gols = 0;
+  let assistencias = 0;
+  let amarelos = 0;
+  let vermelhos = 0;
+  let v = 0;
+  let e = 0;
+  let d = 0;
+
+  const recentesMap = new Map();
+  const partidasContadas = new Set();
+  const resultadosContados = new Set();
+
+  sumulas.forEach(s=>{
+
+    const ladoJogador = ladoDoJogadorNaSumula(s);
+
+    const elenco = [
+      ...(Array.isArray(s.escalacao) ? s.escalacao : []),
+      ...(Array.isArray(s.jogadores) ? s.jogadores : []),
+      ...(Array.isArray(s.jogadoresA) ? s.jogadoresA.map(p=>({...p,time:"A"})) : []),
+      ...(Array.isArray(s.jogadoresB) ? s.jogadoresB.map(p=>({...p,time:"B"})) : []),
+      ...(Array.isArray(s.escalacaoA) ? s.escalacaoA.map(p=>({...p,time:"A"})) : []),
+      ...(Array.isArray(s.escalacaoB) ? s.escalacaoB.map(p=>({...p,time:"B"})) : [])
+    ];
+
+    const participou = elenco.some(p=>mesmoJogador(p));
+
+    if(participou){
+      const partidaId = jogoIdRegistro(s);
+      if(partidaId && !partidasContadas.has(partidaId)){
+        partidasContadas.add(partidaId);
+        jogosCount++;
+      }
+      recentesMap.set(partidaId || s.id || Math.random(), s);
+    }
+
+    todasListasDeGols(s).forEach(ev=>{
+      if(!mesmoJogador(ev)) return;
+
+      const tipo = n(val(ev,["tipo","evento","acao"],"gol"));
+
+      if(!tipo.includes("contra")){
+        gols++;
+      }
+    });
+
+    todasListasDeAssistencias(s).forEach(ev=>{
+      if(mesmoJogador(ev)) assistencias++;
+    });
+
+    todasListasDeCartoes(s).forEach(ev=>{
+      if(!mesmoJogador(ev)) return;
+
+      const tipo = n(val(ev,["tipo","cartao","cor"],""));
+
+      if(tipo.includes("verm")) vermelhos++;
+      else amarelos++;
+    });
+
+    if(ladoJogador && statusFinalizadoRegistro(s)){
+      const partidaId = jogoIdRegistro(s);
+
+      if(partidaId && !resultadosContados.has(partidaId)){
+        resultadosContados.add(partidaId);
+
+        const ga = golsPlacarA(s);
+        const gb = golsPlacarB(s);
+
+        if(ladoJogador === "A"){
+          if(ga > gb) v++;
+          else if(ga === gb) e++;
+          else d++;
+        }
+
+        if(ladoJogador === "B"){
+          if(gb > ga) v++;
+          else if(gb === ga) e++;
+          else d++;
+        }
+      }
+    }
   });
 
-  await carregarFotografos();
-};
+  jogos.forEach(j=>{
 
-window.fotografoOficial = async function(id){
-  await sincronizarFotografo(id,{
-    aprovado:true,
-    autorizado:true,
-    status:"ativo",
-    fotografo:true,
-    fotografoOficial:true
+    if(!jogoDoTimeDoJogador(j)) return;
+
+    recentesMap.set(j.id || Math.random(), j);
+
+    if(statusFinalizadoRegistro(j)){
+
+      const partidaId = jogoIdRegistro(j);
+
+      if(partidaId && resultadosContados.has(partidaId)) return;
+      if(partidaId) resultadosContados.add(partidaId);
+
+      const ga = golsPlacarA(j);
+      const gb = golsPlacarB(j);
+
+      if(jogadorEhDoLado(j,"A")){
+        if(ga > gb) v++;
+        else if(ga === gb) e++;
+        else d++;
+      }else if(jogadorEhDoLado(j,"B")){
+        if(gb > ga) v++;
+        else if(gb === ga) e++;
+        else d++;
+      }
+    }
   });
 
-  await carregarFotografos();
-};
+  const pontos = (v * 3) + e;
+  const total = v + e + d;
 
-window.reprovarFotografo = async function(id){
-  await sincronizarFotografo(id,{
-    aprovado:false,
-    autorizado:false,
-    status:"reprovado",
-    fotografo:true,
-    fotografoOficial:false
-  });
+  const aproveitamento = total
+    ? Math.round((pontos / (total * 3)) * 100)
+    : 0;
 
-  await carregarFotografos();
-};
+  const recentes = Array.from(recentesMap.values())
+    .sort((a,b)=>dataMs(val(b,["dataHora","data","dataJogo","finalizadaEm"],"")) - dataMs(val(a,["dataHora","data","dataJogo","finalizadaEm"],"")))
+    .slice(0,8);
 
-window.bloquearFotografo = async function(id){
-  await sincronizarFotografo(id,{
-    aprovado:false,
-    autorizado:false,
-    status:"bloqueado",
-    fotografo:true,
-    fotografoOficial:false
-  });
+  return {
+    jogos:jogosCount || Number(val(jogador,["jogos","partidas","participacoes"],0)),
+    gols:gols || Number(val(jogador,["gols","totalGols"],0)),
+    assistencias:assistencias || Number(val(jogador,["assistencias","totalAssistencias"],0)),
+    amarelos:amarelos || Number(val(jogador,["amarelos","cartoesAmarelos"],0)),
+    vermelhos:vermelhos || Number(val(jogador,["vermelhos","cartoesVermelhos"],0)),
+    v,e,d,
+    aproveitamento,
+    suspenso:
+      vermelhos > 0 ||
+      amarelos >= 3 ||
+      jogador.suspenso === true,
+    recentes
+  };
+}
 
-  await carregarFotografos();
-};
+function jogoNome(j){
+  const a = nomeTimeRegistroJogo(j,"A");
+  const b = nomeTimeRegistroJogo(j,"B");
+  return `${a} x ${b}`;
+}
 
-window.abrirPerfilFotografo = function(id){
-  window.open("fotografos.html?id="+encodeURIComponent(id),"_blank");
-};
+function render(){
 
-window.postarNoticia = async function(){
-  const titulo = document.getElementById("tituloNoticia").value.trim();
-  const texto = document.getElementById("textoNoticia").value.trim();
-  const imagem = document.getElementById("imagemNoticia").value.trim();
-
-  if(!titulo){
-    alert("Digite o título");
+  if(!jogador){
+    app.innerHTML = `<div class="loading">Jogador não encontrado.</div>`;
     return;
   }
 
-  await addDoc(collection(db,"noticias"),{
-    titulo,
-    texto,
-    imagem,
-    data:new Date().toISOString()
-  });
+  const s = calcular();
 
-  alert("Notícia publicada!");
+  app.innerHTML = `
+    <section class="hero">
 
-  document.getElementById("tituloNoticia").value="";
-  document.getElementById("textoNoticia").value="";
-  document.getElementById("imagemNoticia").value="";
-};
+      <img class="foto" src="${fotoJogador(jogador)}" onerror="this.src='logo-liga.jfif'">
 
-window.logout = function(){
-  signOut(auth).then(()=>{
-    window.location.href="login.html";
-  });
-};
+      <div>
 
-onAuthStateChanged(auth, async user=>{
-  if(!user){
-    location.href="login.html";
+        <h1>${nomeJogador(jogador)}</h1>
+
+        <p>
+          Jogador oficial da Liga Goiana de Futebol de Base.<br>
+          Time: ${timeJogador(jogador)}<br>
+          Posição: ${posicao(jogador)}<br>
+          Camisa: ${val(jogador,["numero","camisa","numeroCamisa"],"-")}
+        </p>
+
+        <div class="tags">
+
+          <span class="tag">${timeJogador(jogador)}</span>
+
+          ${categorias(jogador).map(c=>`
+            <span class="tag">${c}</span>
+          `).join("")}
+
+          ${
+            s.suspenso
+            ? `<span class="tag red">Suspenso</span>`
+            : `<span class="tag ok">Liberado</span>`
+          }
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="stats">
+
+      <div class="stat">
+        <strong>${s.jogos}</strong>
+        <span>JOGOS</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.gols}</strong>
+        <span>GOLS</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.assistencias}</strong>
+        <span>ASSIST.</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.amarelos}</strong>
+        <span>AMARELOS</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.vermelhos}</strong>
+        <span>VERMELHOS</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.v}</strong>
+        <span>VITÓRIAS</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.e}</strong>
+        <span>EMPATES</span>
+      </div>
+
+      <div class="stat">
+        <strong>${s.d}</strong>
+        <span>DERROTAS</span>
+      </div>
+
+    </section>
+
+    <section class="grid">
+
+      <div class="panel">
+
+        <h2><i class="fa-solid fa-chart-line"></i> Estatísticas</h2>
+
+        <div class="panel-body">
+
+          <div class="item">
+            <span>Aproveitamento</span>
+            <strong>${s.aproveitamento}%</strong>
+          </div>
+
+          <div class="item">
+            <span>Status</span>
+            <strong>${s.suspenso ? "Suspenso" : "Liberado"}</strong>
+          </div>
+
+          <div class="item">
+            <span>Posição</span>
+            <strong>${posicao(jogador)}</strong>
+          </div>
+
+          <div class="item">
+            <span>Categoria</span>
+            <strong>${categorias(jogador).join(", ")}</strong>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="panel">
+
+        <h2><i class="fa-solid fa-calendar-days"></i> Jogos recentes</h2>
+
+        <div class="panel-body">
+
+          ${
+            s.recentes.length
+            ? s.recentes.map(j=>`
+              <div class="jogo">
+
+                <strong>${jogoNome(j)}</strong>
+
+                <p>
+                  Campeonato: ${val(j,["campeonato","campeonatoNome"],"-")}<br>
+                  Categoria: ${val(j,["categoria"],"-")}<br>
+                  Data: ${dataBR(val(j,["dataHora","data","dataJogo"],""))}<br>
+                  Status: ${val(j,["status","sumulaStatus"],"-")}
+                </p>
+
+              </div>
+            `).join("")
+            : `<div class="loading">Nenhum jogo encontrado.</div>`
+          }
+
+        </div>
+
+      </div>
+
+    </section>
+  `;
+}
+
+async function carregar(){
+
+  if(!id){
+    app.innerHTML = `<div class="loading">ID do jogador não informado.</div>`;
     return;
   }
 
-  info("Validando acesso...");
+  const jogadorSnap = await getDoc(doc(db,"jogadores",id));
 
-  const ok = await validar(user);
+  if(jogadorSnap.exists()){
 
-  if(!ok){
-    erro("Sem permissão");
-    setTimeout(()=>location.href="index.html",1500);
-    return;
+    jogador = {
+      id:jogadorSnap.id,
+      ...jogadorSnap.data()
+    };
   }
 
-  await carregarTotais();
-  await carregarUsuarios();
-  await carregarFotografos();
+  const jogosSnap = await getDocs(collection(db,"jogos"));
 
-  statusInfo.style.display="none";
-  painel.style.display="block";
-});
+  jogos = jogosSnap.docs.map(d=>({
+    id:d.id,
+    ...d.data()
+  }));
+
+  const sumulasSnap = await getDocs(collection(db,"sumulas"));
+
+  sumulas = sumulasSnap.docs.map(d=>({
+    id:d.id,
+    ...d.data()
+  }));
+
+  render();
+}
+
+carregar();
+
 </script>
 
 </body>
