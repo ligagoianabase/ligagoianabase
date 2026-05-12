@@ -3,14 +3,330 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Cadastro - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#061427;
+  --card:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --gold-line:rgba(247,198,0,.42);
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:980px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+a{color:inherit;text-decoration:none}
+button,input,select{font-family:inherit}
+
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
+
+.header{
+  padding:22px 0;
+  text-align:center;
+}
+
+.header h1{
+  color:var(--gold);
+  font-size:28px;
+  font-weight:900;
+}
+
+.header p{
+  color:var(--muted);
+  margin-top:6px;
+  font-size:14px;
+}
+
+.card{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.13), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.97), rgba(8,23,44,.98));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:22px;
+  box-shadow:var(--shadow);
+  margin-bottom:28px;
+}
+
+.top-actions{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+
+.btn-top{
+  background:#0d2346;
+  border:1px solid rgba(255,255,255,.10);
+  color:#fff;
+  padding:10px 14px;
+  border-radius:12px;
+  font-weight:900;
+}
+
+.btn-top:hover{
+  color:#111;
+  background:var(--gold);
+}
+
+.form-title{
+  color:var(--gold);
+  font-size:22px;
+  font-weight:900;
+  margin-bottom:14px;
+  text-align:center;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.full{grid-column:1/-1}
+
+label{
+  display:block;
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+
+input,select{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:12px;
+  background:#f5f7fb;
+  color:#111;
+  font-size:14px;
+  outline:none;
+}
+
+input:focus,select:focus{
+  outline:2px solid rgba(247,198,0,.55);
+}
+
+.aviso{
+  margin-top:12px;
+  background:rgba(247,198,0,.10);
+  border:1px solid rgba(247,198,0,.22);
+  color:var(--muted);
+  padding:12px;
+  border-radius:12px;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.btn{
+  flex:1;
+  min-width:180px;
+  padding:13px 16px;
+  border:none;
+  border-radius:12px;
+  font-weight:900;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+.btn-main{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.btn-sec{
+  background:#1a3f73;
+  color:#fff;
+}
+
+.btn:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+
+.msg{
+  display:none;
+  margin-top:14px;
+  padding:12px;
+  border-radius:12px;
+  font-weight:800;
+  font-size:14px;
+  line-height:1.5;
+}
+
+.msg.ok{
+  display:block;
+  background:rgba(27,127,53,.16);
+  border:1px solid rgba(27,127,53,.45);
+  color:#d8ffe3;
+}
+
+.msg.erro{
+  display:block;
+  background:rgba(217,65,65,.16);
+  border:1px solid rgba(217,65,65,.45);
+  color:#ffd6d6;
+}
+
+@media(max-width:700px){
+  .form-grid{grid-template-columns:1fr}
+  .header h1{font-size:22px}
+  .card{padding:16px}
+}
+</style>
 </head>
+
 <body>
-<!-- ARQUIVO GERADO -->
-<script>
+
+<header class="header">
+  <div class="wrap">
+    <h1>LIGA GOIANA DE FUTEBOL DE BASE</h1>
+    <p>Cadastro de usuário</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="top-actions">
+    <a class="btn-top" href="index.html"><i class="fa-solid fa-house"></i> Página Inicial</a>
+    <a class="btn-top" href="login.html"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+  </div>
+
+  <section class="card">
+    <div class="form-title">Criar Conta</div>
+
+    <div class="form-grid">
+      <div>
+        <label>Nome completo</label>
+        <input id="nome" placeholder="Digite seu nome">
+      </div>
+
+      <div>
+        <label>CPF</label>
+        <input id="cpf" placeholder="Digite seu CPF">
+      </div>
+
+      <div>
+        <label>E-mail</label>
+        <input id="email" type="email" placeholder="email@exemplo.com">
+      </div>
+
+      <div>
+        <label>Telefone / WhatsApp</label>
+        <input id="telefone" placeholder="Ex: 5562999999999">
+      </div>
+
+      <div>
+        <label>Senha</label>
+        <input id="senha" type="password" placeholder="Mínimo 6 caracteres">
+      </div>
+
+      <div>
+        <label>Confirmar senha</label>
+        <input id="confirmarSenha" type="password" placeholder="Repita a senha">
+      </div>
+
+      <div class="full">
+        <label>Tipo de usuário</label>
+        <select id="tipoUsuario">
+          <option value="">Selecione</option>
+          <option value="torcedor">Torcedor</option>
+          <option value="pai_atleta">Pai de atleta</option>
+          <option value="jogador">Jogador</option>
+          <option value="tecnico">Técnico</option>
+          <option value="arbitro">Árbitro</option>
+          <option value="assistente">Assistente</option>
+          <option value="fotografo">Fotógrafo</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Time vinculado</label>
+        <input id="time" placeholder="Opcional">
+      </div>
+
+      <div>
+        <label>Categoria</label>
+        <input id="categoria" placeholder="Ex: Sub-15">
+      </div>
+    </div>
+
+    <div class="aviso">
+      Torcedor e pai de atleta entram direto como ativos. Jogador, técnico, árbitro, assistente e fotógrafo ficam pendentes de aprovação.
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-main" id="btnCadastrar" type="button" onclick="cadastrarUsuario()">
+        <i class="fa-solid fa-user-plus"></i> Criar Conta
+      </button>
+
+      <button class="btn btn-sec" type="button" onclick="limparFormulario()">
+        <i class="fa-solid fa-broom"></i> Limpar
+      </button>
+    </div>
+
+    <div id="mensagem" class="msg"></div>
+  </section>
+
+</main>
+
+<script type="module">
+import { auth, db } from "./firebase.js";
+
+import {
+  createUserWithEmailAndPassword,
+  updateProfile
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+import {
+  doc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+function txt(v){
+  return String(v || "").trim();
+}
+
+function limparNumero(v){
+  return String(v || "").replace(/\D/g,"");
+}
+
 function regrasDePermissao(tipoUsuario){
 
-  // ENTRAM DIRETO
   if(
     tipoUsuario === "torcedor" ||
     tipoUsuario === "pai_atleta"
@@ -22,13 +338,120 @@ function regrasDePermissao(tipoUsuario){
     };
   }
 
-  // TODOS OS OUTROS FICAM PENDENTES
   return {
     autorizado:false,
     aprovado:false,
     status:"pendente"
   };
 }
+
+function mostrarMensagem(tipo,texto){
+  const msg = document.getElementById("mensagem");
+  msg.className = "msg " + tipo;
+  msg.innerHTML = texto;
+}
+
+window.limparFormulario = function(){
+  document.getElementById("nome").value = "";
+  document.getElementById("cpf").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("telefone").value = "";
+  document.getElementById("senha").value = "";
+  document.getElementById("confirmarSenha").value = "";
+  document.getElementById("tipoUsuario").value = "";
+  document.getElementById("time").value = "";
+  document.getElementById("categoria").value = "";
+};
+
+window.cadastrarUsuario = async function(){
+
+  const btn = document.getElementById("btnCadastrar");
+
+  try{
+
+    btn.disabled = true;
+    btn.innerHTML = "Criando conta...";
+
+    const nome = txt(document.getElementById("nome").value);
+    const cpf = limparNumero(document.getElementById("cpf").value);
+    const email = txt(document.getElementById("email").value).toLowerCase();
+    const telefone = limparNumero(document.getElementById("telefone").value);
+    const senha = document.getElementById("senha").value;
+    const confirmarSenha = document.getElementById("confirmarSenha").value;
+    const tipoUsuario = document.getElementById("tipoUsuario").value;
+    const time = txt(document.getElementById("time").value);
+    const categoria = txt(document.getElementById("categoria").value);
+
+    if(!nome) throw new Error("Digite seu nome.");
+    if(!email) throw new Error("Digite seu e-mail.");
+    if(!senha || senha.length < 6) throw new Error("Senha mínima 6 caracteres.");
+    if(senha !== confirmarSenha) throw new Error("As senhas não conferem.");
+    if(!tipoUsuario) throw new Error("Selecione o tipo de usuário.");
+
+    const permissao = regrasDePermissao(tipoUsuario);
+
+    const cred = await createUserWithEmailAndPassword(auth,email,senha);
+
+    await updateProfile(cred.user,{
+      displayName:nome
+    });
+
+    const dadosUsuario = {
+      uid:cred.user.uid,
+      nome,
+      cpf,
+      email,
+      telefone,
+      whatsapp:telefone,
+      tipoUsuario,
+      time,
+      categoria,
+      foto:"",
+      ...permissao,
+      criadoEm:serverTimestamp()
+    };
+
+    await setDoc(doc(db,"usuarios",cred.user.uid),dadosUsuario);
+
+    mostrarMensagem(
+      "ok",
+      permissao.status === "ativo"
+      ? "Conta criada com sucesso!"
+      : "Conta criada e aguardando aprovação."
+    );
+
+    setTimeout(()=>{
+      location.href = "login.html";
+    },1500);
+
+  }catch(e){
+
+    console.error(e);
+
+    let erro = e.message || "Erro ao criar conta.";
+
+    if(e.code === "auth/email-already-in-use"){
+      erro = "Esse e-mail já está cadastrado.";
+    }
+
+    if(e.code === "auth/invalid-email"){
+      erro = "E-mail inválido.";
+    }
+
+    if(e.code === "auth/weak-password"){
+      erro = "Senha muito fraca.";
+    }
+
+    mostrarMensagem("erro",erro);
+
+  }finally{
+
+    btn.disabled = false;
+    btn.innerHTML = `<i class="fa-solid fa-user-plus"></i> Criar Conta`;
+
+  }
+};
 </script>
+
 </body>
 </html>
