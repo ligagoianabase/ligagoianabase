@@ -517,9 +517,17 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
+
+const storage = getStorage();
+
 let arbitrosCache = [];
 let fotoAtual = "";
-let fotoArquivoBase64 = "";
 
 function txt(v){
   return String(v || "").trim();
@@ -544,9 +552,8 @@ window.previewFotoArquivo = function(){
   const leitor = new FileReader();
 
   leitor.onload = function(e){
-    fotoArquivoBase64 = e.target.result;
     document.getElementById("previewFotoBox").style.display = "flex";
-    document.getElementById("previewFotoImg").src = fotoArquivoBase64;
+    document.getElementById("previewFotoImg").src = e.target.result;
     document.getElementById("previewFotoTexto").textContent = arquivo.name;
   };
 
@@ -554,9 +561,16 @@ window.previewFotoArquivo = function(){
 };
 
 async function uploadFotoSeExistir(){
+  const arquivo = document.getElementById("fotoArquivo").files[0];
   const fotoUrlManual = txt(document.getElementById("foto").value);
 
-  if(fotoArquivoBase64) return fotoArquivoBase64;
+  if(arquivo){
+    const nomeArquivo = `arbitros/${Date.now()}-${arquivo.name}`;
+    const referencia = ref(storage,nomeArquivo);
+    await uploadBytes(referencia,arquivo);
+    return await getDownloadURL(referencia);
+  }
+
   if(fotoUrlManual) return fotoUrlManual;
 
   return fotoAtual || "logo-liga.jfif";
@@ -579,7 +593,6 @@ window.limparFormulario = function(){
   document.getElementById("previewFotoImg").src = "logo-liga.jfif";
   document.getElementById("previewFotoTexto").textContent = "Pré-visualização da foto";
   fotoAtual = "";
-  fotoArquivoBase64 = "";
 };
 
 window.salvarArbitro = async function(){
@@ -619,8 +632,6 @@ window.salvarArbitro = async function(){
     funcao:funcaoPrincipal,
     podeAtuarComo:["Árbitro Centro","Assistente","4º Árbitro"],
     foto,
-    fotoPerfil:foto,
-    fotoBase64:String(foto).startsWith("data:image") ? foto : "",
     atualizadoEm:serverTimestamp()
   };
 
@@ -657,12 +668,11 @@ window.editarArbitro = function(id){
   document.getElementById("whatsapp").value = a.whatsapp || "";
   document.getElementById("email").value = a.email || "";
   document.getElementById("funcaoPrincipal").value = a.funcaoPrincipal || a.funcao || "Árbitro Centro";
-  document.getElementById("foto").value = String(a.foto || "").startsWith("data:image") ? "" : (a.foto || "");
+  document.getElementById("foto").value = a.foto || "";
   document.getElementById("fotoArquivo").value = "";
   document.getElementById("tituloFormulario").textContent = "Editar Árbitro";
 
-  fotoAtual = a.foto || a.fotoBase64 || a.fotoPerfil || "";
-  fotoArquivoBase64 = "";
+  fotoAtual = a.foto || "";
 
   if(fotoAtual){
     document.getElementById("previewFotoBox").style.display = "flex";
@@ -736,7 +746,7 @@ function renderizarArbitros(){
     <div class="card">
       <div class="player">
         <img
-          src="${a.foto || a.fotoBase64 || a.fotoPerfil || "logo-liga.jfif"}"
+          src="${a.foto || "logo-liga.jfif"}"
           class="photo"
           onerror="this.src='logo-liga.jfif'"
         >
