@@ -517,15 +517,6 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
-
-const storage = getStorage();
-
 let arbitrosCache = [];
 let fotoAtual = "";
 
@@ -565,10 +556,19 @@ async function uploadFotoSeExistir(){
   const fotoUrlManual = txt(document.getElementById("foto").value);
 
   if(arquivo){
-    const nomeArquivo = `arbitros/${Date.now()}-${arquivo.name}`;
-    const referencia = ref(storage,nomeArquivo);
-    await uploadBytes(referencia,arquivo);
-    return await getDownloadURL(referencia);
+    return await new Promise((resolve,reject)=>{
+      const leitor = new FileReader();
+
+      leitor.onload = function(e){
+        resolve(e.target.result);
+      };
+
+      leitor.onerror = function(){
+        reject("Erro ao carregar foto");
+      };
+
+      leitor.readAsDataURL(arquivo);
+    });
   }
 
   if(fotoUrlManual) return fotoUrlManual;
@@ -608,13 +608,6 @@ window.salvarArbitro = async function(){
   const funcaoPrincipal = document.getElementById("funcaoPrincipal").value;
 
   if(!nome) return alert("Digite o nome do árbitro.");
-  if(!cpf) return alert("Digite o CPF.");
-  if(cpf.length !== 11) return alert("Digite um CPF válido com 11 números.");
-  if(!nascimento) return alert("Digite a data de nascimento.");
-  if(!telefone) return alert("Digite o telefone.");
-  if(!whatsapp) return alert("Digite o WhatsApp.");
-  if(whatsapp.length < 10) return alert("Digite um WhatsApp válido.");
-  if(!email) return alert("Digite o e-mail.");
 
   const foto = await uploadFotoSeExistir();
 
