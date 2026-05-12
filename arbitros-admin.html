@@ -4,23 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Árbitros ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Perfil do Árbitro - Liga Goiana</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="menu.css">
 
 <style>
 :root{
-  --bg:#0b1f3a;
-  --bg-dark:#08172c;
-  --card:#102a52;
-  --card-hover:#153766;
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
   --gold:#f7c600;
-  --gold-soft:rgba(247,198,0,.12);
-  --gold-line:rgba(247,198,0,.24);
+  --gold2:#ffe45c;
   --white:#ffffff;
-  --muted:#d8e1ef;
-  --shadow:0 8px 22px rgba(0,0,0,.28);
-  --transition:.25s ease;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
   --max:1240px;
 }
 
@@ -29,779 +32,636 @@
 body{
   font-family:Arial, sans-serif;
   background:
-    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
     url("fundo.png") center/cover fixed no-repeat;
   color:var(--white);
   min-height:100vh;
+  overflow-x:hidden;
 }
 
-a{text-decoration:none;color:inherit;transition:var(--transition)}
-button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
-input,select{font-family:inherit}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none}
+img{display:block;max-width:100%}
 
-.wrap{width:min(100% - 28px, var(--max));margin:0 auto}
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
 
-header{
-  background:rgba(8,23,44,.96);
-  border-bottom:3px solid var(--gold);
+.container{
+  padding:22px 0 34px;
+}
+
+.hero{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.18), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.97), rgba(8,23,44,.98));
+  border:1px solid var(--gold-line);
+  border-radius:22px;
+  padding:22px;
+  margin-bottom:16px;
   box-shadow:var(--shadow);
+  display:grid;
+  grid-template-columns:170px 1fr;
+  gap:20px;
+  align-items:center;
 }
 
-.header-top{
-  min-height:82px;
+.foto{
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid var(--gold);
+  background:#fff;
+}
+
+.hero h1{
+  color:var(--gold);
+  font-size:36px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+
+.hero p{
+  color:var(--muted);
+  line-height:1.55;
+  font-size:14px;
+}
+
+.tags{
   display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
+  gap:7px;
   flex-wrap:wrap;
-  padding:14px 0;
+  margin-top:12px;
 }
 
-.header-left,.header-right{
+.tag{
+  background:#1a3f73;
+  padding:7px 11px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.tag-gold{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+.actions{
   display:flex;
-  align-items:center;
   gap:10px;
   flex-wrap:wrap;
+  margin-top:14px;
 }
 
-.header-title{
-  flex:1;
-  text-align:center;
-  font-size:24px;
-  font-weight:700;
-}
-
-.top-btn{
+.btn{
+  min-height:40px;
+  border-radius:12px;
+  padding:0 14px;
+  font-weight:900;
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:8px;
-  padding:10px 16px;
-  border-radius:10px;
-  font-weight:700;
-  white-space:nowrap;
 }
 
-.btn-light{background:#fff4cf;color:#111}
-.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
-.btn-gold{background:var(--gold);color:#111}
-.btn-gold:hover{filter:brightness(1.04);transform:translateY(-2px)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
+.btn-blue{background:#1a3f73;color:#fff}
+.btn-gray{background:#4b5563;color:#fff}
 
-.nav-bar{
-  background:rgba(16,42,82,.95);
-  border-top:1px solid rgba(255,255,255,.06);
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.stat{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:16px;
+  padding:15px;
+  text-align:center;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+}
+
+.stat strong{
+  display:block;
+  color:var(--gold);
+  font-size:30px;
+  margin-bottom:5px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.panel{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 35%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+  margin-bottom:14px;
+}
+
+.panel h2{
+  color:var(--gold);
+  font-size:20px;
+  padding:15px;
   border-bottom:1px solid rgba(255,255,255,.08);
 }
 
-.menu{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  padding:12px 0;
-  flex-wrap:wrap;
+.panel-body{
+  padding:14px;
 }
 
-.menu a{
-  color:white;
-  font-weight:700;
-  font-size:14px;
-  background:#0d2346;
-  padding:10px 14px;
-  border-radius:10px;
-  border:1px solid transparent;
-  white-space:nowrap;
-}
-
-.menu a:hover{
-  color:var(--gold);
-  background:var(--gold-soft);
-  border-color:var(--gold-line);
-}
-
-.menu a.ativo{
-  background:var(--gold);
-  color:black;
-}
-
-.container{padding:24px 0 34px}
-
-.hero,.form-panel{
-  background:linear-gradient(135deg,#102a52,#0d2346);
-  border:1px solid var(--gold-line);
-  border-radius:18px;
-  padding:22px;
-  margin-bottom:20px;
-  box-shadow:var(--shadow);
-}
-
-.hero h2{
-  margin:0 0 8px;
-  color:var(--gold);
-  font-size:28px;
-}
-
-.hero p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.6;
-  font-size:15px;
-}
-
-.form-title{
-  color:var(--gold);
-  font-size:20px;
-  margin-bottom:14px;
-  font-weight:900;
-}
-
-.form-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-}
-
-.full{grid-column:1/-1}
-
-label{
-  display:block;
-  font-size:13px;
-  font-weight:900;
-  margin-bottom:6px;
-  color:#fff;
-}
-
-input,select{
-  width:100%;
-  padding:13px;
-  border:none;
-  border-radius:10px;
-  font-size:14px;
-  background:#f5f7fb;
-  color:#111;
-}
-
-input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
-
-.preview-foto{
-  display:none;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
-
-.preview-foto img{
-  width:78px;
-  height:78px;
-  object-fit:cover;
-  background:#fff;
-  border-radius:50%;
-  border:2px solid var(--gold);
-}
-
-.preview-foto span{
-  color:var(--muted);
-  font-size:13px;
-}
-
-.form-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:16px;
-}
-
-.filtros{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:12px;
-  margin-bottom:20px;
-}
-
-.lista-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-  gap:14px;
-}
-
-.card{
-  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
-  padding:16px;
-  border-radius:16px;
+.item{
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  gap:14px;
-  border:1px solid rgba(255,230,0,.10);
-  box-shadow:var(--shadow);
+  gap:10px;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  color:var(--muted);
+  font-size:14px;
 }
 
-.card:hover{
-  transform:translateY(-2px);
-  border-color:var(--gold-line);
-}
+.item:last-child{border-bottom:none}
 
-.player{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  flex:1;
-}
-
-.photo{
-  width:68px;
-  height:68px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid rgba(255,255,255,.15);
-  background:#fff;
-  flex-shrink:0;
-}
-
-.player-info{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-
-.nome-jogador{
-  font-weight:700;
-  font-size:18px;
+.item strong{
   color:#fff;
 }
 
-.player-info small{
+.valor{
+  color:var(--gold);
+  font-weight:900;
+}
+
+.jogo-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:10px;
+}
+
+.jogo-card strong{
+  color:#fff;
+  display:block;
+  margin-bottom:6px;
+}
+
+.jogo-card p{
   color:var(--muted);
   font-size:13px;
   line-height:1.5;
 }
 
-.tags{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  margin-top:4px;
-}
-
-.tag{
-  background:#1a3f73;
-  padding:5px 9px;
-  border-radius:999px;
-  font-size:12px;
-  border:1px solid rgba(255,255,255,.08);
-}
-
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
-
-.btn-acao{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:11px 14px;
-  border-radius:10px;
-  font-weight:700;
-  font-size:13px;
-  border:none;
-  cursor:pointer;
-  white-space:nowrap;
-}
-
-.btn-ver{background:var(--gold);color:black}
-.btn-danger{background:#d94141;color:#fff}
-.btn-green{background:#25d366;color:#fff}
-.btn-blue{background:#1a3f73;color:#fff}
-
 .vazio{
-  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
-  padding:30px;
-  border-radius:14px;
-  text-align:center;
   color:var(--muted);
-  border:1px solid rgba(255,255,255,.06);
-  box-shadow:var(--shadow);
-  grid-column:1/-1;
+  text-align:center;
+  padding:18px;
 }
 
-@media(max-width:900px){
-  .header-title{order:3;width:100%;text-align:center}
-  .header-left,.header-right{width:100%;justify-content:center}
-  .form-grid,.filtros{grid-template-columns:1fr}
-  .card{flex-direction:column;align-items:flex-start}
-  .actions{width:100%;justify-content:flex-start}
+.loading{
+  max-width:760px;
+  margin:80px auto;
+  background:rgba(16,42,82,.96);
+  border:1px solid var(--gold-line);
+  color:var(--gold);
+  padding:24px;
+  border-radius:16px;
+  text-align:center;
+  font-size:18px;
+  font-weight:900;
 }
 
-@media(max-width:600px){
-  .top-btn,.btn-acao{width:100%;justify-content:center}
-  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
-  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
-  .menu{
-    justify-content:flex-start;
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-    padding-bottom:14px;
+@media(max-width:1000px){
+  .stats-grid{
+    grid-template-columns:repeat(3,1fr);
   }
-  .menu a{flex:0 0 auto}
+
+  .grid2{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:700px){
+  .hero{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+
+  .foto{
+    margin:auto;
+  }
+
+  .hero h1{
+    font-size:28px;
+  }
+
+  .stats-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .actions,
+  .tags{
+    justify-content:center;
+  }
+}
+
+@media(max-width:480px){
+  .stats-grid{
+    grid-template-columns:1fr;
+  }
+
+  .btn{
+    width:100%;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <div class="wrap header-top">
-    <div class="header-left">
-      <a href="index.html" class="top-btn btn-light">
-        <i class="fa-solid fa-house"></i> Página Inicial
-      </a>
-
-      <a href="admin.html" class="top-btn btn-light">
-        <i class="fa-solid fa-gears"></i> Painel ADM
-      </a>
-    </div>
-
-    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
-
-    <div class="header-right">
-      <button class="top-btn btn-gold" type="button" onclick="salvarArbitro()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Árbitro
-      </button>
-    </div>
+<main class="wrap container" id="app">
+  <div class="loading">
+    <i class="fa-solid fa-spinner fa-spin"></i><br>
+    Carregando perfil do árbitro...
   </div>
-
-  <div class="nav-bar">
-    <div class="wrap">
-      <div class="menu">
-        <a href="admin.html">Painel</a>
-        <a href="campeonatos-admin.html">Campeonatos</a>
-        <a href="jogos-admin.html">Jogos</a>
-        <a href="times-admin.html">Times</a>
-        <a href="tecnicos-admin.html">Técnicos</a>
-        <a href="jogadores-admin.html">Jogadores</a>
-        <a href="arbitros-admin.html" class="ativo">Árbitros</a>
-        <a href="assistentes-admin.html">Assistentes</a>
-        <a href="sumulas-admin.html">Súmulas</a>
-      </div>
-    </div>
-  </div>
-</header>
-
-<div class="wrap container">
-
-  <div class="hero">
-    <h2>Árbitros ADM</h2>
-    <p>Cadastre árbitros com foto, telefone, WhatsApp, e-mail e função principal. Na escala, qualquer cadastrado poderá atuar como árbitro central, assistente ou 4º árbitro.</p>
-  </div>
-
-  <section class="form-panel">
-    <div class="form-title" id="tituloFormulario">Novo Árbitro</div>
-
-    <input type="hidden" id="arbitroId">
-
-    <div class="form-grid">
-      <div>
-        <label>Nome completo</label>
-        <input id="nome" placeholder="Nome do árbitro">
-      </div>
-
-      <div>
-        <label>CPF</label>
-        <input id="cpf" placeholder="CPF">
-      </div>
-
-      <div>
-        <label>Data de nascimento</label>
-        <input id="nascimento" type="date">
-      </div>
-
-      <div>
-        <label>Status</label>
-        <select id="status">
-          <option value="ativo">Ativo</option>
-          <option value="inativo">Inativo</option>
-          <option value="suspenso">Suspenso</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Telefone</label>
-        <input id="telefone" placeholder="Ex: (62) 99999-9999">
-      </div>
-
-      <div>
-        <label>WhatsApp</label>
-        <input id="whatsapp" placeholder="Ex: 5562999999999">
-      </div>
-
-      <div>
-        <label>E-mail</label>
-        <input id="email" type="email" placeholder="email@exemplo.com">
-      </div>
-
-      <div>
-        <label>Função principal</label>
-        <select id="funcaoPrincipal">
-          <option value="Árbitro Centro">Árbitro Centro</option>
-          <option value="Assistente">Assistente</option>
-          <option value="4º Árbitro">4º Árbitro</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Foto URL</label>
-        <input id="foto" placeholder="foto-arbitro.png ou URL">
-      </div>
-
-      <div>
-        <label>Enviar foto do PC/Celular</label>
-        <input type="file" id="fotoArquivo" accept="image/*" onchange="previewFotoArquivo()">
-      </div>
-
-      <div class="full">
-        <label>Prévia</label>
-        <div class="preview-foto" id="previewFotoBox">
-          <img id="previewFotoImg" src="logo-liga.jfif">
-          <span id="previewFotoTexto">Pré-visualização da foto</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-actions">
-      <button class="btn-acao btn-ver" type="button" onclick="salvarArbitro()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Árbitro
-      </button>
-
-      <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
-        <i class="fa-solid fa-broom"></i> Limpar
-      </button>
-    </div>
-  </section>
-
-  <div class="filtros">
-    <input id="buscaArbitro" placeholder="Pesquisar árbitro...">
-
-    <select id="filtroFuncao">
-      <option value="">Todas as funções</option>
-      <option value="Árbitro Centro">Árbitro Centro</option>
-      <option value="Assistente">Assistente</option>
-      <option value="4º Árbitro">4º Árbitro</option>
-    </select>
-
-    <select id="filtroStatus">
-      <option value="">Todos os status</option>
-      <option value="ativo">Ativo</option>
-      <option value="inativo">Inativo</option>
-      <option value="suspenso">Suspenso</option>
-    </select>
-  </div>
-
-  <div class="lista-grid" id="listaArbitros"></div>
-
-</div>
+</main>
 
 <script type="module">
+import { renderMenu } from "./menu.js";
 import { db } from "./firebase.js";
 import {
   collection,
-  addDoc,
   getDocs,
   doc,
-  updateDoc,
-  deleteDoc,
-  serverTimestamp
+  getDoc
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
+renderMenu("arbitros");
 
-const storage = getStorage();
+const app = document.getElementById("app");
+const idUrl = new URLSearchParams(location.search).get("id");
 
-let arbitrosCache = [];
-let fotoAtual = "";
+let arbitro = null;
+let jogos = [];
+let sumulas = [];
+let todosArbitros = [];
 
-function txt(v){
-  return String(v || "").trim();
-}
-
-function normalizarTexto(texto){
-  return String(texto || "")
-    .trim()
+function n(txt){
+  return String(txt || "")
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"");
+    .replace(/[\u0300-\u036f]/g,"")
+    .trim();
 }
 
-function limparNumero(v){
-  return String(v || "").replace(/\D/g,"");
-}
-
-window.previewFotoArquivo = function(){
-  const arquivo = document.getElementById("fotoArquivo").files[0];
-  if(!arquivo) return;
-
-  const leitor = new FileReader();
-
-  leitor.onload = function(e){
-    document.getElementById("previewFotoBox").style.display = "flex";
-    document.getElementById("previewFotoImg").src = e.target.result;
-    document.getElementById("previewFotoTexto").textContent = arquivo.name;
-  };
-
-  leitor.readAsDataURL(arquivo);
-};
-
-async function uploadFotoSeExistir(){
-  const arquivo = document.getElementById("fotoArquivo").files[0];
-  const fotoUrlManual = txt(document.getElementById("foto").value);
-
-  if(arquivo){
-    const nomeArquivo = `arbitros/${Date.now()}-${arquivo.name}`;
-    const referencia = ref(storage,nomeArquivo);
-    await uploadBytes(referencia,arquivo);
-    return await getDownloadURL(referencia);
-  }
-
-  if(fotoUrlManual) return fotoUrlManual;
-
-  return fotoAtual || "logo-liga.jfif";
-}
-
-window.limparFormulario = function(){
-  document.getElementById("arbitroId").value = "";
-  document.getElementById("nome").value = "";
-  document.getElementById("cpf").value = "";
-  document.getElementById("nascimento").value = "";
-  document.getElementById("status").value = "ativo";
-  document.getElementById("telefone").value = "";
-  document.getElementById("whatsapp").value = "";
-  document.getElementById("email").value = "";
-  document.getElementById("funcaoPrincipal").value = "Árbitro Centro";
-  document.getElementById("foto").value = "";
-  document.getElementById("fotoArquivo").value = "";
-  document.getElementById("tituloFormulario").textContent = "Novo Árbitro";
-  document.getElementById("previewFotoBox").style.display = "none";
-  document.getElementById("previewFotoImg").src = "logo-liga.jfif";
-  document.getElementById("previewFotoTexto").textContent = "Pré-visualização da foto";
-  fotoAtual = "";
-};
-
-window.salvarArbitro = async function(){
-  const id = document.getElementById("arbitroId").value;
-
-  const nome = txt(document.getElementById("nome").value);
-  const cpf = limparNumero(document.getElementById("cpf").value);
-  const nascimento = document.getElementById("nascimento").value;
-  const status = document.getElementById("status").value;
-  const telefone = txt(document.getElementById("telefone").value);
-  const whatsapp = limparNumero(document.getElementById("whatsapp").value);
-  const email = txt(document.getElementById("email").value).toLowerCase();
-  const funcaoPrincipal = document.getElementById("funcaoPrincipal").value;
-
-  if(!nome) return alert("Digite o nome do árbitro.");
-  if(!cpf) return alert("Digite o CPF.");
-  if(cpf.length !== 11) return alert("Digite um CPF válido com 11 números.");
-  if(!nascimento) return alert("Digite a data de nascimento.");
-  if(!telefone) return alert("Digite o telefone.");
-  if(!whatsapp) return alert("Digite o WhatsApp.");
-  if(whatsapp.length < 10) return alert("Digite um WhatsApp válido.");
-  if(!email) return alert("Digite o e-mail.");
-
-  const foto = await uploadFotoSeExistir();
-
-  const dados = {
-    nome,
-    nomeCompleto:nome,
-    cpf,
-    nascimento,
-    dataNascimento:nascimento,
-    status,
-    telefone,
-    whatsapp,
-    email,
-    funcaoPrincipal,
-    funcao:funcaoPrincipal,
-    podeAtuarComo:["Árbitro Centro","Assistente","4º Árbitro"],
-    foto,
-    atualizadoEm:serverTimestamp()
-  };
-
-  if(id){
-    await updateDoc(doc(db,"arbitros",id),dados);
-    alert("Árbitro atualizado!");
-  }else{
-    await addDoc(collection(db,"arbitros"),{
-      ...dados,
-      jogos:0,
-      jogosComoArbitroCentro:0,
-      jogosComoAssistente:0,
-      jogosComoQuartoArbitro:0,
-      cartoesAplicados:0,
-      criadoEm:serverTimestamp()
-    });
-    alert("Árbitro cadastrado!");
-  }
-
-  limparFormulario();
-  await carregarArbitros();
-};
-
-window.editarArbitro = function(id){
-  const a = arbitrosCache.find(x=>x.id === id);
-  if(!a) return;
-
-  document.getElementById("arbitroId").value = a.id;
-  document.getElementById("nome").value = a.nome || "";
-  document.getElementById("cpf").value = a.cpf || "";
-  document.getElementById("nascimento").value = a.nascimento || a.dataNascimento || "";
-  document.getElementById("status").value = a.status || "ativo";
-  document.getElementById("telefone").value = a.telefone || "";
-  document.getElementById("whatsapp").value = a.whatsapp || "";
-  document.getElementById("email").value = a.email || "";
-  document.getElementById("funcaoPrincipal").value = a.funcaoPrincipal || a.funcao || "Árbitro Centro";
-  document.getElementById("foto").value = a.foto || "";
-  document.getElementById("fotoArquivo").value = "";
-  document.getElementById("tituloFormulario").textContent = "Editar Árbitro";
-
-  fotoAtual = a.foto || "";
-
-  if(fotoAtual){
-    document.getElementById("previewFotoBox").style.display = "flex";
-    document.getElementById("previewFotoImg").src = fotoAtual;
-    document.getElementById("previewFotoTexto").textContent = "Foto atual";
-  }
-
-  window.scrollTo({top:0,behavior:"smooth"});
-};
-
-window.excluirArbitro = async function(id){
-  if(!confirm("Excluir árbitro?")) return;
-  await deleteDoc(doc(db,"arbitros",id));
-  await carregarArbitros();
-};
-
-window.abrirWhatsapp = function(numero){
-  const n = limparNumero(numero);
-  if(!n) return alert("WhatsApp não informado.");
-  window.open("https://wa.me/" + n, "_blank");
-};
-
-async function carregarArbitros(){
-  const lista = document.getElementById("listaArbitros");
-  lista.innerHTML = `<div class="vazio">Carregando árbitros...</div>`;
-
-  const snap = await getDocs(collection(db,"arbitros"));
-
-  arbitrosCache = [];
-  snap.forEach(d=>arbitrosCache.push({id:d.id,...d.data()}));
-
-  arbitrosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
-
-  renderizarArbitros();
-}
-
-function renderizarArbitros(){
-  const lista = document.getElementById("listaArbitros");
-  const busca = normalizarTexto(document.getElementById("buscaArbitro").value);
-  const filtroFuncao = document.getElementById("filtroFuncao").value;
-  const filtroStatus = document.getElementById("filtroStatus").value;
-
-  let arbitros = arbitrosCache.filter(a=>{
-    if(filtroFuncao && (a.funcaoPrincipal || a.funcao) !== filtroFuncao) return false;
-    if(filtroStatus && a.status !== filtroStatus) return false;
-
-    if(busca){
-      const texto = normalizarTexto(`
-        ${a.nome || ""}
-        ${a.cpf || ""}
-        ${a.nascimento || ""}
-        ${a.dataNascimento || ""}
-        ${a.telefone || ""}
-        ${a.whatsapp || ""}
-        ${a.email || ""}
-        ${a.funcaoPrincipal || a.funcao || ""}
-      `);
-
-      if(!texto.includes(busca)) return false;
+function val(obj,chaves,f=""){
+  for(const c of chaves){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== ""){
+      return obj[c];
     }
+  }
+  return f;
+}
 
-    return true;
+function nomeArbitro(a){
+  return val(a,["nome","nomeCompleto","arbitro"],"Árbitro");
+}
+
+function fotoArbitro(a){
+  return val(a,["foto","imagem","avatar","fotoUrl"],"logo-liga.jfif");
+}
+
+function cidadeArbitro(a){
+  return val(a,["cidadeNascimento","cidade","municipio"],"-");
+}
+
+function categoriasArbitro(a){
+  const cats = val(a,["categorias"],[]);
+  const cat = val(a,["categoria"],"");
+
+  if(Array.isArray(cats) && cats.length) return cats;
+  if(cat) return [cat];
+
+  return ["Todas as categorias"];
+}
+
+function mesmoArbitro(nome,item){
+  const nomeNormal = n(nome);
+
+  const nomes = [
+    val(item,["arbitro"],""),
+    val(item,["arbitroNome"],""),
+    val(item,["nomeArbitro"],""),
+    item?.arbitragem?.arbitro || ""
+  ];
+
+  const ids = [
+    val(item,["arbitroId"],""),
+    val(item,["arbitroUid"],"")
+  ];
+
+  return nomes.some(x=>n(x) === nomeNormal) || ids.includes(idUrl);
+}
+
+function finalizado(item){
+  return item.finalizado === true ||
+    item.encerrado === true ||
+    item.sumulaFinalizada === true ||
+    item.publica === true ||
+    item.publico === true ||
+    n(val(item,["status"],"")) === "finalizado" ||
+    n(val(item,["sumulaStatus"],"")) === "finalizada";
+}
+
+function contarCartoes(s){
+  let amarelos = 0;
+  let vermelhos = 0;
+
+  const eventos = [
+    ...(s.eventos || []),
+    ...(s.cartoes || []),
+    ...(s.cartoesLista || [])
+  ];
+
+  eventos.forEach(ev=>{
+    const tipo = n(val(ev,["tipo","evento","acao","cartao"],""));
+
+    if(tipo.includes("amarelo")) amarelos++;
+    if(tipo.includes("vermelho")) vermelhos++;
   });
 
-  if(!arbitros.length){
-    lista.innerHTML = `<div class="vazio">Nenhum árbitro encontrado.</div>`;
+  amarelos += (s.amarelosDetalhadosA || []).length;
+  amarelos += (s.amarelosDetalhadosB || []).length;
+  amarelos += (s.cartoesAmarelos || []).length;
+  amarelos += (s.amarelos || []).length;
+
+  vermelhos += (s.vermelhosDetalhadosA || []).length;
+  vermelhos += (s.vermelhosDetalhadosB || []).length;
+  vermelhos += (s.cartoesVermelhos || []).length;
+  vermelhos += (s.vermelhos || []).length;
+
+  return {amarelos,vermelhos};
+}
+
+function calcularStats(a){
+  const nome = nomeArbitro(a);
+
+  let jogosApitados = 0;
+  let jogosFinalizados = 0;
+  let jogosPendentes = 0;
+  let sumulasFinalizadas = 0;
+  let amarelos = 0;
+  let vermelhos = 0;
+
+  const porCategoria = {};
+  const porCampeonato = {};
+  const jogosRecentes = [];
+
+  jogos.forEach(j=>{
+    if(!mesmoArbitro(nome,j)) return;
+
+    jogosApitados++;
+
+    if(finalizado(j)) jogosFinalizados++;
+    else jogosPendentes++;
+
+    const categoria = val(j,["categoria","categoriaNome"],"Sem categoria");
+    const campeonato = val(j,["campeonato","campeonatoNome","nomeCampeonato"],"Sem campeonato");
+
+    porCategoria[categoria] = (porCategoria[categoria] || 0) + 1;
+    porCampeonato[campeonato] = (porCampeonato[campeonato] || 0) + 1;
+
+    jogosRecentes.push(j);
+  });
+
+  sumulas.forEach(s=>{
+    if(!mesmoArbitro(nome,s)) return;
+
+    if(finalizado(s)) sumulasFinalizadas++;
+
+    const cartoes = contarCartoes(s);
+    amarelos += cartoes.amarelos;
+    vermelhos += cartoes.vermelhos;
+  });
+
+  const totalCartoes = amarelos + vermelhos;
+  const mediaCartoes = jogosApitados ? (totalCartoes / jogosApitados).toFixed(2) : "0.00";
+
+  return {
+    jogosApitados,
+    jogosFinalizados,
+    jogosPendentes,
+    sumulasFinalizadas,
+    amarelos,
+    vermelhos,
+    totalCartoes,
+    mediaCartoes,
+    porCategoria,
+    porCampeonato,
+    jogosRecentes:jogosRecentes.slice(-8).reverse()
+  };
+}
+
+function rankingPosicao(a){
+  const lista = todosArbitros
+    .map(ar=>({
+      id:ar.id,
+      jogos:calcularStats(ar).jogosApitados
+    }))
+    .sort((x,y)=>y.jogos-x.jogos);
+
+  const pos = lista.findIndex(x=>x.id === a.id);
+
+  return pos >= 0 ? pos + 1 : "-";
+}
+
+function itemHTML(nome,valor){
+  return `
+    <div class="item">
+      <span>${nome}</span>
+      <strong class="valor">${valor}</strong>
+    </div>
+  `;
+}
+
+function listaObj(obj){
+  const entries = Object.entries(obj || {})
+    .sort((a,b)=>b[1]-a[1]);
+
+  if(!entries.length) return `<div class="vazio">Nenhum dado encontrado.</div>`;
+
+  return entries.map(([nome,valor])=>itemHTML(nome,valor)).join("");
+}
+
+function jogoNome(j){
+  const a = val(j,["timeANome"], j.timeA?.nome || j.timeA || "Time A");
+  const b = val(j,["timeBNome"], j.timeB?.nome || j.timeB || "Time B");
+  return `${a} x ${b}`;
+}
+
+function dataJogo(j){
+  return val(j,["data","dataJogo","dataHora"],"-");
+}
+
+function render(){
+  if(!arbitro){
+    app.innerHTML = `<div class="loading">Árbitro não encontrado.</div>`;
     return;
   }
 
-  lista.innerHTML = arbitros.map(a=>`
-    <div class="card">
-      <div class="player">
-        <img
-          src="${a.foto || "logo-liga.jfif"}"
-          class="photo"
-          onerror="this.src='logo-liga.jfif'"
-        >
+  const stats = calcularStats(arbitro);
+  const cats = categoriasArbitro(arbitro);
 
-        <div class="player-info">
-          <div class="nome-jogador">${a.nome || "-"}</div>
+  app.innerHTML = `
+    <section class="hero">
+      <img class="foto" src="${fotoArbitro(arbitro)}" onerror="this.src='logo-liga.jfif'">
 
-          <small>CPF: ${a.cpf || "-"}</small>
-          <small>Nascimento: ${a.nascimento || a.dataNascimento || "-"}</small>
-          <small>Telefone: ${a.telefone || "-"}</small>
-          <small>WhatsApp: ${a.whatsapp || "-"}</small>
-          <small>E-mail: ${a.email || "-"}</small>
-          <small>Função principal: ${a.funcaoPrincipal || a.funcao || "-"}</small>
+      <div>
+        <h1>${nomeArbitro(arbitro)}</h1>
 
-          <small>
-            Jogos: ${Number(a.jogos || 0)} |
-            Centro: ${Number(a.jogosComoArbitroCentro || 0)} |
-            Assistente: ${Number(a.jogosComoAssistente || 0)} |
-            4º: ${Number(a.jogosComoQuartoArbitro || 0)}
-          </small>
+        <p>
+          Árbitro cadastrado na Liga Goiana de Futebol de Base.<br>
+          Cidade: ${cidadeArbitro(arbitro)}<br>
+          Contato, CPF e dados pessoais são privados.
+        </p>
 
-          <div class="tags">
-            <span class="tag">${a.status || "ativo"}</span>
-            <span class="tag">${a.funcaoPrincipal || a.funcao || "Árbitro Centro"}</span>
-            <span class="tag">Pode atuar em qualquer função</span>
-          </div>
+        <div class="tags">
+          <span class="tag tag-gold"><i class="fa-solid fa-whistle"></i> Árbitro Oficial</span>
+          ${cats.map(c=>`<span class="tag">${c}</span>`).join("")}
+          <span class="tag">Ranking: ${rankingPosicao(arbitro)}º</span>
+        </div>
+
+        <div class="actions">
+          <a class="btn btn-gold" href="arbitros.html">
+            <i class="fa-solid fa-arrow-left"></i> Voltar
+          </a>
+
+          <button class="btn btn-blue" onclick="compartilhar()">
+            <i class="fa-solid fa-share-nodes"></i> Compartilhar
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <div class="stat"><strong>${stats.jogosApitados}</strong><span>Jogos</span></div>
+      <div class="stat"><strong>${stats.sumulasFinalizadas}</strong><span>Súmulas</span></div>
+      <div class="stat"><strong>${stats.jogosFinalizados}</strong><span>Finalizados</span></div>
+      <div class="stat"><strong>${stats.jogosPendentes}</strong><span>Pendentes</span></div>
+      <div class="stat"><strong>${stats.amarelos}</strong><span>Amarelos</span></div>
+      <div class="stat"><strong>${stats.vermelhos}</strong><span>Vermelhos</span></div>
+    </section>
+
+    <section class="grid2">
+      <div class="panel">
+        <h2><i class="fa-solid fa-chart-line"></i> Estatísticas</h2>
+        <div class="panel-body">
+          ${itemHTML("Total de cartões",stats.totalCartoes)}
+          ${itemHTML("Média de cartões por jogo",stats.mediaCartoes)}
+          ${itemHTML("Ranking por jogos",rankingPosicao(arbitro)+"º")}
+          ${itemHTML("Status",val(arbitro,["status"],"ativo"))}
         </div>
       </div>
 
-      <div class="actions">
-        <button class="btn-acao btn-green" onclick="abrirWhatsapp('${a.whatsapp || ""}')">
-          <i class="fa-brands fa-whatsapp"></i> WhatsApp
-        </button>
-
-        <a class="btn-acao btn-blue" href="mailto:${a.email || ""}">
-          <i class="fa-solid fa-envelope"></i> E-mail
-        </a>
-
-        <button class="btn-acao btn-ver" onclick="editarArbitro('${a.id}')">
-          <i class="fa-solid fa-pen"></i> Editar
-        </button>
-
-        <button class="btn-acao btn-danger" onclick="excluirArbitro('${a.id}')">
-          <i class="fa-solid fa-trash"></i> Excluir
-        </button>
+      <div class="panel">
+        <h2><i class="fa-solid fa-trophy"></i> Campeonatos trabalhados</h2>
+        <div class="panel-body">
+          ${listaObj(stats.porCampeonato)}
+        </div>
       </div>
-    </div>
-  `).join("");
+
+      <div class="panel">
+        <h2><i class="fa-solid fa-layer-group"></i> Jogos por categoria</h2>
+        <div class="panel-body">
+          ${listaObj(stats.porCategoria)}
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2><i class="fa-solid fa-calendar-days"></i> Jogos recentes</h2>
+        <div class="panel-body">
+          ${
+            stats.jogosRecentes.length
+            ? stats.jogosRecentes.map(j=>`
+              <div class="jogo-card">
+                <strong>${jogoNome(j)}</strong>
+                <p>
+                  Campeonato: ${val(j,["campeonato","campeonatoNome"],"-")}<br>
+                  Categoria: ${val(j,["categoria"],"-")}<br>
+                  Data: ${dataJogo(j)}<br>
+                  Status: ${val(j,["status"],"-")}
+                </p>
+              </div>
+            `).join("")
+            : `<div class="vazio">Nenhum jogo encontrado.</div>`
+          }
+        </div>
+      </div>
+    </section>
+  `;
 }
 
-document.getElementById("buscaArbitro").addEventListener("input",renderizarArbitros);
-document.getElementById("filtroFuncao").addEventListener("change",renderizarArbitros);
-document.getElementById("filtroStatus").addEventListener("change",renderizarArbitros);
+window.compartilhar = async function(){
+  const url = location.href;
 
-await carregarArbitros();
+  if(navigator.share){
+    await navigator.share({
+      title:"Perfil do Árbitro - Liga Goiana",
+      url
+    });
+    return;
+  }
+
+  await navigator.clipboard.writeText(url);
+  alert("Link copiado.");
+};
+
+async function carregar(){
+  if(!idUrl){
+    app.innerHTML = `<div class="loading">ID do árbitro não informado.</div>`;
+    return;
+  }
+
+  const snapArbitro = await getDoc(doc(db,"arbitros",idUrl));
+
+  if(snapArbitro.exists()){
+    arbitro = {id:snapArbitro.id,...snapArbitro.data()};
+  }
+
+  const snapArbitros = await getDocs(collection(db,"arbitros"));
+  todosArbitros = snapArbitros.docs.map(d=>({id:d.id,...d.data()}));
+
+  const snapJogos = await getDocs(collection(db,"jogos"));
+  jogos = snapJogos.docs.map(d=>({id:d.id,...d.data()}));
+
+  const snapSumulas = await getDocs(collection(db,"sumulas"));
+  sumulas = snapSumulas.docs.map(d=>({id:d.id,...d.data()}));
+
+  render();
+}
+
+carregar();
 </script>
 
 </body>
