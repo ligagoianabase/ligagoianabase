@@ -447,7 +447,7 @@ td:nth-child(4) input{min-width:110px}
 
 .add-row{
   display:grid;
-  grid-template-columns:60px 1fr 1fr 95px auto;
+  grid-template-columns:60px 1fr 150px 1fr 95px auto;
   gap:6px;
   margin-top:8px;
 }
@@ -852,6 +852,21 @@ td:nth-child(4) input{min-width:110px}
   outline:2px solid rgba(247,198,0,.55);
 }
 
+
+/* NOVO: técnico manual, motivo do cartão e limite de titulares */
+.comissao-add{
+  display:grid;
+  grid-template-columns:1fr 150px auto;
+  gap:6px;
+  padding:0 12px 12px;
+}
+.cartao-motivo{
+  grid-column:1/-1;
+}
+@media(max-width:900px){
+  .comissao-add{grid-template-columns:1fr;}
+}
+
 </style>
 </head>
 
@@ -903,6 +918,7 @@ let sumulaSalva = null;
 let finalizada = false;
 let podeEditar = false;
 let autoSaveTimer = null;
+const LIMITE_TITULARES = 7;
 
 let jogadoresA = [];
 let jogadoresB = [];
@@ -910,6 +926,8 @@ let golsA = [];
 let golsB = [];
 let cartoesA = [];
 let cartoesB = [];
+let comissaoAEdit = [];
+let comissaoBEdit = [];
 
 function campo(obj, chaves, fallback=""){
   for(const c of chaves){
@@ -947,6 +965,33 @@ function normalizarTexto(txt){
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g,"");
+}
+
+function limparCpf(cpf){
+  return String(cpf || "").replace(/\D/g,"");
+}
+
+function cpfJaEscalado(cpf, ignorarJogador=null){
+  const cpfLimpo = limparCpf(cpf);
+  if(!cpfLimpo) return false;
+
+  return [...jogadoresA, ...jogadoresB].some(j => j !== ignorarJogador && limparCpf(j.cpf) === cpfLimpo);
+}
+
+function quantidadeTitulares(lista){
+  return lista.filter(j => j.tipo !== "suplente").length;
+}
+
+function validarTitularesAntesDeFinalizar(){
+  const titularesA = quantidadeTitulares(jogadoresA);
+  const titularesB = quantidadeTitulares(jogadoresB);
+
+  if(titularesA !== LIMITE_TITULARES || titularesB !== LIMITE_TITULARES){
+    alert(`Cada time precisa ter exatamente ${LIMITE_TITULARES} titulares.\n\n${getTimeA().nome}: ${titularesA} titular(es)\n${getTimeB().nome}: ${titularesB} titular(es)`);
+    return false;
+  }
+
+  return true;
 }
 function mesmoDiaDoJogo(){
   const data = campo(jogo,["data","dataJogo","dataHora"],"");
@@ -1092,13 +1137,22 @@ function normalizarComissao(t, timeNome=""){
   };
 }
 function listaComissao(time){
+  return time === "A" ? comissaoAEdit : comissaoBEdit;
+}
+
+function carregarComissaoInicial(time){
   const timeNome = time === "A" ? getTimeA().nome : getTimeB().nome;
-  const base = time === "A" ? primeiroArray(sumulaSalva?.comissaoA, sumulaSalva?.tecnicosA, jogo.comissaoA, jogo.tecnicosA) : primeiroArray(sumulaSalva?.comissaoB, sumulaSalva?.tecnicosB, jogo.comissaoB, jogo.tecnicosB);
+  const base = time === "A"
+    ? primeiroArray(sumulaSalva?.comissaoAPrivada, sumulaSalva?.tecnicosAPrivada, sumulaSalva?.comissaoA, sumulaSalva?.tecnicosA, jogo.comissaoA, jogo.tecnicosA)
+    : primeiroArray(sumulaSalva?.comissaoBPrivada, sumulaSalva?.tecnicosBPrivada, sumulaSalva?.comissaoB, sumulaSalva?.tecnicosB, jogo.comissaoB, jogo.tecnicosB);
+
   let lista = base.map(t=>normalizarComissao(t,timeNome)).filter(t=>t.nome);
+
   if(!lista.length){
     const nome = time === "A" ? campo(jogo,["tecnicoA"],"") : campo(jogo,["tecnicoB"],"");
     if(nome) lista = [{nome,funcao:"Técnico",cpf:"",cref:"",timeNome}];
   }
+
   return lista;
 }
 function renderComissaoLista(lista){
@@ -1125,6 +1179,39 @@ function renderComissao(){
   $("comissaoA").innerHTML = renderComissaoLista(listaComissao("A"));
   $("comissaoB").innerHTML = renderComissaoLista(listaComissao("B"));
 }
+
+window.adicionarTecnico = function(time){
+  const nome = $(`novoTecnicoNome${time}`).value.trim();
+  const cpf = $(`novoTecnicoCpf${time}`).value.trim();
+
+  if(!nome){
+    alert("Informe o nome do técnico.");
+    return;
+  }
+
+  if(!cpf){
+    alert("Informe o CPF do técnico.");
+    return;
+  }
+
+  const item = {
+    nome,
+    funcao:"Técnico",
+    cpf,
+    cref:"",
+    timeNome:time === "A" ? getTimeA().nome : getTimeB().nome,
+    manual:true
+  };
+
+  if(time === "A") comissaoAEdit.push(item);
+  else comissaoBEdit.push(item);
+
+  $(`novoTecnicoNome${time}`).value = "";
+  $(`novoTecnicoCpf${time}`).value = "";
+
+  renderComissao();
+  salvarRascunhoRapido();
+};
 function opcoesTodosJogadores(){
   return [...jogadoresA.map(j=>({...j,time:getTimeA().nome})), ...jogadoresB.map(j=>({...j,time:getTimeB().nome}))].filter(j=>j.nome);
 }
@@ -1265,6 +1352,7 @@ function criarTela(){
           <div class="add-row">
             <input id="novoNumA" placeholder="Nº">
             <input id="novoNomeA" placeholder="Jogador não cadastrado">
+            <input id="novoCpfA" placeholder="CPF do jogador">
             <select id="novaPosA">
               <option value="">Posição</option>
               <option value="Goleiro">Goleiro</option>
@@ -1273,19 +1361,15 @@ function criarTela(){
               <option value="Lateral Esquerdo">Lateral Esquerdo</option>
               <option value="Volante">Volante</option>
               <option value="Meia">Meia</option>
-              <option value="Meia Atacante">Meia Atacante</option>
-              <option value="Ponta Direita">Ponta Direita</option>
-              <option value="Ponta Esquerda">Ponta Esquerda</option>
               <option value="Atacante">Atacante</option>
-              <option value="Centroavante">Centroavante</option>
             </select>
             <select id="novoTipoA"><option value="titular">Titular</option><option value="suplente">Suplente</option></select>
             <button class="btn btn-blue" onclick="adicionarJogador('A')">+</button>
           </div>
 
           <div class="busca-box">
-            <input id="buscaOutroA" placeholder="Buscar jogador de outra categoria pelo nome">
-            <button class="btn btn-gray" onclick="buscarOutroJogador('A')"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+            <input id="buscaOutroA" placeholder="Buscar jogador cadastrado pelo CPF">
+            <button class="btn btn-gray" onclick="buscarOutroJogadorPorCpf('A')"><i class="fa-solid fa-magnifying-glass"></i> Buscar CPF</button>
           </div>
         </div>
 
@@ -1311,6 +1395,7 @@ function criarTela(){
           <div class="add-row">
             <input id="novoNumB" placeholder="Nº">
             <input id="novoNomeB" placeholder="Jogador não cadastrado">
+            <input id="novoCpfB" placeholder="CPF do jogador">
             <select id="novaPosB">
               <option value="">Posição</option>
               <option value="Goleiro">Goleiro</option>
@@ -1319,19 +1404,15 @@ function criarTela(){
               <option value="Lateral Esquerdo">Lateral Esquerdo</option>
               <option value="Volante">Volante</option>
               <option value="Meia">Meia</option>
-              <option value="Meia Atacante">Meia Atacante</option>
-              <option value="Ponta Direita">Ponta Direita</option>
-              <option value="Ponta Esquerda">Ponta Esquerda</option>
               <option value="Atacante">Atacante</option>
-              <option value="Centroavante">Centroavante</option>
             </select>
             <select id="novoTipoB"><option value="titular">Titular</option><option value="suplente">Suplente</option></select>
             <button class="btn btn-blue" onclick="adicionarJogador('B')">+</button>
           </div>
 
           <div class="busca-box">
-            <input id="buscaOutroB" placeholder="Buscar jogador de outra categoria pelo nome">
-            <button class="btn btn-gray" onclick="buscarOutroJogador('B')"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+            <input id="buscaOutroB" placeholder="Buscar jogador cadastrado pelo CPF">
+            <button class="btn btn-gray" onclick="buscarOutroJogadorPorCpf('B')"><i class="fa-solid fa-magnifying-glass"></i> Buscar CPF</button>
           </div>
         </div>
       </div>
@@ -1343,10 +1424,20 @@ function criarTela(){
         <div class="comissao-card">
           <div class="comissao-head" id="comissaoTituloA">TIME A</div>
           <div class="comissao-lista" id="comissaoA"></div>
+          <div class="comissao-add">
+            <input id="novoTecnicoNomeA" placeholder="Nome do técnico">
+            <input id="novoTecnicoCpfA" placeholder="CPF do técnico">
+            <button class="btn btn-blue" onclick="adicionarTecnico('A')">+</button>
+          </div>
         </div>
         <div class="comissao-card">
           <div class="comissao-head" id="comissaoTituloB">TIME B</div>
           <div class="comissao-lista" id="comissaoB"></div>
+          <div class="comissao-add">
+            <input id="novoTecnicoNomeB" placeholder="Nome do técnico">
+            <input id="novoTecnicoCpfB" placeholder="CPF do técnico">
+            <button class="btn btn-blue" onclick="adicionarTecnico('B')">+</button>
+          </div>
         </div>
       </div>
     </section>
@@ -1390,6 +1481,23 @@ function criarTela(){
                   <option value="segundo_amarelo">2º Amarelo</option>
                 </select>
 
+                <select id="cartaoMotivoA" class="cartao-motivo">
+                  <option value="">Motivo do cartão</option>
+                  <option value="Retardar o reinício de jogo">Retardar o reinício de jogo</option>
+                  <option value="Falta temerária">Falta temerária</option>
+                  <option value="Conduta antidesportiva">Conduta antidesportiva</option>
+                  <option value="Reclamação por palavras ou gestos">Reclamação por palavras ou gestos</option>
+                  <option value="Impedir ataque promissor">Impedir ataque promissor</option>
+                  <option value="Não respeitar distância regulamentar">Não respeitar distância regulamentar</option>
+                  <option value="Reincidência de infrações">Reincidência de infrações</option>
+                  <option value="Entrada sem autorização">Entrada sem autorização</option>
+                  <option value="Simulação">Simulação</option>
+                  <option value="Jogo brusco grave">Jogo brusco grave</option>
+                  <option value="Conduta violenta">Conduta violenta</option>
+                  <option value="Linguagem ofensiva ou abusiva">Linguagem ofensiva ou abusiva</option>
+                  <option value="Segundo cartão amarelo">Segundo cartão amarelo</option>
+                </select>
+
                 <button class="btn btn-blue" onclick="adicionarCartao('A')">+</button>
               </div>
               <div id="listaCartoesA"></div>
@@ -1431,6 +1539,23 @@ function criarTela(){
                 <select id="cartaoVermelhoTipoB" style="display:none;">
                   <option value="direto">Direto</option>
                   <option value="segundo_amarelo">2º Amarelo</option>
+                </select>
+
+                <select id="cartaoMotivoB" class="cartao-motivo">
+                  <option value="">Motivo do cartão</option>
+                  <option value="Retardar o reinício de jogo">Retardar o reinício de jogo</option>
+                  <option value="Falta temerária">Falta temerária</option>
+                  <option value="Conduta antidesportiva">Conduta antidesportiva</option>
+                  <option value="Reclamação por palavras ou gestos">Reclamação por palavras ou gestos</option>
+                  <option value="Impedir ataque promissor">Impedir ataque promissor</option>
+                  <option value="Não respeitar distância regulamentar">Não respeitar distância regulamentar</option>
+                  <option value="Reincidência de infrações">Reincidência de infrações</option>
+                  <option value="Entrada sem autorização">Entrada sem autorização</option>
+                  <option value="Simulação">Simulação</option>
+                  <option value="Jogo brusco grave">Jogo brusco grave</option>
+                  <option value="Conduta violenta">Conduta violenta</option>
+                  <option value="Linguagem ofensiva ou abusiva">Linguagem ofensiva ou abusiva</option>
+                  <option value="Segundo cartão amarelo">Segundo cartão amarelo</option>
                 </select>
 
                 <button class="btn btn-blue" onclick="adicionarCartao('B')">+</button>
@@ -1583,6 +1708,9 @@ function preencher(){
   $("linkPublicoTexto").innerText = campo(sumulaSalva,["linkPublico"],linkPublico());
   $("publicadaEm").innerText = campo(sumulaSalva,["publicadaEmTexto"],"Aguardando finalização");
 
+  comissaoAEdit = carregarComissaoInicial("A");
+  comissaoBEdit = carregarComissaoInicial("B");
+
   atualizarTitulos();
   renderEscalacoes();
   renderComissao();
@@ -1633,11 +1761,7 @@ function opcoesPosicaoHtml(valorAtual){
     "Lateral Esquerdo",
     "Volante",
     "Meia",
-    "Meia Atacante",
-    "Ponta Direita",
-    "Ponta Esquerda",
-    "Atacante",
-    "Centroavante"
+    "Atacante"
   ];
 
   const existe = posicoes.some(p => normalizarTexto(p) === normalizarTexto(valor));
@@ -1679,6 +1803,24 @@ function linhaJogador(j,time){
 window.editarJogador = function(time,i,c,v){
   const lista = time === "A" ? jogadoresA : jogadoresB;
   if(!lista[i]) return;
+
+  if(c === "cpf"){
+    if(cpfJaEscalado(v, lista[i])){
+      alert("Este CPF já está na súmula. Não é permitido cadastrar o mesmo jogador 2 vezes.");
+      renderEscalacoes();
+      return;
+    }
+  }
+
+  if(c === "tipo" && v !== "suplente"){
+    const titularesSemEsse = lista.filter((j,idx) => idx !== i && j.tipo !== "suplente").length;
+    if(titularesSemEsse >= LIMITE_TITULARES){
+      alert(`Este time já tem ${LIMITE_TITULARES} titulares. Deixe este jogador como suplente.`);
+      renderEscalacoes();
+      return;
+    }
+  }
+
   lista[i][c] = v;
   montarSelects();
   salvarRascunhoRapido();
@@ -1695,6 +1837,7 @@ window.removerJogador = function(time,i){
 window.adicionarJogador = function(time){
   const n = $(`novoNum${time}`).value;
   const nome = $(`novoNome${time}`).value;
+  const cpf = $(`novoCpf${time}`).value;
   const pos = $(`novaPos${time}`).value;
   const tipo = $(`novoTipo${time}`).value;
 
@@ -1703,11 +1846,28 @@ window.adicionarJogador = function(time){
     return;
   }
 
+  if(!cpf){
+    alert("Informe o CPF do jogador.");
+    return;
+  }
+
+  if(cpfJaEscalado(cpf)){
+    alert("Este CPF já está na súmula. Não é permitido cadastrar o mesmo jogador 2 vezes.");
+    return;
+  }
+
+  const lista = time === "A" ? jogadoresA : jogadoresB;
+
+  if(tipo !== "suplente" && quantidadeTitulares(lista) >= LIMITE_TITULARES){
+    alert(`Este time já tem ${LIMITE_TITULARES} titulares. Adicione como reserva/suplente.`);
+    return;
+  }
+
   const obj = {
     id:"",
     numero:n,
     nome,
-    cpf:"",
+    cpf,
     nascimento:"",
     posicao:pos,
     categoria:campo(jogo,["categoria"],""),
@@ -1715,17 +1875,16 @@ window.adicionarJogador = function(time){
     manual:true
   };
 
-
   if(jogadorSuspenso(obj)){
     alert("Este jogador está suspenso e não pode ser escalado.");
     return;
   }
 
-  if(time === "A") jogadoresA.push(obj);
-  else jogadoresB.push(obj);
+  lista.push(obj);
 
   $(`novoNum${time}`).value = "";
   $(`novoNome${time}`).value = "";
+  $(`novoCpf${time}`).value = "";
   $(`novaPos${time}`).value = "";
 
   renderEscalacoes();
@@ -1733,46 +1892,50 @@ window.adicionarJogador = function(time){
   salvarRascunhoRapido();
 };
 
-window.buscarOutroJogador = async function(time){
-  const termo = normalizarTexto($(`buscaOutro${time}`).value);
-  if(!termo){
-    alert("Digite o nome do jogador.");
+window.buscarOutroJogadorPorCpf = async function(time){
+  const cpfBusca = limparCpf($(`buscaOutro${time}`).value);
+
+  if(!cpfBusca){
+    alert("Digite o CPF do jogador.");
     return;
   }
 
-  const timeId = time === "A" ? campo(jogo,["timeAId"], campo(jogo?.timeA,["id"],"")) : campo(jogo,["timeBId"], campo(jogo?.timeB,["id"],""));
-  const timeNome = time === "A" ? getTimeA().nome : getTimeB().nome;
+  if(cpfJaEscalado(cpfBusca)){
+    alert("Este CPF já está na súmula. Não é permitido lançar o mesmo jogador 2 vezes.");
+    return;
+  }
 
   const snap = await getDocs(collection(db,"jogadores"));
-  const encontrados = [];
+  let encontrado = null;
 
   snap.forEach(d=>{
+    if(encontrado) return;
+
     const j = {id:d.id,...d.data()};
+    const cpfJogador = limparCpf(campo(j,["cpf","CPF"],""));
 
-    const mesmoTime =
-      j.timeId === timeId ||
-      j.timeID === timeId ||
-      normalizarTexto(j.timeNome) === normalizarTexto(timeNome) ||
-      normalizarTexto(j.time) === normalizarTexto(timeNome);
-
-    const nomeBate = normalizarTexto(j.nome).includes(termo);
-
-    if(mesmoTime && nomeBate){
-      encontrados.push(normalizarJogador(j));
+    if(cpfJogador && cpfJogador === cpfBusca){
+      encontrado = normalizarJogador(j);
     }
   });
 
-  if(!encontrados.length){
-    alert("Nenhum jogador encontrado nesse time.");
+  if(!encontrado){
+    alert("Nenhum jogador cadastrado encontrado com esse CPF. Se for incluir manualmente, preencha número, nome e CPF no campo acima.");
     return;
   }
 
-  const escolhido = encontrados[0];
-  escolhido.numero = "";
-  escolhido.tipo = "suplente";
+  if(jogadorSuspenso(encontrado)){
+    alert("Este jogador está suspenso e não pode ser escalado.");
+    return;
+  }
 
-  if(time === "A") jogadoresA.push(escolhido);
-  else jogadoresB.push(escolhido);
+  const lista = time === "A" ? jogadoresA : jogadoresB;
+
+  encontrado.numero = "";
+  encontrado.tipo = quantidadeTitulares(lista) >= LIMITE_TITULARES ? "suplente" : "titular";
+  encontrado.manual = false;
+
+  lista.push(encontrado);
 
   $(`buscaOutro${time}`).value = "";
 
@@ -1780,7 +1943,7 @@ window.buscarOutroJogador = async function(time){
   montarSelects();
   salvarRascunhoRapido();
 
-  alert("Jogador puxado de outra categoria. Informe o número da camisa na súmula.");
+  alert("Jogador encontrado pelo CPF e adicionado à súmula. Informe o número da camisa se necessário.");
 };
 
 function montarSelects(){
@@ -1852,6 +2015,7 @@ window.adicionarCartao = function(time){
   const minuto = $(time === "A" ? "cartaoMinutoA" : "cartaoMinutoB").value;
   const tipo = $(time === "A" ? "cartaoTipoA" : "cartaoTipoB").value;
   const vermelhoTipo = tipo === "vermelho" ? $(time === "A" ? "cartaoVermelhoTipoA" : "cartaoVermelhoTipoB").value : "";
+  const motivo = $(time === "A" ? "cartaoMotivoA" : "cartaoMotivoB").value;
 
   const obj = {
     time,
@@ -1862,13 +2026,18 @@ window.adicionarCartao = function(time){
     minuto,
     tempo:minuto,
     tipo,
-    vermelhoTipo
+    vermelhoTipo,
+    motivoCartao:motivo,
+    motivo
   };
 
   if(time === "A") cartoesA.push(obj);
   else cartoesB.push(obj);
 
   $(time === "A" ? "cartaoMinutoA" : "cartaoMinutoB").value = "";
+  if($(time === "A" ? "cartaoMotivoA" : "cartaoMotivoB")){
+    $(time === "A" ? "cartaoMotivoA" : "cartaoMotivoB").value = "";
+  }
 
   renderEventos();
   atualizarResumo();
@@ -1890,9 +2059,10 @@ function eventoHtml(e,tipo,time,i){
 
   const fn = tipo === "gol" ? "removerGol" : "removerCartao";
 
+  const motivo = e.motivoCartao || e.motivo || "";
   return `
     <div class="event-item">
-      <span>${icone} <strong>${e.minuto || "-"}</strong> ${e.nome} Nº ${e.numero || "S/N"} ${extra}</span>
+      <span>${icone} <strong>${e.minuto || "-"}</strong> ${e.nome} Nº ${e.numero || "S/N"} ${extra}${motivo ? `<br><small>Motivo: ${motivo}</small>` : ""}</span>
       <button onclick="${fn}('${time}',${i})">X</button>
     </div>
   `;
@@ -1982,8 +2152,14 @@ function montarDados(finalizar=false){
 
     jogadoresA,
     jogadoresB,
-    comissaoA:listaComissao("A"),
-    comissaoB:listaComissao("B"),
+    comissaoA:listaComissao("A").map(t=>({...t,cpf:""})),
+    comissaoB:listaComissao("B").map(t=>({...t,cpf:""})),
+    comissaoAPrivada:listaComissao("A"),
+    comissaoBPrivada:listaComissao("B"),
+    tecnicosA:listaComissao("A").map(t=>({...t,cpf:""})),
+    tecnicosB:listaComissao("B").map(t=>({...t,cpf:""})),
+    tecnicosAPrivada:listaComissao("A"),
+    tecnicosBPrivada:listaComissao("B"),
     escalacaoA:jogadoresA,
     escalacaoB:jogadoresB,
 
@@ -2153,6 +2329,8 @@ window.finalizarSumula = async function(){
     alert("Você não tem permissão para finalizar esta súmula ou ela já está finalizada.");
     return;
   }
+
+  if(!validarTitularesAntesDeFinalizar()) return;
 
   if(!confirm("Tem certeza? Após finalizar não poderá editar.")) return;
 
