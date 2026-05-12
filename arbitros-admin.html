@@ -556,20 +556,39 @@ async function uploadFotoSeExistir(){
   const fotoUrlManual = txt(document.getElementById("foto").value);
 
   if(arquivo){
-    const formData = new FormData();
-    formData.append("key","9556c62fd6864f3e1e33d9fd4431668c");
-    formData.append("image",arquivo);
 
-    const resposta = await fetch("https://api.imgbb.com/1/upload", {
-      method:"POST",
-      body:formData
+    const base64 = await new Promise((resolve,reject)=>{
+      const leitor = new FileReader();
+
+      leitor.onload = function(e){
+        const resultado = String(e.target.result || "");
+        resolve(resultado.split(",")[1]);
+      };
+
+      leitor.onerror = function(){
+        reject(new Error("Erro ao ler a foto selecionada."));
+      };
+
+      leitor.readAsDataURL(arquivo);
     });
+
+    const formData = new FormData();
+    formData.append("image", base64);
+
+    const resposta = await fetch(
+      "https://api.imgbb.com/1/upload?key=9556c62fd6864f3e1e33d9fd4431668c",
+      {
+        method:"POST",
+        body:formData
+      }
+    );
 
     const resultado = await resposta.json();
 
-    if(!resultado.success){
-      console.error(resultado);
-      alert("Erro ao enviar foto.");
+    console.log("Resposta ImgBB:", resultado);
+
+    if(!resultado.success || !resultado.data || !resultado.data.url){
+      alert("Erro ImgBB: não foi possível enviar a foto.");
       return fotoAtual || "logo-liga.jfif";
     }
 
