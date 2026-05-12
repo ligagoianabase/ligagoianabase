@@ -1,527 +1,642 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ADM Súmulas - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-<link rel="stylesheet" href="menu.css" />
+<title>Editar Súmula ADM - Liga Goiana</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 :root{
-  --bg:#061427;
-  --card:#071d37;
-  --card2:#0d2a52;
+  --bg:#0b1f3a;
+  --card:#102a52;
+  --card2:#0d2446;
   --gold:#f7c600;
   --gold2:#ffe45c;
-  --white:#ffffff;
-  --muted:#cbd6ea;
-  --line:rgba(255,255,255,.12);
-  --gold-line:rgba(247,198,0,.45);
-  --green:#1b5e20;
-  --yellow:#7a5a00;
-  --red:#b42323;
+  --white:#fff;
+  --muted:#d9e3f2;
+  --line:rgba(255,255,255,.10);
+  --gold-line:rgba(247,198,0,.34);
+  --red:#d94141;
+  --green:#1b8f43;
   --blue:#1a3f73;
-  --shadow:0 14px 34px rgba(0,0,0,.38);
-  --max:1240px;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --max:1280px;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;min-height:100%;overflow-x:hidden}
+
+html,body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+}
 
 body{
-  font-family:Arial, sans-serif;
+  font-family:Arial,sans-serif;
   background:
-    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    linear-gradient(rgba(11,31,58,.90),rgba(11,31,58,.96)),
     url("fundo.png") center/cover fixed no-repeat;
-  color:var(--white);
-  min-height:100vh;
+  color:#fff;
 }
 
 a{text-decoration:none;color:inherit}
-button{font-family:inherit;cursor:pointer;border:none}
-input,select,textarea{font-family:inherit}
-img{display:block;max-width:100%}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer;border:none}
 
-.wrap{width:min(100% - 28px, var(--max));margin:0 auto}
-.container{padding:22px 0 34px}
+.wrap{
+  width:min(100% - 28px,var(--max));
+  margin:0 auto;
+}
 
-.hero{
-  background:
-    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
-    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
-  border:1px solid var(--gold-line);
-  border-radius:20px;
-  padding:20px;
-  margin-bottom:14px;
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
   box-shadow:var(--shadow);
 }
 
-.hero h2{
-  color:var(--gold);
-  font-size:28px;
-  font-weight:900;
-  margin-bottom:6px;
-}
-
-.hero p{
-  color:var(--muted);
-  line-height:1.5;
-  font-size:14px;
-}
-
-.hero-tags{
+.header-inner{
+  min-height:84px;
   display:flex;
-  gap:6px;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
   flex-wrap:wrap;
-  margin-top:12px;
+  padding:14px 0;
 }
 
-.hero-tag{
-  background:rgba(26,63,115,.9);
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:11px;
-  border:1px solid rgba(255,255,255,.08);
-  font-weight:800;
-}
-
-.filtros{
-  display:grid;
-  grid-template-columns:1.5fr 1fr 1fr 1fr;
+.header-left,
+.header-right{
+  display:flex;
+  align-items:center;
   gap:10px;
-  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:900;
+}
+
+.btn-light{background:#fff4cf;color:#111}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
+.btn-green{background:var(--green);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+.btn-blue{background:var(--blue);color:#fff}
+
+.container{padding:24px 0 34px}
+
+.hero-panel,
+.form-panel,
+.list-panel{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
+
+.hero-panel h2{
+  font-size:28px;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
+.hero-panel p{
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.bloco-titulo{
+  margin:0 0 14px;
+  color:var(--gold);
+  font-size:18px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.full{grid-column:1/-1}
+
+label{
+  display:block;
+  margin:0 0 6px;
+  font-weight:900;
+  color:#eef4ff;
+  font-size:13px;
 }
 
 input,select,textarea{
   width:100%;
   padding:12px;
   border:none;
-  border-radius:12px;
+  border-radius:10px;
   font-size:14px;
   background:#f5f7fb;
   color:#111;
   outline:none;
-  box-shadow:0 8px 18px rgba(0,0,0,.22);
 }
 
-textarea{min-height:90px;resize:vertical;line-height:1.35}
-input:focus,select:focus,textarea:focus{outline:2px solid rgba(247,198,0,.65)}
+textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+.score-box{
+  display:grid;
+  grid-template-columns:1fr 160px 1fr;
+  align-items:center;
+  gap:14px;
+}
+
+.team-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:14px;
+  text-align:center;
+}
+
+.team-card img{
+  width:84px;
+  height:84px;
+  object-fit:contain;
+  background:#fff;
+  border-radius:16px;
+  border:2px solid var(--gold);
+  margin:0 auto 8px;
+}
+
+.team-card strong{
+  color:var(--gold);
+  font-size:18px;
+  display:block;
+}
+
+.placar-edit{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  color:var(--gold);
+  font-size:34px;
+  font-weight:900;
+}
+
+.placar-edit input{
+  width:68px;
+  text-align:center;
+  font-size:28px;
+  font-weight:900;
+}
 
 .top-actions{
   display:flex;
-  justify-content:space-between;
-  align-items:center;
   gap:10px;
   flex-wrap:wrap;
-  margin-bottom:12px;
+  margin-top:16px;
 }
 
-.titulo-secao{
-  color:var(--gold);
-  font-size:22px;
-  font-weight:900;
-  margin:0 0 2px;
-}
-
-.lista-grid{
-  display:grid;
-  grid-template-columns:repeat(5, 1fr);
-  gap:12px;
-}
-
-.card{
-  background:
-    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border:1px solid rgba(247,198,0,.22);
-  border-radius:15px;
-  padding:12px;
-  box-shadow:0 8px 20px rgba(0,0,0,.25);
-  transition:.25s ease;
-  text-align:center;
-  min-height:265px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-
-.card:hover{transform:translateY(-1px);border-color:var(--gold)}
-
-.card-top{
-  display:flex;
+.action-btn,
+.link-btn{
+  display:inline-flex;
   align-items:center;
-  justify-content:space-between;
-  gap:6px;
-  margin-bottom:8px;
+  justify-content:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:900;
 }
 
-.card-icon{
-  width:30px;
-  height:30px;
-  border-radius:9px;
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
+.action-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
   color:#111;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:14px;
-  flex-shrink:0;
 }
 
-.status-area{display:flex;justify-content:flex-end;gap:5px;flex-wrap:wrap}
-.status{
-  color:#fff;
-  padding:5px 8px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:900;
-  background:var(--blue);
+.link-btn{
+  background:var(--gold);
+  color:#111;
+  font-size:12px;
 }
-.status.finalizada,.status.publicada{background:var(--green)}
-.status.pendente{background:var(--yellow)}
-.status.andamento{background:var(--blue)}
-.status.cancelada{background:var(--red)}
 
-.times-linha{
+.event-list{
   display:grid;
-  grid-template-columns:1fr 58px 1fr;
-  align-items:center;
-  gap:6px;
-  margin:6px 0 8px;
+  gap:8px;
+  margin-top:12px;
 }
 
-.time-box{
-  display:flex;
-  align-items:center;
-  gap:5px;
-  min-width:0;
-  font-size:12px;
-  font-weight:900;
-}
-
-.time-box.visitante{justify-content:flex-end;text-align:right;flex-direction:row-reverse}
-.time-box span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-.escudo{
-  width:26px;
-  height:26px;
-  border-radius:50%;
-  border:1px solid var(--gold);
-  object-fit:cover;
-  background:#fff;
-  flex-shrink:0;
-}
-
-.placar{
-  color:var(--gold);
-  font-size:15px;
-  font-weight:900;
-  background:rgba(2,10,24,.9);
-  border:1px solid var(--gold-line);
-  border-radius:8px;
-  width:58px;
-  height:28px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.info-jogo{
-  color:var(--muted);
-  font-size:11px;
-  line-height:1.3;
-  text-align:center;
-  margin:6px 0 8px;
-}
-.info-jogo strong{color:#fff}
-
-.tags{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-bottom:10px}
-.tag{
-  background:rgba(26,63,115,.9);
-  padding:4px 6px;
-  border-radius:999px;
-  font-size:10px;
+.event-item{
+  background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.08);
-  font-weight:800;
-}
-
-.card-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:auto}
-
-.btn-mini,.btn-main,.btn-danger,.btn-gray,.btn-blue,.btn-green,.btn-acao{
-  width:100%;
-  min-height:36px;
-  padding:8px 8px;
-  border-radius:9px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:5px;
-  font-size:12px;
-}
-
-.btn-main{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
-.btn-danger{background:var(--red);color:#fff}
-.btn-gray{background:#4b5563;color:#fff}
-.btn-blue{background:#1a3f73;color:#fff;border:1px solid rgba(255,255,255,.08)}
-.btn-green{background:#25d366;color:#fff}
-.btn-mini:hover,.btn-main:hover,.btn-danger:hover,.btn-gray:hover,.btn-blue:hover,.btn-green:hover,.btn-acao:hover{transform:translateY(-1px)}
-.top-actions .btn-blue{width:auto}
-
-.vazio{
-  color:var(--muted);
-  text-align:center;
-  padding:18px;
-  background:rgba(7,29,55,.9);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  grid-column:1/-1;
-}
-
-.modal-bg{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.72);
-  display:none;
-  align-items:flex-start;
-  justify-content:center;
-  padding:18px 10px;
-  z-index:9999;
-  overflow:auto;
-}
-.modal-bg.ativo{display:flex}
-
-.modal{
-  width:min(100%,1060px);
-  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(8,23,44,.99));
-  border-radius:18px;
-  border:1px solid var(--gold-line);
-  box-shadow:0 20px 60px rgba(0,0,0,.48);
-  overflow:hidden;
-  color:#fff;
-}
-
-.modal-head{
-  background:linear-gradient(135deg, rgba(16,42,82,.98), rgba(8,23,44,.98));
-  color:#fff;
-  border-bottom:3px solid var(--gold);
-  padding:14px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-.modal-head h2{font-size:20px;font-weight:900;text-transform:uppercase;color:var(--gold)}
-.modal-close{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.12);color:#fff;font-size:18px}
-.modal-body{padding:14px;background:rgba(2,8,20,.38)}
-
-.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
-.form-grid .full{grid-column:1/-1}
-.form-grid .half{grid-column:span 2}
-.label{display:block;color:var(--gold);font-size:11px;font-weight:900;text-transform:uppercase;margin:0 0 5px 2px}
-
-.editor-box{
-  background:rgba(7,29,55,.92);
-  border:1px solid rgba(247,198,0,.22);
-  border-radius:14px;
-  padding:12px;
-  margin-bottom:12px;
-}
-.editor-title{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--gold);font-size:15px;font-weight:900;text-transform:uppercase;margin-bottom:10px}
-.editor-title .btn-main{width:auto}
-
-.table-wrap{overflow:auto;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:#fff}
-table{width:100%;border-collapse:collapse;min-width:760px}
-th{background:#061d44;color:#fff;font-size:11px;text-transform:uppercase;padding:8px;text-align:left}
-td{border-bottom:1px solid #e5eaf1;padding:6px;font-size:12px;color:#111;vertical-align:middle}
-tr:last-child td{border-bottom:none}
-td input,td select{padding:8px;border-radius:8px;font-size:12px;box-shadow:none}
-.row-actions{display:flex;gap:5px;justify-content:center}
-.del{width:32px;height:32px;border-radius:8px;background:var(--red);color:#fff}
-
-.modal-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding:14px;background:rgba(7,29,55,.96);border-top:1px solid rgba(255,255,255,.12)}
-.modal-actions button{width:auto}
-
-.alerta{
-  background:rgba(247,198,0,.12);
-  color:#ffe45c;
-  border:1px solid rgba(247,198,0,.35);
   border-radius:12px;
   padding:10px;
-  font-size:12px;
-  line-height:1.4;
-  margin-bottom:12px;
-  font-weight:800;
+  display:grid;
+  grid-template-columns:70px 1fr 120px 110px 42px;
+  gap:8px;
+  align-items:center;
 }
 
-.toast{
-  position:fixed;
-  right:14px;
-  bottom:14px;
-  background:#071d37;
-  color:#fff;
-  border:1px solid var(--gold);
-  border-radius:14px;
-  padding:12px 14px;
-  box-shadow:0 10px 30px rgba(0,0,0,.30);
-  z-index:10000;
+.status{
   display:none;
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
   font-weight:900;
   font-size:13px;
 }
-.toast.ativo{display:block}
 
-@media(max-width:1100px){
-  .lista-grid{grid-template-columns:repeat(4, 1fr)}
-  .filtros{grid-template-columns:1fr 1fr}
-  .form-grid{grid-template-columns:1fr 1fr}
+.status-ok{
+  display:block;
+  background:rgba(27,143,67,.18);
+  color:#aaf0bd;
+  border:1px solid rgba(27,143,67,.35);
+}
+
+.status-erro{
+  display:block;
+  background:rgba(217,65,65,.18);
+  color:#ffb7b7;
+  border:1px solid rgba(217,65,65,.35);
+}
+
+.status-aviso{
+  display:block;
+  background:rgba(247,198,0,.16);
+  color:#ffe690;
+  border:1px solid rgba(247,198,0,.35);
+}
+
+.mensagem-vazia{
+  color:var(--muted);
+  text-align:center;
+  padding:16px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;
 }
 
 @media(max-width:900px){
-  .filtros{grid-template-columns:1fr}
-  .lista-grid{grid-template-columns:repeat(3, 1fr)}
-  .hero h2{font-size:22px}
+  .header-title{
+    order:3;
+    width:100%;
+    text-align:center;
+    font-size:19px;
+  }
+
+  .header-left,
+  .header-right{
+    width:100%;
+    justify-content:center;
+  }
+
+  .grid,
+  .grid-2,
+  .score-box{
+    grid-template-columns:1fr;
+  }
+
+  .event-item{
+    grid-template-columns:1fr;
+  }
 }
 
-@media(max-width:650px){
-  .lista-grid{grid-template-columns:repeat(2, 1fr)}
-  .card-actions{grid-template-columns:1fr}
-  .form-grid{grid-template-columns:1fr}
-  .form-grid .half{grid-column:1/-1}
-  .modal-bg{padding:8px 0}
-  .modal{border-radius:0}
-  .modal-body{padding:10px}
-  .modal-actions{justify-content:stretch}
-  .modal-actions button{width:100%}
-}
+@media(max-width:600px){
+  .top-btn,
+  .action-btn,
+  .link-btn{
+    width:100%;
+  }
 
-@media(max-width:430px){
-  .lista-grid{grid-template-columns:1fr}
+  .hero-panel h2{
+    font-size:23px;
+  }
+
+  .hero-panel,
+  .form-panel,
+  .list-panel{
+    padding:16px;
+  }
 }
 </style>
 </head>
+
 <body>
 
-<main class="wrap container">
-  <section class="hero">
-    <h2>Administração de Súmulas</h2>
-    <p>Controle, publicação e correção oficial depois da finalização pelo árbitro.</p>
+<header>
+  <div class="wrap header-inner">
+    <div class="header-left">
+      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
 
-    <div class="hero-tags">
-      <div class="hero-tag" id="tagTotal">Súmulas: 0</div>
-      <div class="hero-tag" id="tagFinalizadas">Finalizadas: 0</div>
-      <div class="hero-tag" id="tagPendentes">Pendentes: 0</div>
-      <div class="hero-tag">Correção ADM</div>
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
+
+      <a href="sumulas-admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-file-lines"></i> Súmulas
+      </a>
     </div>
-  </section>
 
-  <section class="filtros">
-    <input id="busca" placeholder="Pesquisar time, campeonato, categoria, árbitro ou local...">
-    <select id="filtroStatus">
-      <option value="">Todos os status</option>
-      <option value="finalizada">Finalizadas/Publicadas</option>
-      <option value="pendente">Pendentes</option>
-      <option value="andamento">Em andamento</option>
-    </select>
-    <select id="filtroCampeonato"><option value="">Todos os campeonatos</option></select>
-    <select id="filtroCategoria"><option value="">Todas categorias</option></select>
-  </section>
+    <div class="header-title">Editar Súmula ADM</div>
+
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarEReprocessar()">
+        <i class="fa-solid fa-arrows-rotate"></i> Salvar e Reprocessar
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+<section class="hero-panel">
+  <h2>Correção de Súmula Finalizada</h2>
+  <p>
+    Use esta página apenas quando o árbitro finalizou a súmula e algum dado precisa ser corrigido.
+    O sistema salva a correção, republica a súmula pública e reprocessa estatísticas usando base recalculada.
+  </p>
+  <div id="statusBox" class="status"></div>
+</section>
+
+<section class="form-panel">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-magnifying-glass"></i> Buscar Súmula
+  </h3>
+
+  <div class="grid">
+    <div class="full">
+      <label>Súmula / Jogo</label>
+      <select id="sumulaSelect" onchange="carregarSumulaSelecionada()">
+        <option value="">Carregando súmulas...</option>
+      </select>
+    </div>
+  </div>
 
   <div class="top-actions">
-    <h2 class="titulo-secao">Súmulas cadastradas</h2>
-    <button class="btn-blue" onclick="recarregarTela()"><i class="fa-solid fa-rotate"></i> Atualizar</button>
+    <button class="action-btn" type="button" onclick="carregarListaSumulas()">
+      <i class="fa-solid fa-rotate"></i> Atualizar Lista
+    </button>
+  </div>
+</section>
+
+<section class="form-panel" id="painelEdicao" style="display:none">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-pen-to-square"></i> Dados da Partida
+  </h3>
+
+  <div class="score-box">
+    <div class="team-card">
+      <img id="logoA" src="logo-liga.jfif">
+      <strong id="nomeA">Time A</strong>
+    </div>
+
+    <div class="placar-edit">
+      <input id="placarA" type="number" min="0" value="0">
+      <span>x</span>
+      <input id="placarB" type="number" min="0" value="0">
+    </div>
+
+    <div class="team-card">
+      <img id="logoB" src="logo-liga.jfif">
+      <strong id="nomeB">Time B</strong>
+    </div>
   </div>
 
-  <section class="lista-grid" id="listaSumulas">
-    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando súmulas...</div>
-  </section>
-</main>
-
-<div class="modal-bg" id="modalEditor">
-  <div class="modal">
-    <div class="modal-head">
-      <h2 id="modalTitulo">Editar Súmula</h2>
-      <button class="modal-close" onclick="fecharEditor()"><i class="fa-solid fa-xmark"></i></button>
+  <div class="grid" style="margin-top:16px">
+    <div>
+      <label>Campeonato</label>
+      <input id="campeonato">
     </div>
 
-    <div class="modal-body">
-      <div class="alerta">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-        Correção ADM: ao salvar, a súmula pública continua publicada/finalizada e os dados principais são atualizados no Firebase.
-      </div>
-
-      <div class="form-grid">
-        <div class="half"><label class="label">Campeonato</label><input id="edCampeonato"></div>
-        <div><label class="label">Categoria</label><input id="edCategoria"></div>
-        <div><label class="label">Rodada/Fase</label><input id="edRodada"></div>
-        <div><label class="label">Time A</label><input id="edTimeA"></div>
-        <div><label class="label">Gols A</label><input id="edGolsA" type="number" min="0"></div>
-        <div><label class="label">Gols B</label><input id="edGolsB" type="number" min="0"></div>
-        <div><label class="label">Time B</label><input id="edTimeB"></div>
-        <div><label class="label">Data</label><input id="edData" type="date"></div>
-        <div><label class="label">Hora</label><input id="edHora" type="time"></div>
-        <div class="half"><label class="label">Local/Campo</label><input id="edLocal"></div>
-        <div class="half"><label class="label">Árbitro</label><input id="edArbitro"></div>
-        <div><label class="label">Assistente 1</label><input id="edAssistente1"></div>
-        <div><label class="label">Assistente 2</label><input id="edAssistente2"></div>
-        <div><label class="label">4º Árbitro</label><input id="edQuarto"></div>
-        <div class="full"><label class="label">Observações / Correção ADM</label><textarea id="edObs" placeholder="Descreva a correção feita pelo ADM..."></textarea></div>
-      </div>
-
-      <div class="editor-box">
-        <div class="editor-title">
-          <span><i class="fa-solid fa-futbol"></i> Gols</span>
-          <button class="btn-main" onclick="adicionarGol()"><i class="fa-solid fa-plus"></i> Adicionar Gol</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Time</th><th>Jogador</th><th>Nº</th><th>Minuto</th><th>Tipo</th><th>Ação</th></tr></thead>
-            <tbody id="tbodyGols"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="editor-box">
-        <div class="editor-title">
-          <span><i class="fa-solid fa-square"></i> Cartões</span>
-          <button class="btn-main" onclick="adicionarCartao()"><i class="fa-solid fa-plus"></i> Adicionar Cartão</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Time</th><th>Jogador</th><th>Nº</th><th>Minuto</th><th>Cartão</th><th>Vermelho</th><th>Ação</th></tr></thead>
-            <tbody id="tbodyCartoes"></tbody>
-          </table>
-        </div>
-      </div>
+    <div>
+      <label>Categoria</label>
+      <input id="categoria">
     </div>
 
-    <div class="modal-actions">
-      <button class="btn-gray" onclick="fecharEditor()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
-      <button class="btn-blue" onclick="abrirPublicaAtual()"><i class="fa-solid fa-eye"></i> Ver Pública</button>
-      <button class="btn-green" onclick="salvarCorrecaoAdmin()"><i class="fa-solid fa-floppy-disk"></i> Salvar Correção ADM</button>
+    <div>
+      <label>Data</label>
+      <input id="dataJogo">
+    </div>
+
+    <div>
+      <label>Hora</label>
+      <input id="horaJogo">
+    </div>
+
+    <div>
+      <label>Local</label>
+      <input id="localJogo">
+    </div>
+
+    <div>
+      <label>Árbitro</label>
+      <input id="arbitro">
+    </div>
+
+    <div class="full">
+      <label>Observações</label>
+      <textarea id="observacoes"></textarea>
     </div>
   </div>
+</section>
+
+<section class="grid-2" id="painelEventos" style="display:none">
+
+  <div class="form-panel">
+    <h3 class="bloco-titulo">
+      <i class="fa-solid fa-futbol"></i> Gols
+    </h3>
+
+    <div class="grid">
+      <div>
+        <label>Time</label>
+        <select id="golTime">
+          <option value="A">Time A</option>
+          <option value="B">Time B</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Jogador</label>
+        <input id="golNome" placeholder="Nome do jogador">
+      </div>
+
+      <div>
+        <label>Nº</label>
+        <input id="golNumero" placeholder="10">
+      </div>
+
+      <div>
+        <label>Minuto</label>
+        <input id="golMinuto" placeholder="23">
+      </div>
+
+      <div>
+        <label>Tipo</label>
+        <select id="golTipo">
+          <option value="normal">Gol</option>
+          <option value="penalti">Pênalti</option>
+          <option value="contra">Contra</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button class="action-btn" type="button" onclick="adicionarGol()">
+        <i class="fa-solid fa-plus"></i> Adicionar Gol
+      </button>
+    </div>
+
+    <div id="listaGols" class="event-list"></div>
+  </div>
+
+  <div class="form-panel">
+    <h3 class="bloco-titulo">
+      <i class="fa-solid fa-square"></i> Cartões
+    </h3>
+
+    <div class="grid">
+      <div>
+        <label>Time</label>
+        <select id="cartaoTime">
+          <option value="A">Time A</option>
+          <option value="B">Time B</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Jogador</label>
+        <input id="cartaoNome" placeholder="Nome do jogador">
+      </div>
+
+      <div>
+        <label>Nº</label>
+        <input id="cartaoNumero" placeholder="5">
+      </div>
+
+      <div>
+        <label>Minuto</label>
+        <input id="cartaoMinuto" placeholder="45">
+      </div>
+
+      <div>
+        <label>Tipo</label>
+        <select id="cartaoTipo" onchange="toggleVermelho()">
+          <option value="amarelo">Amarelo</option>
+          <option value="vermelho">Vermelho</option>
+        </select>
+      </div>
+
+      <div id="boxVermelho" style="display:none">
+        <label>Tipo de vermelho</label>
+        <select id="vermelhoTipo">
+          <option value="direto">Direto</option>
+          <option value="segundo_amarelo">2º Amarelo</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button class="action-btn" type="button" onclick="adicionarCartao()">
+        <i class="fa-solid fa-plus"></i> Adicionar Cartão
+      </button>
+    </div>
+
+    <div id="listaCartoes" class="event-list"></div>
+  </div>
+
+</section>
+
+<section class="form-panel" id="painelFinal" style="display:none">
+  <h3 class="bloco-titulo">
+    <i class="fa-solid fa-clock-rotate-left"></i> Histórico da Correção
+  </h3>
+
+  <div class="grid">
+    <div class="full">
+      <label>Motivo da correção</label>
+      <textarea id="motivoCorrecao" placeholder="Ex: árbitro lançou cartão no jogador errado / placar estava incorreto"></textarea>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <button class="action-btn btn-green" type="button" onclick="salvarEReprocessar()">
+      <i class="fa-solid fa-check"></i> Salvar, Republicar e Reprocessar
+    </button>
+
+    <button class="action-btn btn-blue" type="button" onclick="abrirPublica()">
+      <i class="fa-solid fa-eye"></i> Ver Súmula Pública
+    </button>
+  </div>
+</section>
+
 </div>
 
-<div class="toast" id="toast"></div>
-
 <script type="module">
-import { renderMenu } from "./menu.js";
-import { db } from "./firebase.js";
-import { collection, doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { auth, db } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  serverTimestamp,
+  increment,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-try{ renderMenu("sumula-admin"); }catch(e){ console.warn("Menu não carregado", e); }
+let usuarioAtual = null;
+let perfilAtual = null;
+let sumulasCache = [];
+let sumulaAtual = null;
+let jogoAtual = null;
+let gols = [];
+let cartoes = [];
 
-let jogos = [];
-let sumulas = [];
-let editando = null;
-let golsEdit = [];
-let cartoesEdit = [];
+function el(id){ return document.getElementById(id); }
 
-const $ = id => document.getElementById(id);
-const norm = txt => String(txt || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+function texto(v){ return String(v || "").trim(); }
+
+function n(v){
+  const num = Number(v);
+  return Number.isFinite(num) ? num : 0;
+}
+
+function normalizar(v){
+  return texto(v).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
 
 function campo(obj,chaves,fallback=""){
   for(const c of chaves){
@@ -530,402 +645,429 @@ function campo(obj,chaves,fallback=""){
   return fallback;
 }
 
-function nomeTime(obj,fallback="TIME"){
-  if(obj && typeof obj === "object") return campo(obj,["nome","nomeTime","time","equipe"],fallback);
-  return obj || fallback;
+function nomeTime(t,fallback){
+  if(t && typeof t === "object") return campo(t,["nome","nomeTime","time","equipe"],fallback);
+  return t || fallback;
 }
 
-function logoTime(obj){
-  if(obj && typeof obj === "object") return campo(obj,["logo","escudo","imagem","foto"],"logo-liga.jfif");
+function logoTime(t){
+  if(t && typeof t === "object") return campo(t,["logo","escudo","imagem"],"logo-liga.jfif");
   return "logo-liga.jfif";
 }
 
-function dataMs(v){
-  if(!v) return 0;
-  if(typeof v.toDate === "function") return v.toDate().getTime();
-  const d = new Date(v).getTime();
-  return isNaN(d) ? 0 : d;
+function mostrarStatus(msg,tipo="ok"){
+  const box = el("statusBox");
+  box.className = "status " + (tipo === "erro" ? "status-erro" : tipo === "aviso" ? "status-aviso" : "status-ok");
+  box.innerText = msg;
+  setTimeout(()=>{ box.style.display = "none"; }, 5000);
 }
 
-function dataBR(v){
-  if(!v) return "-";
-  if(typeof v.toDate === "function") v = v.toDate();
-  const d = new Date(v);
-  if(isNaN(d.getTime())) return String(v);
-  return d.toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+window.voltarPagina = function(){
+  if(window.history.length > 1) window.history.back();
+  else window.location.href = "admin.html";
+};
+
+async function carregarPerfil(){
+  if(!usuarioAtual) return null;
+
+  const refs = [
+    doc(db,"usuarios",usuarioAtual.uid),
+    doc(db,"users",usuarioAtual.uid),
+    doc(db,"admins",usuarioAtual.uid)
+  ];
+
+  for(const r of refs){
+    const snap = await getDoc(r);
+    if(snap.exists()) return {id:snap.id,...snap.data()};
+  }
+
+  return {id:usuarioAtual.uid,email:usuarioAtual.email || ""};
 }
 
-function toDateInput(v){
-  if(!v) return "";
-  if(typeof v.toDate === "function") v = v.toDate();
-  const d = new Date(v);
-  if(isNaN(d.getTime())) return "";
-  return d.toISOString().slice(0,10);
+function ehAdmin(){
+  const tipo = normalizar(campo(perfilAtual,["tipo","tipoUsuario","perfil","cargo","role"],""));
+  const nivel = normalizar(campo(perfilAtual,["nivel","permissao"],""));
+  return tipo.includes("admin") || nivel.includes("admin") || perfilAtual?.admin === true || perfilAtual?.autorizado === true;
 }
 
-function statusFinalizado(s){
-  const st = norm(s?.status);
-  const ss = norm(s?.sumulaStatus);
-  return s?.sumulaFinalizada === true ||
-    s?.publica === true ||
-    s?.publico === true ||
-    s?.verSumula === true ||
-    ["finalizado","finalizada","publicado","publicada"].includes(st) ||
-    ["finalizado","finalizada","publicado","publicada"].includes(ss);
+function nomeJogo(s){
+  const a = nomeTime(s.timeA, campo(s,["timeANome","mandante"],"Time A"));
+  const b = nomeTime(s.timeB, campo(s,["timeBNome","visitante"],"Time B"));
+  const data = campo(s,["data","dataJogo"],"");
+  return `${a} x ${b}${data ? " - " + data : ""}`;
 }
 
-function statusClasse(item){
-  if(statusFinalizado(item.raw)) return "finalizada";
-  const st = norm(item.status);
-  if(st.includes("andamento")) return "andamento";
-  if(st.includes("cancel")) return "cancelada";
-  return "pendente";
-}
+window.carregarListaSumulas = async function(){
+  const select = el("sumulaSelect");
+  select.innerHTML = `<option value="">Carregando súmulas...</option>`;
 
-function statusTexto(item){
-  const c = statusClasse(item);
-  if(c === "finalizada") return "Finalizada";
-  if(c === "andamento") return "Em andamento";
-  if(c === "cancelada") return "Cancelada";
-  return "Pendente";
-}
+  try{
+    const snap = await getDocs(collection(db,"sumulas"));
+    sumulasCache = [];
+    snap.forEach(d=>sumulasCache.push({id:d.id,...d.data()}));
 
-function pegarJogo(id){
-  return jogos.find(j => String(j.id) === String(id) || String(j.sumulaId || "") === String(id)) || {};
-}
+    sumulasCache.sort((a,b)=>String(b.finalizadaEm || b.data || "").localeCompare(String(a.finalizadaEm || a.data || "")));
 
-function itemCompleto(s){
-  const id = s.id || s.jogoId || s.idJogo;
-  const j = pegarJogo(s.jogoId || s.idJogo || s.id);
-  const timeA = s.timeA || j.timeA || {nome:campo(s,["timeANome","mandante"],"Time A"), logo:campo(s,["logoA","escudoTimeA"],"logo-liga.jfif")};
-  const timeB = s.timeB || j.timeB || {nome:campo(s,["timeBNome","visitante"],"Time B"), logo:campo(s,["logoB","escudoTimeB"],"logo-liga.jfif")};
+    select.innerHTML = `<option value="">Selecione uma súmula</option>` + sumulasCache.map(s=>{
+      const status = s.sumulaFinalizada || s.status === "finalizado" ? "FINALIZADA" : "RASCUNHO";
+      return `<option value="${s.id}">${nomeJogo(s)} — ${status}</option>`;
+    }).join("");
 
-  return {
-    id:String(id || ""),
-    jogoId:String(s.jogoId || s.idJogo || j.id || id || ""),
-    campeonato:campo(s,["campeonato","campeonatoNome"],campo(j,["campeonato","campeonatoNome"],"Campeonato")),
-    categoria:campo(s,["categoria"],campo(j,["categoria"],"-")),
-    rodada:campo(s,["rodada","fase"],campo(j,["rodada","fase"],"-")),
-    local:campo(s,["local","campo","estadio"],campo(j,["local","campo","estadio"],"-")),
-    data:campo(s,["finalizadaEm","publicadaEm","data","dataHora"],campo(j,["data","dataHora"],"")),
-    hora:campo(s,["hora","horario"],campo(j,["hora","horario"],"")),
-    arbitro:campo(s,["arbitro","arbitroNome"],campo(j,["arbitro","arbitroNome"],"-")),
-    assistente1:campo(s,["assistente1"],campo(j,["assistente1"],"")),
-    assistente2:campo(s,["assistente2"],campo(j,["assistente2"],"")),
-    quartoArbitro:campo(s,["quartoArbitro","quarto_arbitro"],campo(j,["quartoArbitro","quarto_arbitro"],"")),
-    timeA,
-    timeB,
-    golsA:Number(campo(s,["golsA","placarA","golsMandante"],campo(j,["golsA","placarA"],0))),
-    golsB:Number(campo(s,["golsB","placarB","golsVisitante"],campo(j,["golsB","placarB"],0))),
-    status:campo(s,["status","sumulaStatus"],campo(j,["status","sumulaStatus"],"pendente")),
-    raw:s
-  };
-}
-
-function baseLista(){
-  const mapa = new Map();
-  sumulas.forEach(s=>{
-    const item = itemCompleto(s);
-    if(item.id) mapa.set(item.id,item);
-  });
-
-  jogos.forEach(j=>{
-    const id = String(j.sumulaId || j.jogoId || j.id || "");
-    if(!id || mapa.has(id)) return;
-    mapa.set(id,itemCompleto({...j,id,jogoId:j.id}));
-  });
-
-  return Array.from(mapa.values());
-}
-
-function listaFiltrada(){
-  const busca = norm($("busca").value);
-  const st = $("filtroStatus").value;
-  const camp = $("filtroCampeonato").value;
-  const cat = $("filtroCategoria").value;
-
-  return baseLista().filter(x=>{
-    if(st && statusClasse(x) !== st) return false;
-    if(camp && x.campeonato !== camp) return false;
-    if(cat && x.categoria !== cat) return false;
-
-    if(busca){
-      const txt = norm(`${nomeTime(x.timeA)} ${nomeTime(x.timeB)} ${x.campeonato} ${x.categoria} ${x.local} ${x.arbitro} ${x.rodada}`);
-      if(!txt.includes(busca)) return false;
+    const idUrl = new URLSearchParams(location.search).get("id");
+    if(idUrl){
+      select.value = idUrl;
+      carregarSumulaSelecionada();
     }
+  }catch(e){
+    console.error(e);
+    mostrarStatus("Erro ao carregar súmulas.","erro");
+  }
+};
 
-    return true;
-  }).sort((a,b)=>dataMs(b.data)-dataMs(a.data));
+window.carregarSumulaSelecionada = async function(){
+  const id = el("sumulaSelect").value;
+  if(!id) return;
+
+  const sumulaSnap = await getDoc(doc(db,"sumulas",id));
+  if(!sumulaSnap.exists()) return mostrarStatus("Súmula não encontrada.","erro");
+
+  sumulaAtual = {id:sumulaSnap.id,...sumulaSnap.data()};
+
+  const jogoSnap = await getDoc(doc(db,"jogos",id));
+  jogoAtual = jogoSnap.exists() ? {id:jogoSnap.id,...jogoSnap.data()} : {};
+
+  gols = Array.isArray(sumulaAtual.gols) ? [...sumulaAtual.gols] : [];
+  cartoes = Array.isArray(sumulaAtual.cartoes) ? [...sumulaAtual.cartoes] : [];
+
+  preencherTela();
+};
+
+function preencherTela(){
+  const timeA = sumulaAtual.timeA || jogoAtual.timeA || {};
+  const timeB = sumulaAtual.timeB || jogoAtual.timeB || {};
+
+  el("nomeA").innerText = nomeTime(timeA, campo(sumulaAtual,["timeANome"],"Time A"));
+  el("nomeB").innerText = nomeTime(timeB, campo(sumulaAtual,["timeBNome"],"Time B"));
+  el("logoA").src = logoTime(timeA);
+  el("logoB").src = logoTime(timeB);
+
+  el("placarA").value = campo(sumulaAtual,["golsA","placarA"],gols.filter(g=>g.time==="A").length);
+  el("placarB").value = campo(sumulaAtual,["golsB","placarB"],gols.filter(g=>g.time==="B").length);
+
+  el("campeonato").value = campo(sumulaAtual,["campeonato","campeonatoNome"],campo(jogoAtual,["campeonato","campeonatoNome"],""));
+  el("categoria").value = campo(sumulaAtual,["categoria"],campo(jogoAtual,["categoria"],""));
+  el("dataJogo").value = campo(sumulaAtual,["data","dataJogo"],campo(jogoAtual,["data","dataJogo"],""));
+  el("horaJogo").value = campo(sumulaAtual,["hora","horario"],campo(jogoAtual,["hora","horario"],""));
+  el("localJogo").value = campo(sumulaAtual,["local","campo","estadio"],campo(jogoAtual,["local","campo","estadio"],""));
+  el("arbitro").value = campo(sumulaAtual,["arbitro","arbitroNome"],campo(jogoAtual,["arbitro","arbitroNome"],""));
+  el("observacoes").value = campo(sumulaAtual,["observacoes","observacoesArbitro"],"");
+
+  el("painelEdicao").style.display = "block";
+  el("painelEventos").style.display = "grid";
+  el("painelFinal").style.display = "block";
+
+  renderGols();
+  renderCartoes();
+
+  mostrarStatus("Súmula carregada para correção.","aviso");
 }
 
-function preencherFiltros(){
-  const campAtual = $("filtroCampeonato").value;
-  const catAtual = $("filtroCategoria").value;
-  const lista = baseLista();
-
-  const camps = [...new Set(lista.map(x=>x.campeonato).filter(Boolean))].sort();
-  $("filtroCampeonato").innerHTML = `<option value="">Todos os campeonatos</option>` + camps.map(c=>`<option value="${c}">${c}</option>`).join("");
-  if(camps.includes(campAtual)) $("filtroCampeonato").value = campAtual;
-
-  const cats = [...new Set(lista.filter(x=>!$("filtroCampeonato").value || x.campeonato === $("filtroCampeonato").value).map(x=>x.categoria).filter(Boolean))].sort();
-  $("filtroCategoria").innerHTML = `<option value="">Todas categorias</option>` + cats.map(c=>`<option value="${c}">${c}</option>`).join("");
-  if(cats.includes(catAtual)) $("filtroCategoria").value = catAtual;
+function atualizarPlacarPelosGols(){
+  el("placarA").value = gols.filter(g=>g.time === "A").length;
+  el("placarB").value = gols.filter(g=>g.time === "B").length;
 }
 
-function atualizarTags(){
-  const lista = baseLista();
-  $("tagTotal").innerText = `Súmulas: ${lista.length}`;
-  $("tagFinalizadas").innerText = `Finalizadas: ${lista.filter(x=>statusClasse(x)==="finalizada").length}`;
-  $("tagPendentes").innerText = `Pendentes: ${lista.filter(x=>statusClasse(x)==="pendente").length}`;
-}
+window.adicionarGol = function(){
+  const time = el("golTime").value;
+  const nome = texto(el("golNome").value);
+  if(!nome) return mostrarStatus("Digite o nome do jogador do gol.","erro");
 
-function renderizar(){
-  atualizarTags();
-  const lista = listaFiltrada();
-  const box = $("listaSumulas");
+  gols.push({
+    time,
+    timeNome:time === "A" ? el("nomeA").innerText : el("nomeB").innerText,
+    nome,
+    jogador:nome,
+    numero:texto(el("golNumero").value),
+    minuto:texto(el("golMinuto").value),
+    tempo:texto(el("golMinuto").value),
+    tipo:el("golTipo").value
+  });
 
-  if(!lista.length){
-    box.innerHTML = `<div class="vazio">Nenhuma súmula encontrada.</div>`;
+  el("golNome").value = "";
+  el("golNumero").value = "";
+  el("golMinuto").value = "";
+
+  atualizarPlacarPelosGols();
+  renderGols();
+};
+
+window.removerGol = function(i){
+  gols.splice(i,1);
+  atualizarPlacarPelosGols();
+  renderGols();
+};
+
+function renderGols(){
+  const box = el("listaGols");
+
+  if(!gols.length){
+    box.innerHTML = `<div class="mensagem-vazia">Nenhum gol lançado.</div>`;
     return;
   }
 
-  box.innerHTML = lista.map(x=>{
-    const nomeA = nomeTime(x.timeA,"Time A");
-    const nomeB = nomeTime(x.timeB,"Time B");
-    const logoA = logoTime(x.timeA);
-    const logoB = logoTime(x.timeB);
-    const cls = statusClasse(x);
-
-    return `
-      <article class="card">
-        <div>
-          <div class="card-top">
-            <div class="card-icon"><i class="fa-solid fa-file-pen"></i></div>
-            <div class="status-area"><div class="status ${cls}">${statusTexto(x)}</div></div>
-          </div>
-
-          <div class="times-linha">
-            <div class="time-box">
-              <img src="${logoA}" class="escudo" onerror="this.src='logo-liga.jfif'">
-              <span>${nomeA}</span>
-            </div>
-
-            <div class="placar">${x.golsA} x ${x.golsB}</div>
-
-            <div class="time-box visitante">
-              <span>${nomeB}</span>
-              <img src="${logoB}" class="escudo" onerror="this.src='logo-liga.jfif'">
-            </div>
-          </div>
-
-          <div class="info-jogo">
-            <strong>${x.campeonato}</strong><br>
-            ${x.categoria}<br>
-            ${dataBR(x.data)}<br>
-            ${x.local}
-          </div>
-
-          <div class="tags">
-            <span class="tag">${x.rodada}</span>
-            <span class="tag">${x.arbitro}</span>
-          </div>
-        </div>
-
-        <div class="card-actions">
-          <button class="btn-blue" onclick="abrirPublica('${x.id}')"><i class="fa-solid fa-eye"></i> Pública</button>
-          <button class="btn-main" onclick="abrirEditor('${x.id}')"><i class="fa-solid fa-pen-to-square"></i> Corrigir</button>
-        </div>
-      </article>
-    `;
-  }).join("");
+  box.innerHTML = gols.map((g,i)=>`
+    <div class="event-item">
+      <input value="${g.minuto || g.tempo || ""}" onchange="gols[${i}].minuto=this.value;gols[${i}].tempo=this.value">
+      <input value="${g.nome || g.jogador || ""}" onchange="gols[${i}].nome=this.value;gols[${i}].jogador=this.value">
+      <input value="${g.numero || ""}" onchange="gols[${i}].numero=this.value">
+      <select onchange="gols[${i}].time=this.value; atualizarPlacarPelosGols(); renderGols();">
+        <option value="A" ${g.time==="A" ? "selected" : ""}>Time A</option>
+        <option value="B" ${g.time==="B" ? "selected" : ""}>Time B</option>
+      </select>
+      <button class="link-btn btn-red" onclick="removerGol(${i})">X</button>
+    </div>
+  `).join("");
 }
 
-window.abrirPublica = id => window.open(`sumula-publica.html?id=${encodeURIComponent(id)}`,"_blank");
-window.recarregarTela = () => { preencherFiltros(); renderizar(); toast("Tela atualizada."); };
-window.fecharEditor = () => { $("modalEditor").classList.remove("ativo"); editando = null; };
-window.abrirPublicaAtual = () => { if(editando?.id) abrirPublica(editando.id); };
+window.adicionarCartao = function(){
+  const time = el("cartaoTime").value;
+  const nome = texto(el("cartaoNome").value);
+  if(!nome) return mostrarStatus("Digite o nome do jogador do cartão.","erro");
 
-function toast(msg){
-  const t = $("toast");
-  t.innerText = msg;
-  t.classList.add("ativo");
-  setTimeout(()=>t.classList.remove("ativo"),2600);
-}
+  cartoes.push({
+    time,
+    timeNome:time === "A" ? el("nomeA").innerText : el("nomeB").innerText,
+    nome,
+    jogador:nome,
+    numero:texto(el("cartaoNumero").value),
+    minuto:texto(el("cartaoMinuto").value),
+    tempo:texto(el("cartaoMinuto").value),
+    tipo:el("cartaoTipo").value,
+    vermelhoTipo:el("cartaoTipo").value === "vermelho" ? el("vermelhoTipo").value : ""
+  });
 
-window.abrirEditor = async id => {
-  const item = baseLista().find(x=>String(x.id) === String(id));
-  if(!item) return toast("Súmula não encontrada.");
+  el("cartaoNome").value = "";
+  el("cartaoNumero").value = "";
+  el("cartaoMinuto").value = "";
 
-  editando = item;
-  $("modalTitulo").innerText = `Correção ADM - ${nomeTime(item.timeA)} x ${nomeTime(item.timeB)}`;
-  $("edCampeonato").value = item.campeonato;
-  $("edCategoria").value = item.categoria;
-  $("edRodada").value = item.rodada;
-  $("edTimeA").value = nomeTime(item.timeA,"Time A");
-  $("edTimeB").value = nomeTime(item.timeB,"Time B");
-  $("edGolsA").value = item.golsA;
-  $("edGolsB").value = item.golsB;
-  $("edData").value = toDateInput(item.data);
-  $("edHora").value = item.hora || "";
-  $("edLocal").value = item.local;
-  $("edArbitro").value = item.arbitro;
-  $("edAssistente1").value = item.assistente1;
-  $("edAssistente2").value = item.assistente2;
-  $("edQuarto").value = item.quartoArbitro;
-  $("edObs").value = campo(item.raw,["observacoesAdmin","correcaoAdmin","observacoes"],"");
-
-  golsEdit = Array.isArray(item.raw.gols) ? JSON.parse(JSON.stringify(item.raw.gols)) : [];
-  cartoesEdit = Array.isArray(item.raw.cartoes) ? JSON.parse(JSON.stringify(item.raw.cartoes)) : [];
-  renderGolsEditor();
-  renderCartoesEditor();
-  $("modalEditor").classList.add("ativo");
+  renderCartoes();
 };
 
-function linhaTimeSelect(valor){
-  return `<select class="ev-time"><option value="A" ${String(valor)==="A" || norm(valor).includes("mand") ? "selected" : ""}>Time A</option><option value="B" ${String(valor)==="B" || norm(valor).includes("visit") ? "selected" : ""}>Time B</option></select>`;
-}
-
-window.adicionarGol = () => { golsEdit.push({time:"A",nome:"",numero:"",minuto:"",tipo:"normal"}); renderGolsEditor(); };
-window.adicionarCartao = () => { cartoesEdit.push({time:"A",nome:"",numero:"",minuto:"",tipo:"amarelo",vermelhoTipo:""}); renderCartoesEditor(); };
-window.removerGol = i => { golsEdit.splice(i,1); renderGolsEditor(); };
-window.removerCartao = i => { cartoesEdit.splice(i,1); renderCartoesEditor(); };
-
-window.renderGolsEditor = function(){
-  $("tbodyGols").innerHTML = golsEdit.length ? golsEdit.map((g,i)=>`
-    <tr>
-      <td>${linhaTimeSelect(g.time || g.lado || "A")}</td>
-      <td><input class="ev-nome" value="${campo(g,["nome","jogador","jogadorNome","atleta"],"")}"></td>
-      <td><input class="ev-numero" value="${campo(g,["numero","camisa","n"],"")}"></td>
-      <td><input class="ev-minuto" value="${campo(g,["minuto","tempo"],"")}"></td>
-      <td><select class="ev-tipo"><option value="normal" ${campo(g,["tipo"],"")==="normal" ? "selected" : ""}>Normal</option><option value="penalti" ${campo(g,["tipo"],"")==="penalti" ? "selected" : ""}>Pênalti</option><option value="contra" ${campo(g,["tipo"],"")==="contra" ? "selected" : ""}>Contra</option></select></td>
-      <td><button class="del" onclick="removerGol(${i})"><i class="fa-solid fa-trash"></i></button></td>
-    </tr>`).join("") : `<tr><td colspan="6">Nenhum gol cadastrado.</td></tr>`;
+window.removerCartao = function(i){
+  cartoes.splice(i,1);
+  renderCartoes();
 };
 
-window.renderCartoesEditor = function(){
-  $("tbodyCartoes").innerHTML = cartoesEdit.length ? cartoesEdit.map((c,i)=>`
-    <tr>
-      <td>${linhaTimeSelect(c.time || c.lado || "A")}</td>
-      <td><input class="ev-nome" value="${campo(c,["nome","jogador","jogadorNome","atleta"],"")}"></td>
-      <td><input class="ev-numero" value="${campo(c,["numero","camisa","n"],"")}"></td>
-      <td><input class="ev-minuto" value="${campo(c,["minuto","tempo"],"")}"></td>
-      <td><select class="ev-cor"><option value="amarelo" ${!norm(campo(c,["tipo","cartao","cor"],"amarelo")).includes("verm") ? "selected" : ""}>Amarelo</option><option value="vermelho" ${norm(campo(c,["tipo","cartao","cor"],"")).includes("verm") ? "selected" : ""}>Vermelho</option></select></td>
-      <td><select class="ev-vermelho"><option value="direto" ${campo(c,["vermelhoTipo"],"") !== "segundo_amarelo" ? "selected" : ""}>Direto</option><option value="segundo_amarelo" ${campo(c,["vermelhoTipo"],"") === "segundo_amarelo" ? "selected" : ""}>2º amarelo</option></select></td>
-      <td><button class="del" onclick="removerCartao(${i})"><i class="fa-solid fa-trash"></i></button></td>
-    </tr>`).join("") : `<tr><td colspan="7">Nenhum cartão cadastrado.</td></tr>`;
+window.toggleVermelho = function(){
+  el("boxVermelho").style.display = el("cartaoTipo").value === "vermelho" ? "block" : "none";
 };
 
-function coletarGols(){
-  return [...$("tbodyGols").querySelectorAll("tr")]
-    .filter(tr=>tr.querySelector(".ev-time"))
-    .map(tr=>({
-      time:tr.querySelector(".ev-time").value,
-      nome:tr.querySelector(".ev-nome").value.trim(),
-      numero:tr.querySelector(".ev-numero").value.trim(),
-      minuto:tr.querySelector(".ev-minuto").value.trim(),
-      tipo:tr.querySelector(".ev-tipo").value
-    })).filter(x=>x.nome || x.minuto);
+function renderCartoes(){
+  const box = el("listaCartoes");
+
+  if(!cartoes.length){
+    box.innerHTML = `<div class="mensagem-vazia">Nenhum cartão lançado.</div>`;
+    return;
+  }
+
+  box.innerHTML = cartoes.map((c,i)=>`
+    <div class="event-item">
+      <input value="${c.minuto || c.tempo || ""}" onchange="cartoes[${i}].minuto=this.value;cartoes[${i}].tempo=this.value">
+      <input value="${c.nome || c.jogador || ""}" onchange="cartoes[${i}].nome=this.value;cartoes[${i}].jogador=this.value">
+      <input value="${c.numero || ""}" onchange="cartoes[${i}].numero=this.value">
+      <select onchange="cartoes[${i}].tipo=this.value">
+        <option value="amarelo" ${c.tipo==="amarelo" ? "selected" : ""}>Amarelo</option>
+        <option value="vermelho" ${c.tipo==="vermelho" ? "selected" : ""}>Vermelho</option>
+      </select>
+      <button class="link-btn btn-red" onclick="removerCartao(${i})">X</button>
+    </div>
+  `).join("");
 }
 
-function coletarCartoes(){
-  return [...$("tbodyCartoes").querySelectorAll("tr")]
-    .filter(tr=>tr.querySelector(".ev-time"))
-    .map(tr=>({
-      time:tr.querySelector(".ev-time").value,
-      nome:tr.querySelector(".ev-nome").value.trim(),
-      numero:tr.querySelector(".ev-numero").value.trim(),
-      minuto:tr.querySelector(".ev-minuto").value.trim(),
-      tipo:tr.querySelector(".ev-cor").value,
-      cor:tr.querySelector(".ev-cor").value,
-      vermelhoTipo:tr.querySelector(".ev-cor").value === "vermelho" ? tr.querySelector(".ev-vermelho").value : ""
-    })).filter(x=>x.nome || x.minuto);
+function resultado(gp,gc){
+  if(gp > gc) return "vitoria";
+  if(gp < gc) return "derrota";
+  return "empate";
 }
 
-window.salvarCorrecaoAdmin = async function(){
-  if(!editando?.id) return toast("Nenhuma súmula aberta.");
+function pontosResultado(r){
+  if(r === "vitoria") return 3;
+  if(r === "empate") return 1;
+  return 0;
+}
 
-  const nomeA = $("edTimeA").value.trim() || "Time A";
-  const nomeB = $("edTimeB").value.trim() || "Time B";
-  const dataValor = $("edData").value || "";
+/*
+  Sistema seguro:
+  - guarda último processamento em sumula.estatisticasProcessadas
+  - ao reprocessar, aplica diferença entre estatística antiga e nova
+  - evita duplicar pontos/gols/cartões
+*/
+async function aplicarDeltaTime(timeObj, novoGP, novoGC, antigoGP, antigoGC){
+  const idTime = campo(timeObj,["id","timeId"],"");
+  if(!idTime) return;
 
-  const payload = {
-    campeonato:$("edCampeonato").value.trim(),
-    campeonatoNome:$("edCampeonato").value.trim(),
-    categoria:$("edCategoria").value.trim(),
-    rodada:$("edRodada").value.trim(),
-    fase:$("edRodada").value.trim(),
-    timeA:{...(editando.timeA && typeof editando.timeA === "object" ? editando.timeA : {}),nome:nomeA},
-    timeB:{...(editando.timeB && typeof editando.timeB === "object" ? editando.timeB : {}),nome:nomeB},
-    timeANome:nomeA,
-    timeBNome:nomeB,
-    golsA:Number($("edGolsA").value || 0),
-    placarA:Number($("edGolsA").value || 0),
-    golsB:Number($("edGolsB").value || 0),
-    placarB:Number($("edGolsB").value || 0),
-    data:dataValor,
-    hora:$("edHora").value,
-    local:$("edLocal").value.trim(),
-    campo:$("edLocal").value.trim(),
-    arbitro:$("edArbitro").value.trim(),
-    arbitroNome:$("edArbitro").value.trim(),
-    assistente1:$("edAssistente1").value.trim(),
-    assistente2:$("edAssistente2").value.trim(),
-    quartoArbitro:$("edQuarto").value.trim(),
-    observacoesAdmin:$("edObs").value.trim(),
-    correcaoAdmin:$("edObs").value.trim(),
-    gols:coletarGols(),
-    cartoes:coletarCartoes(),
+  const novoRes = resultado(novoGP,novoGC);
+  const antigoRes = resultado(antigoGP,antigoGC);
+
+  const delta = {
+    jogos:0,
+    pontos:pontosResultado(novoRes) - pontosResultado(antigoRes),
+    vitorias:(novoRes === "vitoria" ? 1 : 0) - (antigoRes === "vitoria" ? 1 : 0),
+    empates:(novoRes === "empate" ? 1 : 0) - (antigoRes === "empate" ? 1 : 0),
+    derrotas:(novoRes === "derrota" ? 1 : 0) - (antigoRes === "derrota" ? 1 : 0),
+    golsPro:novoGP - antigoGP,
+    golsContra:novoGC - antigoGC,
+    saldo:(novoGP - novoGC) - (antigoGP - antigoGC)
+  };
+
+  await setDoc(doc(db,"times",idTime),{
+    pontos:increment(delta.pontos),
+    vitorias:increment(delta.vitorias),
+    empates:increment(delta.empates),
+    derrotas:increment(delta.derrotas),
+    golsPro:increment(delta.golsPro),
+    golsContra:increment(delta.golsContra),
+    saldo:increment(delta.saldo),
+    atualizadoEm:serverTimestamp()
+  },{merge:true});
+}
+
+async function reprocessarEstatisticas(){
+  const timeA = sumulaAtual.timeA || jogoAtual.timeA || {};
+  const timeB = sumulaAtual.timeB || jogoAtual.timeB || {};
+
+  const novoA = n(el("placarA").value);
+  const novoB = n(el("placarB").value);
+
+  const antigo = sumulaAtual.estatisticasProcessadas || {
+    golsA:n(sumulaAtual.golsA),
+    golsB:n(sumulaAtual.golsB),
+    gols:sumulaAtual.gols || [],
+    cartoes:sumulaAtual.cartoes || []
+  };
+
+  await aplicarDeltaTime(timeA,novoA,novoB,n(antigo.golsA),n(antigo.golsB));
+  await aplicarDeltaTime(timeB,novoB,novoA,n(antigo.golsB),n(antigo.golsA));
+
+  // Jogadores/cartões: salva histórico da correção para conferência manual.
+  // Isso evita duplicação automática quando jogador não tem ID consistente.
+  await addDoc(collection(db,"historicoCorrecoesSumula"),{
+    sumulaId:sumulaAtual.id,
+    jogoId:sumulaAtual.id,
+    antes:antigo,
+    depois:{
+      golsA:novoA,
+      golsB:novoB,
+      gols,
+      cartoes
+    },
+    motivo:texto(el("motivoCorrecao").value),
+    data:new Date().toISOString(),
+    criadoEm:serverTimestamp()
+  });
+}
+
+window.salvarEReprocessar = async function(){
+  if(!sumulaAtual) return mostrarStatus("Selecione uma súmula.","erro");
+
+  if(!confirm("Salvar correção e reprocessar estatísticas da tabela?")) return;
+
+  const id = sumulaAtual.id;
+  const golsA = n(el("placarA").value);
+  const golsB = n(el("placarB").value);
+
+  const dados = {
+    campeonato: texto(el("campeonato").value),
+    campeonatoNome: texto(el("campeonato").value),
+    categoria: texto(el("categoria").value),
+    data: texto(el("dataJogo").value),
+    dataJogo: texto(el("dataJogo").value),
+    hora: texto(el("horaJogo").value),
+    horario: texto(el("horaJogo").value),
+    local: texto(el("localJogo").value),
+    campo: texto(el("localJogo").value),
+    arbitro: texto(el("arbitro").value),
+    arbitroNome: texto(el("arbitro").value),
+
+    golsA,
+    golsB,
+    placar: `${golsA} x ${golsB}`,
+    gols,
+    cartoes,
+
+    observacoes: texto(el("observacoes").value),
+    observacoesArbitro: texto(el("observacoes").value),
+
+    status:"finalizado",
+    sumulaStatus:"finalizada",
     sumulaFinalizada:true,
     publica:true,
     publico:true,
-    verSumula:true,
-    status:"finalizado",
-    sumulaStatus:"publicada",
-    corrigidaPorAdmin:true,
-    corrigidaEm:serverTimestamp(),
-    atualizadaEm:serverTimestamp()
+    corrigidaPeloAdm:true,
+    motivoUltimaCorrecao:texto(el("motivoCorrecao").value),
+    ultimaCorrecaoEm:serverTimestamp(),
+    atualizadoEm:serverTimestamp(),
+    linkPublico:"sumula-publica.html?id="+id,
+
+    estatisticasProcessadas:{
+      golsA,
+      golsB,
+      gols,
+      cartoes,
+      processadoEm:new Date().toISOString()
+    }
   };
 
-  try{
-    await setDoc(doc(db,"sumulas",editando.id), payload, {merge:true});
+  await reprocessarEstatisticas();
 
-    if(editando.jogoId){
-      await setDoc(doc(db,"jogos",editando.jogoId), {
-        golsA:payload.golsA,
-        placarA:payload.placarA,
-        golsB:payload.golsB,
-        placarB:payload.placarB,
-        status:"finalizado",
-        sumulaStatus:"publicada",
-        sumulaFinalizada:true,
-        verSumula:true,
-        atualizadoPorAdmin:true,
-        atualizadoEm:serverTimestamp()
-      }, {merge:true});
-    }
+  await setDoc(doc(db,"sumulas",id),dados,{merge:true});
 
-    toast("Correção salva e súmula pública atualizada.");
-    fecharEditor();
-  }catch(e){
-    console.error(e);
-    toast("Erro ao salvar correção.");
-  }
+  await setDoc(doc(db,"jogos",id),{
+    golsA,
+    golsB,
+    placarA:golsA,
+    placarB:golsB,
+    placar:{A:golsA,B:golsB},
+    placarTexto:`${golsA} x ${golsB}`,
+    gols,
+    cartoes,
+    status:"finalizado",
+    sumulaFinalizada:true,
+    verSumula:true,
+    linkPublico:"sumula-publica.html?id="+id,
+    atualizadoEm:serverTimestamp()
+  },{merge:true});
+
+  mostrarStatus("Súmula corrigida, republicada e estatísticas reprocessadas.");
+  sumulaAtual = {...sumulaAtual,...dados};
 };
 
-["busca","filtroStatus","filtroCategoria"].forEach(id=>$(id).addEventListener("input",renderizar));
-$("filtroCampeonato").addEventListener("change",()=>{ preencherFiltros(); $("filtroCategoria").value=""; renderizar(); });
+window.abrirPublica = function(){
+  if(!sumulaAtual) return;
+  window.open("sumula-publica.html?id="+sumulaAtual.id,"_blank");
+};
 
-onSnapshot(collection(db,"jogos"),snap=>{
-  jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
-  preencherFiltros();
-  renderizar();
-});
+window.gols = gols;
+window.cartoes = cartoes;
 
-onSnapshot(collection(db,"sumulas"),snap=>{
-  sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
-  preencherFiltros();
-  renderizar();
+onAuthStateChanged(auth, async user=>{
+  usuarioAtual = user;
+
+  if(!user){
+    mostrarStatus("Faça login para acessar.","erro");
+    return;
+  }
+
+  perfilAtual = await carregarPerfil();
+
+  if(!ehAdmin()){
+    mostrarStatus("Acesso negado. Somente ADM autorizado pode editar súmula finalizada.","erro");
+    return;
+  }
+
+  await carregarListaSumulas();
 });
 </script>
+
 </body>
 </html>
