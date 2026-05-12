@@ -522,7 +522,7 @@ header{
 </div>
 
 <script type="module">
-import { auth, db, storage } from "./firebase.js";
+import { auth, db } from "./firebase.js";
 
 import {
   onAuthStateChanged,
@@ -539,10 +539,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 import {
+  getStorage,
   ref,
   uploadBytes,
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
+
+const storage = getStorage();
 
 let usuarioAtualId = "";
 let fotoAtualUrl = "";
@@ -1138,6 +1141,7 @@ window.recarregarDados = async function(){
 
 window.salvarPerfil = async function(){
   limparMensagens();
+  mostrarSucesso("Salvando perfil...");
 
   if(!auth.currentUser || !usuarioAtualId){
     mostrarErro("Usuário não identificado.");
@@ -1258,7 +1262,7 @@ window.salvarPerfil = async function(){
       atualizadoEm:new Date().toISOString()
     };
 
-    await updateDoc(doc(db,"usuarios",usuarioAtualId),dadosAtualizados);
+    await setDoc(doc(db,"usuarios",usuarioAtualId),dadosAtualizados,{merge:true});
     await sincronizarPerfilPublico(tipoAtual,dadosAtualizados);
 
     arquivoFotoSelecionado = null;
