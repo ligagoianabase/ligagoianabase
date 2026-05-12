@@ -611,7 +611,6 @@ import {
   doc,
   getDoc,
   setDoc,
-  updateDoc,
   serverTimestamp,
   increment,
   addDoc
@@ -678,7 +677,11 @@ function idPrincipal(item){
 
 function dataOrdenacao(item){
   const v = campo(item,["finalizadaEm","publicadaEm","dataHora","data","dataJogo","criadoEm"],"");
-  if(v && typeof v.toDate === "function") return v.toDate().getTime();
+
+  if(v && typeof v.toDate === "function"){
+    return v.toDate().getTime();
+  }
+
   const d = new Date(v).getTime();
   return Number.isFinite(d) ? d : 0;
 }
@@ -698,38 +701,36 @@ function juntarSumulasEJogos(){
     });
   });
 
-  jogosCache
-    .filter(registroFinalizado)
-    .forEach(j=>{
-      const id = idPrincipal(j);
-      if(!id) return;
+  jogosCache.forEach(j=>{
+    const id = idPrincipal(j);
+    if(!id) return;
 
-      const existente = mapa.get(id) || {};
+    const existente = mapa.get(id);
 
+    if(registroFinalizado(j) || existente){
       mapa.set(id,{
         ...j,
-        ...existente,
+        ...(existente || {}),
         id:id,
         jogoId:id,
-        origemRegistro:existente.origemRegistro || "jogos",
+        origemRegistro:existente?.origemRegistro || "jogos",
         status:campo(existente,["status"],campo(j,["status"],"finalizado")),
         sumulaStatus:campo(existente,["sumulaStatus"],campo(j,["sumulaStatus"],"finalizada")),
         sumulaFinalizada:true,
         publica:true,
         publico:true
       });
-    });
+    }
+  });
 
-  return [...mapa.values()]
-    .filter(s=>registroFinalizado(s) || s.origemRegistro === "sumulas")
-    .sort((a,b)=>dataOrdenacao(b)-dataOrdenacao(a));
+  return [...mapa.values()].sort((a,b)=>dataOrdenacao(b)-dataOrdenacao(a));
 }
-
 
 function mostrarStatus(msg,tipo="ok"){
   const box = el("statusBox");
   box.className = "status " + (tipo === "erro" ? "status-erro" : tipo === "aviso" ? "status-aviso" : "status-ok");
   box.innerText = msg;
+  box.style.display = "block";
   setTimeout(()=>{ box.style.display = "none"; }, 5000);
 }
 
@@ -764,7 +765,7 @@ function ehAdmin(){
 function nomeJogo(s){
   const a = nomeTime(s.timeA, campo(s,["timeANome","mandante"],"Time A"));
   const b = nomeTime(s.timeB, campo(s,["timeBNome","visitante"],"Time B"));
-  const data = campo(s,["data","dataJogo"],"");
+  const data = campo(s,["data","dataJogo","dataHora"],"");
   return `${a} x ${b}${data ? " - " + data : ""}`;
 }
 
@@ -787,8 +788,8 @@ window.carregarListaSumulas = async function(){
     const lista = juntarSumulasEJogos();
 
     if(!lista.length){
-      select.innerHTML = `<option value="">Nenhuma súmula encontrada</option>`;
-      mostrarStatus("Nenhuma súmula foi encontrada em sumulas ou jogos finalizados.","aviso");
+      select.innerHTML = `<option value="">Nenhuma súmula publicada encontrada</option>`;
+      mostrarStatus("Nenhuma súmula publicada encontrada em sumulas ou jogos.","aviso");
       return;
     }
 
@@ -806,14 +807,15 @@ window.carregarListaSumulas = async function(){
     }
 
     mostrarStatus(`${lista.length} súmula(s) carregada(s).`,"ok");
+
   }catch(e){
     console.error(e);
     select.innerHTML = `<option value="">Erro ao carregar súmulas</option>`;
-    mostrarStatus("Erro ao carregar súmulas. Confira as regras do Firebase e se existem as coleções sumulas/jogos.","erro");
+    mostrarStatus("Erro ao carregar súmulas. Confira as regras do Firebase e as coleções sumulas/jogos.","erro");
   }
 };
 
-window.carregarSumulaSelecionadawindow.carregarSumulaSelecionada = async function(){
+window.carregarSumulaSelecionada = async function(){
   const id = el("sumulaSelect").value;
   if(!id) return;
 
@@ -880,13 +882,14 @@ window.carregarSumulaSelecionadawindow.carregarSumulaSelecionada = async functio
       Array.isArray(jogoAtual.cartoes) ? [...jogoAtual.cartoes] : [];
 
     preencherTela();
+
   }catch(e){
     console.error(e);
     mostrarStatus("Erro ao abrir a súmula selecionada.","erro");
   }
 };
 
-function preencherTelafunction preencherTela(){
+function preencherTela(){
   const timeA = sumulaAtual.timeA || jogoAtual.timeA || {};
   const timeB = sumulaAtual.timeB || jogoAtual.timeB || {};
 
@@ -1040,12 +1043,6 @@ function pontosResultado(r){
   return 0;
 }
 
-/*
-  Sistema seguro:
-  - guarda último processamento em sumula.estatisticasProcessadas
-  - ao reprocessar, aplica diferença entre estatística antiga e nova
-  - evita duplicar pontos/gols/cartões
-*/
 async function aplicarDeltaTime(timeObj, novoGP, novoGC, antigoGP, antigoGC){
   const idTime = campo(timeObj,["id","timeId"],"");
   if(!idTime) return;
@@ -1054,7 +1051,6 @@ async function aplicarDeltaTime(timeObj, novoGP, novoGC, antigoGP, antigoGC){
   const antigoRes = resultado(antigoGP,antigoGC);
 
   const delta = {
-    jogos:0,
     pontos:pontosResultado(novoRes) - pontosResultado(antigoRes),
     vitorias:(novoRes === "vitoria" ? 1 : 0) - (antigoRes === "vitoria" ? 1 : 0),
     empates:(novoRes === "empate" ? 1 : 0) - (antigoRes === "empate" ? 1 : 0),
@@ -1093,11 +1089,9 @@ async function reprocessarEstatisticas(){
   await aplicarDeltaTime(timeA,novoA,novoB,n(antigo.golsA),n(antigo.golsB));
   await aplicarDeltaTime(timeB,novoB,novoA,n(antigo.golsB),n(antigo.golsA));
 
-  // Jogadores/cartões: salva histórico da correção para conferência manual.
-  // Isso evita duplicação automática quando jogador não tem ID consistente.
   await addDoc(collection(db,"historicoCorrecoesSumula"),{
-    sumulaId:sumulaAtual.id,
-    jogoId:sumulaAtual.id,
+    sumulaId:idPrincipal(sumulaAtual) || sumulaAtual.id,
+    jogoId:idPrincipal(sumulaAtual) || sumulaAtual.id,
     antes:antigo,
     depois:{
       golsA:novoA,
@@ -1188,7 +1182,8 @@ window.salvarEReprocessar = async function(){
 
 window.abrirPublica = function(){
   if(!sumulaAtual) return;
-  window.open("sumula-publica.html?id="+sumulaAtual.id,"_blank");
+  const id = idPrincipal(sumulaAtual) || sumulaAtual.id;
+  window.open("sumula-publica.html?id="+id,"_blank");
 };
 
 window.gols = gols;
