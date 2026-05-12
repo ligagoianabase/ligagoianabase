@@ -3,266 +3,883 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Artilharia - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
+<title>Campeonatos - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="menu.css">
 
 <style>
 :root{
-  --bg:#061427;--card:#071d37;--card2:#0d2a52;--gold:#f7c600;--gold2:#ffe45c;
-  --white:#fff;--muted:#cbd6ea;--line:rgba(255,255,255,.12);--gold-line:rgba(247,198,0,.45);
-  --shadow:0 14px 34px rgba(0,0,0,.38);--max:1240px;
+  --bg:#061427;
+  --card:#071d37;
+  --card2:#0d2a52;
+  --gold:#f7c600;
+  --gold2:#ffe45c;
+  --white:#ffffff;
+  --muted:#cbd6ea;
+  --line:rgba(255,255,255,.12);
+  --gold-line:rgba(247,198,0,.45);
+  --green:#1b5e20;
+  --yellow:#7a5a00;
+  --red:#b42323;
+  --blue:#1a3f73;
+  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --max:1240px;
 }
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(rgba(2,8,20,.88),rgba(2,8,20,.96)),url("fundo.png") center/cover fixed no-repeat;color:#fff;min-height:100vh}
-a{text-decoration:none;color:inherit}button,input,select{font-family:inherit}
-.wrap{width:min(100% - 28px,var(--max));margin:0 auto}
-.site-header{background:linear-gradient(180deg,rgba(2,10,24,.98),rgba(8,23,44,.96));border-bottom:3px solid var(--gold);box-shadow:var(--shadow)}
-.header-top{min-height:92px;display:flex;align-items:center;justify-content:center;padding:18px 0}
-.header-title{text-align:center;font-size:26px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}
-.nav-bar{background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.98));border-top:1px solid rgba(255,255,255,.06)}
-.menu{display:flex;justify-content:center;align-items:center;gap:clamp(4px,.55vw,10px);padding:14px 6px;flex-wrap:nowrap;overflow:hidden}
-.menu a{font-weight:900;font-size:clamp(11px,.92vw,15px);background:linear-gradient(180deg,rgba(16,42,82,.98),rgba(12,33,64,.98));padding:clamp(8px,.75vw,12px) clamp(9px,1vw,18px);border-radius:15px;border:1px solid rgba(255,255,255,.07);white-space:nowrap;box-shadow:0 10px 22px rgba(0,0,0,.24)}
-.menu a:hover{color:var(--gold);border-color:var(--gold-line)}
-.menu a.ativo{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
-.container{padding:22px 0 34px}
-.hero{background:radial-gradient(circle at top left,rgba(247,198,0,.16),transparent 34%),linear-gradient(135deg,rgba(16,42,82,.96),rgba(8,23,44,.96));border:1px solid var(--gold-line);border-radius:20px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
-.hero h2{color:var(--gold);font-size:28px;font-weight:900;margin-bottom:6px}
-.hero p{color:var(--muted);line-height:1.5;font-size:14px}
-.hero-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
-.hero-tag{background:rgba(26,63,115,.9);padding:6px 10px;border-radius:999px;font-size:11px;border:1px solid rgba(255,255,255,.08);font-weight:800}
-.filtros{display:grid;grid-template-columns:1fr 220px 220px;gap:10px;margin-bottom:14px}
-input,select{width:100%;padding:12px;border:none;border-radius:12px;font-size:14px;background:#f5f7fb;color:#111;outline:none;box-shadow:0 8px 18px rgba(0,0,0,.22)}
-.tabela-box{background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.97));border:1px solid rgba(247,198,0,.22);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
-table{width:100%;border-collapse:collapse}
-th{background:rgba(247,198,0,.14);color:var(--gold);font-size:13px;text-transform:uppercase;text-align:left;padding:13px 10px}
-td{padding:13px 10px;border-top:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:14px}
-tbody tr:hover{background:rgba(247,198,0,.08)}
-.pos{font-weight:900;color:#fff;text-align:center}
-.jogador{font-weight:900;color:#fff}
-.gols{font-size:22px;color:var(--gold);font-weight:900;text-align:center}
-.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(26,63,115,.9);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:5px 9px;font-size:12px;font-weight:800;color:#fff}
-.vazio{padding:22px;text-align:center;color:var(--muted)}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
+  border:none;
+}
+
+img{
+  display:block;
+  max-width:100%;
+}
+
+.wrap{
+  width:min(100% - 28px, var(--max));
+  margin:0 auto;
+}
+
+/* PÁGINA */
+.container{
+  padding:22px 0 34px;
+}
+
+/* HERO */
+.hero{
+  background:
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid var(--gold-line);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+
+.hero-top{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+.hero-logo{
+  width:80px;
+  height:80px;
+  border-radius:18px;
+  object-fit:cover;
+  border:2px solid var(--gold);
+  background:#fff;
+}
+
+.hero-info{
+  flex:1;
+}
+
+.hero h2{
+  color:var(--gold);
+  font-size:24px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+
+.hero p{
+  color:var(--muted);
+  font-size:14px;
+}
+
+.hero-tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.hero-tag{
+  background:#0b2447;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+/* BOTÕES */
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:nowrap;
+  margin-top:16px;
+  align-items:center;
+}
+
+.actions .btn{
+  flex:1;
+  min-width:0;
+}
+
+.btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:10px 12px;
+  border-radius:10px;
+  font-weight:900;
+  font-size:12px;
+}
+
+.btn-main{
+  background:var(--gold);
+  color:#111;
+}
+
+.btn-sec{
+  background:#1a3f73;
+  color:#fff;
+}
+/* GRID PRINCIPAL */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-bottom:14px;
+}
+
+/* CARD PADRÃO */
+.card{
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:16px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+.card h3{
+  color:var(--gold);
+  font-size:18px;
+  margin-bottom:12px;
+  font-weight:900;
+}
+
+/* INFO */
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.info{
+  background:#081c36;
+  border-radius:12px;
+  padding:10px;
+}
+
+.info strong{
+  display:block;
+  font-size:11px;
+  color:var(--gold);
+  margin-bottom:4px;
+}
+
+.info span{
+  font-size:13px;
+  font-weight:800;
+}
+
+/* TAGS */
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+
+.tag{
+  background:#1a3f73;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:11px;
+}
+
+/* REGRAS */
+.rules{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.rule{
+  background:#081c36;
+  padding:10px;
+  border-radius:12px;
+  font-size:13px;
+}
+
+/* JOGOS */
+.games{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.game{
+  background:#081c36;
+  border-radius:12px;
+  padding:10px;
+}
+
+.game strong{
+  font-size:14px;
+}
+
+.game small{
+  display:block;
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* STATUS */
+.status{
+  margin-top:6px;
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.final{
+  background:var(--green);
+}
+
+.agendado{
+  background:var(--yellow);
+}
+/* RESPONSIVO */
 @media(max-width:900px){
-  .menu{justify-content:flex-start;overflow-x:auto;padding:14px;scrollbar-width:none}
-  .menu::-webkit-scrollbar{display:none}.menu a{flex:0 0 auto;font-size:15px;padding:12px 18px}
-  .filtros{grid-template-columns:1fr}.tabela-box{overflow-x:auto}.header-title{font-size:20px}
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .info-grid{
+    grid-template-columns:1fr;
+  }
 }
+
+@media(max-width:600px){
+  .wrap{
+    width:min(100% - 18px, var(--max));
+  }
+
+  .hero{
+    padding:14px;
+  }
+
+  .hero h2{
+    font-size:20px;
+  }
+
+  .hero-logo{
+    width:70px;
+    height:70px;
+  }
+
+  .actions{
+    flex-direction:row;
+    flex-wrap:nowrap;
+    gap:8px;
+  }
+
+  .actions .btn{
+    flex:1;
+    width:auto;
+    font-size:12px;
+    padding:10px 6px;
+  }
+}
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+  gap:10px;
+}
+
+.stat-card,
+.info-item{
+  background:rgba(8,28,54,.95);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;
+  padding:10px;
+}
+
+.stat-card strong,
+.info-item strong{
+  display:block;
+  color:var(--gold);
+  font-size:11px;
+  margin-bottom:5px;
+}
+
+.stat-card span,
+.info-item span{
+  color:#fff;
+  font-size:14px;
+  font-weight:900;
+}
+
 </style>
 </head>
 
 <body>
-<header class="site-header">
-  <div class="wrap header-top"><div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div></div>
-  <div class="nav-bar"><div class="wrap"><nav class="menu">
-    <a href="index.html">Início</a>
-    <a href="campeonatos.html">Campeonatos</a>
-    <a href="classificacao.html">Classificação</a>
-    <a href="jogos.html">Jogos</a>
-    <a href="times.html">Times</a>
-    <a href="tecnicos.html">Técnicos</a>
-    <a href="jogadores.html">Jogadores</a>
-    <a href="arbitros.html">Árbitros</a>
-    <a href="assistentes.html">Assistente</a>
-    <a href="sumulas.html">Súmula</a>
-    <a href="artilharia.html" class="ativo">Artilharia</a>
-    <a href="cartoes.html">Cartões</a>
-    <a href="noticias.html">Notícias</a>
-    <a href="login.html">Login</a>
-  </nav></div></div>
-</header>
 
-<main class="wrap container">
+<main class="wrap container" id="conteudo" style="display:none;">
+
+  <!-- HERO -->
   <section class="hero">
-    <h2>Artilharia</h2>
-    <p>Ranking automático dos jogadores que marcaram gols nas súmulas finalizadas.</p>
-    <div class="hero-tags">
-      <div class="hero-tag" id="tagTotal">Jogadores: 0</div>
-      <div class="hero-tag" id="tagGols">Gols: 0</div>
-      <div class="hero-tag">Atualização automática</div>
+    <div class="hero-top">
+
+      <img id="logoCampeonato" class="hero-logo" src="logo-liga.jfif">
+
+      <div>
+        <h2 id="nomeCampeonato">Carregando...</h2>
+        <p id="descricaoCampeonato">Carregando informações...</p>
+
+        <div class="hero-tags">
+          <div class="hero-tag" id="tagTemporada">Temporada</div>
+          <div class="hero-tag" id="tagStatus">Status</div>
+          <div class="hero-tag" id="tagCategorias">Categorias</div>
+          <div class="hero-tag" id="tagJogos">Jogos</div>
+          <div class="hero-tag" id="tagTimes">Times</div>
+          <div class="hero-tag" id="tagGols">Gols</div>
+        </div>
+
+        <div class="actions">
+          <a id="btnTabela" class="btn btn-gold">
+            <i class="fa-solid fa-table"></i> Tabela
+          </a>
+
+          <a id="btnJogos" class="btn btn-blue">
+            <i class="fa-solid fa-calendar"></i> Jogos
+          </a>
+
+          <a id="btnTimes" class="btn btn-blue">
+            <i class="fa-solid fa-shield"></i> Times
+          </a>
+        </div>
+      </div>
+
     </div>
   </section>
+<!-- GRID PRINCIPAL -->
+  <section class="grid">
 
-  <section class="filtros">
-    <input id="busca" placeholder="Pesquisar jogador, time ou categoria...">
-    <select id="filtroTime"><option value="">Todos os times</option></select>
-    <select id="filtroCategoria"><option value="">Todas categorias</option></select>
+    <!-- RESUMO -->
+    <div class="card">
+      <h3>Resumo do Campeonato</h3>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <strong>Nome</strong>
+          <span id="infoNome">-</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Temporada</strong>
+          <span id="infoTemporada">-</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Status</strong>
+          <span id="infoStatus">-</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Tipo</strong>
+          <span id="infoTipo">-</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Início</strong>
+          <span id="infoInicio">-</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Fim</strong>
+          <span id="infoFim">-</span>
+        </div>
+      </div>
+
+      <div style="margin-top:15px;">
+        <strong style="color:var(--gold);">Descrição</strong>
+        <p id="descricaoCompleta">-</p>
+      </div>
+    </div>
+
+    <!-- ESTATÍSTICAS -->
+    <div class="card">
+      <h3>Informações Gerais</h3>
+
+      <div class="stats-grid">
+        <div class="stat-card"><strong>Categorias</strong><span id="totalCategorias">0</span></div>
+        <div class="stat-card"><strong>Jogos</strong><span id="totalJogos">0</span></div>
+        <div class="stat-card"><strong>Finalizados</strong><span id="totalFinalizados">0</span></div>
+        <div class="stat-card"><strong>Times</strong><span id="totalTimes">0</span></div>
+        <div class="stat-card"><strong>Jogadores</strong><span id="totalJogadores">0</span></div>
+        <div class="stat-card"><strong>Técnicos</strong><span id="totalTecnicos">0</span></div>
+        <div class="stat-card"><strong>Gols</strong><span id="totalGols">0</span></div>
+      </div>
+
+      <div style="margin-top:15px;">
+        <strong style="color:var(--gold);">Categorias</strong>
+        <div class="tags" id="listaCategorias"></div>
+      </div>
+    </div>
+
+  </section>
+<!-- REGRAS -->
+  <section class="card" style="margin-bottom:15px;">
+    <h3>Regras Disciplinares</h3>
+
+    <div id="listaRegras" style="display:flex;flex-direction:column;gap:10px;"></div>
   </section>
 
-  <section class="tabela-box">
-    <table>
-      <thead>
-        <tr>
-          <th style="text-align:center">#</th>
-          <th>Jogador</th>
-          <th>Time</th>
-          <th>Categoria</th>
-          <th style="text-align:center">Jogos</th>
-          <th style="text-align:center">Gols</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"><tr><td colspan="6" class="vazio">Carregando artilharia...</td></tr></tbody>
-    </table>
+  <!-- JOGOS -->
+  <section class="card" style="margin-bottom:15px;">
+    <h3>Próximos Jogos / Resultados</h3>
+
+    <div id="listaJogos" style="display:flex;flex-direction:column;gap:10px;"></div>
   </section>
+
+  <!-- REGULAMENTO -->
+  <section class="card">
+    <h3>Regulamento</h3>
+    <p id="textoRegulamento">-</p>
+  </section>
+
 </main>
 
-<script type="module">
-import { db } from "./firebase.js";
-import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+<!-- LOADING -->
+<div class="wrap" id="loading">
+  <div class="card" style="text-align:center;">Carregando campeonato...</div>
+</div>
 
+<!-- ERRO -->
+<div class="wrap" id="erro" style="display:none;">
+  <div class="card" style="text-align:center;">Campeonato não encontrado.</div>
+</div>
+<script type="module">
+import { renderMenu } from "./menu.js";
+import { db } from "./firebase.js";
+import {
+  doc,
+  getDoc,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+renderMenu("campeonatos");
+
+const conteudo = document.getElementById("conteudo");
+const loading = document.getElementById("loading");
+const erro = document.getElementById("erro");
+
+let campeonato = null;
+let jogos = [];
+let jogadores = [];
+let tecnicos = [];
 let sumulas = [];
 
-const tbody = document.getElementById("tbody");
-const busca = document.getElementById("busca");
-const filtroTime = document.getElementById("filtroTime");
-const filtroCategoria = document.getElementById("filtroCategoria");
+/* VOLTAR */
+window.voltarPagina = function(){
+  if(document.referrer){
+    history.back();
+  }else{
+    location.href = "campeonatos.html";
+  }
+};
 
-function n(txt){
-  return String(txt || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+/* UTIL */
+function param(nome){
+  return new URLSearchParams(location.search).get(nome);
 }
 
-function val(obj,chaves,f=""){
+function normalizar(txt){
+  return String(txt||"")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+
+function val(obj, chaves, f=""){
   for(const c of chaves){
-    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== "") return obj[c];
+    if(obj && obj[c]!==undefined && obj[c]!==null && obj[c]!== ""){
+      return obj[c];
+    }
   }
   return f;
 }
-
-function nomeTimePorLetra(s,letra){
-  if(letra === "A"){
-    if(s.timeA && typeof s.timeA === "object") return s.timeA.nome || "Time A";
-    return val(s,["timeA","mandante","timeMandanteNome","mandanteNome"],"Time A");
-  }
-  if(s.timeB && typeof s.timeB === "object") return s.timeB.nome || "Time B";
-  return val(s,["timeB","visitante","timeVisitanteNome","visitanteNome"],"Time B");
+function nomeCamp(c){
+  return val(c, ["nome", "campeonato", "titulo"], "");
 }
 
-function publicada(s){
-  return s.sumulaFinalizada === true || s.publica === true || s.publico === true || n(s.status) === "finalizado";
+function idCamp(c){
+  return val(c, ["id", "campeonatoId"], "");
 }
 
-function arrGols(s){
-  const gols = [];
+function dataBR(valor){
+  if(!valor) return "-";
 
-  if(Array.isArray(s.gols)){
-    s.gols.forEach(g=>gols.push(g));
+  const d = new Date(valor);
+
+  if(isNaN(d.getTime())){
+    return String(valor);
   }
 
-  if(Array.isArray(s.golsA)){
-    s.golsA.forEach(g=>gols.push({...g,time:g.time || "A"}));
-  }
-
-  if(Array.isArray(s.golsB)){
-    s.golsB.forEach(g=>gols.push({...g,time:g.time || "B"}));
-  }
-
-  return gols;
-}
-
-function chaveGol(g,s){
-  const nome = val(g,["nome","jogador","jogadorNome","atleta"],"Sem nome");
-  const numero = val(g,["numero","camisa","n"],"");
-  const timeLetra = val(g,["time","lado","equipe"],"");
-  const time = val(g,["timeNome","clube","equipeNome"], timeLetra === "B" ? nomeTimePorLetra(s,"B") : nomeTimePorLetra(s,"A"));
-  return `${n(nome)}|${n(time)}|${numero}`;
-}
-
-function montarRanking(){
-  const mapa = {};
-
-  sumulas.filter(publicada).forEach(s=>{
-    arrGols(s).forEach(g=>{
-      const nome = val(g,["nome","jogador","jogadorNome","atleta"],"Sem nome");
-      const numero = val(g,["numero","camisa","n"],"");
-      const timeLetra = val(g,["time","lado","equipe"],"");
-      const time = val(g,["timeNome","clube","equipeNome"], timeLetra === "B" ? nomeTimePorLetra(s,"B") : nomeTimePorLetra(s,"A"));
-      const categoria = val(g,["categoria"], val(s,["categoria"],"-"));
-      const key = chaveGol(g,s);
-
-      if(!mapa[key]){
-        mapa[key] = {
-          nome, numero, time, categoria,
-          gols:0,
-          jogosSet:new Set()
-        };
-      }
-
-      mapa[key].gols++;
-      mapa[key].jogosSet.add(s.jogoId || s.id || "");
-    });
+  return d.toLocaleString("pt-BR", {
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric",
+    hour:"2-digit",
+    minute:"2-digit"
   });
-
-  return Object.values(mapa).map(x=>({
-    ...x,
-    jogos:x.jogosSet.size
-  })).sort((a,b)=>b.gols - a.gols || b.jogos - a.jogos || a.nome.localeCompare(b.nome,"pt-BR"));
 }
 
-function preencherFiltros(lista){
-  const atualTime = filtroTime.value;
-  const atualCategoria = filtroCategoria.value;
-  const times = new Set();
+/* DADOS EXEMPLO */
+const campeonatoExemplo = {
+  id:"copa-mundo-2002",
+  nome:"Copa do Mundo FIFA 2002",
+  temporada:"2002",
+  status:"Finalizado",
+  tipo:"Mata-mata",
+  logo:"logo-liga.jfif",
+  descricao:"Campeonato de exemplo com a final Brasil 2 x 0 Alemanha para demonstrar o funcionamento do sistema.",
+  regulamento:"Exemplo de regulamento da competição. Os dados podem ser removidos depois.",
+  categorias:["Seleção Principal"],
+  publicado:true,
+  publico:true,
+  exemplo:true,
+  regrasCartoes:{
+    amarelosParaSuspensao:2,
+    jogosSuspensaoAmarelos:1,
+    jogosSuspensaoVermelhoDireto:1,
+    jogosSuspensaoSegundoAmarelo:1
+  }
+};
+
+const jogosExemplo = [
+  {
+    id:"final-copa-2002",
+    campeonatoId:"copa-mundo-2002",
+    campeonato:"Copa do Mundo FIFA 2002",
+    categoria:"Seleção Principal",
+    rodada:"Final",
+    data:"2002-06-30T08:00:00",
+    local:"International Stadium Yokohama",
+    timeA:"Brasil",
+    timeB:"Alemanha",
+    golsA:2,
+    golsB:0,
+    status:"finalizado",
+    exemplo:true
+  }
+];
+
+const jogadoresExemplo = [
+  { id:"ronaldo-2002", nome:"Ronaldo", time:"Brasil", exemplo:true },
+  { id:"rivaldo-2002", nome:"Rivaldo", time:"Brasil", exemplo:true },
+  { id:"kahn-2002", nome:"Oliver Kahn", time:"Alemanha", exemplo:true }
+];
+
+const tecnicosExemplo = [
+  { id:"scolari-2002", nome:"Luiz Felipe Scolari", time:"Brasil", exemplo:true },
+  { id:"voller-2002", nome:"Rudi Völler", time:"Alemanha", exemplo:true }
+];
+
+const sumulasExemplo = [
+  {
+    id:"final-copa-2002",
+    jogoId:"final-copa-2002",
+    campeonatoId:"copa-mundo-2002",
+    campeonato:"Copa do Mundo FIFA 2002",
+    categoria:"Seleção Principal",
+    timeA:"Brasil",
+    timeB:"Alemanha",
+    golsA:2,
+    golsB:0,
+    status:"finalizada",
+    exemplo:true
+  }
+];
+
+function pertenceAoCamp(item){
+  const campId = idCamp(campeonato);
+  const campNome = nomeCamp(campeonato);
+
+  const itemCampId = val(item, ["campeonatoId"], "");
+  const itemCampNome = val(item, ["campeonato", "nomeCampeonato"], "");
+
+  return itemCampId === campId ||
+    normalizar(itemCampNome) === normalizar(campNome);
+}
+
+function jogosCamp(){
+  return jogos.filter(pertenceAoCamp);
+}
+
+function sumulasCamp(){
+  return sumulas.filter(pertenceAoCamp);
+}
+
+function calcularTotais(){
+  const listaJogos = jogosCamp();
+  const listaSumulas = sumulasCamp();
+
   const categorias = new Set();
+  const times = new Set();
 
-  lista.forEach(i=>{
-    if(i.time) times.add(i.time);
-    if(i.categoria && i.categoria !== "-") categorias.add(i.categoria);
+  listaJogos.forEach(j => {
+    if(j.categoria) categorias.add(j.categoria);
+    if(j.timeA) times.add(normalizar(j.timeA));
+    if(j.timeB) times.add(normalizar(j.timeB));
   });
 
-  filtroTime.innerHTML = `<option value="">Todos os times</option>`;
-  [...times].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(t=>filtroTime.innerHTML += `<option value="${t}">${t}</option>`);
-  if([...times].includes(atualTime)) filtroTime.value = atualTime;
+  const nomesTimes = Array.from(times);
 
-  filtroCategoria.innerHTML = `<option value="">Todas categorias</option>`;
-  [...categorias].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(c=>filtroCategoria.innerHTML += `<option value="${c}">${c}</option>`);
-  if([...categorias].includes(atualCategoria)) filtroCategoria.value = atualCategoria;
+  const jogadoresDoCamp = jogadores.filter(j =>
+    nomesTimes.includes(normalizar(j.time))
+  );
+
+  const tecnicosDoCamp = tecnicos.filter(t =>
+    nomesTimes.includes(normalizar(t.time))
+  );
+
+  let gols = 0;
+
+  listaSumulas.forEach(s => {
+    gols += Number(s.golsA || 0);
+    gols += Number(s.golsB || 0);
+  });
+
+  if(gols === 0){
+    listaJogos.forEach(j => {
+      gols += Number(j.golsA || 0);
+      gols += Number(j.golsB || 0);
+    });
+  }
+
+  return {
+    jogos:listaJogos,
+    sumulas:listaSumulas,
+    categorias:categorias.size || (Array.isArray(campeonato.categorias) ? campeonato.categorias.length : 0),
+    times:times.size,
+    jogadores:jogadoresDoCamp.length,
+    tecnicos:tecnicosDoCamp.length,
+    gols
+  };
 }
+function preencherJogos(listaJogos){
+  const box = document.getElementById("listaJogos");
 
-function render(){
-  const ranking = montarRanking();
-  preencherFiltros(ranking);
-
-  const q = n(busca.value);
-  const ft = filtroTime.value;
-  const fc = filtroCategoria.value;
-
-  const lista = ranking.filter(i=>{
-    if(ft && i.time !== ft) return false;
-    if(fc && i.categoria !== fc) return false;
-    if(q && !n(`${i.nome} ${i.time} ${i.categoria} ${i.numero}`).includes(q)) return false;
-    return true;
-  });
-
-  document.getElementById("tagTotal").innerText = `Jogadores: ${lista.length}`;
-  document.getElementById("tagGols").innerText = `Gols: ${lista.reduce((s,i)=>s+i.gols,0)}`;
-
-  if(!lista.length){
-    tbody.innerHTML = `<tr><td colspan="6" class="vazio">Nenhum gol registrado em súmulas finalizadas.</td></tr>`;
+  if(!listaJogos.length){
+    box.innerHTML = `<div class="vazio">Nenhum jogo cadastrado para este campeonato.</div>`;
     return;
   }
 
-  tbody.innerHTML = lista.map((i,idx)=>`
-    <tr>
-      <td class="pos">${idx+1}</td>
-      <td>
-        <div class="jogador">${i.nome}</div>
-        <span class="badge"><i class="fa-solid fa-shirt"></i> Nº ${i.numero || "-"}</span>
-      </td>
-      <td>${i.time || "-"}</td>
-      <td>${i.categoria || "-"}</td>
-      <td style="text-align:center">${i.jogos}</td>
-      <td class="gols">${i.gols}</td>
-    </tr>
-  `).join("");
+  const ordenados = [...listaJogos].sort((a,b) =>
+    String(a.data || "").localeCompare(String(b.data || ""))
+  );
+
+  box.innerHTML = ordenados.slice(0,8).map(j => {
+    const finalizado = normalizar(j.status) === "finalizado" || normalizar(j.status) === "sumula_enviada";
+    const placar = finalizado ? `${Number(j.golsA || 0)} x ${Number(j.golsB || 0)}` : "x";
+
+    return `
+      <div class="game">
+        <strong>${j.timeA || "-"} ${placar} ${j.timeB || "-"}</strong>
+        <small>Categoria: ${j.categoria || "-"}</small>
+        <small>Data: ${dataBR(j.data)}</small>
+        <small>Local: ${j.local || "-"}</small>
+
+        <div class="status ${finalizado ? "final" : "agendado"}">
+          ${finalizado ? "Finalizado" : "Agendado"}
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
-busca.addEventListener("input",render);
-filtroTime.addEventListener("change",render);
-filtroCategoria.addEventListener("change",render);
+function preencherTela(){
+  const totais = calcularTotais();
+  const nome = nomeCamp(campeonato);
 
-onSnapshot(collection(db,"sumulas"),snap=>{
-  sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
-  render();
-});
+  document.title = `${nome || "Campeonato"} - LIGA GOIANA DE FUTEBOL DE BASE`;
+
+  document.getElementById("logoCampeonato").src = campeonato.logo || "logo-liga.jfif";
+  document.getElementById("logoCampeonato").onerror = function(){ this.src = "logo-liga.jfif"; };
+
+  document.getElementById("nomeCampeonato").textContent = nome || "Campeonato";
+  document.getElementById("descricaoCampeonato").textContent =
+    campeonato.descricao || campeonato.resumo || "Sem descrição cadastrada.";
+
+  document.getElementById("tagTemporada").textContent = `Temporada: ${campeonato.temporada || "-"}`;
+  document.getElementById("tagStatus").textContent = `Status: ${campeonato.status || "-"}`;
+  document.getElementById("tagCategorias").textContent = `Categorias: ${totais.categorias}`;
+  document.getElementById("tagJogos").textContent = `Jogos: ${totais.jogos.length}`;
+  document.getElementById("tagTimes").textContent = `Times: ${totais.times}`;
+  document.getElementById("tagGols").textContent = `Gols: ${totais.gols}`;
+
+  document.getElementById("infoNome").textContent = nome || "-";
+  document.getElementById("infoTemporada").textContent = campeonato.temporada || "-";
+  document.getElementById("infoStatus").textContent = campeonato.status || "-";
+  document.getElementById("infoTipo").textContent = campeonato.tipo || campeonato.formato || "-";
+  document.getElementById("infoInicio").textContent = campeonato.dataInicio || campeonato.inicio || "-";
+  document.getElementById("infoFim").textContent = campeonato.dataFim || campeonato.fim || "-";
+  document.getElementById("descricaoCompleta").textContent =
+    campeonato.descricao || campeonato.resumo || "Sem descrição cadastrada.";
+
+  document.getElementById("totalCategorias").textContent = totais.categorias;
+  document.getElementById("totalJogos").textContent = totais.jogos.length;
+  document.getElementById("totalFinalizados").textContent = totais.sumulas.length;
+  document.getElementById("totalTimes").textContent = totais.times;
+  document.getElementById("totalJogadores").textContent = totais.jogadores;
+  document.getElementById("totalTecnicos").textContent = totais.tecnicos;
+  document.getElementById("totalGols").textContent = totais.gols;
+
+  const categorias = Array.isArray(campeonato.categorias) ? campeonato.categorias : [];
+
+  document.getElementById("listaCategorias").innerHTML = categorias.length
+    ? categorias.map(c => `<span class="tag">${typeof c === "string" ? c : (c.nome || c.categoria || "")}</span>`).join("")
+    : `<span class="tag">Sem categorias</span>`;
+
+  const regras = campeonato.regrasCartoes || {};
+
+  document.getElementById("listaRegras").innerHTML = `
+    <div class="rule">
+      <strong style="color:var(--gold);">Suspensão por amarelos</strong><br>
+      ${Number(regras.amarelosParaSuspensao || 3)} amarelos = ${Number(regras.jogosSuspensaoAmarelos || 1)} jogo(s) de suspensão
+    </div>
+
+    <div class="rule">
+      <strong style="color:var(--gold);">Vermelho pelo segundo amarelo</strong><br>
+      2º amarelo = ${Number(regras.jogosSuspensaoSegundoAmarelo || 1)} jogo(s) de suspensão
+    </div>
+
+    <div class="rule">
+      <strong style="color:var(--gold);">Vermelho direto</strong><br>
+      Vermelho direto = ${Number(regras.jogosSuspensaoVermelhoDireto || 2)} jogo(s) de suspensão
+    </div>
+  `;
+
+  document.getElementById("textoRegulamento").textContent =
+    campeonato.regulamento || campeonato.regulamentoTexto || campeonato.observacoes || "Sem regulamento cadastrado.";
+
+  document.getElementById("btnTabela").href = `tabela.html?campeonato=${encodeURIComponent(nome)}`;
+  document.getElementById("btnJogos").href = `jogos.html?campeonato=${encodeURIComponent(nome)}`;
+  document.getElementById("btnTimes").href = `times.html?campeonato=${encodeURIComponent(nome)}`;
+
+  preencherJogos(totais.jogos);
+}
+
+async function carregarRelacionados(){
+  const [snapJogos, snapJogadores, snapTecnicos, snapSumulas] = await Promise.all([
+    getDocs(collection(db, "jogos")),
+    getDocs(collection(db, "jogadores")),
+    getDocs(collection(db, "tecnicos")),
+    getDocs(collection(db, "sumulas"))
+  ]);
+
+  jogos = [];
+  jogadores = [];
+  tecnicos = [];
+  sumulas = [];
+
+  snapJogos.forEach(d => jogos.push({ id:d.id, ...d.data() }));
+  snapJogadores.forEach(d => jogadores.push({ id:d.id, ...d.data() }));
+  snapTecnicos.forEach(d => tecnicos.push({ id:d.id, ...d.data() }));
+  snapSumulas.forEach(d => sumulas.push({ id:d.id, ...d.data() }));
+}
+
+async function iniciar(){
+  try{
+    const id = param("id");
+
+    if(id === "copa-mundo-2002"){
+      campeonato = campeonatoExemplo;
+      jogos = jogosExemplo;
+      jogadores = jogadoresExemplo;
+      tecnicos = tecnicosExemplo;
+      sumulas = sumulasExemplo;
+      preencherTela();
+      loading.style.display = "none";
+      conteudo.style.display = "block";
+      return;
+    }
+
+    if(!id){
+      campeonato = campeonatoExemplo;
+      jogos = jogosExemplo;
+      jogadores = jogadoresExemplo;
+      tecnicos = tecnicosExemplo;
+      sumulas = sumulasExemplo;
+      preencherTela();
+      loading.style.display = "none";
+      conteudo.style.display = "block";
+      return;
+    }
+
+    const snap = await getDoc(doc(db, "campeonatos", id));
+
+    if(!snap.exists()){
+      throw new Error("Campeonato não encontrado");
+    }
+
+    campeonato = { id:snap.id, ...snap.data() };
+
+    await carregarRelacionados();
+
+    preencherTela();
+
+    loading.style.display = "none";
+    conteudo.style.display = "block";
+  }catch(e){
+    console.error(e);
+    loading.style.display = "none";
+    erro.style.display = "block";
+  }
+}
+
+iniciar();
 </script>
+
 </body>
 </html>
