@@ -518,22 +518,7 @@ function n(txt){
 
 function val(obj, chaves, f=""){
   for(const c of chaves){
-    if(!obj) continue;
-
-    if(String(c).includes(".")){
-      const partes = String(c).split(".");
-      let atual = obj;
-
-      for(const p of partes){
-        atual = atual && atual[p] !== undefined ? atual[p] : undefined;
-      }
-
-      if(atual !== undefined && atual !== null && atual !== ""){
-        return atual;
-      }
-    }
-
-    if(obj[c] !== undefined && obj[c] !== null && obj[c] !== ""){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== ""){
       return obj[c];
     }
   }
@@ -545,16 +530,7 @@ function nomeArbitro(a){
 }
 
 function fotoArbitro(a){
-  return val(a,[
-    "foto",
-    "fotoBase64",
-    "fotoPerfil",
-    "imagem",
-    "avatar",
-    "fotoUrl",
-    "urlFoto",
-    "photoURL"
-  ],"logo-liga.jfif");
+  return val(a,["foto","imagem","avatar","fotoUrl"],"logo-liga.jfif");
 }
 
 function cidadeArbitro(a){
