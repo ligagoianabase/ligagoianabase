@@ -538,15 +538,6 @@ import {
   getDocs
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
-
-const storage = getStorage();
-
 let usuarioAtualId = "";
 let fotoAtualUrl = "";
 let arquivoFotoSelecionado = null;
@@ -678,13 +669,24 @@ function preencherFoto(src){
 async function uploadFotoPerfil(uid,arquivo){
   if(!arquivo) return fotoAtualUrl || "";
 
-  const nomeSeguro = arquivo.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-  const caminho = `usuarios/${uid}/perfil-${Date.now()}-${nomeSeguro}`;
-  const storageRef = ref(storage,caminho);
+  const IMGBB_API_KEY = "9556c62fd6864f3e1e33d9fd4431668c";
+  const formData = new FormData();
+  formData.append("image",arquivo);
+  formData.append("name",`perfil-${uid}-${Date.now()}`);
 
-  await uploadBytes(storageRef,arquivo);
+  const resposta = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,{
+    method:"POST",
+    body:formData
+  });
 
-  return await getDownloadURL(storageRef);
+  const resultado = await resposta.json();
+
+  if(!resposta.ok || !resultado.success){
+    console.error("Erro ImgBB:",resultado);
+    throw new Error(resultado?.error?.message || "Erro ao enviar imagem para o ImgBB.");
+  }
+
+  return resultado.data?.url || resultado.data?.display_url || "";
 }
 
 function setStats(a,b,c,d){
@@ -1177,6 +1179,14 @@ window.salvarPerfil = async function(){
 
     let fotoUrlFinal = fotoAtualUrl || dadosAtuais.fotoPerfil || dadosAtuais.foto || "";
 
+    if(arquivoFotoSelecionado){
+      mostrarSucesso("Enviando foto...");
+      fotoUrlFinal = await Promise.race([
+        uploadFotoPerfil(usuarioAtualId,arquivoFotoSelecionado),
+        new Promise((_,reject)=>setTimeout(()=>reject(new Error("Tempo limite ao enviar foto. Tente uma imagem menor.")),20000))
+      ]);
+    }
+
     const dadosAtualizados = {
       ...dadosAtuais,
       nome,
@@ -1207,11 +1217,6 @@ window.salvarPerfil = async function(){
       atualizadoEm:new Date().toISOString()
     };
 
-    /*
-      IMPORTANTE:
-      Salva os dados primeiro. Assim o botão nunca fica travado se o Storage da foto
-      demorar, falhar ou estiver bloqueado pelas regras.
-    */
     await setDoc(refUsuario,dadosAtualizados,{merge:true});
 
     try{
@@ -1220,36 +1225,15 @@ window.salvarPerfil = async function(){
       console.warn("Perfil salvo em usuarios, mas não sincronizou coleção pública:", erroPublico);
     }
 
-    mostrarSucesso("Perfil salvo com sucesso.");
-
-    /*
-      Se tiver foto nova, tenta enviar depois do perfil salvo.
-      Se der erro, não bloqueia o usuário.
-    */
-    if(arquivoFotoSelecionado){
-      Promise.race([
-        uploadFotoPerfil(usuarioAtualId,arquivoFotoSelecionado),
-        new Promise((_,reject)=>setTimeout(()=>reject(new Error("Tempo limite ao enviar foto.")),8000))
-      ]).then(async(urlFoto)=>{
-        await setDoc(refUsuario,{
-          fotoPerfil:urlFoto,
-          foto:urlFoto,
-          atualizadoEm:new Date().toISOString()
-        },{merge:true}).catch(()=>{});
-
-        const dadosComFoto = {...dadosAtualizados,fotoPerfil:urlFoto,foto:urlFoto};
-
-        sincronizarPerfilPublico(tipoAtual,dadosComFoto).catch(()=>{});
-      }).catch((erroFoto)=>{
-        console.warn("Foto não enviada, mas perfil foi salvo:", erroFoto);
-      });
-    }
-
     arquivoFotoSelecionado = null;
+    fotoAtualUrl = fotoUrlFinal;
+    preencherTela(dadosAtualizados);
+
+    mostrarSucesso("Perfil salvo com sucesso.");
 
     setTimeout(()=>{
       window.location.href = "perfil.html";
-    },1000);
+    },1200);
 
   }catch(erro){
     console.error("Erro ao salvar perfil:",erro);
