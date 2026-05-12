@@ -394,6 +394,50 @@ textarea:focus{
   gap:8px;
 }
 
+.upload-box{
+  background:rgba(255,255,255,.06);
+  border:1px dashed var(--gold-line);
+  border-radius:14px;
+  padding:14px;
+}
+
+.upload-label{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-height:48px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+  font-weight:900;
+  cursor:pointer;
+  text-align:center;
+}
+
+.upload-label input{
+  display:none;
+}
+
+.preview-noticia{
+  display:none;
+  width:100%;
+  max-height:280px;
+  object-fit:cover;
+  border-radius:14px;
+  margin-top:12px;
+  border:2px solid var(--gold);
+  background:#fff;
+}
+
+.upload-hint{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  margin-top:10px;
+  text-align:center;
+}
+
 .lista-pendentes{
   display:flex;
   flex-direction:column;
@@ -653,7 +697,18 @@ textarea:focus{
       <div class="form-grid">
         <input id="tituloNoticia" placeholder="Título da notícia">
         <textarea id="textoNoticia" placeholder="Conteúdo da notícia"></textarea>
-        <input id="imagemNoticia" placeholder="URL da imagem (opcional)">
+
+        <div class="upload-box">
+          <label class="upload-label" for="imagemNoticiaArquivo">
+            <i class="fa-solid fa-image"></i>
+            Escolher foto da notícia
+            <input id="imagemNoticiaArquivo" type="file" accept="image/*">
+          </label>
+          <img id="previewNoticia" class="preview-noticia" alt="Prévia da imagem da notícia">
+          <div class="upload-hint">
+            Opcional. A imagem será salva direto no Firestore em Base64, sem usar Firebase Storage.
+          </div>
+        </div>
 
         <button class="btn-full btn-gold" onclick="postarNoticia()">
           <i class="fa-solid fa-paper-plane"></i> Publicar Notícia
@@ -1042,13 +1097,69 @@ window.abrirPerfilFotografo = function(id){
   window.open("fotografos.html?id="+encodeURIComponent(id),"_blank");
 };
 
+function arquivoParaBase64(file){
+  return new Promise((resolve,reject)=>{
+    if(!file){
+      resolve("");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result || "");
+    reader.onerror = () => reject(new Error("Falha ao carregar a imagem."));
+    reader.readAsDataURL(file);
+  });
+}
+
+function prepararPreviewNoticia(){
+  const input = document.getElementById("imagemNoticiaArquivo");
+  const preview = document.getElementById("previewNoticia");
+
+  if(!input || !preview) return;
+
+  input.addEventListener("change", async ()=>{
+    const file = input.files && input.files[0];
+
+    if(!file){
+      preview.src = "";
+      preview.style.display = "none";
+      return;
+    }
+
+    if(!file.type.startsWith("image/")){
+      alert("Escolha apenas arquivo de imagem.");
+      input.value = "";
+      preview.src = "";
+      preview.style.display = "none";
+      return;
+    }
+
+    const base64 = await arquivoParaBase64(file);
+    preview.src = base64;
+    preview.style.display = "block";
+  });
+}
+
+prepararPreviewNoticia();
+
 window.postarNoticia = async function(){
   const titulo = document.getElementById("tituloNoticia").value.trim();
   const texto = document.getElementById("textoNoticia").value.trim();
-  const imagem = document.getElementById("imagemNoticia").value.trim();
+  const inputImagem = document.getElementById("imagemNoticiaArquivo");
+  const preview = document.getElementById("previewNoticia");
+  const arquivoImagem = inputImagem && inputImagem.files ? inputImagem.files[0] : null;
 
   if(!titulo){
     alert("Digite o título");
+    return;
+  }
+
+  let imagem = "";
+
+  try{
+    imagem = await arquivoParaBase64(arquivoImagem);
+  }catch(e){
+    alert("Não foi possível carregar a foto da notícia.");
     return;
   }
 
@@ -1056,14 +1167,24 @@ window.postarNoticia = async function(){
     titulo,
     texto,
     imagem,
-    data:new Date().toISOString()
+    imagemBase64:imagem,
+    foto:imagem,
+    fotoNoticia:imagem,
+    data:new Date().toISOString(),
+    criadoEm:serverTimestamp(),
+    atualizadoEm:serverTimestamp()
   });
 
   alert("Notícia publicada!");
 
   document.getElementById("tituloNoticia").value="";
   document.getElementById("textoNoticia").value="";
-  document.getElementById("imagemNoticia").value="";
+
+  if(inputImagem) inputImagem.value="";
+  if(preview){
+    preview.src="";
+    preview.style.display="none";
+  }
 };
 
 window.logout = function(){
