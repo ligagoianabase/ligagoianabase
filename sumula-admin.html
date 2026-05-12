@@ -650,12 +650,6 @@ textarea{
 }
 
 
-/* A edição completa agora abre na sumula-arbitro.html */
-#painelEdicao,
-#painelEventos,
-#painelFinal{
-  display:none!important;
-}
 
 </style>
 </head>
@@ -1160,12 +1154,12 @@ function atualizarTopoAdm(){
 }
 
 window.abrirSumulaAdm = function(id){
-  window.location.href = `sumula-arbitro.html?id=${encodeURIComponent(id)}`;
+  window.location.href = `sumula-publica.html?id=${encodeURIComponent(id)}`;
 };
 
 window.abrirPublicaAdm = function(id,event){
-  event.stopPropagation();
-  window.open(`sumula-publica.html?id=${encodeURIComponent(id)}`,"_blank");
+  if(event) event.stopPropagation();
+  window.location.href = `sumula-publica.html?id=${encodeURIComponent(id)}`;
 };
 
 function renderizarAdm(){
@@ -1236,8 +1230,8 @@ function renderizarAdm(){
         </div>
 
         <div class="card-actions">
-          <a class="btn-ver" href="sumula-arbitro.html?id=${encodeURIComponent(id)}" onclick="event.stopPropagation()">
-            <i class="fa-solid fa-pen-to-square"></i> Abrir Súmula Inteira
+          <a class="btn-ver" href="sumula-publica.html?id=${encodeURIComponent(id)}" onclick="event.stopPropagation()">
+            <i class="fa-solid fa-eye"></i> Ver Súmula Inteira
           </a>
 
           <button class="btn-wpp" type="button" onclick="abrirPublicaAdm('${id}', event)">
