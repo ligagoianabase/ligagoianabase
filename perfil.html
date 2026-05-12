@@ -1144,7 +1144,7 @@ window.salvarPerfil = async function(){
   mostrarSucesso("Salvando perfil...");
 
   if(!auth.currentUser || !usuarioAtualId){
-    mostrarErro("Usuário não identificado.");
+    mostrarErro("Usuário não identificado. Faça login novamente.");
     return;
   }
 
@@ -1169,68 +1169,22 @@ window.salvarPerfil = async function(){
     return;
   }
 
-  if(!cpf){
-    mostrarErro("CPF obrigatório.");
-    return;
-  }
-
-  if(cpf.length !== 11){
-    mostrarErro("Digite um CPF válido.");
-    return;
-  }
-
-  if(!telefone){
-    mostrarErro("WhatsApp obrigatório.");
-    return;
-  }
-
-  if(!dataNascimento){
-    mostrarErro("Data de nascimento obrigatória.");
-    return;
-  }
-
-  const snapAtual = await getDoc(doc(db,"usuarios",usuarioAtualId));
-  const dadosAtuais = snapAtual.exists() ? snapAtual.data() : {};
-  const tipoAtual = tipoNormalizado(dadosAtuais.tipoUsuario || dadosAtuais.tipo || dadosAtuais.perfil || "torcedor");
-
-  if(tipoAtual === "jogador"){
-    if(!time){
-      mostrarErro("Informe o time do jogador.");
-      return;
-    }
-
-    if(!categoria){
-      mostrarErro("Informe a categoria do jogador.");
-      return;
-    }
-
-    if(!numeroCamisa){
-      mostrarErro("Informe o número da camisa do jogador.");
-      return;
-    }
-  }
-
-  if(tipoAtual === "tecnico" || tipoAtual === "assistente"){
-    if(!time){
-      mostrarErro("Informe o time.");
-      return;
-    }
-  }
-
-  if(tipoAtual === "fotografo"){
-    if(!cidade){
-      mostrarErro("Informe a cidade do fotógrafo.");
-      return;
-    }
-
-    if(!especialidade){
-      mostrarErro("Informe a especialidade do fotógrafo.");
-      return;
-    }
-  }
-
   try{
-    const fotoUrlFinal = await uploadFotoPerfil(usuarioAtualId,arquivoFotoSelecionado);
+    const refUsuario = doc(db,"usuarios",usuarioAtualId);
+    const snapAtual = await getDoc(refUsuario);
+    const dadosAtuais = snapAtual.exists() ? snapAtual.data() : {};
+    const tipoAtual = tipoNormalizado(dadosAtuais.tipoUsuario || dadosAtuais.tipo || dadosAtuais.perfil || "torcedor");
+
+    let fotoUrlFinal = fotoAtualUrl || dadosAtuais.fotoPerfil || dadosAtuais.foto || "";
+
+    if(arquivoFotoSelecionado){
+      try{
+        fotoUrlFinal = await uploadFotoPerfil(usuarioAtualId,arquivoFotoSelecionado);
+      }catch(erroFoto){
+        console.warn("Erro ao enviar foto. Perfil será salvo sem trocar a foto:", erroFoto);
+        mostrarSucesso("Foto não enviada, mas salvando os dados do perfil...");
+      }
+    }
 
     const dadosAtualizados = {
       ...dadosAtuais,
@@ -1262,16 +1216,27 @@ window.salvarPerfil = async function(){
       atualizadoEm:new Date().toISOString()
     };
 
-    await setDoc(doc(db,"usuarios",usuarioAtualId),dadosAtualizados,{merge:true});
-    await sincronizarPerfilPublico(tipoAtual,dadosAtualizados);
+    await setDoc(refUsuario,dadosAtualizados,{merge:true});
+
+    try{
+      await sincronizarPerfilPublico(tipoAtual,dadosAtualizados);
+    }catch(erroPublico){
+      console.warn("Perfil salvo em usuarios, mas não sincronizou coleção pública:", erroPublico);
+    }
 
     arquivoFotoSelecionado = null;
+    dadosPerfilAtual = dadosAtualizados;
+    preencherTela(dadosAtualizados);
 
-    mostrarSucesso("Perfil salvo e sincronizado com sucesso.");
-    await window.recarregarDados();
+    mostrarSucesso("Perfil salvo com sucesso.");
+
+    setTimeout(()=>{
+      window.location.href = "perfil.html";
+    },1200);
+
   }catch(erro){
-    console.error(erro);
-    mostrarErro("Erro ao salvar perfil.");
+    console.error("Erro ao salvar perfil:",erro);
+    mostrarErro("Erro ao salvar perfil: " + (erro?.message || erro?.code || erro));
   }
 };
 
