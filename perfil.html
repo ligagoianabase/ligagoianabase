@@ -1177,15 +1177,6 @@ window.salvarPerfil = async function(){
 
     let fotoUrlFinal = fotoAtualUrl || dadosAtuais.fotoPerfil || dadosAtuais.foto || "";
 
-    if(arquivoFotoSelecionado){
-      try{
-        fotoUrlFinal = await uploadFotoPerfil(usuarioAtualId,arquivoFotoSelecionado);
-      }catch(erroFoto){
-        console.warn("Erro ao enviar foto. Perfil será salvo sem trocar a foto:", erroFoto);
-        mostrarSucesso("Foto não enviada, mas salvando os dados do perfil...");
-      }
-    }
-
     const dadosAtualizados = {
       ...dadosAtuais,
       nome,
@@ -1216,6 +1207,11 @@ window.salvarPerfil = async function(){
       atualizadoEm:new Date().toISOString()
     };
 
+    /*
+      IMPORTANTE:
+      Salva os dados primeiro. Assim o botão nunca fica travado se o Storage da foto
+      demorar, falhar ou estiver bloqueado pelas regras.
+    */
     await setDoc(refUsuario,dadosAtualizados,{merge:true});
 
     try{
@@ -1224,15 +1220,36 @@ window.salvarPerfil = async function(){
       console.warn("Perfil salvo em usuarios, mas não sincronizou coleção pública:", erroPublico);
     }
 
-    arquivoFotoSelecionado = null;
-    dadosPerfilAtual = dadosAtualizados;
-    preencherTela(dadosAtualizados);
-
     mostrarSucesso("Perfil salvo com sucesso.");
+
+    /*
+      Se tiver foto nova, tenta enviar depois do perfil salvo.
+      Se der erro, não bloqueia o usuário.
+    */
+    if(arquivoFotoSelecionado){
+      Promise.race([
+        uploadFotoPerfil(usuarioAtualId,arquivoFotoSelecionado),
+        new Promise((_,reject)=>setTimeout(()=>reject(new Error("Tempo limite ao enviar foto.")),8000))
+      ]).then(async(urlFoto)=>{
+        await setDoc(refUsuario,{
+          fotoPerfil:urlFoto,
+          foto:urlFoto,
+          atualizadoEm:new Date().toISOString()
+        },{merge:true}).catch(()=>{});
+
+        const dadosComFoto = {...dadosAtualizados,fotoPerfil:urlFoto,foto:urlFoto};
+
+        sincronizarPerfilPublico(tipoAtual,dadosComFoto).catch(()=>{});
+      }).catch((erroFoto)=>{
+        console.warn("Foto não enviada, mas perfil foi salvo:", erroFoto);
+      });
+    }
+
+    arquivoFotoSelecionado = null;
 
     setTimeout(()=>{
       window.location.href = "perfil.html";
-    },1200);
+    },1000);
 
   }catch(erro){
     console.error("Erro ao salvar perfil:",erro);
