@@ -1,11 +1,13 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+from pathlib import Path
 
-import { 
-  getAuth 
+content = '''import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+
+import {
+  getAuth
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
-import { 
-  getFirestore 
+import {
+  getFirestore
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 import {
@@ -28,3 +30,10 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 
 export const storage = getStorage(app);
+'''
+
+out = Path("/mnt/data/firebase.js")
+out.write_text(content, encoding="utf-8")
+
+print("firebase.js criado completo.")
+print("Linhas:", content.count("\\n") + 1)
