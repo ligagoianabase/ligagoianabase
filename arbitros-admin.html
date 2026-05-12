@@ -4,715 +4,804 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fotógrafos - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Árbitros ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="menu.css">
 
 <style>
 :root{
-  --bg:#061427;
-  --card:#071d37;
-  --card2:#0d2a52;
+  --bg:#0b1f3a;
+  --bg-dark:#08172c;
+  --card:#102a52;
+  --card-hover:#153766;
   --gold:#f7c600;
-  --gold2:#ffe45c;
+  --gold-soft:rgba(247,198,0,.12);
+  --gold-line:rgba(247,198,0,.24);
   --white:#ffffff;
-  --muted:#cbd6ea;
-  --line:rgba(255,255,255,.12);
-  --gold-line:rgba(247,198,0,.45);
-  --green:#1b5e20;
-  --blue:#1a3f73;
-  --shadow:0 14px 34px rgba(0,0,0,.38);
+  --muted:#d8e1ef;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --transition:.25s ease;
   --max:1240px;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
 
-html,body{
-  width:100%;
-  min-height:100%;
-  overflow-x:hidden;
-}
-
 body{
-  font-family:Arial,sans-serif;
+  font-family:Arial, sans-serif;
   background:
-    linear-gradient(rgba(2,8,20,.88), rgba(2,8,20,.96)),
+    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
     url("fundo.png") center/cover fixed no-repeat;
   color:var(--white);
   min-height:100vh;
 }
 
-a{text-decoration:none;color:inherit}
-button,input,select{font-family:inherit}
-button{cursor:pointer;border:none}
-img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit;transition:var(--transition)}
+button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
+input,select{font-family:inherit}
 
-.wrap{
-  width:min(100% - 28px,var(--max));
-  margin:0 auto;
+.wrap{width:min(100% - 28px, var(--max));margin:0 auto}
+
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
 }
 
-.container{
-  padding:22px 0 34px;
+.header-top{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
 }
 
-.hero{
-  background:
-    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
-    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+.header-left,.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:24px;
+  font-weight:700;
+}
+
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.btn-light{background:#fff4cf;color:#111}
+.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
+.btn-gold{background:var(--gold);color:#111}
+.btn-gold:hover{filter:brightness(1.04);transform:translateY(-2px)}
+
+.nav-bar{
+  background:rgba(16,42,82,.95);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.menu{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:12px 0;
+  flex-wrap:wrap;
+}
+
+.menu a{
+  color:white;
+  font-weight:700;
+  font-size:14px;
+  background:#0d2346;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+
+.menu a:hover{
+  color:var(--gold);
+  background:var(--gold-soft);
+  border-color:var(--gold-line);
+}
+
+.menu a.ativo{
+  background:var(--gold);
+  color:black;
+}
+
+.container{padding:24px 0 34px}
+
+.hero,.form-panel{
+  background:linear-gradient(135deg,#102a52,#0d2346);
   border:1px solid var(--gold-line);
-  border-radius:20px;
-  padding:20px;
-  margin-bottom:14px;
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
   box-shadow:var(--shadow);
 }
 
 .hero h2{
+  margin:0 0 8px;
   color:var(--gold);
   font-size:28px;
-  font-weight:900;
-  margin-bottom:6px;
 }
 
 .hero p{
+  margin:0;
   color:var(--muted);
-  line-height:1.5;
-  font-size:14px;
+  line-height:1.6;
+  font-size:15px;
 }
 
-.hero-tags{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  margin-top:12px;
-}
-
-.hero-tag{
-  background:rgba(26,63,115,.9);
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:11px;
-  border:1px solid rgba(255,255,255,.08);
-  font-weight:800;
-}
-
-.filtros{
-  display:grid;
-  grid-template-columns:1fr 220px;
-  gap:10px;
+.form-title{
+  color:var(--gold);
+  font-size:20px;
   margin-bottom:14px;
+  font-weight:900;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.full{grid-column:1/-1}
+
+label{
+  display:block;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:6px;
+  color:#fff;
 }
 
 input,select{
   width:100%;
-  padding:12px;
+  padding:13px;
   border:none;
-  border-radius:12px;
+  border-radius:10px;
   font-size:14px;
   background:#f5f7fb;
   color:#111;
-  outline:none;
-  box-shadow:0 8px 18px rgba(0,0,0,.22);
 }
 
-.titulo-secao{
-  color:var(--gold);
-  font-size:22px;
-  font-weight:900;
-  margin:0 0 12px;
+input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
+
+.preview-foto{
+  display:none;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.preview-foto img{
+  width:78px;
+  height:78px;
+  object-fit:cover;
+  background:#fff;
+  border-radius:50%;
+  border:2px solid var(--gold);
+}
+
+.preview-foto span{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.form-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  margin-bottom:20px;
 }
 
 .lista-grid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
   gap:14px;
 }
 
-.foto-card{
-  background:
-    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border:1px solid rgba(247,198,0,.22);
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 8px 20px rgba(0,0,0,.25);
-  transition:.25s ease;
-}
-
-.foto-card:hover{
-  transform:translateY(-2px);
-  border-color:var(--gold);
-}
-
-.perfil-top{
+.card{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
   padding:16px;
-  text-align:center;
-}
-
-.avatar{
-  width:105px;
-  height:105px;
-  border-radius:50%;
-  object-fit:cover;
-  background:#fff;
-  border:3px solid var(--gold);
-  margin:0 auto 10px;
-}
-
-.foto-card strong{
-  display:block;
-  color:#fff;
-  font-size:18px;
-  font-weight:900;
-  margin-bottom:5px;
-}
-
-.foto-card p{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.5;
-}
-
-.badges{
+  border-radius:16px;
   display:flex;
-  gap:5px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-top:8px;
-}
-
-.badge{
-  display:inline-flex;
+  justify-content:space-between;
   align-items:center;
-  gap:5px;
-  background:rgba(247,198,0,.12);
-  border:1px solid var(--gold-line);
-  color:var(--gold);
-  padding:5px 8px;
-  border-radius:999px;
-  font-size:10px;
-  font-weight:900;
-}
-
-.badge-oficial{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#111;
-  border-color:rgba(247,198,0,.75);
-}
-
-.card-oficial{
-  border-color:rgba(247,198,0,.70);
-  box-shadow:0 10px 28px rgba(247,198,0,.14);
-}
-
-.album-mini{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:4px;
-  padding:0 12px 12px;
-}
-
-.album-mini img,
-.album-mini video{
-  width:100%;
-  height:70px;
-  object-fit:cover;
-  border-radius:8px;
-  background:#fff;
-}
-
-.card-actions{
-  display:grid;
-  grid-template-columns:1fr 42px 42px;
-  gap:8px;
-  padding:12px;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-
-.btn{
-  min-height:40px;
-  border-radius:11px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  font-size:13px;
-}
-
-.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
-.btn-wpp{background:#25d366;color:#fff}
-.btn-blue{background:#1a3f73;color:#fff}
-.btn-gray{background:#4b5563;color:#fff}
-
-.perfil-detalhe{
-  background:
-    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border:1px solid var(--gold-line);
-  border-radius:20px;
-  padding:18px;
+  gap:14px;
+  border:1px solid rgba(255,230,0,.10);
   box-shadow:var(--shadow);
 }
 
-.detalhe-head{
-  display:grid;
-  grid-template-columns:150px 1fr;
-  gap:18px;
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold-line);
+}
+
+.player{
+  display:flex;
   align-items:center;
-  margin-bottom:18px;
+  gap:12px;
+  flex:1;
 }
 
-.detalhe-head .avatar{
-  width:140px;
-  height:140px;
-  margin:0;
+.photo{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid rgba(255,255,255,.15);
+  background:#fff;
+  flex-shrink:0;
 }
 
-.detalhe-head h2{
-  color:var(--gold);
-  font-size:30px;
-  margin-bottom:7px;
+.player-info{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
 }
 
-.detalhe-head p{
+.nome-jogador{
+  font-weight:700;
+  font-size:18px;
+  color:#fff;
+}
+
+.player-info small{
   color:var(--muted);
-  font-size:14px;
-  line-height:1.6;
+  font-size:13px;
+  line-height:1.5;
 }
 
-.detalhe-actions{
+.tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:4px;
+}
+
+.tag{
+  background:#1a3f73;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.actions{
   display:flex;
   gap:8px;
   flex-wrap:wrap;
-  margin-top:12px;
+  justify-content:flex-end;
 }
 
-.albuns-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
+.btn-acao{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:11px 14px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:13px;
+  border:none;
+  cursor:pointer;
+  white-space:nowrap;
 }
 
-.album-card{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  overflow:hidden;
-}
-
-.album-card img{
-  width:100%;
-  height:150px;
-  object-fit:cover;
-  background:#fff;
-}
-
-.album-body{
-  padding:12px;
-}
-
-.album-body strong{
-  color:#fff;
-  font-size:14px;
-  line-height:1.25;
-}
-
-.album-body p{
-  color:var(--muted);
-  font-size:11px;
-  margin-top:6px;
-  line-height:1.45;
-}
+.btn-ver{background:var(--gold);color:black}
+.btn-danger{background:#d94141;color:#fff}
+.btn-green{background:#25d366;color:#fff}
+.btn-blue{background:#1a3f73;color:#fff}
 
 .vazio{
-  color:var(--muted);
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:30px;
+  border-radius:14px;
   text-align:center;
-  padding:18px;
-  background:rgba(7,29,55,.9);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:var(--shadow);
   grid-column:1/-1;
 }
 
-@media(max-width:1100px){
-  .lista-grid,.albuns-grid{grid-template-columns:repeat(3,1fr)}
-}
-
 @media(max-width:900px){
-  .lista-grid,.albuns-grid{grid-template-columns:repeat(2,1fr)}
-  .filtros{grid-template-columns:1fr}
-  .hero h2{font-size:22px}
-  .detalhe-head{grid-template-columns:1fr;text-align:center}
-  .detalhe-head .avatar{margin:0 auto}
+  .header-title{order:3;width:100%;text-align:center}
+  .header-left,.header-right{width:100%;justify-content:center}
+  .form-grid,.filtros{grid-template-columns:1fr}
+  .card{flex-direction:column;align-items:flex-start}
+  .actions{width:100%;justify-content:flex-start}
 }
 
-@media(max-width:520px){
-  .lista-grid,.albuns-grid{grid-template-columns:1fr}
-  .card-actions{grid-template-columns:1fr}
+@media(max-width:600px){
+  .top-btn,.btn-acao{width:100%;justify-content:center}
+  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
+  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
+  .menu{
+    justify-content:flex-start;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:14px;
+  }
+  .menu a{flex:0 0 auto}
 }
 </style>
 </head>
 
 <body>
 
-<main class="wrap container">
+<header>
+  <div class="wrap header-top">
+    <div class="header-left">
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
 
-  <section class="hero">
-    <h2>Fotógrafos</h2>
-    <p>Fotógrafos cadastrados e aprovados na Liga Goiana de Futebol de Base.</p>
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
+    </div>
 
-    <div class="hero-tags">
-      <div class="hero-tag" id="tagTotal">Fotógrafos: 0</div>
-      <div class="hero-tag" id="tagCidade">Cidade: Todas</div>
-      <div class="hero-tag">Perfis aprovados</div>
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
+
+    <div class="header-right">
+      <button class="top-btn btn-gold" type="button" onclick="salvarArbitro()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Árbitro
+      </button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="wrap">
+      <div class="menu">
+        <a href="admin.html">Painel</a>
+        <a href="campeonatos-admin.html">Campeonatos</a>
+        <a href="jogos-admin.html">Jogos</a>
+        <a href="times-admin.html">Times</a>
+        <a href="tecnicos-admin.html">Técnicos</a>
+        <a href="jogadores-admin.html">Jogadores</a>
+        <a href="arbitros-admin.html" class="ativo">Árbitros</a>
+        <a href="assistentes-admin.html">Assistentes</a>
+        <a href="sumulas-admin.html">Súmulas</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap container">
+
+  <div class="hero">
+    <h2>Árbitros ADM</h2>
+    <p>Cadastre árbitros com foto, telefone, WhatsApp, e-mail e função principal. Na escala, qualquer cadastrado poderá atuar como árbitro central, assistente ou 4º árbitro.</p>
+  </div>
+
+  <section class="form-panel">
+    <div class="form-title" id="tituloFormulario">Novo Árbitro</div>
+
+    <input type="hidden" id="arbitroId">
+
+    <div class="form-grid">
+      <div>
+        <label>Nome completo</label>
+        <input id="nome" placeholder="Nome do árbitro">
+      </div>
+
+      <div>
+        <label>CPF</label>
+        <input id="cpf" placeholder="CPF">
+      </div>
+
+      <div>
+        <label>Data de nascimento</label>
+        <input id="nascimento" type="date">
+      </div>
+
+      <div>
+        <label>Status</label>
+        <select id="status">
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
+          <option value="suspenso">Suspenso</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Telefone</label>
+        <input id="telefone" placeholder="Ex: (62) 99999-9999">
+      </div>
+
+      <div>
+        <label>WhatsApp</label>
+        <input id="whatsapp" placeholder="Ex: 5562999999999">
+      </div>
+
+      <div>
+        <label>E-mail</label>
+        <input id="email" type="email" placeholder="email@exemplo.com">
+      </div>
+
+      <div>
+        <label>Função principal</label>
+        <select id="funcaoPrincipal">
+          <option value="Árbitro Centro">Árbitro Centro</option>
+          <option value="Assistente">Assistente</option>
+          <option value="4º Árbitro">4º Árbitro</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Foto URL</label>
+        <input id="foto" placeholder="foto-arbitro.png ou URL">
+      </div>
+
+      <div>
+        <label>Enviar foto do PC/Celular</label>
+        <input type="file" id="fotoArquivo" accept="image/*" onchange="previewFotoArquivo()">
+      </div>
+
+      <div class="full">
+        <label>Prévia</label>
+        <div class="preview-foto" id="previewFotoBox">
+          <img id="previewFotoImg" src="logo-liga.jfif">
+          <span id="previewFotoTexto">Pré-visualização da foto</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-acao btn-ver" type="button" onclick="salvarArbitro()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Árbitro
+      </button>
+
+      <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
+        <i class="fa-solid fa-broom"></i> Limpar
+      </button>
     </div>
   </section>
 
-  <section class="filtros" id="filtrosBox">
-    <input id="busca" placeholder="Pesquisar fotógrafo, cidade, Instagram ou especialidade...">
+  <div class="filtros">
+    <input id="buscaArbitro" placeholder="Pesquisar árbitro...">
 
-    <select id="filtroCidade">
-      <option value="">Todas cidades</option>
+    <select id="filtroFuncao">
+      <option value="">Todas as funções</option>
+      <option value="Árbitro Centro">Árbitro Centro</option>
+      <option value="Assistente">Assistente</option>
+      <option value="4º Árbitro">4º Árbitro</option>
     </select>
-  </section>
 
-  <h2 class="titulo-secao" id="tituloPagina">Fotógrafos</h2>
+    <select id="filtroStatus">
+      <option value="">Todos os status</option>
+      <option value="ativo">Ativo</option>
+      <option value="inativo">Inativo</option>
+      <option value="suspenso">Suspenso</option>
+    </select>
+  </div>
 
-  <section id="conteudoFotografos" class="lista-grid">
-    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando fotógrafos...</div>
-  </section>
+  <div class="lista-grid" id="listaArbitros"></div>
 
-</main>
+</div>
 
 <script type="module">
-import { renderMenu } from "./menu.js";
 import { db } from "./firebase.js";
 import {
   collection,
-  onSnapshot,
+  addDoc,
   getDocs,
   doc,
-  getDoc
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-renderMenu("fotografos");
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js";
 
-const idUrl = new URLSearchParams(location.search).get("id");
-let fotografos = [];
-let galerias = [];
+const storage = getStorage();
 
-function el(id){return document.getElementById(id)}
+let arbitrosCache = [];
+let fotoAtual = "";
 
-function n(txt){
-  return String(txt || "")
+function txt(v){
+  return String(v || "").trim();
+}
+
+function normalizarTexto(texto){
+  return String(texto || "")
     .trim()
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g,"");
 }
 
-function val(obj,chaves,f=""){
-  for(const c of chaves){
-    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== ""){
-      return obj[c];
-    }
-  }
-  return f;
-}
-
-function aprovado(f){
-  const status = n(val(f,["status","situacao"],""));
-
-  if(
-    status === "bloqueado" ||
-    status === "reprovado" ||
-    status === "inativo" ||
-    status === "pendente" ||
-    f.bloqueado === true
-  ){
-    return false;
-  }
-
-  return f.aprovado === true ||
-    f.autorizado === true ||
-    status === "aprovado" ||
-    status === "ativo";
-}
-
-function fotografoOficial(f){
-  return f.fotografoOficial === true ||
-    f.oficial === true ||
-    f.seloOficial === true;
-}
-
-function nomeFotografo(f){
-  return val(f,["nome","nomeCompleto","displayName"],"Fotógrafo");
-}
-
-function fotoPerfil(f){
-  return val(f,["foto","fotoPerfil","avatar","imagem"],"logo-liga.jfif");
-}
-
-function cidadeFotografo(f){
-  return val(f,["cidade","municipio","local"],"-");
-}
-
-function telefoneLimpo(v){
+function limparNumero(v){
   return String(v || "").replace(/\D/g,"");
 }
 
-function linkInstagram(v){
-  if(!v) return "";
-  if(String(v).startsWith("http")) return v;
-  return "https://instagram.com/" + String(v).replace("@","");
+window.previewFotoArquivo = function(){
+  const arquivo = document.getElementById("fotoArquivo").files[0];
+  if(!arquivo) return;
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+    document.getElementById("previewFotoBox").style.display = "flex";
+    document.getElementById("previewFotoImg").src = e.target.result;
+    document.getElementById("previewFotoTexto").textContent = arquivo.name;
+  };
+
+  leitor.readAsDataURL(arquivo);
+};
+
+async function uploadFotoSeExistir(){
+  const arquivo = document.getElementById("fotoArquivo").files[0];
+  const fotoUrlManual = txt(document.getElementById("foto").value);
+
+  if(arquivo){
+    const nomeArquivo = `arbitros/${Date.now()}-${arquivo.name}`;
+    const referencia = ref(storage,nomeArquivo);
+    await uploadBytes(referencia,arquivo);
+    return await getDownloadURL(referencia);
+  }
+
+  if(fotoUrlManual) return fotoUrlManual;
+
+  return fotoAtual || "logo-liga.jfif";
 }
 
-function galeriasDoFotografo(f){
-  const uid = f.uid || f.id;
-  const nome = n(nomeFotografo(f));
+window.limparFormulario = function(){
+  document.getElementById("arbitroId").value = "";
+  document.getElementById("nome").value = "";
+  document.getElementById("cpf").value = "";
+  document.getElementById("nascimento").value = "";
+  document.getElementById("status").value = "ativo";
+  document.getElementById("telefone").value = "";
+  document.getElementById("whatsapp").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("funcaoPrincipal").value = "Árbitro Centro";
+  document.getElementById("foto").value = "";
+  document.getElementById("fotoArquivo").value = "";
+  document.getElementById("tituloFormulario").textContent = "Novo Árbitro";
+  document.getElementById("previewFotoBox").style.display = "none";
+  document.getElementById("previewFotoImg").src = "logo-liga.jfif";
+  document.getElementById("previewFotoTexto").textContent = "Pré-visualização da foto";
+  fotoAtual = "";
+};
 
-  return galerias.filter(g=>{
-    const statusOk = g.aprovado === true || g.publicado === true || g.status === "aprovado";
-    if(!statusOk) return false;
+window.salvarArbitro = async function(){
+  const id = document.getElementById("arbitroId").value;
 
-    const gUid = g.fotografoUid || g.criadoPorUid || "";
-    const gNome = n(g.fotografo || g.fotografoNome || g.criadoPorNome || "");
+  const nome = txt(document.getElementById("nome").value);
+  const cpf = limparNumero(document.getElementById("cpf").value);
+  const nascimento = document.getElementById("nascimento").value;
+  const status = document.getElementById("status").value;
+  const telefone = txt(document.getElementById("telefone").value);
+  const whatsapp = limparNumero(document.getElementById("whatsapp").value);
+  const email = txt(document.getElementById("email").value).toLowerCase();
+  const funcaoPrincipal = document.getElementById("funcaoPrincipal").value;
 
-    return (uid && gUid === uid) || (nome && gNome === nome);
-  });
+  if(!nome) return alert("Digite o nome do árbitro.");
+  if(!cpf) return alert("Digite o CPF.");
+  if(cpf.length !== 11) return alert("Digite um CPF válido com 11 números.");
+  if(!nascimento) return alert("Digite a data de nascimento.");
+  if(!telefone) return alert("Digite o telefone.");
+  if(!whatsapp) return alert("Digite o WhatsApp.");
+  if(whatsapp.length < 10) return alert("Digite um WhatsApp válido.");
+  if(!email) return alert("Digite o e-mail.");
+
+  const foto = await uploadFotoSeExistir();
+
+  const dados = {
+    nome,
+    nomeCompleto:nome,
+    cpf,
+    nascimento,
+    dataNascimento:nascimento,
+    status,
+    telefone,
+    whatsapp,
+    email,
+    funcaoPrincipal,
+    funcao:funcaoPrincipal,
+    podeAtuarComo:["Árbitro Centro","Assistente","4º Árbitro"],
+    foto,
+    atualizadoEm:serverTimestamp()
+  };
+
+  if(id){
+    await updateDoc(doc(db,"arbitros",id),dados);
+    alert("Árbitro atualizado!");
+  }else{
+    await addDoc(collection(db,"arbitros"),{
+      ...dados,
+      jogos:0,
+      jogosComoArbitroCentro:0,
+      jogosComoAssistente:0,
+      jogosComoQuartoArbitro:0,
+      cartoesAplicados:0,
+      criadoEm:serverTimestamp()
+    });
+    alert("Árbitro cadastrado!");
+  }
+
+  limparFormulario();
+  await carregarArbitros();
+};
+
+window.editarArbitro = function(id){
+  const a = arbitrosCache.find(x=>x.id === id);
+  if(!a) return;
+
+  document.getElementById("arbitroId").value = a.id;
+  document.getElementById("nome").value = a.nome || "";
+  document.getElementById("cpf").value = a.cpf || "";
+  document.getElementById("nascimento").value = a.nascimento || a.dataNascimento || "";
+  document.getElementById("status").value = a.status || "ativo";
+  document.getElementById("telefone").value = a.telefone || "";
+  document.getElementById("whatsapp").value = a.whatsapp || "";
+  document.getElementById("email").value = a.email || "";
+  document.getElementById("funcaoPrincipal").value = a.funcaoPrincipal || a.funcao || "Árbitro Centro";
+  document.getElementById("foto").value = a.foto || "";
+  document.getElementById("fotoArquivo").value = "";
+  document.getElementById("tituloFormulario").textContent = "Editar Árbitro";
+
+  fotoAtual = a.foto || "";
+
+  if(fotoAtual){
+    document.getElementById("previewFotoBox").style.display = "flex";
+    document.getElementById("previewFotoImg").src = fotoAtual;
+    document.getElementById("previewFotoTexto").textContent = "Foto atual";
+  }
+
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.excluirArbitro = async function(id){
+  if(!confirm("Excluir árbitro?")) return;
+  await deleteDoc(doc(db,"arbitros",id));
+  await carregarArbitros();
+};
+
+window.abrirWhatsapp = function(numero){
+  const n = limparNumero(numero);
+  if(!n) return alert("WhatsApp não informado.");
+  window.open("https://wa.me/" + n, "_blank");
+};
+
+async function carregarArbitros(){
+  const lista = document.getElementById("listaArbitros");
+  lista.innerHTML = `<div class="vazio">Carregando árbitros...</div>`;
+
+  const snap = await getDocs(collection(db,"arbitros"));
+
+  arbitrosCache = [];
+  snap.forEach(d=>arbitrosCache.push({id:d.id,...d.data()}));
+
+  arbitrosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
+
+  renderizarArbitros();
 }
 
-function capaGaleria(g){
-  return g.capa || g.imagem || (Array.isArray(g.midias) ? g.midias[0]?.url : "") || "logo-liga.jfif";
-}
+function renderizarArbitros(){
+  const lista = document.getElementById("listaArbitros");
+  const busca = normalizarTexto(document.getElementById("buscaArbitro").value);
+  const filtroFuncao = document.getElementById("filtroFuncao").value;
+  const filtroStatus = document.getElementById("filtroStatus").value;
 
-function preencherCidades(){
-  const atual = el("filtroCidade").value;
-  const set = new Set();
-
-  fotografos.filter(aprovado).forEach(f=>{
-    const cidade = cidadeFotografo(f);
-    if(cidade && cidade !== "-") set.add(cidade);
-  });
-
-  el("filtroCidade").innerHTML = `<option value="">Todas cidades</option>` +
-    [...set].sort((a,b)=>a.localeCompare(b,"pt-BR")).map(c=>`<option value="${c}">${c}</option>`).join("");
-
-  if([...set].includes(atual)) el("filtroCidade").value = atual;
-}
-
-function filtrados(){
-  const busca = n(el("busca").value);
-  const cidade = el("filtroCidade").value;
-
-  return fotografos.filter(f=>{
-    if(!aprovado(f)) return false;
-    if(cidade && cidadeFotografo(f) !== cidade) return false;
+  let arbitros = arbitrosCache.filter(a=>{
+    if(filtroFuncao && (a.funcaoPrincipal || a.funcao) !== filtroFuncao) return false;
+    if(filtroStatus && a.status !== filtroStatus) return false;
 
     if(busca){
-      const alvo = n(`${nomeFotografo(f)} ${cidadeFotografo(f)} ${f.instagram || ""} ${f.especialidade || ""} ${f.portfolio || ""}`);
-      if(!alvo.includes(busca)) return false;
+      const texto = normalizarTexto(`
+        ${a.nome || ""}
+        ${a.cpf || ""}
+        ${a.nascimento || ""}
+        ${a.dataNascimento || ""}
+        ${a.telefone || ""}
+        ${a.whatsapp || ""}
+        ${a.email || ""}
+        ${a.funcaoPrincipal || a.funcao || ""}
+      `);
+
+      if(!texto.includes(busca)) return false;
     }
 
     return true;
-  }).sort((a,b)=>{
-    const oficialA = fotografoOficial(a) ? 1 : 0;
-    const oficialB = fotografoOficial(b) ? 1 : 0;
-
-    if(oficialA !== oficialB) return oficialB - oficialA;
-
-    return nomeFotografo(a).localeCompare(nomeFotografo(b),"pt-BR");
   });
-}
 
-function atualizarTopo(lista){
-  el("tagTotal").innerText = `Fotógrafos: ${lista.length}`;
-  el("tagCidade").innerText = `Cidade: ${el("filtroCidade").value || "Todas"}`;
-}
-
-function renderLista(){
-  const lista = filtrados();
-  const box = el("conteudoFotografos");
-  box.className = "lista-grid";
-
-  atualizarTopo(lista);
-
-  if(!fotografos.length){
-    box.innerHTML = `<div class="vazio">Nenhum fotógrafo cadastrado no Firebase.</div>`;
+  if(!arbitros.length){
+    lista.innerHTML = `<div class="vazio">Nenhum árbitro encontrado.</div>`;
     return;
   }
 
-  if(!lista.length){
-    box.innerHTML = `<div class="vazio">Nenhum fotógrafo aprovado encontrado.</div>`;
-    return;
-  }
+  lista.innerHTML = arbitros.map(a=>`
+    <div class="card">
+      <div class="player">
+        <img
+          src="${a.foto || "logo-liga.jfif"}"
+          class="photo"
+          onerror="this.src='logo-liga.jfif'"
+        >
 
-  box.innerHTML = lista.map(f=>{
-    const albuns = galeriasDoFotografo(f);
-    const wpp = telefoneLimpo(val(f,["whatsapp","telefone","celular"],""));
-    const insta = linkInstagram(val(f,["instagram"],""));
-    const portfolio = val(f,["portfolio","site","linkExterno","link"],"");
+        <div class="player-info">
+          <div class="nome-jogador">${a.nome || "-"}</div>
 
-    return `
-      <article class="foto-card ${fotografoOficial(f) ? "card-oficial" : ""}">
-        <div class="perfil-top">
-          <img class="avatar" src="${fotoPerfil(f)}" onerror="this.src='logo-liga.jfif'">
-          <strong>${nomeFotografo(f)}</strong>
-          <p>
-            ${cidadeFotografo(f)}<br>
-            ${val(f,["especialidade","bio","descricao"],"Fotógrafo da Liga Goiana")}
-          </p>
+          <small>CPF: ${a.cpf || "-"}</small>
+          <small>Nascimento: ${a.nascimento || a.dataNascimento || "-"}</small>
+          <small>Telefone: ${a.telefone || "-"}</small>
+          <small>WhatsApp: ${a.whatsapp || "-"}</small>
+          <small>E-mail: ${a.email || "-"}</small>
+          <small>Função principal: ${a.funcaoPrincipal || a.funcao || "-"}</small>
 
-          <div class="badges">
-            ${fotografoOficial(f) ? `<span class="badge badge-oficial"><i class="fa-solid fa-certificate"></i> Fotógrafo Oficial</span>` : ""}
-            <span class="badge"><i class="fa-solid fa-circle-check"></i> Aprovado</span>
-            <span class="badge"><i class="fa-solid fa-images"></i> ${albuns.length} álbum(ns)</span>
+          <small>
+            Jogos: ${Number(a.jogos || 0)} |
+            Centro: ${Number(a.jogosComoArbitroCentro || 0)} |
+            Assistente: ${Number(a.jogosComoAssistente || 0)} |
+            4º: ${Number(a.jogosComoQuartoArbitro || 0)}
+          </small>
+
+          <div class="tags">
+            <span class="tag">${a.status || "ativo"}</span>
+            <span class="tag">${a.funcaoPrincipal || a.funcao || "Árbitro Centro"}</span>
+            <span class="tag">Pode atuar em qualquer função</span>
           </div>
         </div>
+      </div>
 
-        <div class="album-mini">
-          ${
-            albuns.slice(0,6).map(g=>`<img src="${capaGaleria(g)}" onerror="this.src='logo-liga.jfif'">`).join("") ||
-            `<img src="logo-liga.jfif"><img src="logo-liga.jfif"><img src="logo-liga.jfif">`
-          }
-        </div>
+      <div class="actions">
+        <button class="btn-acao btn-green" onclick="abrirWhatsapp('${a.whatsapp || ""}')">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp
+        </button>
 
-        <div class="card-actions">
-          <a class="btn btn-gold" href="fotografos.html?id=${encodeURIComponent(f.id)}">
-            <i class="fa-solid fa-eye"></i> Ver perfil
-          </a>
+        <a class="btn-acao btn-blue" href="mailto:${a.email || ""}">
+          <i class="fa-solid fa-envelope"></i> E-mail
+        </a>
 
-          ${wpp ? `<a class="btn btn-wpp" href="https://wa.me/55${wpp}" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>` : ""}
-          ${insta ? `<a class="btn btn-blue" href="${insta}" target="_blank"><i class="fa-brands fa-instagram"></i></a>` : ""}
-          ${portfolio ? `<a class="btn btn-gray" href="${portfolio}" target="_blank"><i class="fa-solid fa-globe"></i></a>` : ""}
-        </div>
-      </article>
-    `;
-  }).join("");
-}
+        <button class="btn-acao btn-ver" onclick="editarArbitro('${a.id}')">
+          <i class="fa-solid fa-pen"></i> Editar
+        </button>
 
-function renderPerfil(f){
-  const box = el("conteudoFotografos");
-  const albuns = galeriasDoFotografo(f);
-  const wpp = telefoneLimpo(val(f,["whatsapp","telefone","celular"],""));
-  const insta = linkInstagram(val(f,["instagram"],""));
-  const portfolio = val(f,["portfolio","site","linkExterno","link"],"");
-
-  el("filtrosBox").style.display = "none";
-  el("tituloPagina").innerText = nomeFotografo(f);
-  box.className = "perfil-detalhe";
-
-  box.innerHTML = `
-    <div class="detalhe-head">
-      <img class="avatar" src="${fotoPerfil(f)}" onerror="this.src='logo-liga.jfif'">
-
-      <div>
-        <h2>${nomeFotografo(f)}</h2>
-        <p>
-          Cidade: ${cidadeFotografo(f)}<br>
-          Especialidade: ${val(f,["especialidade"],"Fotografia esportiva")}<br>
-          ${val(f,["bio","descricao"],"Fotógrafo cadastrado na Liga Goiana de Futebol de Base.")}
-        </p>
-
-        <div class="badges" style="justify-content:flex-start">
-          ${fotografoOficial(f) ? `<span class="badge badge-oficial"><i class="fa-solid fa-certificate"></i> Fotógrafo Oficial</span>` : ""}
-          <span class="badge"><i class="fa-solid fa-circle-check"></i> Fotógrafo cadastrado</span>
-          <span class="badge"><i class="fa-solid fa-images"></i> ${albuns.length} álbum(ns)</span>
-        </div>
-
-        <div class="detalhe-actions">
-          <a class="btn btn-gold" href="fotografos.html"><i class="fa-solid fa-arrow-left"></i> Fotógrafos</a>
-          ${wpp ? `<a class="btn btn-wpp" href="https://wa.me/55${wpp}" target="_blank"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>` : ""}
-          ${insta ? `<a class="btn btn-blue" href="${insta}" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>` : ""}
-          ${portfolio ? `<a class="btn btn-gray" href="${portfolio}" target="_blank"><i class="fa-solid fa-globe"></i> Portfólio</a>` : ""}
-        </div>
+        <button class="btn-acao btn-danger" onclick="excluirArbitro('${a.id}')">
+          <i class="fa-solid fa-trash"></i> Excluir
+        </button>
       </div>
     </div>
-
-    <h2 class="titulo-secao">Fotos publicadas</h2>
-
-    <div class="albuns-grid">
-      ${
-        albuns.length
-        ? albuns.map(g=>`
-          <article class="album-card">
-            <img src="${capaGaleria(g)}" onerror="this.src='logo-liga.jfif'">
-            <div class="album-body">
-              <strong>${g.titulo || "Álbum"}</strong>
-              <p>
-                ${g.campeonato || "-"}<br>
-                ${g.categoria || "-"}<br>
-                ${g.data || ""}
-              </p>
-              <div style="margin-top:10px">
-                <a class="btn btn-gold" href="galeria.html?id=${encodeURIComponent(g.id)}">
-                  <i class="fa-solid fa-images"></i> Ver álbum
-                </a>
-              </div>
-            </div>
-          </article>
-        `).join("")
-        : `<div class="vazio">Este fotógrafo ainda não possui álbuns publicados.</div>`
-      }
-    </div>
-  `;
+  `).join("");
 }
 
-async function carregarPerfilPorId(){
-  try{
-    const snap = await getDoc(doc(db,"fotografos",idUrl));
+document.getElementById("buscaArbitro").addEventListener("input",renderizarArbitros);
+document.getElementById("filtroFuncao").addEventListener("change",renderizarArbitros);
+document.getElementById("filtroStatus").addEventListener("change",renderizarArbitros);
 
-    let f = null;
-
-    if(snap.exists()){
-      f = {id:snap.id,...snap.data()};
-    }else{
-      const alt = fotografos.find(x=>x.id === idUrl);
-      if(alt) f = alt;
-    }
-
-    if(!f || !aprovado(f)){
-      el("conteudoFotografos").innerHTML = `<div class="vazio">Fotógrafo não encontrado ou ainda não aprovado.</div>`;
-      return;
-    }
-
-    renderPerfil(f);
-  }catch(e){
-    console.error(e);
-    el("conteudoFotografos").innerHTML = `<div class="vazio">Erro ao carregar fotógrafo.</div>`;
-  }
-}
-
-async function carregarDados(){
-  const snapFotografos = await getDocs(collection(db,"fotografos"));
-  fotografos = snapFotografos.docs.map(d=>({id:d.id,uid:d.id,...d.data()}));
-
-  const snapUsuarios = await getDocs(collection(db,"usuarios"));
-  snapUsuarios.forEach(d=>{
-    const u = {id:d.id,uid:d.id,...d.data()};
-    const tipo = n(val(u,["tipo","tipoUsuario","perfil","funcao"],""));
-    if(tipo.includes("fotografo") || tipo.includes("fotógrafo") || u.fotografo === true){
-      if(!fotografos.some(f=>f.id === u.id)) fotografos.push(u);
-    }
-  });
-
-  const snapGaleria = await getDocs(collection(db,"galeria"));
-  galerias = snapGaleria.docs.map(d=>({id:d.id,...d.data()}));
-
-  if(idUrl){
-    carregarPerfilPorId();
-  }else{
-    preencherCidades();
-    renderLista();
-  }
-}
-
-document.getElementById("busca").addEventListener("input",renderLista);
-document.getElementById("filtroCidade").addEventListener("change",renderLista);
-
-carregarDados();
+await carregarArbitros();
 </script>
 
 </body>
