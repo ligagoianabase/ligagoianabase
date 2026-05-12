@@ -770,15 +770,7 @@ textarea{
     </select>
   </div>
 
-  <select id="sumulaSelect" onchange="carregarSumulaSelecionada()">
-    <option value="">Carregando súmulas...</option>
-  </select>
-
-  <div class="top-actions">
-    <button class="action-btn" type="button" onclick="carregarListaSumulas()">
-      <i class="fa-solid fa-rotate"></i> Atualizar Lista
-    </button>
-  </div>
+  <input type="hidden" id="sumulaSelect" value="">
 
   <h3 class="titulo-lista-sumulas">
     <i class="fa-solid fa-file-lines"></i> Súmulas Finalizadas
@@ -1307,7 +1299,7 @@ window.abrirPublicaCardAdm = function(id){
 
 window.carregarListaSumulas = async function(){
   const select = el("sumulaSelect");
-  select.innerHTML = `<option value="">Carregando súmulas...</option>`;
+  select.value = "";
 
   try{
     const [sumulasSnap, jogosSnap] = await Promise.all([
@@ -1324,18 +1316,13 @@ window.carregarListaSumulas = async function(){
     const lista = juntarSumulasEJogos();
 
     if(!lista.length){
-      select.innerHTML = `<option value="">Nenhuma súmula publicada encontrada</option>`;
+      select.value = "";
       if(el("cardsSumulasAdm")) el("cardsSumulasAdm").innerHTML = `<div class="vazio-card">Nenhuma súmula encontrada.</div>`;
       mostrarStatus("Nenhuma súmula publicada encontrada em sumulas ou jogos.","aviso");
       return;
     }
 
-    select.innerHTML = `<option value="">Selecione uma súmula</option>` + lista.map(s=>{
-      const id = idPrincipal(s);
-      const status = registroFinalizado(s) ? "FINALIZADA" : "RASCUNHO";
-      const origem = s.origemRegistro === "jogos" ? "JOGO" : "SÚMULA";
-      return `<option value="${id}">${nomeJogo(s)} — ${status} — ${origem}</option>`;
-    }).join("");
+    select.value = "";
 
     const idUrl = new URLSearchParams(location.search).get("id");
     if(idUrl){
