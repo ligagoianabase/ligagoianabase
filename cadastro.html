@@ -314,6 +314,8 @@ import {
 import {
   doc,
   setDoc,
+  collection,
+  addDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
@@ -343,6 +345,46 @@ function regrasDePermissao(tipoUsuario){
     aprovado:false,
     status:"pendente"
   };
+}
+
+
+function colecaoPublicaDoTipo(tipoUsuario){
+  const mapa = {
+    jogador:"jogadores",
+    tecnico:"tecnicos",
+    arbitro:"arbitros",
+    assistente:"assistentes",
+    fotografo:"fotografos"
+  };
+
+  return mapa[tipoUsuario] || "";
+}
+
+async function salvarPerfilPublico(tipoUsuario,dadosUsuario){
+  const colecao = colecaoPublicaDoTipo(tipoUsuario);
+
+  if(!colecao) return;
+
+  await addDoc(collection(db,colecao),{
+    uid:dadosUsuario.uid,
+    nome:dadosUsuario.nome,
+    nomeCompleto:dadosUsuario.nome,
+    cpf:dadosUsuario.cpf,
+    email:dadosUsuario.email,
+    telefone:dadosUsuario.telefone,
+    whatsapp:dadosUsuario.whatsapp,
+    tipoUsuario:dadosUsuario.tipoUsuario,
+    time:dadosUsuario.time,
+    timeNome:dadosUsuario.time,
+    categoria:dadosUsuario.categoria,
+    status:dadosUsuario.status,
+    aprovado:dadosUsuario.aprovado,
+    autorizado:dadosUsuario.autorizado,
+    foto:dadosUsuario.foto || "",
+    criadoPeloCadastro:true,
+    criadoEm:serverTimestamp(),
+    atualizadoEm:serverTimestamp()
+  });
 }
 
 function mostrarMensagem(tipo,texto){
@@ -412,6 +454,8 @@ window.cadastrarUsuario = async function(){
     };
 
     await setDoc(doc(db,"usuarios",cred.user.uid),dadosUsuario);
+
+    await salvarPerfilPublico(tipoUsuario,dadosUsuario);
 
     mostrarMensagem(
       "ok",
