@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Técnicos - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Assistente - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="menu.css">
@@ -41,7 +41,7 @@ body{
 }
 
 a{text-decoration:none;color:inherit}
-button{font-family:inherit;cursor:pointer;border:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
 input,select{font-family:inherit}
 img{display:block;max-width:100%}
 
@@ -96,7 +96,7 @@ img{display:block;max-width:100%}
 
 .filtros{
   display:grid;
-  grid-template-columns:1fr 1fr 1fr;
+  grid-template-columns:1fr 1fr;
   gap:10px;
   margin-bottom:14px;
 }
@@ -123,17 +123,16 @@ select:focus{
   color:var(--gold);
   font-size:22px;
   font-weight:900;
-  margin:0 0 12px;
+  margin:18px 0 12px;
 }
 
-/* MESMO PADRÃO DOS JOGADORES — FOTO REDONDA DO LADO / ATÉ 3 POR LINHA */
 .lista-grid{
   display:grid;
   grid-template-columns:repeat(3, 1fr);
   gap:14px;
 }
 
-.card-tecnico{
+.card{
   background:
     radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 36%),
     linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
@@ -147,9 +146,10 @@ select:focus{
   flex-direction:column;
   justify-content:space-between;
   gap:12px;
+  overflow:hidden;
 }
 
-.card-tecnico:hover{
+.card:hover{
   transform:translateY(-2px);
   border-color:var(--gold);
 }
@@ -174,8 +174,11 @@ select:focus{
   border-radius:999px;
   font-size:10px;
   font-weight:900;
-  background:rgba(27,94,32,.88);
 }
+
+.status-ativo{background:rgba(27,94,32,.88);}
+.status-pendente{background:rgba(122,90,0,.88);}
+.status-inativo{background:rgba(180,35,35,.88);}
 
 .card-main{
   display:flex;
@@ -184,13 +187,18 @@ select:focus{
 }
 
 .photo{
-  width:78px;
-  height:78px;
-  border-radius:50%;
-  object-fit:cover;
-  background:#1a3f73;
-  border:2px solid var(--gold);
+  width:96px;
+  height:96px;
+  object-fit:contain;
+  background:transparent;
+  border:none;
+  border-radius:0;
+  padding:0;
   flex-shrink:0;
+
+  filter:
+    drop-shadow(0 0 8px rgba(247,198,0,.30))
+    drop-shadow(0 8px 18px rgba(0,0,0,.45));
 }
 
 .user-info{
@@ -215,8 +223,8 @@ select:focus{
 }
 
 .sub{
-  font-size:12px;
   color:var(--muted);
+  font-size:12px;
   line-height:1.45;
 }
 
@@ -228,74 +236,114 @@ select:focus{
 }
 
 .tag{
-  background:rgba(26,63,115,.95);
+  background:#1a3f73;
   padding:4px 8px;
   border-radius:999px;
   font-size:10px;
-  font-weight:900;
   border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
 }
 
-.info-grid{
+.stats-grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:6px;
   margin-top:10px;
 }
 
-.info-box{
-  background:rgba(255,255,255,.045);
+.stat-card{
+  background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.08);
   border-radius:9px;
   padding:7px 4px;
   text-align:center;
 }
 
-.info-box strong{
-  color:var(--gold);
+.stat-card strong{
   display:block;
-  font-size:12px;
+  color:var(--gold);
+  font-size:15px;
   line-height:1;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
 }
 
-.info-box span{
+.stat-card span{
+  display:block;
   color:var(--muted);
-  font-size:8px;
-  font-weight:900;
+  font-size:9px;
+  font-weight:800;
+  margin-top:3px;
+}
+
+.actions{
+  display:flex;
+  justify-content:center;
+  margin-top:10px;
 }
 
 .btn-ver{
   width:100%;
-  padding:10px 8px;
-  border-radius:10px;
-  font-weight:900;
-  font-size:12px;
-  background:linear-gradient(135deg, var(--gold), var(--gold2));
-  color:#111;
-  text-align:center;
-  transition:.2s ease;
   display:flex;
   align-items:center;
   justify-content:center;
   gap:7px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+  padding:10px 12px;
+  border-radius:11px;
+  font-weight:900;
+  font-size:13px;
 }
 
-.btn-ver:hover{
-  filter:brightness(1.05);
-  transform:translateY(-1px);
+.ranking-box{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.ranking-card{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.14), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+.ranking-card h3{
+  color:var(--gold);
+  font-size:15px;
+  margin-bottom:10px;
+}
+
+.ranking-item{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  color:var(--muted);
+  font-size:12px;
+}
+
+.ranking-item strong{
+  color:#fff;
+}
+
+.ranking-num{
+  color:var(--gold);
+  font-weight:900;
 }
 
 .vazio{
-  color:var(--muted);
-  text-align:center;
-  padding:18px;
-  background:rgba(7,29,55,.9);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
   grid-column:1/-1;
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  padding:22px;
+  border-radius:14px;
+  text-align:center;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.08);
 }
 
 .modal{
@@ -313,7 +361,7 @@ select:focus{
   background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(8,23,44,.98));
   padding:20px;
   border-radius:18px;
-  max-width:680px;
+  max-width:780px;
   width:100%;
   max-height:88vh;
   overflow:auto;
@@ -345,8 +393,26 @@ select:focus{
   font-size:14px;
 }
 
+.modal-box h3{
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
 .modal-box strong{
   color:#fff;
+}
+
+.categoria-item{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  color:var(--muted);
+}
+
+.categoria-item strong{
+  color:var(--gold);
 }
 
 .modal-close{
@@ -358,15 +424,10 @@ select:focus{
   font-weight:900;
 }
 
-@media(max-width:1100px){
-  .lista-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-}
-
 @media(max-width:900px){
   .filtros,
-  .modal-grid{
+  .modal-grid,
+  .ranking-box{
     grid-template-columns:1fr;
   }
 
@@ -383,6 +444,11 @@ select:focus{
   .card-main{
     align-items:center;
   }
+
+  .photo{
+    width:105px;
+    height:105px;
+  }
 }
 
 @media(max-width:600px){
@@ -394,35 +460,6 @@ select:focus{
     font-size:22px;
   }
 }
-
-/* PADRÃO FIFA / eFOOTBALL - FOTOS E LOGOS */
-.card{
-  overflow:hidden !important;
-}
-
-.card .photo,
-.modal-content .photo{
-  width:96px !important;
-  height:96px !important;
-  object-fit:contain !important;
-  background:transparent !important;
-  border:none !important;
-  border-radius:0 !important;
-  padding:0 !important;
-  flex-shrink:0 !important;
-  filter:
-    drop-shadow(0 0 8px rgba(247,198,0,.30))
-    drop-shadow(0 8px 18px rgba(0,0,0,.45)) !important;
-}
-
-@media(max-width:650px){
-  .card .photo,
-  .modal-content .photo{
-    width:105px !important;
-    height:105px !important;
-  }
-}
-
 </style>
 </head>
 
@@ -431,36 +468,39 @@ select:focus{
 <main class="wrap container">
 
   <section class="hero">
-    <h2>Técnicos</h2>
-    <p>Consulte os técnicos cadastrados e vinculados aos times da Liga Goiana de Futebol de Base.</p>
+    <h2>Assistentes</h2>
+    <p>Veja os assistentes cadastrados e acompanhe estatísticas públicas de atuação. Telefone, e-mail e CPF não aparecem para o público.</p>
 
     <div class="hero-tags">
-      <div class="hero-tag" id="tagTotal">Técnicos: 0</div>
-      <div class="hero-tag" id="tagTimes">Times: 0</div>
+      <div class="hero-tag" id="tagTotal">Assistentes: 0</div>
+      <div class="hero-tag" id="tagJogos">Jogos: 0</div>
       <div class="hero-tag" id="tagCategorias">Categorias: 0</div>
+      <div class="hero-tag" id="tagSumulas">Súmulas: 0</div>
     </div>
   </section>
 
   <section class="filtros">
-    <input id="buscaTecnico" placeholder="Pesquisar técnico, time, categoria ou cidade...">
-
-    <select id="filtroTime">
-      <option value="">Todos os times</option>
-    </select>
+    <input id="busca" placeholder="Pesquisar assistente, cidade ou categoria...">
 
     <select id="filtroCategoria">
       <option value="">Todas categorias</option>
     </select>
   </section>
 
-  <h2 class="titulo-secao" id="tituloPagina">Técnicos</h2>
+  <h2 class="titulo-secao">Ranking dos Assistentes</h2>
+  <section class="ranking-box" id="rankingBox"></section>
 
-  <section class="lista-grid" id="listaTecnicos">
-    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando técnicos...</div>
+  <h2 class="titulo-secao" id="tituloPagina">Assistentes</h2>
+
+  <section class="lista-grid" id="lista">
+    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando assistentes...</div>
   </section>
 
 </main>
 
+<div class="modal" id="modal">
+  <div class="modal-content" id="modalContent"></div>
+</div>
 
 <script type="module">
 import { renderMenu } from "./menu.js";
@@ -470,267 +510,465 @@ import {
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-renderMenu("tecnicos");
+renderMenu("assistente");
 
-let tecnicos = [];
-let times = [];
+let assistentes = [];
+let jogos = [];
+let sumulas = [];
 
-function normalizarTexto(texto){
-  return String(texto || "")
-    .trim()
+function n(txt){
+  return String(txt || "")
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"");
+    .replace(/[\u0300-\u036f]/g,"")
+    .trim();
 }
 
-function valorCampo(obj, chaves, fallback = ""){
-  for(const chave of chaves){
-    if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
-      return obj[chave];
+function val(obj, chaves, f=""){
+  for(const c of chaves){
+    if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== ""){
+      return obj[c];
     }
   }
-  return fallback;
+  return f;
 }
 
-function nomeTecnico(t){
-  return valorCampo(t, ["nome", "tecnicoNome", "nomeTecnico"], "Técnico sem nome");
+function nomeAssistente(a){
+  return val(a,["nome","nomeCompleto","assistente"],"Assistente sem nome");
 }
 
-function fotoTecnico(t){
-  return valorCampo(t, ["foto", "imagem", "avatar", "fotoUrl"], "logo-liga.jfif");
+function fotoAssistente(a){
+  return val(a,["foto","imagem","avatar","fotoUrl"],"logo-liga.jfif");
 }
 
-function timeTecnico(t){
-  return valorCampo(t, ["time", "timeNome", "equipe"], "-");
+function cidadeAssistente(a){
+  return val(a,["cidadeNascimento","cidade","municipio"],"-");
 }
 
-function categoriaTecnico(t){
-  const cats = valorCampo(t, ["categorias"], []);
-
-  if(Array.isArray(cats) && cats.length){
-    return cats.join(", ");
-  }
-
-  return valorCampo(t, ["categoria", "categoriaNome"], "-");
+function statusAssistente(a){
+  return n(val(a,["status"],"ativo"));
 }
 
-function cidadeTecnico(t){
-  return valorCampo(t, ["cidade", "cidadeNascimento", "municipio"], "-");
+function categoriasAssistente(a){
+  const cats = val(a,["categorias"],[]);
+  const cat = val(a,["categoria"],"");
+
+  if(Array.isArray(cats) && cats.length) return cats;
+  if(cat) return [cat];
+
+  return ["Todas as categorias"];
 }
 
-function telefoneTecnico(t){
-  return valorCampo(t, ["telefone", "whatsapp", "celular"], "-");
+function mesmoAssistente(nome, item){
+  const nomeNormal = n(nome);
+
+  const nomes = [
+    val(item,["assistente"],""),
+    val(item,["assistente1"],""),
+    val(item,["assistente2"],""),
+    val(item,["assistenteNome"],""),
+    val(item,["nomeAssistente"],""),
+    val(item,["arbitroAuxiliar"],""),
+    val(item,["auxiliar"],"")
+  ];
+
+  return nomes.some(x => n(x) === nomeNormal);
 }
 
-function emailTecnico(t){
-  return valorCampo(t, ["email"], "-");
+function categoriaDoJogo(jogo){
+  return val(jogo,["categoria","categoriaNome"],"Sem categoria");
 }
 
-function statusTecnico(t){
-  return valorCampo(t, ["status"], "ativo");
+function statusClasse(status){
+  if(status === "inativo" || status === "reprovado") return "status-inativo";
+  if(status === "pendente") return "status-pendente";
+  return "status-ativo";
 }
 
-function preencherFiltros(){
-  const filtroTime = document.getElementById("filtroTime");
-  const filtroCategoria = document.getElementById("filtroCategoria");
+function statusTexto(status){
+  if(status === "inativo") return "Inativo";
+  if(status === "reprovado") return "Reprovado";
+  if(status === "pendente") return "Pendente";
+  return "Ativo";
+}
 
-  const timeAtual = filtroTime.value;
-  const categoriaAtual = filtroCategoria.value;
+function calcularStatsAssistente(a){
+  const nome = nomeAssistente(a);
 
-  const nomesTimes = new Set();
+  let jogosTrabalhados = 0;
+  let jogosFinalizados = 0;
+  let jogosPendentes = 0;
+  let sumulasFinalizadas = 0;
+  const porCategoria = {};
+  const porCampeonato = {};
 
-  times.forEach(t=>{
-    const nome = valorCampo(t, ["nome", "timeNome", "equipe"], "");
-    if(nome) nomesTimes.add(nome);
-  });
+  jogos.forEach(j=>{
+    if(!mesmoAssistente(nome,j)) return;
 
-  tecnicos.forEach(t=>{
-    const nome = timeTecnico(t);
-    if(nome && nome !== "-") nomesTimes.add(nome);
-  });
+    jogosTrabalhados++;
 
-  filtroTime.innerHTML = `<option value="">Todos os times</option>`;
+    const categoria = categoriaDoJogo(j);
+    porCategoria[categoria] = (porCategoria[categoria] || 0) + 1;
 
-  [...nomesTimes].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(nome=>{
-    filtroTime.innerHTML += `<option value="${nome}">${nome}</option>`;
-  });
+    const campeonato = val(j,["campeonato","campeonatoNome","nomeCampeonato"],"Sem campeonato");
+    porCampeonato[campeonato] = (porCampeonato[campeonato] || 0) + 1;
 
-  if([...nomesTimes].includes(timeAtual)){
-    filtroTime.value = timeAtual;
-  }
+    const status = n(val(j,["status"],""));
 
-  const categorias = new Set();
-
-  tecnicos.forEach(t=>{
-    const cats = valorCampo(t, ["categorias"], []);
-
-    if(Array.isArray(cats)){
-      cats.forEach(c=>{
-        if(c) categorias.add(c);
-      });
+    if(status === "finalizado" || j.finalizado === true || j.sumulaFinalizada === true){
+      jogosFinalizados++;
+    }else{
+      jogosPendentes++;
     }
-
-    const cat = valorCampo(t, ["categoria", "categoriaNome"], "");
-    if(cat) categorias.add(cat);
   });
 
-  filtroCategoria.innerHTML = `<option value="">Todas categorias</option>`;
+  sumulas.forEach(s=>{
+    if(!mesmoAssistente(nome,s)) return;
 
-  [...categorias].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(cat=>{
-    filtroCategoria.innerHTML += `<option value="${cat}">${cat}</option>`;
+    if(
+      s.sumulaFinalizada === true ||
+      s.publica === true ||
+      s.publico === true ||
+      n(val(s,["status"],"")) === "finalizado"
+    ){
+      sumulasFinalizadas++;
+    }
   });
 
-  if([...categorias].includes(categoriaAtual)){
-    filtroCategoria.value = categoriaAtual;
+  return {
+    jogosTrabalhados,
+    jogosFinalizados,
+    jogosPendentes,
+    sumulasFinalizadas,
+    porCategoria,
+    porCampeonato
+  };
+}
+
+function preencherCategorias(){
+  const select = document.getElementById("filtroCategoria");
+  const atual = select.value;
+  const set = new Set();
+
+  jogos.forEach(j=>{
+    const cat = categoriaDoJogo(j);
+    if(cat && cat !== "Sem categoria") set.add(cat);
+  });
+
+  assistentes.forEach(a=>{
+    categoriasAssistente(a).forEach(c=>{
+      if(c && c !== "Todas as categorias") set.add(c);
+    });
+  });
+
+  select.innerHTML = `<option value="">Todas categorias</option>`;
+
+  [...set].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(c=>{
+    select.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+
+  if([...set].includes(atual)){
+    select.value = atual;
   }
 }
 
-function tecnicoTemCategoria(t,categoria){
-  if(!categoria) return true;
+function filtrados(){
+  const busca = n(document.getElementById("busca").value);
+  const categoria = document.getElementById("filtroCategoria").value;
 
-  const cats = valorCampo(t, ["categorias"], []);
-  if(Array.isArray(cats) && cats.includes(categoria)) return true;
-
-  return valorCampo(t, ["categoria", "categoriaNome"], "") === categoria;
-}
-
-function tecnicosFiltrados(){
-  const busca = normalizarTexto(document.getElementById("buscaTecnico").value);
-  const timeSelecionado = document.getElementById("filtroTime").value;
-  const categoriaSelecionada = document.getElementById("filtroCategoria").value;
-
-  return tecnicos.filter(t=>{
-    const nome = nomeTecnico(t);
-    const time = timeTecnico(t);
-    const categoria = categoriaTecnico(t);
-    const cidade = cidadeTecnico(t);
-    const email = emailTecnico(t);
-
-    if(timeSelecionado && time !== timeSelecionado) return false;
-    if(!tecnicoTemCategoria(t,categoriaSelecionada)) return false;
+  return assistentes.filter(a=>{
+    const nome = nomeAssistente(a);
+    const cidade = cidadeAssistente(a);
+    const cats = categoriasAssistente(a);
 
     if(busca){
-      const texto = normalizarTexto(`${nome} ${time} ${categoria} ${cidade} ${email}`);
+      const texto = n(`${nome} ${cidade} ${cats.join(" ")}`);
       if(!texto.includes(busca)) return false;
     }
 
-    return true;
-  });
-}
+    if(categoria){
+      const stats = calcularStatsAssistente(a);
+      const temCategoriaPeloCadastro = cats.includes(categoria);
+      const temCategoriaPeloJogo = !!stats.porCategoria[categoria];
 
-function atualizarTopo(){
-  const lista = tecnicosFiltrados();
-
-  const timesSet = new Set(lista.map(timeTecnico).filter(t=>t && t !== "-"));
-  const categoriasSet = new Set();
-
-  lista.forEach(t=>{
-    const cats = valorCampo(t, ["categorias"], []);
-
-    if(Array.isArray(cats)){
-      cats.forEach(c=>{
-        if(c) categoriasSet.add(c);
-      });
+      if(!temCategoriaPeloCadastro && !temCategoriaPeloJogo) return false;
     }
 
-    const cat = valorCampo(t, ["categoria", "categoriaNome"], "");
-    if(cat) categoriasSet.add(cat);
-  });
-
-  const timeSelecionado = document.getElementById("filtroTime").value;
-  const categoriaSelecionada = document.getElementById("filtroCategoria").value;
-
-  document.getElementById("tagTotal").innerText = `Técnicos: ${lista.length}`;
-  document.getElementById("tagTimes").innerText = `Times: ${timesSet.size}`;
-  document.getElementById("tagCategorias").innerText = `Categorias: ${categoriasSet.size}`;
-
-  document.getElementById("tituloPagina").innerText =
-    `Técnicos${categoriaSelecionada ? " - " + categoriaSelecionada : ""}${timeSelecionado ? " | " + timeSelecionado : ""}`;
+    return true;
+  }).sort((a,b)=>nomeAssistente(a).localeCompare(nomeAssistente(b),"pt-BR"));
 }
 
-function renderizarTecnicos(){
-  const container = document.getElementById("listaTecnicos");
-  const lista = tecnicosFiltrados();
+function atualizarTopo(lista){
+  let totalJogos = 0;
+  let totalCategorias = new Set();
+  let totalSumulas = 0;
 
-  atualizarTopo();
+  lista.forEach(a=>{
+    const stats = calcularStatsAssistente(a);
 
-  if(!lista.length){
-    container.innerHTML = `<div class="vazio">Nenhum técnico encontrado.</div>`;
+    totalJogos += stats.jogosTrabalhados;
+    totalSumulas += stats.sumulasFinalizadas;
+
+    Object.keys(stats.porCategoria).forEach(c=>{
+      if(c) totalCategorias.add(c);
+    });
+  });
+
+  document.getElementById("tagTotal").innerText = `Assistentes: ${lista.length}`;
+  document.getElementById("tagJogos").innerText = `Jogos: ${totalJogos}`;
+  document.getElementById("tagCategorias").innerText = `Categorias: ${totalCategorias.size}`;
+  document.getElementById("tagSumulas").innerText = `Súmulas: ${totalSumulas}`;
+
+  const categoria = document.getElementById("filtroCategoria").value;
+
+  document.getElementById("tituloPagina").innerText =
+    `Assistentes${categoria ? " - " + categoria : ""}`;
+}
+
+function rankingHTML(titulo, lista, campo){
+  const top = [...lista]
+    .map(a=>({
+      nome:nomeAssistente(a),
+      valor:calcularStatsAssistente(a)[campo] || 0
+    }))
+    .sort((a,b)=>b.valor - a.valor)
+    .slice(0,5);
+
+  if(!top.length){
+    return `
+      <div class="ranking-card">
+        <h3>${titulo}</h3>
+        <div class="ranking-item">
+          <span>Nenhum dado</span>
+          <span class="ranking-num">0</span>
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="ranking-card">
+      <h3>${titulo}</h3>
+      ${
+        top.map((item,index)=>`
+          <div class="ranking-item">
+            <strong>${index + 1}. ${item.nome}</strong>
+            <span class="ranking-num">${item.valor}</span>
+          </div>
+        `).join("")
+      }
+    </div>
+  `;
+}
+
+function renderRanking(lista){
+  const box = document.getElementById("rankingBox");
+
+  box.innerHTML = `
+    ${rankingHTML("Mais jogos trabalhados", lista, "jogosTrabalhados")}
+    ${rankingHTML("Mais súmulas finalizadas", lista, "sumulasFinalizadas")}
+    ${rankingHTML("Mais jogos finalizados", lista, "jogosFinalizados")}
+  `;
+}
+
+function render(){
+  const box = document.getElementById("lista");
+  const lista = filtrados();
+
+  atualizarTopo(lista);
+  renderRanking(lista);
+
+  if(!assistentes.length){
+    box.innerHTML = `<div class="vazio">Nenhum assistente cadastrado no Firebase.</div>`;
     return;
   }
 
-  const ordenados = [...lista].sort((a,b)=>nomeTecnico(a).localeCompare(nomeTecnico(b),"pt-BR"));
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhum assistente encontrado.</div>`;
+    return;
+  }
 
-  container.innerHTML = ordenados.map(t=>{
-    const id = t.id;
-    const nome = nomeTecnico(t);
-    const foto = fotoTecnico(t);
-    const time = timeTecnico(t);
-    const categoria = categoriaTecnico(t);
-    const cidade = cidadeTecnico(t);
-    const status = statusTecnico(t);
+  box.innerHTML = lista.map(a=>{
+    const nome = nomeAssistente(a);
+    const foto = fotoAssistente(a);
+    const cidade = cidadeAssistente(a);
+    const status = statusAssistente(a);
+    const stats = calcularStatsAssistente(a);
+    const cats = categoriasAssistente(a);
 
     return `
-      <article class="card-tecnico">
+      <div class="card">
 
         <div class="card-top">
-          <div class="card-funcao">Técnico</div>
-          <div class="status-tag">${status}</div>
+          <div class="card-funcao">Assistente</div>
+
+          <div class="status-tag ${statusClasse(status)}">
+            ${statusTexto(status)}
+          </div>
         </div>
 
         <div class="card-main">
-          <img class="photo" src="${foto}" onerror="this.src='logo-liga.jfif'" alt="${nome}">
+          <img src="${foto}" class="photo" onerror="this.src='logo-liga.jfif'">
 
           <div class="user-info">
             <div class="nome">${nome}</div>
-            <div class="time-nome">${time}</div>
+            <div class="time-nome">Assistente oficial</div>
             <div class="sub">Cidade: ${cidade}</div>
 
             <div class="tags">
-              ${
-                categoria !== "-"
-                ? categoria.split(",").map(c=>`<span class="tag">${c.trim()}</span>`).join("")
-                : `<span class="tag">Sem categoria</span>`
-              }
+              ${cats.map(c=>`<span class="tag">${c}</span>`).join("")}
             </div>
           </div>
         </div>
 
-        <div class="info-grid">
-          <div class="info-box">
-            <strong>${time}</strong>
-            <span>TIME</span>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <strong>${stats.jogosTrabalhados}</strong>
+            <span>JOGOS</span>
           </div>
 
-          <div class="info-box">
-            <strong>${cidade}</strong>
-            <span>CIDADE</span>
+          <div class="stat-card">
+            <strong>${stats.sumulasFinalizadas}</strong>
+            <span>SÚMULAS</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>${stats.jogosPendentes}</strong>
+            <span>PEND.</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>${stats.jogosFinalizados}</strong>
+            <span>FINAL.</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>${Object.keys(stats.porCategoria).length}</strong>
+            <span>CATEG.</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>${Object.keys(stats.porCampeonato).length}</strong>
+            <span>CAMPS.</span>
           </div>
         </div>
 
-        <button class="btn-ver" onclick="location.href='tecnico-publico.html?id=${encodeURIComponent(id)}'">
-          <i class="fa-solid fa-eye"></i> Ver Técnico
-        </button>
-      </article>
+        <div class="actions">
+          <button class="btn-ver" onclick="ver('${a.id}')">
+            <i class="fa-solid fa-eye"></i> Ver Assistente
+          </button>
+        </div>
+      </div>
     `;
   }).join("");
 }
 
+window.ver = function(id){
+  const a = assistentes.find(x=>x.id === id);
+  if(!a) return;
 
-document.getElementById("buscaTecnico").addEventListener("input",renderizarTecnicos);
-document.getElementById("filtroTime").addEventListener("change",renderizarTecnicos);
-document.getElementById("filtroCategoria").addEventListener("change",renderizarTecnicos);
+  const nome = nomeAssistente(a);
+  const foto = fotoAssistente(a);
+  const cidade = cidadeAssistente(a);
+  const status = statusAssistente(a);
+  const cats = categoriasAssistente(a);
+  const stats = calcularStatsAssistente(a);
 
-onSnapshot(collection(db,"tecnicos"),snap=>{
-  tecnicos = snap.docs.map(d=>({id:d.id,...d.data()}));
-  preencherFiltros();
-  renderizarTecnicos();
+  const categoriasHTML = Object.keys(stats.porCategoria).length
+    ? Object.entries(stats.porCategoria)
+      .sort((x,y)=>x[0].localeCompare(y[0],"pt-BR"))
+      .map(([c,q])=>`
+        <div class="categoria-item">
+          <span>${c}</span>
+          <strong>${q} jogo(s)</strong>
+        </div>
+      `).join("")
+    : `<div class="categoria-item"><span>Sem jogos por categoria</span><strong>0</strong></div>`;
+
+  const campeonatosHTML = Object.keys(stats.porCampeonato).length
+    ? Object.entries(stats.porCampeonato)
+      .sort((x,y)=>x[0].localeCompare(y[0],"pt-BR"))
+      .map(([c,q])=>`
+        <div class="categoria-item">
+          <span>${c}</span>
+          <strong>${q} jogo(s)</strong>
+        </div>
+      `).join("")
+    : `<div class="categoria-item"><span>Sem campeonatos vinculados</span><strong>0</strong></div>`;
+
+  document.getElementById("modalContent").innerHTML = `
+    <img src="${foto}" class="photo" style="margin:auto;width:90px;height:90px;" onerror="this.src='logo-liga.jfif'">
+    <h2>${nome}</h2>
+
+    <div class="tags" style="justify-content:center;">
+      ${cats.map(c=>`<span class="tag">${c}</span>`).join("")}
+    </div>
+
+    <div class="modal-grid">
+
+      <div class="modal-box">
+        <h3>Dados públicos</h3>
+        <strong>Cidade:</strong> ${cidade}<br>
+        <strong>Status:</strong> ${statusTexto(status)}<br>
+        <strong>Contato:</strong> Privado<br>
+        <strong>Documento:</strong> Privado
+      </div>
+
+      <div class="modal-box">
+        <h3>Resumo</h3>
+        <strong>Jogos trabalhados:</strong> ${stats.jogosTrabalhados}<br>
+        <strong>Súmulas finalizadas:</strong> ${stats.sumulasFinalizadas}<br>
+        <strong>Jogos finalizados:</strong> ${stats.jogosFinalizados}<br>
+        <strong>Jogos pendentes:</strong> ${stats.jogosPendentes}
+      </div>
+
+      <div class="modal-box">
+        <h3>Campeonatos</h3>
+        ${campeonatosHTML}
+      </div>
+
+      <div class="modal-box">
+        <h3>Categorias</h3>
+        ${categoriasHTML}
+      </div>
+
+    </div>
+
+    <button class="modal-close" onclick="fechar()">
+      <i class="fa-solid fa-xmark"></i> Fechar
+    </button>
+  `;
+
+  document.getElementById("modal").style.display = "flex";
+};
+
+window.fechar = function(){
+  document.getElementById("modal").style.display = "none";
+};
+
+document.getElementById("modal").addEventListener("click",e=>{
+  if(e.target.id === "modal") fechar();
 });
 
-onSnapshot(collection(db,"times"),snap=>{
-  times = snap.docs.map(d=>({id:d.id,...d.data()}));
-  preencherFiltros();
-  renderizarTecnicos();
+document.getElementById("busca").addEventListener("input",render);
+document.getElementById("filtroCategoria").addEventListener("change",render);
+
+onSnapshot(collection(db,"assistentes"),snap=>{
+  assistentes = snap.docs.map(d=>({id:d.id,...d.data()}));
+  preencherCategorias();
+  render();
+});
+
+onSnapshot(collection(db,"jogos"),snap=>{
+  jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
+  preencherCategorias();
+  render();
+});
+
+onSnapshot(collection(db,"sumulas"),snap=>{
+  sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
+  preencherCategorias();
+  render();
 });
 </script>
 
