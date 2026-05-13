@@ -72,7 +72,7 @@ export function renderMenu(paginaAtual = "") {
                     <a href="tecnicos.html">Técnicos</a>
                     <a href="jogadores.html">Jogadores</a>
                     <a href="arbitros.html">Árbitros</a>
-                    <a href="assistente.html">Assistente</a>
+                    <a href="assistentes.html">Assistentes</a>
                     <a href="fotografos.html">Fotógrafos</a>
                   </div>
                 </div>
@@ -96,8 +96,8 @@ export function renderMenu(paginaAtual = "") {
             Árbitros
           </a>
 
-          <a href="assistente.html" class="${paginaAtual === "assistente" || paginaAtual === "assistentes" ? "ativo" : ""}">
-            Assistente
+          <a href="assistentes.html" class="${paginaAtual === "assistentes" ? "ativo" : ""}">
+            Assistentes
           </a>
 
           <a href="sumulas.html" class="${paginaAtual === "sumulas" || paginaAtual === "sumula" ? "ativo" : ""}">
