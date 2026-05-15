@@ -316,7 +316,10 @@ import {
   setDoc,
   collection,
   addDoc,
-  serverTimestamp
+  serverTimestamp,
+  query,
+  where,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 function txt(v){
@@ -429,6 +432,32 @@ window.cadastrarUsuario = async function(){
     if(!senha || senha.length < 6) throw new Error("Senha mínima 6 caracteres.");
     if(senha !== confirmarSenha) throw new Error("As senhas não conferem.");
     if(!tipoUsuario) throw new Error("Selecione o tipo de usuário.");
+
+    // VERIFICA CPF DUPLICADO
+    if(cpf){
+      const qCpf = query(
+        collection(db,"usuarios"),
+        where("cpf","==",cpf)
+      );
+
+      const cpfSnap = await getDocs(qCpf);
+
+      if(!cpfSnap.empty){
+        throw new Error("Esse CPF já está cadastrado.");
+      }
+    }
+
+    // VERIFICA E-MAIL DUPLICADO
+    const qEmail = query(
+      collection(db,"usuarios"),
+      where("email","==",email)
+    );
+
+    const emailSnap = await getDocs(qEmail);
+
+    if(!emailSnap.empty){
+      throw new Error("Esse e-mail já está cadastrado.");
+    }
 
     const permissao = regrasDePermissao(tipoUsuario);
 
