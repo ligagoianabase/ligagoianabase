@@ -204,6 +204,26 @@
   }
 }
 
+
+/* ===== SÚMULA OFFLINE NO PERFIL DO ÁRBITRO ===== */
+.offline-card{
+  border-color:rgba(247,198,0,.45);
+  background:
+    radial-gradient(circle at top right,rgba(247,198,0,.16),transparent 35%),
+    linear-gradient(180deg,rgba(16,42,82,.98),rgba(12,33,64,.98));
+}
+
+.team img{
+  object-fit:contain !important;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  padding:0 !important;
+  filter:
+    drop-shadow(0 0 8px rgba(247,198,0,.35))
+    drop-shadow(0 8px 18px rgba(0,0,0,.50));
+}
+
 </style>
 </head>
 <body>
@@ -216,6 +236,7 @@
     <div class="actions">
       <a class="btn btn-light" href="index.html"><i class="fa-solid fa-house"></i> Início</a>
       <a class="btn btn-gold" href="perfil.html"><i class="fa-solid fa-user"></i> Meu Perfil</a>
+      <a class="btn btn-green" href="sumula-offline.html"><i class="fa-solid fa-file-circle-plus"></i> Súmula Offline</a>
       <button class="btn btn-red" id="logoutBtn" type="button"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
     </div>
   </div>
@@ -225,7 +246,7 @@
   <section class="hero">
     <div class="hero-card">
       <h1><i class="fa-solid fa-file-signature"></i> Minhas Súmulas</h1>
-      <p>Aqui aparecem somente os jogos em que você foi selecionado como árbitro. Clique em “Abrir Súmula” para preencher e finalizar a partida.</p>
+      <p>Aqui aparecem somente os jogos em que você foi selecionado como árbitro. Clique em “Abrir Súmula” para preencher e finalizar a partida. Se estiver sem internet ou o jogo não foi criado pelo ADM, use “Súmula Offline”.</p>
       <div class="status" id="statusBox">Carregando suas súmulas...</div>
     </div>
   </section>
@@ -279,16 +300,58 @@ function jogoDoArbitro(jogo,user,perfil){
   return false;
 }
 
+
+function cardOfflineHtml(){
+  return `
+    <article class="card offline-card">
+      <div class="card-top">
+        <div class="team">
+          <img src="logo-liga.jfif" onerror="this.src='logo-liga.jfif'" alt="Liga Goiana">
+          <div>
+            <strong>Súmula Offline / Manual</strong>
+            <span>Emergência para árbitro ou ADM</span>
+          </div>
+        </div>
+
+        <div class="versus"><i class="fa-solid fa-wifi-slash"></i></div>
+
+        <div class="team away">
+          <img src="logo-liga.jfif" onerror="this.src='logo-liga.jfif'" alt="Liga Goiana">
+          <div>
+            <strong>Funciona sem internet</strong>
+            <span>Preenchimento manual</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info"><span>Uso</span>Sem jogo cadastrado</div>
+        <div class="info"><span>Dados</span>Times e jogadores manuais</div>
+        <div class="info"><span>Salva</span>No navegador</div>
+        <div class="info"><span>Online</span>Envia ao Firebase depois</div>
+        <div class="info"><span>Visual</span>Padrão súmula pública</div>
+      </div>
+
+      <div class="card-actions">
+        <span class="badge badge-andamento"><i class="fa-solid fa-triangle-exclamation"></i> Emergência</span>
+        <a class="btn btn-green" href="sumula-offline.html">
+          <i class="fa-solid fa-file-circle-plus"></i> Criar Súmula Offline
+        </a>
+      </div>
+    </article>
+  `;
+}
+
 function renderizar(jogos){
   if(!jogos.length){
-    lista.innerHTML=`<div class="empty"><i class="fa-solid fa-circle-info"></i><br><br>Nenhuma súmula vinculada ao seu usuário ainda.</div>`;
+    lista.innerHTML=cardOfflineHtml()+`<div class="empty"><i class="fa-solid fa-circle-info"></i><br><br>Nenhuma súmula vinculada ao seu usuário ainda.</div>`;
     statusBox.className="status";
     statusBox.textContent="Nenhum jogo encontrado para este árbitro.";
     return;
   }
   statusBox.className="status ok";
   statusBox.textContent=`${jogos.length} súmula(s) encontrada(s).`;
-  lista.innerHTML=jogos.map(j=>{
+  lista.innerHTML=cardOfflineHtml()+jogos.map(j=>{
     const A=j.timeA||{}; const B=j.timeB||{};
     const nomeA=nomeTime(A,j.timeMandanteNome||j.mandanteNome||"Mandante");
     const nomeB=nomeTime(B,j.timeVisitanteNome||j.visitanteNome||"Visitante");
