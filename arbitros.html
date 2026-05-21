@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Assistente Público - Liga Goiana</title>
+<title>Árbitro Público - Liga Goiana</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="menu.css">
@@ -235,7 +235,7 @@ body{
 
   <div class="loading">
     <i class="fa-solid fa-spinner fa-spin"></i><br>
-    Carregando assistente...
+    Carregando árbitro...
   </div>
 
 </div>
@@ -252,12 +252,12 @@ import {
   doc
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-renderMenu("assistente");
+renderMenu("arbitro");
 
 const app = document.getElementById("app");
 const id = new URLSearchParams(location.search).get("id");
 
-let assistente = null;
+let arbitro = null;
 let jogos = [];
 let sumulas = [];
 
@@ -278,12 +278,16 @@ function n(t){
     .trim();
 }
 
-function nomeAssistente(a){
-  return val(a,["nome","nomeCompleto","assistente"],"Assistente");
+function nomeArbitro(a){
+  return val(a,["nome","nomeCompleto","arbitro","arbitroNome"],"Árbitro");
 }
 
-function fotoAssistente(a){
+function fotoArbitro(a){
   return val(a,["foto","imagem","avatar","fotoUrl"],"logo-liga.jfif");
+}
+
+function cidadeArbitro(a){
+  return val(a,["cidade","cidadeNascimento","municipio"],"-");
 }
 
 function categorias(a){
@@ -294,28 +298,45 @@ function categorias(a){
   return cat ? [cat] : [];
 }
 
-function mesmoAssistente(item){
+function statusTexto(status){
+  const st = n(status);
+
+  if(st === "inativo") return "Inativo";
+  if(st === "reprovado") return "Reprovado";
+  if(st === "pendente") return "Pendente";
+
+  return "Ativo";
+}
+
+function mesmoArbitro(item){
 
   const ids = [
-    val(item,["assistenteId","auxiliarId"],"")
+    val(item,["arbitroId"],""),
+    val(item,["arbitroPrincipalId"],""),
+    val(item,["juizId"],""),
+    val(item,["arbitro"],"")
   ];
 
   if(ids.includes(id)) return true;
 
   const nomes = [
-    val(item,["assistente"],""),
-    val(item,["assistente1"],""),
-    val(item,["assistente2"],""),
-    val(item,["nomeAssistente"],"")
+    val(item,["arbitro"],""),
+    val(item,["arbitroPrincipal"],""),
+    val(item,["arbitroNome"],""),
+    val(item,["nomeArbitro"],""),
+    val(item,["juiz"],""),
+    val(item,["juizNome"],"")
   ];
 
-  return nomes.some(x=>n(x) === n(nomeAssistente(assistente)));
+  return nomes.some(x=>n(x) === n(nomeArbitro(arbitro)));
 }
 
 function finalizado(j){
   return j.finalizado === true ||
     j.encerrado === true ||
     j.sumulaFinalizada === true ||
+    j.publica === true ||
+    j.publico === true ||
     n(val(j,["status"],"")) === "finalizado";
 }
 
@@ -332,16 +353,15 @@ function calcular(){
 
   jogos.forEach(j=>{
 
-    if(!mesmoAssistente(j)) return;
+    if(!mesmoArbitro(j)) return;
 
     jogosCount++;
-
     recentes.push(j);
 
     const categoria = val(j,["categoria","categoriaNome"],"Sem categoria");
     categoriasMap[categoria] = (categoriasMap[categoria] || 0) + 1;
 
-    const camp = val(j,["campeonato","campeonatoNome"],"Sem campeonato");
+    const camp = val(j,["campeonato","campeonatoNome","nomeCampeonato"],"Sem campeonato");
     campeonatosMap[camp] = (campeonatosMap[camp] || 0) + 1;
 
     if(finalizado(j)) finalizados++;
@@ -350,7 +370,7 @@ function calcular(){
 
   sumulas.forEach(s=>{
 
-    if(!mesmoAssistente(s)) return;
+    if(!mesmoArbitro(s)) return;
 
     if(finalizado(s)){
       sumulasFinalizadas++;
@@ -400,8 +420,8 @@ function listaHTML(obj){
 
 function render(){
 
-  if(!assistente){
-    app.innerHTML = `<div class="loading">Assistente não encontrado.</div>`;
+  if(!arbitro){
+    app.innerHTML = `<div class="loading">Árbitro não encontrado.</div>`;
     return;
   }
 
@@ -410,26 +430,26 @@ function render(){
   app.innerHTML = `
     <section class="hero">
 
-      <img class="foto" src="${fotoAssistente(assistente)}" onerror="this.src='logo-liga.jfif'">
+      <img class="foto" src="${fotoArbitro(arbitro)}" onerror="this.src='logo-liga.jfif'">
 
       <div>
 
-        <h1>${nomeAssistente(assistente)}</h1>
+        <h1>${nomeArbitro(arbitro)}</h1>
 
         <p>
-          Assistente oficial da Liga Goiana de Futebol de Base.<br>
-          Cidade: ${val(assistente,["cidade","cidadeNascimento","municipio"],"-")}<br>
+          Árbitro oficial da Liga Goiana de Futebol de Base.<br>
+          Cidade: ${cidadeArbitro(arbitro)}<br>
           Contatos e documentos são privados.
         </p>
 
         <div class="tags">
 
-          ${categorias(assistente).map(c=>`
+          ${categorias(arbitro).map(c=>`
             <span class="tag">${c}</span>
           `).join("")}
 
           <span class="tag">
-            ${val(assistente,["status"],"ativo")}
+            ${statusTexto(val(arbitro,["status"],"ativo"))}
           </span>
 
         </div>
@@ -508,8 +528,8 @@ function render(){
                 <strong>${jogoNome(j)}</strong>
 
                 <p>
-                  Campeonato: ${val(j,["campeonato","campeonatoNome"],"-")}<br>
-                  Categoria: ${val(j,["categoria"],"-")}<br>
+                  Campeonato: ${val(j,["campeonato","campeonatoNome","nomeCampeonato"],"-")}<br>
+                  Categoria: ${val(j,["categoria","categoriaNome"],"-")}<br>
                   Data: ${val(j,["data","dataJogo","dataHora"],"-")}<br>
                   Status: ${val(j,["status"],"-")}
                 </p>
@@ -530,17 +550,17 @@ function render(){
 async function carregar(){
 
   if(!id){
-    app.innerHTML = `<div class="loading">ID do assistente não informado.</div>`;
+    app.innerHTML = `<div class="loading">ID do árbitro não informado.</div>`;
     return;
   }
 
-  const assistenteSnap = await getDoc(doc(db,"assistentes",id));
+  const arbitroSnap = await getDoc(doc(db,"arbitros",id));
 
-  if(assistenteSnap.exists()){
+  if(arbitroSnap.exists()){
 
-    assistente = {
-      id:assistenteSnap.id,
-      ...assistenteSnap.data()
+    arbitro = {
+      id:arbitroSnap.id,
+      ...arbitroSnap.data()
     };
   }
 
