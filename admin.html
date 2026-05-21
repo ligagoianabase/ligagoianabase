@@ -452,6 +452,10 @@ textarea:focus{
   grid-template-columns:1fr 1fr 1fr;
 }
 
+.usuario-acoes.acoes-4{
+  grid-template-columns:1fr 1fr 1fr 1fr;
+}
+
 .usuario-foto{
   width:54px;
   height:54px;
@@ -733,6 +737,7 @@ import {
   updateDoc,
   addDoc,
   setDoc,
+  deleteDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
@@ -836,9 +841,10 @@ async function carregarUsuarios(){
           <span class="tag">Pendente</span>
         </div>
 
-        <div class="usuario-acoes">
+        <div class="usuario-acoes acoes-3">
           <button class="btn-green" onclick="aprovar('${d.id}')">Aprovar</button>
           <button class="btn-red" onclick="reprovar('${d.id}')">Reprovar</button>
+          <button class="btn-red" onclick="excluirUsuarioPendente('${d.id}')">Excluir</button>
         </div>
       </div>
     `;
@@ -982,13 +988,121 @@ window.aprovar = async function(id){
 };
 
 window.reprovar = async function(id){
-  await updateDoc(doc(db,"usuarios",id),{
+  if(!confirm("Reprovar e bloquear este usuário?")) return;
+
+  const userRef = doc(db,"usuarios",id);
+  const snap = await getDoc(userRef);
+
+  if(!snap.exists()){
+    alert("Usuário não encontrado.");
+    await carregarUsuarios();
+    return;
+  }
+
+  const usuario = snap.data();
+
+  const tipo = normalizar(
+    usuario.tipoUsuario ||
+    usuario.tipo ||
+    usuario.perfil ||
+    ""
+  );
+
+  const dadosBloqueio = {
     aprovado:false,
     autorizado:false,
-    status:"bloqueado"
-  });
+    status:"bloqueado",
+    publico:false,
+    atualizadoEm:serverTimestamp()
+  };
 
-  carregarUsuarios();
+  await updateDoc(userRef,dadosBloqueio);
+
+  if(tipo === "arbitro"){
+    await setDoc(doc(db,"arbitros",id),{
+      usuarioId:id,
+      uid:id,
+      nome:usuario.nome || usuario.nomeCompleto || "",
+      nomeCompleto:usuario.nomeCompleto || usuario.nome || "",
+      email:usuario.email || "",
+      cpf:usuario.cpf || "",
+      tipo:"arbitro",
+      perfil:"arbitro",
+      tipoUsuario:"arbitro",
+      ...dadosBloqueio
+    },{merge:true});
+  }
+
+  await carregarUsuarios();
+  await carregarTotais();
+
+  alert("Usuário reprovado/bloqueado.");
+};
+
+window.excluirUsuarioPendente = async function(id){
+  if(!confirm("Excluir este usuário pendente? Essa ação remove o cadastro pendente.")) return;
+
+  const userRef = doc(db,"usuarios",id);
+  const snap = await getDoc(userRef);
+
+  if(!snap.exists()){
+    alert("Usuário não encontrado.");
+    await carregarUsuarios();
+    return;
+  }
+
+  const usuario = snap.data();
+
+  const tipo = normalizar(
+    usuario.tipoUsuario ||
+    usuario.tipo ||
+    usuario.perfil ||
+    ""
+  );
+
+  try{
+    await deleteDoc(userRef);
+  }catch(e){
+    console.log("Não foi possível excluir usuário. Vou bloquear.", e);
+
+    await updateDoc(userRef,{
+      aprovado:false,
+      autorizado:false,
+      status:"bloqueado",
+      publico:false,
+      atualizadoEm:serverTimestamp()
+    });
+  }
+
+  if(tipo === "arbitro"){
+    try{
+      await deleteDoc(doc(db,"arbitros",id));
+    }catch(e){
+      console.log("Não foi possível excluir árbitro. Vou ocultar do público.", e);
+
+      await setDoc(doc(db,"arbitros",id),{
+        usuarioId:id,
+        uid:id,
+        nome:usuario.nome || usuario.nomeCompleto || "",
+        nomeCompleto:usuario.nomeCompleto || usuario.nome || "",
+        email:usuario.email || "",
+        cpf:usuario.cpf || "",
+        tipo:"arbitro",
+        perfil:"arbitro",
+        tipoUsuario:"arbitro",
+        aprovado:false,
+        autorizado:false,
+        status:"bloqueado",
+        publico:false,
+        atualizadoEm:serverTimestamp()
+      },{merge:true});
+    }
+  }
+
+  await carregarUsuarios();
+  await carregarTotais();
+
+  alert("Usuário removido da lista de pendentes.");
 };
 
 async function sincronizarFotografo(id, dadosExtras={}){
