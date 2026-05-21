@@ -493,6 +493,9 @@ select:focus{
 
 </main>
 
+<div class="modal" id="modal">
+  <div class="modal-content" id="modalContent"></div>
+</div>
 
 <script type="module">
 import { renderMenu } from "./menu.js";
@@ -912,7 +915,7 @@ function render(){
         </div>
 
         <div class="actions">
-          <button class="btn-ver" onclick="location.href='arbitro-publico.html?id=${encodeURIComponent(a.id)}'">
+          <button class="btn-ver" onclick="ver('${a.id}')">
             <i class="fa-solid fa-eye"></i> Ver Árbitro
           </button>
         </div>
@@ -920,6 +923,97 @@ function render(){
     `;
   }).join("");
 }
+
+
+window.ver = function(id){
+  const a = arbitros.find(x=>x.id === id);
+  if(!a) return;
+
+  const nome = nomeArbitro(a);
+  const foto = fotoArbitro(a);
+  const cidade = cidadeArbitro(a);
+  const status = statusArbitro(a);
+  const cats = categoriasArbitro(a);
+  const stats = calcularStatsArbitro(a);
+
+  const categoriasHTML = Object.keys(stats.porCategoria).length
+    ? Object.entries(stats.porCategoria)
+      .sort((x,y)=>x[0].localeCompare(y[0],"pt-BR"))
+      .map(([c,q])=>`
+        <div class="categoria-item">
+          <span>${c}</span>
+          <strong>${q} jogo(s)</strong>
+        </div>
+      `).join("")
+    : `<div class="categoria-item"><span>Sem jogos por categoria</span><strong>0</strong></div>`;
+
+  const campeonatosHTML = Object.keys(stats.porCampeonato).length
+    ? Object.entries(stats.porCampeonato)
+      .sort((x,y)=>x[0].localeCompare(y[0],"pt-BR"))
+      .map(([c,q])=>`
+        <div class="categoria-item">
+          <span>${c}</span>
+          <strong>${q} jogo(s)</strong>
+        </div>
+      `).join("")
+    : `<div class="categoria-item"><span>Sem campeonatos vinculados</span><strong>0</strong></div>`;
+
+  document.getElementById("modalContent").innerHTML = `
+    <img src="${foto}" class="photo" style="margin:auto;width:90px;height:90px;" onerror="this.src='logo-liga.jfif'">
+    <h2>${nome}</h2>
+
+    <div class="tags" style="justify-content:center;">
+      ${cats.map(c=>`<span class="tag">${c}</span>`).join("")}
+    </div>
+
+    <div class="modal-grid">
+
+      <div class="modal-box">
+        <h3>Dados públicos</h3>
+        <strong>Cidade:</strong> ${cidade}<br>
+        <strong>Status:</strong> ${statusTexto(status)}<br>
+        <strong>Contato:</strong> Privado<br>
+        <strong>Documento:</strong> Privado
+      </div>
+
+      <div class="modal-box">
+        <h3>Resumo</h3>
+        <strong>Jogos apitados:</strong> ${stats.jogosApitados}<br>
+        <strong>Súmulas finalizadas:</strong> ${stats.sumulasFinalizadas}<br>
+        <strong>Jogos finalizados:</strong> ${stats.jogosFinalizados}<br>
+        <strong>Jogos pendentes:</strong> ${stats.jogosPendentes}<br>
+        <strong>Cartões amarelos:</strong> ${stats.amarelos}<br>
+        <strong>Cartões vermelhos:</strong> ${stats.vermelhos}<br>
+        <strong>Média de cartões:</strong> ${stats.mediaCartoes}
+      </div>
+
+      <div class="modal-box">
+        <h3>Campeonatos</h3>
+        ${campeonatosHTML}
+      </div>
+
+      <div class="modal-box">
+        <h3>Categorias</h3>
+        ${categoriasHTML}
+      </div>
+
+    </div>
+
+    <button class="modal-close" onclick="fechar()">
+      <i class="fa-solid fa-xmark"></i> Fechar
+    </button>
+  `;
+
+  document.getElementById("modal").style.display = "flex";
+};
+
+window.fechar = function(){
+  document.getElementById("modal").style.display = "none";
+};
+
+document.getElementById("modal").addEventListener("click",e=>{
+  if(e.target.id === "modal") fechar();
+});
 
 
 document.getElementById("busca").addEventListener("input",render);
