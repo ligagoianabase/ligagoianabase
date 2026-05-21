@@ -9,27 +9,23 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-
 :root{
-  --bg:#020b18;
-  --sidebar:#03132b;
-  --sidebar2:#061d3d;
-  --panel:#082447;
-  --panel2:#0b315e;
-  --panel3:#071b35;
+  --bg:#020a18;
+  --panel:#071b35;
+  --panel2:#0b2547;
+  --panel3:#102f5e;
   --gold:#f7c600;
   --gold2:#ffe45c;
   --white:#ffffff;
   --muted:#cbd6ea;
   --line:rgba(255,255,255,.10);
   --gold-line:rgba(247,198,0,.48);
-  --red:#cf2e2e;
-  --green:#1f8f3a;
-  --blue:#1a64c7;
-  --purple:#6f48d9;
-  --shadow:0 18px 45px rgba(0,0,0,.38);
-  --sidebar-w:320px;
-  --max:1260px;
+  --green:#2e7d32;
+  --red:#cf2f2f;
+  --blue:#1a5cc8;
+  --purple:#5d3fd3;
+  --shadow:0 18px 46px rgba(0,0,0,.42);
+  --max:1480px;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -37,7 +33,7 @@
 body{
   font-family:Arial, sans-serif;
   background:
-    linear-gradient(rgba(1,8,20,.88), rgba(1,8,20,.97)),
+    linear-gradient(rgba(2,8,20,.87), rgba(2,8,20,.96)),
     url("fundo.png") center/cover fixed no-repeat;
   color:var(--white);
   min-height:100vh;
@@ -48,503 +44,340 @@ a{text-decoration:none;color:inherit}
 button,input,select,textarea{font-family:inherit}
 button{cursor:pointer;border:none}
 
-/* ===== SIDEBAR ===== */
+.wrap{
+  width:min(100% - 34px, var(--max));
+  margin:0 auto;
+}
+
+/* ===== MENU LATERAL ABRE/FECHA ===== */
 .sidebar-overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.58);
+  background:rgba(0,0,0,.62);
   opacity:0;
   visibility:hidden;
   transition:.25s ease;
   z-index:998;
+  backdrop-filter:blur(3px);
 }
-
 .sidebar-overlay.show{opacity:1;visibility:visible}
 
 .sidebar{
   position:fixed;
-  top:0;
-  left:0;
-  width:var(--sidebar-w);
+  inset:0 auto 0 0;
+  width:330px;
   max-width:90%;
   height:100vh;
   background:
-    radial-gradient(circle at top left, rgba(247,198,0,.10), transparent 24%),
-    linear-gradient(180deg, #03152f, #020b18 72%);
-  border-right:1px solid rgba(247,198,0,.35);
+    radial-gradient(circle at top left, rgba(247,198,0,.10), transparent 32%),
+    linear-gradient(180deg,#04142d,#020b18 72%);
+  border-right:1px solid var(--gold-line);
   box-shadow:var(--shadow);
-  padding:18px 16px;
+  padding:18px;
   transform:translateX(-105%);
-  transition:.25s ease;
+  transition:.28s ease;
   z-index:999;
   overflow-y:auto;
 }
-
 .sidebar.open{transform:translateX(0)}
-
-.sidebar-brand{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  padding:4px 4px 18px;
-  margin-bottom:14px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-.sidebar-logo{
-  width:78px;
-  height:78px;
-  object-fit:contain;
-  filter:drop-shadow(0 0 12px rgba(247,198,0,.20));
-  flex:0 0 auto;
-}
-
-.sidebar-brand-title{
-  font-size:24px;
-  font-weight:900;
-  line-height:1.05;
-  text-transform:uppercase;
-  letter-spacing:.3px;
-}
-
-.sidebar-brand-title small{
-  display:block;
-  color:#fff;
-  font-size:15px;
-  margin-top:6px;
-  font-weight:800;
-}
 
 .sidebar-header{
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  color:var(--gold);
-  font-size:18px;
-  font-weight:900;
-  margin-bottom:8px;
+  justify-content:space-between;
+  gap:12px;
+  padding-bottom:16px;
+  margin-bottom:14px;
+  border-bottom:1px solid rgba(255,255,255,.09);
 }
-
+.sidebar-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.sidebar-logo{
+  width:72px;
+  height:72px;
+  object-fit:contain;
+  filter:drop-shadow(0 8px 20px rgba(0,0,0,.45));
+}
+.sidebar-title strong{
+  display:block;
+  font-size:20px;
+  font-weight:900;
+  letter-spacing:.4px;
+}
+.sidebar-title span{
+  display:block;
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+  margin-top:3px;
+}
 .sidebar-close{
-  width:36px;
-  height:36px;
+  width:38px;
+  height:38px;
   border-radius:12px;
   background:rgba(247,198,0,.12);
+  border:1px solid var(--gold-line);
   color:var(--gold);
-  font-size:24px;
-  border:1px solid rgba(247,198,0,.28);
+  font-size:25px;
+  font-weight:900;
 }
 
-.side-label{
-  color:#dfe8f7;
+.side-section{
+  color:var(--gold);
   font-size:12px;
   font-weight:900;
+  margin:18px 6px 10px;
   text-transform:uppercase;
-  margin:18px 10px 10px;
-  opacity:.95;
 }
-
 .side-menu{
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:7px;
 }
-
 .side-menu a{
   display:flex;
   align-items:center;
   gap:12px;
-  padding:12px 12px;
+  min-height:44px;
+  padding:11px 13px;
   border-radius:12px;
-  color:#f4f7ff;
-  font-weight:800;
+  color:#eef4ff;
+  font-weight:900;
   font-size:15px;
-  transition:.2s ease;
   border:1px solid transparent;
+  transition:.2s ease;
 }
-
 .side-menu a i{
-  color:var(--gold);
   width:22px;
+  color:var(--gold);
   text-align:center;
   font-size:16px;
 }
-
 .side-menu a:hover,
-.side-menu a.active{
-  background:linear-gradient(135deg, rgba(247,198,0,.28), rgba(247,198,0,.08));
+.side-menu a.ativo{
+  background:linear-gradient(135deg,rgba(247,198,0,.26),rgba(247,198,0,.08));
+  border-color:var(--gold);
   color:var(--gold);
-  border-color:var(--gold-line);
 }
-
-.side-footer-card{
-  margin-top:20px;
-  padding:14px;
-  border-radius:14px;
-  border:1px solid var(--gold-line);
-  background:linear-gradient(135deg, rgba(247,198,0,.12), rgba(13,42,82,.78));
+.side-public{
+  margin-top:18px;
+  padding-top:16px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.side-public a{
   display:flex;
-  gap:10px;
   align-items:center;
-  color:#fff;
+  gap:12px;
+  padding:13px;
+  border:1px solid var(--gold-line);
+  border-radius:14px;
+  background:linear-gradient(135deg,rgba(247,198,0,.12),rgba(13,42,82,.72));
 }
+.side-public i{color:var(--gold);font-size:22px}
+.side-public strong{display:block;color:var(--gold)}
+.side-public span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
 
-.side-footer-card i{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  color:var(--gold);
-  border:1px solid rgba(247,198,0,.45);
-}
-
-.side-footer-card strong{
-  color:var(--gold);
-  display:block;
-  font-size:15px;
-}
-
-.side-footer-card span{
-  color:var(--muted);
-  font-size:12px;
-}
-
-/* ===== LAYOUT ===== */
-.app-shell{
-  min-height:100vh;
-  transition:.25s ease;
-}
-
-body.sidebar-open .app-shell{
-  margin-left:var(--sidebar-w);
-}
-
-.header{
-  background:linear-gradient(180deg, rgba(2,10,24,.98), rgba(5,18,38,.98));
-  border-bottom:1px solid var(--gold-line);
-  box-shadow:0 8px 22px rgba(0,0,0,.25);
+/* ===== TOPO ===== */
+header{
+  background:linear-gradient(180deg, rgba(1,9,22,.98), rgba(5,18,38,.96));
+  border-bottom:2px solid var(--gold);
+  box-shadow:0 8px 26px rgba(0,0,0,.28);
   position:sticky;
   top:0;
-  z-index:80;
+  z-index:50;
 }
-
 .header-inner{
   min-height:86px;
-  display:flex;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
   align-items:center;
-  justify-content:space-between;
   gap:18px;
-  padding:12px 24px;
+  padding:13px 0;
 }
-
 .menu-toggle{
-  width:46px;
-  height:46px;
+  width:52px;
+  height:52px;
   border-radius:14px;
   border:1px solid var(--gold-line);
   background:rgba(247,198,0,.10);
   color:var(--gold);
-  font-size:20px;
-  flex-shrink:0;
+  font-size:23px;
+  box-shadow:0 8px 20px rgba(0,0,0,.24);
 }
-
 .header-title{
-  flex:1;
-  text-align:left;
-}
-
-.header-title h1{
-  font-size:26px;
+  text-align:center;
+  font-size:25px;
   font-weight:900;
+  letter-spacing:.5px;
   text-transform:uppercase;
-  letter-spacing:.3px;
 }
-
-.header-title p{
-  margin-top:6px;
+.header-sub{
+  display:block;
   color:var(--muted);
-  font-size:14px;
+  font-size:13px;
+  font-weight:500;
+  margin-top:4px;
+  text-transform:none;
+  letter-spacing:0;
 }
-
-.top-actions{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
 .top-btn{
-  padding:12px 16px;
-  border-radius:10px;
+  padding:11px 17px;
+  border-radius:12px;
   font-weight:900;
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:8px;
 }
-
-.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
-.btn-red{background:var(--red);color:#fff}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 10px 22px rgba(207,47,47,.25)}
 .btn-green{background:var(--green);color:#fff}
 .btn-blue{background:var(--blue);color:#fff}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
 
-.wrap{
-  width:min(100% - 36px, var(--max));
-  margin:0 auto;
-}
+.container{padding:24px 0 38px}
 
-.container{padding:22px 0 34px}
-
-/* ===== PAINEL ===== */
 .hero-panel{
   background:
-    radial-gradient(circle at left, rgba(247,198,0,.15), transparent 23%),
-    linear-gradient(135deg, rgba(11,49,94,.95), rgba(7,27,53,.96));
+    radial-gradient(circle at top left, rgba(247,198,0,.18), transparent 34%),
+    linear-gradient(135deg, rgba(12,42,82,.96), rgba(4,19,40,.96));
   border:1px solid var(--gold-line);
-  border-radius:18px;
-  padding:22px 24px;
+  border-radius:20px;
+  padding:24px 26px;
   box-shadow:var(--shadow);
-  margin-bottom:18px;
+  margin-bottom:20px;
   display:flex;
   align-items:center;
   gap:16px;
 }
-
 .hero-icon{
   width:58px;
   height:58px;
   border-radius:50%;
-  border:1px solid var(--gold-line);
-  color:var(--gold);
   display:grid;
   place-items:center;
-  font-size:24px;
-  background:rgba(247,198,0,.08);
+  background:rgba(247,198,0,.12);
+  border:1px solid var(--gold-line);
+  color:var(--gold);
+  font-size:25px;
   flex:0 0 auto;
 }
-
-.hero-panel h2{
-  font-size:26px;
-  color:var(--gold);
-  margin-bottom:6px;
-  font-weight:900;
-}
-
-.hero-panel p{
-  color:var(--muted);
-  line-height:1.5;
-  font-size:14px;
-}
-
+.hero-panel h2{font-size:27px;color:var(--gold);margin-bottom:6px;font-weight:900}
+.hero-panel p{color:var(--muted);line-height:1.5;font-size:14px}
 .status-box{
-  margin-top:14px;
-  padding:14px;
+  margin-top:12px;
+  padding:12px;
   border-radius:12px;
   display:none;
   font-weight:900;
   font-size:13px;
-  line-height:1.45;
 }
-
-.status-info{background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.08)}
+.status-info{background:rgba(255,255,255,.06);color:#fff;border:1px solid var(--line)}
 .status-erro{background:rgba(180,35,35,.22);color:#ffb0b0;border:1px solid rgba(255,120,120,.25)}
-
 #painelConteudo{display:none}
 
+/* ===== CARDS DO TOPO ===== */
 .grid{
   display:grid;
   grid-template-columns:repeat(6,minmax(0,1fr));
-  gap:12px;
-  margin-bottom:18px;
+  gap:14px;
+  margin-bottom:20px;
 }
-
 .card{
   background:
-    radial-gradient(circle at top right, rgba(247,198,0,.08), transparent 30%),
-    linear-gradient(180deg, rgba(13,49,94,.96), rgba(7,27,53,.96));
-  border-radius:16px;
-  padding:16px;
-  box-shadow:0 8px 22px rgba(0,0,0,.26);
+    radial-gradient(circle at top right, rgba(255,255,255,.10), transparent 35%),
+    linear-gradient(180deg, rgba(16,48,91,.96), rgba(7,25,52,.98));
   border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  padding:18px 14px;
+  box-shadow:0 10px 24px rgba(0,0,0,.28);
+  min-height:104px;
   display:flex;
   align-items:center;
   gap:12px;
-  min-height:94px;
 }
-
-.card-icon{
-  width:50px;
-  height:50px;
-  border-radius:50%;
+.card i{
+  width:52px;
+  height:52px;
   display:grid;
   place-items:center;
+  border-radius:50%;
   color:var(--gold);
   background:rgba(255,255,255,.08);
-  font-size:20px;
+  font-size:22px;
   flex:0 0 auto;
 }
-
-.card:nth-child(4){border-color:var(--gold-line)}
-
-.card h3{
-  font-size:28px;
-  color:#fff;
-  font-weight:900;
-  line-height:1;
-}
-
-.card p{
-  margin-top:6px;
-  font-size:12px;
-  color:#fff;
-  font-weight:900;
-  text-transform:uppercase;
-}
-
-.card small{
-  color:var(--muted);
-  font-size:12px;
-  display:block;
-  margin-top:2px;
-}
+.card h3{font-size:28px;color:#fff;font-weight:900;line-height:1}
+.card p{margin-top:7px;font-size:12px;color:#fff;font-weight:900;text-transform:uppercase}
+.card span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.card.destaque{border-color:var(--gold);box-shadow:0 0 0 1px rgba(247,198,0,.15),0 12px 28px rgba(0,0,0,.32)}
 
 .dashboard-grid{
   display:grid;
   grid-template-columns:1.35fr 1fr;
-  gap:14px;
+  gap:16px;
+  align-items:start;
 }
-
 .admin-block{
   background:
-    radial-gradient(circle at top right, rgba(247,198,0,.07), transparent 30%),
-    linear-gradient(180deg, rgba(11,49,94,.84), rgba(7,27,53,.92));
+    radial-gradient(circle at top right, rgba(247,198,0,.08), transparent 35%),
+    linear-gradient(180deg, rgba(13,42,82,.92), rgba(5,22,45,.96));
   border:1px solid rgba(255,255,255,.10);
-  border-radius:16px;
-  padding:14px;
-  margin-bottom:14px;
-  box-shadow:0 8px 22px rgba(0,0,0,.20);
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:0 10px 24px rgba(0,0,0,.23);
 }
-
 .section-title{
-  font-size:16px;
-  color:#fff;
-  margin-bottom:12px;
+  color:var(--gold);
+  font-size:18px;
   font-weight:900;
+  margin-bottom:14px;
   display:flex;
   align-items:center;
-  gap:8px;
-  text-transform:uppercase;
+  gap:9px;
 }
-
-.section-title i{color:var(--gold)}
 
 .menu{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
   gap:10px;
 }
-
 .menu a{
-  background:linear-gradient(180deg, rgba(13,49,94,.95), rgba(7,27,53,.95));
-  color:white;
-  padding:16px 14px;
+  min-height:72px;
+  background:linear-gradient(180deg, rgba(18,55,104,.95), rgba(8,29,59,.98));
+  color:#fff;
+  padding:14px;
   border-radius:12px;
   font-weight:900;
   display:flex;
   align-items:center;
-  gap:10px;
-  box-shadow:0 8px 18px rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.10);
+  gap:12px;
+  border:1px solid rgba(255,255,255,.09);
   font-size:14px;
-  min-height:64px;
+  transition:.2s ease;
 }
+.menu a i{color:var(--gold);font-size:21px;width:24px;text-align:center}
+.menu a:hover{border-color:var(--gold);transform:translateY(-2px);color:var(--gold)}
 
-.menu a i{color:var(--gold);width:22px;text-align:center;font-size:18px}
-.menu a:hover{border-color:var(--gold-line);color:var(--gold);transform:translateY(-1px)}
-
-.duplo{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.form-grid input:nth-child(3),
-.form-grid .btn-full{grid-column:1/-1}
-
-input,select,textarea{
-  width:100%;
-  padding:12px;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:10px;
-  font-size:14px;
-  background:rgba(3,19,43,.9);
-  color:#fff;
-  outline:none;
-}
-
-textarea{min-height:88px;resize:vertical}
-input::placeholder,textarea::placeholder{color:rgba(203,214,234,.70)}
-input:focus,select:focus,textarea:focus{outline:2px solid rgba(247,198,0,.45)}
-
-.btn-full{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-
-.lista-pendentes{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  min-height:120px;
-  max-height:520px;
-  overflow:auto;
-  padding-right:4px;
-}
-
+.duplo{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.lista-pendentes{display:flex;flex-direction:column;gap:10px;max-height:520px;overflow:auto;padding-right:4px}
 .usuario-card{
-  background:linear-gradient(180deg, rgba(13,49,94,.96), rgba(7,27,53,.96));
-  border:1px solid rgba(247,198,0,.18);
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
+  border:1px solid rgba(255,255,255,.09);
   border-radius:14px;
   padding:12px;
   overflow:hidden;
 }
-
 .usuario-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .usuario-nome{font-weight:900;color:#fff;font-size:14px}
 .usuario-info{color:var(--muted);font-size:12px;line-height:1.45;margin-top:4px}
-
-.tag{
-  display:inline-flex;
-  background:rgba(26,63,115,.9);
-  border:1px solid rgba(255,255,255,.08);
-  padding:4px 7px;
-  border-radius:999px;
-  font-size:10px;
-  font-weight:900;
-  color:#fff;
-}
-
-.usuario-acoes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.usuario-acoes.acoes-3{grid-template-columns:1fr 1fr 1fr}
-.usuario-acoes.acoes-4{grid-template-columns:1fr 1fr 1fr 1fr}
-.usuario-acoes button{padding:9px;border-radius:10px;font-weight:900;font-size:12px}
 .usuario-top-left{display:flex;gap:10px;align-items:flex-start}
-
 .usuario-foto{
-  width:82px!important;
-  height:82px!important;
+  width:74px!important;
+  height:74px!important;
   object-fit:contain!important;
   background:transparent!important;
   border:none!important;
@@ -553,191 +386,203 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(247,198,0,.45)}
   filter:drop-shadow(0 0 8px rgba(247,198,0,.35)) drop-shadow(0 8px 18px rgba(0,0,0,.45));
   flex:0 0 auto;
 }
+.tag{display:inline-flex;background:rgba(26,63,115,.9);border:1px solid var(--line);padding:4px 7px;border-radius:999px;font-size:10px;font-weight:900;color:#fff}
+.usuario-acoes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.usuario-acoes.acoes-3{grid-template-columns:repeat(3,1fr)}
+.usuario-acoes.acoes-4{grid-template-columns:repeat(4,1fr)}
+.usuario-acoes button{padding:9px;border-radius:10px;font-weight:900;font-size:12px;color:#fff}
+.vazio{color:var(--muted);text-align:center;padding:18px;background:rgba(7,29,55,.9);border:1px solid var(--line);border-radius:16px}
 
-.vazio{
-  color:var(--muted);
-  text-align:center;
-  padding:20px;
-  background:rgba(3,19,43,.70);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  flex:1;
-  display:grid;
-  place-items:center;
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid input:nth-child(3){grid-column:1/-1}
+input,select,textarea{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  background:#f5f7fb;
+  color:#111;
+  outline:none;
 }
+textarea{min-height:92px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(247,198,0,.65)}
+.btn-full{grid-column:1/-1;width:100%;padding:13px;border-radius:12px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px}
+.footer-note{margin-top:18px;color:var(--muted);font-size:13px;line-height:1.6;text-align:center}
 
-.footer-note{margin-top:20px;color:var(--muted);font-size:13px;line-height:1.6;text-align:center}
+.news-panel{display:none}
 
 @media(max-width:1180px){
-  body.sidebar-open .app-shell{margin-left:0}
-  .sidebar{transform:translateX(-105%)}
-  .sidebar.open{transform:translateX(0)}
   .grid{grid-template-columns:repeat(3,1fr)}
   .dashboard-grid{grid-template-columns:1fr}
   .menu{grid-template-columns:repeat(3,1fr)}
 }
-
 @media(max-width:760px){
-  .header-inner{padding:12px 14px}
-  .header-title h1{font-size:18px;text-align:center}
-  .header-title p{display:none}
+  .wrap{width:min(100% - 22px, var(--max))}
+  .header-inner{grid-template-columns:auto 1fr auto;gap:10px}
+  .header-title{font-size:17px}.header-sub{display:none}
   .top-btn span{display:none}
-  .hero-panel{align-items:flex-start;padding:16px}
-  .hero-icon{display:none}
-  .hero-panel h2{font-size:22px}
+  .hero-panel{align-items:flex-start;padding:17px}.hero-icon{display:none}.hero-panel h2{font-size:22px}
   .grid{grid-template-columns:1fr 1fr}
   .menu{grid-template-columns:1fr}
-  .duplo,.form-grid{grid-template-columns:1fr}
+  .duplo{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}.form-grid input:nth-child(3){grid-column:auto}.btn-full{grid-column:auto}
 }
+@media(max-width:480px){.grid{grid-template-columns:1fr}.card{min-height:auto}.usuario-acoes,.usuario-acoes.acoes-3,.usuario-acoes.acoes-4{grid-template-columns:1fr}}
+</style></head>
 
-@media(max-width:480px){
-  .grid{grid-template-columns:1fr}
-  .card{min-height:auto}
-}
-
-</style>
-</head>
-
-<body class="sidebar-open">
+<body>
 
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<aside class="sidebar open" id="sidebar">
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div class="sidebar-brand">
       <img src="logo-liga.jfif" class="sidebar-logo" onerror="this.style.display='none'">
-      <div class="sidebar-brand-title">
-        Liga Goiana
-        <small>de Futebol de Base</small>
+      <div class="sidebar-title">
+        <strong>LIGA GOIANA</strong>
+        <span>DE FUTEBOL DE BASE</span>
       </div>
     </div>
     <button class="sidebar-close" id="sidebarClose" type="button">×</button>
   </div>
 
-  <div class="side-label">Principal</div>
+  <div class="side-section">Principal</div>
   <div class="side-menu">
-    <a href="admin.html" class="active"><i class="fa-solid fa-house"></i> Dashboard</a>
+    <a href="admin.html" class="ativo"><i class="fa-solid fa-house-user"></i> Dashboard</a>
     <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos</a>
     <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
     <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times</a>
     <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos</a>
     <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores</a>
-    <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros</a>
+    <a href="arbitros-admin.html"><i class="fa-solid fa-gavel"></i> Árbitros</a>
     <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes</a>
     <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Súmulas</a>
+    <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Editar Súmula</a>
+    <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Editar Tabelas</a>
+    <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação</a>
+    <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas</a>
   </div>
 
-  <div class="side-label">Gestão do sistema</div>
+  <div class="side-section">Sistema</div>
   <div class="side-menu">
-    <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários</a>
-    <a href="usuarios-admin.html"><i class="fa-solid fa-lock"></i> Permissões</a>
+    <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários e Permissões</a>
+    <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Fases / Mata-Mata</a>
     <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
-    <a href="configuracoes-admin.html"><i class="fa-solid fa-gear"></i> Configurações</a>
-    <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
+    <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria</a>
+    <a href="fotografos.html"><i class="fa-solid fa-camera"></i> Fotógrafos</a>
+    <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios Gerais</a>
   </div>
 
-  <a class="side-footer-card" href="index.html">
-    <i class="fa-solid fa-globe"></i>
-    <div>
-      <strong>Site Público</strong>
-      <span>Ver site da Liga</span>
-    </div>
-  </a>
+  <div class="side-public">
+    <a href="index.html">
+      <i class="fa-solid fa-globe"></i>
+      <div><strong>Site Público</strong><span>Ver site da Liga</span></div>
+    </a>
+  </div>
 </aside>
 
-<div class="app-shell">
-  <header class="header">
-    <div class="header-inner">
-      <button class="menu-toggle" id="menuToggle" type="button"><i class="fa-solid fa-bars"></i></button>
-
-      <div class="header-title">
-        <h1>Painel do Administrador</h1>
-        <p>Bem-vindo(a) ao sistema administrativo da Liga Goiana de Futebol de Base</p>
-      </div>
-
-      <div class="top-actions">
-        <button class="top-btn btn-red" onclick="logout()">
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Sair</span>
-        </button>
-      </div>
+<header>
+  <div class="wrap header-inner">
+    <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+    <div class="header-title">
+      Painel do Administrador
+      <span class="header-sub">Bem-vindo(a) ao sistema administrativo da Liga Goiana de Futebol de Base</span>
     </div>
-  </header>
+    <button class="top-btn btn-red" onclick="logout()">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      <span>Sair</span>
+    </button>
+  </div>
+</header>
 
-  <main class="wrap container">
+<div class="wrap container">
 
-    <section class="hero-panel">
-      <div class="hero-icon"><i class="fa-solid fa-chart-simple"></i></div>
+  <section class="hero-panel">
+    <div class="hero-icon"><i class="fa-solid fa-chart-column"></i></div>
+    <div>
+      <h2>Gestão Geral da Liga</h2>
+      <p>Aqui você controla tudo: usuários, jogos, súmulas, estatísticas e notícias.</p>
+      <div id="statusInfo" class="status-box status-info">Carregando painel...</div>
+      <div id="statusErro" class="status-box status-erro"></div>
+    </div>
+  </section>
+
+  <div id="painelConteudo">
+
+    <div class="grid">
+      <div class="card"><i class="fa-solid fa-shield-halved"></i><div><h3 id="totalTimes">0</h3><p>Times</p><span>Cadastrados</span></div></div>
+      <div class="card"><i class="fa-solid fa-users"></i><div><h3 id="totalJogadores">0</h3><p>Jogadores</p><span>Cadastrados</span></div></div>
+      <div class="card"><i class="fa-solid fa-user-tie"></i><div><h3 id="totalTecnicos">0</h3><p>Técnicos</p><span>Cadastrados</span></div></div>
+      <div class="card destaque"><i class="fa-solid fa-gavel"></i><div><h3 id="totalArbitros">0</h3><p>Árbitros</p><span>Cadastrados</span></div></div>
+      <div class="card"><i class="fa-solid fa-calendar-days"></i><div><h3 id="totalJogos">0</h3><p>Jogos</p><span>Programados</span></div></div>
+      <div class="card"><i class="fa-solid fa-file-lines"></i><div><h3 id="totalSumulas">0</h3><p>Súmulas</p><span>Finalizadas</span></div></div>
+    </div>
+
+    <div class="dashboard-grid">
       <div>
-        <h2>Gestão Geral da Liga</h2>
-        <p>Aqui você controla tudo: usuários, jogos, súmulas, estatísticas e notícias.</p>
+        <div class="admin-block">
+          <h3 class="section-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Acessos rápidos</h3>
+          <div class="menu">
+            <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos</a>
+            <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
+            <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times</a>
+            <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos</a>
+            <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores</a>
+            <a href="arbitros-admin.html"><i class="fa-solid fa-gavel"></i> Árbitros</a>
+            <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes</a>
+            <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Súmulas</a>
+            <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Editar Súmula</a>
+            <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Editar Tabelas</a>
+            <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação</a>
+            <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Fases / Mata-Mata</a>
+            <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas</a>
+            <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários</a>
+            <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
+            <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria</a>
+            <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios Gerais</a>
+          </div>
+        </div>
 
-        <div id="statusInfo" class="status-box status-info">Carregando painel...</div>
-        <div id="statusErro" class="status-box status-erro"></div>
-      </div>
-    </section>
-
-    <div id="painelConteudo">
-
-      <section class="grid">
-        <div class="card"><div class="card-icon"><i class="fa-solid fa-shield-halved"></i></div><div><h3 id="totalTimes">0</h3><p>Times</p><small>Cadastrados</small></div></div>
-        <div class="card"><div class="card-icon"><i class="fa-solid fa-users"></i></div><div><h3 id="totalJogadores">0</h3><p>Jogadores</p><small>Cadastrados</small></div></div>
-        <div class="card"><div class="card-icon"><i class="fa-solid fa-user-tie"></i></div><div><h3 id="totalTecnicos">0</h3><p>Técnicos</p><small>Cadastrados</small></div></div>
-        <div class="card"><div class="card-icon"><i class="fa-solid fa-whistle"></i></div><div><h3 id="totalArbitros">0</h3><p>Árbitros</p><small>Cadastrados</small></div></div>
-        <div class="card"><div class="card-icon"><i class="fa-solid fa-calendar-days"></i></div><div><h3 id="totalJogos">0</h3><p>Jogos</p><small>Programados</small></div></div>
-        <div class="card"><div class="card-icon"><i class="fa-solid fa-file-lines"></i></div><div><h3 id="totalSumulas">0</h3><p>Súmulas</p><small>Finalizadas</small></div></div>
-      </section>
-
-      <section class="dashboard-grid">
-        <div>
+        <div class="duplo">
           <div class="admin-block">
-            <h3 class="section-title"><i class="fa-solid fa-table-cells-large"></i> Acessos rápidos</h3>
-            <div class="menu">
-              <a href="campeonatos-admin.html"><i class="fa-solid fa-trophy"></i> Campeonatos</a>
-              <a href="jogos-admin.html"><i class="fa-solid fa-calendar-days"></i> Jogos</a>
-              <a href="times-admin.html"><i class="fa-solid fa-shield-halved"></i> Times</a>
-              <a href="tecnicos-admin.html"><i class="fa-solid fa-user-tie"></i> Técnicos</a>
-              <a href="jogadores-admin.html"><i class="fa-solid fa-users"></i> Jogadores</a>
-              <a href="arbitros-admin.html"><i class="fa-solid fa-whistle"></i> Árbitros</a>
-              <a href="assistentes-admin.html"><i class="fa-solid fa-user-group"></i> Assistentes</a>
-              <a href="sumulas-admin.html"><i class="fa-solid fa-file-lines"></i> Súmulas</a>
-              <a href="sumula-admin.html"><i class="fa-solid fa-file-signature"></i> Editar Súmula</a>
-              <a href="tabelas-admin.html"><i class="fa-solid fa-table"></i> Editar Tabelas</a>
-              <a href="classificacao-admin.html"><i class="fa-solid fa-ranking-star"></i> Classificação</a>
-              <a href="configuracoes-admin.html"><i class="fa-solid fa-sliders"></i> Fases / Mata-Mata</a>
-              <a href="escalas-admin.html"><i class="fa-solid fa-clipboard-list"></i> Escalas</a>
-              <a href="usuarios-admin.html"><i class="fa-solid fa-user-gear"></i> Usuários</a>
-              <a href="noticias-admin.html"><i class="fa-solid fa-newspaper"></i> Notícias</a>
-              <a href="galeria-admin.html"><i class="fa-solid fa-images"></i> Galeria</a>
-              <a href="relatorios-admin.html"><i class="fa-solid fa-chart-column"></i> Relatórios Gerais</a>
+            <h3 class="section-title"><i class="fa-solid fa-user-check"></i> Usuários Pendentes</h3>
+            <div class="lista-pendentes" id="listaUsuarios">
+              <div class="vazio">Carregando usuários...</div>
             </div>
           </div>
 
-          <div class="duplo">
-            <div class="admin-block"><h3 class="section-title"><i class="fa-solid fa-user-check"></i> Usuários Pendentes</h3><div class="lista-pendentes" id="listaUsuarios"><div class="vazio">Carregando usuários...</div></div></div>
-            <div class="admin-block"><h3 class="section-title"><i class="fa-solid fa-camera"></i> Fotógrafos Pendentes</h3><div class="lista-pendentes" id="listaFotografos"><div class="vazio">Carregando fotógrafos...</div></div></div>
-          </div>
-
           <div class="admin-block">
-            <h3 class="section-title"><i class="fa-solid fa-pen-to-square"></i> Nova Notícia</h3>
-            <div class="form-grid">
-              <input id="tituloNoticia" placeholder="Título da notícia">
-              <textarea id="textoNoticia" placeholder="Conteúdo da notícia"></textarea>
-              <input id="imagemNoticia" placeholder="URL da imagem (opcional)">
-              <button class="btn-full btn-gold" onclick="postarNoticia()"><i class="fa-solid fa-paper-plane"></i> Publicar Notícia</button>
+            <h3 class="section-title"><i class="fa-solid fa-camera"></i> Fotógrafos Pendentes</h3>
+            <div class="lista-pendentes" id="listaFotografos">
+              <div class="vazio">Carregando fotógrafos...</div>
             </div>
           </div>
         </div>
 
-        <aside>
-          <div class="admin-block"><h3 class="section-title"><i class="fa-solid fa-chart-pie"></i> Resumo Geral</h3><div class="vazio" style="min-height:252px;"><div><i class="fa-solid fa-futbol" style="font-size:42px;color:var(--gold);margin-bottom:12px;"></i><br>Dados gerais atualizados pelo Firebase</div></div></div>
-          <div class="admin-block"><h3 class="section-title"><i class="fa-solid fa-bullhorn"></i> Últimas notícias</h3><div class="vazio" style="min-height:178px;">Use o formulário ao lado para publicar notícias.</div></div>
-        </aside>
-      </section>
+        <div class="admin-block">
+          <h3 class="section-title"><i class="fa-solid fa-pen-to-square"></i> Nova Notícia</h3>
+          <div class="form-grid">
+            <input id="tituloNoticia" placeholder="Título da notícia">
+            <textarea id="textoNoticia" placeholder="Conteúdo da notícia"></textarea>
+            <input id="imagemNoticia" placeholder="URL da imagem (opcional)">
+            <button class="btn-full btn-gold" onclick="postarNoticia()">
+              <i class="fa-solid fa-paper-plane"></i> Publicar Notícia
+            </button>
+          </div>
+        </div>
+      </div>
 
-      <div class="footer-note">Painel administrativo da Liga Goiana de Futebol de Base</div>
+      <div>
+        <div class="admin-block">
+          <h3 class="section-title"><i class="fa-solid fa-chart-pie"></i> Resumo Geral</h3>
+          <div class="vazio">Use os menus para gerenciar competições, jogos, usuários, súmulas e relatórios.</div>
+        </div>
+      </div>
     </div>
-  </main>
+
+    <div class="footer-note">Painel administrativo da Liga Goiana de Futebol de Base</div>
+  </div>
 </div>
 
 <script>
@@ -746,31 +591,18 @@ const sidebarOverlay = document.getElementById("sidebarOverlay");
 const menuToggle = document.getElementById("menuToggle");
 const sidebarClose = document.getElementById("sidebarClose");
 
-function abrirSidebar(){
-  sidebar.classList.add("open");
-  document.body.classList.add("sidebar-open");
-  if(window.innerWidth <= 1180) sidebarOverlay.classList.add("show");
-}
-
-function fecharSidebar(){
-  sidebar.classList.remove("open");
-  document.body.classList.remove("sidebar-open");
-  sidebarOverlay.classList.remove("show");
-}
-
 menuToggle.onclick = () => {
-  if(sidebar.classList.contains("open")) fecharSidebar();
-  else abrirSidebar();
+  sidebar.classList.add("open");
+  sidebarOverlay.classList.add("show");
 };
 
 sidebarClose.onclick = fecharSidebar;
 sidebarOverlay.onclick = fecharSidebar;
 
-window.addEventListener("resize",()=>{
-  if(window.innerWidth > 1180){
-    sidebarOverlay.classList.remove("show");
-  }
-});
+function fecharSidebar(){
+  sidebar.classList.remove("open");
+  sidebarOverlay.classList.remove("show");
+}
 </script>
 
 <script type="module">
@@ -1293,4 +1125,3 @@ onAuthStateChanged(auth, async user=>{
 
 </body>
 </html>
-
