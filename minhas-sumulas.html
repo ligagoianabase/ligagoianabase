@@ -225,15 +225,25 @@
 }
 
 
-/* ===== AJUSTE VISUAL: Minhas Súmulas igual aos cards de Jogos ===== */
+/* ===== MINHAS SÚMULAS - CARDS NO MESMO PADRÃO DE JOGOS ===== */
 
+/* remove o card repetido da súmula offline/manual */
+.card.offline-card,
+.card:has(a[href*="sumula-offline"]),
+.card:has(button[onclick*="Offline"]),
+.card:has(button[onclick*="offline"]){
+  display:none !important;
+}
+
+/* grade igual jogos */
 .lista{
   display:grid !important;
-  grid-template-columns:repeat(4, 1fr) !important;
+  grid-template-columns:repeat(5, 1fr) !important;
   gap:12px !important;
   align-items:start !important;
 }
 
+/* card igual .card-jogo */
 .card{
   background:
     radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
@@ -255,6 +265,7 @@
   border-color:var(--gold) !important;
 }
 
+/* topo igual jogos */
 .card-top{
   display:grid !important;
   grid-template-columns:1fr 58px 1fr !important;
@@ -263,6 +274,7 @@
   margin-bottom:8px !important;
 }
 
+/* times igual jogos */
 .team,
 .team.away{
   display:flex !important;
@@ -271,9 +283,9 @@
   min-width:0 !important;
   font-size:12px !important;
   font-weight:900 !important;
-  text-align:left !important;
   flex-direction:row !important;
   justify-content:flex-start !important;
+  text-align:left !important;
 }
 
 .team.away{
@@ -300,23 +312,17 @@
   display:block !important;
   color:#fff !important;
   font-size:12px !important;
-  line-height:1.15 !important;
+  line-height:1.1 !important;
   overflow:hidden !important;
   text-overflow:ellipsis !important;
   white-space:nowrap !important;
-  max-width:100% !important;
 }
 
 .team span{
-  display:block !important;
-  color:var(--muted) !important;
-  font-size:10px !important;
-  margin-top:2px !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
+  display:none !important;
 }
 
+/* placar/versus igual jogos */
 .versus{
   color:var(--gold) !important;
   font-size:15px !important;
@@ -332,8 +338,10 @@
   align-items:center !important;
   justify-content:center !important;
   box-shadow:none !important;
+  margin:0 auto !important;
 }
 
+/* informações compactas igual .info-jogo */
 .info-grid{
   display:block !important;
   margin:6px 0 8px !important;
@@ -354,8 +362,8 @@
 .info span{
   display:inline !important;
   color:#fff !important;
-  font-weight:900 !important;
   font-size:11px !important;
+  font-weight:900 !important;
   text-transform:none !important;
   margin:0 !important;
 }
@@ -364,6 +372,7 @@
   margin-top:2px !important;
 }
 
+/* botões iguais jogos */
 .card-actions{
   display:grid !important;
   grid-template-columns:1fr !important;
@@ -385,142 +394,22 @@
   min-height:34px !important;
 }
 
-/* deixa o card Offline / Manual como botão discreto, sem ocupar espaço grande */
-.card.offline-card{
-  min-height:auto !important;
-  max-width:260px !important;
-  padding:10px !important;
-  opacity:.9 !important;
-  border:1px dashed rgba(247,198,0,.35) !important;
-  background:
-    linear-gradient(180deg, rgba(16,42,82,.82), rgba(8,23,44,.88)) !important;
-}
-
-.card.offline-card .card-top{
-  grid-template-columns:34px 1fr !important;
-  gap:8px !important;
-  margin-bottom:8px !important;
-}
-
-.card.offline-card .team{
-  display:grid !important;
-  grid-template-columns:34px 1fr !important;
-  gap:8px !important;
-  align-items:center !important;
-  text-align:left !important;
-}
-
-.card.offline-card .team img{
-  width:30px !important;
-  height:30px !important;
-}
-
-.card.offline-card .team strong{
-  font-size:12px !important;
-  white-space:normal !important;
-}
-
-.card.offline-card .team span,
-.card.offline-card .versus,
-.card.offline-card .info-grid{
-  display:none !important;
-}
-
-.card.offline-card .card-actions{
-  gap:6px !important;
-}
-
-.card.offline-card .btn,
-.card.offline-card .badge{
-  min-height:30px !important;
-  padding:7px 8px !important;
-  font-size:10px !important;
-}
-
+/* responsivo igual jogos */
 @media(max-width:1100px){
-  .lista{
-    grid-template-columns:repeat(4, 1fr) !important;
-  }
+  .lista{grid-template-columns:repeat(4, 1fr) !important;}
 }
 
 @media(max-width:900px){
-  .lista{
-    grid-template-columns:repeat(3, 1fr) !important;
-  }
+  .lista{grid-template-columns:repeat(3, 1fr) !important;}
 }
 
 @media(max-width:650px){
-  .lista{
-    grid-template-columns:repeat(2, 1fr) !important;
-  }
+  .lista{grid-template-columns:repeat(2, 1fr) !important;}
+  .card{min-height:205px !important;}
 }
 
 @media(max-width:430px){
-  .lista{
-    grid-template-columns:1fr !important;
-  }
-}
-
-
-/* AJUSTE FINAL: remover card offline repetido e melhorar celular */
-.card.offline-card{
-  display:none !important;
-}
-
-.lista .card:first-child:has(.btn-green[href*="sumula-offline"]),
-.lista .card:first-child:has(a[href*="sumula-offline"]),
-.lista .card:first-child:has(button[onclick*="offline"]),
-.lista .card:has(.btn-green):has(.btn-blue){
-  display:none !important;
-}
-
-/* Mobile: cards das partidas mais bonitos */
-@media(max-width:650px){
-  .lista{
-    grid-template-columns:1fr !important;
-    gap:12px !important;
-  }
-
-  .card{
-    width:100% !important;
-    min-height:auto !important;
-    padding:12px !important;
-  }
-
-  .card-top{
-    grid-template-columns:1fr 58px 1fr !important;
-  }
-
-  .team strong{
-    font-size:13px !important;
-  }
-
-  .team span{
-    font-size:10px !important;
-  }
-
-  .info-grid{
-    display:grid !important;
-    grid-template-columns:1fr 1fr !important;
-    gap:7px !important;
-  }
-
-  .info{
-    text-align:left !important;
-    padding:8px !important;
-    background:rgba(255,255,255,.045) !important;
-    border-radius:10px !important;
-  }
-
-  .card-actions{
-    margin-top:10px !important;
-  }
-}
-
-@media(max-width:430px){
-  .info-grid{
-    grid-template-columns:1fr !important;
-  }
+  .lista{grid-template-columns:1fr !important;}
 }
 
 </style>
@@ -601,7 +490,44 @@ function jogoDoArbitro(jogo,user,perfil){
 
 
 function cardOfflineHtml(){
-  return ``;
+  return `
+    <article class="card offline-card">
+      <div class="card-top">
+        <div class="team">
+          <img src="logo-liga.jfif" onerror="this.src='logo-liga.jfif'" alt="Liga Goiana">
+          <div>
+            <strong>Súmula Offline / Manual</strong>
+            <span>Emergência para árbitro ou ADM</span>
+          </div>
+        </div>
+
+        <div class="versus"><i class="fa-solid fa-wifi-slash"></i></div>
+
+        <div class="team away">
+          <img src="logo-liga.jfif" onerror="this.src='logo-liga.jfif'" alt="Liga Goiana">
+          <div>
+            <strong>Funciona sem internet</strong>
+            <span>Preenchimento manual</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info"><span>Uso</span>Sem jogo cadastrado</div>
+        <div class="info"><span>Dados</span>Times e jogadores manuais</div>
+        <div class="info"><span>Salva</span>No navegador</div>
+        <div class="info"><span>Online</span>Envia ao Firebase depois</div>
+        <div class="info"><span>Visual</span>Padrão súmula pública</div>
+      </div>
+
+      <div class="card-actions">
+        <span class="badge badge-andamento"><i class="fa-solid fa-triangle-exclamation"></i> Emergência</span>
+        <a class="btn btn-green" href="sumula-offline.html">
+          <i class="fa-solid fa-file-circle-plus"></i> Criar Súmula Offline
+        </a>
+      </div>
+    </article>
+  `;
 }
 
 function renderizar(jogos){
