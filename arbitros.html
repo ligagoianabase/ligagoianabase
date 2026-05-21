@@ -932,41 +932,62 @@ onSnapshot(collection(db,"arbitros"),snap=>{
     ...d.data()
   }));
 
+  function statusPublicoValido(item){
+    const status = statusArbitro(item);
+
+    // Cadastro antigo sem status continua aparecendo como ativo.
+    if(!status) return true;
+
+    // Público mostra somente árbitro liberado/aprovado/ativo.
+    return ["ativo","aprovado","autorizado"].includes(status);
+  }
+
+  function chavePrincipal(item){
+    const cpf = n(val(item,["cpf","CPF","documento"],"")).replace(/\D/g,"");
+    const email = n(val(item,["email","eMail"],""));
+    const nome = n(nomeArbitro(item));
+
+    return cpf || email || nome || item.id;
+  }
+
+  function prioridade(item){
+    const status = statusArbitro(item);
+
+    if(status === "ativo") return 5;
+    if(status === "aprovado") return 4;
+    if(status === "autorizado") return 3;
+    if(!status) return 2;
+
+    return 1;
+  }
+
   const mapa = new Map();
 
   listaOriginal.forEach(arbitro=>{
+    if(!arbitro) return;
 
-    const chaveNome = n(nomeArbitro(arbitro));
-    const chaveCpf = n(val(arbitro,["cpf","CPF","documento"],""));
-    const chave = chaveCpf || chaveNome;
+    // Não deixa pendente, inativo, suspenso ou reprovado aparecer no público.
+    if(!statusPublicoValido(arbitro)) return;
 
+    const chave = chavePrincipal(arbitro);
     if(!chave) return;
 
-    const novoStatus = statusArbitro(arbitro);
+    const atual = mapa.get(chave);
 
-    // No público, não mostra árbitro reprovado ou inativo
-    if(novoStatus === "reprovado" || novoStatus === "inativo") return;
-
-    // Se já tiver esse árbitro cadastrado, mantém o melhor registro
-    if(mapa.has(chave)){
-
-      const atual = mapa.get(chave);
-      const atualStatus = statusArbitro(atual);
-
-      // Ativo tem prioridade sobre pendente
-      if(atualStatus === "ativo") return;
-
-      if(atualStatus === "pendente" && novoStatus === "ativo"){
-        mapa.set(chave, arbitro);
-      }
-
+    if(!atual){
+      mapa.set(chave, arbitro);
       return;
     }
 
-    mapa.set(chave, arbitro);
+    // Se houver duplicado, mantém o cadastro com melhor status público.
+    if(prioridade(arbitro) > prioridade(atual)){
+      mapa.set(chave, arbitro);
+    }
   });
 
-  arbitros = [...mapa.values()];
+  arbitros = [...mapa.values()].sort((a,b)=>
+    nomeArbitro(a).localeCompare(nomeArbitro(b),"pt-BR")
+  );
 
   preencherCategorias();
   render();
