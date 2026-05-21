@@ -926,7 +926,48 @@ document.getElementById("busca").addEventListener("input",render);
 document.getElementById("filtroCategoria").addEventListener("change",render);
 
 onSnapshot(collection(db,"arbitros"),snap=>{
-  arbitros = snap.docs.map(d=>({id:d.id,...d.data()}));
+
+  const listaOriginal = snap.docs.map(d=>({
+    id:d.id,
+    ...d.data()
+  }));
+
+  const mapa = new Map();
+
+  listaOriginal.forEach(arbitro=>{
+
+    const chaveNome = n(nomeArbitro(arbitro));
+    const chaveCpf = n(val(arbitro,["cpf","CPF","documento"],""));
+    const chave = chaveCpf || chaveNome;
+
+    if(!chave) return;
+
+    const novoStatus = statusArbitro(arbitro);
+
+    // No público, não mostra árbitro reprovado ou inativo
+    if(novoStatus === "reprovado" || novoStatus === "inativo") return;
+
+    // Se já tiver esse árbitro cadastrado, mantém o melhor registro
+    if(mapa.has(chave)){
+
+      const atual = mapa.get(chave);
+      const atualStatus = statusArbitro(atual);
+
+      // Ativo tem prioridade sobre pendente
+      if(atualStatus === "ativo") return;
+
+      if(atualStatus === "pendente" && novoStatus === "ativo"){
+        mapa.set(chave, arbitro);
+      }
+
+      return;
+    }
+
+    mapa.set(chave, arbitro);
+  });
+
+  arbitros = [...mapa.values()];
+
   preencherCategorias();
   render();
 });
