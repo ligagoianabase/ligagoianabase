@@ -645,6 +645,30 @@ window.limparFormulario = function(){
   fotoAtual = "";
 };
 
+function chaveDuplicidadeArbitro(a){
+  const cpf = limparNumero(a.cpf || a.CPF || a.documento || "");
+  const email = normalizarTexto(a.email || a.eMail || "");
+  const nome = normalizarTexto(a.nome || a.nomeCompleto || "");
+
+  return { cpf, email, nome };
+}
+
+function encontrarArbitroDuplicado(dados, ignorarId=""){
+  const novo = chaveDuplicidadeArbitro(dados);
+
+  return arbitrosCache.find(a=>{
+    if(!a || a.id === ignorarId) return false;
+
+    const atual = chaveDuplicidadeArbitro(a);
+
+    if(novo.cpf && atual.cpf && novo.cpf === atual.cpf) return true;
+    if(novo.email && atual.email && novo.email === atual.email) return true;
+    if(novo.nome && atual.nome && novo.nome === atual.nome) return true;
+
+    return false;
+  });
+}
+
 window.salvarArbitro = async function(){
   const id = document.getElementById("arbitroId").value;
 
@@ -678,9 +702,23 @@ window.salvarArbitro = async function(){
     atualizadoEm:serverTimestamp()
   };
 
+  const duplicado = encontrarArbitroDuplicado(dados, id);
+
   if(id){
     await updateDoc(doc(db,"arbitros",id),dados);
     alert("Árbitro atualizado!");
+  }else if(duplicado){
+    // Evita criar outro documento com o mesmo CPF, e-mail ou nome.
+    // Atualiza o cadastro que já existe no Firebase.
+    await updateDoc(doc(db,"arbitros",duplicado.id),{
+      ...dados,
+      jogos:Number(duplicado.jogos || 0),
+      jogosComoArbitroCentro:Number(duplicado.jogosComoArbitroCentro || 0),
+      jogosComoAssistente:Number(duplicado.jogosComoAssistente || 0),
+      jogosComoQuartoArbitro:Number(duplicado.jogosComoQuartoArbitro || 0),
+      cartoesAplicados:Number(duplicado.cartoesAplicados || 0)
+    });
+    alert("Já existia um árbitro com esses dados. O cadastro existente foi atualizado, sem criar duplicado.");
   }else{
     await addDoc(collection(db,"arbitros"),{
       ...dados,
