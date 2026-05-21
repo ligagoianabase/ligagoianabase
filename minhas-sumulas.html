@@ -461,6 +461,68 @@
   }
 }
 
+
+/* AJUSTE FINAL: remover card offline repetido e melhorar celular */
+.card.offline-card{
+  display:none !important;
+}
+
+.lista .card:first-child:has(.btn-green[href*="sumula-offline"]),
+.lista .card:first-child:has(a[href*="sumula-offline"]),
+.lista .card:first-child:has(button[onclick*="offline"]),
+.lista .card:has(.btn-green):has(.btn-blue){
+  display:none !important;
+}
+
+/* Mobile: cards das partidas mais bonitos */
+@media(max-width:650px){
+  .lista{
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+  }
+
+  .card{
+    width:100% !important;
+    min-height:auto !important;
+    padding:12px !important;
+  }
+
+  .card-top{
+    grid-template-columns:1fr 58px 1fr !important;
+  }
+
+  .team strong{
+    font-size:13px !important;
+  }
+
+  .team span{
+    font-size:10px !important;
+  }
+
+  .info-grid{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:7px !important;
+  }
+
+  .info{
+    text-align:left !important;
+    padding:8px !important;
+    background:rgba(255,255,255,.045) !important;
+    border-radius:10px !important;
+  }
+
+  .card-actions{
+    margin-top:10px !important;
+  }
+}
+
+@media(max-width:430px){
+  .info-grid{
+    grid-template-columns:1fr !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -539,44 +601,7 @@ function jogoDoArbitro(jogo,user,perfil){
 
 
 function cardOfflineHtml(){
-  return `
-    <article class="card offline-card">
-      <div class="card-top">
-        <div class="team">
-          <img src="logo-liga.jfif" onerror="this.src='logo-liga.jfif'" alt="Liga Goiana">
-          <div>
-            <strong>Súmula Offline / Manual</strong>
-            <span>Emergência para árbitro ou ADM</span>
-          </div>
-        </div>
-
-        <div class="versus"><i class="fa-solid fa-wifi-slash"></i></div>
-
-        <div class="team away">
-          <img src="logo-liga.jfif" onerror="this.src='logo-liga.jfif'" alt="Liga Goiana">
-          <div>
-            <strong>Funciona sem internet</strong>
-            <span>Preenchimento manual</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="info-grid">
-        <div class="info"><span>Uso</span>Sem jogo cadastrado</div>
-        <div class="info"><span>Dados</span>Times e jogadores manuais</div>
-        <div class="info"><span>Salva</span>No navegador</div>
-        <div class="info"><span>Online</span>Envia ao Firebase depois</div>
-        <div class="info"><span>Visual</span>Padrão súmula pública</div>
-      </div>
-
-      <div class="card-actions">
-        <span class="badge badge-andamento"><i class="fa-solid fa-triangle-exclamation"></i> Emergência</span>
-        <a class="btn btn-green" href="sumula-offline.html">
-          <i class="fa-solid fa-file-circle-plus"></i> Criar Súmula Offline
-        </a>
-      </div>
-    </article>
-  `;
+  return ``;
 }
 
 function renderizar(jogos){
