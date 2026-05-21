@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Perfil do Árbitro - Liga Goiana</title>
+<title>Árbitros - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="menu.css">
@@ -21,6 +21,7 @@
   --line:rgba(255,255,255,.12);
   --gold-line:rgba(247,198,0,.45);
   --green:#1b5e20;
+  --yellow:#7a5a00;
   --red:#b42323;
   --blue:#1a3f73;
   --shadow:0 14px 34px rgba(0,0,0,.38);
@@ -40,7 +41,8 @@ body{
 }
 
 a{text-decoration:none;color:inherit}
-button{font-family:inherit;cursor:pointer;border:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select{font-family:inherit}
 img{display:block;max-width:100%}
 
 .wrap{
@@ -54,302 +56,457 @@ img{display:block;max-width:100%}
 
 .hero{
   background:
-    radial-gradient(circle at top left, rgba(247,198,0,.18), transparent 34%),
-    linear-gradient(135deg, rgba(16,42,82,.97), rgba(8,23,44,.98));
+    radial-gradient(circle at top left, rgba(247,198,0,.16), transparent 34%),
+    linear-gradient(135deg, rgba(16,42,82,.96), rgba(8,23,44,.96));
   border:1px solid var(--gold-line);
-  border-radius:22px;
-  padding:22px;
-  margin-bottom:16px;
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:14px;
   box-shadow:var(--shadow);
-  display:grid;
-  grid-template-columns:170px 1fr;
-  gap:20px;
-  align-items:center;
 }
 
-.foto{
-  width:150px;
-  height:150px;
-  border-radius:50%;
-  object-fit:cover;
-  border:4px solid var(--gold);
-  background:#fff;
-}
-
-.hero h1{
+.hero h2{
   color:var(--gold);
-  font-size:36px;
+  font-size:28px;
   font-weight:900;
   margin-bottom:6px;
 }
 
 .hero p{
   color:var(--muted);
-  line-height:1.55;
+  line-height:1.5;
   font-size:14px;
 }
 
-.tags{
+.hero-tags{
   display:flex;
-  gap:7px;
+  gap:6px;
   flex-wrap:wrap;
   margin-top:12px;
 }
 
-.tag{
-  background:#1a3f73;
-  padding:7px 11px;
+.hero-tag{
+  background:rgba(26,63,115,.9);
+  padding:6px 10px;
   border-radius:999px;
   font-size:11px;
-  font-weight:900;
   border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
 }
 
-.tag-gold{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+input,
+select{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  background:#f5f7fb;
   color:#111;
+  outline:none;
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
+}
+
+input:focus,
+select:focus{
+  outline:2px solid rgba(247,198,0,.65);
+}
+
+.titulo-secao{
+  color:var(--gold);
+  font-size:22px;
+  font-weight:900;
+  margin:18px 0 12px;
+}
+
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:14px;
+}
+
+.card{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 36%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:16px;
+  padding:15px;
+  min-height:210px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  transition:.25s ease;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold);
+}
+
+.card-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:8px;
+}
+
+.card-funcao{
+  color:var(--gold);
+  font-size:14px;
+  font-weight:900;
+}
+
+.status-tag{
+  color:#fff;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+}
+
+.status-ativo{background:rgba(27,94,32,.88);}
+.status-pendente{background:rgba(122,90,0,.88);}
+.status-inativo{background:rgba(180,35,35,.88);}
+
+.card-main{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+}
+
+.photo{
+  width:78px;
+  height:78px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#1a3f73;
+  border:2px solid var(--gold);
+  flex-shrink:0;
+}
+
+.user-info{
+  flex:1;
+  min-width:0;
+}
+
+.nome{
+  font-weight:900;
+  font-size:17px;
+  color:#fff;
+  line-height:1.25;
+  margin-bottom:5px;
+}
+
+.time-nome{
+  color:var(--gold);
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  margin-bottom:4px;
+}
+
+.sub{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+
+.tags{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+
+.tag{
+  background:#1a3f73;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:10px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:800;
+}
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  margin-top:10px;
+}
+
+.stat-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:9px;
+  padding:7px 4px;
+  text-align:center;
+}
+
+.stat-card strong{
+  display:block;
+  color:var(--gold);
+  font-size:15px;
+  line-height:1;
+}
+
+.stat-card span{
+  display:block;
+  color:var(--muted);
+  font-size:9px;
+  font-weight:800;
+  margin-top:3px;
 }
 
 .actions{
   display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:14px;
+  justify-content:center;
+  margin-top:10px;
 }
 
-.btn{
-  min-height:40px;
-  border-radius:12px;
-  padding:0 14px;
-  font-weight:900;
-  display:inline-flex;
+.btn-ver{
+  width:100%;
+  display:flex;
   align-items:center;
   justify-content:center;
-  gap:8px;
-}
-
-.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
-.btn-blue{background:#1a3f73;color:#fff}
-.btn-gray{background:#4b5563;color:#fff}
-
-.stats-grid{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:12px;
-  margin-bottom:16px;
-}
-
-.stat{
-  background:
-    radial-gradient(circle at top right, rgba(247,198,0,.12), transparent 34%),
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border:1px solid rgba(247,198,0,.22);
-  border-radius:16px;
-  padding:15px;
-  text-align:center;
-  box-shadow:0 8px 20px rgba(0,0,0,.22);
-}
-
-.stat strong{
-  display:block;
-  color:var(--gold);
-  font-size:30px;
-  margin-bottom:5px;
-}
-
-.stat span{
-  color:var(--muted);
-  font-size:11px;
+  gap:7px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
+  padding:10px 12px;
+  border-radius:11px;
   font-weight:900;
-  text-transform:uppercase;
+  font-size:13px;
 }
 
-.grid2{
+.ranking-box{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-
-.panel{
-  background:
-    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 35%),
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
-  border:1px solid rgba(247,198,0,.22);
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 8px 20px rgba(0,0,0,.22);
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
   margin-bottom:14px;
 }
 
-.panel h2{
-  color:var(--gold);
-  font-size:20px;
-  padding:15px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-.panel-body{
+.ranking-card{
+  background:
+    radial-gradient(circle at top right, rgba(247,198,0,.14), transparent 34%),
+    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
   padding:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
 }
 
-.item{
+.ranking-card h3{
+  color:var(--gold);
+  font-size:15px;
+  margin-bottom:10px;
+}
+
+.ranking-item{
   display:flex;
   justify-content:space-between;
-  gap:10px;
-  padding:10px 0;
+  gap:8px;
+  padding:7px 0;
   border-bottom:1px solid rgba(255,255,255,.08);
   color:var(--muted);
-  font-size:14px;
+  font-size:12px;
 }
 
-.item:last-child{border-bottom:none}
-
-.item strong{
+.ranking-item strong{
   color:#fff;
 }
 
-.valor{
+.ranking-num{
   color:var(--gold);
   font-weight:900;
 }
 
-.jogo-card{
+.vazio{
+  grid-column:1/-1;
+  background:linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97));
+  padding:22px;
+  border-radius:14px;
+  text-align:center;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  justify-content:center;
+  align-items:center;
+  padding:15px;
+  z-index:9999;
+}
+
+.modal-content{
+  background:linear-gradient(180deg, rgba(16,42,82,.98), rgba(8,23,44,.98));
+  padding:20px;
+  border-radius:18px;
+  max-width:780px;
+  width:100%;
+  max-height:88vh;
+  overflow:auto;
+  border:1px solid var(--gold-line);
+  box-shadow:var(--shadow);
+  text-align:center;
+}
+
+.modal-content h2{
+  color:var(--gold);
+  margin:10px 0;
+}
+
+.modal-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+  text-align:left;
+}
+
+.modal-box{
   background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.08);
   border-radius:14px;
   padding:12px;
-  margin-bottom:10px;
-}
-
-.jogo-card strong{
-  color:#fff;
-  display:block;
-  margin-bottom:6px;
-}
-
-.jogo-card p{
   color:var(--muted);
-  font-size:13px;
-  line-height:1.5;
+  line-height:1.6;
+  font-size:14px;
 }
 
-.vazio{
-  color:var(--muted);
-  text-align:center;
-  padding:18px;
-}
-
-.loading{
-  max-width:760px;
-  margin:80px auto;
-  background:rgba(16,42,82,.96);
-  border:1px solid var(--gold-line);
+.modal-box h3{
   color:var(--gold);
-  padding:24px;
-  border-radius:16px;
-  text-align:center;
-  font-size:18px;
+  margin-bottom:8px;
+}
+
+.modal-box strong{
+  color:#fff;
+}
+
+.categoria-item{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  color:var(--muted);
+}
+
+.categoria-item strong{
+  color:var(--gold);
+}
+
+.modal-close{
+  margin-top:14px;
+  padding:10px 14px;
+  border-radius:11px;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  color:#111;
   font-weight:900;
 }
 
-@media(max-width:1000px){
-  .stats-grid{
+@media(max-width:1100px){
+  .lista-grid{
     grid-template-columns:repeat(3,1fr);
   }
+}
 
-  .grid2{
+@media(max-width:900px){
+  .filtros,
+  .modal-grid,
+  .ranking-box{
     grid-template-columns:1fr;
+  }
+
+  .lista-grid{
+    grid-template-columns:repeat(2,1fr);
   }
 }
 
-@media(max-width:700px){
+@media(max-width:650px){
+  .lista-grid{
+    grid-template-columns:1fr;
+  }
+
+  .card-main{
+    align-items:center;
+  }
+}
+
+@media(max-width:600px){
   .hero{
-    grid-template-columns:1fr;
-    text-align:center;
+    padding:14px;
   }
 
-  .foto{
-    margin:auto;
-  }
-
-  .hero h1{
-    font-size:28px;
-  }
-
-  .stats-grid{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .actions,
-  .tags{
-    justify-content:center;
+  .hero h2{
+    font-size:22px;
   }
 }
-
-@media(max-width:480px){
-  .stats-grid{
-    grid-template-columns:1fr;
-  }
-
-  .btn{
-    width:100%;
-  }
-}
-
-/* ===== PADRÃO FIFA / eFOOTBALL ===== */
-
-.foto{
-  width:175px !important;
-  height:175px !important;
-  object-fit:contain !important;
-  border:none !important;
-  border-radius:0 !important;
-  background:transparent !important;
-  padding:0 !important;
-
-  filter:
-    drop-shadow(0 0 8px rgba(247,198,0,.35))
-    drop-shadow(0 8px 18px rgba(0,0,0,.50));
-}
-
-@media(max-width:700px){
-  .foto{
-    width:155px !important;
-    height:155px !important;
-  }
-}
-
 </style>
 </head>
 
 <body>
 
-<main class="wrap container" id="app">
-  <div class="loading">
-    <i class="fa-solid fa-spinner fa-spin"></i><br>
-    Carregando perfil do árbitro...
-  </div>
+<main class="wrap container">
+
+  <section class="hero">
+    <h2>Árbitros</h2>
+    <p>Veja os árbitros cadastrados e acompanhe estatísticas públicas de jogos, súmulas e cartões. Telefone, e-mail e CPF não aparecem para o público.</p>
+
+    <div class="hero-tags">
+      <div class="hero-tag" id="tagTotal">Árbitros: 0</div>
+      <div class="hero-tag" id="tagJogos">Jogos: 0</div>
+      <div class="hero-tag" id="tagCartoes">Cartões: 0</div>
+      <div class="hero-tag" id="tagSumulas">Súmulas: 0</div>
+    </div>
+  </section>
+
+  <section class="filtros">
+    <input id="busca" placeholder="Pesquisar árbitro, cidade ou categoria...">
+
+    <select id="filtroCategoria">
+      <option value="">Todas categorias</option>
+    </select>
+  </section>
+
+  <h2 class="titulo-secao">Ranking dos Árbitros</h2>
+  <section class="ranking-box" id="rankingBox"></section>
+
+  <h2 class="titulo-secao" id="tituloPagina">Árbitros</h2>
+
+  <section class="lista-grid" id="lista">
+    <div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando árbitros...</div>
+  </section>
+
 </main>
+
 
 <script type="module">
 import { renderMenu } from "./menu.js";
 import { db } from "./firebase.js";
 import {
   collection,
-  getDocs,
-  doc,
-  getDoc
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 renderMenu("arbitros");
 
-const app = document.getElementById("app");
-const idUrl = new URLSearchParams(location.search).get("id");
-
-let arbitro = null;
+let arbitros = [];
 let jogos = [];
 let sumulas = [];
-let todosArbitros = [];
 
 function n(txt){
   return String(txt || "")
@@ -359,7 +516,7 @@ function n(txt){
     .trim();
 }
 
-function val(obj,chaves,f=""){
+function val(obj, chaves, f=""){
   for(const c of chaves){
     if(obj && obj[c] !== undefined && obj[c] !== null && obj[c] !== ""){
       return obj[c];
@@ -369,7 +526,7 @@ function val(obj,chaves,f=""){
 }
 
 function nomeArbitro(a){
-  return val(a,["nome","nomeCompleto","arbitro"],"Árbitro");
+  return val(a,["nome","nomeCompleto","arbitro"],"Árbitro sem nome");
 }
 
 function fotoArbitro(a){
@@ -378,6 +535,88 @@ function fotoArbitro(a){
 
 function cidadeArbitro(a){
   return val(a,["cidadeNascimento","cidade","municipio"],"-");
+}
+
+function statusArbitro(a){
+  return n(val(a,["status"],"ativo"));
+}
+
+function statusTexto(a){
+  const status = statusArbitro(a);
+
+  if(status === "inativo") return "Inativo";
+  if(status === "reprovado") return "Reprovado";
+  if(status === "pendente") return "Pendente";
+
+  return "Ativo";
+}
+
+function chaveArbitro(a){
+  const cpf = n(val(a,["cpf","CPF"],"")).replace(/\D/g,"");
+  const email = n(val(a,["email","eMail"],""));
+  const nome = n(nomeArbitro(a));
+
+  return cpf || email || nome || a.id;
+}
+
+function arbitroMaisValido(atual, novo){
+  if(!atual) return novo;
+
+  const statusAtual = statusArbitro(atual);
+  const statusNovo = statusArbitro(novo);
+
+  if(statusAtual === "ativo" && statusNovo !== "ativo") return atual;
+  if(statusNovo === "ativo" && statusAtual !== "ativo") return novo;
+
+  if(statusAtual === "pendente" && statusNovo === "reprovado") return atual;
+  if(statusNovo === "pendente" && statusAtual === "reprovado") return novo;
+
+  return atual;
+}
+
+function limparArbitrosDuplicados(lista){
+  const mapa = new Map();
+
+  lista.forEach(item=>{
+    if(!item) return;
+
+    const status = statusArbitro(item);
+
+    // Reprovado não aparece no público se existir outro cadastro válido.
+    if(status === "reprovado"){
+      const chave = chaveArbitro(item);
+      if(!mapa.has(chave)) mapa.set(chave,item);
+      return;
+    }
+
+    const chave = chaveArbitro(item);
+    mapa.set(chave, arbitroMaisValido(mapa.get(chave), item));
+  });
+
+  return [...mapa.values()].filter(item=>statusArbitro(item) !== "reprovado");
+}
+
+function escolherArbitroPublico(lista, id){
+  const atual = lista.find(a=>a.id === id);
+
+  if(!atual) return null;
+
+  const chave = chaveArbitro(atual);
+
+  const relacionados = lista.filter(a=>chaveArbitro(a) === chave);
+  const ativo = relacionados.find(a=>statusArbitro(a) === "ativo");
+
+  // Se o link abriu o pendente, mas já existe ativo do mesmo árbitro,
+  // o perfil público mostra o ativo.
+  if(ativo) return ativo;
+
+  if(statusArbitro(atual) === "reprovado") return null;
+
+  return atual;
+}
+
+function statusArbitro(a){
+  return n(val(a,["status"],"ativo"));
 }
 
 function categoriasArbitro(a){
@@ -390,50 +629,39 @@ function categoriasArbitro(a){
   return ["Todas as categorias"];
 }
 
-function mesmoArbitro(nome,item){
+function mesmoArbitro(nome, item){
   const nomeNormal = n(nome);
 
   const nomes = [
     val(item,["arbitro"],""),
     val(item,["arbitroNome"],""),
     val(item,["nomeArbitro"],""),
-    item?.arbitragem?.arbitro || ""
+    val(item,["arbitragem.arbitro"],"")
   ];
 
-  const ids = [
-    val(item,["arbitroId"],""),
-    val(item,["arbitroUid"],"")
-  ];
-
-  return nomes.some(x=>n(x) === nomeNormal) || ids.includes(idUrl);
+  return nomes.some(x => n(x) === nomeNormal);
 }
 
-function finalizado(item){
-  return item.finalizado === true ||
-    item.encerrado === true ||
-    item.sumulaFinalizada === true ||
-    item.publica === true ||
-    item.publico === true ||
-    n(val(item,["status"],"")) === "finalizado" ||
-    n(val(item,["sumulaStatus"],"")) === "finalizada";
+function categoriaDoJogo(jogo){
+  return val(jogo,["categoria","categoriaNome"],"Sem categoria");
 }
 
-function contarCartoes(s){
+function statusClasse(status){
+  if(status === "inativo" || status === "reprovado") return "status-inativo";
+  if(status === "pendente") return "status-pendente";
+  return "status-ativo";
+}
+
+function statusTexto(status){
+  if(status === "inativo") return "Inativo";
+  if(status === "reprovado") return "Reprovado";
+  if(status === "pendente") return "Pendente";
+  return "Ativo";
+}
+
+function contarCartoesSumula(s){
   let amarelos = 0;
   let vermelhos = 0;
-
-  const eventos = [
-    ...(s.eventos || []),
-    ...(s.cartoes || []),
-    ...(s.cartoesLista || [])
-  ];
-
-  eventos.forEach(ev=>{
-    const tipo = n(val(ev,["tipo","evento","acao","cartao"],""));
-
-    if(tipo.includes("amarelo")) amarelos++;
-    if(tipo.includes("vermelho")) vermelhos++;
-  });
 
   amarelos += (s.amarelosDetalhadosA || []).length;
   amarelos += (s.amarelosDetalhadosB || []).length;
@@ -445,10 +673,22 @@ function contarCartoes(s){
   vermelhos += (s.cartoesVermelhos || []).length;
   vermelhos += (s.vermelhos || []).length;
 
-  return {amarelos,vermelhos};
+  const eventos = [
+    ...(s.eventos || []),
+    ...(s.cartoes || [])
+  ];
+
+  eventos.forEach(ev=>{
+    const tipo = n(val(ev,["tipo","evento","acao","cartao"],""));
+
+    if(tipo.includes("amarelo")) amarelos++;
+    if(tipo.includes("vermelho")) vermelhos++;
+  });
+
+  return { amarelos, vermelhos };
 }
 
-function calcularStats(a){
+function calcularStatsArbitro(a){
   const nome = nomeArbitro(a);
 
   let jogosApitados = 0;
@@ -457,34 +697,42 @@ function calcularStats(a){
   let sumulasFinalizadas = 0;
   let amarelos = 0;
   let vermelhos = 0;
-
   const porCategoria = {};
   const porCampeonato = {};
-  const jogosRecentes = [];
 
   jogos.forEach(j=>{
     if(!mesmoArbitro(nome,j)) return;
 
     jogosApitados++;
 
-    if(finalizado(j)) jogosFinalizados++;
-    else jogosPendentes++;
-
-    const categoria = val(j,["categoria","categoriaNome"],"Sem categoria");
-    const campeonato = val(j,["campeonato","campeonatoNome","nomeCampeonato"],"Sem campeonato");
-
+    const categoria = categoriaDoJogo(j);
     porCategoria[categoria] = (porCategoria[categoria] || 0) + 1;
+
+    const campeonato = val(j,["campeonato","campeonatoNome","nomeCampeonato"],"Sem campeonato");
     porCampeonato[campeonato] = (porCampeonato[campeonato] || 0) + 1;
 
-    jogosRecentes.push(j);
+    const status = n(val(j,["status"],""));
+
+    if(status === "finalizado" || j.finalizado === true || j.sumulaFinalizada === true){
+      jogosFinalizados++;
+    }else{
+      jogosPendentes++;
+    }
   });
 
   sumulas.forEach(s=>{
     if(!mesmoArbitro(nome,s)) return;
 
-    if(finalizado(s)) sumulasFinalizadas++;
+    if(
+      s.sumulaFinalizada === true ||
+      s.publica === true ||
+      s.publico === true ||
+      n(val(s,["status"],"")) === "finalizado"
+    ){
+      sumulasFinalizadas++;
+    }
 
-    const cartoes = contarCartoes(s);
+    const cartoes = contarCartoesSumula(s);
     amarelos += cartoes.amarelos;
     vermelhos += cartoes.vermelhos;
   });
@@ -502,190 +750,276 @@ function calcularStats(a){
     totalCartoes,
     mediaCartoes,
     porCategoria,
-    porCampeonato,
-    jogosRecentes:jogosRecentes.slice(-8).reverse()
+    porCampeonato
   };
 }
 
-function rankingPosicao(a){
-  const lista = todosArbitros
-    .map(ar=>({
-      id:ar.id,
-      jogos:calcularStats(ar).jogosApitados
-    }))
-    .sort((x,y)=>y.jogos-x.jogos);
+function preencherCategorias(){
+  const select = document.getElementById("filtroCategoria");
+  const atual = select.value;
+  const set = new Set();
 
-  const pos = lista.findIndex(x=>x.id === a.id);
+  jogos.forEach(j=>{
+    const cat = categoriaDoJogo(j);
+    if(cat && cat !== "Sem categoria") set.add(cat);
+  });
 
-  return pos >= 0 ? pos + 1 : "-";
+  arbitros.forEach(a=>{
+    categoriasArbitro(a).forEach(c=>{
+      if(c && c !== "Todas as categorias") set.add(c);
+    });
+  });
+
+  select.innerHTML = `<option value="">Todas categorias</option>`;
+
+  [...set].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(c=>{
+    select.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+
+  if([...set].includes(atual)){
+    select.value = atual;
+  }
 }
 
-function itemHTML(nome,valor){
+function filtrados(){
+  const busca = n(document.getElementById("busca").value);
+  const categoria = document.getElementById("filtroCategoria").value;
+
+  return arbitros.filter(a=>{
+    const nome = nomeArbitro(a);
+    const cidade = cidadeArbitro(a);
+    const cats = categoriasArbitro(a);
+
+    if(busca){
+      const texto = n(`${nome} ${cidade} ${cats.join(" ")}`);
+      if(!texto.includes(busca)) return false;
+    }
+
+    if(categoria){
+      const stats = calcularStatsArbitro(a);
+      const temCategoriaPeloCadastro = cats.includes(categoria);
+      const temCategoriaPeloJogo = !!stats.porCategoria[categoria];
+
+      if(!temCategoriaPeloCadastro && !temCategoriaPeloJogo) return false;
+    }
+
+    return true;
+  }).sort((a,b)=>nomeArbitro(a).localeCompare(nomeArbitro(b),"pt-BR"));
+}
+
+function atualizarTopo(lista){
+  let totalJogos = 0;
+  let totalCartoes = 0;
+  let totalSumulas = 0;
+
+  lista.forEach(a=>{
+    const stats = calcularStatsArbitro(a);
+    totalJogos += stats.jogosApitados;
+    totalCartoes += stats.totalCartoes;
+    totalSumulas += stats.sumulasFinalizadas;
+  });
+
+  document.getElementById("tagTotal").innerText = `Árbitros: ${lista.length}`;
+  document.getElementById("tagJogos").innerText = `Jogos: ${totalJogos}`;
+  document.getElementById("tagCartoes").innerText = `Cartões: ${totalCartoes}`;
+  document.getElementById("tagSumulas").innerText = `Súmulas: ${totalSumulas}`;
+
+  const categoria = document.getElementById("filtroCategoria").value;
+  document.getElementById("tituloPagina").innerText =
+    `Árbitros${categoria ? " - " + categoria : ""}`;
+}
+
+function rankingHTML(titulo, lista, campo, sufixo=""){
+  const top = [...lista]
+    .map(a=>({
+      nome:nomeArbitro(a),
+      valor:calcularStatsArbitro(a)[campo] || 0
+    }))
+    .sort((a,b)=>b.valor - a.valor)
+    .slice(0,5);
+
+  if(!top.length){
+    return `
+      <div class="ranking-card">
+        <h3>${titulo}</h3>
+        <div class="ranking-item">
+          <span>Nenhum dado</span>
+          <span class="ranking-num">0</span>
+        </div>
+      </div>
+    `;
+  }
+
   return `
-    <div class="item">
-      <span>${nome}</span>
-      <strong class="valor">${valor}</strong>
+    <div class="ranking-card">
+      <h3>${titulo}</h3>
+      ${
+        top.map((item,index)=>`
+          <div class="ranking-item">
+            <strong>${index + 1}. ${item.nome}</strong>
+            <span class="ranking-num">${item.valor}${sufixo}</span>
+          </div>
+        `).join("")
+      }
     </div>
   `;
 }
 
-function listaObj(obj){
-  const entries = Object.entries(obj || {})
-    .sort((a,b)=>b[1]-a[1]);
+function renderRanking(lista){
+  const box = document.getElementById("rankingBox");
 
-  if(!entries.length) return `<div class="vazio">Nenhum dado encontrado.</div>`;
+  box.innerHTML = `
+    ${rankingHTML("Mais jogos apitados", lista, "jogosApitados")}
+    ${rankingHTML("Mais súmulas finalizadas", lista, "sumulasFinalizadas")}
+    ${rankingHTML("Mais cartões aplicados", lista, "totalCartoes")}
+    ${
+      (() => {
+        const topMedia = [...lista]
+          .map(a=>({
+            nome:nomeArbitro(a),
+            valor:Number(calcularStatsArbitro(a).mediaCartoes || 0)
+          }))
+          .sort((a,b)=>b.valor - a.valor)
+          .slice(0,5);
 
-  return entries.map(([nome,valor])=>itemHTML(nome,valor)).join("");
-}
-
-function jogoNome(j){
-  const a = val(j,["timeANome"], j.timeA?.nome || j.timeA || "Time A");
-  const b = val(j,["timeBNome"], j.timeB?.nome || j.timeB || "Time B");
-  return `${a} x ${b}`;
-}
-
-function dataJogo(j){
-  return val(j,["data","dataJogo","dataHora"],"-");
-}
-
-function render(){
-  if(!arbitro){
-    app.innerHTML = `<div class="loading">Árbitro não encontrado.</div>`;
-    return;
-  }
-
-  const stats = calcularStats(arbitro);
-  const cats = categoriasArbitro(arbitro);
-
-  app.innerHTML = `
-    <section class="hero">
-      <img class="foto" src="${fotoArbitro(arbitro)}" onerror="this.src='logo-liga.jfif'">
-
-      <div>
-        <h1>${nomeArbitro(arbitro)}</h1>
-
-        <p>
-          Árbitro cadastrado na Liga Goiana de Futebol de Base.<br>
-          Cidade: ${cidadeArbitro(arbitro)}<br>
-          Contato, CPF e dados pessoais são privados.
-        </p>
-
-        <div class="tags">
-          <span class="tag tag-gold"><i class="fa-solid fa-whistle"></i> Árbitro Oficial</span>
-          ${cats.map(c=>`<span class="tag">${c}</span>`).join("")}
-          <span class="tag">Ranking: ${rankingPosicao(arbitro)}º</span>
-        </div>
-
-        <div class="actions">
-          <a class="btn btn-gold" href="arbitros.html">
-            <i class="fa-solid fa-arrow-left"></i> Voltar
-          </a>
-
-          <button class="btn btn-blue" onclick="compartilhar()">
-            <i class="fa-solid fa-share-nodes"></i> Compartilhar
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <section class="stats-grid">
-      <div class="stat"><strong>${stats.jogosApitados}</strong><span>Jogos</span></div>
-      <div class="stat"><strong>${stats.sumulasFinalizadas}</strong><span>Súmulas</span></div>
-      <div class="stat"><strong>${stats.jogosFinalizados}</strong><span>Finalizados</span></div>
-      <div class="stat"><strong>${stats.jogosPendentes}</strong><span>Pendentes</span></div>
-      <div class="stat"><strong>${stats.amarelos}</strong><span>Amarelos</span></div>
-      <div class="stat"><strong>${stats.vermelhos}</strong><span>Vermelhos</span></div>
-    </section>
-
-    <section class="grid2">
-      <div class="panel">
-        <h2><i class="fa-solid fa-chart-line"></i> Estatísticas</h2>
-        <div class="panel-body">
-          ${itemHTML("Total de cartões",stats.totalCartoes)}
-          ${itemHTML("Média de cartões por jogo",stats.mediaCartoes)}
-          ${itemHTML("Ranking por jogos",rankingPosicao(arbitro)+"º")}
-          ${itemHTML("Status",val(arbitro,["status"],"ativo"))}
-        </div>
-      </div>
-
-      <div class="panel">
-        <h2><i class="fa-solid fa-trophy"></i> Campeonatos trabalhados</h2>
-        <div class="panel-body">
-          ${listaObj(stats.porCampeonato)}
-        </div>
-      </div>
-
-      <div class="panel">
-        <h2><i class="fa-solid fa-layer-group"></i> Jogos por categoria</h2>
-        <div class="panel-body">
-          ${listaObj(stats.porCategoria)}
-        </div>
-      </div>
-
-      <div class="panel">
-        <h2><i class="fa-solid fa-calendar-days"></i> Jogos recentes</h2>
-        <div class="panel-body">
-          ${
-            stats.jogosRecentes.length
-            ? stats.jogosRecentes.map(j=>`
-              <div class="jogo-card">
-                <strong>${jogoNome(j)}</strong>
-                <p>
-                  Campeonato: ${val(j,["campeonato","campeonatoNome"],"-")}<br>
-                  Categoria: ${val(j,["categoria"],"-")}<br>
-                  Data: ${dataJogo(j)}<br>
-                  Status: ${val(j,["status"],"-")}
-                </p>
-              </div>
-            `).join("")
-            : `<div class="vazio">Nenhum jogo encontrado.</div>`
-          }
-        </div>
-      </div>
-    </section>
+        return `
+          <div class="ranking-card">
+            <h3>Média de cartões</h3>
+            ${
+              topMedia.length
+              ? topMedia.map((item,index)=>`
+                <div class="ranking-item">
+                  <strong>${index + 1}. ${item.nome}</strong>
+                  <span class="ranking-num">${item.valor.toFixed(2)}</span>
+                </div>
+              `).join("")
+              : `
+                <div class="ranking-item">
+                  <span>Nenhum dado</span>
+                  <span class="ranking-num">0</span>
+                </div>
+              `
+            }
+          </div>
+        `;
+      })()
+    }
   `;
 }
 
-window.compartilhar = async function(){
-  const url = location.href;
+function render(){
+  const box = document.getElementById("lista");
+  const lista = filtrados();
 
-  if(navigator.share){
-    await navigator.share({
-      title:"Perfil do Árbitro - Liga Goiana",
-      url
-    });
+  atualizarTopo(lista);
+  renderRanking(lista);
+
+  if(!arbitros.length){
+    box.innerHTML = `<div class="vazio">Nenhum árbitro cadastrado no Firebase.</div>`;
     return;
   }
 
-  await navigator.clipboard.writeText(url);
-  alert("Link copiado.");
-};
-
-async function carregar(){
-  if(!idUrl){
-    app.innerHTML = `<div class="loading">ID do árbitro não informado.</div>`;
+  if(!lista.length){
+    box.innerHTML = `<div class="vazio">Nenhum árbitro encontrado.</div>`;
     return;
   }
 
-  const snapArbitro = await getDoc(doc(db,"arbitros",idUrl));
+  box.innerHTML = lista.map(a=>{
+    const nome = nomeArbitro(a);
+    const foto = fotoArbitro(a);
+    const cidade = cidadeArbitro(a);
+    const status = statusArbitro(a);
+    const stats = calcularStatsArbitro(a);
+    const cats = categoriasArbitro(a);
 
-  if(snapArbitro.exists()){
-    arbitro = {id:snapArbitro.id,...snapArbitro.data()};
-  }
+    return `
+      <div class="card">
 
-  const snapArbitros = await getDocs(collection(db,"arbitros"));
-  todosArbitros = snapArbitros.docs.map(d=>({id:d.id,...d.data()}));
+        <div class="card-top">
+          <div class="card-funcao">Árbitro</div>
 
-  const snapJogos = await getDocs(collection(db,"jogos"));
-  jogos = snapJogos.docs.map(d=>({id:d.id,...d.data()}));
+          <div class="status-tag ${statusClasse(status)}">
+            ${statusTexto(status)}
+          </div>
+        </div>
 
-  const snapSumulas = await getDocs(collection(db,"sumulas"));
-  sumulas = snapSumulas.docs.map(d=>({id:d.id,...d.data()}));
+        <div class="card-main">
+          <img src="${foto}" class="photo" onerror="this.src='logo-liga.jfif'">
 
-  render();
+          <div class="user-info">
+            <div class="nome">${nome}</div>
+            <div class="time-nome">Árbitro oficial</div>
+            <div class="sub">Cidade: ${cidade}</div>
+
+            <div class="tags">
+              ${cats.map(c=>`<span class="tag">${c}</span>`).join("")}
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <strong>${stats.jogosApitados}</strong>
+            <span>JOGOS</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>${stats.sumulasFinalizadas}</strong>
+            <span>SÚMULAS</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>${stats.jogosPendentes}</strong>
+            <span>PEND.</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>${stats.amarelos}</strong>
+            <span>AMAR.</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>${stats.vermelhos}</strong>
+            <span>VERM.</span>
+          </div>
+
+          <div class="stat-card">
+            <strong>${stats.mediaCartoes}</strong>
+            <span>MÉDIA</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-ver" onclick="location.href='arbitro-publico.html?id=${encodeURIComponent(a.id)}'">
+            <i class="fa-solid fa-eye"></i> Ver Árbitro
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
-carregar();
+
+document.getElementById("busca").addEventListener("input",render);
+document.getElementById("filtroCategoria").addEventListener("change",render);
+
+onSnapshot(collection(db,"arbitros"),snap=>{
+  arbitros = snap.docs.map(d=>({id:d.id,...d.data()}));
+  preencherCategorias();
+  render();
+});
+
+onSnapshot(collection(db,"jogos"),snap=>{
+  jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
+  preencherCategorias();
+  render();
+});
+
+onSnapshot(collection(db,"sumulas"),snap=>{
+  sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
+  preencherCategorias();
+  render();
+});
 </script>
 
 </body>
