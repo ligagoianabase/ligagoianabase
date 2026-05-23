@@ -550,8 +550,6 @@ select{
   }
 }
 
-
-
 .hidden{display:none !important}
 
 .lista-topo{
@@ -581,24 +579,15 @@ select{
   box-shadow:0 8px 20px rgba(0,0,0,.22);
 }
 
-.card .actions{
-  margin-top:auto;
-}
-
-.card .actions .btn-acao{
-  flex:1;
-  min-width:86px;
-}
-
-@media(min-width:901px){
-  .header-top{min-height:72px}
-  .hero{padding:16px 18px}
-}
-
 @media(max-width:600px){
-  .lista-topo{align-items:stretch}
-  .lista-topo .btn-acao{width:100%}
+  .lista-topo{align-items:stretch;}
+  .lista-topo .btn-acao{width:100%;}
 }
+
+#areaListaArbitros{width:100%;}
+.card .actions{margin-top:auto;}
+.card .actions .btn-acao{flex:1;min-width:86px;}
+@media(min-width:901px){.header-top{min-height:72px}.hero{padding:16px 18px}}
 
 </style>
 </head>
@@ -620,7 +609,7 @@ select{
     <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
     <div class="header-right">
-      <button class="top-btn btn-gold" type="button" onclick="abrirFormularioNovoArbitro()">
+      <button class="top-btn btn-gold" type="button" onclick="abrirFormularioNovo()">
         <i class="fa-solid fa-plus"></i> Novo Árbitro
       </button>
     </div>
@@ -745,12 +734,12 @@ select{
         <p>Gerencie, edite ou crie novos árbitros.</p>
       </div>
 
-      <button class="btn-acao btn-novo" type="button" onclick="abrirFormularioNovoArbitro()">
+      <button class="btn-acao btn-novo" type="button" onclick="abrirFormularioNovo()">
         <i class="fa-solid fa-plus"></i> Novo Árbitro
       </button>
     </div>
 
-    <div class="filtros">
+  <div class="filtros">
     <input id="buscaArbitro" placeholder="Pesquisar árbitro...">
 
     <select id="filtroFuncao">
@@ -800,7 +789,7 @@ function mostrarLista(){
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
-window.abrirFormularioNovoArbitro = function(){
+window.abrirFormularioNovo = function(){
   limparFormulario();
   document.getElementById("tituloFormulario").textContent = "Novo Árbitro";
   mostrarFormulario();
