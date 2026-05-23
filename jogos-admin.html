@@ -430,6 +430,46 @@ input:focus,select:focus,textarea:focus{
     drop-shadow(0 8px 18px rgba(0,0,0,.50));
 }
 
+
+.hidden{display:none !important}
+
+.lista-topo{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:16px;
+  flex-wrap:wrap;
+}
+
+.lista-topo h2{
+  color:var(--gold);
+  font-size:24px;
+  font-weight:900;
+}
+
+.lista-topo p{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:4px;
+}
+
+.btn-novo{
+  background:linear-gradient(135deg,var(--gold),#ffe45c);
+  color:#111;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+}
+
+@media(max-width:600px){
+  .lista-topo{
+    align-items:stretch;
+  }
+
+  .lista-topo .btn-acao{
+    width:100%;
+  }
+}
+
 </style>
 </head>
 
@@ -450,8 +490,8 @@ input:focus,select:focus,textarea:focus{
     <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
     <div class="header-right">
-      <button class="top-btn btn-gold" type="button" onclick="salvarJogo()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Jogo
+      <button class="top-btn btn-gold" type="button" onclick="abrirFormularioNovo()">
+        <i class="fa-solid fa-plus"></i> Novo Jogo
       </button>
     </div>
   </div>
@@ -483,7 +523,7 @@ input:focus,select:focus,textarea:focus{
     </p>
   </div>
 
-  <section class="form-panel">
+  <section class="form-panel hidden" id="formJogo">
     <div class="form-title">Novo Jogo</div>
 
     <div class="form-grid">
@@ -589,6 +629,10 @@ input:focus,select:focus,textarea:focus{
       <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
         <i class="fa-solid fa-broom"></i> Limpar
       </button>
+
+      <button class="btn-acao btn-blue" type="button" onclick="voltarLista()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
     </div>
 
     <div class="envios-panel" id="painelEnvios">
@@ -598,23 +642,38 @@ input:focus,select:focus,textarea:focus{
     </div>
   </section>
 
-  <div class="filtros">
-    <input id="buscaJogo" placeholder="Pesquisar jogo...">
+  <section id="areaListaJogos">
 
-    <select id="filtroCampeonato">
-      <option value="">Todos os campeonatos</option>
-    </select>
+    <div class="lista-topo">
+      <div>
+        <h2>Jogos cadastrados</h2>
+        <p>Gerencie os jogos e abra novas súmulas.</p>
+      </div>
 
-    <select id="filtroCategoria">
-      <option value="">Todas categorias</option>
-    </select>
-  </div>
-
-  <section class="list-panel">
-    <div class="form-title">Jogos Cadastrados</div>
-    <div id="listaJogos" class="lista-grid">
-      <div class="vazio">Carregando jogos...</div>
+      <button class="btn-acao btn-novo" type="button" onclick="abrirFormularioNovo()">
+        <i class="fa-solid fa-plus"></i> Novo Jogo
+      </button>
     </div>
+
+    <div class="filtros">
+      <input id="buscaJogo" placeholder="Pesquisar jogo...">
+
+      <select id="filtroCampeonato">
+        <option value="">Todos os campeonatos</option>
+      </select>
+
+      <select id="filtroCategoria">
+        <option value="">Todas categorias</option>
+      </select>
+    </div>
+
+    <section class="list-panel">
+      <div class="form-title">Jogos Cadastrados</div>
+      <div id="listaJogos" class="lista-grid">
+        <div class="vazio">Carregando jogos...</div>
+      </div>
+    </section>
+
   </section>
 
 </div>
@@ -638,6 +697,28 @@ let arbitrosCache = [];
 let assistentesCache = [];
 let jogosCache = [];
 let classificacaoCache = [];
+
+function mostrarFormulario(){
+  document.getElementById("formJogo").classList.remove("hidden");
+  document.getElementById("areaListaJogos").classList.add("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function mostrarLista(){
+  document.getElementById("formJogo").classList.add("hidden");
+  document.getElementById("areaListaJogos").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+window.abrirFormularioNovo = function(){
+  limparFormulario();
+  mostrarFormulario();
+};
+
+window.voltarLista = function(){
+  limparFormulario();
+  mostrarLista();
+};
 
 const categoriasFixas = [
   "Sub-11","Sub-12","Sub-13","Sub-14","Sub-15","Sub-16",
@@ -1537,6 +1618,7 @@ window.salvarJogo = async function(){
 
   limparFormulario();
   await carregarJogos();
+  mostrarLista();
   }catch(erro){
     console.error("Erro ao salvar jogo e súmula:", erro);
     alert("Erro ao salvar jogo e súmula. Abra o console e veja a mensagem: " + (erro?.message || erro));
