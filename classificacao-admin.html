@@ -328,18 +328,186 @@ td.time-cell{
     drop-shadow(0 10px 22px rgba(0,0,0,.50));
 }
 
+
+/* ===== PADRÃO EXATO CAMPEONATOS ADM ===== */
+:root{
+  --bg:#0b1f3a;
+  --bg-dark:#08172c;
+  --card:#102a52;
+  --card-hover:#153766;
+  --gold:#f7c600;
+  --gold-soft:rgba(247,198,0,.12);
+  --gold-line:rgba(247,198,0,.24);
+  --white:#ffffff;
+  --muted:#d8e1ef;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --transition:.25s ease;
+  --max:1180px;
+}
+body{
+  font-family:Arial, sans-serif;
+  background:
+    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+    url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+}
+a{text-decoration:none;color:inherit;transition:var(--transition)}
+button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
+input,select,textarea{font-family:inherit}
+.wrap{width:min(100% - 28px, var(--max));margin:0 auto}
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
+  box-shadow:var(--shadow);
+}
+.header-top{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
+}
+.header-left,.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:21px;
+  font-weight:700;
+  text-transform:none;
+}
+.top-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
+  white-space:nowrap;
+  font-size:14px;
+}
+.btn-light{background:#fff4cf;color:#111}
+.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
+.btn-gold{background:var(--gold);color:#111}
+.btn-gold:hover{filter:brightness(1.04);transform:translateY(-2px)}
+.nav-bar{
+  background:rgba(16,42,82,.95);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.menu{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:12px 0;
+  flex-wrap:wrap;
+}
+.menu a{
+  color:white;
+  font-weight:700;
+  font-size:14px;
+  background:#0d2346;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+.menu a:hover{
+  color:var(--gold);
+  background:var(--gold-soft);
+  border-color:var(--gold-line);
+}
+.container{padding:18px 0 28px}
+.hero-panel,.filter-panel,.table-panel{
+  background:linear-gradient(135deg,#102a52,#0d2346);
+  border:1px solid var(--gold-line);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
+  box-shadow:var(--shadow);
+}
+.hero-panel h2{
+  margin:0 0 8px;
+  color:var(--gold);
+  font-size:22px;
+}
+.hero-panel p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.45;
+  font-size:13px;
+}
+.bloco-titulo{font-size:18px;margin-bottom:12px;color:var(--gold)}
+.grid{grid-template-columns:1fr 220px;gap:10px}
+label{font-size:13px;margin-bottom:6px;color:#fff}
+input,select,textarea{
+  width:100%;
+  padding:10px 11px;
+  border:none;
+  border-radius:9px;
+  font-size:13px;
+  background:#f5f7fb;
+  color:#111;
+  box-shadow:none;
+}
+.table-box{
+  border-radius:14px;
+  border:1px solid rgba(255,230,0,.10);
+  box-shadow:0 7px 18px rgba(0,0,0,.24);
+}
+table{background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96))}
+th{font-size:11px;padding:10px 7px;background:rgba(247,198,0,.12);color:var(--gold)}
+td{font-size:12px;padding:9px 7px}
+.pos{width:30px;height:30px;border-radius:9px;font-size:12px}
+.time-info img{
+  width:34px !important;
+  height:34px !important;
+  object-fit:contain !important;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  padding:0 !important;
+  filter:
+    drop-shadow(0 0 8px rgba(247,198,0,.30))
+    drop-shadow(0 8px 18px rgba(0,0,0,.45)) !important;
+}
+@media(max-width:900px){
+  .header-title{order:3;width:100%;text-align:center}
+  .header-left,.header-right{width:100%;justify-content:center}
+  .grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .wrap{width:min(100% - 18px, var(--max));}
+  .hero-panel,.filter-panel,.table-panel{padding:14px;border-radius:14px}
+  .hero-panel h2{font-size:20px}
+  .top-btn{width:100%;justify-content:center}
+  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
+  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
+  .menu{
+    justify-content:flex-start;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:14px;
+  }
+  .menu a{flex:0 0 auto}
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
-  <div class="wrap header-inner">
+  <div class="wrap header-top">
     <div class="header-left">
-      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
-        <i class="fa-solid fa-arrow-left"></i> Voltar
-      </button>
-
       <a href="index.html" class="top-btn btn-light">
         <i class="fa-solid fa-house"></i> Página Inicial
       </a>
@@ -349,12 +517,28 @@ td.time-cell{
       </a>
     </div>
 
-    <div class="header-title">Classificação ADM</div>
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
     <div class="header-right">
       <a href="tabelas-admin.html" class="top-btn btn-gold">
         <i class="fa-solid fa-pen-to-square"></i> Editar Tabela
       </a>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="wrap">
+      <div class="menu">
+        <a href="admin.html">Painel</a>
+        <a href="campeonatos-admin.html">Campeonatos</a>
+        <a href="jogos-admin.html">Jogos</a>
+        <a href="times-admin.html">Times</a>
+        <a href="tecnicos-admin.html">Técnicos</a>
+        <a href="jogadores-admin.html">Jogadores</a>
+        <a href="arbitros-admin.html">Árbitros</a>
+        <a href="assistentes-admin.html">Assistentes</a>
+        <a href="sumulas-admin.html">Súmulas</a>
+      </div>
     </div>
   </div>
 </header>
