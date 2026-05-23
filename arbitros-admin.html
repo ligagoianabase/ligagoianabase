@@ -550,6 +550,49 @@ select{
   }
 }
 
+
+.hidden{display:none !important}
+
+.lista-topo{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+
+.lista-topo h2{
+  color:var(--gold);
+  font-size:21px;
+  font-weight:900;
+}
+
+.lista-topo p{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:4px;
+}
+
+.btn-novo{
+  background:linear-gradient(135deg,var(--gold),#ffe45c);
+  color:#111;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+}
+
+#areaListaArbitros{width:100%;}
+
+@media(min-width:901px){
+  .header-top{min-height:72px}
+  .hero{padding:16px 18px}
+}
+
+@media(max-width:600px){
+  .lista-topo{align-items:stretch;}
+  .lista-topo .btn-acao{width:100%;}
+  .lista-topo h2{font-size:19px}
+}
+
 </style>
 </head>
 
@@ -570,8 +613,8 @@ select{
     <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
     <div class="header-right">
-      <button class="top-btn btn-gold" type="button" onclick="salvarArbitro()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Árbitro
+      <button class="top-btn btn-gold" type="button" onclick="abrirFormularioNovo()">
+        <i class="fa-solid fa-plus"></i> Novo Árbitro
       </button>
     </div>
   </div>
@@ -600,7 +643,7 @@ select{
     <p>Cadastre árbitros com foto, telefone, WhatsApp, e-mail e função principal. Na escala, qualquer cadastrado poderá atuar como árbitro central, assistente ou 4º árbitro.</p>
   </div>
 
-  <section class="form-panel">
+  <section class="form-panel hidden" id="formArbitro">
     <div class="form-title" id="tituloFormulario">Novo Árbitro</div>
 
     <input type="hidden" id="arbitroId">
@@ -681,8 +724,24 @@ select{
       <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
         <i class="fa-solid fa-broom"></i> Limpar
       </button>
+
+      <button class="btn-acao btn-blue" type="button" onclick="voltarLista()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
     </div>
   </section>
+
+  <section id="areaListaArbitros">
+    <div class="lista-topo">
+      <div>
+        <h2>Árbitros cadastrados</h2>
+        <p>Gerencie, edite ou crie novos árbitros.</p>
+      </div>
+
+      <button class="btn-acao btn-novo" type="button" onclick="abrirFormularioNovo()">
+        <i class="fa-solid fa-plus"></i> Novo Árbitro
+      </button>
+    </div>
 
   <div class="filtros">
     <input id="buscaArbitro" placeholder="Pesquisar árbitro...">
@@ -703,6 +762,7 @@ select{
   </div>
 
   <div class="lista-grid" id="listaArbitros"></div>
+  </section>
 
 </div>
 
@@ -720,6 +780,30 @@ import {
 
 let arbitrosCache = [];
 let fotoAtual = "";
+
+function mostrarFormulario(){
+  document.getElementById("formArbitro").classList.remove("hidden");
+  document.getElementById("areaListaArbitros").classList.add("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function mostrarLista(){
+  document.getElementById("formArbitro").classList.add("hidden");
+  document.getElementById("areaListaArbitros").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+window.abrirFormularioNovo = function(){
+  limparFormulario();
+  document.getElementById("tituloFormulario").textContent = "Novo Árbitro";
+  mostrarFormulario();
+};
+
+window.voltarLista = function(){
+  limparFormulario();
+  mostrarLista();
+};
+
 
 function txt(v){
   return String(v || "").trim();
@@ -847,6 +931,7 @@ window.salvarArbitro = async function(){
 
   limparFormulario();
   await carregarArbitros();
+  mostrarLista();
 };
 
 window.editarArbitro = function(id){
@@ -874,7 +959,7 @@ window.editarArbitro = function(id){
     document.getElementById("previewFotoTexto").textContent = "Foto atual";
   }
 
-  window.scrollTo({top:0,behavior:"smooth"});
+  mostrarFormulario();
 };
 
 window.excluirArbitro = async function(id){
