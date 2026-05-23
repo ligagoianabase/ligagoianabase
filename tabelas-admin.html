@@ -432,6 +432,110 @@ td.time-cell{
     drop-shadow(0 8px 18px rgba(0,0,0,.50));
 }
 
+
+/* ===== PADRÃO VISUAL CAMPEONATOS ADM - TABELAS ===== */
+:root{
+  --max:1180px;
+  --bg:#0b1f3a;
+  --bg-dark:#08172c;
+  --card:#102a52;
+  --card-hover:#153766;
+  --gold:#f7c600;
+  --gold-soft:rgba(247,198,0,.12);
+  --gold-line:rgba(247,198,0,.24);
+  --white:#ffffff;
+  --muted:#d8e1ef;
+  --shadow:0 8px 22px rgba(0,0,0,.28);
+  --transition:.25s ease;
+}
+body{
+  background:
+    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
+    url("fundo.png") center/cover fixed no-repeat;
+}
+.wrap{width:min(100% - 28px,var(--max));margin:0 auto}
+.header-inner{min-height:82px;padding:14px 0}
+.header-title{font-size:21px;font-weight:700;text-transform:none;letter-spacing:0;text-shadow:none}
+.container{padding:18px 0 28px}
+.hero-panel,.form-panel,.list-panel{
+  background:linear-gradient(135deg,#102a52,#0d2346);
+  border:1px solid var(--gold-line);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
+  box-shadow:var(--shadow);
+}
+.hero-panel h2{font-size:22px;margin:0 0 8px}
+.hero-panel p{font-size:13px;line-height:1.45}
+.bloco-titulo{font-size:18px;margin-bottom:12px}
+.grid{grid-template-columns:repeat(3,1fr);gap:10px}
+.grid-2{grid-template-columns:1fr 220px;gap:10px}
+label{font-size:13px;margin-bottom:6px}
+input,select,textarea{
+  padding:10px 11px;
+  border-radius:9px;
+  font-size:13px;
+  box-shadow:none;
+}
+textarea{min-height:82px}
+.top-actions{gap:10px;margin-top:16px}
+.action-btn,.link-btn,.top-btn{
+  padding:9px 10px;
+  border-radius:9px;
+  font-size:12px;
+  font-weight:700;
+}
+.table-box{
+  border-radius:14px;
+  border:1px solid rgba(255,230,0,.10);
+  box-shadow:0 7px 18px rgba(0,0,0,.24);
+}
+table{background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96))}
+th{font-size:11px;padding:10px 7px;background:rgba(247,198,0,.12)}
+td{font-size:12px;padding:9px 7px}
+.pos{width:30px;height:30px;border-radius:9px;font-size:12px}
+.time-info{gap:8px}
+.time-info img{
+  width:34px !important;
+  height:34px !important;
+  object-fit:contain !important;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  padding:0 !important;
+  filter:
+    drop-shadow(0 0 8px rgba(247,198,0,.30))
+    drop-shadow(0 8px 18px rgba(0,0,0,.45)) !important;
+}
+.badge-punicao{font-size:11px;padding:4px 7px}
+.lista-historico{gap:10px;max-height:320px}
+.historico-card{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  border:1px solid rgba(255,230,0,.10);
+  border-left:4px solid var(--gold);
+  border-radius:14px;
+  padding:12px;
+  box-shadow:0 7px 18px rgba(0,0,0,.20);
+}
+.historico-card p{font-size:12px;line-height:1.35}
+.status-mini{font-size:13px;border-radius:12px;padding:12px}
+@media(max-width:1100px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:900px){
+  .header-title{order:3;width:100%;text-align:center;font-size:21px}
+  .header-left,.header-right{width:100%;justify-content:center}
+  .grid,.grid-2{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .wrap{width:min(100% - 18px,var(--max))}
+  .hero-panel,.form-panel,.list-panel{padding:14px;border-radius:14px}
+  .hero-panel h2{font-size:20px}
+  .top-btn,.action-btn,.link-btn{width:100%;justify-content:center;font-size:11px;padding:8px 5px}
+  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
+  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
+}
+
 </style>
 </head>
 
@@ -457,7 +561,7 @@ td.time-cell{
 
     <div class="header-right">
       <button class="top-btn btn-gold" type="button" onclick="salvarAlteracoesTabela()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Alterações
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Tabela
       </button>
     </div>
   </div>
@@ -961,7 +1065,11 @@ function renderHistorico(){
 }
 
 window.carregarTabela = async function(){
+  const categoriaAtual = el(ids.categoriaSelect).value;
   carregarCategorias();
+  if(categoriaAtual && Array.from(el(ids.categoriaSelect).options).some(o=>o.value === categoriaAtual)){
+    el(ids.categoriaSelect).value = categoriaAtual;
+  }
   montarTabelaBase();
   preencherSelectTimes();
   preencherSelectJogadores();
@@ -1118,7 +1226,11 @@ window.alternarTipoPunicao = function(){
 el("timePunicao").addEventListener("change",preencherSelectJogadores);
 
 window.salvarAlteracoesTabela = async function(){
-  mostrarStatus("Use o botão Editar de cada time ou Aplicar no Time para salvar alterações.");
+  if(el("timeEdicao").value){
+    await aplicarEdicaoTime();
+    return;
+  }
+  mostrarStatus("Selecione um time na tabela e clique em Editar, ou use Aplicar no Time para salvar.","erro");
 };
 
 async function atualizarTudo(){
