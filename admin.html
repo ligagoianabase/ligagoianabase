@@ -48,36 +48,10 @@ button{cursor:pointer;border:none}
 img{max-width:100%;display:block}
 
 .wrap{
-  width:100%;
-  max-width:1280px;
-  margin:0 auto;
-  padding-left:20px;
-  padding-right:20px;
-}
-
-.container{
-  width:100%;
-}
-
-#painelConteudo{
-  width:100%;
-}
-
-.grid,
-.menu,
-.duplo{
-  width:100%;
-}
-
-@media(min-width:1200px){
-
-  .grid{
-    grid-template-columns:repeat(6, minmax(180px,1fr));
-  }
-
-  .menu{
-    grid-template-columns:repeat(5, minmax(180px,1fr));
-  }
+  width:min(calc(100% - 64px), 1120px);
+  max-width:1120px;
+  margin-left:auto;
+  margin-right:auto;
 }
 
 /* MENU LATERAL ABRE / FECHA */
@@ -398,6 +372,108 @@ header{
   .card{padding:14px 8px}
   .usuario-acoes,.usuario-acoes.acoes-4{grid-template-columns:1fr}
 }
+
+/* ===== AJUSTE FINAL: CENTRALIZADO NO PC E NO CELULAR ===== */
+body{
+  overflow-x:hidden !important;
+}
+
+header{
+  width:100%;
+}
+
+.header-inner{
+  width:min(calc(100% - 64px), 1120px) !important;
+  max-width:1120px !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+.container.wrap{
+  width:min(calc(100% - 64px), 1120px) !important;
+  max-width:1120px !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+
+#painelConteudo,
+.hero-panel,
+.admin-block,
+.grid,
+.menu,
+.duplo{
+  width:100% !important;
+  max-width:100% !important;
+}
+
+.grid{
+  grid-template-columns:repeat(6, minmax(0, 1fr)) !important;
+}
+
+.menu{
+  grid-template-columns:repeat(5, minmax(0, 1fr)) !important;
+}
+
+@media(max-width:1180px){
+  .header-inner,
+  .container.wrap{
+    width:min(calc(100% - 40px), 980px) !important;
+    max-width:980px !important;
+  }
+
+  .grid{
+    grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .menu{
+    grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media(max-width:760px){
+  .header-inner,
+  .container.wrap{
+    width:min(calc(100% - 24px), 520px) !important;
+    max-width:520px !important;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .menu,
+  .duplo,
+  .form-grid{
+    grid-template-columns:1fr !important;
+  }
+}
+
+@media(max-width:430px){
+  .header-inner,
+  .container.wrap{
+    width:calc(100% - 18px) !important;
+  }
+
+  .grid{
+    grid-template-columns:1fr 1fr !important;
+    gap:8px !important;
+  }
+
+  .card{
+    min-height:86px !important;
+  }
+
+  .card h3{
+    font-size:26px !important;
+  }
+
+  .card p{
+    font-size:11px !important;
+  }
+}
+
 </style>
 </head>
 
