@@ -679,29 +679,37 @@ input:focus,select:focus,textarea:focus{
 
       <div class="full">
         <label>Configuração dos grupos</label>
+        <div class="form-actions" style="margin:0 0 10px">
+          <button class="btn-acao btn-blue" type="button" onclick="aplicarConfigPadraoElite()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Usar modelo Elite de Base
+          </button>
+          <button class="btn-acao btn-danger" type="button" onclick="limparConfiguracaoGrupos()">
+            <i class="fa-solid fa-broom"></i> Limpar grupos
+          </button>
+        </div>
         <div class="grupos-config">
           <div class="grupo-box">
             <h3>SUB 17 — Grupo A</h3>
             <textarea id="sub17GrupoA" placeholder="Um time por linha"></textarea>
-            <div class="helper">Ex: AE Independência, Campineira, AD Taquaral, CAP Salesiano</div>
+            <div class="helper">Digite os times do Grupo A para esta categoria.</div>
           </div>
 
           <div class="grupo-box">
             <h3>SUB 17 — Grupo B</h3>
             <textarea id="sub17GrupoB" placeholder="Um time por linha"></textarea>
-            <div class="helper">Ex: Deportivo Capital, Santos, Atletas de Jesus, Abadia</div>
+            <div class="helper">Digite os times do Grupo B para esta categoria.</div>
           </div>
 
           <div class="grupo-box">
             <h3>SUB 20 — Grupo A</h3>
             <textarea id="sub20GrupoA" placeholder="Um time por linha"></textarea>
-            <div class="helper">Ex: AE Independência, Campineira, AD Taquaral, CAP Salesiano</div>
+            <div class="helper">Digite os times do Grupo A para esta categoria.</div>
           </div>
 
           <div class="grupo-box">
             <h3>SUB 20 — Grupo B</h3>
             <textarea id="sub20GrupoB" placeholder="Um time por linha"></textarea>
-            <div class="helper">Ex: Deportivo Capital, Santos, Monte Cristo, Abadia</div>
+            <div class="helper">Digite os times do Grupo B para esta categoria.</div>
           </div>
         </div>
       </div>
@@ -867,6 +875,19 @@ function aplicarConfigPadraoElite(){
   marcarCategorias(["Sub-17","Sub-20"]);
 }
 
+window.aplicarConfigPadraoElite = aplicarConfigPadraoElite;
+
+window.limparConfiguracaoGrupos = function(){
+  document.getElementById("quantidadeGrupos").value = 2;
+  document.getElementById("classificadosPorGrupo").value = 2;
+  document.getElementById("tipoFaseFinal").value = "semifinal-final";
+  preencherTextarea("sub17GrupoA",[]);
+  preencherTextarea("sub17GrupoB",[]);
+  preencherTextarea("sub20GrupoA",[]);
+  preencherTextarea("sub20GrupoB",[]);
+  document.getElementById("cruzamentosFaseFinal").value = "1º Grupo A x 2º Grupo B\n1º Grupo B x 2º Grupo A";
+};
+
 function lerConfiguracaoGrupos(){
   return {
     quantidadeGrupos:Number(document.getElementById("quantidadeGrupos").value || 2),
@@ -883,7 +904,7 @@ function lerConfiguracaoGrupos(){
 }
 
 function preencherConfiguracaoGrupos(cfg){
-  if(!cfg){ aplicarConfigPadraoElite(); return; }
+  if(!cfg){ window.limparConfiguracaoGrupos(); return; }
   document.getElementById("quantidadeGrupos").value = cfg.quantidadeGrupos || 2;
   document.getElementById("classificadosPorGrupo").value = cfg.classificadosPorGrupo || 2;
   document.getElementById("tipoFaseFinal").value = cfg.tipoFaseFinal || "semifinal-final";
@@ -1024,7 +1045,7 @@ window.limparFormulario = function(){
   document.getElementById("previewLogoTexto").textContent = "Pré-visualização da logo";
   logoAtual = "";
   marcarCategorias([]);
-  aplicarConfigPadraoElite();
+  window.limparConfiguracaoGrupos();
 };
 
 window.salvarCampeonato = async function(){
