@@ -834,6 +834,19 @@ function campo(obj, chaves, padrao=""){
   return padrao;
 }
 
+function imagemSegura(valor, padrao="logo-liga.jfif"){
+  const img = String(valor || "").trim();
+  if(!img) return padrao;
+  if(img.startsWith("data:image/")) return padrao;
+  return img;
+}
+
+function esc(v){
+  return String(v ?? "").replace(/[&<>"']/g, m => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
+}
+
 function normalizar(t){
   return String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
 }
@@ -902,7 +915,7 @@ function nomeTime(){
 }
 
 function logoTime(){
-  return campo(time,["logo","escudo","imagem","foto"],"logo-liga.jfif");
+  return imagemSegura(campo(time,["logo","escudo","imagem","foto"],"logo-liga.jfif"));
 }
 
 function cidadeTime(){
@@ -1288,7 +1301,7 @@ function headerHtml(){
   return `
     <section class="team-hero">
       <div class="team-hero-top">
-        <img class="team-logo" src="${logoTime()}" onerror="this.src='logo-liga.jfif'">
+        <img class="team-logo" src="${esc(logoTime())}" onerror="this.src='logo-liga.jfif'">
         <div class="team-name">${nomeTime()}</div>
         <div class="team-city">${cidadeTime() || "Cidade não cadastrada"}</div>
       </div>
@@ -1320,19 +1333,19 @@ function detalhesCard(){
       <div class="card-body">
         <div class="details-main">
           <div class="person-box">
-            <img src="${logoTime()}" onerror="this.src='logo-liga.jfif'">
+            <img src="${esc(logoTime())}" onerror="this.src='logo-liga.jfif'">
             <strong>${nomeTime()}</strong>
             <span>${cidadeTime() || "Cidade não cadastrada"}</span>
           </div>
 
           <div class="person-box">
-            <img src="${campo(time,["fotoTime","imagemTime","bannerTime","fotoEquipe","fotoElenco","fotoGrupo"], logoTime())}" onerror="this.src='logo-liga.jfif'">
+            <img src="${esc(imagemSegura(campo(time,["fotoTime","imagemTime","bannerTime","fotoEquipe","fotoElenco","fotoGrupo"], logoTime())))}" onerror="this.src='logo-liga.jfif'">
             <strong>${filtroCategoria || "Todas categorias"}</strong>
             <span>${cats.length} categoria(s) cadastrada(s)</span>
           </div>
 
           <div class="person-box round">
-            <img src="${campo(time,["fotoTecnico","imagemTecnico","tecnicoFoto","fotoTreinador"], "logo-liga.jfif")}" onerror="this.src='logo-liga.jfif'">
+            <img src="${esc(imagemSegura(campo(time,["fotoTecnico","imagemTecnico","tecnicoFoto","fotoTreinador"], "logo-liga.jfif")))}" onerror="this.src='logo-liga.jfif'">
             <strong>${tecnicoPrincipal() || "Técnico não cadastrado"}</strong>
             <span>Técnico</span>
           </div>
@@ -1403,7 +1416,7 @@ function topList(titulo, lista, valorFn, subtituloFn, rotulo="Gols"){
         ${lista.length ? lista.map((j,idx)=>`
           <div class="rank-row">
             <div class="rank-number">${idx+1}</div>
-            <img src="${campo(j,["foto","fotoPerfil","imagem"],"logo-liga.jfif")}" onerror="this.src='logo-liga.jfif'">
+            <img src="${esc(imagemSegura(campo(j,["foto","fotoPerfil","imagem"],"logo-liga.jfif")))}" onerror="this.src='logo-liga.jfif'">
             <div class="rank-info">
               <strong>${campo(j,["nome","nomeCompleto"],"Jogador")}</strong>
               <span>${subtituloFn(j)}</span>
@@ -1502,7 +1515,7 @@ function uniformesCard(){
         <div class="uniforme-foto">
           ${
             u.foto
-            ? `<img src="${u.foto}" alt="${u.nome}" onerror="this.parentElement.innerHTML='<div class=&quot;uniforme-sem-foto&quot;><i class=&quot;fa-solid fa-palette&quot;></i><span>Uniforme sem foto</span></div>'">`
+            ? `<img src="${esc(imagemSegura(u.foto))}" alt="${u.nome}" onerror="this.parentElement.innerHTML='<div class=&quot;uniforme-sem-foto&quot;><i class=&quot;fa-solid fa-palette&quot;></i><span>Uniforme sem foto</span></div>'">`
             : `
               <div class="uniforme-sem-foto">
                 <i class="fa-solid fa-palette"></i>
@@ -1547,7 +1560,7 @@ function titulosCard(){
         <div class="titulos-grid">
           ${Array.isArray(titulos) && titulos.length ? titulos.map(t=>`
             <div class="titulo-card">
-              <img src="${t.logo || t.logoCampeonato || "logo-liga.jfif"}" onerror="this.src='logo-liga.jfif'">
+              <img src="${esc(imagemSegura(t.logo || t.logoCampeonato || "logo-liga.jfif"))}" onerror="this.src='logo-liga.jfif'">
               <strong>${t.nome || t.campeonato || "Campeonato"}</strong>
               <span>${t.ano || t.temporada || ""}</span>
             </div>
@@ -1620,7 +1633,7 @@ function logoTimeDoRegistro(registro,lado){
     : campo(registro,["timeB","visitante","timeVisitante"],null);
 
   if(obj && typeof obj === "object"){
-    return campo(obj,["logo","escudo","imagem","foto"],"logo-liga.jfif");
+    return imagemSegura(campo(obj,["logo","escudo","imagem","foto"],"logo-liga.jfif"));
   }
 
   return "logo-liga.jfif";
@@ -1827,7 +1840,7 @@ function elencoCard(){
         ${grupos[g].map((j,idx)=>`
           <div class="rank-row">
             <div class="rank-number">${campo(j,["numero","camisa"],idx+1)}</div>
-            <img src="${campo(j,["foto","fotoPerfil","imagem"],"logo-liga.jfif")}" onerror="this.src='logo-liga.jfif'">
+            <img src="${esc(imagemSegura(campo(j,["foto","fotoPerfil","imagem"],"logo-liga.jfif")))}" onerror="this.src='logo-liga.jfif'">
             <div class="rank-info">
               <strong>${campo(j,["nome","nomeCompleto"],"Jogador")}</strong>
               <span>${campo(j,["posicao","posição","funcao"],"Atleta")}</span>
