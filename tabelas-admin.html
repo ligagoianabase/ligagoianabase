@@ -537,15 +537,93 @@ td{font-size:12px;padding:9px 7px}
 }
 
 
+/* ===== FLUXO PADRÃO CAMPEONATOS ADM ===== */
 .hidden{display:none !important}
-.lista-topo{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
-.lista-topo h2{color:var(--gold);font-size:21px;font-weight:900}
-.lista-topo p{color:var(--muted);font-size:14px;margin-top:4px}
-.lista-topo-actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn-novo{background:linear-gradient(135deg,var(--gold),#ffe45c);color:#111;box-shadow:0 8px 20px rgba(0,0,0,.22)}
-.btn-acao{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 10px;border-radius:9px;font-weight:700;font-size:12px;border:none;cursor:pointer;white-space:nowrap}
-.btn-ver{background:var(--gold);color:#111}.btn-danger{background:#d94141;color:#fff}.btn-blue{background:#1a3f73;color:#fff}
-@media(max-width:600px){.lista-topo{align-items:stretch}.lista-topo-actions,.lista-topo .btn-acao{width:100%}.lista-topo-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}.lista-topo h2{font-size:19px}}
+
+.header-inner{
+  min-height:72px;
+  padding:14px 0;
+}
+
+.header-title{
+  font-size:21px;
+  font-weight:700;
+  text-transform:none;
+}
+
+.lista-topo{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+
+.lista-topo h2{
+  color:var(--gold);
+  font-size:21px;
+  font-weight:900;
+}
+
+.lista-topo p{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:4px;
+}
+
+.lista-topo-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.btn-acao{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:9px 10px;
+  border-radius:9px;
+  font-weight:700;
+  font-size:12px;
+  border:none;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.btn-novo{
+  background:linear-gradient(135deg,var(--gold),#ffe45c);
+  color:#111;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+}
+
+.btn-ver{background:var(--gold);color:black}
+.btn-danger{background:#d94141;color:#fff}
+.btn-blue{background:#1a3f73;color:#fff}
+
+#areaListaTabela{
+  width:100%;
+}
+
+.form-panel.hidden{
+  display:none !important;
+}
+
+@media(max-width:600px){
+  .lista-topo{
+    align-items:stretch;
+  }
+
+  .lista-topo-actions,
+  .lista-topo .btn-acao{
+    width:100%;
+  }
+
+  .lista-topo h2{
+    font-size:19px;
+  }
+}
 
 </style>
 </head>
@@ -573,6 +651,9 @@ td{font-size:12px;padding:9px 7px}
     <div class="header-right">
       <button class="top-btn btn-gold" type="button" onclick="abrirEditarTabela()">
         <i class="fa-solid fa-pen-to-square"></i> Editar Tabela
+      </button>
+      <button class="top-btn btn-gold" type="button" onclick="abrirPunicao()">
+        <i class="fa-solid fa-gavel"></i> Nova Punição
       </button>
     </div>
   </div>
@@ -693,7 +774,7 @@ td{font-size:12px;padding:9px 7px}
   </div>
 </section>
 
-<section class="form-panel hidden" id="formPunicao">
+<section class="form-panel hidden" id="formPunicoes">
   <h3 class="bloco-titulo">
     <i class="fa-solid fa-gavel"></i> Punições
   </h3>
@@ -765,20 +846,20 @@ td{font-size:12px;padding:9px 7px}
 <section id="areaListaTabela">
   <div class="lista-topo">
     <div>
-      <h2>Classificação e Punições</h2>
-      <p>Gerencie a tabela, edite times e registre punições.</p>
+      <h2>Tabela e Punições</h2>
+      <p>Gerencie classificação, pontos e histórico de punições.</p>
     </div>
 
     <div class="lista-topo-actions">
       <button class="btn-acao btn-novo" type="button" onclick="abrirEditarTabela()">
         <i class="fa-solid fa-pen-to-square"></i> Editar Tabela
       </button>
-      <button class="btn-acao btn-blue" type="button" onclick="abrirNovaPunicao()">
+
+      <button class="btn-acao btn-blue" type="button" onclick="abrirPunicao()">
         <i class="fa-solid fa-gavel"></i> Nova Punição
       </button>
     </div>
   </div>
-</section>
 
 <section class="list-panel">
   <h3 class="bloco-titulo">
@@ -821,6 +902,7 @@ td{font-size:12px;padding:9px 7px}
     <div class="mensagem-vazia">Nenhuma punição registrada.</div>
   </div>
 </section>
+</section>
 
 </div>
 
@@ -855,6 +937,40 @@ const ids = {
   statusMsg:"statusMsg"
 };
 
+function esconderPaineis(){
+  const editar = document.getElementById("formEditarTabela");
+  const punicoes = document.getElementById("formPunicoes");
+  const lista = document.getElementById("areaListaTabela");
+  if(editar) editar.classList.add("hidden");
+  if(punicoes) punicoes.classList.add("hidden");
+  if(lista) lista.classList.remove("hidden");
+}
+
+window.voltarLista = function(){
+  esconderPaineis();
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.abrirEditarTabela = function(){
+  const editar = document.getElementById("formEditarTabela");
+  const punicoes = document.getElementById("formPunicoes");
+  const lista = document.getElementById("areaListaTabela");
+  if(punicoes) punicoes.classList.add("hidden");
+  if(lista) lista.classList.add("hidden");
+  if(editar) editar.classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.abrirPunicao = function(){
+  const editar = document.getElementById("formEditarTabela");
+  const punicoes = document.getElementById("formPunicoes");
+  const lista = document.getElementById("areaListaTabela");
+  if(editar) editar.classList.add("hidden");
+  if(lista) lista.classList.add("hidden");
+  if(punicoes) punicoes.classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
 function el(id){
   return document.getElementById(id);
 }
@@ -875,33 +991,6 @@ function mostrarStatus(msg,tipo="ok"){
   box.innerText = msg;
   setTimeout(()=>{ box.style.display = "none"; }, 3500);
 }
-
-
-function esconderFormularios(){
-  const edit = document.getElementById("formEditarTabela");
-  const pun = document.getElementById("formPunicao");
-  if(edit) edit.classList.add("hidden");
-  if(pun) pun.classList.add("hidden");
-}
-
-window.voltarLista = function(){
-  esconderFormularios();
-  window.scrollTo({top:0,behavior:"smooth"});
-};
-
-window.abrirEditarTabela = function(){
-  esconderFormularios();
-  const edit = document.getElementById("formEditarTabela");
-  if(edit) edit.classList.remove("hidden");
-  window.scrollTo({top:edit ? edit.offsetTop - 12 : 0,behavior:"smooth"});
-};
-
-window.abrirNovaPunicao = function(){
-  esconderFormularios();
-  const pun = document.getElementById("formPunicao");
-  if(pun) pun.classList.remove("hidden");
-  window.scrollTo({top:pun ? pun.offsetTop - 12 : 0,behavior:"smooth"});
-};
 
 window.voltarPagina = function(){
   if(window.history.length > 1){
@@ -1140,7 +1229,6 @@ window.carregarTabela = async function(){
 };
 
 window.editarLinha = function(id){
-  abrirEditarTabela();
   const t = tabelaCache.find(x=>x.id === id);
   if(!t) return;
 
@@ -1157,7 +1245,7 @@ window.editarLinha = function(id){
   el("editPontosPunicao").value = t.pontosPunicao;
   el("editMotivoPunicao").value = t.motivoPunicao;
 
-  window.scrollTo({top:260,behavior:"smooth"});
+  abrirEditarTabela();
 };
 
 window.limparEdicao = function(){
@@ -1295,7 +1383,6 @@ window.salvarAlteracoesTabela = async function(){
     await aplicarEdicaoTime();
     return;
   }
-  abrirEditarTabela();
   mostrarStatus("Selecione um time na tabela e clique em Editar, ou use Aplicar no Time para salvar.","erro");
 };
 
@@ -1311,7 +1398,6 @@ async function atualizarTudo(){
 }
 
 async function iniciar(){
-  esconderFormularios();
   await carregarCampeonatos();
   await atualizarTudo();
 }
