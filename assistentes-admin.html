@@ -349,6 +349,241 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
   }
   .menu a{flex:0 0 auto}
 }
+
+.hidden{display:none !important}
+
+.lista-topo{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+
+.lista-topo h2{
+  color:var(--gold);
+  font-size:21px;
+  font-weight:900;
+}
+
+.lista-topo p{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:4px;
+}
+
+.btn-novo{
+  background:linear-gradient(135deg,var(--gold),#ffe45c);
+  color:#111;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+}
+
+/* ===== PADRÃO VISUAL CAMPEONATOS ADM ===== */
+:root{
+  --max:1180px;
+}
+
+.wrap.container{
+  max-width:1180px;
+}
+
+.header-title{
+  font-size:21px;
+}
+
+.container{
+  padding:18px 0 28px;
+}
+
+.hero,
+.form-panel{
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
+}
+
+.hero h2{
+  font-size:22px;
+}
+
+.hero p{
+  line-height:1.45;
+  font-size:13px;
+}
+
+.form-title{
+  font-size:18px;
+  margin-bottom:12px;
+}
+
+.form-grid{
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+input,
+select{
+  padding:10px 11px;
+  border-radius:9px;
+  font-size:13px;
+}
+
+.filtros{
+  grid-template-columns:1fr 220px 220px;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+
+.card{
+  padding:12px;
+  border-radius:14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:stretch;
+  gap:10px;
+  min-height:230px;
+  box-shadow:0 7px 18px rgba(0,0,0,.24);
+}
+
+.player{
+  align-items:flex-start;
+  gap:10px;
+}
+
+.photo,
+.preview-foto img{
+  width:64px !important;
+  height:64px !important;
+  object-fit:contain !important;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  padding:0 !important;
+  flex-shrink:0;
+  filter:
+    drop-shadow(0 0 8px rgba(247,198,0,.30))
+    drop-shadow(0 8px 18px rgba(0,0,0,.45));
+}
+
+.player-info{
+  gap:4px;
+}
+
+.nome-jogador{
+  font-size:15px;
+}
+
+.player-info small{
+  font-size:11.5px;
+  line-height:1.35;
+}
+
+.tag{
+  padding:4px 7px;
+  font-size:11px;
+}
+
+.actions{
+  justify-content:flex-start;
+  margin-top:auto;
+}
+
+.actions .btn-acao{
+  flex:1;
+  min-width:86px;
+}
+
+.btn-acao{
+  padding:9px 10px;
+  border-radius:9px;
+  font-size:12px;
+}
+
+@media(max-width:1100px){
+  .lista-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:900px){
+  .form-grid,
+  .filtros{
+    grid-template-columns:1fr;
+  }
+
+  .card{
+    align-items:stretch;
+  }
+
+  .actions{
+    width:100%;
+  }
+}
+
+@media(max-width:600px){
+  .wrap{
+    width:min(100% - 18px,var(--max));
+  }
+
+  .lista-grid{
+    grid-template-columns:1fr;
+  }
+
+  .hero,
+  .form-panel{
+    padding:14px;
+    border-radius:14px;
+  }
+
+  .hero h2{
+    font-size:20px;
+  }
+
+  .lista-topo{
+    align-items:stretch;
+  }
+
+  .lista-topo h2{
+    font-size:19px;
+  }
+
+  .lista-topo .btn-acao{
+    width:100%;
+  }
+
+  .card{
+    min-height:auto;
+    padding:11px;
+  }
+
+  .photo,
+  .preview-foto img{
+    width:56px !important;
+    height:56px !important;
+  }
+
+  .actions{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:6px;
+    width:100%;
+  }
+
+  .actions .btn-acao{
+    width:100%;
+    font-size:11px;
+    padding:8px 5px;
+  }
+}
+
 </style>
 </head>
 
@@ -369,8 +604,8 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
     <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
     <div class="header-right">
-      <button class="top-btn btn-gold" type="button" onclick="salvarAssistente()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Assistente
+      <button class="top-btn btn-gold" type="button" onclick="abrirFormularioNovo()">
+        <i class="fa-solid fa-plus"></i> Novo Assistente
       </button>
     </div>
   </div>
@@ -399,7 +634,7 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
     <p>Cadastre assistentes com foto, telefone, WhatsApp, e-mail e função principal. Na escala, qualquer cadastrado poderá atuar como árbitro central, assistente ou 4º árbitro.</p>
   </div>
 
-  <section class="form-panel">
+  <section class="form-panel hidden" id="formAssistente">
     <div class="form-title" id="tituloFormulario">Novo Assistente</div>
 
     <input type="hidden" id="assistenteId">
@@ -473,15 +708,31 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
     </div>
 
     <div class="form-actions">
-      <button class="btn-acao btn-ver" type="button" onclick="salvarAssistente()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Assistente
+      <button class="btn-acao btn-ver" type="button" onclick="abrirFormularioNovo()">
+        <i class="fa-solid fa-plus"></i> Novo Assistente
       </button>
 
       <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
         <i class="fa-solid fa-broom"></i> Limpar
       </button>
+
+      <button class="btn-acao btn-blue" type="button" onclick="voltarLista()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
     </div>
   </section>
+
+  <section id="areaListaAssistentes">
+    <div class="lista-topo">
+      <div>
+        <h2>Assistentes cadastrados</h2>
+        <p>Gerencie, edite ou crie novos assistentes.</p>
+      </div>
+
+      <button class="btn-acao btn-novo" type="button" onclick="abrirFormularioNovo()">
+        <i class="fa-solid fa-plus"></i> Novo Assistente
+      </button>
+    </div>
 
   <div class="filtros">
     <input id="buscaAssistente" placeholder="Pesquisar assistente...">
@@ -502,6 +753,7 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
   </div>
 
   <div class="lista-grid" id="listaAssistentes"></div>
+  </section>
 
 </div>
 
@@ -520,6 +772,29 @@ import {
 
 let assistentesCache = [];
 let fotoAtual = "";
+
+function mostrarFormulario(){
+  document.getElementById("formAssistente").classList.remove("hidden");
+  document.getElementById("areaListaAssistentes").classList.add("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function mostrarLista(){
+  document.getElementById("formAssistente").classList.add("hidden");
+  document.getElementById("areaListaAssistentes").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+window.abrirFormularioNovo = function(){
+  limparFormulario();
+  document.getElementById("tituloFormulario").textContent = "Novo Assistente";
+  mostrarFormulario();
+};
+
+window.voltarLista = function(){
+  limparFormulario();
+  mostrarLista();
+};
 
 function txt(v){
   return String(v || "").trim();
@@ -677,6 +952,7 @@ window.salvarAssistente = async function(){
 
   limparFormulario();
   await carregarAssistentes();
+  mostrarLista();
 };
 
 window.editarAssistente = function(id){
@@ -704,7 +980,7 @@ window.editarAssistente = function(id){
     document.getElementById("previewFotoTexto").textContent = "Foto atual";
   }
 
-  window.scrollTo({top:0,behavior:"smooth"});
+  mostrarFormulario();
 };
 
 window.excluirAssistente = async function(id){
