@@ -1385,73 +1385,81 @@ window.previewLogoArquivo = function(){
   leitor.readAsDataURL(arquivo);
 };
 
-function arquivoParaBase64(arquivo,max=700,qualidade=.76){
-  return new Promise((resolve,reject)=>{
-    if(!arquivo){
-      resolve("");
-      return;
-    }
+const IMGBB_KEYS = [
+  "9556c62fd6864f3e1e33d9fd4431668c",
+  "131039e973092d592a956f02461367ff",
+  "646f0f2df72bd046cbc81450603913e2"
+];
 
+function ehBase64Imagem(valor){
+  return String(valor || "").startsWith("data:image/");
+}
+
+function imagemSegura(valor){
+  const v = txt(valor);
+  if(!v || ehBase64Imagem(v)) return "logo-liga.jfif";
+  return v;
+}
+
+function arquivoParaPreview(arquivo){
+  return new Promise((resolve,reject)=>{
+    if(!arquivo){ resolve(""); return; }
     if(!arquivo.type || !arquivo.type.startsWith("image/")){
       reject(new Error("O arquivo precisa ser uma imagem."));
       return;
     }
-
     const leitor = new FileReader();
-
-    leitor.onload = function(e){
-      const img = new Image();
-
-      img.onload = function(){
-        let largura = img.width;
-        let altura = img.height;
-
-        if(largura > altura && largura > max){
-          altura = Math.round((altura * max) / largura);
-          largura = max;
-        }else if(altura >= largura && altura > max){
-          largura = Math.round((largura * max) / altura);
-          altura = max;
-        }
-
-        const canvas = document.createElement("canvas");
-        canvas.width = largura;
-        canvas.height = altura;
-
-        const ctx = canvas.getContext("2d");
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0,0,largura,altura);
-        ctx.drawImage(img,0,0,largura,altura);
-
-        resolve(canvas.toDataURL("image/jpeg",qualidade));
-      };
-
-      img.onerror = function(){
-        reject(new Error("Não foi possível ler a imagem."));
-      };
-
-      img.src = e.target.result;
-    };
-
-    leitor.onerror = function(){
-      reject(new Error("Erro ao carregar a imagem."));
-    };
-
+    leitor.onload = e=>resolve(e.target.result);
+    leitor.onerror = ()=>reject(new Error("Erro ao carregar a imagem."));
     leitor.readAsDataURL(arquivo);
   });
 }
 
-async function uploadLogoSeExistir(){
-  const arquivo = document.getElementById("logoArquivo").files[0];
-  const logoUrlManual = txt(document.getElementById("logo").value);
-
-  if(arquivo){
-    return await arquivoParaBase64(arquivo,520,.74);
+async function uploadImagemImgBB(arquivo){
+  if(!arquivo) return "";
+  if(!arquivo.type || !arquivo.type.startsWith("image/")){
+    throw new Error("O arquivo precisa ser uma imagem.");
   }
 
-  if(logoUrlManual) return logoUrlManual;
+  let ultimoErro = null;
 
-  return logoAtual || "logo-liga.jfif";
+  for(const key of IMGBB_KEYS){
+    try{
+      const form = new FormData();
+      form.append("image", arquivo);
+      form.append("name", `${Date.now()}-${arquivo.name || "imagem"}`);
+
+      const resp = await fetch(`https://api.imgbb.com/1/upload?key=${key}`,{
+        method:"POST",
+        body:form
+      });
+
+      const json = await resp.json();
+
+      if(resp.ok && json?.success){
+        return json.data?.display_url || json.data?.url || json.data?.image?.url || "";
+      }
+
+      ultimoErro = json?.error?.message || "Erro ao enviar imagem para o ImgBB.";
+    }catch(e){
+      ultimoErro = e?.message || e;
+    }
+  }
+
+  throw new Error("Erro ao enviar imagem para o ImgBB: " + (ultimoErro || "verifique sua chave/API."));
+}
+
+async function urlImagemManualOuUpload(inputArquivoId,inputUrlId,atual=""){
+  const arquivo = document.getElementById(inputArquivoId)?.files?.[0];
+  const urlManual = txt(document.getElementById(inputUrlId)?.value);
+
+  if(arquivo) return await uploadImagemImgBB(arquivo);
+  if(urlManual) return imagemSegura(urlManual);
+  return imagemSegura(atual) || "logo-liga.jfif";
+}
+
+async function uploadLogoSeExistir(){
+  return await urlImagemManualOuUpload("logoArquivo","logo",logoAtual);
 }
 
 function padraoModelo(){ return ""; }
@@ -1492,14 +1500,10 @@ window.previewFotoUniforme = function(){
     return;
   }
 
-  const leitor = new FileReader();
-
-  leitor.onload = function(e){
-    uniformeFotoTemp = e.target.result;
+  arquivoParaPreview(arquivo).then(url=>{
+    uniformeFotoTemp = url;
     atualizarPreviewUniforme();
-  };
-
-  leitor.readAsDataURL(arquivo);
+  }).catch(e=>alert(e.message || e));
 };
 
 
@@ -1575,7 +1579,7 @@ function renderizarUniformes(){
     <div class="uniforme-chip" onclick="editarUniforme(${i})">
       ${
         u.foto
-        ? `<img class="uniforme-chip-img" src="${u.foto}" onerror="this.style.display='none'">`
+        ? `<img class="uniforme-chip-img" src="${imagemSegura(u.foto)}" onerror="this.style.display='none'">`
         : `<div class="uniforme-chip-img" style="display:flex;align-items:center;justify-content:center;gap:6px;">
              <span class="cor-bolinha" style="background:${u.cor1 || "#f7c600"}"></span>
              <span class="cor-bolinha" style="background:${u.cor2 || "#111111"}"></span>
@@ -1633,6 +1637,23 @@ function podeEditarTime(t){
          String(t.tecnicoEmail || t.emailTecnico || "") === String(email);
 }
 
+
+async function prepararUniformesParaSalvar(){
+  const arquivoAtual = document.getElementById("uniformeFotoArquivo")?.files?.[0];
+  if(arquivoAtual && uniformeFotoTemp && ehBase64Imagem(uniformeFotoTemp)){
+    uniformeFotoTemp = await uploadImagemImgBB(arquivoAtual);
+    atualizarPreviewUniforme();
+  }
+
+  const enviados = [];
+  for(const u of uniformesTemp){
+    enviados.push({
+      ...u,
+      foto:imagemSegura(u.foto)
+    });
+  }
+  return enviados;
+}
 window.salvarTime = async function(){
   const botoesSalvar = document.querySelectorAll('button[onclick="salvarTime()"]');
 
@@ -1682,6 +1703,7 @@ window.salvarTime = async function(){
     // Uniforme é opcional na criação/edição do time.
 
     const logo = await uploadLogoSeExistir();
+    const uniformesSalvos = await prepararUniformesParaSalvar();
 
     const dados = {
       nome,
@@ -1707,7 +1729,7 @@ window.salvarTime = async function(){
         facebook,
         youtube
       },
-      uniformes:uniformesTemp,
+      uniformes:uniformesSalvos,
       tecnicoId:id ? (timesCache.find(t=>t.id === id)?.tecnicoId || usuarioId()) : usuarioId(),
       tecnicoNome:id ? (timesCache.find(t=>t.id === id)?.tecnicoNome || usuarioNome()) : usuarioNome(),
       tecnicoEmail:id ? (timesCache.find(t=>t.id === id)?.tecnicoEmail || usuarioLogado?.email || "") : (usuarioLogado?.email || ""),
@@ -1786,7 +1808,7 @@ window.editarTime = function(id){
 
   if(logoAtual){
     document.getElementById("previewLogoBox").style.display = "flex";
-    document.getElementById("previewLogoImg").src = logoAtual;
+    document.getElementById("previewLogoImg").src = imagemSegura(logoAtual);
     document.getElementById("previewLogoTexto").textContent = "Escudo atual";
   }
 
@@ -1909,7 +1931,7 @@ function renderizarTimes(){
       <div class="card">
         <div class="player">
           <img
-            src="${t.logo || t.escudo || "logo-liga.jfif"}"
+            src="${imagemSegura(t.logo || t.escudo)}"
             class="photo"
             onerror="this.src='logo-liga.jfif'"
           >
@@ -2004,8 +2026,8 @@ window.salvarJogador = async function(){
 
     mostrarStatusJogador("info","Salvando jogador...");
 
-    const foto = fotoArquivo ? await arquivoParaBase64(fotoArquivo,520,.72) : "";
-    const fotoIdentidade = identidadeArquivo ? await arquivoParaBase64(identidadeArquivo,900,.74) : "";
+    const foto = fotoArquivo ? await uploadImagemImgBB(fotoArquivo) : "";
+    const fotoIdentidade = identidadeArquivo ? await uploadImagemImgBB(identidadeArquivo) : "";
 
     const dados = {
       nome,
@@ -2133,7 +2155,7 @@ function renderizarJogadores(){
 
   box.innerHTML = lista.map(j=>`
     <div class="jogador-card">
-      <img src="${j.foto || "logo-liga.jfif"}" onerror="this.src='logo-liga.jfif'">
+      <img src="${imagemSegura(j.foto)}" onerror="this.src='logo-liga.jfif'">
 
       <div>
         <h4>${j.nome || j.nomeCompleto || "-"}</h4>
