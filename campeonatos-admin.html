@@ -478,6 +478,16 @@ input:focus,select:focus,textarea:focus{
   border-radius:12px;
   padding:10px;
 }
+.grupo-topo{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:8px;
+}
+.grupo-topo input{
+  font-weight:900;
+  color:#111;
+}
 .grupo-box h3{
   color:var(--gold);
   font-size:14px;
@@ -490,6 +500,13 @@ input:focus,select:focus,textarea:focus{
   margin-top:6px;
   line-height:1.35;
 }
+.manual-box{
+  background:rgba(8,23,44,.45);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  padding:10px;
+}
+.manual-box textarea{min-height:120px}
 @media(max-width:900px){
   .grupos-config{grid-template-columns:1fr}
 }
@@ -605,25 +622,6 @@ input:focus,select:focus,textarea:focus{
       </div>
 
       <div>
-        <label>Quantidade de grupos</label>
-        <input id="quantidadeGrupos" type="number" min="1" value="2">
-      </div>
-
-      <div>
-        <label>Classificados por grupo</label>
-        <input id="classificadosPorGrupo" type="number" min="1" value="2">
-      </div>
-
-      <div>
-        <label>Tipo da fase final</label>
-        <select id="tipoFaseFinal">
-          <option value="semifinal-final">Semifinal + Final</option>
-          <option value="final-direta">Final direta</option>
-          <option value="mata-mata">Mata-mata</option>
-        </select>
-      </div>
-
-      <div>
         <label>Zerar cartões em</label>
         <select id="zerarCartoesEm">
           <option value="nunca">Nunca</option>
@@ -678,45 +676,64 @@ input:focus,select:focus,textarea:focus{
       </div>
 
       <div class="full">
-        <label>Configuração dos grupos</label>
+        <label>Configuração manual do campeonato</label>
+
+        <div class="form-grid" style="margin-bottom:10px">
+          <div>
+            <label>Total de times</label>
+            <input id="quantidadeTimes" type="number" min="0" placeholder="Ex: 20">
+          </div>
+
+          <div>
+            <label>Quantidade de grupos</label>
+            <input id="quantidadeGrupos" type="number" min="0" value="0" onchange="gerarGruposManuais()">
+          </div>
+
+          <div>
+            <label>Classificados por grupo</label>
+            <input id="classificadosPorGrupo" type="number" min="0" value="0">
+          </div>
+
+          <div>
+            <label>Tipo da fase final</label>
+            <select id="tipoFaseFinal">
+              <option value="nenhuma">Sem fase final</option>
+              <option value="final-direta">Final direta</option>
+              <option value="semifinal-final">Semifinal + Final</option>
+              <option value="mata-mata">Mata-mata</option>
+              <option value="personalizada">Personalizada</option>
+            </select>
+          </div>
+
+          <div class="full">
+            <div class="helper">Use do jeito que quiser: pontos corridos com todos os times na lista abaixo, ou fase de grupos criando quantos grupos precisar.</div>
+          </div>
+        </div>
+
+        <div class="manual-box" style="margin-bottom:10px">
+          <label>Times participantes / pontos corridos</label>
+          <textarea id="timesParticipantes" placeholder="Um time por linha. Use aqui quando for pontos corridos ou lista geral do campeonato."></textarea>
+          <div class="helper">Para pontos corridos, coloque todos os times aqui. Para grupos, você pode usar apenas os grupos abaixo.</div>
+        </div>
+
         <div class="form-actions" style="margin:0 0 10px">
-          <button class="btn-acao btn-blue" type="button" onclick="aplicarConfigPadraoElite()">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Usar modelo Elite de Base
+          <button class="btn-acao btn-blue" type="button" onclick="adicionarGrupoManual()">
+            <i class="fa-solid fa-plus"></i> Adicionar grupo
           </button>
           <button class="btn-acao btn-danger" type="button" onclick="limparConfiguracaoGrupos()">
-            <i class="fa-solid fa-broom"></i> Limpar grupos
+            <i class="fa-solid fa-broom"></i> Limpar configuração
           </button>
         </div>
-        <div class="grupos-config">
-          <div class="grupo-box">
-            <h3>SUB 17 — Grupo A</h3>
-            <textarea id="sub17GrupoA" placeholder="Um time por linha"></textarea>
-            <div class="helper">Digite os times do Grupo A para esta categoria.</div>
-          </div>
 
-          <div class="grupo-box">
-            <h3>SUB 17 — Grupo B</h3>
-            <textarea id="sub17GrupoB" placeholder="Um time por linha"></textarea>
-            <div class="helper">Digite os times do Grupo B para esta categoria.</div>
-          </div>
-
-          <div class="grupo-box">
-            <h3>SUB 20 — Grupo A</h3>
-            <textarea id="sub20GrupoA" placeholder="Um time por linha"></textarea>
-            <div class="helper">Digite os times do Grupo A para esta categoria.</div>
-          </div>
-
-          <div class="grupo-box">
-            <h3>SUB 20 — Grupo B</h3>
-            <textarea id="sub20GrupoB" placeholder="Um time por linha"></textarea>
-            <div class="helper">Digite os times do Grupo B para esta categoria.</div>
-          </div>
-        </div>
+        <div class="grupos-config" id="gruposManuais"></div>
       </div>
 
       <div class="full">
-        <label>Cruzamento automático da fase final</label>
-        <textarea id="cruzamentosFaseFinal" placeholder="Ex: 1º Grupo A x 2º Grupo B"></textarea>
+        <label>Cruzamentos / fase final manual</label>
+        <textarea id="cruzamentosFaseFinal" placeholder="Ex: 1º Grupo A x 2º Grupo B
+1º Grupo B x 2º Grupo A
+Final: vencedor 1 x vencedor 2"></textarea>
+        <div class="helper">Opcional. Digite os cruzamentos como quiser. O sistema salva junto com o campeonato.</div>
       </div>
 
       <div class="full">
@@ -822,96 +839,123 @@ function normalizarTexto(texto){
 }
 
 function linhasTextarea(id){
-  return document.getElementById(id).value
+  const el = document.getElementById(id);
+  if(!el) return [];
+  return el.value
     .split("\n")
     .map(t=>txt(t))
     .filter(Boolean);
 }
 
 function preencherTextarea(id, lista){
-  document.getElementById(id).value = Array.isArray(lista) ? lista.join("\n") : "";
+  const el = document.getElementById(id);
+  if(el) el.value = Array.isArray(lista) ? lista.join("\n") : "";
 }
 
-function configuracaoEliteBasePadrao(){
-  return {
-    quantidadeGrupos:2,
-    classificadosPorGrupo:2,
-    tipoFaseFinal:"semifinal-final",
-    criterioClassificacao:["PTS","V","SG","GP","GC"],
-    tabelaCampos:["PTS","J","V","E","D","GP","GC","SG"],
-    categorias:{
-      "Sub-17":{
-        grupos:{
-          "Grupo A":["AE Independência","Campineira","AD Taquaral","CAP Salesiano"],
-          "Grupo B":["Deportivo Capital","Santos","Atletas de Jesus","Abadia"]
-        }
-      },
-      "Sub-20":{
-        grupos:{
-          "Grupo A":["AE Independência","Campineira","AD Taquaral","CAP Salesiano"],
-          "Grupo B":["Deportivo Capital","Santos","Monte Cristo","Abadia"]
-        }
-      }
-    },
-    cruzamentosFaseFinal:[
-      "1º Grupo A x 2º Grupo B",
-      "1º Grupo B x 2º Grupo A",
-      "Vencedores fazem a final"
-    ],
-    observacao:"Fase de grupos: todos contra todos dentro do grupo. Classificam os 2 primeiros de cada grupo."
-  };
+function nomeGrupoPadrao(indice){
+  const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  return "Grupo " + (letras[indice] || (indice + 1));
 }
 
-function aplicarConfigPadraoElite(){
-  const cfg = configuracaoEliteBasePadrao();
-  document.getElementById("quantidadeGrupos").value = cfg.quantidadeGrupos;
-  document.getElementById("classificadosPorGrupo").value = cfg.classificadosPorGrupo;
-  document.getElementById("tipoFaseFinal").value = cfg.tipoFaseFinal;
-  preencherTextarea("sub17GrupoA",cfg.categorias["Sub-17"].grupos["Grupo A"]);
-  preencherTextarea("sub17GrupoB",cfg.categorias["Sub-17"].grupos["Grupo B"]);
-  preencherTextarea("sub20GrupoA",cfg.categorias["Sub-20"].grupos["Grupo A"]);
-  preencherTextarea("sub20GrupoB",cfg.categorias["Sub-20"].grupos["Grupo B"]);
-  document.getElementById("cruzamentosFaseFinal").value = cfg.cruzamentosFaseFinal.join("\n");
-  marcarCategorias(["Sub-17","Sub-20"]);
+function grupoBoxHTML(grupo = {}, indice = 0){
+  const nome = grupo.nome || nomeGrupoPadrao(indice);
+  const times = Array.isArray(grupo.times) ? grupo.times.join("\n") : "";
+
+  return `
+    <div class="grupo-box" data-grupo-index="${indice}">
+      <div class="grupo-topo">
+        <input class="grupo-nome" value="${nome.replace(/"/g,"&quot;")}" placeholder="Nome do grupo">
+        <button class="btn-acao btn-danger" type="button" onclick="removerGrupoManual(${indice})" title="Remover grupo">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+      <textarea class="grupo-times" placeholder="Um time por linha">${times}</textarea>
+      <div class="helper">Digite manualmente quais times ficam neste grupo.</div>
+    </div>
+  `;
 }
 
-window.aplicarConfigPadraoElite = aplicarConfigPadraoElite;
+function gruposAtuaisDaTela(){
+  return Array.from(document.querySelectorAll("#gruposManuais .grupo-box")).map((box,idx)=>({
+    nome:txt(box.querySelector(".grupo-nome")?.value) || nomeGrupoPadrao(idx),
+    times:(box.querySelector(".grupo-times")?.value || "")
+      .split("\n")
+      .map(t=>txt(t))
+      .filter(Boolean)
+  }));
+}
+
+function renderizarGruposManuais(grupos = []){
+  const area = document.getElementById("gruposManuais");
+  if(!area) return;
+  area.innerHTML = grupos.map((g,i)=>grupoBoxHTML(g,i)).join("");
+  document.getElementById("quantidadeGrupos").value = grupos.length || 0;
+}
+
+window.adicionarGrupoManual = function(){
+  const grupos = gruposAtuaisDaTela();
+  grupos.push({nome:nomeGrupoPadrao(grupos.length),times:[]});
+  renderizarGruposManuais(grupos);
+};
+
+window.removerGrupoManual = function(indice){
+  const grupos = gruposAtuaisDaTela();
+  grupos.splice(indice,1);
+  renderizarGruposManuais(grupos);
+};
+
+window.gerarGruposManuais = function(){
+  const qtd = Number(document.getElementById("quantidadeGrupos").value || 0);
+  const grupos = gruposAtuaisDaTela();
+  while(grupos.length < qtd){
+    grupos.push({nome:nomeGrupoPadrao(grupos.length),times:[]});
+  }
+  if(grupos.length > qtd){
+    grupos.length = qtd;
+  }
+  renderizarGruposManuais(grupos);
+};
 
 window.limparConfiguracaoGrupos = function(){
-  document.getElementById("quantidadeGrupos").value = 2;
-  document.getElementById("classificadosPorGrupo").value = 2;
-  document.getElementById("tipoFaseFinal").value = "semifinal-final";
-  preencherTextarea("sub17GrupoA",[]);
-  preencherTextarea("sub17GrupoB",[]);
-  preencherTextarea("sub20GrupoA",[]);
-  preencherTextarea("sub20GrupoB",[]);
-  document.getElementById("cruzamentosFaseFinal").value = "1º Grupo A x 2º Grupo B\n1º Grupo B x 2º Grupo A";
+  document.getElementById("quantidadeTimes").value = "";
+  document.getElementById("quantidadeGrupos").value = 0;
+  document.getElementById("classificadosPorGrupo").value = 0;
+  document.getElementById("tipoFaseFinal").value = "nenhuma";
+  document.getElementById("timesParticipantes").value = "";
+  document.getElementById("cruzamentosFaseFinal").value = "";
+  renderizarGruposManuais([]);
 };
 
 function lerConfiguracaoGrupos(){
+  const grupos = gruposAtuaisDaTela();
+  const timesParticipantes = linhasTextarea("timesParticipantes");
+
   return {
-    quantidadeGrupos:Number(document.getElementById("quantidadeGrupos").value || 2),
-    classificadosPorGrupo:Number(document.getElementById("classificadosPorGrupo").value || 2),
-    tipoFaseFinal:document.getElementById("tipoFaseFinal").value || "semifinal-final",
+    quantidadeTimes:Number(document.getElementById("quantidadeTimes").value || timesParticipantes.length || 0),
+    quantidadeGrupos:grupos.length,
+    classificadosPorGrupo:Number(document.getElementById("classificadosPorGrupo").value || 0),
+    tipoFaseFinal:document.getElementById("tipoFaseFinal").value || "nenhuma",
     criterioClassificacao:["PTS","V","SG","GP","GC"],
     tabelaCampos:["PTS","J","V","E","D","GP","GC","SG"],
-    categorias:{
-      "Sub-17":{grupos:{"Grupo A":linhasTextarea("sub17GrupoA"),"Grupo B":linhasTextarea("sub17GrupoB")}},
-      "Sub-20":{grupos:{"Grupo A":linhasTextarea("sub20GrupoA"),"Grupo B":linhasTextarea("sub20GrupoB")}}
-    },
+    timesParticipantes,
+    grupos,
     cruzamentosFaseFinal:linhasTextarea("cruzamentosFaseFinal")
   };
 }
 
 function preencherConfiguracaoGrupos(cfg){
-  if(!cfg){ window.limparConfiguracaoGrupos(); return; }
-  document.getElementById("quantidadeGrupos").value = cfg.quantidadeGrupos || 2;
-  document.getElementById("classificadosPorGrupo").value = cfg.classificadosPorGrupo || 2;
-  document.getElementById("tipoFaseFinal").value = cfg.tipoFaseFinal || "semifinal-final";
-  preencherTextarea("sub17GrupoA",cfg.categorias?.["Sub-17"]?.grupos?.["Grupo A"] || []);
-  preencherTextarea("sub17GrupoB",cfg.categorias?.["Sub-17"]?.grupos?.["Grupo B"] || []);
-  preencherTextarea("sub20GrupoA",cfg.categorias?.["Sub-20"]?.grupos?.["Grupo A"] || []);
-  preencherTextarea("sub20GrupoB",cfg.categorias?.["Sub-20"]?.grupos?.["Grupo B"] || []);
+  if(!cfg){
+    window.limparConfiguracaoGrupos();
+    return;
+  }
+
+  const grupos = Array.isArray(cfg.grupos) ? cfg.grupos : [];
+  document.getElementById("quantidadeTimes").value = cfg.quantidadeTimes || (Array.isArray(cfg.timesParticipantes) ? cfg.timesParticipantes.length : 0) || "";
+  document.getElementById("quantidadeGrupos").value = cfg.quantidadeGrupos ?? grupos.length ?? 0;
+  document.getElementById("classificadosPorGrupo").value = cfg.classificadosPorGrupo || 0;
+  document.getElementById("tipoFaseFinal").value = cfg.tipoFaseFinal || "nenhuma";
+  preencherTextarea("timesParticipantes",cfg.timesParticipantes || []);
+  renderizarGruposManuais(grupos);
   document.getElementById("cruzamentosFaseFinal").value = Array.isArray(cfg.cruzamentosFaseFinal) ? cfg.cruzamentosFaseFinal.join("\n") : "";
 }
 
@@ -1113,11 +1157,13 @@ window.salvarCampeonato = async function(){
       logo,
       logoCampeonato:logo,
       categorias,
+      quantidadeTimes:configuracaoGrupos.quantidadeTimes,
       quantidadeGrupos:configuracaoGrupos.quantidadeGrupos,
       classificadosPorGrupo:configuracaoGrupos.classificadosPorGrupo,
       tipoFaseFinal:configuracaoGrupos.tipoFaseFinal,
+      timesParticipantes:configuracaoGrupos.timesParticipantes,
       configuracaoGrupos,
-      grupos:configuracaoGrupos.categorias,
+      grupos:configuracaoGrupos.grupos,
       cruzamentosFaseFinal:configuracaoGrupos.cruzamentosFaseFinal,
       publicado:status === "publicado",
       publico:status === "publicado",
@@ -1199,10 +1245,12 @@ window.editarCampeonato = function(id){
 
   marcarCategorias(Array.isArray(c.categorias) ? c.categorias : []);
   preencherConfiguracaoGrupos(c.configuracaoGrupos || {
+    quantidadeTimes:c.quantidadeTimes,
     quantidadeGrupos:c.quantidadeGrupos,
     classificadosPorGrupo:c.classificadosPorGrupo,
     tipoFaseFinal:c.tipoFaseFinal,
-    categorias:c.grupos,
+    timesParticipantes:c.timesParticipantes,
+    grupos:Array.isArray(c.grupos) ? c.grupos : [],
     cruzamentosFaseFinal:c.cruzamentosFaseFinal
   });
   mostrarFormulario();
@@ -1275,7 +1323,8 @@ function renderizarCampeonatos(){
             <small>Formato: ${c.formato || "-"}</small>
             <small>Turno: ${c.turno || "-"}</small>
             <small>Fase final: ${c.faseFinalInicio || "-"}</small>
-            <small>Grupos: ${c.quantidadeGrupos || c.configuracaoGrupos?.quantidadeGrupos || 2} | Classificados: ${c.classificadosPorGrupo || c.configuracaoGrupos?.classificadosPorGrupo || 2}</small>
+            <small>Times: ${c.quantidadeTimes || c.configuracaoGrupos?.quantidadeTimes || 0} | Grupos: ${c.quantidadeGrupos || c.configuracaoGrupos?.quantidadeGrupos || 0}</small>
+            <small>Classificados/grupo: ${c.classificadosPorGrupo || c.configuracaoGrupos?.classificadosPorGrupo || 0} | Final: ${c.tipoFaseFinal || c.configuracaoGrupos?.tipoFaseFinal || "nenhuma"}</small>
 
             <small>
               Jogos: ${Number(c.estatisticas?.jogos || 0)} |
@@ -1316,7 +1365,7 @@ document.getElementById("buscaCampeonato").addEventListener("input",renderizarCa
 document.getElementById("filtroStatus").addEventListener("change",renderizarCampeonatos);
 
 montarCategorias();
-aplicarConfigPadraoElite();
+window.limparConfiguracaoGrupos();
 carregarCampeonatos();
 </script>
 
