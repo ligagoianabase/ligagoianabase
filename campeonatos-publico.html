@@ -172,6 +172,17 @@ img{
   background:#1a3f73;
   color:#fff;
 }
+
+.btn-gold{
+  background:var(--gold);
+  color:#111;
+}
+
+.btn-blue{
+  background:#1a3f73;
+  color:#fff;
+}
+
 /* GRID PRINCIPAL */
 .grid{
   display:grid;
@@ -778,6 +789,20 @@ function nomeCamp(c){
   return val(c, ["nome", "campeonato", "titulo"], "");
 }
 
+function logoValida(url){
+  const u = String(url || "").trim();
+  if(!u) return "";
+
+  // Não usa mais Base64 no site público. Logo precisa ser URL/arquivo leve.
+  if(u.startsWith("data:image/")) return "";
+
+  return u;
+}
+
+function logoCampeonatoUrl(c){
+  return logoValida(c?.logoCampeonato) || logoValida(c?.logo) || "logo-liga.jfif";
+}
+
 function idCamp(c){
   return val(c, ["id", "campeonatoId"], "");
 }
@@ -1007,7 +1032,8 @@ function logoTime(j, lado){
   const keys = lado === "A" ? keysA : keysB;
 
   for(const k of keys){
-    if(j && j[k]) return j[k];
+    const logo = logoValida(j && j[k]);
+    if(logo) return logo;
   }
 
   return "logo-liga.jfif";
@@ -1152,7 +1178,7 @@ function preencherTela(){
 
   document.title = `${nome || "Campeonato"} - LIGA GOIANA DE FUTEBOL DE BASE`;
 
-  document.getElementById("logoCampeonato").src = campeonato.logo || "logo-liga.jfif";
+  document.getElementById("logoCampeonato").src = logoCampeonatoUrl(campeonato);
   document.getElementById("logoCampeonato").onerror = function(){ this.src = "logo-liga.jfif"; };
 
   document.getElementById("nomeCampeonato").textContent = nome || "Campeonato";
