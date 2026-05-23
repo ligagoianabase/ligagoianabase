@@ -536,20 +536,8 @@ td{font-size:12px;padding:9px 7px}
   .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
 }
 
-
 /* ===== FLUXO PADRÃO CAMPEONATOS ADM ===== */
 .hidden{display:none !important}
-
-.header-inner{
-  min-height:72px;
-  padding:14px 0;
-}
-
-.header-title{
-  font-size:21px;
-  font-weight:700;
-  text-transform:none;
-}
 
 .lista-topo{
   display:flex;
@@ -592,22 +580,13 @@ td{font-size:12px;padding:9px 7px}
   white-space:nowrap;
 }
 
+.btn-ver{background:var(--gold);color:#111}
+.btn-danger{background:#d94141;color:#fff}
+.btn-blue{background:#1a3f73;color:#fff}
 .btn-novo{
   background:linear-gradient(135deg,var(--gold),#ffe45c);
   color:#111;
   box-shadow:0 8px 20px rgba(0,0,0,.22);
-}
-
-.btn-ver{background:var(--gold);color:black}
-.btn-danger{background:#d94141;color:#fff}
-.btn-blue{background:#1a3f73;color:#fff}
-
-#areaListaTabela{
-  width:100%;
-}
-
-.form-panel.hidden{
-  display:none !important;
 }
 
 @media(max-width:600px){
@@ -618,10 +597,6 @@ td{font-size:12px;padding:9px 7px}
   .lista-topo-actions,
   .lista-topo .btn-acao{
     width:100%;
-  }
-
-  .lista-topo h2{
-    font-size:19px;
   }
 }
 
@@ -649,11 +624,8 @@ td{font-size:12px;padding:9px 7px}
     <div class="header-title">Tabelas ADM</div>
 
     <div class="header-right">
-      <button class="top-btn btn-gold" type="button" onclick="abrirEditarTabela()">
-        <i class="fa-solid fa-pen-to-square"></i> Editar Tabela
-      </button>
-      <button class="top-btn btn-gold" type="button" onclick="abrirPunicao()">
-        <i class="fa-solid fa-gavel"></i> Nova Punição
+      <button class="top-btn btn-gold" type="button" onclick="salvarAlteracoesTabela()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Tabela
       </button>
     </div>
   </div>
@@ -670,7 +642,7 @@ td{font-size:12px;padding:9px 7px}
   <div id="statusMsg" class="status-mini"></div>
 </section>
 
-<section class="form-panel">
+<section class="form-panel" id="formSelecaoTabela">
   <h3 class="bloco-titulo">
     <i class="fa-solid fa-filter"></i> Seleção da Tabela
   </h3>
@@ -692,7 +664,26 @@ td{font-size:12px;padding:9px 7px}
   </div>
 </section>
 
-<section class="form-panel hidden" id="formEditarTabela">
+<section id="areaAcoesTabela">
+  <div class="lista-topo">
+    <div>
+      <h2>Tabela e punições</h2>
+      <p>Use os botões para abrir edição ou registrar punição.</p>
+    </div>
+
+    <div class="lista-topo-actions">
+      <button class="btn-acao btn-novo" type="button" onclick="abrirEdicaoTabela()">
+        <i class="fa-solid fa-pen-to-square"></i> Editar Tabela
+      </button>
+
+      <button class="btn-acao btn-blue" type="button" onclick="abrirPunicao()">
+        <i class="fa-solid fa-gavel"></i> Nova Punição
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="form-panel hidden" id="formEdicaoTabela">
   <h3 class="bloco-titulo">
     <i class="fa-solid fa-pen-to-square"></i> Editar Dados da Tabela
   </h3>
@@ -843,24 +834,6 @@ td{font-size:12px;padding:9px 7px}
   </div>
 </section>
 
-<section id="areaListaTabela">
-  <div class="lista-topo">
-    <div>
-      <h2>Tabela e Punições</h2>
-      <p>Gerencie classificação, pontos e histórico de punições.</p>
-    </div>
-
-    <div class="lista-topo-actions">
-      <button class="btn-acao btn-novo" type="button" onclick="abrirEditarTabela()">
-        <i class="fa-solid fa-pen-to-square"></i> Editar Tabela
-      </button>
-
-      <button class="btn-acao btn-blue" type="button" onclick="abrirPunicao()">
-        <i class="fa-solid fa-gavel"></i> Nova Punição
-      </button>
-    </div>
-  </div>
-
 <section class="list-panel">
   <h3 class="bloco-titulo">
     <i class="fa-solid fa-table"></i> Classificação
@@ -902,7 +875,6 @@ td{font-size:12px;padding:9px 7px}
     <div class="mensagem-vazia">Nenhuma punição registrada.</div>
   </div>
 </section>
-</section>
 
 </div>
 
@@ -937,40 +909,6 @@ const ids = {
   statusMsg:"statusMsg"
 };
 
-function esconderPaineis(){
-  const editar = document.getElementById("formEditarTabela");
-  const punicoes = document.getElementById("formPunicoes");
-  const lista = document.getElementById("areaListaTabela");
-  if(editar) editar.classList.add("hidden");
-  if(punicoes) punicoes.classList.add("hidden");
-  if(lista) lista.classList.remove("hidden");
-}
-
-window.voltarLista = function(){
-  esconderPaineis();
-  window.scrollTo({top:0,behavior:"smooth"});
-};
-
-window.abrirEditarTabela = function(){
-  const editar = document.getElementById("formEditarTabela");
-  const punicoes = document.getElementById("formPunicoes");
-  const lista = document.getElementById("areaListaTabela");
-  if(punicoes) punicoes.classList.add("hidden");
-  if(lista) lista.classList.add("hidden");
-  if(editar) editar.classList.remove("hidden");
-  window.scrollTo({top:0,behavior:"smooth"});
-};
-
-window.abrirPunicao = function(){
-  const editar = document.getElementById("formEditarTabela");
-  const punicoes = document.getElementById("formPunicoes");
-  const lista = document.getElementById("areaListaTabela");
-  if(editar) editar.classList.add("hidden");
-  if(lista) lista.classList.add("hidden");
-  if(punicoes) punicoes.classList.remove("hidden");
-  window.scrollTo({top:0,behavior:"smooth"});
-};
-
 function el(id){
   return document.getElementById(id);
 }
@@ -991,6 +929,42 @@ function mostrarStatus(msg,tipo="ok"){
   box.innerText = msg;
   setTimeout(()=>{ box.style.display = "none"; }, 3500);
 }
+
+function esconderFormsTabela(){
+  const edicao = el("formEdicaoTabela");
+  const punicoes = el("formPunicoes");
+  const acoes = el("areaAcoesTabela");
+
+  if(edicao) edicao.classList.add("hidden");
+  if(punicoes) punicoes.classList.add("hidden");
+  if(acoes) acoes.classList.remove("hidden");
+}
+
+function mostrarFormTabela(id){
+  esconderFormsTabela();
+
+  const painel = el(id);
+  const acoes = el("areaAcoesTabela");
+
+  if(acoes) acoes.classList.add("hidden");
+  if(painel) painel.classList.remove("hidden");
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+window.abrirEdicaoTabela = function(){
+  mostrarFormTabela("formEdicaoTabela");
+};
+
+window.abrirPunicao = function(){
+  mostrarFormTabela("formPunicoes");
+};
+
+window.voltarLista = function(){
+  limparEdicao();
+  esconderFormsTabela();
+  window.scrollTo({top:0,behavior:"smooth"});
+};
 
 window.voltarPagina = function(){
   if(window.history.length > 1){
@@ -1232,6 +1206,8 @@ window.editarLinha = function(id){
   const t = tabelaCache.find(x=>x.id === id);
   if(!t) return;
 
+  mostrarFormTabela("formEdicaoTabela");
+
   el("timeEdicao").value = t.id;
   el("editPontos").value = t.pontos;
   el("editJogos").value = t.jogos;
@@ -1245,7 +1221,7 @@ window.editarLinha = function(id){
   el("editPontosPunicao").value = t.pontosPunicao;
   el("editMotivoPunicao").value = t.motivoPunicao;
 
-  abrirEditarTabela();
+  window.scrollTo({top:0,behavior:"smooth"});
 };
 
 window.limparEdicao = function(){
@@ -1400,6 +1376,7 @@ async function atualizarTudo(){
 async function iniciar(){
   await carregarCampeonatos();
   await atualizarTudo();
+  esconderFormsTabela();
 }
 
 iniciar();
