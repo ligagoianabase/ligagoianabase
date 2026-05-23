@@ -360,6 +360,27 @@ function temporadaCampeonato(c){
   return valor(c, ["temporada", "ano", "edicao", "edição"], "-");
 }
 
+function formatoCampeonato(c){
+  return valor(c, ["formato", "tipo", "modelo"], "-");
+}
+
+function gruposCampeonato(c){
+  const qtd = valor(c, ["quantidadeGrupos"], "");
+  const cfg = c.configuracaoGrupos || {};
+  const grupos = qtd || cfg.quantidadeGrupos || "";
+  const classificados = valor(c, ["classificadosPorGrupo"], "") || cfg.classificadosPorGrupo || "";
+
+  if(grupos && Number(grupos) > 0){
+    return `Grupos: ${grupos}${classificados ? ` | Classificados: ${classificados}` : ""}`;
+  }
+
+  if(String(formatoCampeonato(c)).toLowerCase().includes("pontos")){
+    return "Pontos corridos";
+  }
+
+  return "-";
+}
+
 function categoriaCampeonato(c){
   const categoria = valor(c, ["categoria"], "");
   const categorias = valor(c, ["categorias"], []);
@@ -450,6 +471,17 @@ function render(){
     return;
   }
 
+  campeonatos = campeonatos.filter(c => {
+    const publicado = c.publicado === true || c.publico === true || c.visivelPublico === true;
+    const status = normalizar(valor(c, ["status"], ""));
+    return publicado || status === "publicado" || status === "ativo" || status === "em andamento";
+  });
+
+  if(!campeonatos.length){
+    lista.innerHTML = `<div class="vazio">Nenhum campeonato publicado no momento.</div>`;
+    return;
+  }
+
   campeonatos.sort((a,b) => {
     return nomeCampeonato(a).localeCompare(nomeCampeonato(b), "pt-BR");
   });
@@ -461,7 +493,9 @@ function render(){
     const timesQtd = contarTimes(c);
     const categoria = categoriaCampeonato(c);
     const temporada = temporadaCampeonato(c);
-    const logo = valor(c, ["logo", "imagem", "foto", "escudo"], "logo-liga.jfif");
+    const logo = valor(c, ["logo", "logoCampeonato", "imagem", "foto", "escudo"], "logo-liga.jfif");
+    const formato = formatoCampeonato(c);
+    const gruposInfo = gruposCampeonato(c);
 
     return `
       <div class="card">
@@ -485,7 +519,9 @@ function render(){
 
           <div class="info-campeonato">
             <strong>Temporada:</strong> ${temporada}<br>
+            <strong>Formato:</strong> ${formato}<br>
             <strong>Categoria:</strong> ${categoria}<br>
+            ${gruposInfo !== "-" ? `<strong>${gruposInfo}</strong><br>` : ""}
             <strong>Times:</strong> ${timesQtd}<br>
             <strong>Jogos:</strong> ${jogosQtd}<br>
             <strong>Gols:</strong> ${golsQtd}
@@ -493,6 +529,7 @@ function render(){
 
           <div class="tags">
             <span class="tag">${categoria}</span>
+            <span class="tag">${formato}</span>
             <span class="tag">${temporada}</span>
           </div>
         </div>
