@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Árbitros ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Campeonatos ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -21,7 +21,7 @@
   --muted:#d8e1ef;
   --shadow:0 8px 22px rgba(0,0,0,.28);
   --transition:.25s ease;
-  --max:1240px;
+  --max:1180px;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -37,7 +37,7 @@ body{
 
 a{text-decoration:none;color:inherit;transition:var(--transition)}
 button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
-input,select{font-family:inherit}
+input,select,textarea{font-family:inherit}
 
 .wrap{width:min(100% - 28px, var(--max));margin:0 auto}
 
@@ -67,7 +67,7 @@ header{
 .header-title{
   flex:1;
   text-align:center;
-  font-size:24px;
+  font-size:21px;
   font-weight:700;
 }
 
@@ -123,41 +123,41 @@ header{
   color:black;
 }
 
-.container{padding:24px 0 34px}
+.container{padding:18px 0 28px}
 
 .hero,.form-panel{
   background:linear-gradient(135deg,#102a52,#0d2346);
   border:1px solid var(--gold-line);
-  border-radius:18px;
-  padding:22px;
-  margin-bottom:20px;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
   box-shadow:var(--shadow);
 }
 
 .hero h2{
   margin:0 0 8px;
   color:var(--gold);
-  font-size:28px;
+  font-size:22px;
 }
 
 .hero p{
   margin:0;
   color:var(--muted);
-  line-height:1.6;
-  font-size:15px;
+  line-height:1.45;
+  font-size:13px;
 }
 
 .form-title{
   color:var(--gold);
-  font-size:20px;
-  margin-bottom:14px;
+  font-size:18px;
+  margin-bottom:12px;
   font-weight:900;
 }
 
 .form-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:12px;
+  gap:10px;
 }
 
 .full{grid-column:1/-1}
@@ -170,19 +170,23 @@ label{
   color:#fff;
 }
 
-input,select{
+input,select,textarea{
   width:100%;
-  padding:13px;
+  padding:10px 11px;
   border:none;
-  border-radius:10px;
-  font-size:14px;
+  border-radius:9px;
+  font-size:13px;
   background:#f5f7fb;
   color:#111;
 }
 
-input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
+textarea{min-height:82px;resize:vertical}
 
-.preview-foto{
+input:focus,select:focus,textarea:focus{
+  outline:2px solid rgba(247,198,0,.5);
+}
+
+.preview-logo{
   display:none;
   align-items:center;
   gap:12px;
@@ -190,19 +194,50 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
   margin-top:10px;
 }
 
-.preview-foto img{
-  width:78px;
-  height:78px;
-  object-fit:cover;
-  background:#fff;
-  border-radius:50%;
-  border:2px solid var(--gold);
+.preview-logo img{
+  width:120px;
+  height:120px;
+  object-fit:contain;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  padding:0;
+
+  filter:
+    drop-shadow(0 0 8px rgba(247,198,0,.35))
+    drop-shadow(0 8px 18px rgba(0,0,0,.45));
 }
 
-.preview-foto span{
+.preview-logo span{
   color:var(--muted);
   font-size:13px;
 }
+
+.checkbox-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(115px,1fr));
+  gap:8px;
+}
+
+.check-item{
+  background:#102a52;
+  padding:9px 10px;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:14px;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.08);
+  cursor:pointer;
+}
+
+.check-item:hover{
+  background:#153766;
+  border-color:var(--gold-line);
+}
+
+.check-item input{width:auto}
 
 .form-actions{
   display:flex;
@@ -213,27 +248,30 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
 
 .filtros{
   display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:12px;
-  margin-bottom:20px;
+  grid-template-columns:1fr 220px;
+  gap:10px;
+  margin-bottom:14px;
 }
 
 .lista-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-  gap:14px;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
 }
 
 .card{
   background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
-  padding:16px;
-  border-radius:16px;
+  padding:12px;
+  border-radius:14px;
   display:flex;
+  flex-direction:column;
   justify-content:space-between;
-  align-items:center;
-  gap:14px;
+  align-items:stretch;
+  gap:10px;
   border:1px solid rgba(255,230,0,.10);
-  box-shadow:var(--shadow);
+  box-shadow:0 7px 18px rgba(0,0,0,.24);
+  overflow:hidden;
+  min-height:230px;
 }
 
 .card:hover{
@@ -243,37 +281,42 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
 
 .player{
   display:flex;
-  align-items:center;
-  gap:12px;
+  align-items:flex-start;
+  gap:10px;
   flex:1;
 }
 
 .photo{
-  width:68px;
-  height:68px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid rgba(255,255,255,.15);
-  background:#fff;
+  width:64px;
+  height:64px;
+  object-fit:contain;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  padding:0;
   flex-shrink:0;
+
+  filter:
+    drop-shadow(0 0 8px rgba(247,198,0,.30))
+    drop-shadow(0 8px 18px rgba(0,0,0,.45));
 }
 
 .player-info{
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:4px;
 }
 
 .nome-jogador{
   font-weight:700;
-  font-size:18px;
+  font-size:15px;
   color:#fff;
 }
 
 .player-info small{
   color:var(--muted);
-  font-size:13px;
-  line-height:1.5;
+  font-size:11.5px;
+  line-height:1.35;
 }
 
 .tags{
@@ -285,9 +328,9 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
 
 .tag{
   background:#1a3f73;
-  padding:5px 9px;
+  padding:4px 7px;
   border-radius:999px;
-  font-size:12px;
+  font-size:11px;
   border:1px solid rgba(255,255,255,.08);
 }
 
@@ -295,7 +338,7 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
   display:flex;
   gap:8px;
   flex-wrap:wrap;
-  justify-content:flex-end;
+  justify-content:flex-start;
 }
 
 .btn-acao{
@@ -303,10 +346,10 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
   align-items:center;
   justify-content:center;
   gap:8px;
-  padding:11px 14px;
-  border-radius:10px;
+  padding:9px 10px;
+  border-radius:9px;
   font-weight:700;
-  font-size:13px;
+  font-size:12px;
   border:none;
   cursor:pointer;
   white-space:nowrap;
@@ -314,7 +357,6 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
 
 .btn-ver{background:var(--gold);color:black}
 .btn-danger{background:#d94141;color:#fff}
-.btn-green{background:#25d366;color:#fff}
 .btn-blue{background:#1a3f73;color:#fff}
 
 .vazio{
@@ -328,6 +370,11 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
   grid-column:1/-1;
 }
 
+
+@media(max-width:1100px){
+  .lista-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
 @media(max-width:900px){
   .header-title{order:3;width:100%;text-align:center}
   .header-left,.header-right{width:100%;justify-content:center}
@@ -337,6 +384,7 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
 }
 
 @media(max-width:600px){
+  .lista-grid{grid-template-columns:1fr}
   .top-btn,.btn-acao{width:100%;justify-content:center}
   .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
   .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
@@ -348,206 +396,6 @@ input:focus,select:focus{outline:2px solid rgba(247,198,0,.5)}
     padding-bottom:14px;
   }
   .menu a{flex:0 0 auto}
-}
-
-
-/* ===== PADRÃO VISUAL CAMPEONATOS ADM ===== */
-:root{
-  --max:1180px;
-}
-
-.wrap.container{
-  max-width:1180px;
-}
-
-.header-title{
-  font-size:21px;
-}
-
-.container{
-  padding:18px 0 28px;
-}
-
-.hero,
-.form-panel{
-  border-radius:16px;
-  padding:16px;
-  margin-bottom:12px;
-}
-
-.hero h2{
-  font-size:22px;
-}
-
-.hero p{
-  line-height:1.45;
-  font-size:13px;
-}
-
-.form-title{
-  font-size:18px;
-  margin-bottom:12px;
-}
-
-.form-grid{
-  gap:10px;
-}
-
-input,
-select{
-  padding:10px 11px;
-  border-radius:9px;
-  font-size:13px;
-}
-
-.filtros{
-  grid-template-columns:1fr 220px 220px;
-  gap:10px;
-  margin-bottom:14px;
-}
-
-.lista-grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:12px;
-}
-
-.card{
-  padding:12px;
-  border-radius:14px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  align-items:stretch;
-  gap:10px;
-  min-height:230px;
-  box-shadow:0 7px 18px rgba(0,0,0,.24);
-}
-
-.player{
-  align-items:flex-start;
-  gap:10px;
-}
-
-.photo,
-.preview-foto img{
-  width:64px !important;
-  height:64px !important;
-  object-fit:contain !important;
-  background:transparent !important;
-  border:none !important;
-  border-radius:0 !important;
-  padding:0 !important;
-  flex-shrink:0;
-  filter:
-    drop-shadow(0 0 8px rgba(247,198,0,.30))
-    drop-shadow(0 8px 18px rgba(0,0,0,.45));
-}
-
-.player-info{
-  gap:4px;
-}
-
-.nome-jogador{
-  font-size:15px;
-}
-
-.player-info small{
-  font-size:11.5px;
-  line-height:1.35;
-}
-
-.tag{
-  padding:4px 7px;
-  font-size:11px;
-}
-
-.actions{
-  justify-content:flex-start;
-  margin-top:auto;
-}
-
-.actions .btn-acao{
-  flex:1;
-  min-width:86px;
-}
-
-.btn-acao{
-  padding:9px 10px;
-  border-radius:9px;
-  font-size:12px;
-}
-
-@media(max-width:1100px){
-  .lista-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-}
-
-@media(max-width:900px){
-  .filtros{
-    grid-template-columns:1fr;
-  }
-
-  .card{
-    align-items:stretch;
-  }
-
-  .actions{
-    width:100%;
-  }
-}
-
-@media(max-width:600px){
-  .wrap{
-    width:min(100% - 18px,var(--max));
-  }
-
-  .lista-grid{
-    grid-template-columns:1fr;
-  }
-
-  .hero,
-  .form-panel{
-    padding:14px;
-    border-radius:14px;
-  }
-
-  .hero h2{
-    font-size:20px;
-  }
-
-  .card{
-    min-height:auto;
-    padding:11px;
-  }
-
-  .photo,
-  .preview-foto img{
-    width:56px !important;
-    height:56px !important;
-  }
-
-  .actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:6px;
-    width:100%;
-  }
-
-  .actions .btn-acao{
-    width:100%;
-    font-size:11px;
-    padding:8px 5px;
-  }
-
-  .form-grid{
-    grid-template-columns:1fr;
-  }
-
-  .filtros{
-    grid-template-columns:1fr;
-  }
 }
 
 .hidden{display:none !important}
@@ -580,14 +428,44 @@ select{
 }
 
 @media(max-width:600px){
-  .lista-topo{align-items:stretch;}
-  .lista-topo .btn-acao{width:100%;}
+  .lista-topo{
+    align-items:stretch;
+  }
+
+  .lista-topo .btn-acao{
+    width:100%;
+  }
 }
 
-#areaListaArbitros{width:100%;}
-.card .actions{margin-top:auto;}
-.card .actions .btn-acao{flex:1;min-width:86px;}
-@media(min-width:901px){.header-top{min-height:72px}.hero{padding:16px 18px}}
+
+/* AJUSTE VISUAL ADM COMPACTO - menu superior mantido */
+.wrap.container{
+  max-width:1180px;
+}
+#areaListaCampeonatos{
+  width:100%;
+}
+.card .actions{
+  margin-top:auto;
+}
+.card .actions .btn-acao{
+  flex:1;
+  min-width:86px;
+}
+@media(min-width:901px){
+  .header-top{min-height:72px}
+  .hero{padding:16px 18px}
+}
+@media(max-width:600px){
+  .wrap{width:min(100% - 18px, var(--max));}
+  .hero,.form-panel{padding:14px;border-radius:14px}
+  .hero h2{font-size:20px}
+  .lista-topo h2{font-size:19px}
+  .card{min-height:auto;padding:11px}
+  .photo{width:56px;height:56px}
+  .actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%}
+  .actions .btn-acao{width:100%;font-size:11px;padding:8px 5px}
+}
 
 </style>
 </head>
@@ -610,7 +488,7 @@ select{
 
     <div class="header-right">
       <button class="top-btn btn-gold" type="button" onclick="abrirFormularioNovo()">
-        <i class="fa-solid fa-plus"></i> Novo Árbitro
+        <i class="fa-solid fa-plus"></i> Novo Campeonato
       </button>
     </div>
   </div>
@@ -619,12 +497,12 @@ select{
     <div class="wrap">
       <div class="menu">
         <a href="admin.html">Painel</a>
-        <a href="campeonatos-admin.html">Campeonatos</a>
+        <a href="campeonatos-admin.html" class="ativo">Campeonatos</a>
         <a href="jogos-admin.html">Jogos</a>
         <a href="times-admin.html">Times</a>
         <a href="tecnicos-admin.html">Técnicos</a>
         <a href="jogadores-admin.html">Jogadores</a>
-        <a href="arbitros-admin.html" class="ativo">Árbitros</a>
+        <a href="arbitros-admin.html">Árbitros</a>
         <a href="assistentes-admin.html">Assistentes</a>
         <a href="sumulas-admin.html">Súmulas</a>
       </div>
@@ -635,86 +513,133 @@ select{
 <div class="wrap container">
 
   <div class="hero">
-    <h2>Árbitros ADM</h2>
-    <p>Cadastre árbitros com foto, telefone, WhatsApp, e-mail e função principal. Na escala, qualquer cadastrado poderá atuar como árbitro central, assistente ou 4º árbitro.</p>
+    <h2>Campeonatos ADM</h2>
+    <p>Cadastre campeonatos, logo, temporada, formato, categorias e regras. Tudo salvo no Firebase para jogos, tabelas, súmulas e estatísticas automáticas.</p>
   </div>
 
-  <section class="form-panel hidden" id="formArbitro">
-    <div class="form-title" id="tituloFormulario">Novo Árbitro</div>
+  <section class="form-panel hidden" id="formCampeonato">
+    <div class="form-title" id="tituloFormulario">Novo Campeonato</div>
 
-    <input type="hidden" id="arbitroId">
+    <input type="hidden" id="campeonatoId">
 
     <div class="form-grid">
       <div>
-        <label>Nome completo</label>
-        <input id="nome" placeholder="Nome do árbitro">
+        <label>Nome do campeonato</label>
+        <input id="nome" placeholder="Ex: Copa União de Base">
       </div>
 
       <div>
-        <label>CPF</label>
-        <input id="cpf" placeholder="CPF">
-      </div>
-
-      <div>
-        <label>Data de nascimento</label>
-        <input id="nascimento" type="date">
+        <label>Temporada</label>
+        <input id="temporada" placeholder="Ex: 2026">
       </div>
 
       <div>
         <label>Status</label>
         <select id="status">
-          <option value="ativo">Ativo</option>
-          <option value="inativo">Inativo</option>
-          <option value="suspenso">Suspenso</option>
+          <option value="rascunho">Rascunho</option>
+          <option value="publicado">Publicado</option>
+          <option value="encerrado">Encerrado</option>
         </select>
       </div>
 
       <div>
-        <label>Telefone</label>
-        <input id="telefone" placeholder="Ex: (62) 99999-9999">
-      </div>
-
-      <div>
-        <label>WhatsApp</label>
-        <input id="whatsapp" placeholder="Ex: 5562999999999">
-      </div>
-
-      <div>
-        <label>E-mail</label>
-        <input id="email" type="email" placeholder="email@exemplo.com">
-      </div>
-
-      <div>
-        <label>Função principal</label>
-        <select id="funcaoPrincipal">
-          <option value="Árbitro Centro">Árbitro Centro</option>
-          <option value="Assistente">Assistente</option>
-          <option value="4º Árbitro">4º Árbitro</option>
+        <label>Formato</label>
+        <select id="formato">
+          <option value="">Selecione</option>
+          <option value="Pontos corridos">Pontos corridos</option>
+          <option value="Mata-mata">Mata-mata</option>
+          <option value="Pontos corridos + fase final">Pontos corridos + fase final</option>
+          <option value="Fase de grupos">Fase de grupos</option>
         </select>
       </div>
 
       <div>
-        <label>Foto URL</label>
-        <input id="foto" placeholder="foto-arbitro.png ou URL">
+        <label>Turno</label>
+        <select id="turno">
+          <option value="">Selecione</option>
+          <option value="Ida">Ida</option>
+          <option value="Ida e volta">Ida e volta</option>
+        </select>
       </div>
 
       <div>
-        <label>Enviar foto do PC/Celular</label>
-        <input type="file" id="fotoArquivo" accept="image/*" onchange="previewFotoArquivo()">
+        <label>Data de início</label>
+        <input id="dataInicio" type="date">
+      </div>
+
+      <div>
+        <label>Data final</label>
+        <input id="dataFim" type="date">
+      </div>
+
+      <div>
+        <label>Fase final começa com</label>
+        <input id="faseFinalInicio" type="number" min="1" placeholder="Ex: 8">
+      </div>
+
+      <div>
+        <label>Zerar cartões em</label>
+        <select id="zerarCartoesEm">
+          <option value="nunca">Nunca</option>
+          <option value="fim-primeira-fase">Fim da primeira fase</option>
+          <option value="quartas">Quartas</option>
+          <option value="semi">Semifinal</option>
+          <option value="final">Final</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Logo URL</label>
+        <input id="logo" placeholder="logo-campeonato.png ou URL">
+      </div>
+
+      <div>
+        <label>Enviar logo do PC/Celular</label>
+        <input type="file" id="logoArquivo" accept="image/*" onchange="previewLogoArquivo()">
+      </div>
+
+      <div>
+        <label>Prévia</label>
+        <div class="preview-logo" id="previewLogoBox">
+          <img id="previewLogoImg" src="logo-liga.jfif">
+          <span id="previewLogoTexto">Pré-visualização da logo</span>
+        </div>
       </div>
 
       <div class="full">
-        <label>Prévia</label>
-        <div class="preview-foto" id="previewFotoBox">
-          <img id="previewFotoImg" src="logo-liga.jfif">
-          <span id="previewFotoTexto">Pré-visualização da foto</span>
-        </div>
+        <label>Descrição / observações</label>
+        <textarea id="descricao" placeholder="Descrição do campeonato"></textarea>
+      </div>
+
+      <div>
+        <label>Amarelos para suspensão</label>
+        <input id="amarelosParaSuspensao" type="number" min="1" value="3">
+      </div>
+
+      <div>
+        <label>Jogos suspenso por amarelo</label>
+        <input id="jogosSuspensaoAmarelos" type="number" min="1" value="1">
+      </div>
+
+      <div>
+        <label>Jogos por segundo amarelo</label>
+        <input id="jogosSuspensaoSegundoAmarelo" type="number" min="1" value="1">
+      </div>
+
+      <div>
+        <label>Jogos por vermelho direto</label>
+        <input id="jogosSuspensaoVermelhoDireto" type="number" min="1" value="2">
+      </div>
+
+      <div class="full">
+        <label>Categorias do campeonato</label>
+        <div class="checkbox-grid" id="categoriasGrid"></div>
       </div>
     </div>
 
     <div class="form-actions">
-      <button class="btn-acao btn-ver" type="button" onclick="salvarArbitro()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Árbitro
+      <button class="btn-acao btn-ver" type="button" onclick="salvarCampeonato()">
+        <i class="fa-solid fa-floppy-disk"></i> Salvar Campeonato
       </button>
 
       <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
@@ -727,37 +652,30 @@ select{
     </div>
   </section>
 
-  <section id="areaListaArbitros">
+  <section id="areaListaCampeonatos">
     <div class="lista-topo">
       <div>
-        <h2>Árbitros cadastrados</h2>
-        <p>Gerencie, edite ou crie novos árbitros.</p>
+        <h2>Campeonatos cadastrados</h2>
+        <p>Gerencie, edite ou crie novos campeonatos.</p>
       </div>
 
       <button class="btn-acao btn-novo" type="button" onclick="abrirFormularioNovo()">
-        <i class="fa-solid fa-plus"></i> Novo Árbitro
+        <i class="fa-solid fa-plus"></i> Novo Campeonato
       </button>
     </div>
 
-  <div class="filtros">
-    <input id="buscaArbitro" placeholder="Pesquisar árbitro...">
+    <div class="filtros">
+      <input id="buscaCampeonato" placeholder="Pesquisar campeonato...">
 
-    <select id="filtroFuncao">
-      <option value="">Todas as funções</option>
-      <option value="Árbitro Centro">Árbitro Centro</option>
-      <option value="Assistente">Assistente</option>
-      <option value="4º Árbitro">4º Árbitro</option>
-    </select>
+      <select id="filtroStatus">
+        <option value="">Todos os status</option>
+        <option value="rascunho">Rascunho</option>
+        <option value="publicado">Publicado</option>
+        <option value="encerrado">Encerrado</option>
+      </select>
+    </div>
 
-    <select id="filtroStatus">
-      <option value="">Todos os status</option>
-      <option value="ativo">Ativo</option>
-      <option value="inativo">Inativo</option>
-      <option value="suspenso">Suspenso</option>
-    </select>
-  </div>
-
-  <div class="lista-grid" id="listaArbitros"></div>
+    <div class="lista-grid" id="listaCampeonatos"></div>
   </section>
 
 </div>
@@ -774,24 +692,24 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-let arbitrosCache = [];
-let fotoAtual = "";
+let campeonatosCache = [];
+let logoAtual = "";
 
 function mostrarFormulario(){
-  document.getElementById("formArbitro").classList.remove("hidden");
-  document.getElementById("areaListaArbitros").classList.add("hidden");
+  document.getElementById("formCampeonato").classList.remove("hidden");
+  document.getElementById("areaListaCampeonatos").classList.add("hidden");
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function mostrarLista(){
-  document.getElementById("formArbitro").classList.add("hidden");
-  document.getElementById("areaListaArbitros").classList.remove("hidden");
+  document.getElementById("formCampeonato").classList.add("hidden");
+  document.getElementById("areaListaCampeonatos").classList.remove("hidden");
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
 window.abrirFormularioNovo = function(){
   limparFormulario();
-  document.getElementById("tituloFormulario").textContent = "Novo Árbitro";
+  document.getElementById("tituloFormulario").textContent = "Novo Campeonato";
   mostrarFormulario();
 };
 
@@ -800,9 +718,12 @@ window.voltarLista = function(){
   mostrarLista();
 };
 
-function txt(v){
-  return String(v || "").trim();
-}
+const categoriasFixas = [
+  "Sub-11","Sub-12","Sub-13","Sub-14","Sub-15","Sub-16",
+  "Sub-17","Sub-18","Sub-19","Sub-20","Sub-21"
+];
+
+function txt(v){return String(v || "").trim()}
 
 function normalizarTexto(texto){
   return String(texto || "")
@@ -812,197 +733,318 @@ function normalizarTexto(texto){
     .replace(/[\u0300-\u036f]/g,"");
 }
 
-function limparNumero(v){
-  return String(v || "").replace(/\D/g,"");
+function montarCategorias(){
+  const grid = document.getElementById("categoriasGrid");
+  grid.innerHTML = categoriasFixas.map(c=>`
+    <label class="check-item">
+      <input type="checkbox" value="${c}">
+      <span>${c}</span>
+    </label>
+  `).join("");
 }
 
-window.previewFotoArquivo = function(){
-  const arquivo = document.getElementById("fotoArquivo").files[0];
+function categoriasSelecionadas(){
+  return Array.from(document.querySelectorAll('#categoriasGrid input[type="checkbox"]:checked'))
+    .map(i=>i.value);
+}
+
+function marcarCategorias(categorias){
+  document.querySelectorAll('#categoriasGrid input[type="checkbox"]').forEach(item=>{
+    item.checked = (categorias || []).includes(item.value);
+  });
+}
+
+window.previewLogoArquivo = function(){
+  const arquivo = document.getElementById("logoArquivo").files[0];
   if(!arquivo) return;
 
   const leitor = new FileReader();
 
   leitor.onload = function(e){
-    document.getElementById("previewFotoBox").style.display = "flex";
-    document.getElementById("previewFotoImg").src = e.target.result;
-    document.getElementById("previewFotoTexto").textContent = arquivo.name;
+    document.getElementById("previewLogoBox").style.display = "flex";
+    document.getElementById("previewLogoImg").src = e.target.result;
+    document.getElementById("previewLogoTexto").textContent = arquivo.name;
   };
 
   leitor.readAsDataURL(arquivo);
 };
 
-async function uploadFotoSeExistir(){
-  const arquivo = document.getElementById("fotoArquivo").files[0];
-  const fotoUrlManual = txt(document.getElementById("foto").value);
+function arquivoParaLogoBase64(arquivo){
+  return new Promise((resolve,reject)=>{
+    if(!arquivo){
+      resolve("");
+      return;
+    }
+
+    if(!arquivo.type || !arquivo.type.startsWith("image/")){
+      reject(new Error("O arquivo da logo precisa ser uma imagem."));
+      return;
+    }
+
+    const leitor = new FileReader();
+
+    leitor.onload = function(e){
+      const img = new Image();
+
+      img.onload = function(){
+        const max = 700;
+        let largura = img.width;
+        let altura = img.height;
+
+        if(largura > altura && largura > max){
+          altura = Math.round((altura * max) / largura);
+          largura = max;
+        }else if(altura >= largura && altura > max){
+          largura = Math.round((largura * max) / altura);
+          altura = max;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = largura;
+        canvas.height = altura;
+
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0,0,largura,altura);
+        ctx.drawImage(img,0,0,largura,altura);
+
+        const base64 = canvas.toDataURL("image/png");
+        resolve(base64);
+      };
+
+      img.onerror = function(){
+        reject(new Error("Não foi possível ler a imagem da logo."));
+      };
+
+      img.src = e.target.result;
+    };
+
+    leitor.onerror = function(){
+      reject(new Error("Erro ao carregar o arquivo da logo."));
+    };
+
+    leitor.readAsDataURL(arquivo);
+  });
+}
+
+async function uploadLogoSeExistir(){
+  const arquivo = document.getElementById("logoArquivo").files[0];
+  const logoUrlManual = txt(document.getElementById("logo").value);
 
   if(arquivo){
-    return await new Promise((resolve,reject)=>{
-      const leitor = new FileReader();
-
-      leitor.onload = function(e){
-        resolve(e.target.result);
-      };
-
-      leitor.onerror = function(){
-        reject("Erro ao carregar foto");
-      };
-
-      leitor.readAsDataURL(arquivo);
-    });
+    return await arquivoParaLogoBase64(arquivo);
   }
 
-  if(fotoUrlManual) return fotoUrlManual;
+  if(logoUrlManual) return logoUrlManual;
 
-  return fotoAtual || "logo-liga.jfif";
+  return logoAtual || "logo-liga.jfif";
 }
 
 window.limparFormulario = function(){
-  document.getElementById("arbitroId").value = "";
+  document.getElementById("campeonatoId").value = "";
   document.getElementById("nome").value = "";
-  document.getElementById("cpf").value = "";
-  document.getElementById("nascimento").value = "";
-  document.getElementById("status").value = "ativo";
-  document.getElementById("telefone").value = "";
-  document.getElementById("whatsapp").value = "";
-  document.getElementById("email").value = "";
-  document.getElementById("funcaoPrincipal").value = "Árbitro Centro";
-  document.getElementById("foto").value = "";
-  document.getElementById("fotoArquivo").value = "";
-  document.getElementById("tituloFormulario").textContent = "Novo Árbitro";
-  document.getElementById("previewFotoBox").style.display = "none";
-  document.getElementById("previewFotoImg").src = "logo-liga.jfif";
-  document.getElementById("previewFotoTexto").textContent = "Pré-visualização da foto";
-  fotoAtual = "";
+  document.getElementById("temporada").value = "";
+  document.getElementById("status").value = "rascunho";
+  document.getElementById("formato").value = "";
+  document.getElementById("turno").value = "";
+  document.getElementById("dataInicio").value = "";
+  document.getElementById("dataFim").value = "";
+  document.getElementById("faseFinalInicio").value = "";
+  document.getElementById("zerarCartoesEm").value = "nunca";
+  document.getElementById("logo").value = "";
+  document.getElementById("logoArquivo").value = "";
+  document.getElementById("descricao").value = "";
+  document.getElementById("amarelosParaSuspensao").value = 3;
+  document.getElementById("jogosSuspensaoAmarelos").value = 1;
+  document.getElementById("jogosSuspensaoSegundoAmarelo").value = 1;
+  document.getElementById("jogosSuspensaoVermelhoDireto").value = 2;
+  document.getElementById("tituloFormulario").textContent = "Novo Campeonato";
+  document.getElementById("previewLogoBox").style.display = "none";
+  document.getElementById("previewLogoImg").src = "logo-liga.jfif";
+  document.getElementById("previewLogoTexto").textContent = "Pré-visualização da logo";
+  logoAtual = "";
+  marcarCategorias([]);
 };
 
-window.salvarArbitro = async function(){
-  const id = document.getElementById("arbitroId").value;
+window.salvarCampeonato = async function(){
+  const botoesSalvar = document.querySelectorAll('button[onclick="salvarCampeonato()"]');
 
-  const nome = txt(document.getElementById("nome").value);
-  const cpf = limparNumero(document.getElementById("cpf").value);
-  const nascimento = document.getElementById("nascimento").value;
-  const status = document.getElementById("status").value;
-  const telefone = txt(document.getElementById("telefone").value);
-  const whatsapp = limparNumero(document.getElementById("whatsapp").value);
-  const email = txt(document.getElementById("email").value).toLowerCase();
-  const funcaoPrincipal = document.getElementById("funcaoPrincipal").value;
-
-  if(!nome) return alert("Digite o nome do árbitro.");
-
-  const foto = await uploadFotoSeExistir();
-
-  const dados = {
-    nome,
-    nomeCompleto:nome,
-    cpf,
-    nascimento,
-    dataNascimento:nascimento,
-    status,
-    telefone,
-    whatsapp,
-    email,
-    funcaoPrincipal,
-    funcao:funcaoPrincipal,
-    podeAtuarComo:["Árbitro Centro","Assistente","4º Árbitro"],
-    foto,
-    atualizadoEm:serverTimestamp()
-  };
-
-  if(id){
-    await updateDoc(doc(db,"arbitros",id),dados);
-    alert("Árbitro atualizado!");
-  }else{
-    await addDoc(collection(db,"arbitros"),{
-      ...dados,
-      jogos:0,
-      jogosComoArbitroCentro:0,
-      jogosComoAssistente:0,
-      jogosComoQuartoArbitro:0,
-      cartoesAplicados:0,
-      criadoEm:serverTimestamp()
+  try{
+    botoesSalvar.forEach(btn=>{
+      btn.disabled = true;
+      btn.style.opacity = ".65";
+      btn.style.cursor = "not-allowed";
     });
-    alert("Árbitro cadastrado!");
-  }
 
-  limparFormulario();
-  await carregarArbitros();
-  mostrarLista();
+    const id = document.getElementById("campeonatoId").value;
+
+    const nome = txt(document.getElementById("nome").value);
+    const temporada = txt(document.getElementById("temporada").value);
+    const status = document.getElementById("status").value;
+    const formato = document.getElementById("formato").value;
+    const turno = document.getElementById("turno").value;
+    const dataInicio = document.getElementById("dataInicio").value;
+    const dataFim = document.getElementById("dataFim").value;
+    const faseFinalInicio = Number(document.getElementById("faseFinalInicio").value || 0);
+    const zerarCartoesEm = document.getElementById("zerarCartoesEm").value;
+    const descricao = txt(document.getElementById("descricao").value);
+    const amarelosParaSuspensao = Number(document.getElementById("amarelosParaSuspensao").value || 3);
+    const jogosSuspensaoAmarelos = Number(document.getElementById("jogosSuspensaoAmarelos").value || 1);
+    const jogosSuspensaoSegundoAmarelo = Number(document.getElementById("jogosSuspensaoSegundoAmarelo").value || 1);
+    const jogosSuspensaoVermelhoDireto = Number(document.getElementById("jogosSuspensaoVermelhoDireto").value || 2);
+    const categorias = categoriasSelecionadas();
+
+    if(!nome){
+      alert("Digite o nome do campeonato.");
+      return;
+    }
+
+    if(!temporada){
+      alert("Digite a temporada.");
+      return;
+    }
+
+    if(!formato){
+      alert("Selecione o formato.");
+      return;
+    }
+
+    if(!categorias.length){
+      alert("Selecione pelo menos uma categoria.");
+      return;
+    }
+
+    const logo = await uploadLogoSeExistir();
+
+    const dados = {
+      nome,
+      temporada,
+      status,
+      formato,
+      turno,
+      dataInicio,
+      dataFim,
+      faseFinalInicio,
+      zerarCartoesEm,
+      descricao,
+      logo,
+      logoCampeonato:logo,
+      categorias,
+      publicado:status === "publicado",
+      publico:status === "publicado",
+      visivelPublico:status === "publicado",
+      regrasCartoes:{
+        amarelosParaSuspensao,
+        jogosSuspensaoAmarelos,
+        jogosSuspensaoSegundoAmarelo,
+        jogosSuspensaoVermelhoDireto
+      },
+      estatisticas:{
+        jogos:0,
+        gols:0,
+        cartoesAmarelos:0,
+        cartoesVermelhos:0,
+        times:0,
+        jogadores:0
+      },
+      atualizadoEm:serverTimestamp()
+    };
+
+    if(id){
+      await updateDoc(doc(db,"campeonatos",id),dados);
+      alert("Campeonato atualizado com logo salva!");
+    }else{
+      await addDoc(collection(db,"campeonatos"),{
+        ...dados,
+        criadoEm:serverTimestamp()
+      });
+      alert("Campeonato cadastrado com logo salva!");
+    }
+
+    limparFormulario();
+    await carregarCampeonatos();
+    mostrarLista();
+
+  }catch(e){
+    console.error("Erro ao salvar campeonato:", e);
+    alert("Erro ao salvar campeonato/logo: " + (e.message || e));
+  }finally{
+    botoesSalvar.forEach(btn=>{
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      btn.style.cursor = "pointer";
+    });
+  }
 };
 
-window.editarArbitro = function(id){
-  const a = arbitrosCache.find(x=>x.id === id);
-  if(!a) return;
+window.editarCampeonato = function(id){
+  const c = campeonatosCache.find(x=>x.id === id);
+  if(!c) return;
 
-  document.getElementById("arbitroId").value = a.id;
-  document.getElementById("nome").value = a.nome || "";
-  document.getElementById("cpf").value = a.cpf || "";
-  document.getElementById("nascimento").value = a.nascimento || a.dataNascimento || "";
-  document.getElementById("status").value = a.status || "ativo";
-  document.getElementById("telefone").value = a.telefone || "";
-  document.getElementById("whatsapp").value = a.whatsapp || "";
-  document.getElementById("email").value = a.email || "";
-  document.getElementById("funcaoPrincipal").value = a.funcaoPrincipal || a.funcao || "Árbitro Centro";
-  document.getElementById("foto").value = a.foto || "";
-  document.getElementById("fotoArquivo").value = "";
-  document.getElementById("tituloFormulario").textContent = "Editar Árbitro";
+  document.getElementById("campeonatoId").value = c.id;
+  document.getElementById("nome").value = c.nome || "";
+  document.getElementById("temporada").value = c.temporada || "";
+  document.getElementById("status").value = c.status || "rascunho";
+  document.getElementById("formato").value = c.formato || "";
+  document.getElementById("turno").value = c.turno || "";
+  document.getElementById("dataInicio").value = c.dataInicio || "";
+  document.getElementById("dataFim").value = c.dataFim || "";
+  document.getElementById("faseFinalInicio").value = c.faseFinalInicio || "";
+  document.getElementById("zerarCartoesEm").value = c.zerarCartoesEm || "nunca";
+  document.getElementById("logo").value = (String(c.logo || "").startsWith("data:image/") ? "" : (c.logo || c.logoCampeonato || ""));
+  document.getElementById("logoArquivo").value = "";
+  document.getElementById("descricao").value = c.descricao || "";
+  document.getElementById("amarelosParaSuspensao").value = c.regrasCartoes?.amarelosParaSuspensao || 3;
+  document.getElementById("jogosSuspensaoAmarelos").value = c.regrasCartoes?.jogosSuspensaoAmarelos || 1;
+  document.getElementById("jogosSuspensaoSegundoAmarelo").value = c.regrasCartoes?.jogosSuspensaoSegundoAmarelo || 1;
+  document.getElementById("jogosSuspensaoVermelhoDireto").value = c.regrasCartoes?.jogosSuspensaoVermelhoDireto || 2;
+  document.getElementById("tituloFormulario").textContent = "Editar Campeonato";
 
-  fotoAtual = a.foto || "";
+  logoAtual = c.logo || c.logoCampeonato || "";
 
-  if(fotoAtual){
-    document.getElementById("previewFotoBox").style.display = "flex";
-    document.getElementById("previewFotoImg").src = fotoAtual;
-    document.getElementById("previewFotoTexto").textContent = "Foto atual";
+  if(logoAtual){
+    document.getElementById("previewLogoBox").style.display = "flex";
+    document.getElementById("previewLogoImg").src = logoAtual;
+    document.getElementById("previewLogoTexto").textContent = "Logo atual";
   }
 
+  marcarCategorias(Array.isArray(c.categorias) ? c.categorias : []);
   mostrarFormulario();
 };
 
-window.excluirArbitro = async function(id){
-  if(!confirm("Excluir árbitro?")) return;
-  await deleteDoc(doc(db,"arbitros",id));
-  await carregarArbitros();
+window.excluirCampeonato = async function(id){
+  if(!confirm("Excluir campeonato?")) return;
+  await deleteDoc(doc(db,"campeonatos",id));
+  await carregarCampeonatos();
 };
 
-window.abrirWhatsapp = function(numero){
-  const n = limparNumero(numero);
-  if(!n) return alert("WhatsApp não informado.");
-  window.open("https://wa.me/" + n, "_blank");
-};
+async function carregarCampeonatos(){
+  const lista = document.getElementById("listaCampeonatos");
+  lista.innerHTML = `<div class="vazio">Carregando campeonatos...</div>`;
 
-async function carregarArbitros(){
-  const lista = document.getElementById("listaArbitros");
-  lista.innerHTML = `<div class="vazio">Carregando árbitros...</div>`;
+  const snap = await getDocs(collection(db,"campeonatos"));
 
-  const snap = await getDocs(collection(db,"arbitros"));
+  campeonatosCache = [];
+  snap.forEach(d=>campeonatosCache.push({id:d.id,...d.data()}));
 
-  arbitrosCache = [];
-  snap.forEach(d=>arbitrosCache.push({id:d.id,...d.data()}));
+  campeonatosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
 
-  arbitrosCache.sort((a,b)=>(a.nome || "").localeCompare(b.nome || "","pt-BR"));
-
-  renderizarArbitros();
+  renderizarCampeonatos();
 }
 
-function renderizarArbitros(){
-  const lista = document.getElementById("listaArbitros");
-  const busca = normalizarTexto(document.getElementById("buscaArbitro").value);
-  const filtroFuncao = document.getElementById("filtroFuncao").value;
+function renderizarCampeonatos(){
+  const lista = document.getElementById("listaCampeonatos");
+  const busca = normalizarTexto(document.getElementById("buscaCampeonato").value);
   const filtroStatus = document.getElementById("filtroStatus").value;
 
-  let arbitros = arbitrosCache.filter(a=>{
-    if(filtroFuncao && (a.funcaoPrincipal || a.funcao) !== filtroFuncao) return false;
-    if(filtroStatus && a.status !== filtroStatus) return false;
+  let campeonatos = campeonatosCache.filter(c=>{
+    if(filtroStatus && c.status !== filtroStatus) return false;
 
     if(busca){
       const texto = normalizarTexto(`
-        ${a.nome || ""}
-        ${a.cpf || ""}
-        ${a.nascimento || ""}
-        ${a.dataNascimento || ""}
-        ${a.telefone || ""}
-        ${a.whatsapp || ""}
-        ${a.email || ""}
-        ${a.funcaoPrincipal || a.funcao || ""}
+        ${c.nome || ""}
+        ${c.temporada || ""}
+        ${c.formato || ""}
+        ${Array.isArray(c.categorias) ? c.categorias.join(" ") : ""}
       `);
 
       if(!texto.includes(busca)) return false;
@@ -1011,71 +1053,72 @@ function renderizarArbitros(){
     return true;
   });
 
-  if(!arbitros.length){
-    lista.innerHTML = `<div class="vazio">Nenhum árbitro encontrado.</div>`;
+  if(!campeonatos.length){
+    lista.innerHTML = `<div class="vazio">Nenhum campeonato encontrado.</div>`;
     return;
   }
 
-  lista.innerHTML = arbitros.map(a=>`
-    <div class="card">
-      <div class="player">
-        <img
-          src="${a.foto || "logo-liga.jfif"}"
-          class="photo"
-          onerror="this.src='logo-liga.jfif'"
-        >
+  lista.innerHTML = campeonatos.map(c=>{
+    const categorias = Array.isArray(c.categorias) && c.categorias.length ? c.categorias : ["Sem categoria"];
 
-        <div class="player-info">
-          <div class="nome-jogador">${a.nome || "-"}</div>
+    return `
+      <div class="card">
+        <div class="player">
+          <img
+            src="${c.logo || c.logoCampeonato || "logo-liga.jfif"}"
+            class="photo"
+            onerror="this.src='logo-liga.jfif'"
+          >
 
-          <small>CPF: ${a.cpf || "-"}</small>
-          <small>Nascimento: ${a.nascimento || a.dataNascimento || "-"}</small>
-          <small>Telefone: ${a.telefone || "-"}</small>
-          <small>WhatsApp: ${a.whatsapp || "-"}</small>
-          <small>E-mail: ${a.email || "-"}</small>
-          <small>Função principal: ${a.funcaoPrincipal || a.funcao || "-"}</small>
+          <div class="player-info">
+            <div class="nome-jogador">${c.nome || "-"}</div>
 
-          <small>
-            Jogos: ${Number(a.jogos || 0)} |
-            Centro: ${Number(a.jogosComoArbitroCentro || 0)} |
-            Assistente: ${Number(a.jogosComoAssistente || 0)} |
-            4º: ${Number(a.jogosComoQuartoArbitro || 0)}
-          </small>
+            <small>Temporada: ${c.temporada || "-"}</small>
+            <small>Status: ${c.status || "rascunho"}</small>
+            <small>Formato: ${c.formato || "-"}</small>
+            <small>Turno: ${c.turno || "-"}</small>
+            <small>Fase final: ${c.faseFinalInicio || "-"}</small>
 
-          <div class="tags">
-            <span class="tag">${a.status || "ativo"}</span>
-            <span class="tag">${a.funcaoPrincipal || a.funcao || "Árbitro Centro"}</span>
-            <span class="tag">Pode atuar em qualquer função</span>
+            <small>
+              Jogos: ${Number(c.estatisticas?.jogos || 0)} |
+              Gols: ${Number(c.estatisticas?.gols || 0)}
+            </small>
+
+            <small>
+              🟨 ${Number(c.estatisticas?.cartoesAmarelos || 0)} |
+              🟥 ${Number(c.estatisticas?.cartoesVermelhos || 0)}
+            </small>
+
+            <div class="tags">
+              <span class="tag">${c.status || "rascunho"}</span>
+              ${categorias.map(cat=>`<span class="tag">${cat}</span>`).join("")}
+            </div>
           </div>
         </div>
+
+        <div class="actions">
+          <a class="btn-acao btn-blue" href="campeonatos-publico.html?id=${c.id}">
+            <i class="fa-solid fa-eye"></i> Ver
+          </a>
+
+          <button class="btn-acao btn-ver" onclick="editarCampeonato('${c.id}')">
+            <i class="fa-solid fa-pen"></i> Editar
+          </button>
+
+          <button class="btn-acao btn-danger" onclick="excluirCampeonato('${c.id}')">
+            <i class="fa-solid fa-trash"></i> Excluir
+          </button>
+        </div>
       </div>
-
-      <div class="actions">
-        <button class="btn-acao btn-green" onclick="abrirWhatsapp('${a.whatsapp || ""}')">
-          <i class="fa-brands fa-whatsapp"></i> WhatsApp
-        </button>
-
-        <a class="btn-acao btn-blue" href="mailto:${a.email || ""}">
-          <i class="fa-solid fa-envelope"></i> E-mail
-        </a>
-
-        <button class="btn-acao btn-ver" onclick="editarArbitro('${a.id}')">
-          <i class="fa-solid fa-pen"></i> Editar
-        </button>
-
-        <button class="btn-acao btn-danger" onclick="excluirArbitro('${a.id}')">
-          <i class="fa-solid fa-trash"></i> Excluir
-        </button>
-      </div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
-document.getElementById("buscaArbitro").addEventListener("input",renderizarArbitros);
-document.getElementById("filtroFuncao").addEventListener("change",renderizarArbitros);
-document.getElementById("filtroStatus").addEventListener("change",renderizarArbitros);
+document.getElementById("buscaCampeonato").addEventListener("input",renderizarCampeonatos);
+document.getElementById("filtroStatus").addEventListener("change",renderizarCampeonatos);
 
-await carregarArbitros();
+montarCategorias();
+carregarCampeonatos();
 </script>
 
 </body>
