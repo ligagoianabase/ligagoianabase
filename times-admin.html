@@ -667,6 +667,53 @@ input:focus,select:focus,textarea:focus{
   height:64px !important;
 }
 
+
+.hidden{display:none !important}
+
+.lista-topo{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:16px;
+  flex-wrap:wrap;
+}
+
+.lista-topo h2{
+  color:var(--gold);
+  font-size:24px;
+  font-weight:900;
+}
+
+.lista-topo p{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:4px;
+}
+
+.lista-topo-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.btn-novo{
+  background:linear-gradient(135deg,var(--gold),#ffe45c);
+  color:#111;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+}
+
+@media(max-width:600px){
+  .lista-topo{
+    align-items:stretch;
+  }
+
+  .lista-topo-actions,
+  .lista-topo .btn-acao{
+    width:100%;
+  }
+}
+
 </style>
 </head>
 
@@ -687,8 +734,8 @@ input:focus,select:focus,textarea:focus{
     <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
     <div class="header-right">
-      <button class="top-btn btn-gold" type="button" onclick="salvarTime()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Time
+      <button class="top-btn btn-gold" type="button" onclick="abrirFormularioNovoTime()">
+        <i class="fa-solid fa-plus"></i> Novo Time
       </button>
     </div>
   </div>
@@ -717,7 +764,7 @@ input:focus,select:focus,textarea:focus{
     <p>ADM controla todos os times. Técnico cria, edita e gerencia apenas o próprio time, jogadores e uniformes.</p>
   </div>
 
-  <section class="form-panel">
+  <section class="form-panel hidden" id="formTime">
     <div class="form-title" id="tituloFormulario">Novo Time</div>
 
     <input type="hidden" id="timeId">
@@ -821,10 +868,14 @@ input:focus,select:focus,textarea:focus{
       <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
         <i class="fa-solid fa-broom"></i> Limpar
       </button>
+
+      <button class="btn-acao btn-blue" type="button" onclick="voltarLista()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
     </div>
   </section>
 
-  <section class="form-panel">
+  <section class="form-panel hidden" id="formUniformes">
     <div class="form-title">Uniformes do Time</div>
 
     <div class="uniforme-builder">
@@ -923,7 +974,7 @@ input:focus,select:focus,textarea:focus{
     </div>
   </section>
 
-  <section class="form-panel">
+  <section class="form-panel hidden" id="formJogador">
     <div class="form-title">Cadastrar Jogador do Time</div>
 
     <div id="statusJogadorMsg" class="status-msg"></div>
@@ -993,25 +1044,50 @@ input:focus,select:focus,textarea:focus{
       <button class="btn-acao btn-danger" type="button" onclick="limparJogadorForm()">
         <i class="fa-solid fa-broom"></i> Limpar Jogador
       </button>
+
+      <button class="btn-acao btn-blue" type="button" onclick="voltarLista()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
     </div>
   </section>
 
-  <div class="filtros">
-    <input id="buscaTime" placeholder="Pesquisar time...">
+  <section id="areaListaTimes">
 
-    <select id="filtroStatus">
-      <option value="">Todos os status</option>
-      <option value="ativo">Ativo</option>
-      <option value="pendente">Pendente</option>
-      <option value="inativo">Inativo</option>
-    </select>
-  </div>
+    <div class="lista-topo">
+      <div>
+        <h2>Times cadastrados</h2>
+        <p>Gerencie times, jogadores e uniformes.</p>
+      </div>
 
-  <div class="lista-grid" id="listaTimes"></div>
+      <div class="lista-topo-actions">
+        <button class="btn-acao btn-novo" type="button" onclick="abrirFormularioNovoTime()">
+          <i class="fa-solid fa-plus"></i> Novo Time
+        </button>
 
-  <section class="form-panel">
-    <div class="form-title">Jogadores do Time</div>
-    <div class="jogadores-grid" id="listaJogadores"></div>
+        <button class="btn-acao btn-blue" type="button" onclick="abrirFormularioJogador()">
+          <i class="fa-solid fa-user-plus"></i> Novo Jogador
+        </button>
+      </div>
+    </div>
+
+    <div class="filtros">
+      <input id="buscaTime" placeholder="Pesquisar time...">
+
+      <select id="filtroStatus">
+        <option value="">Todos os status</option>
+        <option value="ativo">Ativo</option>
+        <option value="pendente">Pendente</option>
+        <option value="inativo">Inativo</option>
+      </select>
+    </div>
+
+    <div class="lista-grid" id="listaTimes"></div>
+
+    <section class="form-panel">
+      <div class="form-title">Jogadores do Time</div>
+      <div class="jogadores-grid" id="listaJogadores"></div>
+    </section>
+
   </section>
 
 </div>
@@ -1037,6 +1113,49 @@ let ehAdmin = false;
 let uniformeEditIndex = -1;
 let uniformesTemp = [];
 let uniformeFotoTemp = "";
+
+function esconderTodosPaineis(){
+  document.getElementById("formTime").classList.add("hidden");
+  document.getElementById("formUniformes").classList.add("hidden");
+  document.getElementById("formJogador").classList.add("hidden");
+  document.getElementById("areaListaTimes").classList.add("hidden");
+}
+
+function mostrarLista(){
+  esconderTodosPaineis();
+  document.getElementById("areaListaTimes").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function mostrarFormularioTime(){
+  esconderTodosPaineis();
+  document.getElementById("formTime").classList.remove("hidden");
+  document.getElementById("formUniformes").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function mostrarFormularioJogador(){
+  esconderTodosPaineis();
+  document.getElementById("formJogador").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+window.abrirFormularioNovoTime = function(){
+  limparFormulario();
+  mostrarFormularioTime();
+};
+
+window.abrirFormularioJogador = function(){
+  limparJogadorForm();
+  carregarSelectTimesJogador();
+  mostrarFormularioJogador();
+};
+
+window.voltarLista = function(){
+  limparFormulario();
+  limparJogadorForm();
+  mostrarLista();
+};
 
 const categoriasFixas = [
   "Sub-07","Sub-09","Sub-11","Sub-12","Sub-13","Sub-14","Sub-15","Sub-16",
@@ -1515,6 +1634,7 @@ window.salvarTime = async function(){
 
     limparFormulario();
     await carregarTudo();
+    mostrarLista();
 
   }catch(e){
     console.error("Erro ao salvar time:", e);
@@ -1572,7 +1692,7 @@ window.editarTime = function(id){
   renderizarUniformes();
   limparUniformeForm();
   carregarSelectTimesJogador();
-  window.scrollTo({top:0,behavior:"smooth"});
+  mostrarFormularioTime();
 };
 
 window.excluirTime = async function(id){
@@ -1828,6 +1948,7 @@ window.salvarJogador = async function(){
 
     limparJogadorForm();
     await carregarTudo();
+    mostrarLista();
 
   }catch(e){
     console.error("Erro ao salvar jogador:", e);
@@ -1857,7 +1978,7 @@ window.editarJogador = function(id){
   document.getElementById("jogadorPosicao").value = j.posicao || j.posição || "";
   document.getElementById("jogadorNumero").value = j.numero || j.camisa || "";
 
-  window.scrollTo({top:document.getElementById("statusJogadorMsg").offsetTop - 80, behavior:"smooth"});
+  mostrarFormularioJogador();
 };
 
 window.excluirJogador = async function(id){
