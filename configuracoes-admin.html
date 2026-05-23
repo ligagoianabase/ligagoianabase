@@ -3,329 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Configurações ADM - Liga Goiana</title>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 <style>
-:root{
-  --bg:#0b1f3a;
-  --gold:#f7c600;
-  --gold2:#ffe45c;
-  --muted:#d9e3f2;
-  --line:rgba(255,255,255,.10);
-  --gold-line:rgba(247,198,0,.34);
-  --shadow:0 8px 22px rgba(0,0,0,.28);
-  --red:#d94141;
-  --green:#1b8f43;
-  --blue:#1a3f73;
-  --max:1280px;
-}
-
-*{margin:0;padding:0;box-sizing:border-box}
-
-html,body{
-  width:100%;
-  min-height:100%;
-  overflow-x:hidden;
-}
-
-body{
-  font-family:Arial,sans-serif;
-  background:
-    linear-gradient(rgba(11,31,58,.90),rgba(11,31,58,.96)),
-    url("fundo.png") center/cover fixed no-repeat;
-  color:#fff;
-}
-
-a{text-decoration:none;color:inherit}
-button,input,select,textarea{font-family:inherit}
-button{cursor:pointer;border:none}
-
-.wrap{
-  width:min(100% - 28px,var(--max));
-  margin:0 auto;
-}
-
-header{
-  background:rgba(8,23,44,.96);
-  border-bottom:3px solid var(--gold);
-  box-shadow:var(--shadow);
-}
-
-.header-inner{
-  min-height:84px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  flex-wrap:wrap;
-  padding:14px 0;
-}
-
-.header-left,
-.header-right{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.header-title{
-  flex:1;
-  text-align:center;
-  font-size:24px;
-  font-weight:900;
-  text-transform:uppercase;
-}
-
-.top-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:10px 16px;
-  border-radius:10px;
-  font-weight:900;
-}
-
-.btn-light{background:#fff4cf;color:#111}
-.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111}
-.btn-green{background:var(--green);color:#fff}
-.btn-red{background:var(--red);color:#fff}
-.btn-blue{background:var(--blue);color:#fff}
-
-.container{padding:24px 0 34px}
-
-.hero-panel,
-.form-panel,
-.list-panel{
-  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:18px;
-  padding:20px;
-  box-shadow:var(--shadow);
-  margin-bottom:20px;
-}
-
-.hero-panel h2{
-  font-size:28px;
-  color:var(--gold);
-  margin-bottom:8px;
-}
-
-.hero-panel p{
-  color:var(--muted);
-  line-height:1.6;
-}
-
-.bloco-titulo{
-  margin:0 0 14px;
-  color:var(--gold);
-  font-size:18px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-}
-
-.grid-2{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.full{grid-column:1/-1}
-
-label{
-  display:block;
-  margin:0 0 6px;
-  font-weight:900;
-  color:#eef4ff;
-  font-size:13px;
-}
-
-input,select,textarea{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  font-size:14px;
-  background:#f5f7fb;
-  color:#111;
-  outline:none;
-}
-
-textarea{
-  min-height:90px;
-  resize:vertical;
-}
-
-.top-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:16px;
-}
-
-.action-btn,
-.link-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:10px 14px;
-  border-radius:10px;
-  font-weight:900;
-}
-
-.action-btn{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#111;
-}
-
-.link-btn{
-  background:var(--gold);
-  color:#111;
-  font-size:12px;
-}
-
-.lista{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
-  gap:14px;
-}
-
-.card{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  padding:14px;
-}
-
-.card strong{
-  display:block;
-  color:var(--gold);
-  font-size:17px;
-  margin-bottom:8px;
-}
-
-.card p{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.6;
-}
-
-.tag{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  padding:5px 8px;
-  border-radius:999px;
-  background:rgba(247,198,0,.12);
-  border:1px solid var(--gold-line);
-  color:var(--gold);
-  font-size:11px;
-  font-weight:900;
-  margin-top:8px;
-}
-
-.confrontos{
-  display:grid;
-  gap:10px;
-}
-
-.confronto{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-left:4px solid var(--gold);
-  border-radius:14px;
-  padding:12px;
-}
-
-.confronto strong{
-  color:var(--gold);
-  display:block;
-  margin-bottom:8px;
-}
-
-.status{
-  display:none;
-  margin-top:12px;
-  padding:12px;
-  border-radius:12px;
-  font-weight:900;
-  font-size:13px;
-}
-
-.status-ok{
-  display:block;
-  background:rgba(27,143,67,.18);
-  color:#aaf0bd;
-  border:1px solid rgba(27,143,67,.35);
-}
-
-.status-erro{
-  display:block;
-  background:rgba(217,65,65,.18);
-  color:#ffb7b7;
-  border:1px solid rgba(217,65,65,.35);
-}
-
-.mensagem-vazia{
-  color:var(--muted);
-  text-align:center;
-  padding:16px;
-  background:rgba(255,255,255,.035);
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:14px;
-  grid-column:1/-1;
-}
-
-@media(max-width:900px){
-  .header-title{
-    order:3;
-    width:100%;
-    text-align:center;
-    font-size:19px;
-  }
-
-  .header-left,
-  .header-right{
-    width:100%;
-    justify-content:center;
-  }
-
-  .grid,
-  .grid-2{
-    grid-template-columns:1fr;
-  }
-}
-
-@media(max-width:600px){
-  .top-btn,
-  .action-btn,
-  .link-btn{
-    width:100%;
-  }
-
-  .hero-panel h2{font-size:23px}
-
-  .hero-panel,
-  .form-panel,
-  .list-panel{
-    padding:16px;
-  }
-}
-
-/* ===== PADRÃO EXATO CAMPEONATOS ADM ===== */
 :root{
   --bg:#0b1f3a;
   --bg-dark:#08172c;
@@ -340,301 +20,66 @@ textarea{
   --transition:.25s ease;
   --max:1180px;
 }
-
+*{margin:0;padding:0;box-sizing:border-box}
 body{
+  font-family:Arial, sans-serif;
   background:
     linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
     url("fundo.png") center/cover fixed no-repeat;
+  color:var(--white);
+  min-height:100vh;
 }
-
 a{text-decoration:none;color:inherit;transition:var(--transition)}
 button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
 input,select,textarea{font-family:inherit}
-
 .wrap{width:min(100% - 28px, var(--max));margin:0 auto}
-
-header{
-  background:rgba(8,23,44,.96);
-  border-bottom:3px solid var(--gold);
-  box-shadow:var(--shadow);
-}
-
-.header-top{
-  min-height:82px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  flex-wrap:wrap;
-  padding:14px 0;
-}
-
-.header-left,.header-right{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.header-title{
-  flex:1;
-  text-align:center;
-  font-size:21px;
-  font-weight:700;
-  text-transform:none;
-}
-
-.top-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:10px 16px;
-  border-radius:10px;
-  font-weight:700;
-  white-space:nowrap;
-}
-
-.btn-light{background:#fff4cf;color:#111}
-.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
-.btn-gold{background:var(--gold);color:#111}
-.btn-gold:hover{filter:brightness(1.04);transform:translateY(-2px)}
-
-.nav-bar{
-  background:rgba(16,42,82,.95);
-  border-top:1px solid rgba(255,255,255,.06);
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-.menu{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  padding:12px 0;
-  flex-wrap:wrap;
-}
-
-.menu a{
-  color:white;
-  font-weight:700;
-  font-size:14px;
-  background:#0d2346;
-  padding:10px 14px;
-  border-radius:10px;
-  border:1px solid transparent;
-  white-space:nowrap;
-}
-
-.menu a:hover{
-  color:var(--gold);
-  background:var(--gold-soft);
-  border-color:var(--gold-line);
-}
-
-.menu a.ativo{
-  background:var(--gold);
-  color:black;
-}
-
+header{background:rgba(8,23,44,.96);border-bottom:3px solid var(--gold);box-shadow:var(--shadow)}
+.header-top{min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:14px 0}
+.header-left,.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.header-title{flex:1;text-align:center;font-size:21px;font-weight:700}
+.top-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:10px;font-weight:700;white-space:nowrap}
+.btn-light{background:#fff4cf;color:#111}.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
+.btn-gold{background:var(--gold);color:#111}.btn-gold:hover{filter:brightness(1.04);transform:translateY(-2px)}
+.nav-bar{background:rgba(16,42,82,.95);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.08)}
+.menu{display:flex;justify-content:center;gap:10px;padding:12px 0;flex-wrap:wrap}
+.menu a{color:white;font-weight:700;font-size:14px;background:#0d2346;padding:10px 14px;border-radius:10px;border:1px solid transparent;white-space:nowrap}
+.menu a:hover{color:var(--gold);background:var(--gold-soft);border-color:var(--gold-line)}
+.menu a.ativo{background:var(--gold);color:black}
 .container{padding:18px 0 28px}
-
-.hero-panel,
-.form-panel,
-.list-panel{
-  background:linear-gradient(135deg,#102a52,#0d2346);
-  border:1px solid var(--gold-line);
-  border-radius:16px;
-  padding:16px;
-  margin-bottom:12px;
-  box-shadow:var(--shadow);
-}
-
-.hero-panel h2{
-  margin:0 0 8px;
-  color:var(--gold);
-  font-size:22px;
-}
-
-.hero-panel p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.45;
-  font-size:13px;
-}
-
-.bloco-titulo{
-  color:var(--gold);
-  font-size:18px;
-  margin-bottom:12px;
-  font-weight:900;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-}
-
-.grid-2{
-  display:grid;
-  grid-template-columns:1fr 220px;
-  gap:10px;
-}
-
-label{
-  display:block;
-  font-size:13px;
-  font-weight:900;
-  margin-bottom:6px;
-  color:#fff;
-}
-
-input,select,textarea{
-  width:100%;
-  padding:10px 11px;
-  border:none;
-  border-radius:9px;
-  font-size:13px;
-  background:#f5f7fb;
-  color:#111;
-}
-
-textarea{min-height:82px;resize:vertical}
-
-input:focus,select:focus,textarea:focus{
-  outline:2px solid rgba(247,198,0,.5);
-}
-
-.top-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:16px;
-}
-
-.action-btn,
-.link-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:9px 10px;
-  border-radius:9px;
-  font-weight:700;
-  font-size:12px;
-  border:none;
-  cursor:pointer;
-  white-space:nowrap;
-}
-
-.action-btn{background:linear-gradient(135deg,var(--gold),#ffe45c);color:#111}
-.btn-blue{background:#1a3f73;color:#fff}
-.btn-green{background:#1b8f43;color:#fff}
-.btn-red{background:#d94141;color:#fff}
-
-.lista{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:12px;
-}
-
-.card,
-.confronto{
-  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
-  padding:12px;
-  border-radius:14px;
-  border:1px solid rgba(255,230,0,.10);
-  box-shadow:0 7px 18px rgba(0,0,0,.24);
-}
-
-.card strong,
-.confronto strong{
-  color:var(--gold);
-  font-size:15px;
-}
-
-.card p,
-.confronto p{
-  color:var(--muted);
-  font-size:11.5px;
-  line-height:1.35;
-}
-
-.tag{
-  background:#1a3f73;
-  color:#fff;
-  padding:4px 7px;
-  border-radius:999px;
-  font-size:11px;
-  border:1px solid rgba(255,255,255,.08);
-}
-
-.mensagem-vazia{
-  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
-  padding:30px;
-  border-radius:14px;
-  text-align:center;
-  color:var(--muted);
-  border:1px solid rgba(255,255,255,.06);
-  box-shadow:var(--shadow);
-  grid-column:1/-1;
-}
-
-@media(max-width:1100px){
-  .lista{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .grid{grid-template-columns:repeat(2,1fr)}
-}
-
-@media(max-width:900px){
-  .header-title{order:3;width:100%;text-align:center}
-  .header-left,.header-right{width:100%;justify-content:center}
-  .grid,.grid-2{grid-template-columns:1fr}
-}
-
-@media(max-width:600px){
-  .wrap{width:min(100% - 18px, var(--max));}
-  .lista{grid-template-columns:1fr}
-  .top-btn,.action-btn,.link-btn{width:100%;justify-content:center}
-  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
-  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
-  .menu{
-    justify-content:flex-start;
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-    padding-bottom:14px;
-  }
-  .menu a{flex:0 0 auto}
-  .hero-panel,.form-panel,.list-panel{padding:14px;border-radius:14px}
-  .hero-panel h2{font-size:20px}
-}
-
+.hero,.form-panel,.list-panel{background:linear-gradient(135deg,#102a52,#0d2346);border:1px solid var(--gold-line);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.hero h2{margin:0 0 8px;color:var(--gold);font-size:22px}.hero p{margin:0;color:var(--muted);line-height:1.45;font-size:13px}
+.form-title,.bloco-titulo{color:var(--gold);font-size:18px;margin-bottom:12px;font-weight:900;display:flex;align-items:center;gap:8px}
+.form-grid,.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.grid-2{display:grid;grid-template-columns:1fr 220px;gap:10px}.full{grid-column:1/-1}
+label{display:block;font-size:13px;font-weight:900;margin-bottom:6px;color:#fff}
+input,select,textarea{width:100%;padding:10px 11px;border:none;border-radius:9px;font-size:13px;background:#f5f7fb;color:#111}textarea{min-height:82px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(247,198,0,.5)}
+.form-actions,.top-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.lista{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.confrontos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.card,.confronto{background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));padding:12px;border-radius:14px;display:flex;flex-direction:column;gap:10px;border:1px solid rgba(255,230,0,.10);box-shadow:0 7px 18px rgba(0,0,0,.24);overflow:hidden;min-height:150px}.card:hover,.confronto:hover{transform:translateY(-2px);border-color:var(--gold-line)}
+.card strong,.confronto strong{display:block;color:var(--gold);font-size:15px}.card p,.confronto p{color:var(--muted);font-size:11.5px;line-height:1.35}
+.tag{background:#1a3f73;padding:4px 7px;border-radius:999px;font-size:11px;border:1px solid rgba(255,255,255,.08);color:#fff;font-weight:700;display:inline-flex;align-items:center;gap:5px;margin-top:auto;width:max-content}
+.btn-acao,.action-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 10px;border-radius:9px;font-weight:700;font-size:12px;border:none;cursor:pointer;white-space:nowrap}.action-btn{background:var(--gold);color:#111}.btn-ver{background:var(--gold);color:black}.btn-danger{background:#d94141;color:#fff}.btn-blue{background:#1a3f73!important;color:#fff}.btn-green{background:#1b8f43!important;color:#fff}.btn-novo{background:linear-gradient(135deg,var(--gold),#ffe45c);color:#111;box-shadow:0 8px 20px rgba(0,0,0,.22)}
+.vazio,.mensagem-vazia{background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));padding:30px;border-radius:14px;text-align:center;color:var(--muted);border:1px solid rgba(255,255,255,.06);box-shadow:var(--shadow);grid-column:1/-1}
+.hidden{display:none !important}.lista-topo{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}.lista-topo h2{color:var(--gold);font-size:21px;font-weight:900}.lista-topo p{color:var(--muted);font-size:14px;margin-top:4px}.lista-topo-actions{display:flex;gap:10px;flex-wrap:wrap}
+.status{display:none;margin-top:12px;padding:12px;border-radius:12px;font-weight:900;font-size:13px}.status-ok{display:block;background:rgba(27,143,67,.18);color:#aaf0bd;border:1px solid rgba(27,143,67,.35)}.status-erro{display:block;background:rgba(217,65,65,.18);color:#ffb7b7;border:1px solid rgba(217,65,65,.35)}
+.wrap.container{max-width:1180px}#areaListaConfiguracao{width:100%}
+@media(max-width:1100px){.lista,.confrontos{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.header-title{order:3;width:100%;text-align:center}.header-left,.header-right{width:100%;justify-content:center}.form-grid,.grid,.grid-2{grid-template-columns:1fr}}
+@media(max-width:600px){.wrap{width:min(100% - 18px,var(--max))}.lista,.confrontos{grid-template-columns:1fr}.top-btn,.btn-acao,.action-btn{width:100%;justify-content:center}.header-left,.header-right{flex-direction:row;flex-wrap:nowrap}.header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}.menu{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:14px}.menu a{flex:0 0 auto}.hero,.form-panel,.list-panel{padding:14px;border-radius:14px}.hero h2{font-size:20px}.lista-topo{align-items:stretch}.lista-topo h2{font-size:19px}.lista-topo-actions,.lista-topo .btn-acao{width:100%}.card,.confronto{min-height:auto;padding:11px}}
 </style>
 </head>
-
 <body>
-
 <header>
   <div class="wrap header-top">
     <div class="header-left">
-      <a href="index.html" class="top-btn btn-light">
-        <i class="fa-solid fa-house"></i> Página Inicial
-      </a>
-
-      <a href="admin.html" class="top-btn btn-light">
-        <i class="fa-solid fa-gears"></i> Painel ADM
-      </a>
+      <a href="index.html" class="top-btn btn-light"><i class="fa-solid fa-house"></i> Página Inicial</a>
+      <a href="admin.html" class="top-btn btn-light"><i class="fa-solid fa-gears"></i> Painel ADM</a>
     </div>
-
     <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
-
     <div class="header-right">
-      <button class="top-btn btn-gold" type="button" onclick="salvarConfiguracao()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar
-      </button>
+      <button class="top-btn btn-gold" type="button" onclick="abrirFormularioNovo()"><i class="fa-solid fa-pen-to-square"></i> Editar Configuração</button>
     </div>
   </div>
-
   <div class="nav-bar">
     <div class="wrap">
       <div class="menu">
@@ -651,126 +96,46 @@ input:focus,select:focus,textarea:focus{
     </div>
   </div>
 </header>
-
 <div class="wrap container">
-
-<section class="hero-panel">
+<section class="hero">
   <h2>Configurações do Campeonato</h2>
-  <p>
-    Controle campeonatos já criados: fase atual, encerramento da classificação,
-    montagem de mata-mata, quartas, semifinal, final e confrontos da próxima fase.
-  </p>
+  <p>Controle campeonatos já criados: fase atual, encerramento da classificação, montagem de mata-mata, quartas, semifinal, final e confrontos da próxima fase.</p>
   <div id="statusBox" class="status"></div>
 </section>
-
-<section class="form-panel">
-  <h3 class="bloco-titulo">
-    <i class="fa-solid fa-trophy"></i> Campeonato
-  </h3>
-
-  <div class="grid">
-    <div>
-      <label>Campeonato</label>
-      <select id="campeonatoSelect" onchange="carregarCampeonatoSelecionado()">
-        <option value="">Carregando campeonatos...</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Categoria</label>
-      <select id="categoriaSelect" onchange="gerarPreviaConfrontos()">
-        <option value="">Todas / Geral</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Status do campeonato</label>
-      <select id="statusCampeonato">
-        <option value="ativo">Ativo</option>
-        <option value="classificacao_encerrada">Classificação Encerrada</option>
-        <option value="mata_mata">Mata-Mata</option>
-        <option value="finalizado">Finalizado</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Fase atual</label>
-      <select id="faseAtual">
-        <option value="classificacao">Classificação</option>
-        <option value="oitavas">Oitavas</option>
-        <option value="quartas">Quartas de Final</option>
-        <option value="semifinal">Semifinal</option>
-        <option value="final">Final</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Próxima fase</label>
-      <select id="proximaFase">
-        <option value="oitavas">Oitavas</option>
-        <option value="quartas">Quartas de Final</option>
-        <option value="semifinal">Semifinal</option>
-        <option value="final">Final</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Times classificados</label>
-      <select id="quantidadeClassificados" onchange="gerarPreviaConfrontos()">
-        <option value="2">2 times</option>
-        <option value="4">4 times</option>
-        <option value="8">8 times</option>
-        <option value="16">16 times</option>
-      </select>
-    </div>
-
-    <div class="full">
-      <label>Observações</label>
-      <textarea id="observacoes" placeholder="Ex: classificação encerrada, quartas iniciadas, regra de confronto etc."></textarea>
-    </div>
+<section class="form-panel hidden" id="formConfiguracao">
+  <div class="form-title"><i class="fa-solid fa-trophy"></i> Campeonato</div>
+  <div class="form-grid">
+    <div><label>Campeonato</label><select id="campeonatoSelect" onchange="carregarCampeonatoSelecionado()"><option value="">Carregando campeonatos...</option></select></div>
+    <div><label>Categoria</label><select id="categoriaSelect" onchange="gerarPreviaConfrontos()"><option value="">Todas / Geral</option></select></div>
+    <div><label>Status do campeonato</label><select id="statusCampeonato"><option value="ativo">Ativo</option><option value="classificacao_encerrada">Classificação Encerrada</option><option value="mata_mata">Mata-Mata</option><option value="finalizado">Finalizado</option></select></div>
+    <div><label>Fase atual</label><select id="faseAtual"><option value="classificacao">Classificação</option><option value="oitavas">Oitavas</option><option value="quartas">Quartas de Final</option><option value="semifinal">Semifinal</option><option value="final">Final</option></select></div>
+    <div><label>Próxima fase</label><select id="proximaFase"><option value="oitavas">Oitavas</option><option value="quartas">Quartas de Final</option><option value="semifinal">Semifinal</option><option value="final">Final</option></select></div>
+    <div><label>Times classificados</label><select id="quantidadeClassificados" onchange="gerarPreviaConfrontos()"><option value="2">2 times</option><option value="4">4 times</option><option value="8">8 times</option><option value="16">16 times</option></select></div>
+    <div class="full"><label>Observações</label><textarea id="observacoes" placeholder="Ex: classificação encerrada, quartas iniciadas, regra de confronto etc."></textarea></div>
   </div>
-
-  <div class="top-actions">
-    <button class="action-btn" type="button" onclick="encerrarClassificacao()">
-      <i class="fa-solid fa-lock"></i> Encerrar Classificação
-    </button>
-
-    <button class="action-btn btn-blue" type="button" onclick="gerarPreviaConfrontos()">
-      <i class="fa-solid fa-sitemap"></i> Gerar Prévia
-    </button>
-
-    <button class="action-btn btn-green" type="button" onclick="criarMataMata()">
-      <i class="fa-solid fa-circle-nodes"></i> Criar Mata-Mata
-    </button>
-
-    <button class="action-btn" type="button" onclick="salvarConfiguracao()">
-      <i class="fa-solid fa-floppy-disk"></i> Salvar Configuração
-    </button>
+  <div class="form-actions">
+    <button class="btn-acao btn-ver" type="button" onclick="encerrarClassificacao()"><i class="fa-solid fa-lock"></i> Encerrar Classificação</button>
+    <button class="btn-acao btn-blue" type="button" onclick="gerarPreviaConfrontos()"><i class="fa-solid fa-sitemap"></i> Gerar Prévia</button>
+    <button class="btn-acao btn-green" type="button" onclick="criarMataMata()"><i class="fa-solid fa-circle-nodes"></i> Criar Mata-Mata</button>
+    <button class="btn-acao btn-ver" type="button" onclick="salvarConfiguracao()"><i class="fa-solid fa-floppy-disk"></i> Salvar Configuração</button>
+    <button class="btn-acao btn-blue" type="button" onclick="voltarLista()"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
   </div>
 </section>
-
+<section id="areaListaConfiguracao">
+  <div class="lista-topo">
+    <div><h2>Fases / Mata-Mata</h2><p>Selecione um campeonato no botão editar para configurar fases e confrontos.</p></div>
+    <div class="lista-topo-actions"><button class="btn-acao btn-novo" type="button" onclick="abrirFormularioNovo()"><i class="fa-solid fa-pen-to-square"></i> Editar Configuração</button></div>
+  </div>
+</section>
 <section class="list-panel">
-  <h3 class="bloco-titulo">
-    <i class="fa-solid fa-ranking-star"></i> Times Classificados / Base da Tabela
-  </h3>
-
-  <div id="listaTimes" class="lista">
-    <div class="mensagem-vazia">Selecione um campeonato.</div>
-  </div>
+  <h3 class="bloco-titulo"><i class="fa-solid fa-ranking-star"></i> Times Classificados / Base da Tabela</h3>
+  <div id="listaTimes" class="lista"><div class="mensagem-vazia">Selecione um campeonato.</div></div>
 </section>
-
 <section class="list-panel">
-  <h3 class="bloco-titulo">
-    <i class="fa-solid fa-sitemap"></i> Prévia dos Confrontos
-  </h3>
-
-  <div id="listaConfrontos" class="confrontos">
-    <div class="mensagem-vazia">Gere a prévia dos confrontos.</div>
-  </div>
+  <h3 class="bloco-titulo"><i class="fa-solid fa-sitemap"></i> Prévia dos Confrontos</h3>
+  <div id="listaConfrontos" class="confrontos"><div class="mensagem-vazia">Gere a prévia dos confrontos.</div></div>
 </section>
-
 </div>
-
 <script type="module">
 import { db } from "./firebase.js";
 import {
@@ -806,6 +171,26 @@ function mostrarStatus(msg,tipo="ok"){
   box.innerText = msg;
   setTimeout(()=>{ box.style.display = "none"; }, 4000);
 }
+
+function mostrarFormulario(){
+  document.getElementById("formConfiguracao").classList.remove("hidden");
+  document.getElementById("areaListaConfiguracao").classList.add("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function mostrarLista(){
+  document.getElementById("formConfiguracao").classList.add("hidden");
+  document.getElementById("areaListaConfiguracao").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+window.abrirFormularioNovo = function(){
+  mostrarFormulario();
+};
+
+window.voltarLista = function(){
+  mostrarLista();
+};
 
 window.voltarPagina = function(){
   if(window.history.length > 1){
@@ -1011,6 +396,7 @@ window.encerrarClassificacao = async function(){
 
   el("statusCampeonato").value = "classificacao_encerrada";
   mostrarStatus("Classificação encerrada.");
+  mostrarLista();
 };
 
 window.criarMataMata = async function(){
@@ -1041,6 +427,7 @@ window.criarMataMata = async function(){
   el("faseAtual").value = el("proximaFase").value;
 
   mostrarStatus("Mata-mata criado e confrontos salvos.");
+  mostrarLista();
 };
 
 window.salvarConfiguracao = async function(){
@@ -1057,6 +444,7 @@ window.salvarConfiguracao = async function(){
   });
 
   mostrarStatus("Configurações salvas com sucesso.");
+  mostrarLista();
 };
 
 async function iniciar(){
@@ -1065,6 +453,7 @@ async function iniciar(){
       carregarCampeonatos(),
       carregarTimes()
     ]);
+    mostrarLista();
   }catch(e){
     console.error(e);
     mostrarStatus("Erro ao carregar dados. Confira Firebase.","erro");
@@ -1073,6 +462,5 @@ async function iniciar(){
 
 iniciar();
 </script>
-
 </body>
 </html>
