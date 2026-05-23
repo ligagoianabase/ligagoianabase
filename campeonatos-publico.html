@@ -386,6 +386,194 @@ img{
   }
 }
 
+/* ===== CHAVEAMENTO / MATA-MATA PÚBLICO ===== */
+.bracket-section{
+  margin-bottom:15px;
+  overflow:hidden;
+}
+
+.bracket-wrap{
+  background:#000;
+  border-radius:16px;
+  padding:18px 12px;
+  overflow-x:auto;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.bracket{
+  min-width:760px;
+  display:flex;
+  align-items:stretch;
+  justify-content:center;
+  gap:36px;
+  position:relative;
+}
+
+.bracket-round{
+  min-width:170px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:34px;
+  position:relative;
+}
+
+.bracket-round-title{
+  text-align:center;
+  color:#fff;
+  font-size:18px;
+  font-weight:500;
+  margin-bottom:4px;
+}
+
+.bracket-game{
+  background:#111c23;
+  border-radius:16px;
+  padding:10px;
+  min-height:118px;
+  box-shadow:0 10px 26px rgba(0,0,0,.42);
+  position:relative;
+  border:1px solid rgba(255,255,255,.06);
+}
+
+.bracket-game.final-game{
+  min-width:360px;
+  min-height:190px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  background:#111c23;
+}
+
+.bracket-status{
+  color:#aab3bb;
+  font-size:12px;
+  text-align:center;
+  margin-bottom:5px;
+  min-height:15px;
+}
+
+.bracket-teams{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:8px;
+}
+
+.bracket-team{
+  text-align:center;
+  min-width:0;
+}
+
+.bracket-logo{
+  width:44px;
+  height:44px;
+  object-fit:contain;
+  margin:0 auto 5px;
+  filter:drop-shadow(0 5px 8px rgba(0,0,0,.5));
+}
+
+.bracket-abrev{
+  font-size:18px;
+  font-weight:900;
+  color:#fff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.bracket-score{
+  font-size:24px;
+  font-weight:900;
+  color:#aeb5bd;
+  white-space:nowrap;
+}
+
+.bracket-final-title{
+  color:#0b8cff;
+  font-size:24px;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+.bracket-cup{
+  color:var(--gold);
+  font-size:36px;
+  margin-bottom:8px;
+}
+
+.bracket-final-teams{
+  width:100%;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:16px;
+}
+
+.bracket-final-team .bracket-logo{
+  width:72px;
+  height:72px;
+}
+
+.bracket-final-team .bracket-abrev{
+  font-size:20px;
+  white-space:normal;
+}
+
+.bracket-winner{
+  color:var(--gold);
+  font-size:16px;
+  font-weight:900;
+  margin-top:10px;
+}
+
+.bracket-empty{
+  color:var(--muted);
+  text-align:center;
+  padding:18px;
+  background:#081c36;
+  border-radius:12px;
+}
+
+@media(max-width:600px){
+  .bracket-wrap{
+    padding:14px 8px;
+  }
+
+  .bracket{
+    min-width:680px;
+    gap:24px;
+  }
+
+  .bracket-round{
+    min-width:145px;
+  }
+
+  .bracket-game{
+    min-height:106px;
+    border-radius:14px;
+  }
+
+  .bracket-game.final-game{
+    min-width:300px;
+  }
+
+  .bracket-logo{
+    width:36px;
+    height:36px;
+  }
+
+  .bracket-abrev{
+    font-size:15px;
+  }
+
+  .bracket-score{
+    font-size:21px;
+  }
+}
+
 </style>
 </head>
 
@@ -507,6 +695,15 @@ img{
     <h3>Próximos Jogos / Resultados</h3>
 
     <div id="listaJogos" style="display:flex;flex-direction:column;gap:10px;"></div>
+  </section>
+
+
+  <!-- CHAVEAMENTO / MATA-MATA -->
+  <section class="card bracket-section" id="secaoChaveamento" style="display:none;">
+    <h3>Chaveamento / Fase Final</h3>
+    <div class="bracket-wrap">
+      <div id="bracketMataMata" class="bracket"></div>
+    </div>
   </section>
 
   <!-- REGULAMENTO -->
@@ -767,6 +964,188 @@ function preencherJogos(listaJogos){
   }).join("");
 }
 
+
+function faseJogo(j){
+  return normalizar(j.fase || j.rodada || j.etapa || "");
+}
+
+function nomeFase(fase){
+  const f = normalizar(fase);
+  if(f.includes("oitava")) return "Oitavas de final";
+  if(f.includes("quarta")) return "Quartas de final";
+  if(f.includes("semi")) return "Semifinal";
+  if(f.includes("final")) return "Final";
+  return fase || "Fase final";
+}
+
+function ordemFase(fase){
+  const f = normalizar(fase);
+  if(f.includes("oitava")) return 1;
+  if(f.includes("quarta")) return 2;
+  if(f.includes("semi")) return 3;
+  if(f.includes("final")) return 4;
+  return 9;
+}
+
+function abrevTime(nome){
+  const n = String(nome || "-").trim();
+  if(!n || n === "-") return "-";
+  const partes = n.split(/\s+/).filter(Boolean);
+  if(partes.length === 1) return partes[0].slice(0,3).toUpperCase();
+  return partes.map(p=>p[0]).join("").slice(0,4).toUpperCase();
+}
+
+function esc(v){
+  return String(v ?? "").replace(/[&<>"']/g, m => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
+}
+
+function logoTime(j, lado){
+  const keysA = ["logoA","logoTimeA","escudoA","escudoTimeA","timeALogo","fotoTimeA"];
+  const keysB = ["logoB","logoTimeB","escudoB","escudoTimeB","timeBLogo","fotoTimeB"];
+  const keys = lado === "A" ? keysA : keysB;
+
+  for(const k of keys){
+    if(j && j[k]) return j[k];
+  }
+
+  return "logo-liga.jfif";
+}
+
+function placarJogo(j){
+  const finalizado = normalizar(j.status) === "finalizado" || normalizar(j.status) === "sumula_enviada";
+  if(!finalizado && (j.golsA === undefined || j.golsB === undefined)) return "x";
+
+  let p = `${Number(j.golsA || 0)}-${Number(j.golsB || 0)}`;
+
+  const penA = j.penaltisA ?? j.penaltiA ?? j.penA;
+  const penB = j.penaltisB ?? j.penaltiB ?? j.penB;
+
+  if(penA !== undefined && penB !== undefined && String(penA) !== "" && String(penB) !== ""){
+    p += `<br><small>(${Number(penA)})-(${Number(penB)})</small>`;
+  }
+
+  return p;
+}
+
+function statusChave(j){
+  const s = normalizar(j.status || j.observacao || j.resultadoStatus || "");
+  if(s.includes("penal")) return "Pós-pênaltis";
+  if(s.includes("prorrog")) return "Pós-prorrogação";
+  if(s.includes("cancel")) return "Cancel.";
+  return j.observacaoPlacar || "";
+}
+
+function vencedorJogo(j){
+  const a = j.timeA || "-";
+  const b = j.timeB || "-";
+  const ga = Number(j.golsA || 0);
+  const gb = Number(j.golsB || 0);
+
+  const penA = j.penaltisA ?? j.penaltiA ?? j.penA;
+  const penB = j.penaltisB ?? j.penaltiB ?? j.penB;
+
+  if(ga > gb) return a;
+  if(gb > ga) return b;
+  if(penA !== undefined && penB !== undefined){
+    if(Number(penA) > Number(penB)) return a;
+    if(Number(penB) > Number(penA)) return b;
+  }
+  return "";
+}
+
+function cardChave(j, final=false){
+  const timeA = j.timeA || "-";
+  const timeB = j.timeB || "-";
+  const vencedor = vencedorJogo(j);
+  const status = statusChave(j);
+
+  if(final){
+    return `
+      <div class="bracket-game final-game">
+        <div class="bracket-final-title">Final</div>
+        <div class="bracket-cup"><i class="fa-solid fa-trophy"></i></div>
+        <div class="bracket-status">${esc(status || dataBR(j.data))}</div>
+
+        <div class="bracket-final-teams">
+          <div class="bracket-team bracket-final-team">
+            <img class="bracket-logo" src="${esc(logoTime(j,"A"))}" onerror="this.src='logo-liga.jfif'">
+            <div class="bracket-abrev ${vencedor === timeA ? "winner" : ""}">${esc(timeA)}</div>
+          </div>
+
+          <div class="bracket-score">${placarJogo(j)}</div>
+
+          <div class="bracket-team bracket-final-team">
+            <img class="bracket-logo" src="${esc(logoTime(j,"B"))}" onerror="this.src='logo-liga.jfif'">
+            <div class="bracket-abrev ${vencedor === timeB ? "winner" : ""}">${esc(timeB)}</div>
+          </div>
+        </div>
+
+        ${vencedor ? `<div class="bracket-winner">${esc(vencedor)} campeão</div>` : ""}
+      </div>
+    `;
+  }
+
+  return `
+    <div class="bracket-game">
+      <div class="bracket-status">${esc(status)}</div>
+      <div class="bracket-teams">
+        <div class="bracket-team">
+          <img class="bracket-logo" src="${esc(logoTime(j,"A"))}" onerror="this.src='logo-liga.jfif'">
+          <div class="bracket-abrev">${esc(abrevTime(timeA))}</div>
+        </div>
+
+        <div class="bracket-score">${placarJogo(j)}</div>
+
+        <div class="bracket-team">
+          <img class="bracket-logo" src="${esc(logoTime(j,"B"))}" onerror="this.src='logo-liga.jfif'">
+          <div class="bracket-abrev">${esc(abrevTime(timeB))}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderizarChaveamento(listaJogos){
+  const secao = document.getElementById("secaoChaveamento");
+  const box = document.getElementById("bracketMataMata");
+  if(!secao || !box) return;
+
+  const mataMata = listaJogos.filter(j=>{
+    const f = faseJogo(j);
+    return f.includes("oitava") || f.includes("quarta") || f.includes("semi") || f.includes("final");
+  });
+
+  if(!mataMata.length){
+    secao.style.display = "none";
+    return;
+  }
+
+  const fases = {};
+  mataMata.forEach(j=>{
+    const nome = nomeFase(j.fase || j.rodada || j.etapa || "Fase final");
+    if(!fases[nome]) fases[nome] = [];
+    fases[nome].push(j);
+  });
+
+  const nomes = Object.keys(fases).sort((a,b)=>ordemFase(a)-ordemFase(b));
+
+  box.innerHTML = nomes.map(nome=>{
+    const jogosFase = fases[nome].sort((a,b)=>String(a.data || "").localeCompare(String(b.data || "")));
+    const isFinal = normalizar(nome).includes("final") && !normalizar(nome).includes("semi") && !normalizar(nome).includes("oitava") && !normalizar(nome).includes("quarta");
+
+    return `
+      <div class="bracket-round">
+        ${!isFinal ? `<div class="bracket-round-title">${esc(nome)}</div>` : ""}
+        ${jogosFase.map(j=>cardChave(j,isFinal)).join("")}
+      </div>
+    `;
+  }).join("");
+
+  secao.style.display = "block";
+}
+
 function preencherTela(){
   const totais = calcularTotais();
   const nome = nomeCamp(campeonato);
@@ -837,6 +1216,7 @@ function preencherTela(){
   document.getElementById("btnTimes").href = `times.html?campeonato=${encodeURIComponent(nome)}`;
 
   preencherJogos(totais.jogos);
+  renderizarChaveamento(totais.jogos);
 }
 
 async function carregarRelacionados(){
