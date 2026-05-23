@@ -467,6 +467,33 @@ input:focus,select:focus,textarea:focus{
   .actions .btn-acao{width:100%;font-size:11px;padding:8px 5px}
 }
 
+.grupos-config{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.grupo-box{
+  background:rgba(8,23,44,.58);
+  border:1px solid rgba(247,198,0,.18);
+  border-radius:12px;
+  padding:10px;
+}
+.grupo-box h3{
+  color:var(--gold);
+  font-size:14px;
+  margin-bottom:8px;
+}
+.grupo-box textarea{min-height:112px}
+.helper{
+  color:var(--muted);
+  font-size:11.5px;
+  margin-top:6px;
+  line-height:1.35;
+}
+@media(max-width:900px){
+  .grupos-config{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 
@@ -578,6 +605,25 @@ input:focus,select:focus,textarea:focus{
       </div>
 
       <div>
+        <label>Quantidade de grupos</label>
+        <input id="quantidadeGrupos" type="number" min="1" value="2">
+      </div>
+
+      <div>
+        <label>Classificados por grupo</label>
+        <input id="classificadosPorGrupo" type="number" min="1" value="2">
+      </div>
+
+      <div>
+        <label>Tipo da fase final</label>
+        <select id="tipoFaseFinal">
+          <option value="semifinal-final">Semifinal + Final</option>
+          <option value="final-direta">Final direta</option>
+          <option value="mata-mata">Mata-mata</option>
+        </select>
+      </div>
+
+      <div>
         <label>Zerar cartões em</label>
         <select id="zerarCartoesEm">
           <option value="nunca">Nunca</option>
@@ -629,6 +675,40 @@ input:focus,select:focus,textarea:focus{
       <div>
         <label>Jogos por vermelho direto</label>
         <input id="jogosSuspensaoVermelhoDireto" type="number" min="1" value="2">
+      </div>
+
+      <div class="full">
+        <label>Configuração dos grupos</label>
+        <div class="grupos-config">
+          <div class="grupo-box">
+            <h3>SUB 17 — Grupo A</h3>
+            <textarea id="sub17GrupoA" placeholder="Um time por linha"></textarea>
+            <div class="helper">Ex: AE Independência, Campineira, AD Taquaral, CAP Salesiano</div>
+          </div>
+
+          <div class="grupo-box">
+            <h3>SUB 17 — Grupo B</h3>
+            <textarea id="sub17GrupoB" placeholder="Um time por linha"></textarea>
+            <div class="helper">Ex: Deportivo Capital, Santos, Atletas de Jesus, Abadia</div>
+          </div>
+
+          <div class="grupo-box">
+            <h3>SUB 20 — Grupo A</h3>
+            <textarea id="sub20GrupoA" placeholder="Um time por linha"></textarea>
+            <div class="helper">Ex: AE Independência, Campineira, AD Taquaral, CAP Salesiano</div>
+          </div>
+
+          <div class="grupo-box">
+            <h3>SUB 20 — Grupo B</h3>
+            <textarea id="sub20GrupoB" placeholder="Um time por linha"></textarea>
+            <div class="helper">Ex: Deportivo Capital, Santos, Monte Cristo, Abadia</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="full">
+        <label>Cruzamento automático da fase final</label>
+        <textarea id="cruzamentosFaseFinal" placeholder="Ex: 1º Grupo A x 2º Grupo B"></textarea>
       </div>
 
       <div class="full">
@@ -731,6 +811,87 @@ function normalizarTexto(texto){
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g,"");
+}
+
+function linhasTextarea(id){
+  return document.getElementById(id).value
+    .split("\n")
+    .map(t=>txt(t))
+    .filter(Boolean);
+}
+
+function preencherTextarea(id, lista){
+  document.getElementById(id).value = Array.isArray(lista) ? lista.join("\n") : "";
+}
+
+function configuracaoEliteBasePadrao(){
+  return {
+    quantidadeGrupos:2,
+    classificadosPorGrupo:2,
+    tipoFaseFinal:"semifinal-final",
+    criterioClassificacao:["PTS","V","SG","GP","GC"],
+    tabelaCampos:["PTS","J","V","E","D","GP","GC","SG"],
+    categorias:{
+      "Sub-17":{
+        grupos:{
+          "Grupo A":["AE Independência","Campineira","AD Taquaral","CAP Salesiano"],
+          "Grupo B":["Deportivo Capital","Santos","Atletas de Jesus","Abadia"]
+        }
+      },
+      "Sub-20":{
+        grupos:{
+          "Grupo A":["AE Independência","Campineira","AD Taquaral","CAP Salesiano"],
+          "Grupo B":["Deportivo Capital","Santos","Monte Cristo","Abadia"]
+        }
+      }
+    },
+    cruzamentosFaseFinal:[
+      "1º Grupo A x 2º Grupo B",
+      "1º Grupo B x 2º Grupo A",
+      "Vencedores fazem a final"
+    ],
+    observacao:"Fase de grupos: todos contra todos dentro do grupo. Classificam os 2 primeiros de cada grupo."
+  };
+}
+
+function aplicarConfigPadraoElite(){
+  const cfg = configuracaoEliteBasePadrao();
+  document.getElementById("quantidadeGrupos").value = cfg.quantidadeGrupos;
+  document.getElementById("classificadosPorGrupo").value = cfg.classificadosPorGrupo;
+  document.getElementById("tipoFaseFinal").value = cfg.tipoFaseFinal;
+  preencherTextarea("sub17GrupoA",cfg.categorias["Sub-17"].grupos["Grupo A"]);
+  preencherTextarea("sub17GrupoB",cfg.categorias["Sub-17"].grupos["Grupo B"]);
+  preencherTextarea("sub20GrupoA",cfg.categorias["Sub-20"].grupos["Grupo A"]);
+  preencherTextarea("sub20GrupoB",cfg.categorias["Sub-20"].grupos["Grupo B"]);
+  document.getElementById("cruzamentosFaseFinal").value = cfg.cruzamentosFaseFinal.join("\n");
+  marcarCategorias(["Sub-17","Sub-20"]);
+}
+
+function lerConfiguracaoGrupos(){
+  return {
+    quantidadeGrupos:Number(document.getElementById("quantidadeGrupos").value || 2),
+    classificadosPorGrupo:Number(document.getElementById("classificadosPorGrupo").value || 2),
+    tipoFaseFinal:document.getElementById("tipoFaseFinal").value || "semifinal-final",
+    criterioClassificacao:["PTS","V","SG","GP","GC"],
+    tabelaCampos:["PTS","J","V","E","D","GP","GC","SG"],
+    categorias:{
+      "Sub-17":{grupos:{"Grupo A":linhasTextarea("sub17GrupoA"),"Grupo B":linhasTextarea("sub17GrupoB")}},
+      "Sub-20":{grupos:{"Grupo A":linhasTextarea("sub20GrupoA"),"Grupo B":linhasTextarea("sub20GrupoB")}}
+    },
+    cruzamentosFaseFinal:linhasTextarea("cruzamentosFaseFinal")
+  };
+}
+
+function preencherConfiguracaoGrupos(cfg){
+  if(!cfg){ aplicarConfigPadraoElite(); return; }
+  document.getElementById("quantidadeGrupos").value = cfg.quantidadeGrupos || 2;
+  document.getElementById("classificadosPorGrupo").value = cfg.classificadosPorGrupo || 2;
+  document.getElementById("tipoFaseFinal").value = cfg.tipoFaseFinal || "semifinal-final";
+  preencherTextarea("sub17GrupoA",cfg.categorias?.["Sub-17"]?.grupos?.["Grupo A"] || []);
+  preencherTextarea("sub17GrupoB",cfg.categorias?.["Sub-17"]?.grupos?.["Grupo B"] || []);
+  preencherTextarea("sub20GrupoA",cfg.categorias?.["Sub-20"]?.grupos?.["Grupo A"] || []);
+  preencherTextarea("sub20GrupoB",cfg.categorias?.["Sub-20"]?.grupos?.["Grupo B"] || []);
+  document.getElementById("cruzamentosFaseFinal").value = Array.isArray(cfg.cruzamentosFaseFinal) ? cfg.cruzamentosFaseFinal.join("\n") : "";
 }
 
 function montarCategorias(){
@@ -863,6 +1024,7 @@ window.limparFormulario = function(){
   document.getElementById("previewLogoTexto").textContent = "Pré-visualização da logo";
   logoAtual = "";
   marcarCategorias([]);
+  aplicarConfigPadraoElite();
 };
 
 window.salvarCampeonato = async function(){
@@ -892,6 +1054,7 @@ window.salvarCampeonato = async function(){
     const jogosSuspensaoSegundoAmarelo = Number(document.getElementById("jogosSuspensaoSegundoAmarelo").value || 1);
     const jogosSuspensaoVermelhoDireto = Number(document.getElementById("jogosSuspensaoVermelhoDireto").value || 2);
     const categorias = categoriasSelecionadas();
+    const configuracaoGrupos = lerConfiguracaoGrupos();
 
     if(!nome){
       alert("Digite o nome do campeonato.");
@@ -929,6 +1092,12 @@ window.salvarCampeonato = async function(){
       logo,
       logoCampeonato:logo,
       categorias,
+      quantidadeGrupos:configuracaoGrupos.quantidadeGrupos,
+      classificadosPorGrupo:configuracaoGrupos.classificadosPorGrupo,
+      tipoFaseFinal:configuracaoGrupos.tipoFaseFinal,
+      configuracaoGrupos,
+      grupos:configuracaoGrupos.categorias,
+      cruzamentosFaseFinal:configuracaoGrupos.cruzamentosFaseFinal,
       publicado:status === "publicado",
       publico:status === "publicado",
       visivelPublico:status === "publicado",
@@ -1008,6 +1177,13 @@ window.editarCampeonato = function(id){
   }
 
   marcarCategorias(Array.isArray(c.categorias) ? c.categorias : []);
+  preencherConfiguracaoGrupos(c.configuracaoGrupos || {
+    quantidadeGrupos:c.quantidadeGrupos,
+    classificadosPorGrupo:c.classificadosPorGrupo,
+    tipoFaseFinal:c.tipoFaseFinal,
+    categorias:c.grupos,
+    cruzamentosFaseFinal:c.cruzamentosFaseFinal
+  });
   mostrarFormulario();
 };
 
@@ -1078,6 +1254,7 @@ function renderizarCampeonatos(){
             <small>Formato: ${c.formato || "-"}</small>
             <small>Turno: ${c.turno || "-"}</small>
             <small>Fase final: ${c.faseFinalInicio || "-"}</small>
+            <small>Grupos: ${c.quantidadeGrupos || c.configuracaoGrupos?.quantidadeGrupos || 2} | Classificados: ${c.classificadosPorGrupo || c.configuracaoGrupos?.classificadosPorGrupo || 2}</small>
 
             <small>
               Jogos: ${Number(c.estatisticas?.jogos || 0)} |
@@ -1118,6 +1295,7 @@ document.getElementById("buscaCampeonato").addEventListener("input",renderizarCa
 document.getElementById("filtroStatus").addEventListener("change",renderizarCampeonatos);
 
 montarCategorias();
+aplicarConfigPadraoElite();
 carregarCampeonatos();
 </script>
 
