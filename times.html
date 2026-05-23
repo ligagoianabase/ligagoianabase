@@ -388,6 +388,28 @@ function valorCampo(obj, chaves, fallback = ""){
   return fallback;
 }
 
+function limparImagemUrl(url){
+  const valor = String(url || "").trim();
+
+  if(!valor) return "logo-liga.jfif";
+
+  // Evita tentar renderizar Base64 antigo salvo no Firestore.
+  // Agora o padrão é usar link direto do ImgBB, ex: https://i.ibb.co/...
+  if(valor.startsWith("data:image/")) return "logo-liga.jfif";
+
+  return valor;
+}
+
+function esc(v){
+  return String(v ?? "").replace(/[&<>"']/g, m => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  }[m]));
+}
+
 /* =========================
    CAMPOS FLEXÍVEIS
 ========================= */
@@ -396,7 +418,7 @@ function nomeTime(t){
 }
 
 function logoTime(t){
-  return valorCampo(t, ["logo", "escudo", "imagem", "foto"], "logo-liga.jfif");
+  return limparImagemUrl(valorCampo(t, ["logo", "logoTime", "logoEquipe", "escudo", "imagem", "foto"], "logo-liga.jfif"));
 }
 
 function categoriaTime(t){
@@ -455,7 +477,7 @@ function timesFiltrados(){
     if(categoria && cat !== categoria) return false;
 
     if(busca){
-      const texto = normalizarTexto(`${nome} ${cat} ${cidade} ${tecnico}`);
+      const texto = normalizarTexto(`${esc(nome)} ${cat} ${cidade} ${tecnico}`);
       if(!texto.includes(busca)) return false;
     }
 
@@ -517,28 +539,29 @@ function renderizarTimes(){
               <i class="fa-solid fa-shield-halved"></i>
             </div>
 
-            <div class="status-tag">${status}</div>
+            <div class="status-tag">${esc(status)}</div>
           </div>
 
           <img class="logo-time"
-               src="${logo}"
-               onerror="this.src='logo-liga.jfif'">
+               src="${esc(logo)}"
+               referrerpolicy="no-referrer"
+               onerror="this.onerror=null;this.src='logo-liga.jfif'">
 
-          <div class="nome-time">${nome}</div>
+          <div class="nome-time">${esc(nome)}</div>
 
           <div class="sub-time">
-            ${cidade}<br>
-            ${categoria}
+            ${esc(cidade)}<br>
+            ${esc(categoria)}
           </div>
 
           <div class="info-grid">
             <div class="info-box">
-              <strong>${categoria}</strong>
+              <strong>${esc(categoria)}</strong>
               <span>Categoria</span>
             </div>
 
             <div class="info-box">
-              <strong>${tecnico}</strong>
+              <strong>${esc(tecnico)}</strong>
               <span>Técnico</span>
             </div>
           </div>
