@@ -195,7 +195,7 @@ input:focus,select:focus,textarea:focus{
 
 .filtros{
   display:grid;
-  grid-template-columns:1fr 220px 220px;
+  grid-template-columns:1fr 180px 160px 150px 150px;
   gap:10px;
   margin-bottom:14px;
 }
@@ -546,9 +546,34 @@ input:focus,select:focus,textarea:focus{
 
       <div>
         <label>Categoria</label>
-        <select id="categoria" onchange="filtrarTimesPorCategoria()">
+        <select id="categoria" onchange="aoSelecionarCategoria()">
           <option value="">Selecione</option>
         </select>
+      </div>
+
+      <div>
+        <label>Grupo</label>
+        <select id="grupo" onchange="filtrarTimesPorCategoria()">
+          <option value="">Sem grupo / Geral</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Fase</label>
+        <select id="fase">
+          <option value="Primeira fase">Primeira fase</option>
+          <option value="Fase de grupos">Fase de grupos</option>
+          <option value="Pontos corridos">Pontos corridos</option>
+          <option value="Oitavas">Oitavas</option>
+          <option value="Quartas">Quartas</option>
+          <option value="Semifinal">Semifinal</option>
+          <option value="Final">Final</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Chave / Confronto</label>
+        <input id="chave" placeholder="Ex: Semi 1, Final, Jogo 1">
       </div>
 
       <div>
@@ -674,6 +699,14 @@ input:focus,select:focus,textarea:focus{
 
       <select id="filtroCategoria">
         <option value="">Todas categorias</option>
+      </select>
+
+      <select id="filtroGrupo">
+        <option value="">Todos os grupos</option>
+      </select>
+
+      <select id="filtroFase">
+        <option value="">Todas as fases</option>
       </select>
     </div>
 
@@ -891,6 +924,89 @@ function categoriasDoCampeonato(campeonato){
   return categoriasFixas;
 }
 
+function gruposDoCampeonato(campeonato,categoria){
+  const nomes = new Set();
+
+  const cfg = campeonato?.configuracaoGrupos || {};
+  const grupos = campeonato?.grupos || cfg?.categorias || {};
+
+  if(categoria && grupos?.[categoria]?.grupos){
+    Object.keys(grupos[categoria].grupos).forEach(g=>nomes.add(g));
+  }
+
+  if(categoria && cfg?.categorias?.[categoria]?.grupos){
+    Object.keys(cfg.categorias[categoria].grupos).forEach(g=>nomes.add(g));
+  }
+
+  if(Array.isArray(campeonato?.gruposManuais)){
+    campeonato.gruposManuais.forEach(g=>{
+      if(!g.categoria || normalizar(g.categoria) === normalizar(categoria)){
+        nomes.add(g.nome || g.grupo || g);
+      }
+    });
+  }
+
+  const qtd = Number(campeonato?.quantidadeGrupos || cfg?.quantidadeGrupos || 0);
+  if(!nomes.size && qtd > 0){
+    for(let i=0;i<qtd;i++){
+      nomes.add(`Grupo ${String.fromCharCode(65+i)}`);
+    }
+  }
+
+  return Array.from(nomes).filter(Boolean);
+}
+
+function preencherSelectGrupos(){
+  const campeonato = buscarCampeonato(el("campeonato").value);
+  const categoria = el("categoria").value;
+  const grupos = gruposDoCampeonato(campeonato,categoria);
+  const select = el("grupo");
+
+  select.innerHTML = `<option value="">Sem grupo / Geral</option>`;
+  grupos.forEach(g=>{
+    select.innerHTML += `<option value="${g}">${g}</option>`;
+  });
+}
+
+function preencherFiltroGruposEFases(){
+  const filtroGrupo = el("filtroGrupo");
+  const filtroFase = el("filtroFase");
+  if(!filtroGrupo || !filtroFase) return;
+
+  const grupoAtual = filtroGrupo.value;
+  const faseAtual = filtroFase.value;
+
+  const grupos = new Set();
+  const fases = new Set();
+
+  jogosCache.forEach(j=>{
+    if(j.grupo) grupos.add(j.grupo);
+    if(j.fase) fases.add(j.fase);
+    else if(j.rodada) fases.add(j.rodada);
+  });
+
+  filtroGrupo.innerHTML = `<option value="">Todos os grupos</option>` +
+    [...grupos].sort((a,b)=>a.localeCompare(b,"pt-BR")).map(g=>`<option value="${g}">${g}</option>`).join("");
+
+  filtroFase.innerHTML = `<option value="">Todas as fases</option>` +
+    [...fases].sort((a,b)=>a.localeCompare(b,"pt-BR")).map(f=>`<option value="${f}">${f}</option>`).join("");
+
+  if([...grupos].includes(grupoAtual)) filtroGrupo.value = grupoAtual;
+  if([...fases].includes(faseAtual)) filtroFase.value = faseAtual;
+}
+
+function gruposTimesCategoriaCampeonato(campeonato,categoria,grupo){
+  if(!campeonato || !categoria || !grupo) return [];
+  const cfg = campeonato.configuracaoGrupos || {};
+  const grupos = campeonato.grupos || cfg.categorias || {};
+  return (
+    grupos?.[categoria]?.grupos?.[grupo] ||
+    cfg?.categorias?.[categoria]?.grupos?.[grupo] ||
+    []
+  ).map(x=>normalizar(typeof x === "object" ? (x.nome || x.time || "") : x));
+}
+
+
 function preencherSelect(select,lista,valor,texto){
   select.innerHTML = `<option value="">Selecione</option>`;
   lista.forEach(item=>{
@@ -999,6 +1115,9 @@ async function criarNoticiaAutomaticaJogo(jogoId,jogo,links){
     campeonatoId:jogo.campeonatoId || "",
     campeonato:jogo.campeonato || "",
     categoria:jogo.categoria || "",
+    grupo:jogo.grupo || "",
+    fase:jogo.fase || "",
+    chave:jogo.chave || "",
     rodada:jogo.rodada || "",
     data:jogo.data || "",
     dataHora:jogo.dataHora || "",
@@ -1040,6 +1159,8 @@ A partida foi oficialmente cadastrada e a súmula digital já está vinculada ao
 
 Campeonato: ${jogo.campeonato || "-"}
 Categoria: ${jogo.categoria || "-"}
+Grupo: ${jogo.grupo || "Geral"}
+Fase: ${jogo.fase || "-"}
 Rodada: ${jogo.rodada || "-"}
 Data: ${dataInfo.data}
 Horário: ${dataInfo.hora}
@@ -1323,16 +1444,33 @@ window.aoSelecionarCampeonato = function(){
     el("categoria").innerHTML += `<option value="${c}">${c}</option>`;
   });
 
+  preencherSelectGrupos();
+  filtrarTimesPorCategoria();
+};
+
+window.aoSelecionarCategoria = function(){
+  preencherSelectGrupos();
   filtrarTimesPorCategoria();
 };
 
 window.filtrarTimesPorCategoria = function(){
+  const campeonato = buscarCampeonato(el("campeonato").value);
   const categoria = el("categoria").value;
+  const grupo = el("grupo").value;
+  const nomesDoGrupo = gruposTimesCategoriaCampeonato(campeonato,categoria,grupo);
 
   const timesFiltrados = timesCache.filter(t=>{
-    if(!categoria) return true;
-    if(!Array.isArray(t.categorias)) return true;
-    return t.categorias.some(c=>normalizar(c) === normalizar(categoria));
+    const nomeNorm = normalizar(nomeTime(t));
+
+    if(categoria && Array.isArray(t.categorias) && !t.categorias.some(c=>normalizar(c) === normalizar(categoria))){
+      return false;
+    }
+
+    if(grupo && nomesDoGrupo.length && !nomesDoGrupo.includes(nomeNorm)){
+      return false;
+    }
+
+    return true;
   });
 
   preencherSelect(el("timeA"),timesFiltrados,t=>t.id,t=>nomeTime(t));
@@ -1378,6 +1516,9 @@ window.atualizarPreviewTimes = function(){
 window.limparFormulario = function(){
   el("campeonato").value = "";
   el("categoria").innerHTML = `<option value="">Selecione</option>`;
+  el("grupo").innerHTML = `<option value="">Sem grupo / Geral</option>`;
+  el("fase").value = "Primeira fase";
+  el("chave").value = "";
   el("rodada").value = "";
   el("dataJogo").value = "";
   el("localJogo").value = "";
@@ -1414,6 +1555,9 @@ window.salvarJogo = async function(){
   const campeonatoObj = buscarCampeonato(campeonatoId);
 
   const categoria = el("categoria").value;
+  const grupo = txt(el("grupo").value);
+  const fase = txt(el("fase").value) || "Primeira fase";
+  const chave = txt(el("chave").value);
   const rodada = txt(el("rodada").value);
   const data = el("dataJogo").value;
   const local = txt(el("localJogo").value);
@@ -1427,18 +1571,22 @@ window.salvarJogo = async function(){
   const assistente2Id = el("assistente2").value;
   const arbitroAuxiliarId = el("arbitroAuxiliar").value;
 
-  if(!campeonatoId) reativarBotoes(); return alert("Selecione o campeonato.");
-  if(!categoria) reativarBotoes(); return alert("Selecione a categoria.");
-  if(!rodada) reativarBotoes(); return alert("Digite a rodada.");
-  if(!data) reativarBotoes(); return alert("Escolha a data e hora.");
-  if(!local) reativarBotoes(); return alert("Digite o local.");
-  if(!timeAId || !timeBId) reativarBotoes(); return alert("Selecione os times.");
-  if(timeAId === timeBId) reativarBotoes(); return alert("Os times não podem ser iguais.");
+  if(!campeonatoId){ reativarBotoes(); return alert("Selecione o campeonato."); }
+  if(!categoria){ reativarBotoes(); return alert("Selecione a categoria."); }
+  if(!fase){ reativarBotoes(); return alert("Selecione a fase."); }
+  if(!rodada){ reativarBotoes(); return alert("Digite a rodada."); }
+  if(!data){ reativarBotoes(); return alert("Escolha a data e hora."); }
+  if(!local){ reativarBotoes(); return alert("Digite o local."); }
+  if(!timeAId || !timeBId){ reativarBotoes(); return alert("Selecione os times."); }
+  if(timeAId === timeBId){ reativarBotoes(); return alert("Os times não podem ser iguais."); }
   try{
     const timeAObj = buscarTime(timeAId);
     const timeBObj = buscarTime(timeBId);
 
-    if(!timeAObj || !timeBObj) reativarBotoes(); return alert("Erro ao localizar os times selecionados.");
+    if(!timeAObj || !timeBObj){
+      reativarBotoes();
+      return alert("Erro ao localizar os times selecionados.");
+    }
 
   const arbitroObj = buscarArbitro(arbitroId) || null;
   const assistente1Obj = buscarAssistente(assistente1Id);
@@ -1463,14 +1611,19 @@ window.salvarJogo = async function(){
     regrasCartoes:campeonatoObj?.regrasCartoes || {},
     formatoCampeonato:campeonatoObj?.formato || "",
     categoria,
+    grupo,
+    fase,
+    chave,
     rodada,
+    grupoNome:grupo,
+    faseNome:fase,
+    chaveNome:chave,
 
     data,
     dataHora:data,
     hora:data.includes("T") ? data.split("T")[1] : "",
     local,
     campo:local,
-    fase:"Primeira fase",
 
     timeAId,
     timeBId,
@@ -1667,6 +1820,7 @@ async function carregarJogos(){
 
   jogosCache.sort((a,b)=>(b.data || "").localeCompare(a.data || ""));
 
+  preencherFiltroGruposEFases();
   renderizarJogos();
 }
 
@@ -1675,15 +1829,22 @@ function renderizarJogos(){
   const busca = normalizar(el("buscaJogo").value);
   const filtroCampeonato = el("filtroCampeonato").value;
   const filtroCategoria = el("filtroCategoria").value;
+  const filtroGrupo = el("filtroGrupo")?.value || "";
+  const filtroFase = el("filtroFase")?.value || "";
 
   let jogos = jogosCache.filter(j=>{
     if(filtroCampeonato && j.campeonatoId !== filtroCampeonato) return false;
     if(filtroCategoria && normalizar(j.categoria) !== normalizar(filtroCategoria)) return false;
+    if(filtroGrupo && normalizar(j.grupo) !== normalizar(filtroGrupo)) return false;
+    if(filtroFase && normalizar(j.fase || j.rodada) !== normalizar(filtroFase)) return false;
 
     if(busca){
       const texto = normalizar(`
         ${j.campeonato || ""}
         ${j.categoria || ""}
+        ${j.grupo || ""}
+        ${j.fase || ""}
+        ${j.chave || ""}
         ${j.rodada || ""}
         ${j.timeA?.nome || ""}
         ${j.timeB?.nome || ""}
@@ -1715,7 +1876,10 @@ function renderizarJogos(){
           <div class="card-grid">
             <div><span>Campeonato</span>${j.campeonato || "-"}</div>
             <div><span>Categoria</span>${j.categoria || "-"}</div>
+            <div><span>Grupo</span>${j.grupo || "Geral"}</div>
+            <div><span>Fase</span>${j.fase || "-"}</div>
             <div><span>Rodada</span>${j.rodada || "-"}</div>
+            <div><span>Chave</span>${j.chave || "-"}</div>
             <div><span>Status</span>${j.status || "agendado"}</div>
             <div><span>Data</span>${dataFormatada}</div>
             <div><span>Local</span>${j.local || "-"}</div>
@@ -1749,6 +1913,7 @@ function renderizarJogos(){
 }
 
 function preencherFiltrosCategorias(){
+  preencherFiltroGruposEFases();
   const filtro = el("filtroCategoria");
   filtro.innerHTML = `<option value="">Todas categorias</option>`;
 
@@ -1768,6 +1933,8 @@ function preencherFiltrosCategorias(){
 el("buscaJogo").addEventListener("input",renderizarJogos);
 el("filtroCampeonato").addEventListener("change",renderizarJogos);
 el("filtroCategoria").addEventListener("change",renderizarJogos);
+if(el("filtroGrupo")) el("filtroGrupo").addEventListener("change",renderizarJogos);
+if(el("filtroFase")) el("filtroFase").addEventListener("change",renderizarJogos);
 
 async function iniciarPagina(){
   preencherFiltrosCategorias();
