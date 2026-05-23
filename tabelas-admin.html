@@ -856,6 +856,11 @@ td{font-size:12px;padding:9px 7px}
   .lista-topo-actions,.lista-topo .btn-acao{width:100%}
 }
 
+
+/* ===== AJUSTE GRUPOS / FORMATO NOVO ===== */
+.grid-2{grid-template-columns:1fr 180px 180px !important}
+@media(max-width:900px){.grid-2{grid-template-columns:1fr !important}}
+.grupo-badge{display:inline-flex;align-items:center;justify-content:center;padding:4px 7px;border-radius:999px;background:#1a3f73;color:#fff;font-size:11px;font-weight:900;border:1px solid rgba(255,255,255,.08)}
 </style>
 </head>
 
@@ -930,6 +935,13 @@ td{font-size:12px;padding:9px 7px}
         <option value="">Todas / Geral</option>
       </select>
     </div>
+
+    <div>
+      <label>Grupo</label>
+      <select id="grupoSelect" onchange="carregarTabela()">
+        <option value="">Todos / Geral</option>
+      </select>
+    </div>
   </div>
 </section>
 
@@ -963,6 +975,11 @@ td{font-size:12px;padding:9px 7px}
       <select id="timeEdicao">
         <option value="">Selecione o time</option>
       </select>
+    </div>
+
+    <div>
+      <label>Grupo</label>
+      <input id="editGrupo" placeholder="Ex: Grupo A">
     </div>
 
     <div>
@@ -1056,6 +1073,11 @@ td{font-size:12px;padding:9px 7px}
     </div>
 
     <div>
+      <label>Grupo da punição</label>
+      <input id="grupoPunicao" placeholder="Ex: Grupo A">
+    </div>
+
+    <div>
       <label>Jogador punido</label>
       <select id="jogadorPunicao">
         <option value="">Selecione o jogador</option>
@@ -1114,6 +1136,7 @@ td{font-size:12px;padding:9px 7px}
         <tr>
           <th>Pos</th>
           <th>Time</th>
+          <th>Grupo</th>
           <th>Pts</th>
           <th>J</th>
           <th>V</th>
@@ -1129,7 +1152,7 @@ td{font-size:12px;padding:9px 7px}
         </tr>
       </thead>
       <tbody id="corpoTabela">
-        <tr><td colspan="14">Carregando tabela...</td></tr>
+        <tr><td colspan="15">Carregando tabela...</td></tr>
       </tbody>
     </table>
   </div>
@@ -1170,6 +1193,7 @@ let historicoCache = [];
 const ids = {
   campeonatoSelect:"campeonatoSelect",
   categoriaSelect:"categoriaSelect",
+  grupoSelect:"grupoSelect",
   timeEdicao:"timeEdicao",
   timePunicao:"timePunicao",
   jogadorPunicao:"jogadorPunicao",
@@ -1189,6 +1213,14 @@ function n(v){
 
 function texto(v){
   return String(v || "").trim();
+}
+
+function norm(v){
+  return String(v || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
 }
 
 function mostrarStatus(msg,tipo="ok"){
@@ -1302,8 +1334,48 @@ function carregarCategorias(){
   }
 
   categorias.forEach(cat=>{
-    select.innerHTML += `<option value="${cat}">${cat}</option>`;
+    const nomeCat = typeof cat === "string" ? cat : (cat.nome || cat.categoria || "");
+    if(nomeCat) select.innerHTML += `<option value="${nomeCat}">${nomeCat}</option>`;
   });
+
+  carregarGrupos();
+}
+
+function nomesGruposDoCampeonato(camp,categoriaAtual=""){
+  const grupos = new Set();
+  if(!camp) return [];
+
+  const cfg = camp.configuracaoGrupos || {};
+  const grupoObj = camp.grupos || cfg.categorias || {};
+
+  Object.entries(grupoObj || {}).forEach(([cat,dados])=>{
+    if(categoriaAtual && norm(cat) !== norm(categoriaAtual)) return;
+    const gs = dados?.grupos || dados || {};
+    Object.keys(gs || {}).forEach(g=>grupos.add(g));
+  });
+
+  if(Array.isArray(camp.gruposNomes)) camp.gruposNomes.forEach(g=>grupos.add(g));
+  if(Number(camp.quantidadeGrupos || cfg.quantidadeGrupos || 0) > 0){
+    const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    for(let i=0;i<Number(camp.quantidadeGrupos || cfg.quantidadeGrupos);i++) grupos.add(`Grupo ${letras[i] || (i+1)}`);
+  }
+
+  tabelaCache.forEach(t=>{ if(t.grupo) grupos.add(t.grupo); });
+
+  return [...grupos].filter(Boolean).sort((a,b)=>a.localeCompare(b,"pt-BR"));
+}
+
+function carregarGrupos(){
+  const select = el(ids.grupoSelect);
+  if(!select) return;
+  const atual = select.value;
+  const campId = el(ids.campeonatoSelect).value;
+  const categoria = el(ids.categoriaSelect).value;
+  const camp = campeonatosCache.find(c=>c.id === campId);
+  const grupos = nomesGruposDoCampeonato(camp,categoria);
+
+  select.innerHTML = `<option value="">Todos / Geral</option>` + grupos.map(g=>`<option value="${g}">${g}</option>`).join("");
+  if(grupos.includes(atual)) select.value = atual;
 }
 
 async function carregarTimes(){
@@ -1354,33 +1426,69 @@ function preencherSelectJogadores(){
   }).join("");
 }
 
+function grupoDoTimeNoCamp(time,camp,categoria){
+  if(time.grupo) return time.grupo;
+  if(time.grupoNome) return time.grupoNome;
+
+  const nome = norm(time.nome || time.nomeTime || "");
+  const cfg = camp?.configuracaoGrupos || {};
+  const gruposCamp = camp?.grupos || cfg.categorias || {};
+
+  for(const [cat,dados] of Object.entries(gruposCamp || {})){
+    if(categoria && norm(cat) !== norm(categoria)) continue;
+    const grupos = dados?.grupos || dados || {};
+    for(const [grupo,lista] of Object.entries(grupos || {})){
+      if(Array.isArray(lista) && lista.some(x=>norm(typeof x === "string" ? x : (x.nome || x.nomeTime || "")) === nome)){
+        return grupo;
+      }
+    }
+  }
+
+  return "";
+}
+
 function montarTabelaBase(){
+  const campId = el(ids.campeonatoSelect).value;
   const categoria = el(ids.categoriaSelect).value;
+  const grupoFiltro = el(ids.grupoSelect)?.value || "";
+  const camp = campeonatosCache.find(c=>c.id === campId);
 
   tabelaCache = timesCache
     .filter(t=>{
-      if(!categoria) return true;
-      const cats = Array.isArray(t.categorias) ? t.categorias : [];
-      return cats.includes(categoria);
+      if(campId && t.campeonatoId && t.campeonatoId !== campId) return false;
+      if(categoria){
+        const cats = Array.isArray(t.categorias) ? t.categorias : [];
+        const catTime = t.categoria || "";
+        if(catTime && norm(catTime) !== norm(categoria) && !cats.some(c=>norm(c) === norm(categoria))) return false;
+        if(!catTime && cats.length && !cats.some(c=>norm(c) === norm(categoria))) return false;
+      }
+      return true;
     })
-    .map(t=>({
-      id:t.id,
-      nome:t.nome || "-",
-      logo:t.logo || t.escudo || "logo-liga.jfif",
-      jogos:n(t.jogos),
-      pontos:n(t.pontos),
-      vitorias:n(t.vitorias),
-      empates:n(t.empates),
-      derrotas:n(t.derrotas),
-      golsPro:n(t.golsPro),
-      golsContra:n(t.golsContra),
-      cartoesAmarelos:n(t.cartoesAmarelos || t.amarelos),
-      cartoesVermelhos:n(t.cartoesVermelhos || t.vermelhos),
-      pontosPunicao:n(t.pontosPunicao),
-      motivoPunicao:texto(t.motivoPunicao),
-      campeonatoId:t.campeonatoId || "",
-      categoria
-    }));
+    .map(t=>{
+      const grupo = grupoDoTimeNoCamp(t,camp,categoria);
+      return {
+        id:t.id,
+        nome:t.nome || "-",
+        logo:t.logo || t.escudo || "logo-liga.jfif",
+        grupo,
+        jogos:n(t.jogos),
+        pontos:n(t.pontos),
+        vitorias:n(t.vitorias),
+        empates:n(t.empates),
+        derrotas:n(t.derrotas),
+        golsPro:n(t.golsPro),
+        golsContra:n(t.golsContra),
+        cartoesAmarelos:n(t.cartoesAmarelos || t.amarelos),
+        cartoesVermelhos:n(t.cartoesVermelhos || t.vermelhos),
+        pontosPunicao:n(t.pontosPunicao),
+        motivoPunicao:texto(t.motivoPunicao),
+        campeonatoId:t.campeonatoId || campId || "",
+        categoria
+      };
+    })
+    .filter(t=>!grupoFiltro || norm(t.grupo) === norm(grupoFiltro));
+
+  carregarGrupos();
 }
 
 function renderTabela(){
@@ -1388,7 +1496,7 @@ function renderTabela(){
   const lista = ordenarTabela(tabelaCache);
 
   if(!lista.length){
-    tbody.innerHTML = `<tr><td colspan="14">Nenhum time encontrado para esta tabela.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="15">Nenhum time encontrado para esta tabela.</td></tr>`;
     return;
   }
 
@@ -1406,6 +1514,7 @@ function renderTabela(){
             <span>${temPunicao(t) ? `<i class="fa-solid fa-gavel gavel"></i>` : ""}${t.nome}</span>
           </div>
         </td>
+        <td>${t.grupo ? `<span class="grupo-badge">${t.grupo}</span>` : "-"}</td>
         <td class="${temPunicao(t) ? "punido" : ""}">${t.pontos}</td>
         <td>${t.jogos}</td>
         <td>${t.vitorias}</td>
@@ -1460,9 +1569,14 @@ function renderHistorico(){
 
 window.carregarTabela = async function(){
   const categoriaAtual = el(ids.categoriaSelect).value;
+  const grupoAtual = el(ids.grupoSelect)?.value || "";
   carregarCategorias();
   if(categoriaAtual && Array.from(el(ids.categoriaSelect).options).some(o=>o.value === categoriaAtual)){
     el(ids.categoriaSelect).value = categoriaAtual;
+  }
+  carregarGrupos();
+  if(grupoAtual && el(ids.grupoSelect) && Array.from(el(ids.grupoSelect).options).some(o=>o.value === grupoAtual)){
+    el(ids.grupoSelect).value = grupoAtual;
   }
   montarTabelaBase();
   preencherSelectTimes();
@@ -1478,6 +1592,7 @@ window.editarLinha = function(id){
   mostrarFormTabela("formEdicaoTabela");
 
   el("timeEdicao").value = t.id;
+  el("editGrupo").value = t.grupo || "";
   el("editPontos").value = t.pontos;
   el("editJogos").value = t.jogos;
   el("editVitorias").value = t.vitorias;
@@ -1495,6 +1610,7 @@ window.editarLinha = function(id){
 
 window.limparEdicao = function(){
   el("timeEdicao").value = "";
+  el("editGrupo").value = "";
   ["editPontos","editJogos","editVitorias","editEmpates","editDerrotas","editGolsPro","editGolsContra","editAmarelos","editVermelhos","editPontosPunicao"].forEach(id=>el(id).value = 0);
   el("editMotivoPunicao").value = "";
 };
@@ -1524,6 +1640,9 @@ window.aplicarEdicaoTime = async function(){
     cartoesVermelhos:n(el("editVermelhos").value),
     pontosPunicao,
     motivoPunicao:texto(el("editMotivoPunicao").value),
+    grupo:texto(el("editGrupo").value),
+    campeonatoId:el("campeonatoSelect").value,
+    categoria:el("categoriaSelect").value,
     atualizadoEm:serverTimestamp()
   };
 
@@ -1536,6 +1655,7 @@ window.aplicarEdicaoTime = async function(){
       nomeAlvo:t.nome,
       campeonatoId:el("campeonatoSelect").value,
       categoria:el("categoriaSelect").value,
+      grupo:texto(el("editGrupo").value),
       pontos:pontosPunicao,
       motivo:dados.motivoPunicao || "Ajuste manual",
       observacao:"Punição aplicada pela edição da tabela.",
@@ -1554,6 +1674,7 @@ window.registrarPunicao = async function(){
   const timeId = el("timePunicao").value;
   const jogadorId = el("jogadorPunicao").value;
   const pontos = n(el("pontosPunicao").value);
+  const grupoPunicao = texto(el("grupoPunicao").value) || (el(ids.grupoSelect)?.value || "");
   const motivo = texto(el("motivoPunicao").value);
   const obs = texto(el("obsPunicao").value);
   const excluirJogador = el("excluirJogadorCampeonato").value === "sim";
@@ -1579,6 +1700,9 @@ window.registrarPunicao = async function(){
     pontos:novosPontos,
     pontosPunicao:novoPontosPunicao,
     motivoPunicao:motivo,
+    grupo:grupoPunicao || timeAtual.grupo || "",
+    campeonatoId:el("campeonatoSelect").value,
+    categoria:el("categoriaSelect").value,
     atualizadoEm:serverTimestamp()
   });
 
@@ -1600,6 +1724,7 @@ window.registrarPunicao = async function(){
     nomeAlvo,
     campeonatoId:el("campeonatoSelect").value,
     categoria:el("categoriaSelect").value,
+    grupo:grupoPunicao,
     pontos,
     motivo,
     observacao:obs,
@@ -1609,6 +1734,7 @@ window.registrarPunicao = async function(){
   });
 
   el("pontosPunicao").value = 0;
+  el("grupoPunicao").value = "";
   el("obsPunicao").value = "";
   el("excluirJogadorCampeonato").value = "nao";
 
