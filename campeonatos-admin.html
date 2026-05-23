@@ -389,6 +389,46 @@ input:focus,select:focus,textarea:focus{
   }
   .menu a{flex:0 0 auto}
 }
+
+.hidden{display:none !important}
+
+.lista-topo{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:16px;
+  flex-wrap:wrap;
+}
+
+.lista-topo h2{
+  color:var(--gold);
+  font-size:24px;
+  font-weight:900;
+}
+
+.lista-topo p{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:4px;
+}
+
+.btn-novo{
+  background:linear-gradient(135deg,var(--gold),#ffe45c);
+  color:#111;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+}
+
+@media(max-width:600px){
+  .lista-topo{
+    align-items:stretch;
+  }
+
+  .lista-topo .btn-acao{
+    width:100%;
+  }
+}
+
 </style>
 </head>
 
@@ -409,8 +449,8 @@ input:focus,select:focus,textarea:focus{
     <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
 
     <div class="header-right">
-      <button class="top-btn btn-gold" type="button" onclick="salvarCampeonato()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar Campeonato
+      <button class="top-btn btn-gold" type="button" onclick="abrirFormularioNovo()">
+        <i class="fa-solid fa-plus"></i> Novo Campeonato
       </button>
     </div>
   </div>
@@ -439,7 +479,7 @@ input:focus,select:focus,textarea:focus{
     <p>Cadastre campeonatos, logo, temporada, formato, categorias e regras. Tudo salvo no Firebase para jogos, tabelas, súmulas e estatísticas automáticas.</p>
   </div>
 
-  <section class="form-panel">
+  <section class="form-panel hidden" id="formCampeonato">
     <div class="form-title" id="tituloFormulario">Novo Campeonato</div>
 
     <input type="hidden" id="campeonatoId">
@@ -567,21 +607,38 @@ input:focus,select:focus,textarea:focus{
       <button class="btn-acao btn-danger" type="button" onclick="limparFormulario()">
         <i class="fa-solid fa-broom"></i> Limpar
       </button>
+
+      <button class="btn-acao btn-blue" type="button" onclick="voltarLista()">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+      </button>
     </div>
   </section>
 
-  <div class="filtros">
-    <input id="buscaCampeonato" placeholder="Pesquisar campeonato...">
+  <section id="areaListaCampeonatos">
+    <div class="lista-topo">
+      <div>
+        <h2>Campeonatos cadastrados</h2>
+        <p>Gerencie, edite ou crie novos campeonatos.</p>
+      </div>
 
-    <select id="filtroStatus">
-      <option value="">Todos os status</option>
-      <option value="rascunho">Rascunho</option>
-      <option value="publicado">Publicado</option>
-      <option value="encerrado">Encerrado</option>
-    </select>
-  </div>
+      <button class="btn-acao btn-novo" type="button" onclick="abrirFormularioNovo()">
+        <i class="fa-solid fa-plus"></i> Novo Campeonato
+      </button>
+    </div>
 
-  <div class="lista-grid" id="listaCampeonatos"></div>
+    <div class="filtros">
+      <input id="buscaCampeonato" placeholder="Pesquisar campeonato...">
+
+      <select id="filtroStatus">
+        <option value="">Todos os status</option>
+        <option value="rascunho">Rascunho</option>
+        <option value="publicado">Publicado</option>
+        <option value="encerrado">Encerrado</option>
+      </select>
+    </div>
+
+    <div class="lista-grid" id="listaCampeonatos"></div>
+  </section>
 
 </div>
 
@@ -599,6 +656,29 @@ import {
 
 let campeonatosCache = [];
 let logoAtual = "";
+
+function mostrarFormulario(){
+  document.getElementById("formCampeonato").classList.remove("hidden");
+  document.getElementById("areaListaCampeonatos").classList.add("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function mostrarLista(){
+  document.getElementById("formCampeonato").classList.add("hidden");
+  document.getElementById("areaListaCampeonatos").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+window.abrirFormularioNovo = function(){
+  limparFormulario();
+  document.getElementById("tituloFormulario").textContent = "Novo Campeonato";
+  mostrarFormulario();
+};
+
+window.voltarLista = function(){
+  limparFormulario();
+  mostrarLista();
+};
 
 const categoriasFixas = [
   "Sub-11","Sub-12","Sub-13","Sub-14","Sub-15","Sub-16",
@@ -737,6 +817,7 @@ window.limparFormulario = function(){
   document.getElementById("descricao").value = "";
   document.getElementById("amarelosParaSuspensao").value = 3;
   document.getElementById("jogosSuspensaoAmarelos").value = 1;
+  document.getElementById("jogosSuspensaoSegundoAmarelo").value = 1;
   document.getElementById("jogosSuspensaoVermelhoDireto").value = 2;
   document.getElementById("tituloFormulario").textContent = "Novo Campeonato";
   document.getElementById("previewLogoBox").style.display = "none";
@@ -843,6 +924,7 @@ window.salvarCampeonato = async function(){
 
     limparFormulario();
     await carregarCampeonatos();
+    mostrarLista();
 
   }catch(e){
     console.error("Erro ao salvar campeonato:", e);
@@ -888,7 +970,7 @@ window.editarCampeonato = function(id){
   }
 
   marcarCategorias(Array.isArray(c.categorias) ? c.categorias : []);
-  window.scrollTo({top:0,behavior:"smooth"});
+  mostrarFormulario();
 };
 
 window.excluirCampeonato = async function(id){
