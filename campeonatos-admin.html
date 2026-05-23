@@ -633,12 +633,12 @@ input:focus,select:focus,textarea:focus{
       </div>
 
       <div>
-        <label>Logo URL</label>
-        <input id="logo" placeholder="logo-campeonato.png ou URL">
+        <label>Logo URL ImgBB</label>
+        <input id="logo" placeholder="Cole aqui o Direct link do ImgBB ou envie a logo abaixo">
       </div>
 
       <div>
-        <label>Enviar logo do PC/Celular</label>
+        <label>Enviar logo para o ImgBB</label>
         <input type="file" id="logoArquivo" accept="image/*" onchange="previewLogoArquivo()">
       </div>
 
@@ -799,6 +799,8 @@ import {
 
 let campeonatosCache = [];
 let logoAtual = "";
+
+const IMGBB_API_KEY = "9556c62fd6864f3e1e33d9fd4431668c";
 
 function mostrarFormulario(){
   document.getElementById("formCampeonato").classList.remove("hidden");
@@ -995,61 +997,30 @@ window.previewLogoArquivo = function(){
   leitor.readAsDataURL(arquivo);
 };
 
-function arquivoParaLogoBase64(arquivo){
-  return new Promise((resolve,reject)=>{
-    if(!arquivo){
-      resolve("");
-      return;
-    }
+async function enviarLogoImgBB(arquivo){
+  if(!arquivo){
+    return "";
+  }
 
-    if(!arquivo.type || !arquivo.type.startsWith("image/")){
-      reject(new Error("O arquivo da logo precisa ser uma imagem."));
-      return;
-    }
+  if(!arquivo.type || !arquivo.type.startsWith("image/")){
+    throw new Error("O arquivo da logo precisa ser uma imagem.");
+  }
 
-    const leitor = new FileReader();
+  const formData = new FormData();
+  formData.append("image", arquivo);
 
-    leitor.onload = function(e){
-      const img = new Image();
-
-      img.onload = function(){
-        const max = 700;
-        let largura = img.width;
-        let altura = img.height;
-
-        if(largura > altura && largura > max){
-          altura = Math.round((altura * max) / largura);
-          largura = max;
-        }else if(altura >= largura && altura > max){
-          largura = Math.round((largura * max) / altura);
-          altura = max;
-        }
-
-        const canvas = document.createElement("canvas");
-        canvas.width = largura;
-        canvas.height = altura;
-
-        const ctx = canvas.getContext("2d");
-        ctx.clearRect(0,0,largura,altura);
-        ctx.drawImage(img,0,0,largura,altura);
-
-        const base64 = canvas.toDataURL("image/png");
-        resolve(base64);
-      };
-
-      img.onerror = function(){
-        reject(new Error("Não foi possível ler a imagem da logo."));
-      };
-
-      img.src = e.target.result;
-    };
-
-    leitor.onerror = function(){
-      reject(new Error("Erro ao carregar o arquivo da logo."));
-    };
-
-    leitor.readAsDataURL(arquivo);
+  const resposta = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,{
+    method:"POST",
+    body:formData
   });
+
+  const json = await resposta.json();
+
+  if(!resposta.ok || !json.success){
+    throw new Error(json?.error?.message || "Erro ao enviar logo para o ImgBB.");
+  }
+
+  return json.data?.url || json.data?.display_url || json.data?.image?.url || "";
 }
 
 async function uploadLogoSeExistir(){
@@ -1057,13 +1028,20 @@ async function uploadLogoSeExistir(){
   const logoUrlManual = txt(document.getElementById("logo").value);
 
   if(arquivo){
-    return await arquivoParaLogoBase64(arquivo);
+    return await enviarLogoImgBB(arquivo);
   }
 
-  if(logoUrlManual) return logoUrlManual;
+  if(logoUrlManual){
+    if(logoUrlManual.startsWith("data:image/")){
+      throw new Error("Não cole Base64 no campo da logo. Use o Direct link do ImgBB ou envie o arquivo para subir no ImgBB.");
+    }
+
+    return logoUrlManual;
+  }
 
   return logoAtual || "logo-liga.jfif";
 }
+
 
 window.limparFormulario = function(){
   document.getElementById("campeonatoId").value = "";
