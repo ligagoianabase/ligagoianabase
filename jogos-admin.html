@@ -768,6 +768,12 @@ const categoriasFixas = [
 function el(id){ return document.getElementById(id); }
 function txt(v){ return String(v || "").trim(); }
 
+function logoSegura(valor){
+  const logo = txt(valor);
+  if(!logo || logo.startsWith("data:image/")) return "logo-liga.jfif";
+  return logo;
+}
+
 function normalizar(texto){
   return String(texto || "")
     .trim()
@@ -926,12 +932,21 @@ function categoriasDoCampeonato(campeonato){
 
 function gruposDoCampeonato(campeonato,categoria){
   const nomes = new Set();
-
   const cfg = campeonato?.configuracaoGrupos || {};
-  const grupos = campeonato?.grupos || cfg?.categorias || {};
 
-  if(categoria && grupos?.[categoria]?.grupos){
-    Object.keys(grupos[categoria].grupos).forEach(g=>nomes.add(g));
+  const gruposLista = Array.isArray(campeonato?.grupos)
+    ? campeonato.grupos
+    : (Array.isArray(cfg?.grupos) ? cfg.grupos : []);
+
+  gruposLista.forEach(g=>{
+    const nome = typeof g === "string" ? g : (g?.nome || g?.grupo || "");
+    if(nome) nomes.add(nome);
+  });
+
+  const gruposObj = (!Array.isArray(campeonato?.grupos) && campeonato?.grupos) || cfg?.categorias || {};
+
+  if(categoria && gruposObj?.[categoria]?.grupos){
+    Object.keys(gruposObj[categoria].grupos).forEach(g=>nomes.add(g));
   }
 
   if(categoria && cfg?.categorias?.[categoria]?.grupos){
@@ -996,11 +1011,22 @@ function preencherFiltroGruposEFases(){
 }
 
 function gruposTimesCategoriaCampeonato(campeonato,categoria,grupo){
-  if(!campeonato || !categoria || !grupo) return [];
+  if(!campeonato || !grupo) return [];
   const cfg = campeonato.configuracaoGrupos || {};
-  const grupos = campeonato.grupos || cfg.categorias || {};
+
+  const gruposLista = Array.isArray(campeonato.grupos)
+    ? campeonato.grupos
+    : (Array.isArray(cfg.grupos) ? cfg.grupos : []);
+
+  const grupoObj = gruposLista.find(g=>normalizar(g?.nome || g?.grupo || g) === normalizar(grupo));
+  if(grupoObj){
+    const times = Array.isArray(grupoObj.times) ? grupoObj.times : [];
+    return times.map(x=>normalizar(typeof x === "object" ? (x.nome || x.time || "") : x));
+  }
+
+  const gruposObj = (!Array.isArray(campeonato.grupos) && campeonato.grupos) || cfg.categorias || {};
   return (
-    grupos?.[categoria]?.grupos?.[grupo] ||
+    gruposObj?.[categoria]?.grupos?.[grupo] ||
     cfg?.categorias?.[categoria]?.grupos?.[grupo] ||
     []
   ).map(x=>normalizar(typeof x === "object" ? (x.nome || x.time || "") : x));
@@ -1129,8 +1155,8 @@ async function criarNoticiaAutomaticaJogo(jogoId,jogo,links){
     timeB:jogo.timeB || null,
     timeMandanteNome:nomeA,
     timeVisitanteNome:nomeB,
-    logoMandante:jogo.timeA?.logo || jogo.timeA?.escudo || "logo-liga.jfif",
-    logoVisitante:jogo.timeB?.logo || jogo.timeB?.escudo || "logo-liga.jfif",
+    logoMandante:logoSegura(jogo.timeA?.logo || jogo.timeA?.escudo),
+    logoVisitante:logoSegura(jogo.timeB?.logo || jogo.timeB?.escudo),
     linkJogo:`jogos.html?id=${jogoId}`,
     linkSumula:links?.publica || "",
     publicado:true,
@@ -1606,7 +1632,7 @@ window.salvarJogo = async function(){
     campeonatoId,
     campeonato:campeonatoObj ? nomeCampeonato(campeonatoObj) : "",
     campeonatoNome:campeonatoObj ? nomeCampeonato(campeonatoObj) : "",
-    logoCampeonato:campeonatoObj?.logo || "logo-liga.jfif",
+    logoCampeonato:logoSegura(campeonatoObj?.logo || campeonatoObj?.logoCampeonato),
     temporada:campeonatoObj?.temporada || "",
     regrasCartoes:campeonatoObj?.regrasCartoes || {},
     formatoCampeonato:campeonatoObj?.formato || "",
@@ -1635,8 +1661,8 @@ window.salvarJogo = async function(){
     timeA:{
       id:timeAObj.id,
       nome:nomeTime(timeAObj),
-      logo:timeAObj.logo || timeAObj.escudo || "logo-liga.jfif",
-      escudo:timeAObj.logo || timeAObj.escudo || "logo-liga.jfif",
+      logo:logoSegura(timeAObj.logo || timeAObj.escudo),
+      escudo:logoSegura(timeAObj.logo || timeAObj.escudo),
       cidade:timeAObj.cidade || ""
     },
 
@@ -1648,8 +1674,8 @@ window.salvarJogo = async function(){
     timeB:{
       id:timeBObj.id,
       nome:nomeTime(timeBObj),
-      logo:timeBObj.logo || timeBObj.escudo || "logo-liga.jfif",
-      escudo:timeBObj.logo || timeBObj.escudo || "logo-liga.jfif",
+      logo:logoSegura(timeBObj.logo || timeBObj.escudo),
+      escudo:logoSegura(timeBObj.logo || timeBObj.escudo),
       cidade:timeBObj.cidade || ""
     },
 
