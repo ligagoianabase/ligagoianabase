@@ -3,25 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Campeonatos ADM - LIGA GOIANA DE FUTEBOL DE BASE</title>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
 :root{
-  --bg:#071a33;
-  --bg-dark:#061326;
+  --bg:#0b1f3a;
+  --bg-dark:#08172c;
   --card:#102a52;
-  --card-2:#0d2346;
+  --card-hover:#153766;
   --gold:#f7c600;
-  --gold-2:#ffe45c;
   --gold-soft:rgba(247,198,0,.12);
   --gold-line:rgba(247,198,0,.24);
   --white:#ffffff;
   --muted:#d8e1ef;
-  --shadow:0 10px 26px rgba(0,0,0,.28);
+  --shadow:0 8px 22px rgba(0,0,0,.28);
   --transition:.25s ease;
   --max:1180px;
-  --side:250px;
-  --side-closed:78px;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -29,193 +29,46 @@
 body{
   font-family:Arial, sans-serif;
   background:
-    linear-gradient(rgba(7,26,51,.91), rgba(7,26,51,.96)),
+    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
     url("fundo.png") center/cover fixed no-repeat;
   color:var(--white);
   min-height:100vh;
-  overflow-x:hidden;
 }
 
 a{text-decoration:none;color:inherit;transition:var(--transition)}
 button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
 input,select,textarea{font-family:inherit}
-.hidden{display:none !important}
 
-.sidebar{
-  position:fixed;
-  inset:0 auto 0 0;
-  width:var(--side);
-  background:linear-gradient(180deg,rgba(8,23,44,.98),rgba(6,19,38,.98));
-  border-right:3px solid var(--gold);
+.wrap{width:min(100% - 28px, var(--max));margin:0 auto}
+
+header{
+  background:rgba(8,23,44,.96);
+  border-bottom:3px solid var(--gold);
   box-shadow:var(--shadow);
-  z-index:50;
-  display:flex;
-  flex-direction:column;
-  transition:width var(--transition), transform var(--transition);
 }
 
-.sidebar-brand{
-  min-height:76px;
-  padding:14px 14px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-.brand-logo{
-  width:42px;
-  height:42px;
-  object-fit:contain;
-  filter:drop-shadow(0 0 8px rgba(247,198,0,.35));
-  flex-shrink:0;
-}
-
-.brand-text{
-  min-width:0;
-  line-height:1.15;
-}
-
-.brand-text strong{
-  display:block;
-  color:var(--gold);
-  font-size:14px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.brand-text span{
-  display:block;
-  color:var(--muted);
-  font-size:12px;
-  margin-top:3px;
-}
-
-.sidebar-menu{
-  padding:12px 10px;
-  display:flex;
-  flex-direction:column;
-  gap:7px;
-  overflow-y:auto;
-}
-
-.sidebar-menu a{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-height:42px;
-  padding:10px 12px;
-  border-radius:12px;
-  color:#fff;
-  font-weight:800;
-  font-size:14px;
-  border:1px solid transparent;
-  background:rgba(13,35,70,.58);
-}
-
-.sidebar-menu a i{
-  width:20px;
-  text-align:center;
-  color:var(--gold);
-  flex-shrink:0;
-}
-
-.sidebar-menu a:hover{
-  background:var(--gold-soft);
-  border-color:var(--gold-line);
-  color:var(--gold);
-}
-
-.sidebar-menu a.ativo{
-  background:linear-gradient(135deg,var(--gold),var(--gold-2));
-  color:#111;
-}
-
-.sidebar-menu a.ativo i{color:#111}
-
-.sidebar-footer{
-  margin-top:auto;
-  padding:12px;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-
-.sidebar-footer a,
-.sidebar-footer button{
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  min-height:40px;
-  border-radius:12px;
-  font-weight:900;
-  font-size:13px;
-}
-
-.sidebar-footer a{background:#fff4cf;color:#111;margin-bottom:8px}
-.sidebar-footer button{background:var(--gold);color:#111}
-
-body.sidebar-fechada .sidebar{width:var(--side-closed)}
-body.sidebar-fechada .brand-text,
-body.sidebar-fechada .sidebar-menu span,
-body.sidebar-fechada .sidebar-footer span{display:none}
-body.sidebar-fechada .sidebar-brand{justify-content:center;padding-inline:8px}
-body.sidebar-fechada .sidebar-menu a{justify-content:center;padding-inline:8px}
-
-.topbar{
-  position:sticky;
-  top:0;
-  z-index:30;
-  margin-left:var(--side);
-  background:rgba(8,23,44,.88);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(247,198,0,.24);
-  transition:margin-left var(--transition);
-}
-
-body.sidebar-fechada .topbar{margin-left:var(--side-closed)}
-
-.topbar-inner{
-  width:min(100% - 28px,var(--max));
-  min-height:70px;
-  margin:0 auto;
+.header-top{
+  min-height:82px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:12px;
+  gap:14px;
+  flex-wrap:wrap;
+  padding:14px 0;
 }
 
-.topbar-left,
-.topbar-right{
+.header-left,.header-right{
   display:flex;
   align-items:center;
   gap:10px;
+  flex-wrap:wrap;
 }
 
-.menu-toggle{
-  width:44px;
-  height:44px;
-  border-radius:12px;
-  background:var(--gold);
-  color:#111;
-  font-size:18px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 8px 20px rgba(0,0,0,.20);
-}
-
-.page-title h1{
-  font-size:20px;
-  color:var(--gold);
-  line-height:1.1;
-}
-
-.page-title p{
-  color:var(--muted);
-  font-size:12px;
-  margin-top:3px;
+.header-title{
+  flex:1;
+  text-align:center;
+  font-size:21px;
+  font-weight:700;
 }
 
 .top-btn{
@@ -223,137 +76,174 @@ body.sidebar-fechada .topbar{margin-left:var(--side-closed)}
   align-items:center;
   justify-content:center;
   gap:8px;
-  padding:10px 14px;
-  border-radius:12px;
-  font-weight:900;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
   white-space:nowrap;
-  font-size:13px;
 }
 
 .btn-light{background:#fff4cf;color:#111}
 .btn-light:hover{background:var(--gold);transform:translateY(-2px)}
-.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#111}
+.btn-gold{background:var(--gold);color:#111}
 .btn-gold:hover{filter:brightness(1.04);transform:translateY(-2px)}
 
-.main-content{
-  margin-left:var(--side);
-  transition:margin-left var(--transition);
+.nav-bar{
+  background:rgba(16,42,82,.95);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
 
-body.sidebar-fechada .main-content{margin-left:var(--side-closed)}
-
-.wrap{
-  width:min(100% - 28px,var(--max));
-  margin:0 auto;
-}
-
-.container{
-  min-height:calc(100vh - 70px);
-  padding:18px 0 32px;
+.menu{
   display:flex;
-  flex-direction:column;
-  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:12px 0;
+  flex-wrap:wrap;
 }
 
-.container > *{width:100%}
+.menu a{
+  color:white;
+  font-weight:700;
+  font-size:14px;
+  background:#0d2346;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+
+.menu a:hover{
+  color:var(--gold);
+  background:var(--gold-soft);
+  border-color:var(--gold-line);
+}
+
+.menu a.ativo{
+  background:var(--gold);
+  color:black;
+}
+
+.container{padding:18px 0 28px}
 
 .hero,.form-panel{
-  background:linear-gradient(135deg,rgba(16,42,82,.96),rgba(13,35,70,.96));
+  background:linear-gradient(135deg,#102a52,#0d2346);
   border:1px solid var(--gold-line);
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:16px;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
   box-shadow:var(--shadow);
 }
 
 .hero h2{
-  margin:0 0 6px;
+  margin:0 0 8px;
   color:var(--gold);
-  font-size:24px;
+  font-size:22px;
 }
 
 .hero p{
   margin:0;
   color:var(--muted);
   line-height:1.45;
-  font-size:14px;
+  font-size:13px;
 }
 
 .form-title{
   color:var(--gold);
-  font-size:20px;
-  margin-bottom:14px;
+  font-size:18px;
+  margin-bottom:12px;
   font-weight:900;
 }
 
 .form-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:11px;
+  gap:10px;
 }
 
 .full{grid-column:1/-1}
 
 label{
   display:block;
-  font-size:12px;
+  font-size:13px;
   font-weight:900;
-  margin-bottom:5px;
+  margin-bottom:6px;
   color:#fff;
 }
 
 input,select,textarea{
   width:100%;
-  padding:11px 12px;
+  padding:10px 11px;
   border:none;
-  border-radius:10px;
-  font-size:14px;
+  border-radius:9px;
+  font-size:13px;
   background:#f5f7fb;
   color:#111;
 }
 
 textarea{min-height:82px;resize:vertical}
-input:focus,select:focus,textarea:focus{outline:2px solid rgba(247,198,0,.5)}
 
-.preview-logo{display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
-.preview-logo img,
-.photo{
+input:focus,select:focus,textarea:focus{
+  outline:2px solid rgba(247,198,0,.5);
+}
+
+.preview-logo{
+  display:none;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.preview-logo img{
+  width:120px;
+  height:120px;
   object-fit:contain;
   background:transparent !important;
   border:none !important;
   border-radius:0 !important;
   padding:0;
-  filter:drop-shadow(0 0 8px rgba(247,198,0,.28)) drop-shadow(0 8px 16px rgba(0,0,0,.42));
+
+  filter:
+    drop-shadow(0 0 8px rgba(247,198,0,.35))
+    drop-shadow(0 8px 18px rgba(0,0,0,.45));
 }
-.preview-logo img{width:96px;height:96px}
-.preview-logo span{color:var(--muted);font-size:13px}
+
+.preview-logo span{
+  color:var(--muted);
+  font-size:13px;
+}
 
 .checkbox-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(105px,1fr));
-  gap:7px;
+  grid-template-columns:repeat(auto-fit,minmax(115px,1fr));
+  gap:8px;
 }
 
 .check-item{
   background:#102a52;
-  padding:8px 9px;
+  padding:9px 10px;
   border-radius:9px;
   display:flex;
   align-items:center;
   gap:8px;
-  font-size:13px;
+  font-size:14px;
   color:var(--muted);
   border:1px solid rgba(255,255,255,.08);
   cursor:pointer;
 }
-.check-item:hover{background:#153766;border-color:var(--gold-line)}
+
+.check-item:hover{
+  background:#153766;
+  border-color:var(--gold-line);
+}
+
 .check-item input{width:auto}
 
 .form-actions{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  margin-top:14px;
+  margin-top:16px;
 }
 
 .filtros{
@@ -363,84 +253,77 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(247,198,0,.5)}
   margin-bottom:14px;
 }
 
-.lista-topo{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:12px;
-  flex-wrap:wrap;
-}
-
-.lista-topo h2{color:var(--gold);font-size:22px;font-weight:900}
-.lista-topo p{color:var(--muted);font-size:13px;margin-top:3px}
-
 .lista-grid{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:12px;
-  align-items:stretch;
 }
 
 .card{
   background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
   padding:12px;
-  border-radius:16px;
+  border-radius:14px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+  align-items:stretch;
   gap:10px;
   border:1px solid rgba(255,230,0,.10);
-  box-shadow:var(--shadow);
+  box-shadow:0 7px 18px rgba(0,0,0,.24);
   overflow:hidden;
   min-height:230px;
 }
-.card:hover{transform:translateY(-2px);border-color:var(--gold-line)}
+
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold-line);
+}
 
 .player{
   display:flex;
   align-items:flex-start;
   gap:10px;
-  min-width:0;
+  flex:1;
 }
 
 .photo{
-  width:66px;
-  height:66px;
+  width:64px;
+  height:64px;
+  object-fit:contain;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  padding:0;
   flex-shrink:0;
+
+  filter:
+    drop-shadow(0 0 8px rgba(247,198,0,.30))
+    drop-shadow(0 8px 18px rgba(0,0,0,.45));
 }
 
 .player-info{
   display:flex;
   flex-direction:column;
   gap:4px;
-  min-width:0;
 }
 
 .nome-jogador{
-  font-weight:900;
+  font-weight:700;
   font-size:15px;
   color:#fff;
-  line-height:1.25;
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
 }
 
 .player-info small{
   color:var(--muted);
-  font-size:12px;
-  line-height:1.25;
+  font-size:11.5px;
+  line-height:1.35;
 }
 
 .tags{
   display:flex;
-  gap:5px;
+  gap:6px;
   flex-wrap:wrap;
   margin-top:4px;
-  max-height:58px;
-  overflow:hidden;
 }
 
 .tag{
@@ -452,20 +335,20 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(247,198,0,.5)}
 }
 
 .actions{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:7px;
-  width:100%;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-start;
 }
 
 .btn-acao{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  gap:6px;
+  gap:8px;
   padding:9px 10px;
-  border-radius:10px;
-  font-weight:900;
+  border-radius:9px;
+  font-weight:700;
   font-size:12px;
   border:none;
   cursor:pointer;
@@ -475,11 +358,10 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(247,198,0,.5)}
 .btn-ver{background:var(--gold);color:black}
 .btn-danger{background:#d94141;color:#fff}
 .btn-blue{background:#1a3f73;color:#fff}
-.btn-novo{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#111;box-shadow:0 8px 20px rgba(0,0,0,.22)}
 
 .vazio{
   background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
-  padding:26px;
+  padding:30px;
   border-radius:14px;
   text-align:center;
   color:var(--muted);
@@ -488,106 +370,154 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(247,198,0,.5)}
   grid-column:1/-1;
 }
 
-@media(max-width:1120px){
+
+@media(max-width:1100px){
   .lista-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
 @media(max-width:900px){
-  .form-grid{grid-template-columns:1fr 1fr}
-  .filtros{grid-template-columns:1fr}
+  .header-title{order:3;width:100%;text-align:center}
+  .header-left,.header-right{width:100%;justify-content:center}
+  .form-grid,.filtros{grid-template-columns:1fr}
+  .card{flex-direction:column;align-items:flex-start}
+  .actions{width:100%;justify-content:flex-start}
 }
 
-@media(max-width:760px){
-  .sidebar{transform:translateX(-100%);width:250px}
-  body:not(.sidebar-fechada) .sidebar{transform:translateX(0)}
-  body.sidebar-fechada .sidebar{transform:translateX(-100%);width:250px}
-  body.sidebar-fechada .brand-text,
-  body.sidebar-fechada .sidebar-menu span,
-  body.sidebar-fechada .sidebar-footer span{display:block}
-  .topbar,body.sidebar-fechada .topbar,.main-content,body.sidebar-fechada .main-content{margin-left:0}
-  .topbar-inner{min-height:64px}
-  .topbar-right .btn-light{display:none}
-  .page-title h1{font-size:17px}
-  .page-title p{display:none}
-  .form-grid{grid-template-columns:1fr}
+@media(max-width:600px){
   .lista-grid{grid-template-columns:1fr}
-  .card{min-height:0}
-  .actions{grid-template-columns:1fr 1fr 1fr}
+  .top-btn,.btn-acao{width:100%;justify-content:center}
+  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
+  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
+  .menu{
+    justify-content:flex-start;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:14px;
+  }
+  .menu a{flex:0 0 auto}
 }
 
-@media(max-width:480px){
-  .wrap,.topbar-inner{width:min(100% - 18px,var(--max))}
-  .container{padding-top:12px}
-  .hero,.form-panel{padding:14px;border-radius:15px}
-  .hero h2{font-size:21px}
-  .lista-topo .btn-acao,.topbar-right .btn-gold{width:100%}
-  .topbar-inner{align-items:flex-start;padding:10px 0;flex-wrap:wrap}
-  .topbar-left{flex:1}
-  .topbar-right{width:100%}
-  .photo{width:58px;height:58px}
-  .actions{grid-template-columns:1fr}
-  .btn-acao{width:100%}
+.hidden{display:none !important}
+
+.lista-topo{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
 }
+
+.lista-topo h2{
+  color:var(--gold);
+  font-size:21px;
+  font-weight:900;
+}
+
+.lista-topo p{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:4px;
+}
+
+.btn-novo{
+  background:linear-gradient(135deg,var(--gold),#ffe45c);
+  color:#111;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+}
+
+@media(max-width:600px){
+  .lista-topo{
+    align-items:stretch;
+  }
+
+  .lista-topo .btn-acao{
+    width:100%;
+  }
+}
+
+
+/* AJUSTE VISUAL ADM COMPACTO - menu superior mantido */
+.wrap.container{
+  max-width:1180px;
+}
+#areaListaCampeonatos{
+  width:100%;
+}
+.card .actions{
+  margin-top:auto;
+}
+.card .actions .btn-acao{
+  flex:1;
+  min-width:86px;
+}
+@media(min-width:901px){
+  .header-top{min-height:72px}
+  .hero{padding:16px 18px}
+}
+@media(max-width:600px){
+  .wrap{width:min(100% - 18px, var(--max));}
+  .hero,.form-panel{padding:14px;border-radius:14px}
+  .hero h2{font-size:20px}
+  .lista-topo h2{font-size:19px}
+  .card{min-height:auto;padding:11px}
+  .photo{width:56px;height:56px}
+  .actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%}
+  .actions .btn-acao{width:100%;font-size:11px;padding:8px 5px}
+}
+
 </style>
 </head>
-<body class="sidebar-fechada">
 
-<aside class="sidebar">
-  <div class="sidebar-brand">
-    <img src="logo-liga.jfif" class="brand-logo" onerror="this.style.display='none'">
-    <div class="brand-text">
-      <strong>LIGA GOIANA</strong>
-      <span>Painel ADM</span>
-    </div>
-  </div>
+<body>
 
-  <nav class="sidebar-menu">
-    <a href="admin.html" onclick="fecharMenuMobile()"><i class="fa-solid fa-gauge-high"></i><span>Painel</span></a>
-    <a href="campeonatos-admin.html" class="ativo" onclick="fecharMenuMobile()"><i class="fa-solid fa-trophy"></i><span>Campeonatos</span></a>
-    <a href="jogos-admin.html" onclick="fecharMenuMobile()"><i class="fa-solid fa-futbol"></i><span>Jogos</span></a>
-    <a href="times-admin.html" onclick="fecharMenuMobile()"><i class="fa-solid fa-shield-halved"></i><span>Times</span></a>
-    <a href="tecnicos-admin.html" onclick="fecharMenuMobile()"><i class="fa-solid fa-user-tie"></i><span>Técnicos</span></a>
-    <a href="jogadores-admin.html" onclick="fecharMenuMobile()"><i class="fa-solid fa-person-running"></i><span>Jogadores</span></a>
-    <a href="arbitros-admin.html" onclick="fecharMenuMobile()"><i class="fa-solid fa-whistle"></i><span>Árbitros</span></a>
-    <a href="assistentes-admin.html" onclick="fecharMenuMobile()"><i class="fa-solid fa-flag"></i><span>Assistentes</span></a>
-    <a href="sumulas-admin.html" onclick="fecharMenuMobile()"><i class="fa-solid fa-file-lines"></i><span>Súmulas</span></a>
-  </nav>
+<header>
+  <div class="wrap header-top">
+    <div class="header-left">
+      <a href="index.html" class="top-btn btn-light">
+        <i class="fa-solid fa-house"></i> Página Inicial
+      </a>
 
-  <div class="sidebar-footer">
-    <a href="index.html"><i class="fa-solid fa-house"></i><span>Inicial</span></a>
-    <button type="button" onclick="abrirFormularioNovo()"><i class="fa-solid fa-plus"></i><span>Novo</span></button>
-  </div>
-</aside>
-
-<header class="topbar">
-  <div class="topbar-inner">
-    <div class="topbar-left">
-      <button class="menu-toggle" type="button" onclick="toggleMenu()" aria-label="Abrir ou fechar menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-      <div class="page-title">
-        <h1>Campeonatos ADM</h1>
-        <p>LIGA GOIANA DE FUTEBOL DE BASE</p>
-      </div>
+      <a href="admin.html" class="top-btn btn-light">
+        <i class="fa-solid fa-gears"></i> Painel ADM
+      </a>
     </div>
 
-    <div class="topbar-right">
-      <a href="admin.html" class="top-btn btn-light"><i class="fa-solid fa-gears"></i> Painel ADM</a>
+    <div class="header-title">LIGA GOIANA DE FUTEBOL DE BASE</div>
+
+    <div class="header-right">
       <button class="top-btn btn-gold" type="button" onclick="abrirFormularioNovo()">
         <i class="fa-solid fa-plus"></i> Novo Campeonato
       </button>
     </div>
   </div>
+
+  <div class="nav-bar">
+    <div class="wrap">
+      <div class="menu">
+        <a href="admin.html">Painel</a>
+        <a href="campeonatos-admin.html" class="ativo">Campeonatos</a>
+        <a href="jogos-admin.html">Jogos</a>
+        <a href="times-admin.html">Times</a>
+        <a href="tecnicos-admin.html">Técnicos</a>
+        <a href="jogadores-admin.html">Jogadores</a>
+        <a href="arbitros-admin.html">Árbitros</a>
+        <a href="assistentes-admin.html">Assistentes</a>
+        <a href="sumulas-admin.html">Súmulas</a>
+      </div>
+    </div>
+  </div>
 </header>
 
-<main class="main-content">
-  <div class="wrap container">
-    <div class="hero">
-      <h2>Campeonatos ADM</h2>
-      <p>Cadastre campeonatos, logo, temporada, formato, categorias e regras. Tudo salvo no Firebase para jogos, tabelas, súmulas e estatísticas automáticas.</p>
-    </div>
+<div class="wrap container">
 
-    <section class="form-panel hidden" id="formCampeonato">
+  <div class="hero">
+    <h2>Campeonatos ADM</h2>
+    <p>Cadastre campeonatos, logo, temporada, formato, categorias e regras. Tudo salvo no Firebase para jogos, tabelas, súmulas e estatísticas automáticas.</p>
+  </div>
+
+  <section class="form-panel hidden" id="formCampeonato">
     <div class="form-title" id="tituloFormulario">Novo Campeonato</div>
 
     <input type="hidden" id="campeonatoId">
@@ -722,7 +652,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(247,198,0,.5)}
     </div>
   </section>
 
-    <section id="areaListaCampeonatos">
+  <section id="areaListaCampeonatos">
     <div class="lista-topo">
       <div>
         <h2>Campeonatos cadastrados</h2>
@@ -747,8 +677,8 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(247,198,0,.5)}
 
     <div class="lista-grid" id="listaCampeonatos"></div>
   </section>
-  </div>
-</main>
+
+</div>
 
 <script type="module">
 import { db } from "./firebase.js";
@@ -1186,16 +1116,6 @@ function renderizarCampeonatos(){
 
 document.getElementById("buscaCampeonato").addEventListener("input",renderizarCampeonatos);
 document.getElementById("filtroStatus").addEventListener("change",renderizarCampeonatos);
-
-window.toggleMenu = function(){
-  document.body.classList.toggle("sidebar-fechada");
-};
-
-window.fecharMenuMobile = function(){
-  if(window.innerWidth <= 760){
-    document.body.classList.add("sidebar-fechada");
-  }
-};
 
 montarCategorias();
 carregarCampeonatos();
