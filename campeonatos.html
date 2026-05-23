@@ -352,6 +352,32 @@ function valor(obj, campos, padrao = ""){
   return padrao;
 }
 
+
+function logoValida(url){
+  const u = String(url || "").trim();
+
+  if(!u) return "logo-liga.jfif";
+
+  // Evita tentar carregar Base64 antigo salvo no Firestore
+  if(u.startsWith("data:image/")) return "logo-liga.jfif";
+
+  // Aceita links do ImgBB e outros links diretos de imagem
+  if(u.startsWith("http://") || u.startsWith("https://")) return u;
+
+  // Aceita arquivo local do projeto
+  return u;
+}
+
+function esc(v){
+  return String(v ?? "").replace(/[&<>"']/g, m => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  }[m]));
+}
+
 function nomeCampeonato(c){
   return valor(c, ["nome", "titulo", "campeonato", "nomeCampeonato"], "Sem nome");
 }
@@ -493,7 +519,7 @@ function render(){
     const timesQtd = contarTimes(c);
     const categoria = categoriaCampeonato(c);
     const temporada = temporadaCampeonato(c);
-    const logo = valor(c, ["logo", "logoCampeonato", "imagem", "foto", "escudo"], "logo-liga.jfif");
+    const logo = logoValida(valor(c, ["logo", "logoCampeonato", "imagem", "foto", "escudo"], "logo-liga.jfif"));
     const formato = formatoCampeonato(c);
     const gruposInfo = gruposCampeonato(c);
 
@@ -507,30 +533,30 @@ function render(){
             </div>
 
             <div class="status-tag ${status.classe}">
-              ${status.texto}
+              ${esc(status.texto)}
             </div>
           </div>
 
-          <img src="${logo}" class="logo" onerror="this.src='logo-liga.jfif'">
+          <img src="${esc(logo)}" class="logo" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='logo-liga.jfif'">
 
           <div class="nome-campeonato">
-            ${nomeCampeonato(c)}
+            ${esc(nomeCampeonato(c))}
           </div>
 
           <div class="info-campeonato">
-            <strong>Temporada:</strong> ${temporada}<br>
-            <strong>Formato:</strong> ${formato}<br>
-            <strong>Categoria:</strong> ${categoria}<br>
-            ${gruposInfo !== "-" ? `<strong>${gruposInfo}</strong><br>` : ""}
+            <strong>Temporada:</strong> ${esc(temporada)}<br>
+            <strong>Formato:</strong> ${esc(formato)}<br>
+            <strong>Categoria:</strong> ${esc(categoria)}<br>
+            ${gruposInfo !== "-" ? `<strong>${esc(gruposInfo)}</strong><br>` : ""}
             <strong>Times:</strong> ${timesQtd}<br>
             <strong>Jogos:</strong> ${jogosQtd}<br>
             <strong>Gols:</strong> ${golsQtd}
           </div>
 
           <div class="tags">
-            <span class="tag">${categoria}</span>
-            <span class="tag">${formato}</span>
-            <span class="tag">${temporada}</span>
+            <span class="tag">${esc(categoria)}</span>
+            <span class="tag">${esc(formato)}</span>
+            <span class="tag">${esc(temporada)}</span>
           </div>
         </div>
 
