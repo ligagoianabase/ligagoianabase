@@ -603,6 +603,67 @@ select,input{
   height:48px !important;
 }
 
+
+/* ===== GRUPOS / FASE FINAL ===== */
+.filtros.filtros-3{
+  grid-template-columns:1fr 1fr 220px;
+}
+.grupo-titulo{
+  color:var(--gold);
+  font-size:18px;
+  font-weight:900;
+  margin:16px 0 8px;
+}
+.grupo-bloco{
+  margin-bottom:16px;
+}
+.classificado{
+  box-shadow:inset 5px 0 0 var(--green);
+}
+.fase-final-box{
+  display:flex;
+  gap:14px;
+  overflow-x:auto;
+  padding-bottom:8px;
+  -webkit-overflow-scrolling:touch;
+}
+.fase-coluna{
+  min-width:230px;
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(8,23,44,.97));
+  border:1px solid rgba(247,198,0,.22);
+  border-radius:15px;
+  padding:12px;
+}
+.fase-coluna h3{
+  color:var(--gold);
+  font-size:16px;
+  margin-bottom:10px;
+  text-align:center;
+}
+.fase-jogo{
+  background:#081c36;
+  border-radius:12px;
+  padding:10px;
+  margin-bottom:10px;
+}
+.fase-jogo strong{
+  display:block;
+  text-align:center;
+  color:#fff;
+  font-size:13px;
+  line-height:1.35;
+}
+.fase-jogo small{
+  display:block;
+  text-align:center;
+  color:var(--muted);
+  font-size:11px;
+  margin-top:5px;
+}
+@media(max-width:900px){
+  .filtros.filtros-3{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 
@@ -625,9 +686,10 @@ select,input{
     </div>
   </section>
 
-  <section class="filtros">
+  <section class="filtros filtros-3">
     <select id="filtroCampeonato"><option value="">Todos os campeonatos</option></select>
     <select id="filtroCategoria"><option value="">Todas categorias</option></select>
+    <select id="filtroGrupo"><option value="">Todos os grupos</option></select>
   </section>
 
   <h2 class="titulo-secao" id="tituloTabela">Tabela</h2>
@@ -637,6 +699,7 @@ select,input{
     <button class="aba" onclick="trocarAba('classificacao',this)">Classificação</button>
     <button class="aba" onclick="trocarAba('casaFora',this)">Casa / Fora</button>
     <button class="aba" onclick="trocarAba('jogos',this)">Jogos</button>
+    <button class="aba" onclick="trocarAba('faseFinal',this)">Fase Final</button>
     <button class="aba" onclick="trocarAba('estatisticasTimes',this)">Estatísticas dos Times</button>
     <button class="aba" onclick="trocarAba('artilharia',this)">Artilharia</button>
     <button class="aba" onclick="trocarAba('assistencias',this)">Assistências</button>
@@ -658,6 +721,45 @@ renderMenu("tabela");
 </script>
 
 <script type="module" src="tabela.js"></script>
+
+<script type="module">
+import { db } from "./firebase.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const filtroGrupo = document.getElementById("filtroGrupo");
+
+function normalizarGrupo(g){
+  return String(g || "").trim();
+}
+
+async function carregarGruposFiltro(){
+  if(!filtroGrupo) return;
+  try{
+    const snap = await getDocs(collection(db,"jogos"));
+    const grupos = new Set();
+    snap.forEach(d=>{
+      const j = d.data();
+      const grupo = normalizarGrupo(j.grupo || j.nomeGrupo || j.chaveGrupo);
+      if(grupo) grupos.add(grupo);
+    });
+
+    const atual = filtroGrupo.value;
+    filtroGrupo.innerHTML = `<option value="">Todos os grupos</option>` +
+      Array.from(grupos).sort((a,b)=>a.localeCompare(b,"pt-BR")).map(g=>`<option value="${g}">${g}</option>`).join("");
+    filtroGrupo.value = atual;
+  }catch(e){
+    console.warn("Não foi possível carregar grupos para o filtro:", e);
+  }
+}
+
+filtroGrupo?.addEventListener("change",()=>{
+  filtroGrupo.dispatchEvent(new Event("input",{bubbles:true}));
+  if(typeof window.renderizarTudo === "function") window.renderizarTudo();
+  if(typeof window.atualizarTabela === "function") window.atualizarTabela();
+});
+
+carregarGruposFiltro();
+</script>
 
 </body>
 </html>
