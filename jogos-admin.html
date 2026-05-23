@@ -21,7 +21,7 @@
   --muted:#d8e1ef;
   --shadow:0 8px 22px rgba(0,0,0,.28);
   --transition:.25s ease;
-  --max:1240px;
+  --max:1180px;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -39,10 +39,7 @@ a{text-decoration:none;color:inherit;transition:var(--transition)}
 button{font-family:inherit;cursor:pointer;transition:var(--transition);border:none;background:none}
 input,select,textarea{font-family:inherit}
 
-.wrap{
-  width:min(100% - 28px, var(--max));
-  margin:0 auto;
-}
+.wrap{width:min(100% - 28px, var(--max));margin:0 auto}
 
 header{
   background:rgba(8,23,44,.96);
@@ -70,7 +67,7 @@ header{
 .header-title{
   flex:1;
   text-align:center;
-  font-size:24px;
+  font-size:21px;
   font-weight:700;
 }
 
@@ -126,41 +123,41 @@ header{
   color:black;
 }
 
-.container{padding:24px 0 34px}
+.container{padding:18px 0 28px}
 
 .hero,.form-panel,.list-panel{
   background:linear-gradient(135deg,#102a52,#0d2346);
   border:1px solid var(--gold-line);
-  border-radius:18px;
-  padding:22px;
-  margin-bottom:20px;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
   box-shadow:var(--shadow);
 }
 
 .hero h2{
   margin:0 0 8px;
   color:var(--gold);
-  font-size:28px;
+  font-size:22px;
 }
 
 .hero p{
   margin:0;
   color:var(--muted);
-  line-height:1.6;
-  font-size:15px;
+  line-height:1.45;
+  font-size:13px;
 }
 
 .form-title{
   color:var(--gold);
-  font-size:20px;
-  margin-bottom:14px;
+  font-size:18px;
+  margin-bottom:12px;
   font-weight:900;
 }
 
 .form-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:12px;
+  gap:10px;
 }
 
 .full{grid-column:1/-1}
@@ -175,13 +172,15 @@ label{
 
 input,select,textarea{
   width:100%;
-  padding:13px;
+  padding:10px 11px;
   border:none;
-  border-radius:10px;
-  font-size:14px;
+  border-radius:9px;
+  font-size:13px;
   background:#f5f7fb;
   color:#111;
 }
+
+textarea{min-height:82px;resize:vertical}
 
 input:focus,select:focus,textarea:focus{
   outline:2px solid rgba(247,198,0,.5);
@@ -194,15 +193,94 @@ input:focus,select:focus,textarea:focus{
   margin-top:16px;
 }
 
+.filtros{
+  display:grid;
+  grid-template-columns:1fr 220px 220px;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.lista-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+
+.card{
+  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
+  padding:12px;
+  border-radius:14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:stretch;
+  gap:10px;
+  border:1px solid rgba(255,230,0,.10);
+  box-shadow:0 7px 18px rgba(0,0,0,.24);
+  overflow:hidden;
+  min-height:230px;
+}
+
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold-line);
+}
+
+.card strong{
+  color:#fff;
+  font-size:15px;
+  line-height:1.25;
+  display:block;
+}
+
+.card strong i{color:var(--gold)}
+
+.card-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  margin-top:8px;
+}
+
+.card-grid div{
+  background:rgba(255,255,255,.04);
+  border-radius:9px;
+  padding:8px;
+  color:var(--muted);
+  font-size:11.5px;
+  line-height:1.35;
+}
+
+.card-grid span{
+  display:block;
+  color:#fff;
+  font-weight:900;
+  font-size:11px;
+  margin-bottom:3px;
+}
+
+.card-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-start;
+  margin-top:auto;
+}
+
+.card-actions .btn-acao{
+  flex:1;
+  min-width:86px;
+}
+
 .btn-acao{
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:8px;
-  padding:11px 14px;
-  border-radius:10px;
+  padding:9px 10px;
+  border-radius:9px;
   font-weight:700;
-  font-size:13px;
+  font-size:12px;
   border:none;
   cursor:pointer;
   white-space:nowrap;
@@ -212,65 +290,8 @@ input:focus,select:focus,textarea:focus{
 .btn-danger{background:#d94141;color:#fff}
 .btn-blue{background:#1a3f73;color:#fff}
 .btn-green{background:#1b5e20;color:#fff}
-
-.filtros{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:12px;
-  margin-bottom:20px;
-}
-
-.lista-grid{
-  display:grid;
-  gap:14px;
-}
-
-.card{
-  background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
-  padding:16px;
-  border-radius:16px;
-  border:1px solid rgba(255,230,0,.10);
-  box-shadow:var(--shadow);
-}
-
-.card:hover{
-  transform:translateY(-2px);
-  border-color:var(--gold-line);
-}
-
-.card strong{
-  color:var(--gold);
-  font-size:18px;
-}
-
-.card-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-top:12px;
-}
-
-.card-grid div{
-  background:rgba(255,255,255,.04);
-  border-radius:10px;
-  padding:10px;
-  color:var(--muted);
-  font-size:13px;
-}
-
-.card-grid span{
-  display:block;
-  color:#fff;
-  font-weight:900;
-  margin-bottom:4px;
-}
-
-.card-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:14px;
-}
+.btn-whats{background:#1fa855;color:#fff}
+.btn-email{background:#1a3f73;color:#fff}
 
 .vazio{
   background:linear-gradient(180deg,rgba(16,42,82,.96),rgba(12,33,64,.96));
@@ -280,34 +301,35 @@ input:focus,select:focus,textarea:focus{
   color:var(--muted);
   border:1px solid rgba(255,255,255,.06);
   box-shadow:var(--shadow);
+  grid-column:1/-1;
 }
 
 .preview-times{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
-  margin-top:14px;
+  margin-top:6px;
 }
 
 .preview-box{
   background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.08);
   border-radius:14px;
-  padding:14px;
+  padding:12px;
 }
 
 .preview-box h4{
   color:var(--gold);
   margin-bottom:8px;
+  font-size:15px;
 }
 
 .preview-box small{
   color:var(--muted);
   display:block;
-  line-height:1.5;
+  line-height:1.45;
+  font-size:12px;
 }
-
-
 
 .envios-panel{
   display:none;
@@ -333,6 +355,7 @@ input:focus,select:focus,textarea:focus{
 
 .envios-lista{
   display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:10px;
 }
 
@@ -362,57 +385,6 @@ input:focus,select:focus,textarea:focus{
   flex-wrap:wrap;
 }
 
-.btn-whats{background:#1fa855;color:#fff}
-.btn-email{background:#1a3f73;color:#fff}
-
-@media(max-width:900px){
-  .header-title{
-    order:3;
-    width:100%;
-    text-align:center;
-  }
-
-  .header-left,.header-right{
-    width:100%;
-    justify-content:center;
-  }
-
-  .form-grid,.filtros,.card-grid,.preview-times{
-    grid-template-columns:1fr;
-  }
-}
-
-@media(max-width:600px){
-  .top-btn,.btn-acao{
-    width:100%;
-    justify-content:center;
-  }
-
-  .header-left,.header-right{
-    flex-direction:row;
-    flex-wrap:nowrap;
-  }
-
-  .header-left .top-btn{
-    width:auto;
-    flex:1;
-    font-size:13px;
-    padding:10px 8px;
-  }
-
-  .menu{
-    justify-content:flex-start;
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-    padding-bottom:14px;
-  }
-
-  .menu a{flex:0 0 auto}
-}
-
-/* ===== PADRÃO FIFA / eFOOTBALL ===== */
-
 .preview-box img,
 .card img,
 .time-logo,
@@ -424,12 +396,10 @@ input:focus,select:focus,textarea:focus{
   border:none !important;
   border-radius:0 !important;
   padding:0 !important;
-
   filter:
     drop-shadow(0 0 8px rgba(247,198,0,.35))
     drop-shadow(0 8px 18px rgba(0,0,0,.50));
 }
-
 
 .hidden{display:none !important}
 
@@ -438,13 +408,13 @@ input:focus,select:focus,textarea:focus{
   align-items:center;
   justify-content:space-between;
   gap:12px;
-  margin-bottom:16px;
+  margin-bottom:12px;
   flex-wrap:wrap;
 }
 
 .lista-topo h2{
   color:var(--gold);
-  font-size:24px;
+  font-size:21px;
   font-weight:900;
 }
 
@@ -460,121 +430,56 @@ input:focus,select:focus,textarea:focus{
   box-shadow:0 8px 20px rgba(0,0,0,.22);
 }
 
-@media(max-width:600px){
-  .lista-topo{
-    align-items:stretch;
-  }
-
-  .lista-topo .btn-acao{
-    width:100%;
-  }
-}
-
-
-/* ===== AJUSTE COMPACTO: 3 JOGOS POR LINHA ===== */
-.list-panel{
-  padding:18px;
-}
-
-.lista-grid{
-  display:grid !important;
-  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
-  gap:14px !important;
-}
-
-.card{
-  padding:14px !important;
-  border-radius:16px !important;
-  min-height:260px;
-  display:flex !important;
-  flex-direction:column !important;
-  justify-content:space-between !important;
-  gap:10px !important;
-  background:
-    radial-gradient(circle at top right, rgba(247,198,0,.10), transparent 36%),
-    linear-gradient(180deg, rgba(16,42,82,.96), rgba(8,23,44,.97)) !important;
-}
-
-.card strong{
-  font-size:16px !important;
-  line-height:1.2 !important;
-}
-
-.card-grid{
-  display:grid !important;
-  grid-template-columns:1fr 1fr !important;
-  gap:7px !important;
-  margin-top:6px !important;
-}
-
-.card-grid div{
-  padding:8px !important;
-  border-radius:9px !important;
-  font-size:12px !important;
-  min-height:auto !important;
-}
-
-.card-grid span{
-  font-size:11px !important;
-  margin-bottom:3px !important;
-}
-
-.card-actions{
-  display:grid !important;
-  grid-template-columns:1fr 1fr !important;
-  gap:8px !important;
-  margin-top:8px !important;
-}
-
-.card-actions .btn-acao{
-  width:100%;
-  padding:9px 8px !important;
-  font-size:12px !important;
-}
-
-.card-actions .btn-danger{
-  grid-column:1/-1;
-}
-
-.filtros{
-  grid-template-columns:1fr 1fr 1fr !important;
-  gap:10px !important;
-}
+.wrap.container{max-width:1180px}
+#areaListaJogos{width:100%}
 
 @media(max-width:1100px){
-  .lista-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  }
+  .lista-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .envios-lista{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
-@media(max-width:700px){
-  .lista-grid{
-    grid-template-columns:1fr !important;
-  }
+@media(max-width:900px){
+  .header-title{order:3;width:100%;text-align:center}
+  .header-left,.header-right{width:100%;justify-content:center}
+  .form-grid,.filtros,.preview-times{grid-template-columns:1fr}
+  .card{flex-direction:column;align-items:stretch}
+}
 
-  .card{
-    min-height:auto;
-  }
+@media(min-width:901px){
+  .header-top{min-height:72px}
+  .hero{padding:16px 18px}
+}
 
-  .card-grid{
-    grid-template-columns:1fr 1fr !important;
+@media(max-width:600px){
+  .wrap{width:min(100% - 18px, var(--max));}
+  .lista-grid{grid-template-columns:1fr}
+  .envios-lista{grid-template-columns:1fr}
+  .top-btn,.btn-acao{width:100%;justify-content:center}
+  .header-left,.header-right{flex-direction:row;flex-wrap:nowrap}
+  .header-left .top-btn{width:auto;flex:1;font-size:13px;padding:10px 8px}
+  .menu{
+    justify-content:flex-start;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:14px;
   }
-
-  .filtros{
-    grid-template-columns:1fr !important;
-  }
+  .menu a{flex:0 0 auto}
+  .hero,.form-panel,.list-panel{padding:14px;border-radius:14px}
+  .hero h2{font-size:20px}
+  .lista-topo{align-items:stretch}
+  .lista-topo h2{font-size:19px}
+  .lista-topo .btn-acao{width:100%}
+  .card{min-height:auto;padding:11px}
+  .card-grid{grid-template-columns:1fr 1fr}
+  .card-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%}
+  .card-actions .btn-acao{width:100%;font-size:11px;padding:8px 5px;min-width:0}
 }
 
 @media(max-width:430px){
-  .card-grid{
-    grid-template-columns:1fr !important;
-  }
-
-  .card-actions{
-    grid-template-columns:1fr !important;
-  }
+  .card-grid{grid-template-columns:1fr}
+  .card-actions{grid-template-columns:1fr}
 }
-
 </style>
 </head>
 
@@ -772,12 +677,9 @@ input:focus,select:focus,textarea:focus{
       </select>
     </div>
 
-    <section class="list-panel">
-      <div class="form-title">Jogos Cadastrados</div>
-      <div id="listaJogos" class="lista-grid">
-        <div class="vazio">Carregando jogos...</div>
-      </div>
-    </section>
+    <div id="listaJogos" class="lista-grid">
+      <div class="vazio">Carregando jogos...</div>
+    </div>
 
   </section>
 
@@ -1493,6 +1395,21 @@ window.limparFormulario = function(){
 };
 
 window.salvarJogo = async function(){
+  const botoesSalvar = document.querySelectorAll('button[onclick="salvarJogo()"]');
+  botoesSalvar.forEach(btn=>{
+    btn.disabled = true;
+    btn.style.opacity = ".65";
+    btn.style.cursor = "not-allowed";
+  });
+
+  const reativarBotoes = ()=>{
+    botoesSalvar.forEach(btn=>{
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      btn.style.cursor = "pointer";
+    });
+  };
+
   const campeonatoId = el("campeonato").value;
   const campeonatoObj = buscarCampeonato(campeonatoId);
 
@@ -1510,18 +1427,18 @@ window.salvarJogo = async function(){
   const assistente2Id = el("assistente2").value;
   const arbitroAuxiliarId = el("arbitroAuxiliar").value;
 
-  if(!campeonatoId) return alert("Selecione o campeonato.");
-  if(!categoria) return alert("Selecione a categoria.");
-  if(!rodada) return alert("Digite a rodada.");
-  if(!data) return alert("Escolha a data e hora.");
-  if(!local) return alert("Digite o local.");
-  if(!timeAId || !timeBId) return alert("Selecione os times.");
-  if(timeAId === timeBId) return alert("Os times não podem ser iguais.");
+  if(!campeonatoId) reativarBotoes(); return alert("Selecione o campeonato.");
+  if(!categoria) reativarBotoes(); return alert("Selecione a categoria.");
+  if(!rodada) reativarBotoes(); return alert("Digite a rodada.");
+  if(!data) reativarBotoes(); return alert("Escolha a data e hora.");
+  if(!local) reativarBotoes(); return alert("Digite o local.");
+  if(!timeAId || !timeBId) reativarBotoes(); return alert("Selecione os times.");
+  if(timeAId === timeBId) reativarBotoes(); return alert("Os times não podem ser iguais.");
   try{
     const timeAObj = buscarTime(timeAId);
     const timeBObj = buscarTime(timeBId);
 
-    if(!timeAObj || !timeBObj) return alert("Erro ao localizar os times selecionados.");
+    if(!timeAObj || !timeBObj) reativarBotoes(); return alert("Erro ao localizar os times selecionados.");
 
   const arbitroObj = buscarArbitro(arbitroId) || null;
   const assistente1Obj = buscarAssistente(assistente1Id);
@@ -1724,9 +1641,11 @@ window.salvarJogo = async function(){
   limparFormulario();
   await carregarJogos();
   mostrarLista();
+  reativarBotoes();
   }catch(erro){
     console.error("Erro ao salvar jogo e súmula:", erro);
     alert("Erro ao salvar jogo e súmula. Abra o console e veja a mensagem: " + (erro?.message || erro));
+    reativarBotoes();
   }
 };
 
