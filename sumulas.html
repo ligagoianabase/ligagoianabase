@@ -116,7 +116,7 @@ img{
 
 .filtros{
   display:grid;
-  grid-template-columns:1fr 1fr 1fr;
+  grid-template-columns:1.3fr 1fr 1fr 180px 180px;
   gap:10px;
   margin-bottom:14px;
 }
@@ -366,6 +366,20 @@ select:focus{
     font-size:22px;
   }
 }
+
+
+/* AJUSTE VISUAL LOGOS FIFA/eFOOTBALL */
+.escudo{
+  object-fit:contain !important;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  padding:0 !important;
+  filter:
+    drop-shadow(0 0 8px rgba(247,198,0,.35))
+    drop-shadow(0 8px 18px rgba(0,0,0,.50));
+}
+
 </style>
 </head>
 
@@ -381,6 +395,8 @@ select:focus{
       <div class="hero-tag" id="tagTotal">Publicadas: 0</div>
       <div class="hero-tag" id="tagCampeonato">Campeonato: Todos</div>
       <div class="hero-tag" id="tagCategoria">Categoria: Todas</div>
+      <div class="hero-tag" id="tagGrupo">Grupo: Todos</div>
+      <div class="hero-tag" id="tagFase">Fase: Todas</div>
       <div class="hero-tag" id="tagAtualizacao">Tempo real</div>
     </div>
   </section>
@@ -394,6 +410,14 @@ select:focus{
 
     <select id="filtroCategoria">
       <option value="">Todas categorias</option>
+    </select>
+
+    <select id="filtroGrupo">
+      <option value="">Todos grupos</option>
+    </select>
+
+    <select id="filtroFase">
+      <option value="">Todas fases</option>
     </select>
   </section>
 
@@ -492,6 +516,9 @@ function itemCompleto(s){
     id,
     campeonato: campo(s,["campeonato","campeonatoNome"], campo(j,["campeonato","campeonatoNome"],"Campeonato")),
     categoria: campo(s,["categoria"], campo(j,["categoria"],"-")),
+    grupo: campo(s,["grupo","grupoNome"], campo(j,["grupo","grupoNome"],"")),
+    fase: campo(s,["fase","etapa"], campo(j,["fase","etapa"],"")),
+    chave: campo(s,["chave","chaveamento"], campo(j,["chave","chaveamento"],"")),
     rodada: campo(s,["rodada","fase"], campo(j,["rodada","fase"],"Súmula")),
     local: campo(s,["local","campo","estadio"], campo(j,["local","campo","estadio"],"-")),
     data: campo(s,["finalizadaEm","publicadaEm","data","dataHora"], campo(j,["data","dataHora"],"")),
@@ -546,36 +573,57 @@ function listaPublicada(){
 function preencherFiltros(){
   const campAtual = $("filtroCampeonato").value;
   const catAtual = $("filtroCategoria").value;
+  const grupoAtual = $("filtroGrupo")?.value || "";
+  const faseAtual = $("filtroFase")?.value || "";
 
-  const camps = [...new Set(listaPublicada().map(x=>x.campeonato).filter(Boolean))].sort();
+  const base = listaPublicada();
+
+  const camps = [...new Set(base.map(x=>x.campeonato).filter(Boolean))].sort();
   $("filtroCampeonato").innerHTML = `<option value="">Todos os campeonatos</option>` +
     camps.map(c=>`<option value="${c}">${c}</option>`).join("");
 
   if(camps.includes(campAtual)) $("filtroCampeonato").value = campAtual;
 
-  const cats = [...new Set(listaPublicada()
-    .filter(x => !$("filtroCampeonato").value || x.campeonato === $("filtroCampeonato").value)
-    .map(x=>x.categoria)
-    .filter(Boolean)
-  )].sort();
+  const porCamp = base.filter(x => !$("filtroCampeonato").value || x.campeonato === $("filtroCampeonato").value);
 
+  const cats = [...new Set(porCamp.map(x=>x.categoria).filter(Boolean))].sort();
   $("filtroCategoria").innerHTML = `<option value="">Todas categorias</option>` +
     cats.map(c=>`<option value="${c}">${c}</option>`).join("");
 
   if(cats.includes(catAtual)) $("filtroCategoria").value = catAtual;
+
+  const porCat = porCamp.filter(x => !$("filtroCategoria").value || x.categoria === $("filtroCategoria").value);
+
+  if($("filtroGrupo")){
+    const grupos = [...new Set(porCat.map(x=>x.grupo).filter(Boolean))].sort();
+    $("filtroGrupo").innerHTML = `<option value="">Todos grupos</option>` +
+      grupos.map(g=>`<option value="${g}">${g}</option>`).join("");
+    if(grupos.includes(grupoAtual)) $("filtroGrupo").value = grupoAtual;
+  }
+
+  if($("filtroFase")){
+    const fases = [...new Set(porCat.map(x=>x.fase || x.rodada).filter(Boolean))].sort();
+    $("filtroFase").innerHTML = `<option value="">Todas fases</option>` +
+      fases.map(f=>`<option value="${f}">${f}</option>`).join("");
+    if(fases.includes(faseAtual)) $("filtroFase").value = faseAtual;
+  }
 }
 
 function filtradas(){
   const busca = norm($("busca").value);
   const camp = $("filtroCampeonato").value;
   const cat = $("filtroCategoria").value;
+  const grupo = $("filtroGrupo")?.value || "";
+  const fase = $("filtroFase")?.value || "";
 
   return listaPublicada().filter(x=>{
     if(camp && x.campeonato !== camp) return false;
     if(cat && x.categoria !== cat) return false;
+    if(grupo && x.grupo !== grupo) return false;
+    if(fase && (x.fase || x.rodada) !== fase) return false;
 
     if(busca){
-      const texto = norm(`${nomeTime(x.timeA,"")} ${nomeTime(x.timeB,"")} ${x.campeonato} ${x.categoria} ${x.local} ${x.rodada} ${x.arbitro}`);
+      const texto = norm(`${nomeTime(x.timeA,"")} ${nomeTime(x.timeB,"")} ${x.campeonato} ${x.categoria} ${x.grupo} ${x.fase} ${x.local} ${x.rodada} ${x.arbitro}`);
       if(!texto.includes(busca)) return false;
     }
 
@@ -588,6 +636,8 @@ function atualizarTopo(){
   $("tagTotal").innerText = `Publicadas: ${lista.length}`;
   $("tagCampeonato").innerText = `Campeonato: ${$("filtroCampeonato").value || "Todos"}`;
   $("tagCategoria").innerText = `Categoria: ${$("filtroCategoria").value || "Todas"}`;
+  if($("tagGrupo")) $("tagGrupo").innerText = `Grupo: ${$("filtroGrupo")?.value || "Todos"}`;
+  if($("tagFase")) $("tagFase").innerText = `Fase: ${$("filtroFase")?.value || "Todas"}`;
   $("tituloPagina").innerText = `Súmulas${$("filtroCategoria").value ? " - " + $("filtroCategoria").value : ""}`;
 }
 
@@ -653,6 +703,9 @@ function renderizar(){
 
           <div class="tags">
             <span class="tag">${x.rodada}</span>
+            ${x.grupo ? `<span class="tag">${x.grupo}</span>` : ""}
+            ${x.fase ? `<span class="tag">${x.fase}</span>` : ""}
+            ${x.chave ? `<span class="tag">${x.chave}</span>` : ""}
             <span class="tag">${x.arbitro}</span>
           </div>
         </div>
@@ -679,7 +732,15 @@ $("filtroCampeonato").addEventListener("change",()=>{
   renderizar();
 });
 
-$("filtroCategoria").addEventListener("change",renderizar);
+$("filtroCategoria").addEventListener("change",()=>{
+  preencherFiltros();
+  if($("filtroGrupo")) $("filtroGrupo").value = "";
+  if($("filtroFase")) $("filtroFase").value = "";
+  renderizar();
+});
+
+if($("filtroGrupo")) $("filtroGrupo").addEventListener("change",renderizar);
+if($("filtroFase")) $("filtroFase").addEventListener("change",renderizar);
 
 onSnapshot(collection(db,"jogos"),snap=>{
   jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
