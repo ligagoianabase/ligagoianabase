@@ -71,6 +71,48 @@ function catItem(x){
 
 function filtroCamp(){ return $("filtroCampeonato")?.value || ""; }
 function filtroCat(){ return $("filtroCategoria")?.value || ""; }
+function filtroGrupo(){ return $("filtroGrupo")?.value || ""; }
+
+function campeonatoAtual(){
+  const f = filtroCamp();
+  if(!f) return null;
+  return campeonatos.find(c => c.id === f || norm(c.nome) === norm(f) || norm(c.campeonato) === norm(f)) || null;
+}
+
+function grupoItem(x){
+  return x?.grupo || x?.grupoNome || x?.chaveGrupo || x?.grupoCampeonato || "";
+}
+
+function grupoPorConfiguracao(time,categoria,campeonatoRef=null){
+  const nome = nomeTime(time);
+  if(!nome) return "";
+
+  const camp = campeonatoRef || campeonatoAtual();
+  const cfg = camp?.configuracaoGrupos || camp?.grupos || null;
+  if(!cfg) return "";
+
+  const cats = cfg.categorias || cfg;
+  const catObj = cats?.[categoria] || cats?.[String(categoria || "").replace("-", " ")] || null;
+  const grupos = catObj?.grupos || catObj || null;
+  if(!grupos || typeof grupos !== "object") return "";
+
+  for(const [grupo,lista] of Object.entries(grupos)){
+    const timesLista = Array.isArray(lista) ? lista : [];
+    if(timesLista.some(t => norm(nomeTime(t) || t) === norm(nome))){
+      return grupo;
+    }
+  }
+
+  return "";
+}
+
+function grupoPartida(p){
+  return grupoItem(p) || grupoPorConfiguracao(p.timeA,p.categoria) || grupoPorConfiguracao(p.timeB,p.categoria) || "";
+}
+
+function passaFiltroGrupoPartida(p){
+  return !filtroGrupo() || norm(grupoPartida(p)) === norm(filtroGrupo());
+}
 
 function passaFiltro(x){
   if(filtroCamp() && norm(campItem(x)) !== norm(filtroCamp())) return false;
@@ -111,7 +153,13 @@ function partidaBase(j){
     gols: s.gols || j.gols || [],
     cartoes: s.cartoes || j.cartoes || [],
     assistencias: s.assistencias || j.assistencias || [],
-    finalizado: finalizado(j)
+    finalizado: finalizado(j),
+    grupo: s.grupo || s.grupoNome || j.grupo || j.grupoNome || j.chaveGrupo || "",
+    fase: s.fase || j.fase || s.etapa || j.etapa || s.rodada || j.rodada || "",
+    penaltisA: s.penaltisA ?? s.penaltiA ?? j.penaltisA ?? j.penaltiA,
+    penaltisB: s.penaltisB ?? s.penaltiB ?? j.penaltisB ?? j.penaltiB,
+    logoA: s.logoA || s.logoTimeA || j.logoA || j.logoTimeA || "",
+    logoB: s.logoB || s.logoTimeB || j.logoB || j.logoTimeB || ""
   };
 }
 
@@ -119,6 +167,7 @@ function partidasFinalizadas(){
   return jogosFiltrados()
     .filter(finalizado)
     .map(partidaBase)
+    .filter(passaFiltroGrupoPartida)
     .sort((a,b) => dataValor(a.data) - dataValor(b.data));
 }
 
@@ -252,6 +301,25 @@ function preencherFiltros(){
     [...cats].sort().map(c=>`<option value="${c}">${c}</option>`).join("");
 
   if([...cats].includes(catAtual)) $("filtroCategoria").value = catAtual;
+
+  if($("filtroGrupo")){
+    const grupoAtual = filtroGrupo();
+    const grupos = new Set();
+
+    jogos
+      .filter(x => !filtroCamp() || norm(campItem(x)) === norm(filtroCamp()))
+      .map(partidaBase)
+      .forEach(p=>{
+        const g = grupoPartida(p);
+        if(g) grupos.add(g);
+      });
+
+    $("filtroGrupo").innerHTML =
+      `<option value="">Todos os grupos</option>` +
+      [...grupos].sort().map(g=>`<option value="${g}">${g}</option>`).join("");
+
+    if([...grupos].includes(grupoAtual)) $("filtroGrupo").value = grupoAtual;
+  }
 }
 
 function atualizarHero(){
@@ -263,13 +331,13 @@ function atualizarHero(){
   const camp = campeonatos.find(x => x.id === filtroCamp() || norm(x.nome) === norm(filtroCamp()));
 
   $("heroTitulo").innerText = camp?.nome || filtroCamp() || "Tabela da Competição";
-  $("heroSub").innerText = filtroCat() ? `Categoria ${filtroCat()}` : "Classificação, jogos e estatísticas geradas automaticamente pelas súmulas finalizadas.";
+  $("heroSub").innerText = `${filtroCat() ? "Categoria " + filtroCat() : "Classificação, jogos e estatísticas geradas automaticamente pelas súmulas finalizadas."}${filtroGrupo() ? " • " + filtroGrupo() : ""}`;
   $("heroTagCategoria").innerText = `Categoria: ${filtroCat() || "Todas"}`;
   $("heroTagJogos").innerText = `Jogos finalizados: ${partidas.length}`;
   $("heroTagTimes").innerText = `Times: ${tabela.length}`;
   $("heroTagGols").innerText = `Gols: ${gols}`;
   $("heroLogo").src = camp?.logo || camp?.escudo || "logo-liga.jfif";
-  $("tituloTabela").innerText = `Tabela${filtroCat() ? " - " + filtroCat() : ""}`;
+  $("tituloTabela").innerText = `Tabela${filtroCat() ? " - " + filtroCat() : ""}${filtroGrupo() ? " - " + filtroGrupo() : ""}`;
 }
 
 function formaHTML(arr){
@@ -378,7 +446,144 @@ function renderDetalhes(){
   `;
 }
 
+
+function gruposDasPartidas(){
+  const grupos = new Map();
+
+  partidasFinalizadas().forEach(p=>{
+    const grupo = grupoPartida(p) || "Geral";
+    if(!grupos.has(grupo)) grupos.set(grupo,[]);
+    grupos.get(grupo).push(p);
+  });
+
+  return [...grupos.entries()].sort((a,b)=>a[0].localeCompare(b[0],"pt-BR"));
+}
+
+function renderClassificacaoPorGrupos(){
+  const grupos = gruposDasPartidas();
+
+  if(!grupos.length){
+    $("areaTabela").innerHTML = `<div class="vazio">Nenhum jogo finalizado.</div>`;
+    return true;
+  }
+
+  const temGrupoReal = grupos.length > 1 || (grupos[0] && grupos[0][0] !== "Geral");
+
+  if(!temGrupoReal || filtroGrupo()){
+    return false;
+  }
+
+  $("areaTabela").innerHTML = grupos.map(([grupo,partidas])=>{
+    const tabela = calcularTabelaPorPartidas(partidas);
+    return `
+      <section style="margin-bottom:18px;">
+        <h3 style="color:var(--gold);font-size:20px;margin:0 0 10px;font-weight:900;">${grupo}</h3>
+        ${tabelaHTML(tabela,"geral")}
+      </section>
+    `;
+  }).join("");
+
+  return true;
+}
+
+function faseNormalizada(j){
+  const f = norm(j.fase || j.rodada || j.etapa || "");
+  if(f.includes("oitava")) return "Oitavas";
+  if(f.includes("quarta")) return "Quartas";
+  if(f.includes("semi")) return "Semifinal";
+  if(f.includes("final")) return "Final";
+  return "";
+}
+
+function ordemFase(f){
+  const n = norm(f);
+  if(n.includes("oitava")) return 1;
+  if(n.includes("quarta")) return 2;
+  if(n.includes("semi")) return 3;
+  if(n.includes("final")) return 4;
+  return 9;
+}
+
+function vencedorPartida(p){
+  if(Number(p.golsA) > Number(p.golsB)) return nomeTime(p.timeA);
+  if(Number(p.golsB) > Number(p.golsA)) return nomeTime(p.timeB);
+  if(p.penaltisA !== undefined && p.penaltisB !== undefined){
+    if(Number(p.penaltisA) > Number(p.penaltisB)) return nomeTime(p.timeA);
+    if(Number(p.penaltisB) > Number(p.penaltisA)) return nomeTime(p.timeB);
+  }
+  return "";
+}
+
+function placarFase(p){
+  if(!p.finalizado) return "x";
+  let placar = `${Number(p.golsA || 0)} x ${Number(p.golsB || 0)}`;
+  if(p.penaltisA !== undefined && p.penaltisB !== undefined && String(p.penaltisA) !== "" && String(p.penaltisB) !== ""){
+    placar += ` <small>(${Number(p.penaltisA)} x ${Number(p.penaltisB)})</small>`;
+  }
+  return placar;
+}
+
+function renderFaseFinal(){
+  const mataMata = jogosFiltrados()
+    .map(partidaBase)
+    .filter(passaFiltroGrupoPartida)
+    .filter(p => faseNormalizada(p));
+
+  if(!mataMata.length){
+    $("areaTabela").innerHTML = `<div class="vazio">Nenhum jogo de fase final encontrado. Use fase/rodada como Oitavas, Quartas, Semifinal ou Final.</div>`;
+    return;
+  }
+
+  const fases = new Map();
+  mataMata.forEach(p=>{
+    const fase = faseNormalizada(p);
+    if(!fases.has(fase)) fases.set(fase,[]);
+    fases.get(fase).push(p);
+  });
+
+  const htmlFases = [...fases.entries()]
+    .sort((a,b)=>ordemFase(a[0])-ordemFase(b[0]))
+    .map(([fase,lista])=>`
+      <div class="ranking-card" style="min-width:250px;">
+        <h3 style="color:var(--gold);margin-bottom:12px;text-align:center;">${fase}</h3>
+        <div style="display:grid;gap:10px;">
+          ${lista.sort((a,b)=>String(a.data||"").localeCompare(String(b.data||""))).map(p=>{
+            const vencedor = vencedorPartida(p);
+            return `
+              <div style="background:rgba(8,28,54,.95);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px;">
+                <div class="times-linha">
+                  <div class="time-box">
+                    <img class="escudo" src="${p.logoA || logoTime(p.timeA) || escudoPorNome(nomeTime(p.timeA))}" onerror="this.src='logo-liga.jfif'">
+                    <span>${nomeTime(p.timeA) || "-"}</span>
+                  </div>
+                  <div class="placar">${placarFase(p)}</div>
+                  <div class="time-box visitante">
+                    <span>${nomeTime(p.timeB) || "-"}</span>
+                    <img class="escudo" src="${p.logoB || logoTime(p.timeB) || escudoPorNome(nomeTime(p.timeB))}" onerror="this.src='logo-liga.jfif'">
+                  </div>
+                </div>
+                <div class="info-item">
+                  ${p.categoria || "-"} • ${p.data || "-"}<br>
+                  ${vencedor ? `<strong>Vencedor:</strong> ${vencedor}` : "Aguardando resultado"}
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+    `).join("");
+
+  $("areaTabela").innerHTML = `
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px;">
+      <div style="display:flex;gap:12px;align-items:stretch;min-width:max-content;">
+        ${htmlFases}
+      </div>
+    </div>
+  `;
+}
+
 function renderClassificacao(){
+  if(renderClassificacaoPorGrupos()) return;
   const lista = calcularTabela();
   $("areaTabela").innerHTML = lista.length ? tabelaHTML(lista,"geral") : `<div class="vazio">Nenhum jogo finalizado.</div>`;
 }
@@ -424,7 +629,7 @@ function renderJogos(){
             <div class="placar">${p.finalizado ? `${p.golsA} x ${p.golsB}` : "x"}</div>
             <div class="time-box visitante"><span>${nomeTime(p.timeB)}</span><img class="escudo" src="${logoTime(p.timeB)}" onerror="this.src='logo-liga.jfif'"></div>
           </div>
-          <div class="info-item"><strong>${p.campeonato || "-"}</strong><br>${p.categoria || "-"}<br>${p.data || "-"}<br>${p.local || "-"}</div>
+          <div class="info-item"><strong>${p.campeonato || "-"}</strong><br>${p.categoria || "-"}${grupoPartida(p) ? " • " + grupoPartida(p) : ""}${p.fase ? " • " + p.fase : ""}<br>${p.data || "-"}<br>${p.local || "-"}</div>
           ${p.finalizado ? `<a class="btn-ver" href="sumula-publica.html?id=${p.id}"><i class="fa-solid fa-file-lines"></i> Ver Súmula</a>` : ""}
         </article>
       `).join("")}
@@ -610,13 +815,14 @@ function agruparOficial(){
   const grupos = new Map();
 
   todasPartidasFinalizadas().forEach(p=>{
-    const key = `${p.campeonatoId || p.campeonato || "geral"}__${p.categoria || "geral"}`;
+    const key = `${p.campeonatoId || p.campeonato || "geral"}__${p.categoria || "geral"}__${grupoPartida(p) || "geral"}`;
 
     if(!grupos.has(key)){
       grupos.set(key,{
         campeonatoId:p.campeonatoId || "",
         campeonato:p.campeonato || "",
         categoria:p.categoria || "",
+        grupo:grupoPartida(p) || "",
         partidas:[]
       });
     }
@@ -809,6 +1015,7 @@ function resumoOficialDoGrupo(grupo){
     campeonatoId:grupo.campeonatoId || "",
     campeonato:grupo.campeonato || "",
     categoria:grupo.categoria || "",
+    grupo:grupo.grupo || "",
     jogosFinalizados:grupo.partidas.length,
     gols,
     times:tabela.length,
@@ -896,6 +1103,7 @@ async function salvarOficialFirestore(){
         campeonatoId:oficial.campeonatoId,
         campeonato:oficial.campeonato,
         categoria:oficial.categoria,
+        grupo:oficial.grupo || "",
         jogosFinalizados:oficial.jogosFinalizados,
         gols:oficial.gols,
         campeao:oficial.lider,
@@ -914,6 +1122,7 @@ async function salvarOficialFirestore(){
           campeonatoId:oficial.campeonatoId,
           campeonato:oficial.campeonato,
           categoria:oficial.categoria,
+          grupo:oficial.grupo || "",
           chaveTabela:oficial.chave,
           atualizadoAutomaticamente:true,
           atualizadoEm:serverTimestamp()
@@ -993,6 +1202,7 @@ function atualizarTela(){
   if(abaAtual === "classificacao") renderClassificacao();
   if(abaAtual === "casaFora") renderCasaFora();
   if(abaAtual === "jogos") renderJogos();
+  if(abaAtual === "faseFinal") renderFaseFinal();
   if(abaAtual === "estatisticasTimes") renderEstatisticasTimes();
   if(abaAtual === "artilharia") renderArtilharia();
   if(abaAtual === "assistencias") renderAssistencias();
@@ -1012,6 +1222,10 @@ if($("filtroCampeonato")){
 
 if($("filtroCategoria")){
   $("filtroCategoria").addEventListener("change",atualizarTela);
+}
+
+if($("filtroGrupo")){
+  $("filtroGrupo").addEventListener("change",atualizarTela);
 }
 
 function ouvir(nome,setter,refreshFiltro=false){
