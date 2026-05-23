@@ -672,7 +672,7 @@ select,input{
 <main class="wrap container">
   <section class="hero">
     <div class="hero-top">
-      <img id="heroLogo" class="hero-logo" src="logo-liga.jfif">
+      <img id="heroLogo" class="hero-logo" src="logo-liga.jfif" referrerpolicy="no-referrer" onerror="this.src='logo-liga.jfif'">
       <div class="hero-info">
         <h2 id="heroTitulo">Tabela da Competição</h2>
         <p id="heroSub">Classificação, jogos e estatísticas geradas automaticamente pelas súmulas finalizadas.</p>
@@ -759,6 +759,30 @@ filtroGrupo?.addEventListener("change",()=>{
 });
 
 carregarGruposFiltro();
+</script>
+
+
+
+<script>
+function logoSeguraTabela(valor){
+  const logo = String(valor || "").trim();
+  if(!logo || logo.startsWith("data:image/")) return "logo-liga.jfif";
+  return logo;
+}
+
+function corrigirLogosTabela(){
+  document.querySelectorAll("img.hero-logo, img.escudo, img.photo, img.logo").forEach(img=>{
+    const src = String(img.getAttribute("src") || "").trim();
+    if(!src || src.startsWith("data:image/")) img.src = "logo-liga.jfif";
+    img.referrerPolicy = "no-referrer";
+    img.onerror = function(){ this.onerror=null; this.src="logo-liga.jfif"; };
+  });
+}
+
+window.logoSeguraTabela = logoSeguraTabela;
+window.corrigirLogosTabela = corrigirLogosTabela;
+document.addEventListener("DOMContentLoaded",corrigirLogosTabela);
+setInterval(corrigirLogosTabela,1200);
 </script>
 
 </body>
