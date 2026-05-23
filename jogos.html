@@ -100,7 +100,7 @@ img{
 
 .filtros{
   display:grid;
-  grid-template-columns:1fr 1fr 1fr;
+  grid-template-columns:1fr 1fr 1fr 180px 180px;
   gap:10px;
   margin-bottom:14px;
 }
@@ -448,6 +448,14 @@ select:focus{
     <select id="filtroCategoria">
       <option value="">Todas categorias</option>
     </select>
+
+    <select id="filtroGrupo">
+      <option value="">Todos os grupos</option>
+    </select>
+
+    <select id="filtroFase">
+      <option value="">Todas as fases</option>
+    </select>
   </section>
 
   <h2 class="titulo-secao" id="tituloPagina">Jogos</h2>
@@ -581,8 +589,16 @@ function obterCategoria(j){
   return valorCampo(j, ["categoria"], "-");
 }
 
+function obterGrupo(j){
+  return valorCampo(j, ["grupo", "nomeGrupo", "grupoNome"], "");
+}
+
+function obterFase(j){
+  return valorCampo(j, ["fase", "etapa"], "");
+}
+
 function obterRodada(j){
-  return valorCampo(j, ["rodada", "fase"], "Jogo");
+  return valorCampo(j, ["rodada", "fase", "etapa"], "Jogo");
 }
 
 function obterLocal(j){
@@ -621,9 +637,13 @@ function textoStatus(j){
 function preencherFiltros(){
   const filtroCampeonato = document.getElementById("filtroCampeonato");
   const filtroCategoria = document.getElementById("filtroCategoria");
+  const filtroGrupo = document.getElementById("filtroGrupo");
+  const filtroFase = document.getElementById("filtroFase");
 
   const campeonatoAtual = filtroCampeonato.value;
   const categoriaAtual = filtroCategoria.value;
+  const grupoAtual = filtroGrupo.value;
+  const faseAtual = filtroFase.value;
 
   const campeonatosSet = new Set();
 
@@ -665,27 +685,67 @@ function preencherFiltros(){
   if([...categorias].includes(categoriaAtual)){
     filtroCategoria.value = categoriaAtual;
   }
+
+  const grupos = new Set();
+  const fases = new Set();
+
+  jogos.forEach(j=>{
+    if(filtroCampeonato.value && obterCampeonato(j) !== filtroCampeonato.value) return;
+    if(filtroCategoria.value && obterCategoria(j) !== filtroCategoria.value) return;
+
+    const grupo = obterGrupo(j);
+    const fase = obterFase(j);
+
+    if(grupo) grupos.add(grupo);
+    if(fase) fases.add(fase);
+  });
+
+  filtroGrupo.innerHTML = `<option value="">Todos os grupos</option>`;
+  [...grupos].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(nome=>{
+    filtroGrupo.innerHTML += `<option value="${nome}">${nome}</option>`;
+  });
+
+  if([...grupos].includes(grupoAtual)){
+    filtroGrupo.value = grupoAtual;
+  }
+
+  filtroFase.innerHTML = `<option value="">Todas as fases</option>`;
+  [...fases].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(nome=>{
+    filtroFase.innerHTML += `<option value="${nome}">${nome}</option>`;
+  });
+
+  if([...fases].includes(faseAtual)){
+    filtroFase.value = faseAtual;
+  }
 }
 
 function jogosFiltrados(){
   const busca = normalizarTexto(document.getElementById("buscaJogo").value);
   const campeonatoSelecionado = document.getElementById("filtroCampeonato").value;
   const categoriaSelecionada = document.getElementById("filtroCategoria").value;
+  const grupoSelecionado = document.getElementById("filtroGrupo").value;
+  const faseSelecionada = document.getElementById("filtroFase").value;
+  const grupoSelecionado = document.getElementById("filtroGrupo").value;
+  const faseSelecionada = document.getElementById("filtroFase").value;
 
   return jogos.filter(j=>{
     const timeA = pegarTimeA(j);
     const timeB = pegarTimeB(j);
     const campeonato = obterCampeonato(j);
     const categoria = obterCategoria(j);
+    const grupo = obterGrupo(j);
+    const fase = obterFase(j);
     const local = obterLocal(j);
     const arbitro = obterArbitro(j);
     const rodada = obterRodada(j);
 
     if(campeonatoSelecionado && campeonato !== campeonatoSelecionado) return false;
     if(categoriaSelecionada && categoria !== categoriaSelecionada) return false;
+    if(grupoSelecionado && grupo !== grupoSelecionado) return false;
+    if(faseSelecionada && fase !== faseSelecionada) return false;
 
     if(busca){
-      const texto = normalizarTexto(`${timeA} ${timeB} ${campeonato} ${categoria} ${local} ${arbitro} ${rodada}`);
+      const texto = normalizarTexto(`${timeA} ${timeB} ${campeonato} ${categoria} ${grupo} ${fase} ${local} ${arbitro} ${rodada}`);
       if(!texto.includes(busca)) return false;
     }
 
@@ -706,7 +766,7 @@ function atualizarTopo(){
   document.getElementById("tagAgendados").innerText = `Agendados: ${agendados.length}`;
 
   document.getElementById("tituloPagina").innerText =
-    `Jogos${categoriaSelecionada ? " - " + categoriaSelecionada : ""}${campeonatoSelecionado ? " | " + campeonatoSelecionado : ""}`;
+    `Jogos${categoriaSelecionada ? " - " + categoriaSelecionada : ""}${grupoSelecionado ? " | " + grupoSelecionado : ""}${faseSelecionada ? " | " + faseSelecionada : ""}${campeonatoSelecionado ? " | " + campeonatoSelecionado : ""}`;
 }
 
 function ehNovo(j){
@@ -750,6 +810,8 @@ window.abrirJogo = function(id){
     <div class="detalhe-grid">
       <div class="detalhe-item"><strong>Campeonato</strong>${obterCampeonato(j)}</div>
       <div class="detalhe-item"><strong>Categoria</strong>${obterCategoria(j)}</div>
+      <div class="detalhe-item"><strong>Grupo</strong>${obterGrupo(j) || "-"}</div>
+      <div class="detalhe-item"><strong>Fase</strong>${obterFase(j) || "-"}</div>
       <div class="detalhe-item"><strong>Data</strong>${formatarDataHora(obterData(j))}</div>
       <div class="detalhe-item"><strong>Local</strong>${obterLocal(j)}</div>
       <div class="detalhe-item"><strong>Rodada/Fase</strong>${obterRodada(j)}</div>
@@ -795,6 +857,8 @@ function renderizarJogos(){
 
     const campeonato = obterCampeonato(j);
     const categoria = obterCategoria(j);
+    const grupo = obterGrupo(j);
+    const fase = obterFase(j);
     const data = formatarDataHora(obterData(j));
     const local = obterLocal(j);
     const rodada = obterRodada(j);
@@ -829,13 +893,16 @@ function renderizarJogos(){
 
         <div class="info-jogo">
           <strong>${campeonato}</strong><br>
-          ${categoria}<br>
+          ${categoria}${grupo ? " • " + grupo : ""}<br>
+          ${fase ? fase + "<br>" : ""}
           ${data}<br>
           ${local}
         </div>
 
         <div class="tags">
           <span class="tag">${rodada}</span>
+          ${grupo ? `<span class="tag">${grupo}</span>` : ""}
+          ${fase ? `<span class="tag">${fase}</span>` : ""}
           <span class="tag">${arbitro}</span>
         </div>
 
@@ -871,7 +938,13 @@ document.getElementById("filtroCampeonato").addEventListener("change", ()=>{
   renderizarJogos();
 });
 
-document.getElementById("filtroCategoria").addEventListener("change", renderizarJogos);
+document.getElementById("filtroCategoria").addEventListener("change", ()=>{
+  preencherFiltros();
+  renderizarJogos();
+});
+
+document.getElementById("filtroGrupo").addEventListener("change", renderizarJogos);
+document.getElementById("filtroFase").addEventListener("change", renderizarJogos);
 
 function iniciarTempoReal(){
   onSnapshot(collection(db,"jogos"),snap=>{
