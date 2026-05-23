@@ -478,6 +478,7 @@ import {
 
 renderMenu("jogos");
 
+let filtrosUrlAplicados = false;
 let jogos = [];
 let sumulas = [];
 let campeonatos = [];
@@ -497,6 +498,36 @@ function valorCampo(obj, chaves, fallback = ""){
     }
   }
   return fallback;
+}
+
+function parametroUrl(nome){
+  return new URLSearchParams(location.search).get(nome) || "";
+}
+
+function aplicarFiltrosDaUrl(){
+  if(filtrosUrlAplicados) return;
+
+  const campUrl = parametroUrl("campeonato");
+  const categoriaUrl = parametroUrl("categoria");
+  const grupoUrl = parametroUrl("grupo");
+  const faseUrl = parametroUrl("fase");
+
+  if(!campUrl && !categoriaUrl && !grupoUrl && !faseUrl){
+    filtrosUrlAplicados = true;
+    return;
+  }
+
+  const filtroCampeonato = document.getElementById("filtroCampeonato");
+  const filtroCategoria = document.getElementById("filtroCategoria");
+  const filtroGrupo = document.getElementById("filtroGrupo");
+  const filtroFase = document.getElementById("filtroFase");
+
+  if(campUrl) filtroCampeonato.value = campUrl;
+  if(categoriaUrl) filtroCategoria.value = categoriaUrl;
+  if(grupoUrl) filtroGrupo.value = grupoUrl;
+  if(faseUrl) filtroFase.value = faseUrl;
+
+  filtrosUrlAplicados = true;
 }
 
 function formatarDataHora(valor){
@@ -543,14 +574,44 @@ function pegarTimeB(j){
   return valorCampo(j, ["timeB", "visitante", "timeVisitanteNome", "visitanteNome"], "Time B");
 }
 
+function logoSegura(url){
+  const logo = String(url || "").trim();
+
+  if(!logo || logo.startsWith("data:image/")){
+    return "logo-liga.jfif";
+  }
+
+  return logo;
+}
+
 function pegarLogoA(j){
-  if(j.timeA && typeof j.timeA === "object") return j.timeA.logo || j.timeA.escudo || "logo-liga.jfif";
-  return valorCampo(j, ["logoTimeA", "escudoA", "logoA", "timeALogo", "mandanteLogo"], "logo-liga.jfif");
+  if(j.timeA && typeof j.timeA === "object"){
+    return logoSegura(j.timeA.logo || j.timeA.logoTime || j.timeA.escudo || j.timeA.foto);
+  }
+
+  return logoSegura(valorCampo(j, [
+    "logoTimeA",
+    "escudoA",
+    "logoA",
+    "timeALogo",
+    "mandanteLogo",
+    "fotoTimeA"
+  ], "logo-liga.jfif"));
 }
 
 function pegarLogoB(j){
-  if(j.timeB && typeof j.timeB === "object") return j.timeB.logo || j.timeB.escudo || "logo-liga.jfif";
-  return valorCampo(j, ["logoTimeB", "escudoB", "logoB", "timeBLogo", "visitanteLogo"], "logo-liga.jfif");
+  if(j.timeB && typeof j.timeB === "object"){
+    return logoSegura(j.timeB.logo || j.timeB.logoTime || j.timeB.escudo || j.timeB.foto);
+  }
+
+  return logoSegura(valorCampo(j, [
+    "logoTimeB",
+    "escudoB",
+    "logoB",
+    "timeBLogo",
+    "visitanteLogo",
+    "fotoTimeB"
+  ], "logo-liga.jfif"));
 }
 
 function pegarPlacarA(j){
@@ -717,14 +778,14 @@ function preencherFiltros(){
   if([...fases].includes(faseAtual)){
     filtroFase.value = faseAtual;
   }
+
+  aplicarFiltrosDaUrl();
 }
 
 function jogosFiltrados(){
   const busca = normalizarTexto(document.getElementById("buscaJogo").value);
   const campeonatoSelecionado = document.getElementById("filtroCampeonato").value;
   const categoriaSelecionada = document.getElementById("filtroCategoria").value;
-  const grupoSelecionado = document.getElementById("filtroGrupo").value;
-  const faseSelecionada = document.getElementById("filtroFase").value;
   const grupoSelecionado = document.getElementById("filtroGrupo").value;
   const faseSelecionada = document.getElementById("filtroFase").value;
 
@@ -760,6 +821,8 @@ function atualizarTopo(){
 
   const campeonatoSelecionado = document.getElementById("filtroCampeonato").value;
   const categoriaSelecionada = document.getElementById("filtroCategoria").value;
+  const grupoSelecionado = document.getElementById("filtroGrupo").value;
+  const faseSelecionada = document.getElementById("filtroFase").value;
 
   document.getElementById("tagTotal").innerText = `Jogos: ${filtrados.length}`;
   document.getElementById("tagFinalizados").innerText = `Finalizados: ${finalizados.length}`;
@@ -947,22 +1010,31 @@ document.getElementById("filtroGrupo").addEventListener("change", renderizarJogo
 document.getElementById("filtroFase").addEventListener("change", renderizarJogos);
 
 function iniciarTempoReal(){
+  const lista = document.getElementById("listaJogos");
+
   onSnapshot(collection(db,"jogos"),snap=>{
     jogos = snap.docs.map(d=>({id:d.id,...d.data()}));
     preencherFiltros();
     renderizarJogos();
+  },erro=>{
+    console.error("Erro ao carregar jogos:", erro);
+    lista.innerHTML = `<div class="vazio">Erro ao carregar jogos. Verifique o Firebase e as permissões.</div>`;
   });
 
   onSnapshot(collection(db,"sumulas"),snap=>{
     sumulas = snap.docs.map(d=>({id:d.id,...d.data()}));
     preencherFiltros();
     renderizarJogos();
+  },erro=>{
+    console.error("Erro ao carregar súmulas:", erro);
   });
 
   onSnapshot(collection(db,"campeonatos"),snap=>{
     campeonatos = snap.docs.map(d=>({id:d.id,...d.data()}));
     preencherFiltros();
     renderizarJogos();
+  },erro=>{
+    console.error("Erro ao carregar campeonatos:", erro);
   });
 }
 
