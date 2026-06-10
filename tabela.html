@@ -695,17 +695,13 @@ select,input{
   <h2 class="titulo-secao" id="tituloTabela">Tabela</h2>
 
   <div class="abas">
-    <button class="aba ativa" onclick="trocarAba('detalhes',this)">Detalhes</button>
-    <button class="aba" onclick="trocarAba('classificacao',this)">Classificação</button>
-    <button class="aba" onclick="trocarAba('casaFora',this)">Casa / Fora</button>
+    <button class="aba ativa" onclick="trocarAba('geral',this)">Classificação Geral</button>
+    <button class="aba" onclick="trocarAba('grupos',this)">Grupos</button>
     <button class="aba" onclick="trocarAba('jogos',this)">Jogos</button>
     <button class="aba" onclick="trocarAba('faseFinal',this)">Fase Final</button>
-    <button class="aba" onclick="trocarAba('estatisticasTimes',this)">Estatísticas dos Times</button>
     <button class="aba" onclick="trocarAba('artilharia',this)">Artilharia</button>
     <button class="aba" onclick="trocarAba('assistencias',this)">Assistências</button>
     <button class="aba" onclick="trocarAba('cartoes',this)">Cartões</button>
-    <button class="aba" onclick="trocarAba('suspensos',this)">Suspensos</button>
-    <button class="aba" onclick="trocarAba('historico',this)">Histórico</button>
   </div>
 
   <div id="areaTabela">
@@ -720,47 +716,385 @@ import { renderMenu } from "./menu.js";
 renderMenu("tabela");
 </script>
 
-<script type="module" src="tabela.js"></script>
 
 <script type="module">
 import { db } from "./firebase.js";
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+let campeonatos = [];
+let jogos = [];
+let times = [];
+let jogadores = [];
+let abaAtual = "geral";
+
+const area = document.getElementById("areaTabela");
+const filtroCampeonato = document.getElementById("filtroCampeonato");
+const filtroCategoria = document.getElementById("filtroCategoria");
 const filtroGrupo = document.getElementById("filtroGrupo");
 
-function normalizarGrupo(g){
-  return String(g || "").trim();
+function txt(v){ return String(v ?? "").trim(); }
+function norm(v){
+  return txt(v).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+function esc(v){
+  return txt(v).replace(/[&<>"']/g,m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+}
+function logoTime(t){
+  return t?.logo || t?.escudo || t?.foto || t?.imagem || "logo-liga.jfif";
+}
+function nomeTime(t){
+  return t?.nome || t?.nomeTime || t?.time || t?.equipe || "-";
+}
+function idTime(t){
+  return txt(t?.id || t?.timeId || t?.idTime || t?.nome || t?.nomeTime);
+}
+function getCampeonatoId(obj){
+  return txt(obj.campeonatoId || obj.idCampeonato || obj.campeonato || obj.campeonato_id || obj.competicaoId);
+}
+function getCategoria(obj){
+  return txt(obj.categoria || obj.categoriaNome || obj.nomeCategoria);
+}
+function getGrupo(obj){
+  return txt(obj.grupo || obj.nomeGrupo || obj.chaveGrupo || obj.grupoNome);
+}
+function statusFinalizado(j){
+  const s = norm(j.status || j.situacao || j.estado);
+  return s.includes("final") || s.includes("encerr") || s.includes("conclu");
+}
+function num(v){ const n = Number(v); return Number.isFinite(n) ? n : 0; }
+
+function timeNomePorIdOuNome(valor){
+  const v = txt(valor);
+  if(!v) return "";
+  const n = norm(v);
+  const achado = times.find(t=>norm(t.id)===n || norm(t.nome)===n || norm(t.nomeTime)===n || norm(t.time)===n);
+  return nomeTime(achado || {nome:v});
+}
+function timeObjPorNome(nome){
+  const n = norm(nome);
+  return times.find(t=>norm(nomeTime(t))===n || norm(t.id)===n) || {nome};
 }
 
-async function carregarGruposFiltro(){
-  if(!filtroGrupo) return;
-  try{
-    const snap = await getDocs(collection(db,"jogos"));
-    const grupos = new Set();
-    snap.forEach(d=>{
-      const j = d.data();
-      const grupo = normalizarGrupo(j.grupo || j.nomeGrupo || j.chaveGrupo);
-      if(grupo) grupos.add(grupo);
+function getCasa(j){ return j.mandante || j.timeCasa || j.casa || j.timeA || j.mandanteNome || j.time1 || j.equipeA; }
+function getFora(j){ return j.visitante || j.timeFora || j.fora || j.timeB || j.visitanteNome || j.time2 || j.equipeB; }
+function getGolsCasa(j){ return num(j.golsMandante ?? j.placarMandante ?? j.golsCasa ?? j.placarCasa ?? j.golsTimeA ?? j.placarA ?? j.gols1); }
+function getGolsFora(j){ return num(j.golsVisitante ?? j.placarVisitante ?? j.golsFora ?? j.placarFora ?? j.golsTimeB ?? j.placarB ?? j.gols2); }
+
+function configCat(camp, categoria){
+  const cfg = camp?.configPorCategoria || camp?.categoriasConfig || camp?.configuracaoCategorias || {};
+  return cfg[categoria] || cfg[txt(categoria)] || Object.entries(cfg).find(([k])=>norm(k)===norm(categoria))?.[1] || {};
+}
+
+function timesDaCategoria(camp, categoria){
+  const cfg = configCat(camp,categoria);
+  const saida = [];
+  const add = (nome, grupo="")=>{
+    nome = timeNomePorIdOuNome(nome);
+    if(!nome) return;
+    const ja = saida.find(x=>norm(x.nome)===norm(nome));
+    if(ja){ if(grupo && !ja.grupo) ja.grupo = grupo; return; }
+    saida.push({nome, grupo});
+  };
+
+  if(Array.isArray(cfg.times)){
+    cfg.times.forEach(t=>{
+      if(typeof t === "string") add(t, t.grupo || "");
+      else add(t.nome || t.nomeTime || t.time || t.id || t.timeId, t.grupo || t.nomeGrupo || "");
     });
-
-    const atual = filtroGrupo.value;
-    filtroGrupo.innerHTML = `<option value="">Todos os grupos</option>` +
-      Array.from(grupos).sort((a,b)=>a.localeCompare(b,"pt-BR")).map(g=>`<option value="${g}">${g}</option>`).join("");
-    filtroGrupo.value = atual;
-  }catch(e){
-    console.warn("Não foi possível carregar grupos para o filtro:", e);
   }
+  if(Array.isArray(cfg.timesParticipantes)) cfg.timesParticipantes.forEach(t=>add(t,""));
+  if(Array.isArray(cfg.grupos)){
+    cfg.grupos.forEach(g=>{
+      const gn = g.nome || g.grupo || g.nomeGrupo || "";
+      (g.times || []).forEach(t=>add(typeof t==="string" ? t : (t.nome || t.nomeTime || t.time || t.id || t.timeId), gn));
+    });
+  }
+
+  // fallback para modelo antigo
+  if(!saida.length && Array.isArray(camp.grupos)){
+    camp.grupos.forEach(g=>{
+      const gn = g.nome || g.grupo || "";
+      (g.times || []).forEach(t=>add(typeof t==="string" ? t : (t.nome || t.nomeTime || t.time), gn));
+    });
+  }
+  if(!saida.length && Array.isArray(camp.timesParticipantes)) camp.timesParticipantes.forEach(t=>add(t,""));
+
+  return saida;
 }
 
-filtroGrupo?.addEventListener("change",()=>{
-  filtroGrupo.dispatchEvent(new Event("input",{bubbles:true}));
-  if(typeof window.renderizarTudo === "function") window.renderizarTudo();
-  if(typeof window.atualizarTabela === "function") window.atualizarTabela();
+function categoriasDoCampeonato(camp){
+  const cats = Array.isArray(camp?.categorias) ? camp.categorias : [];
+  const cfg = camp?.configPorCategoria || {};
+  return Array.from(new Set([...cats, ...Object.keys(cfg)])).filter(Boolean);
+}
+
+async function carregarTudo(){
+  area.innerHTML = `<div class="vazio"><i class="fa-solid fa-spinner fa-spin"></i> Carregando tabela...</div>`;
+  const [campSnap,jogosSnap,timesSnap,jogadoresSnap] = await Promise.all([
+    getDocs(collection(db,"campeonatos")),
+    getDocs(collection(db,"jogos")),
+    getDocs(collection(db,"times")).catch(()=>({forEach:()=>{}})),
+    getDocs(collection(db,"jogadores")).catch(()=>({forEach:()=>{}}))
+  ]);
+
+  campeonatos = [];
+  campSnap.forEach(d=>campeonatos.push({id:d.id,...d.data()}));
+
+  jogos = [];
+  jogosSnap.forEach(d=>jogos.push({id:d.id,...d.data()}));
+
+  times = [];
+  timesSnap.forEach(d=>times.push({id:d.id,...d.data()}));
+
+  jogadores = [];
+  jogadoresSnap.forEach(d=>jogadores.push({id:d.id,...d.data()}));
+
+  montarFiltros();
+  renderizarTudo();
+}
+
+function montarFiltros(){
+  filtroCampeonato.innerHTML = `<option value="">Todos os campeonatos</option>` +
+    campeonatos.sort((a,b)=>txt(a.nome).localeCompare(txt(b.nome),"pt-BR"))
+      .map(c=>`<option value="${c.id}">${esc(c.nome || "Sem nome")} ${c.temporada ? " - "+esc(c.temporada) : ""}</option>`).join("");
+
+  atualizarCategorias();
+}
+
+function atualizarCategorias(){
+  const camp = campeonatos.find(c=>c.id===filtroCampeonato.value);
+  let cats = [];
+  if(camp) cats = categoriasDoCampeonato(camp);
+  else campeonatos.forEach(c=>cats.push(...categoriasDoCampeonato(c)));
+  cats = Array.from(new Set(cats)).sort((a,b)=>a.localeCompare(b,"pt-BR"));
+
+  const atual = filtroCategoria.value;
+  filtroCategoria.innerHTML = `<option value="">Todas categorias</option>` + cats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");
+  if(cats.includes(atual)) filtroCategoria.value = atual;
+  atualizarGrupos();
+}
+
+function atualizarGrupos(){
+  const grupos = new Set();
+  campeonatosFiltrados().forEach(c=>{
+    categoriasFiltradas(c).forEach(cat=>{
+      const cfg = configCat(c,cat);
+      if(Array.isArray(cfg.grupos)) cfg.grupos.forEach(g=>{ if(g.nome) grupos.add(g.nome); });
+      timesDaCategoria(c,cat).forEach(t=>{ if(t.grupo) grupos.add(t.grupo); });
+    });
+  });
+  jogosFiltradosBase().forEach(j=>{ const g = getGrupo(j); if(g) grupos.add(g); });
+
+  const atual = filtroGrupo.value;
+  filtroGrupo.innerHTML = `<option value="">Todos os grupos</option>` +
+    Array.from(grupos).sort((a,b)=>a.localeCompare(b,"pt-BR")).map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join("");
+  if(Array.from(grupos).includes(atual)) filtroGrupo.value = atual;
+}
+
+function campeonatosFiltrados(){
+  return campeonatos.filter(c=>!filtroCampeonato.value || c.id===filtroCampeonato.value);
+}
+function categoriasFiltradas(camp){
+  const cats = categoriasDoCampeonato(camp);
+  return cats.filter(c=>!filtroCategoria.value || norm(c)===norm(filtroCategoria.value));
+}
+function jogosFiltradosBase(){
+  return jogos.filter(j=>{
+    if(filtroCampeonato.value && getCampeonatoId(j) && getCampeonatoId(j)!==filtroCampeonato.value) return false;
+    if(filtroCategoria.value && getCategoria(j) && norm(getCategoria(j))!==norm(filtroCategoria.value)) return false;
+    if(filtroGrupo.value && getGrupo(j) && norm(getGrupo(j))!==norm(filtroGrupo.value)) return false;
+    return true;
+  });
+}
+
+function criarLinhaBase(nome, grupo=""){
+  return {nome,grupo,J:0,V:0,E:0,D:0,GP:0,GC:0,SG:0,PTS:0,ultimos:[]};
+}
+
+function calcularClassificacao(camp,categoria,grupoFiltro=""){
+  const mapa = new Map();
+  timesDaCategoria(camp,categoria).forEach(t=>{
+    if(grupoFiltro && norm(t.grupo)!==norm(grupoFiltro)) return;
+    mapa.set(norm(t.nome), criarLinhaBase(t.nome,t.grupo));
+  });
+
+  const js = jogos.filter(j=>{
+    if(getCampeonatoId(j) && getCampeonatoId(j)!==camp.id) return false;
+    if(getCategoria(j) && norm(getCategoria(j))!==norm(categoria)) return false;
+    if(grupoFiltro && getGrupo(j) && norm(getGrupo(j))!==norm(grupoFiltro)) return false;
+    return statusFinalizado(j);
+  });
+
+  js.forEach(j=>{
+    const casa = timeNomePorIdOuNome(getCasa(j));
+    const fora = timeNomePorIdOuNome(getFora(j));
+    if(!casa || !fora) return;
+    const grupoJogo = getGrupo(j);
+
+    if(!mapa.has(norm(casa))) mapa.set(norm(casa), criarLinhaBase(casa,grupoJogo));
+    if(!mapa.has(norm(fora))) mapa.set(norm(fora), criarLinhaBase(fora,grupoJogo));
+
+    const a = mapa.get(norm(casa));
+    const b = mapa.get(norm(fora));
+    const gc = getGolsCasa(j);
+    const gf = getGolsFora(j);
+
+    a.J++; b.J++;
+    a.GP += gc; a.GC += gf;
+    b.GP += gf; b.GC += gc;
+
+    if(gc > gf){ a.V++; b.D++; a.PTS += 3; a.ultimos.unshift("V"); b.ultimos.unshift("D"); }
+    else if(gc < gf){ b.V++; a.D++; b.PTS += 3; b.ultimos.unshift("V"); a.ultimos.unshift("D"); }
+    else { a.E++; b.E++; a.PTS++; b.PTS++; a.ultimos.unshift("E"); b.ultimos.unshift("E"); }
+
+    if(!a.grupo && grupoJogo) a.grupo = grupoJogo;
+    if(!b.grupo && grupoJogo) b.grupo = grupoJogo;
+  });
+
+  const arr = Array.from(mapa.values()).map(t=>({...t,SG:t.GP-t.GC, AP:t.J ? Math.round((t.PTS/(t.J*3))*100) : 0, ultimos:t.ultimos.slice(0,5)}));
+  arr.sort((a,b)=> b.PTS-a.PTS || b.V-a.V || b.SG-a.SG || b.GP-a.GP || a.GC-b.GC || a.nome.localeCompare(b.nome,"pt-BR"));
+  return arr;
+}
+
+function tabelaHTML(lista, titulo="", classificados=0){
+  if(!lista.length) return `<div class="vazio">Nenhum time encontrado nesta configuração.</div>`;
+  return `
+    ${titulo ? `<h3 class="grupo-titulo">${esc(titulo)}</h3>` : ""}
+    <div class="box-tabela">
+      <div class="table">
+        <div class="row header">
+          <div class="col-pos">#</div><div class="col-time">Time</div><div class="col">PTS</div><div class="col">J</div><div class="col">V</div><div class="col">E</div><div class="col">D</div><div class="col">GP</div><div class="col">GC</div><div class="col">SG</div><div class="col">%</div><div class="col-wide">Últimos 5</div>
+        </div>
+        ${lista.map((t,i)=>{
+          const obj = timeObjPorNome(t.nome);
+          const classe = i===0 ? "top1" : i===1 ? "top2" : i===2 ? "top3" : "";
+          const classificado = classificados && i < classificados ? " classificado" : "";
+          return `<div class="row ${classe}${classificado}">
+            <div class="col-pos">${i+1}</div>
+            <div class="col-time"><div class="team"><img class="escudo" src="${esc(logoTime(obj))}" onerror="this.src='logo-liga.jfif'"><span>${esc(t.nome)}</span>${t.grupo ? `<span class="tag">${esc(t.grupo)}</span>` : ""}</div></div>
+            <div class="col">${t.PTS}</div><div class="col">${t.J}</div><div class="col">${t.V}</div><div class="col">${t.E}</div><div class="col">${t.D}</div><div class="col">${t.GP}</div><div class="col">${t.GC}</div><div class="col">${t.SG}</div><div class="col">${t.AP}%</div>
+            <div class="col-wide"><div class="forma">${(t.ultimos.length?t.ultimos:["-","-","-","-","-"]).slice(0,5).map(r=>`<span class="f-${String(r).toLowerCase()}">${esc(r)}</span>`).join("")}</div></div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>`;
+}
+
+function renderGeral(){
+  let html = "";
+  campeonatosFiltrados().forEach(camp=>{
+    categoriasFiltradas(camp).forEach(cat=>{
+      const geral = calcularClassificacao(camp,cat,"");
+      if(filtroGrupo.value){
+        const porGrupo = geral.filter(t=>norm(t.grupo)===norm(filtroGrupo.value));
+        html += tabelaHTML(porGrupo, `${camp.nome || "Campeonato"} - ${cat} - ${filtroGrupo.value}`);
+      }else{
+        html += tabelaHTML(geral, `${camp.nome || "Campeonato"} - ${cat} - Classificação Geral`);
+      }
+    });
+  });
+  area.innerHTML = html || `<div class="vazio">Nenhum campeonato/categoria encontrado.</div>`;
+}
+
+function renderGrupos(){
+  let html = "";
+  campeonatosFiltrados().forEach(camp=>{
+    categoriasFiltradas(camp).forEach(cat=>{
+      const cfg = configCat(camp,cat);
+      let grupos = [];
+      timesDaCategoria(camp,cat).forEach(t=>{ if(t.grupo && !grupos.includes(t.grupo)) grupos.push(t.grupo); });
+      if(Array.isArray(cfg.grupos)) cfg.grupos.forEach(g=>{ if(g.nome && !grupos.includes(g.nome)) grupos.push(g.nome); });
+      jogos.forEach(j=>{ if(getCampeonatoId(j)===camp.id && norm(getCategoria(j))===norm(cat) && getGrupo(j) && !grupos.includes(getGrupo(j))) grupos.push(getGrupo(j)); });
+
+      if(filtroGrupo.value) grupos = grupos.filter(g=>norm(g)===norm(filtroGrupo.value));
+      if(!grupos.length) grupos = ["Grupo Único"];
+
+      html += `<h2 class="titulo-secao">${esc(camp.nome || "Campeonato")} - ${esc(cat)}</h2>`;
+      grupos.forEach(g=>{
+        const lista = g==="Grupo Único" ? calcularClassificacao(camp,cat,"") : calcularClassificacao(camp,cat,g);
+        html += `<div class="grupo-bloco">${tabelaHTML(lista,g,Number(cfg.classificadosPorGrupo||0))}</div>`;
+      });
+    });
+  });
+  area.innerHTML = html || `<div class="vazio">Nenhum grupo encontrado.</div>`;
+}
+
+function renderJogos(){
+  const js = jogosFiltradosBase();
+  if(!js.length){ area.innerHTML = `<div class="vazio">Nenhum jogo encontrado.</div>`; return; }
+  area.innerHTML = `<div class="lista-grid">${js.map(j=>{
+    const casa = timeNomePorIdOuNome(getCasa(j));
+    const fora = timeNomePorIdOuNome(getFora(j));
+    const oc = timeObjPorNome(casa), of = timeObjPorNome(fora);
+    return `<div class="card-item">
+      <div class="card-top"><span class="status-tag ${statusFinalizado(j)?"status-finalizado":"status-agendado"}">${esc(j.status || j.situacao || "Agendado")}</span><span class="tag">${esc(getGrupo(j)||getCategoria(j)||"")}</span></div>
+      <div class="times-linha"><div class="time-box"><img class="escudo" src="${esc(logoTime(oc))}" onerror="this.src='logo-liga.jfif'"><span>${esc(casa)}</span></div><div class="placar">${statusFinalizado(j)?`${getGolsCasa(j)} x ${getGolsFora(j)}`:"x"}</div><div class="time-box visitante"><span>${esc(fora)}</span><img class="escudo" src="${esc(logoTime(of))}" onerror="this.src='logo-liga.jfif'"></div></div>
+      <div class="info-item">${esc(j.data || j.dataJogo || "")} ${esc(j.hora || j.horario || "")}<br><strong>${esc(j.local || j.campo || "")}</strong></div>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function renderFaseFinal(){
+  let html = "";
+  campeonatosFiltrados().forEach(camp=>{
+    categoriasFiltradas(camp).forEach(cat=>{
+      const cfg = configCat(camp,cat);
+      const fase = cfg.tipoFaseFinal || cfg.faseFinal || camp.tipoFaseFinal || "nenhuma";
+      const cruz = cfg.cruzamentosFaseFinal || camp.cruzamentosFaseFinal || [];
+      html += `<div class="fase-coluna" style="margin-bottom:12px"><h3>${esc(camp.nome)} - ${esc(cat)}</h3>
+      <div class="fase-jogo"><strong>Fase final: ${esc(fase)}</strong><small>Classificados por grupo: ${esc(cfg.classificadosPorGrupo || camp.classificadosPorGrupo || 0)}</small></div>
+      ${Array.isArray(cruz) && cruz.length ? cruz.map(c=>`<div class="fase-jogo"><strong>${esc(c)}</strong></div>`).join("") : `<div class="vazio">Fase final ainda não configurada ou sem jogos gerados.</div>`}
+      </div>`;
+    });
+  });
+  area.innerHTML = `<div class="fase-final-box">${html}</div>` || `<div class="vazio">Sem fase final.</div>`;
+}
+
+function renderSimples(nome){
+  area.innerHTML = `<div class="vazio">${nome} continua vindo das súmulas/jogadores. Nesta atualização foi organizada a Classificação Geral e por Grupos.</div>`;
+}
+
+function atualizarHero(){
+  const camp = campeonatos.find(c=>c.id===filtroCampeonato.value) || campeonatosFiltrados()[0] || {};
+  document.getElementById("heroTitulo").textContent = camp.nome ? `Tabela - ${camp.nome}` : "Tabela da Competição";
+  document.getElementById("heroLogo").src = logoSeguraTabela(camp.logo || camp.logoCampeonato || "logo-liga.jfif");
+  document.getElementById("heroTagCategoria").textContent = `Categoria: ${filtroCategoria.value || "Todas"}`;
+
+  let totalTimes = 0;
+  campeonatosFiltrados().forEach(c=>categoriasFiltradas(c).forEach(cat=>totalTimes += timesDaCategoria(c,cat).length));
+  const jogosF = jogosFiltradosBase().filter(statusFinalizado);
+  const gols = jogosF.reduce((s,j)=>s+getGolsCasa(j)+getGolsFora(j),0);
+  document.getElementById("heroTagJogos").textContent = `Jogos finalizados: ${jogosF.length}`;
+  document.getElementById("heroTagTimes").textContent = `Times: ${totalTimes}`;
+  document.getElementById("heroTagGols").textContent = `Gols: ${gols}`;
+}
+
+window.trocarAba = function(aba,btn){
+  abaAtual = aba;
+  document.querySelectorAll(".aba").forEach(b=>b.classList.remove("ativa"));
+  btn?.classList.add("ativa");
+  renderizarTudo();
+};
+
+window.renderizarTudo = function(){
+  atualizarHero();
+  if(abaAtual==="geral") renderGeral();
+  else if(abaAtual==="grupos") renderGrupos();
+  else if(abaAtual==="jogos") renderJogos();
+  else if(abaAtual==="faseFinal") renderFaseFinal();
+  else renderSimples(abaAtual);
+  setTimeout(()=>{ if(window.corrigirLogosTabela) window.corrigirLogosTabela(); },50);
+};
+
+filtroCampeonato.addEventListener("change",()=>{ atualizarCategorias(); renderizarTudo(); });
+filtroCategoria.addEventListener("change",()=>{ atualizarGrupos(); renderizarTudo(); });
+filtroGrupo.addEventListener("change",renderizarTudo);
+
+carregarTudo().catch(e=>{
+  console.error(e);
+  area.innerHTML = `<div class="vazio">Erro ao carregar tabela: ${esc(e.message || e)}</div>`;
 });
-
-carregarGruposFiltro();
 </script>
-
 
 
 <script>
