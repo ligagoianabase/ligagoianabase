@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fotógrafos - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Fotógrafos - AGF - Associação Goiana de Futebol</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="menu.css">
@@ -361,7 +361,7 @@ input,select{
 
   <section class="hero">
     <h2>Fotógrafos</h2>
-    <p>Fotógrafos cadastrados e aprovados na Liga Goiana de Futebol de Base.</p>
+    <p>Fotógrafos cadastrados e aprovados na AGF - Associação Goiana de Futebol.</p>
 
     <div class="hero-tags">
       <div class="hero-tag" id="tagTotal">Fotógrafos: 0</div>
@@ -452,7 +452,7 @@ function nomeFotografo(f){
 }
 
 function fotoPerfil(f){
-  return val(f,["foto","fotoPerfil","avatar","imagem"],"logo-liga.jfif");
+  return val(f,["foto","fotoPerfil","avatar","imagem"],"logo-agf.png");
 }
 
 function cidadeFotografo(f){
@@ -485,7 +485,7 @@ function galeriasDoFotografo(f){
 }
 
 function capaGaleria(g){
-  return g.capa || g.imagem || (Array.isArray(g.midias) ? g.midias[0]?.url : "") || "logo-liga.jfif";
+  return g.capa || g.imagem || (Array.isArray(g.midias) ? g.midias[0]?.url : "") || "logo-agf.png";
 }
 
 function preencherCidades(){
@@ -558,11 +558,11 @@ function renderLista(){
     return `
       <article class="foto-card ${fotografoOficial(f) ? "card-oficial" : ""}">
         <div class="perfil-top">
-          <img class="avatar" src="${fotoPerfil(f)}" onerror="this.src='logo-liga.jfif'">
+          <img class="avatar" src="${fotoPerfil(f)}" onerror="this.src='logo-agf.png'">
           <strong>${nomeFotografo(f)}</strong>
           <p>
             ${cidadeFotografo(f)}<br>
-            ${val(f,["especialidade","bio","descricao"],"Fotógrafo da Liga Goiana")}
+            ${val(f,["especialidade","bio","descricao"],"Fotógrafo da AGF")}
           </p>
 
           <div class="badges">
@@ -574,8 +574,8 @@ function renderLista(){
 
         <div class="album-mini">
           ${
-            albuns.slice(0,6).map(g=>`<img src="${capaGaleria(g)}" onerror="this.src='logo-liga.jfif'">`).join("") ||
-            `<img src="logo-liga.jfif"><img src="logo-liga.jfif"><img src="logo-liga.jfif">`
+            albuns.slice(0,6).map(g=>`<img src="${capaGaleria(g)}" onerror="this.src='logo-agf.png'">`).join("") ||
+            `<img src="logo-agf.png"><img src="logo-agf.png"><img src="logo-agf.png">`
           }
         </div>
 
@@ -606,14 +606,14 @@ function renderPerfil(f){
 
   box.innerHTML = `
     <div class="detalhe-head">
-      <img class="avatar" src="${fotoPerfil(f)}" onerror="this.src='logo-liga.jfif'">
+      <img class="avatar" src="${fotoPerfil(f)}" onerror="this.src='logo-agf.png'">
 
       <div>
         <h2>${nomeFotografo(f)}</h2>
         <p>
           Cidade: ${cidadeFotografo(f)}<br>
           Especialidade: ${val(f,["especialidade"],"Fotografia esportiva")}<br>
-          ${val(f,["bio","descricao"],"Fotógrafo cadastrado na Liga Goiana de Futebol de Base.")}
+          ${val(f,["bio","descricao"],"Fotógrafo cadastrado na AGF - Associação Goiana de Futebol.")}
         </p>
 
         <div class="badges" style="justify-content:flex-start">
@@ -638,7 +638,7 @@ function renderPerfil(f){
         albuns.length
         ? albuns.map(g=>`
           <article class="album-card">
-            <img src="${capaGaleria(g)}" onerror="this.src='logo-liga.jfif'">
+            <img src="${capaGaleria(g)}" onerror="this.src='logo-agf.png'">
             <div class="album-body">
               <strong>${g.titulo || "Álbum"}</strong>
               <p>
