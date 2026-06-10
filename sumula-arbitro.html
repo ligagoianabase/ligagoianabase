@@ -900,6 +900,7 @@ import {
   getDoc,
   setDoc,
   updateDoc,
+  addDoc,
   serverTimestamp,
   collection,
   getDocs
@@ -976,6 +977,91 @@ function cpfJaEscalado(cpf, ignorarJogador=null){
   if(!cpfLimpo) return false;
 
   return [...jogadoresA, ...jogadoresB].some(j => j !== ignorarJogador && limparCpf(j.cpf) === cpfLimpo);
+}
+
+
+async function buscarJogadorFirebasePorCpf(cpf){
+  const cpfLimpo = limparCpf(cpf);
+  if(!cpfLimpo) return null;
+
+  const snap = await getDocs(collection(db,"jogadores"));
+  let encontrado = null;
+
+  snap.forEach(d=>{
+    if(encontrado) return;
+
+    const dados = {id:d.id,...d.data()};
+    const cpfJogador = limparCpf(campo(dados,["cpf","CPF"],""));
+
+    if(cpfJogador && cpfJogador === cpfLimpo){
+      encontrado = dados;
+    }
+  });
+
+  return encontrado;
+}
+
+function dadosTimeParaJogador(time){
+  if(time === "A"){
+    return {
+      timeId:campo(jogo,["timeAId","mandanteId","timeMandanteId"], campo(jogo?.timeA,["id"],"")),
+      timeNome:getTimeA().nome,
+      time:getTimeA().nome
+    };
+  }
+
+  return {
+    timeId:campo(jogo,["timeBId","visitanteId","timeVisitanteId"], campo(jogo?.timeB,["id"],"")),
+    timeNome:getTimeB().nome,
+    time:getTimeB().nome
+  };
+}
+
+async function salvarJogadorNovoNoFirebase(jogador,time){
+  const cpfLimpo = limparCpf(jogador.cpf);
+
+  if(!cpfLimpo){
+    throw new Error("Informe o CPF do jogador.");
+  }
+
+  const existente = await buscarJogadorFirebasePorCpf(cpfLimpo);
+
+  if(existente){
+    throw new Error("Esse CPF já está cadastrado em outro jogador. Não é permitido cadastrar CPF duplicado.");
+  }
+
+  const dadosTime = dadosTimeParaJogador(time);
+
+  const dados = {
+    nome:jogador.nome,
+    nomeCompleto:jogador.nome,
+    cpf:cpfLimpo,
+    numero:jogador.numero || "",
+    camisa:jogador.numero || "",
+    nascimento:jogador.nascimento || "",
+    dataNascimento:jogador.nascimento || "",
+    posicao:jogador.posicao || "",
+    categoria:jogador.categoria || campo(jogo,["categoria"],""),
+    tipo:jogador.tipo || "titular",
+
+    ...dadosTime,
+
+    campeonatoId:campo(jogo,["campeonatoId"],""),
+    campeonato:campo(jogo,["campeonato","campeonatoNome"],""),
+    status:"ativo",
+    aprovado:true,
+    autorizado:true,
+    criadoPeloArbitro:true,
+    criadoNaSumula:true,
+    sumulaOrigemId:jogoId,
+    jogoOrigemId:jogoId,
+    criadoEm:serverTimestamp(),
+    atualizadoEm:serverTimestamp()
+  };
+
+  const ref = await addDoc(collection(db,"jogadores"),dados);
+
+  return ref.id;
 }
 
 function quantidadeTitulares(lista){
@@ -1834,62 +1920,82 @@ window.removerJogador = function(time,i){
   salvarRascunhoRapido();
 };
 
-window.adicionarJogador = function(time){
+window.adicionarJogador = async function(time){
   const n = $(`novoNum${time}`).value;
-  const nome = $(`novoNome${time}`).value;
+  const nome = $(`novoNome${time}`).value.trim();
   const cpf = $(`novoCpf${time}`).value;
   const pos = $(`novaPos${time}`).value;
   const tipo = $(`novoTipo${time}`).value;
+  const cpfLimpo = limparCpf(cpf);
 
   if(!n || !nome){
     alert("Informe número e nome.");
     return;
   }
 
-  if(!cpf){
+  if(!cpfLimpo){
     alert("Informe o CPF do jogador.");
     return;
   }
 
-  if(cpfJaEscalado(cpf)){
+  if(cpfJaEscalado(cpfLimpo)){
     alert("Este CPF já está na súmula. Não é permitido cadastrar o mesmo jogador 2 vezes.");
     return;
   }
 
-  const lista = time === "A" ? jogadoresA : jogadoresB;
+  try{
+    const existente = await buscarJogadorFirebasePorCpf(cpfLimpo);
 
-  if(tipo !== "suplente" && quantidadeTitulares(lista) >= LIMITE_TITULARES){
-    alert(`Este time já tem ${LIMITE_TITULARES} titulares. Adicione como reserva/suplente.`);
-    return;
+    if(existente){
+      alert("Esse CPF já está cadastrado no sistema. Use o botão Buscar CPF para adicionar esse jogador, sem cadastrar duplicado.");
+      return;
+    }
+
+    const lista = time === "A" ? jogadoresA : jogadoresB;
+
+    if(tipo !== "suplente" && quantidadeTitulares(lista) >= LIMITE_TITULARES){
+      alert(`Este time já tem ${LIMITE_TITULARES} titulares. Adicione como reserva/suplente.`);
+      return;
+    }
+
+    const obj = {
+      id:"",
+      numero:n,
+      nome,
+      cpf:cpfLimpo,
+      nascimento:"",
+      posicao:pos,
+      categoria:campo(jogo,["categoria"],""),
+      tipo,
+      manual:true,
+      criadoPeloArbitro:true
+    };
+
+    if(jogadorSuspenso(obj)){
+      alert("Este jogador está suspenso e não pode ser escalado.");
+      return;
+    }
+
+    const novoId = await salvarJogadorNovoNoFirebase(obj,time);
+    obj.id = novoId;
+
+    lista.push(obj);
+
+    $(`novoNum${time}`).value = "";
+    $(`novoNome${time}`).value = "";
+    $(`novoCpf${time}`).value = "";
+    $(`novaPos${time}`).value = "";
+
+    renderEscalacoes();
+    montarSelects();
+    salvarRascunhoRapido();
+
+    alert("Jogador cadastrado no sistema e adicionado à súmula com time e categoria.");
+
+  }catch(e){
+    console.error(e);
+    alert(e.message || "Erro ao cadastrar jogador.");
   }
-
-  const obj = {
-    id:"",
-    numero:n,
-    nome,
-    cpf,
-    nascimento:"",
-    posicao:pos,
-    categoria:campo(jogo,["categoria"],""),
-    tipo,
-    manual:true
-  };
-
-  if(jogadorSuspenso(obj)){
-    alert("Este jogador está suspenso e não pode ser escalado.");
-    return;
-  }
-
-  lista.push(obj);
-
-  $(`novoNum${time}`).value = "";
-  $(`novoNome${time}`).value = "";
-  $(`novoCpf${time}`).value = "";
-  $(`novaPos${time}`).value = "";
-
-  renderEscalacoes();
-  montarSelects();
-  salvarRascunhoRapido();
 };
 
 window.buscarOutroJogadorPorCpf = async function(time){
@@ -1933,6 +2039,9 @@ window.buscarOutroJogadorPorCpf = async function(time){
 
   encontrado.numero = "";
   encontrado.tipo = quantidadeTitulares(lista) >= LIMITE_TITULARES ? "suplente" : "titular";
+  encontrado.categoria = encontrado.categoria || campo(jogo,["categoria"],"");
+  encontrado.timeNome = encontrado.timeNome || (time === "A" ? getTimeA().nome : getTimeB().nome);
+  encontrado.time = encontrado.time || encontrado.timeNome;
   encontrado.manual = false;
 
   lista.push(encontrado);
