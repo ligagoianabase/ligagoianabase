@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Súmula do Árbitro - Liga Goiana</title>
+<title>Súmula do Árbitro - AGF</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -1228,7 +1228,7 @@ function getTimeA(){
   return {
     nome:$("timeA").value || "Mandante",
     cidade:$("cidadeA").value || "",
-    escudo:$("logoA").src || "logo-liga.jfif"
+    escudo:$("logoA").src || "logo-agf.png"
   };
 }
 
@@ -1236,7 +1236,7 @@ function getTimeB(){
   return {
     nome:$("timeB").value || "Visitante",
     cidade:$("cidadeB").value || "",
-    escudo:$("logoB").src || "logo-liga.jfif"
+    escudo:$("logoB").src || "logo-agf.png"
   };
 }
 
@@ -1246,17 +1246,17 @@ function criarTela(){
 
     <header class="header">
       <div class="header-logo">
-        <img src="logo-liga.jfif">
+        <img src="logo-agf.png">
       </div>
 
       <div class="header-title">
         <h1>SÚMULA OFICIAL</h1>
-        <input id="campeonato" placeholder="LIGA GOIANA DE FUTEBOL DE BASE">
+        <input id="campeonato" placeholder="AGF - ASSOCIAÇÃO GOIANA DE FUTEBOL">
         <span class="header-slogan">Onde o talento encontra o futuro</span>
       </div>
 
       <div class="header-campeonato-logo">
-        <img id="logoCampeonatoTopo" src="logo-liga.jfif" alt="Logo do campeonato">
+        <img id="logoCampeonatoTopo" src="logo-agf.png" alt="Logo do campeonato">
       </div>
 
       <div class="header-right">
@@ -1295,7 +1295,7 @@ function criarTela(){
 
     <section class="score-card">
       <div class="team-score">
-        <img id="logoA" src="logo-liga.jfif">
+        <img id="logoA" src="logo-agf.png">
         <div class="team-name">
           <input class="nome" id="timeA">
           <input class="cidade" id="cidadeA">
@@ -1312,7 +1312,7 @@ function criarTela(){
       </div>
 
       <div class="team-score away">
-        <img id="logoB" src="logo-liga.jfif">
+        <img id="logoB" src="logo-agf.png">
         <div class="team-name">
           <input class="nome" id="timeB">
           <input class="cidade" id="cidadeB">
@@ -1331,7 +1331,7 @@ function criarTela(){
       <div class="section-title">Escalações</div>
       <div class="section-body grid2">
         <div>
-          <div class="lineup-head"><span id="tituloA">TIME A</span><img id="miniLogoA" src="logo-liga.jfif"></div>
+          <div class="lineup-head"><span id="tituloA">TIME A</span><img id="miniLogoA" src="logo-agf.png"></div>
           <div class="table-wrap">
             <table>
               <thead>
@@ -1374,7 +1374,7 @@ function criarTela(){
         </div>
 
         <div>
-          <div class="lineup-head"><span id="tituloB">TIME B</span><img id="miniLogoB" src="logo-liga.jfif"></div>
+          <div class="lineup-head"><span id="tituloB">TIME B</span><img id="miniLogoB" src="logo-agf.png"></div>
           <div class="table-wrap">
             <table>
               <thead>
@@ -1639,7 +1639,7 @@ function criarTela(){
     </section>
 
     <footer class="final-footer">
-      Sistema Liga Goiana - Súmula Oficial
+      Sistema AGF - Súmula Oficial
     </footer>
 
   </div></div></div>
@@ -1650,10 +1650,10 @@ function preencher(){
   const A = timeAObj();
   const B = timeBObj();
 
-  $("campeonato").value = "LIGA GOIANA DE FUTEBOL DE BASE";
+  $("campeonato").value = "AGF - ASSOCIAÇÃO GOIANA DE FUTEBOL";
   if($("campeonatoTopoNome")) $("campeonatoTopoNome").innerText = campo(jogo,["campeonato","campeonatoNome"],"CAMPEONATO");
   if($("campeonatoTopoCategoria")) $("campeonatoTopoCategoria").innerText = campo(jogo,["categoria"],"");
-  if($("logoCampeonatoTopo")) $("logoCampeonatoTopo").src = campo(jogo,["logoCampeonato","campeonatoLogo","logo"], campo(sumulaSalva,["logoCampeonato","campeonatoLogo"],"logo-liga.jfif"));
+  if($("logoCampeonatoTopo")) $("logoCampeonatoTopo").src = campo(jogo,["logoCampeonato","campeonatoLogo","logo"], campo(sumulaSalva,["logoCampeonato","campeonatoLogo"],"logo-agf.png"));
   $("numeroSumula").value = campo(sumulaSalva,["numeroSumula"], campo(jogo,["numeroSumula"],`${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`));
   $("codigoPartida").value = campo(jogo,["codigoPartida","codigo"],jogoId);
   $("fase").value = campo(jogo,["fase"],"Primeira fase");
@@ -1663,11 +1663,11 @@ function preencher(){
   $("timeB").value = campo(B,["nome","nomeTime"],"Visitante");
   $("cidadeA").value = campo(A,["cidade","municipio"],"");
   $("cidadeB").value = campo(B,["cidade","municipio"],"");
-  $("logoA").src = campo(A,["logo","escudo","imagem"],"logo-liga.jfif");
-  $("logoB").src = campo(B,["logo","escudo","imagem"],"logo-liga.jfif");
+  $("logoA").src = campo(A,["logo","escudo","imagem"],"logo-agf.png");
+  $("logoB").src = campo(B,["logo","escudo","imagem"],"logo-agf.png");
   $("miniLogoA").src = $("logoA").src;
   $("miniLogoB").src = $("logoB").src;
-  if($("logoCampeonatoTopo")) $("logoCampeonatoTopo").src = campo(jogo,["logoCampeonato","campeonatoLogo","logo"], campo(sumulaSalva,["logoCampeonato","campeonatoLogo","logo"],"logo-liga.jfif"));
+  if($("logoCampeonatoTopo")) $("logoCampeonatoTopo").src = campo(jogo,["logoCampeonato","campeonatoLogo","logo"], campo(sumulaSalva,["logoCampeonato","campeonatoLogo","logo"],"logo-agf.png"));
 
   $("dataJogo").value = campo(jogo,["data","dataJogo","dataHora"],"");
   $("horaJogo").value = campo(jogo,["hora","horario"],"");
@@ -2490,12 +2490,12 @@ window.finalizarSumula = async function(){
 };
 
 window.compartilharWhatsApp = function(){
-  const texto = encodeURIComponent(`Súmula oficial Liga Goiana: ${linkPublico()}`);
+  const texto = encodeURIComponent(`Súmula oficial AGF: ${linkPublico()}`);
   window.open(`https://wa.me/?text=${texto}`,"_blank");
 };
 
 window.enviarEmail = function(){
-  const assunto = encodeURIComponent("Súmula oficial - Liga Goiana");
+  const assunto = encodeURIComponent("Súmula oficial - AGF");
   const corpo = encodeURIComponent(`Segue link da súmula oficial:\n${linkPublico()}`);
   location.href = `mailto:?subject=${assunto}&body=${corpo}`;
 };
