@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Súmula ADM - Liga Goiana</title>
+<title>Súmula ADM - AGF</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="menu.css">
@@ -197,7 +197,7 @@ input,select{padding:10px 11px;border-radius:9px;font-size:13px;box-shadow:none;
         <i class="fa-solid fa-arrow-left"></i> Voltar
       </button>
       <a href="admin.html" class="admin-btn admin-btn-light">
-        <i class="fa-solid fa-gears"></i> Painel ADM
+        <i class="fa-solid fa-gears"></i> Painel AGF
       </a>
       <a href="sumulas.html" class="admin-btn admin-btn-gold">
         <i class="fa-solid fa-file-lines"></i> Súmulas
@@ -257,7 +257,7 @@ function texto(v){return String(v||"").trim()}
 function normalizar(v){return texto(v).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
 function campo(obj,chaves,fallback=""){for(const c of chaves){if(obj&&obj[c]!==undefined&&obj[c]!==null&&obj[c]!=="")return obj[c]}return fallback}
 function nomeTime(t,fallback){if(t&&typeof t==="object")return campo(t,["nome","nomeTime","time","equipe"],fallback);return t||fallback}
-function logoTime(t){if(t&&typeof t==="object")return campo(t,["logo","escudo","imagem","foto"],"logo-liga.jfif");return "logo-liga.jfif"}
+function logoTime(t){if(t&&typeof t==="object")return campo(t,["logo","escudo","imagem","foto"],"logo-agf.png");return "logo-agf.png"}
 function mostrarStatus(msg,tipo="ok"){const box=el("statusBox");box.className="status "+(tipo==="erro"?"status-erro":tipo==="aviso"?"status-aviso":"status-ok");box.innerText=msg;box.style.display="block";setTimeout(()=>box.style.display="none",5000)}
 window.voltarPagina=function(){if(history.length>1)history.back();else location.href="admin.html"}
 
@@ -439,14 +439,14 @@ function renderizar(){
 
           <div class="times-linha">
             <div class="time-box">
-              <img src="${logoA}" class="escudo" onerror="this.src='logo-liga.jfif'">
+              <img src="${logoA}" class="escudo" onerror="this.src='logo-agf.png'">
               <span>${nomeA}</span>
             </div>
 
             <div class="placar">${golsA} x ${golsB}</div>
 
             <div class="time-box">
-              <img src="${logoB}" class="escudo" onerror="this.src='logo-liga.jfif'">
+              <img src="${logoB}" class="escudo" onerror="this.src='logo-agf.png'">
               <span>${nomeB}</span>
             </div>
           </div>
