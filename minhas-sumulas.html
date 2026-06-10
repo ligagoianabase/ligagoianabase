@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minhas Súmulas - Liga Goiana de Futebol de Base</title>
+<title>Minhas Súmulas - AGF - Associação Goiana de Futebol</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{--bg:#0b1f3a;--bg2:#08172c;--card:#102a52;--gold:#f7c600;--gold-soft:rgba(247,198,0,.12);--gold-line:rgba(247,198,0,.25);--white:#fff;--muted:#d8e1ef;--danger:#d94141;--green:#159447;--shadow:0 10px 28px rgba(0,0,0,.32);--max:1180px}
@@ -468,8 +468,8 @@
 <header class="topbar">
   <div class="wrap topbar-inner">
     <a class="brand" href="index.html">
-      <img src="logo-liga.jfif" alt="Logo Liga Goiana">
-      <div><strong>Liga Goiana de Futebol de Base</strong><span>Área do Árbitro</span></div>
+      <img src="logo-agf.png" alt="Logo AGF">
+      <div><strong>AGF - Associação Goiana de Futebol</strong><span>Área do Árbitro</span></div>
     </a>
     <div class="actions">
       <a class="btn btn-light" href="index.html"><i class="fa-solid fa-house"></i> Início</a>
@@ -503,7 +503,7 @@ let usuarioPerfil = null;
 
 function normalizar(v){return String(v||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");}
 function campo(obj,chaves,fallback=""){for(const c of chaves){if(obj && obj[c]!==undefined && obj[c]!==null && obj[c]!=="") return obj[c];}return fallback;}
-function logoTime(time){return campo(time,["logo","escudo","imagem","foto"],"logo-liga.jfif");}
+function logoTime(time){return campo(time,["logo","escudo","imagem","foto"],"logo-agf.png");}
 function nomeTime(time,fallback){return campo(time,["nome","nomeTime","time","equipe"],fallback);}
 function dataTimestamp(valor){if(!valor)return 0;if(typeof valor.toDate==="function")return valor.toDate().getTime();const t=new Date(valor).getTime();if(!isNaN(t))return t;const p=String(valor).match(/^(\d{2})\/(\d{2})\/(\d{4})/);if(p)return new Date(`${p[3]}-${p[2]}-${p[1]}T00:00:00`).getTime();return 0;}
 function formatarData(j){const data=campo(j,["dataHora","data","dataJogo"],"");const hora=campo(j,["hora","horario"],"");if(data && typeof data.toDate==="function"){const d=data.toDate();return d.toLocaleDateString("pt-BR")+" às "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});}const txt=String(data||"");if(txt.includes("T")){const d=new Date(txt);if(!isNaN(d.getTime()))return d.toLocaleDateString("pt-BR")+" às "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});}if(txt && hora)return `${txt} às ${hora}`;return txt||"-";}
@@ -544,7 +544,7 @@ function cardOfflineHtml(){
     <article class="card offline-card">
       <div class="card-top times-linha-minhas">
         <div class="team">
-          <img src="logo-liga.jfif" onerror="this.src='logo-liga.jfif'" alt="Liga Goiana">
+          <img src="logo-agf.png" onerror="this.src='logo-agf.png'" alt="AGF">
           <div>
             <strong>Súmula Offline / Manual</strong>
             <span>Emergência para árbitro ou ADM</span>
@@ -554,7 +554,7 @@ function cardOfflineHtml(){
         <div class="versus"><i class="fa-solid fa-wifi-slash"></i></div>
 
         <div class="team away">
-          <img src="logo-liga.jfif" onerror="this.src='logo-liga.jfif'" alt="Liga Goiana">
+          <img src="logo-agf.png" onerror="this.src='logo-agf.png'" alt="AGF">
           <div>
             <strong>Funciona sem internet</strong>
             <span>Preenchimento manual</span>
@@ -598,9 +598,9 @@ function renderizar(jogos){
     return `
       <article class="card">
         <div class="card-top times-linha-minhas">
-          <div class="team"><img src="${logoTime(A)}" onerror="this.src='logo-liga.jfif'" alt="${nomeA}"><div><strong>${nomeA}</strong><span>Mandante</span></div></div>
+          <div class="team"><img src="${logoTime(A)}" onerror="this.src='logo-agf.png'" alt="${nomeA}"><div><strong>${nomeA}</strong><span>Mandante</span></div></div>
           <div class="versus">X</div>
-          <div class="team away"><img src="${logoTime(B)}" onerror="this.src='logo-liga.jfif'" alt="${nomeB}"><div><strong>${nomeB}</strong><span>Visitante</span></div></div>
+          <div class="team away"><img src="${logoTime(B)}" onerror="this.src='logo-agf.png'" alt="${nomeB}"><div><strong>${nomeB}</strong><span>Visitante</span></div></div>
         </div>
         <div class="info-grid">
           <div class="info"><span>Campeonato</span>${j.campeonato||j.campeonatoNome||"-"}</div>
