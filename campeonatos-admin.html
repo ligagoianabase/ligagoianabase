@@ -43,22 +43,91 @@ function nomeGrupoPadrao(i){const letras="ABCDEFGHIJKLMNOPQRSTUVWXYZ";return "Gr
 function opcoesGruposHTML(qtd,selecionado=0){return Array.from({length:Math.max(1,Number(qtd||1))},(_,i)=>`<option value="${i}" ${Number(selecionado)===i?'selected':''}>${nomeGrupoPadrao(i)}</option>`).join("")}
 function mapaGrupoTimes(grupos=[]){const mapa={};(Array.isArray(grupos)?grupos:[]).forEach((g,idx)=>{(g.times||[]).forEach(t=>{mapa[txt(t)]=idx})});return mapa}
 function nomesUnicos(lista=[]){return [...new Set((lista||[]).map(txt).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"))}
-function timeRowsHTML(times=[],grupos=[],qtd=1){const nomes=nomesUnicos(times);const mapa=mapaGrupoTimes(grupos);if(!nomes.length){return `<div class="vazio" style="padding:16px">Clique em <b>Buscar times cadastrados</b> para carregar os times desta categoria.</div>`}return nomes.map(nome=>{const idx=Number.isInteger(mapa[nome])?mapa[nome]:0;return `<div class="time-row" data-time-nome="${escapeHTML(nome)}"><input class="time-usar" type="checkbox" checked onchange="atualizarGruposPorSelecao(this.closest('.categoria-config'))"><div class="time-nome">${escapeHTML(nome)}</div><select class="time-grupo" onchange="atualizarGruposPorSelecao(this.closest('.categoria-config'))">${opcoesGruposHTML(qtd,idx)}</select></div>`}).join("")}
-function categoriaHTML(categoria,cfg={}){const s=slugCat(categoria);const formato=cfg.formato||"pontos-corridos";const qtd=Number(cfg.quantidadeGrupos||0)||1;const classificados=Number(cfg.classificadosPorGrupo||0);const turno=cfg.turno||"ida";const fase=cfg.tipoFaseFinal||"nenhuma";const times=Array.isArray(cfg.times)?cfg.times:[];const grupos=Array.isArray(cfg.grupos)?cfg.grupos:[];return `<div class="categoria-config" data-categoria="${escapeHTML(categoria)}"><div class="cat-head"><h3>${escapeHTML(categoria)}</h3><span class="${times.length?'badge-ok':'badge-warn'} cat-badge">${times.length} time(s)</span></div><div class="cat-grid"><div><label>Formato desta categoria</label><select class="cat-formato" onchange="atualizarVisaoCategoria('${s}')"><option value="pontos-corridos" ${formato==='pontos-corridos'?'selected':''}>Pontos corridos / grupo único</option><option value="grupos" ${formato==='grupos'?'selected':''}>Fase de grupos</option><option value="grupos-mata-mata" ${formato==='grupos-mata-mata'?'selected':''}>Grupos + Mata-mata</option><option value="mata-mata" ${formato==='mata-mata'?'selected':''}>Mata-mata</option></select></div><div><label>Turno</label><select class="cat-turno"><option value="ida" ${turno==='ida'?'selected':''}>Ida</option><option value="ida-volta" ${turno==='ida-volta'?'selected':''}>Ida e volta</option></select></div><div><label>Quantidade de grupos</label><input class="cat-qtd-grupos" type="number" min="1" value="${qtd}" onchange="gerarGruposDaCategoria('${s}')"></div><div><label>Classificados por grupo</label><input class="cat-classificados" type="number" min="0" value="${classificados}"></div><div><label>Fase final</label><select class="cat-fase-final"><option value="nenhuma" ${fase==='nenhuma'?'selected':''}>Sem fase final</option><option value="final-direta" ${fase==='final-direta'?'selected':''}>Final direta</option><option value="semifinal-final" ${fase==='semifinal-final'?'selected':''}>Semifinal + Final</option><option value="mata-mata" ${fase==='mata-mata'?'selected':''}>Mata-mata</option></select></div></div><div class="times-area"><label>Times cadastrados desta categoria</label><textarea class="cat-times">${escapeHTML(times.join("\n"))}</textarea><div class="times-seletor">${timeRowsHTML(times,grupos,qtd)}</div><div class="selecionar-actions"><button class="btn-acao btn-blue" type="button" onclick="buscarTimesCategoria('${s}')"><i class="fa-solid fa-magnifying-glass"></i> Buscar times cadastrados</button><button class="btn-acao btn-green" type="button" onclick="distribuirCategoriaAutomatico('${s}')"><i class="fa-solid fa-shuffle"></i> Distribuir automático</button><button class="btn-acao btn-ver" type="button" onclick="selecionarTodosTimes('${s}',true)"><i class="fa-solid fa-check"></i> Marcar todos</button><button class="btn-acao btn-danger" type="button" onclick="selecionarTodosTimes('${s}',false)"><i class="fa-solid fa-xmark"></i> Desmarcar todos</button></div><div class="helper">Agora você seleciona os times cadastrados no site e escolhe em qual grupo cada um vai ficar. O preview dos grupos atualiza sozinho.</div></div><div class="grupos-config cat-grupos">${gruposHTML(grupos,qtd)}</div></div>`}
+function timeRowsHTML(times=[],grupos=[],qtd=1,selecionados=null){const nomes=nomesUnicos(times);const mapa=mapaGrupoTimes(grupos);const setSel=Array.isArray(selecionados)?new Set(selecionados):null;if(!nomes.length){return `<div class="vazio" style="padding:16px">Clique em <b>Carregar todos os times</b> para aparecer todos os times cadastrados no site.</div>`}return nomes.map(nome=>{const idx=Number.isInteger(mapa[nome])?mapa[nome]:0;const checked=setSel?(setSel.has(nome)?"checked":""):"checked";return `<div class="time-row" data-time-nome="${escapeHTML(nome)}"><input class="time-usar" type="checkbox" ${checked} onchange="atualizarGruposPorSelecao(this.closest('.categoria-config'))"><div class="time-nome">${escapeHTML(nome)}</div><select class="time-grupo" onchange="atualizarGruposPorSelecao(this.closest('.categoria-config'))">${opcoesGruposHTML(qtd,idx)}</select></div>`}).join("")}
+function categoriaHTML(categoria,cfg={}){const s=slugCat(categoria);const formato=cfg.formato||"pontos-corridos";const qtd=Number(cfg.quantidadeGrupos||0)||1;const classificados=Number(cfg.classificadosPorGrupo||0);const turno=cfg.turno||"ida";const fase=cfg.tipoFaseFinal||"nenhuma";const times=Array.isArray(cfg.times)?cfg.times:[];const grupos=Array.isArray(cfg.grupos)?cfg.grupos:[];return `<div class="categoria-config" data-categoria="${escapeHTML(categoria)}"><div class="cat-head"><h3>${escapeHTML(categoria)}</h3><span class="${times.length?'badge-ok':'badge-warn'} cat-badge">${times.length} time(s)</span></div><div class="cat-grid"><div><label>Formato desta categoria</label><select class="cat-formato" onchange="atualizarVisaoCategoria('${s}')"><option value="pontos-corridos" ${formato==='pontos-corridos'?'selected':''}>Pontos corridos / grupo único</option><option value="grupos" ${formato==='grupos'?'selected':''}>Fase de grupos</option><option value="grupos-mata-mata" ${formato==='grupos-mata-mata'?'selected':''}>Grupos + Mata-mata</option><option value="mata-mata" ${formato==='mata-mata'?'selected':''}>Mata-mata</option></select></div><div><label>Turno</label><select class="cat-turno"><option value="ida" ${turno==='ida'?'selected':''}>Ida</option><option value="ida-volta" ${turno==='ida-volta'?'selected':''}>Ida e volta</option></select></div><div><label>Quantidade de grupos</label><input class="cat-qtd-grupos" type="number" min="1" value="${qtd}" onchange="gerarGruposDaCategoria('${s}')"></div><div><label>Classificados por grupo</label><input class="cat-classificados" type="number" min="0" value="${classificados}"></div><div><label>Fase final</label><select class="cat-fase-final"><option value="nenhuma" ${fase==='nenhuma'?'selected':''}>Sem fase final</option><option value="final-direta" ${fase==='final-direta'?'selected':''}>Final direta</option><option value="semifinal-final" ${fase==='semifinal-final'?'selected':''}>Semifinal + Final</option><option value="mata-mata" ${fase==='mata-mata'?'selected':''}>Mata-mata</option></select></div></div><div class="times-area"><label>Todos os times cadastrados no site</label><textarea class="cat-times">${escapeHTML(times.join("\n"))}</textarea><div class="times-seletor">${timeRowsHTML(times,grupos,qtd)}</div><div class="selecionar-actions"><button class="btn-acao btn-blue" type="button" onclick="buscarTimesCategoria('${s}')"><i class="fa-solid fa-magnifying-glass"></i> Carregar todos os times</button><button class="btn-acao btn-green" type="button" onclick="distribuirCategoriaAutomatico('${s}')"><i class="fa-solid fa-shuffle"></i> Distribuir automático</button><button class="btn-acao btn-ver" type="button" onclick="selecionarTodosTimes('${s}',true)"><i class="fa-solid fa-check"></i> Marcar todos</button><button class="btn-acao btn-danger" type="button" onclick="selecionarTodosTimes('${s}',false)"><i class="fa-solid fa-xmark"></i> Desmarcar todos</button></div><div class="helper">Aqui aparecem TODOS os times cadastrados no site. Marque os que vão participar desta categoria e escolha em qual grupo cada um vai ficar.</div></div><div class="grupos-config cat-grupos">${gruposHTML(grupos,qtd)}</div></div>`}
 function gruposHTML(grupos=[],qtd=1){let arr=Array.isArray(grupos)?[...grupos]:[];while(arr.length<qtd)arr.push({nome:nomeGrupoPadrao(arr.length),times:[]});if(arr.length>qtd)arr.length=qtd;return arr.map((g,i)=>`<div class="grupo-box"><h4>${escapeHTML(g.nome||nomeGrupoPadrao(i))}</h4><textarea class="grupo-times" readonly placeholder="Times do ${escapeHTML(g.nome||nomeGrupoPadrao(i))}">${escapeHTML((g.times||[]).join("\n"))}</textarea></div>`).join("")}
 function timesSelecionadosBox(box){const rows=Array.from(box.querySelectorAll(".time-row"));if(rows.length){return rows.filter(r=>r.querySelector(".time-usar")?.checked).map(r=>txt(r.dataset.timeNome)).filter(Boolean)}return (box.querySelector(".cat-times")?.value||"").split("\n").map(txt).filter(Boolean)}
 function gruposPorSelecao(box){let qtd=Math.max(1,Number(box.querySelector(".cat-qtd-grupos")?.value||1));const formato=box.querySelector(".cat-formato")?.value||"pontos-corridos";if(formato==='pontos-corridos'||formato==='mata-mata')qtd=1;box.querySelector(".cat-qtd-grupos").value=qtd;const grupos=Array.from({length:qtd},(_,i)=>({nome:nomeGrupoPadrao(i),times:[]}));const rows=Array.from(box.querySelectorAll(".time-row"));if(rows.length){rows.forEach(r=>{if(!r.querySelector(".time-usar")?.checked)return;const nome=txt(r.dataset.timeNome);let idx=Number(r.querySelector(".time-grupo")?.value||0);if(idx>=qtd)idx=0;if(nome)grupos[idx].times.push(nome)})}else{timesSelecionadosBox(box).forEach((nome,i)=>grupos[i%qtd].times.push(nome))}return grupos}
 window.atualizarGruposPorSelecao=function(box){if(!box)return;const times=timesSelecionadosBox(box);box.querySelector(".cat-times").value=times.join("\n");const grupos=gruposPorSelecao(box);box.querySelector(".cat-grupos").innerHTML=gruposHTML(grupos,grupos.length);const badge=box.querySelector(".cat-badge");if(badge){badge.className=(times.length?'badge-ok':'badge-warn')+' cat-badge';badge.textContent=`${times.length} time(s)`}}
 function lerConfigDaTela(){const out={};document.querySelectorAll(".categoria-config").forEach(box=>{window.atualizarGruposPorSelecao(box);const cat=box.dataset.categoria;const times=timesSelecionadosBox(box);const grupos=gruposPorSelecao(box);out[cat]={categoria:cat,formato:box.querySelector(".cat-formato")?.value||"pontos-corridos",turno:box.querySelector(".cat-turno")?.value||"ida",quantidadeTimes:times.length,quantidadeGrupos:Number(box.querySelector(".cat-qtd-grupos")?.value||1),classificadosPorGrupo:Number(box.querySelector(".cat-classificados")?.value||0),tipoFaseFinal:box.querySelector(".cat-fase-final")?.value||"nenhuma",times,grupos,criterioClassificacao:["PTS","V","SG","GP","GC"],tabelaCampos:["PTS","J","V","E","D","GP","GC","SG"]}});return out}
-window.renderizarConfiguracoesCategorias=function(){const atuais=lerConfigDaTela();configCategoriasEditando={...configCategoriasEditando,...atuais};const area=document.getElementById("categoriasConfigArea");const cats=categoriasSelecionadas();if(!cats.length){area.innerHTML=`<div class="vazio">Selecione uma categoria acima para configurar.</div>`;return}area.innerHTML=cats.map(c=>categoriaHTML(c,configCategoriasEditando[c]||{})).join("");cats.forEach(c=>atualizarVisaoCategoria(slugCat(c)))};
+window.renderizarConfiguracoesCategorias=function(){const atuais=lerConfigDaTela();configCategoriasEditando={...configCategoriasEditando,...atuais};const area=document.getElementById("categoriasConfigArea");const cats=categoriasSelecionadas();if(!cats.length){area.innerHTML=`<div class="vazio">Selecione uma categoria acima para configurar.</div>`;return}area.innerHTML=cats.map(c=>categoriaHTML(c,configCategoriasEditando[c]||{})).join("");cats.forEach(c=>{atualizarVisaoCategoria(slugCat(c));const box=boxPorSlug(slugCat(c));if(box && timesCache.length && !box.querySelectorAll(".time-row").length){renderTimesNoBox(box,nomesUnicos(timesCache.map(nomeDoTime).filter(Boolean)))}})};
 function boxPorSlug(s){return Array.from(document.querySelectorAll(".categoria-config")).find(b=>slugCat(b.dataset.categoria)===s)}
 window.atualizarVisaoCategoria=function(s){const box=boxPorSlug(s);if(!box)return;const formato=box.querySelector(".cat-formato").value;const qtd=box.querySelector(".cat-qtd-grupos");if(formato==='pontos-corridos'||formato==='mata-mata'){qtd.value=1}gerarGruposDaCategoria(s,false)};
 window.gerarGruposDaCategoria=function(s,limpar=false){const box=boxPorSlug(s);if(!box)return;let qtd=Math.max(1,Number(box.querySelector(".cat-qtd-grupos").value||1));const formato=box.querySelector(".cat-formato")?.value||"pontos-corridos";if(formato==='pontos-corridos'||formato==='mata-mata')qtd=1;box.querySelector(".cat-qtd-grupos").value=qtd;box.querySelectorAll(".time-grupo").forEach(sel=>{const atual=Number(sel.value||0);sel.innerHTML=opcoesGruposHTML(qtd,atual<qtd?atual:0)});if(limpar){box.querySelectorAll(".time-grupo").forEach(sel=>sel.value=0)}window.atualizarGruposPorSelecao(box)};
-async function carregarTimes(){timesCache=[];try{const snap=await getDocs(collection(db,"times"));snap.forEach(d=>timesCache.push({id:d.id,...d.data()}))}catch(e){console.warn("Não foi possível carregar times:",e)}}
-function categoriaDoTime(t){return t.categoria||t.categorias||t.divisao||t.faixaEtaria||t.categoriaTime||t.categoriaPrincipal||""}function nomeDoTime(t){return t.nome||t.nomeTime||t.time||t.equipe||t.razaoSocial||t.nomeEquipe||""}
-function timePertenceCategoria(t,cat){const alvo=normalizarTexto(cat);const c=categoriaDoTime(t);if(Array.isArray(c))return c.some(x=>normalizarTexto(x)===alvo);if(typeof c==='object'&&c!==null)return Object.values(c).some(x=>normalizarTexto(x)===alvo||x===true&&normalizarTexto(Object.keys(c).find(k=>c[k]===x)||'')===alvo);return normalizarTexto(c)===alvo}
+async function carregarTimes(){
+  timesCache=[];
+  const colecoes=["times","equipes","clubes"];
+  for(const nomeCol of colecoes){
+    try{
+      const snap=await getDocs(collection(db,nomeCol));
+      snap.forEach(d=>{
+        const dados=d.data();
+        timesCache.push({id:d.id,_colecao:nomeCol,...dados});
+      });
+      if(timesCache.length) break;
+    }catch(e){
+      console.warn("Não foi possível carregar "+nomeCol+":",e);
+    }
+  }
+}
+function nomeDoTime(t){return t.nome||t.nomeTime||t.time||t.equipe||t.razaoSocial||t.nomeEquipe||t.nomeClube||t.clube||""}
+function coletarCategoriasTime(t){
+  const chaves=["categoria","categorias","categoriaTime","categoriaPrincipal","categoriasTime","categoriasBase","divisao","faixaEtaria","sub","idade","categoriaSub","categoriaBase"];
+  const lista=[];
+  function add(v,chave=""){
+    if(v===undefined||v===null||v==="") return;
+    if(Array.isArray(v)){v.forEach(x=>add(x,chave));return}
+    if(typeof v==="object"){
+      Object.entries(v).forEach(([k,val])=>{
+        if(val===true) add(k,k);
+        else add(val,k);
+      });
+      return;
+    }
+    lista.push(String(v));
+  }
+  chaves.forEach(k=>add(t[k],k));
+  Object.entries(t).forEach(([k,v])=>{
+    const nk=normalizarTexto(k);
+    if(nk.includes("categoria")||nk.includes("sub")) add(v,k);
+  });
+  return nomesUnicos(lista);
+}
+function normalizarCategoriaBusca(v){
+  let n=normalizarTexto(v).replace(/categoria/g,"").replace(/sub/g,"").replace(/[^0-9a-z]/g,"");
+  return n;
+}
+function timePertenceCategoria(t,cat){
+  const alvo=normalizarCategoriaBusca(cat);
+  const cats=coletarCategoriasTime(t);
+  if(!cats.length) return false;
+  return cats.some(c=>{
+    const nc=normalizarCategoriaBusca(c);
+    return nc===alvo || nc.includes(alvo) || alvo.includes(nc);
+  });
+}
 function renderTimesNoBox(box,nomes){const qtd=Math.max(1,Number(box.querySelector(".cat-qtd-grupos")?.value||1));const gruposAtuais=gruposPorSelecao(box);box.querySelector(".times-seletor").innerHTML=timeRowsHTML(nomes,gruposAtuais,qtd);window.atualizarGruposPorSelecao(box)}
-window.buscarTimesCategoria=async function(s){const box=boxPorSlug(s);if(!box)return;if(!timesCache.length)await carregarTimes();const cat=box.dataset.categoria;let nomes=timesCache.filter(t=>timePertenceCategoria(t,cat)).map(nomeDoTime).filter(Boolean);nomes=nomesUnicos(nomes);if(!nomes.length){alert("Não encontrei times cadastrados nessa categoria. Confira se no cadastro do time a categoria está como "+cat+".");return}renderTimesNoBox(box,nomes);distribuirCategoriaAutomatico(s)};
+window.buscarTimesCategoria=async function(s){
+  const box=boxPorSlug(s);
+  if(!box)return;
+  if(!timesCache.length)await carregarTimes();
+  const cat=box.dataset.categoria;
+  let nomes=timesCache.filter(t=>timePertenceCategoria(t,cat)).map(nomeDoTime).filter(Boolean);
+  nomes=nomesUnicos(nomes);
+
+  if(!nomes.length && timesCache.length){
+    nomes=nomesUnicos(timesCache.map(nomeDoTime).filter(Boolean));
+    alert("Não achei a categoria exata como "+cat+", então carreguei TODOS os times cadastrados. Agora você pode selecionar só os times dessa categoria e escolher o grupo.");
+  }
+
+  if(!nomes.length){
+    alert("Não encontrei nenhum time cadastrado no Firebase. Confira se os times estão salvos na coleção times.");
+    return;
+  }
+
+  renderTimesNoBox(box,nomes);
+  distribuirCategoriaAutomatico(s);
+};
 window.distribuirCategoriaAutomatico=function(s){const box=boxPorSlug(s);if(!box)return;let qtd=Math.max(1,Number(box.querySelector(".cat-qtd-grupos").value||1));const formato=box.querySelector(".cat-formato").value;if(formato==='pontos-corridos'||formato==='mata-mata')qtd=1;box.querySelector(".cat-qtd-grupos").value=qtd;let i=0;box.querySelectorAll(".time-row").forEach(row=>{if(!row.querySelector(".time-usar")?.checked)return;const sel=row.querySelector(".time-grupo");sel.innerHTML=opcoesGruposHTML(qtd,i%qtd);sel.value=String(i%qtd);i++});window.atualizarGruposPorSelecao(box)};
 window.selecionarTodosTimes=function(s,marcar){const box=boxPorSlug(s);if(!box)return;box.querySelectorAll(".time-usar").forEach(ch=>ch.checked=!!marcar);window.atualizarGruposPorSelecao(box)};
 window.previewLogoArquivo=function(){const arq=document.getElementById("logoArquivo").files[0];if(!arq)return;const leitor=new FileReader();leitor.onload=e=>{document.getElementById("previewLogoBox").style.display="flex";document.getElementById("previewLogoImg").src=e.target.result;document.getElementById("previewLogoTexto").textContent=arq.name};leitor.readAsDataURL(arq)};
