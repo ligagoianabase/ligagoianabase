@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Galeria / Fotógrafo - Liga Goiana</title>
+<title>Galeria / Fotógrafo - AGF</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -414,7 +414,7 @@ textarea{
       </a>
 
       <a href="admin.html" class="top-btn btn-light" id="btnPainelAdm">
-        <i class="fa-solid fa-gears"></i> Painel ADM
+        <i class="fa-solid fa-gears"></i> Painel AGF
       </a>
     </div>
 
@@ -696,7 +696,7 @@ function renderMidiaThumb(m){
     return `<video src="${m.url}" onclick="abrirModal('${m.url}','video')" muted></video>`;
   }
 
-  return `<img src="${m.url}" onclick="abrirModal('${m.url}','imagem')" onerror="this.src='logo-liga.jfif'">`;
+  return `<img src="${m.url}" onclick="abrirModal('${m.url}','imagem')" onerror="this.src='logo-agf.png'">`;
 }
 
 window.previewMidiasSelecionadas = function(){
@@ -794,7 +794,7 @@ window.salvarGaleria = async function(){
     return mostrarStatus("Envie pelo menos uma foto/vídeo ou informe um link externo.","erro");
   }
 
-  const capa = midias.find(m=>m.tipo === "imagem")?.url || midias[0]?.url || linkExterno || "logo-liga.jfif";
+  const capa = midias.find(m=>m.tipo === "imagem")?.url || midias[0]?.url || linkExterno || "logo-agf.png";
 
   const statusFinal = isAdmin ? el("statusGaleria").value : "pendente";
   const destaqueFinal = isAdmin && el("destaqueGaleria").value === "sim";
@@ -927,7 +927,7 @@ window.fecharModal = function(){
 
 window.compartilharGaleria = function(id){
   const url = location.href.split("/").slice(0,-1).join("/") + "/galeria.html?id=" + encodeURIComponent(id);
-  window.open("https://wa.me/?text=" + encodeURIComponent("Galeria da Liga Goiana: " + url), "_blank");
+  window.open("https://wa.me/?text=" + encodeURIComponent("Galeria da AGF: " + url), "_blank");
 };
 
 function tagStatus(g){
@@ -959,12 +959,12 @@ function renderGaleria(){
 
   lista.innerHTML = visiveis.map(g=>{
     const midias = Array.isArray(g.midias) ? g.midias : [];
-    const capa = g.capa || g.imagem || midias[0]?.url || "logo-liga.jfif";
+    const capa = g.capa || g.imagem || midias[0]?.url || "logo-agf.png";
     const podeEditar = podeMexerNaGaleria(g);
 
     return `
       <div class="card">
-        <img class="card-cover" src="${capa}" onerror="this.src='logo-liga.jfif'">
+        <img class="card-cover" src="${capa}" onerror="this.src='logo-agf.png'">
 
         <div class="card-body">
           <strong>${g.titulo || "-"}</strong>
