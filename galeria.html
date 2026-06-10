@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Galeria - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Galeria - AGF - Associação Goiana de Futebol</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="menu.css">
@@ -407,7 +407,7 @@ input,select{
 
   <section class="hero">
     <h2>Galeria</h2>
-    <p>Fotos e vídeos oficiais dos jogos, campeonatos e eventos da Liga Goiana de Futebol de Base.</p>
+    <p>Fotos e vídeos oficiais dos jogos, campeonatos e eventos da AGF - Associação Goiana de Futebol.</p>
 
     <div class="hero-tags">
       <div class="hero-tag" id="tagTotal">Álbuns: 0</div>
@@ -556,7 +556,7 @@ function renderFotografoBox(f){
 
   return `
     <div class="fotografo-box">
-      <img class="fotografo-avatar" src="${val(f,["foto","fotoPerfil","avatar"],"logo-liga.jfif")}" onerror="this.src='logo-liga.jfif'">
+      <img class="fotografo-avatar" src="${val(f,["foto","fotoPerfil","avatar"],"logo-agf.png")}" onerror="this.src='logo-agf.png'">
 
       <div class="fotografo-info">
         <strong>
@@ -590,7 +590,7 @@ function midiasAlbum(item){
 }
 
 function capaAlbum(item){
-  return val(item,["capa","imagem","foto"], midiasAlbum(item)[0]?.url || "logo-liga.jfif");
+  return val(item,["capa","imagem","foto"], midiasAlbum(item)[0]?.url || "logo-agf.png");
 }
 
 function tipoMidia(m){
@@ -655,7 +655,7 @@ function renderCardAlbum(a){
   return `
     <article class="album-card">
       <div class="cover">
-        <img src="${capa}" onerror="this.src='logo-liga.jfif'">
+        <img src="${capa}" onerror="this.src='logo-agf.png'">
         <div class="badge">${a.categoria || "Galeria"}</div>
         <div class="count"><i class="fa-solid fa-images"></i> ${qtd}</div>
       </div>
@@ -770,7 +770,7 @@ function renderMidia(m,i){
 
   return `
     <div class="midia-item" onclick="abrirModal('${m.url}','imagem')">
-      <img src="${m.url}" onerror="this.src='logo-liga.jfif'">
+      <img src="${m.url}" onerror="this.src='logo-agf.png'">
     </div>
   `;
 }
@@ -793,7 +793,7 @@ window.fecharModal = function(){
 
 window.compartilharAlbum = function(id){
   const url = location.href.split("?")[0] + "?id=" + encodeURIComponent(id);
-  window.open("https://wa.me/?text=" + encodeURIComponent("Galeria da Liga Goiana: " + url), "_blank");
+  window.open("https://wa.me/?text=" + encodeURIComponent("Galeria da AGF: " + url), "_blank");
 };
 
 async function carregarAlbumPorId(){
