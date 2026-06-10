@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Súmula Offline Manual - Liga Goiana</title>
+<title>Súmula Offline Manual - AGF</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
@@ -579,8 +579,8 @@ function dados(){
     dataHora:txt($("data").value)&&txt($("hora").value)?`${txt($("data").value)}T${txt($("hora").value)}`:"",
     local:txt($("local").value),
     campo:txt($("local").value),
-    timeA:{nome:txt($("timeA").value)||"Time A",logo:txt($("logoA").value)||"logo-liga.jfif",cidade:txt($("cidadeA").value)||"Goiânia - GO"},
-    timeB:{nome:txt($("timeB").value)||"Time B",logo:txt($("logoB").value)||"logo-liga.jfif",cidade:txt($("cidadeB").value)||"Goiânia - GO"},
+    timeA:{nome:txt($("timeA").value)||"Time A",logo:txt($("logoA").value)||"logo-agf.png",cidade:txt($("cidadeA").value)||"Goiânia - GO"},
+    timeB:{nome:txt($("timeB").value)||"Time B",logo:txt($("logoB").value)||"logo-agf.png",cidade:txt($("cidadeB").value)||"Goiânia - GO"},
     golsA:Number($("golsA").value||0),
     golsB:Number($("golsB").value||0),
     placar:{A:Number($("golsA").value||0),B:Number($("golsB").value||0)},
@@ -633,10 +633,10 @@ function aplicarDados(d){
   $("hora").value=d.hora||"";
   $("local").value=d.local||d.campo||"";
   $("timeA").value=d.timeA?.nome||"";
-  $("logoA").value=d.timeA?.logo==="logo-liga.jfif"?"":(d.timeA?.logo||"");
+  $("logoA").value=d.timeA?.logo==="logo-agf.png"?"":(d.timeA?.logo||"");
   $("cidadeA").value=d.timeA?.cidade||"";
   $("timeB").value=d.timeB?.nome||"";
-  $("logoB").value=d.timeB?.logo==="logo-liga.jfif"?"":(d.timeB?.logo||"");
+  $("logoB").value=d.timeB?.logo==="logo-agf.png"?"":(d.timeB?.logo||"");
   $("cidadeB").value=d.timeB?.cidade||"";
   $("golsA").value=d.golsA||0;
   $("golsB").value=d.golsB||0;
@@ -845,9 +845,9 @@ function renderPreview(){
 
   $("previewSumula").innerHTML=`
 <header class="header">
-  <div class="header-logo"><img src="logo-liga.jfif" alt="Liga Goiana"></div>
-  <div class="header-title"><h1>SÚMULA OFICIAL</h1><p>Liga Goiana de Futebol de Base</p><span>Onde o talento encontra o futuro</span></div>
-  <div class="header-campeonato-logo"><img src="logo-liga.jfif" onerror="this.src='logo-liga.jfif'" alt="Logo do Campeonato"></div>
+  <div class="header-logo"><img src="logo-agf.png" alt="AGF"></div>
+  <div class="header-title"><h1>SÚMULA OFICIAL</h1><p>AGF - Associação Goiana de Futebol</p><span>Onde o talento encontra o futuro</span></div>
+  <div class="header-campeonato-logo"><img src="logo-agf.png" onerror="this.src='logo-agf.png'" alt="Logo do Campeonato"></div>
   <div class="header-right"><div class="liga-nome">${d.campeonato||"SÚMULA MANUAL"}</div><div class="liga-slogan">${d.categoria||"Offline"}</div></div>
 </header>
 
@@ -860,9 +860,9 @@ function renderPreview(){
 </section>
 
 <section class="score-card">
-  <div class="team-score"><img src="${logoA}" onerror="this.src='logo-liga.jfif'" alt="${nomeA}"><div class="team-name"><h2>${nomeA}</h2><p>${d.timeA.cidade}</p></div></div>
+  <div class="team-score"><img src="${logoA}" onerror="this.src='logo-agf.png'" alt="${nomeA}"><div class="team-name"><h2>${nomeA}</h2><p>${d.timeA.cidade}</p></div></div>
   <div class="score-center"><div class="score-number">${d.golsA} x ${d.golsB}</div><span>Placar Final</span></div>
-  <div class="team-score away"><img src="${logoB}" onerror="this.src='logo-liga.jfif'" alt="${nomeB}"><div class="team-name"><h2>${nomeB}</h2><p>${d.timeB.cidade}</p></div></div>
+  <div class="team-score away"><img src="${logoB}" onerror="this.src='logo-agf.png'" alt="${nomeB}"><div class="team-name"><h2>${nomeB}</h2><p>${d.timeB.cidade}</p></div></div>
 </section>
 
 <section class="match-strip">
@@ -875,8 +875,8 @@ function renderPreview(){
 <section class="lineups">
   <div class="section-title">Escalações</div>
   <div class="lineups-grid">
-    <div class="lineup-card"><div class="lineup-head">${nomeA}<img src="${logoA}" onerror="this.src='logo-liga.jfif'"></div><table class="table"><thead><tr><th class="num">Nº</th><th>Jogador</th><th class="posicao">Posição</th></tr></thead><tbody>${renderJogadores(d.jogadoresA)}</tbody></table></div>
-    <div class="lineup-card away"><div class="lineup-head">${nomeB}<img src="${logoB}" onerror="this.src='logo-liga.jfif'"></div><table class="table"><thead><tr><th class="num">Nº</th><th>Jogador</th><th class="posicao">Posição</th></tr></thead><tbody>${renderJogadores(d.jogadoresB)}</tbody></table></div>
+    <div class="lineup-card"><div class="lineup-head">${nomeA}<img src="${logoA}" onerror="this.src='logo-agf.png'"></div><table class="table"><thead><tr><th class="num">Nº</th><th>Jogador</th><th class="posicao">Posição</th></tr></thead><tbody>${renderJogadores(d.jogadoresA)}</tbody></table></div>
+    <div class="lineup-card away"><div class="lineup-head">${nomeB}<img src="${logoB}" onerror="this.src='logo-agf.png'"></div><table class="table"><thead><tr><th class="num">Nº</th><th>Jogador</th><th class="posicao">Posição</th></tr></thead><tbody>${renderJogadores(d.jogadoresB)}</tbody></table></div>
   </div>
   <div class="legend">(G) Goleiro &nbsp;&nbsp;&nbsp; (C) Capitão</div>
 </section>
@@ -884,8 +884,8 @@ function renderPreview(){
 <section class="comissao">
   <div class="section-title">Comissão Técnica</div>
   <div class="comissao-grid">
-    <div class="comissao-card"><div class="comissao-head">${nomeA}<img src="${logoA}" onerror="this.src='logo-liga.jfif'"></div><div class="comissao-lista">${renderComissao(comissaoA)}</div></div>
-    <div class="comissao-card"><div class="comissao-head">${nomeB}<img src="${logoB}" onerror="this.src='logo-liga.jfif'"></div><div class="comissao-lista">${renderComissao(comissaoB)}</div></div>
+    <div class="comissao-card"><div class="comissao-head">${nomeA}<img src="${logoA}" onerror="this.src='logo-agf.png'"></div><div class="comissao-lista">${renderComissao(comissaoA)}</div></div>
+    <div class="comissao-card"><div class="comissao-head">${nomeB}<img src="${logoB}" onerror="this.src='logo-agf.png'"></div><div class="comissao-lista">${renderComissao(comissaoB)}</div></div>
   </div>
 </section>
 
@@ -908,7 +908,7 @@ function renderPreview(){
       <div class="summary-box"><div class="summary-card-icon yellow-card"></div><span>Cartões Amarelos</span><strong>${totalCartoes.amarelos}</strong><div class="summary-detail">(${cartoesPorTime.a.filter(c=>c.tipo==="amarelo").length} x ${cartoesPorTime.b.filter(c=>c.tipo==="amarelo").length})</div></div>
       <div class="summary-box"><div class="summary-card-icon red-card"></div><span>Cartões Vermelhos</span><strong>${totalCartoes.vermelhos}</strong><div class="summary-detail">(${cartoesPorTime.a.filter(c=>c.tipo!=="amarelo").length} x ${cartoesPorTime.b.filter(c=>c.tipo!=="amarelo").length})</div></div>
     </div>
-    <div class="best-player"><img class="best-photo" src="logo-liga.jfif"><div><h4>Melhor jogador da partida</h4><strong>${d.melhorJogador||"-"}</strong><span>${d.melhorJogadorTime||"-"}</span><span>${d.melhorJogadorDestaque}</span></div><div class="trophy">🏆</div></div>
+    <div class="best-player"><img class="best-photo" src="logo-agf.png"><div><h4>Melhor jogador da partida</h4><strong>${d.melhorJogador||"-"}</strong><span>${d.melhorJogadorTime||"-"}</span><span>${d.melhorJogadorDestaque}</span></div><div class="trophy">🏆</div></div>
   </div>
 </section>
 
@@ -917,7 +917,7 @@ function renderPreview(){
   <div class="panel share-panel"><h3>Compartilhar</h3><div class="buttons"><button class="btn btn-whats" onclick="compartilharWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Compartilhar WhatsApp</button><button class="btn btn-email" onclick="enviarEmail()"><i class="fa-solid fa-envelope"></i> Enviar por E-mail</button><button class="btn btn-link" onclick="copiarLink()"><i class="fa-solid fa-link"></i> Copiar Link</button><button class="btn btn-pdf" onclick="baixarPDF()"><i class="fa-solid fa-file-pdf"></i> Baixar PDF</button></div></div>
 </section>
 
-<footer class="final-footer"><div>Documento oficial gerado pelo sistema Liga Goiana</div><div>Todos os direitos reservados © 2026</div></footer>
+<footer class="final-footer"><div>Documento oficial gerado pelo sistema AGF</div><div>Todos os direitos reservados © 2026</div></footer>
 `;
   setTimeout(ajustarEscalaSumula,100);
 }
@@ -1020,7 +1020,7 @@ window.copiarLink=async()=>{
   alert("Link copiado.");
 };
 window.compartilharWhatsApp=()=>window.open(`https://wa.me/?text=${encodeURIComponent("Súmula manual/offline: "+location.href)}`,"_blank");
-window.enviarEmail=()=>{location.href=`mailto:?subject=Súmula Manual Liga Goiana&body=${encodeURIComponent(location.href)}`};
+window.enviarEmail=()=>{location.href=`mailto:?subject=Súmula Manual AGF&body=${encodeURIComponent(location.href)}`};
 window.baixarPDF=()=>{ajustarEscalaSumula();setTimeout(()=>window.print(),300)};
 
 document.querySelectorAll("input,select,textarea").forEach(el=>{
