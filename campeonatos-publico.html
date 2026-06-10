@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Campeonatos - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Campeonatos - AGF - Associação Goiana de Futebol</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="menu.css">
@@ -596,7 +596,7 @@ img{
   <section class="hero">
     <div class="hero-top">
 
-      <img id="logoCampeonato" class="hero-logo" src="logo-liga.jfif">
+      <img id="logoCampeonato" class="hero-logo" src="logo-agf.png">
 
       <div>
         <h2 id="nomeCampeonato">Carregando...</h2>
@@ -800,7 +800,7 @@ function logoValida(url){
 }
 
 function logoCampeonatoUrl(c){
-  return logoValida(c?.logoCampeonato) || logoValida(c?.logo) || "logo-liga.jfif";
+  return logoValida(c?.logoCampeonato) || logoValida(c?.logo) || "logo-agf.png";
 }
 
 function idCamp(c){
@@ -832,7 +832,7 @@ const campeonatoExemplo = {
   temporada:"2002",
   status:"Finalizado",
   tipo:"Mata-mata",
-  logo:"logo-liga.jfif",
+  logo:"logo-agf.png",
   descricao:"Campeonato de exemplo com a final Brasil 2 x 0 Alemanha para demonstrar o funcionamento do sistema.",
   regulamento:"Exemplo de regulamento da competição. Os dados podem ser removidos depois.",
   categorias:["Seleção Principal"],
@@ -1036,7 +1036,7 @@ function logoTime(j, lado){
     if(logo) return logo;
   }
 
-  return "logo-liga.jfif";
+  return "logo-agf.png";
 }
 
 function placarJogo(j){
@@ -1096,14 +1096,14 @@ function cardChave(j, final=false){
 
         <div class="bracket-final-teams">
           <div class="bracket-team bracket-final-team">
-            <img class="bracket-logo" src="${esc(logoTime(j,"A"))}" onerror="this.src='logo-liga.jfif'">
+            <img class="bracket-logo" src="${esc(logoTime(j,"A"))}" onerror="this.src='logo-agf.png'">
             <div class="bracket-abrev ${vencedor === timeA ? "winner" : ""}">${esc(timeA)}</div>
           </div>
 
           <div class="bracket-score">${placarJogo(j)}</div>
 
           <div class="bracket-team bracket-final-team">
-            <img class="bracket-logo" src="${esc(logoTime(j,"B"))}" onerror="this.src='logo-liga.jfif'">
+            <img class="bracket-logo" src="${esc(logoTime(j,"B"))}" onerror="this.src='logo-agf.png'">
             <div class="bracket-abrev ${vencedor === timeB ? "winner" : ""}">${esc(timeB)}</div>
           </div>
         </div>
@@ -1118,14 +1118,14 @@ function cardChave(j, final=false){
       <div class="bracket-status">${esc(status)}</div>
       <div class="bracket-teams">
         <div class="bracket-team">
-          <img class="bracket-logo" src="${esc(logoTime(j,"A"))}" onerror="this.src='logo-liga.jfif'">
+          <img class="bracket-logo" src="${esc(logoTime(j,"A"))}" onerror="this.src='logo-agf.png'">
           <div class="bracket-abrev">${esc(abrevTime(timeA))}</div>
         </div>
 
         <div class="bracket-score">${placarJogo(j)}</div>
 
         <div class="bracket-team">
-          <img class="bracket-logo" src="${esc(logoTime(j,"B"))}" onerror="this.src='logo-liga.jfif'">
+          <img class="bracket-logo" src="${esc(logoTime(j,"B"))}" onerror="this.src='logo-agf.png'">
           <div class="bracket-abrev">${esc(abrevTime(timeB))}</div>
         </div>
       </div>
@@ -1176,10 +1176,10 @@ function preencherTela(){
   const totais = calcularTotais();
   const nome = nomeCamp(campeonato);
 
-  document.title = `${nome || "Campeonato"} - LIGA GOIANA DE FUTEBOL DE BASE`;
+  document.title = `${nome || "Campeonato"} - AGF - Associação Goiana de Futebol`;
 
   document.getElementById("logoCampeonato").src = logoCampeonatoUrl(campeonato);
-  document.getElementById("logoCampeonato").onerror = function(){ this.src = "logo-liga.jfif"; };
+  document.getElementById("logoCampeonato").onerror = function(){ this.src = "logo-agf.png"; };
 
   document.getElementById("nomeCampeonato").textContent = nome || "Campeonato";
   document.getElementById("descricaoCampeonato").textContent =
