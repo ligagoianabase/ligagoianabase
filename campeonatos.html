@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Campeonatos - LIGA GOIANA DE FUTEBOL DE BASE</title>
+<title>Campeonatos - AGF - Associação Goiana de Futebol</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="menu.css">
@@ -356,10 +356,10 @@ function valor(obj, campos, padrao = ""){
 function logoValida(url){
   const u = String(url || "").trim();
 
-  if(!u) return "logo-liga.jfif";
+  if(!u) return "logo-agf.png";
 
   // Evita tentar carregar Base64 antigo salvo no Firestore
-  if(u.startsWith("data:image/")) return "logo-liga.jfif";
+  if(u.startsWith("data:image/")) return "logo-agf.png";
 
   // Aceita links do ImgBB e outros links diretos de imagem
   if(u.startsWith("http://") || u.startsWith("https://")) return u;
@@ -519,7 +519,7 @@ function render(){
     const timesQtd = contarTimes(c);
     const categoria = categoriaCampeonato(c);
     const temporada = temporadaCampeonato(c);
-    const logo = logoValida(valor(c, ["logo", "logoCampeonato", "imagem", "foto", "escudo"], "logo-liga.jfif"));
+    const logo = logoValida(valor(c, ["logo", "logoCampeonato", "imagem", "foto", "escudo"], "logo-agf.png"));
     const formato = formatoCampeonato(c);
     const gruposInfo = gruposCampeonato(c);
 
@@ -537,7 +537,7 @@ function render(){
             </div>
           </div>
 
-          <img src="${esc(logo)}" class="logo" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='logo-liga.jfif'">
+          <img src="${esc(logo)}" class="logo" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='logo-agf.png'">
 
           <div class="nome-campeonato">
             ${esc(nomeCampeonato(c))}
