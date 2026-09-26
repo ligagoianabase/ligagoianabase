@@ -9,23 +9,24 @@
   <meta property="og:description" content="Site oficial da DG Sistemas. Campeonatos, jogos, súmulas, classificação, artilharia e notícias.">
   <meta property="og:url" content="https://agfgoiana.vercel.app/">
 
-  <meta name="theme-color" content="#0a0a0a">
+  <meta name="theme-color" content="#04132d">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="DG Sistemas">
   <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
     :root{
-      --yellow:#ffd21a;
-      --yellow-2:#fff06a;
-      --yellow-soft:rgba(255,210,26,.14);
-      --yellow-line:rgba(255,210,26,.30);
+      --yellow:#ffd400;
+      --yellow-2:#ffe600;
+      --yellow-soft:rgba(255,212,0,.12);
+      --yellow-line:rgba(255,212,0,.22);
       --white:#ffffff;
-      --muted:#d6d6d6;
-      --text-soft:#a8a8a8;
+      --muted:#d8e1ef;
+      --text-soft:#a8b6cf;
       --shadow:0 12px 30px rgba(0,0,0,.35);
       --transition:.25s ease;
       --max:1280px;
@@ -44,7 +45,9 @@
       width:100%;
       max-width:100%;
       font-family:Arial, Helvetica, sans-serif;
-      background:linear-gradient(180deg, #050505 0%, #0b0b0b 48%, #030303 100%);
+      background:
+        linear-gradient(rgba(1,7,18,.36), rgba(1,7,18,.58)),
+        linear-gradient(180deg, #050505 0%, #0b0b0b 48%, #030303 100%);
       color:var(--white);
       overflow-x:hidden;
     }
@@ -52,6 +55,7 @@
     a{text-decoration:none;color:inherit;transition:var(--transition);}
     button{font-family:inherit;transition:var(--transition);cursor:pointer;border:none;background:none;}
     ul{list-style:none;}
+    img{max-width:100%;display:block;}
 
     .wrap{
       width:min(100% - 32px, var(--max));
@@ -80,7 +84,7 @@
       width:320px;
       max-width:88%;
       height:100vh;
-      background:linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
       border-right:1px solid var(--yellow-line);
       box-shadow:var(--shadow);
       padding:22px 18px 28px;
@@ -110,20 +114,15 @@
       align-items:center;
     }
 
-    .brand-mark{
-      width:62px;
-      height:62px;
-      flex:0 0 62px;
-      display:grid;
-      place-items:center;
-      border:2px solid var(--yellow);
-      border-radius:16px;
-      background:linear-gradient(145deg,#181818,#050505);
-      color:var(--yellow);
-      font-size:25px;
-      font-weight:1000;
-      letter-spacing:-2px;
-      box-shadow:0 0 24px rgba(255,210,26,.20), inset 0 0 18px rgba(255,210,26,.06);
+    .sidebar-brand img{
+      width:90px;
+      height:90px;
+      object-fit:contain;
+      border:none;
+      background:transparent;
+      border-radius:0;
+      padding:0;
+      filter:drop-shadow(0 5px 12px rgba(0,0,0,.45));
     }
 
     .sidebar-brand-text strong{
@@ -152,7 +151,7 @@
 
     .sidebar-close:hover{
       background:var(--yellow);
-      color:#111111;
+      color:#08172c;
     }
 
     .sidebar-block{
@@ -205,7 +204,7 @@
       position:relative;
       z-index:100;
       backdrop-filter:blur(4px);
-      background:rgba(0,0,0,.18);
+      background:rgba(1,7,18,.18);
       border-bottom:none;
       overflow:visible;
     }
@@ -248,7 +247,7 @@
     .menu-toggle:hover{
       transform:translateY(-2px);
       background:var(--yellow);
-      color:#111111;
+      color:#08172c;
     }
 
     .topbar-logo{
@@ -258,6 +257,18 @@
       min-width:0;
       flex:1 1 auto;
       order:2;
+    }
+
+    .topbar-logo img{
+      width:92px;
+      height:92px;
+      object-fit:contain;
+      border:none;
+      background:transparent;
+      border-radius:0;
+      padding:0;
+      flex-shrink:0;
+      filter:drop-shadow(0 5px 12px rgba(0,0,0,.45));
     }
 
     .logo-text{
@@ -371,7 +382,7 @@
       left:50%;
       transform:translateX(-50%);
       min-width:240px;
-      background:linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
       border:1px solid var(--yellow-line);
       border-radius:16px;
       box-shadow:var(--shadow);
@@ -433,16 +444,16 @@
     }
 
     .btn-primary{
-      background:linear-gradient(135deg, #ffd21a 0%, #fff06a 48%, #ffb800 100%);
-      color:#111111;
+      background:linear-gradient(135deg, var(--yellow), #ffe600);
+      color:#08172c;
       padding:14px 18px;
-      box-shadow:0 10px 22px rgba(255,210,26,.22);
+      box-shadow:0 10px 22px rgba(255,212,0,.22);
     }
 
     .btn-primary:hover{
       transform:translateY(-2px);
       filter:brightness(1.04);
-      box-shadow:0 12px 24px rgba(255,210,26,.3);
+      box-shadow:0 12px 24px rgba(255,212,0,.3);
     }
 
     .btn-secondary{
@@ -455,20 +466,20 @@
     .btn-secondary:hover{
       transform:translateY(-2px);
       background:var(--yellow);
-      color:#111111;
+      color:#08172c;
     }
 
     .btn-login-chip{
       padding:10px 16px;
       border:1px solid var(--yellow-line);
-      background:rgba(255,210,26,.08);
+      background:rgba(255,212,0,.08);
       color:var(--yellow);
       white-space:nowrap;
     }
 
     .btn-login-chip:hover{
       background:var(--yellow);
-      color:#111111;
+      color:#08172c;
     }
 
     .login-avatar{
@@ -484,6 +495,13 @@
       flex-shrink:0;
     }
 
+    .login-avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:50%;
+    }
+
 
 
     .notification-wrap{
@@ -496,7 +514,7 @@
       height:48px;
       border-radius:16px;
       border:1px solid var(--yellow-line);
-      background:rgba(255,210,26,.08);
+      background:rgba(255,212,0,.08);
       color:var(--yellow);
       display:flex;
       align-items:center;
@@ -507,7 +525,7 @@
 
     .notification-btn:hover{
       background:var(--yellow);
-      color:#111111;
+      color:#08172c;
       transform:translateY(-2px);
     }
 
@@ -521,7 +539,7 @@
       border-radius:999px;
       background:#e30613;
       color:#fff;
-      border:2px solid #0a0a0a;
+      border:2px solid #04132d;
       display:none;
       align-items:center;
       justify-content:center;
@@ -535,7 +553,7 @@
       right:0;
       width:360px;
       max-width:calc(100vw - 24px);
-      background:linear-gradient(180deg,#0a0a0a 0%,#050505 100%);
+      background:linear-gradient(180deg,#04132d 0%,#021022 100%);
       border:1px solid var(--yellow-line);
       border-radius:20px;
       box-shadow:var(--shadow);
@@ -591,7 +609,7 @@
 
     .notification-item.nao-lida{
       border-color:var(--yellow-line);
-      background:rgba(255,210,26,.08);
+      background:rgba(255,212,0,.08);
     }
 
     .notification-item strong{
@@ -630,7 +648,7 @@
       padding:8px 12px;
       border-radius:16px;
       border:1px solid var(--yellow-line);
-      background:rgba(255,210,26,.08);
+      background:rgba(255,212,0,.08);
       color:var(--yellow);
       min-height:48px;
       max-width:250px;
@@ -638,7 +656,7 @@
 
     .user-chip:hover{
       background:var(--yellow);
-      color:#111111;
+      color:#08172c;
     }
 
     .user-chip-text{
@@ -682,7 +700,7 @@
       right:0;
       width:320px;
       max-width:calc(100vw - 24px);
-      background:linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
       border:1px solid var(--yellow-line);
       border-radius:20px;
       box-shadow:var(--shadow);
@@ -717,6 +735,13 @@
       color:var(--yellow);
       font-size:22px;
       flex-shrink:0;
+    }
+
+    .user-card-avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:50%;
     }
 
     .user-card-info{
@@ -813,7 +838,7 @@
     }
 
     .hero-card{
-      background:rgba(0,0,0,.16);
+      background:rgba(1,7,18,.16);
       border:none;
       border-radius:0;
       box-shadow:none;
@@ -837,7 +862,7 @@
       gap:8px;
       padding:8px 14px;
       border-radius:999px;
-      background:rgba(255,210,26,.12);
+      background:rgba(255,212,0,.12);
       border:1px solid var(--yellow-line);
       color:var(--yellow);
       font-size:13px;
@@ -868,6 +893,17 @@
       margin-top:26px;
     }
 
+    .hero-art img{
+      width:100%;
+      height:auto;
+      max-height:500px;
+      object-fit:contain;
+      border-radius:0;
+      border:none;
+      box-shadow:none;
+      filter:drop-shadow(0 18px 26px rgba(0,0,0,.55));
+    }
+
     .cards-pilares{
       display:grid;
       grid-template-columns:repeat(4, 1fr);
@@ -876,7 +912,7 @@
     }
 
     .pillar{
-      background:linear-gradient(180deg, rgba(20,20,20,.94), rgba(8,8,8,.96));
+      background:linear-gradient(180deg, rgba(7,24,59,.94), rgba(3,17,45,.96));
       border:1px solid rgba(255,255,255,.08);
       border-radius:20px;
       padding:22px 18px;
@@ -925,7 +961,7 @@
     }
 
     .panel{
-      background:linear-gradient(180deg, rgba(20,20,20,.94), rgba(8,8,8,.96));
+      background:linear-gradient(180deg, rgba(7,24,59,.94), rgba(3,17,45,.96));
       border:1px solid rgba(255,255,255,.08);
       border-radius:24px;
       box-shadow:var(--shadow);
@@ -982,7 +1018,7 @@
     }
 
     .match-table thead th{
-      background:rgba(255,210,26,.12);
+      background:rgba(255,212,0,.12);
       color:var(--yellow);
       text-align:left;
       padding:14px 12px;
@@ -997,7 +1033,7 @@
     }
 
     .match-table tbody tr:hover{
-      background:rgba(255,210,26,.08);
+      background:rgba(255,212,0,.08);
     }
 
     .home-games-list{
@@ -1012,8 +1048,8 @@
       align-items:center;
       padding:16px;
       border-radius:20px;
-      background:linear-gradient(135deg, rgba(255,255,255,.055), rgba(255,210,26,.06));
-      border:1px solid rgba(255,210,26,.18);
+      background:linear-gradient(135deg, rgba(255,255,255,.055), rgba(255,212,0,.06));
+      border:1px solid rgba(255,212,0,.18);
       box-shadow:0 10px 24px rgba(0,0,0,.22);
       transition:var(--transition);
     }
@@ -1021,7 +1057,7 @@
     .home-game-card:hover{
       transform:translateY(-2px);
       border-color:var(--yellow-line);
-      background:linear-gradient(135deg, rgba(255,210,26,.10), rgba(255,255,255,.055));
+      background:linear-gradient(135deg, rgba(255,212,0,.10), rgba(255,255,255,.055));
     }
 
     .home-team-box{
@@ -1035,18 +1071,17 @@
       flex-direction:row-reverse;
       text-align:right;
     }
+
     .home-team-logo{
-      width:64px;
-      height:64px;
+      width:90px;
+      height:90px;
+      object-fit:contain;
+      background:transparent;
+      border:none;
+      border-radius:0;
+      padding:0;
       flex-shrink:0;
-      display:grid;
-      place-items:center;
-      border:1px solid var(--yellow-line);
-      border-radius:16px;
-      background:linear-gradient(145deg,#191919,#060606);
-      color:var(--yellow);
-      font-size:27px;
-      box-shadow:0 0 18px rgba(255,210,26,.12);
+      filter:drop-shadow(0 6px 12px rgba(0,0,0,.45));
     }
 
     .home-team-name{
@@ -1074,11 +1109,11 @@
       width:48px;
       height:48px;
       border-radius:50%;
-      background:linear-gradient(135deg, #ffd21a 0%, #fff06a 48%, #ffb800 100%);
-      color:#0b0b0b;
+      background:linear-gradient(135deg, var(--yellow), #ffe600);
+      color:#06152e;
       font-size:18px;
       font-weight:1000;
-      box-shadow:0 8px 18px rgba(255,210,26,.22);
+      box-shadow:0 8px 18px rgba(255,212,0,.22);
       margin-bottom:8px;
     }
 
@@ -1140,7 +1175,7 @@
 
     .news-item:hover{
       transform:translateY(-2px);
-      background:rgba(255,210,26,.08);
+      background:rgba(255,212,0,.08);
       border-color:var(--yellow-line);
     }
 
@@ -1166,7 +1201,7 @@
       align-items:center;
       gap:20px;
       flex-wrap:wrap;
-      background:linear-gradient(135deg, rgba(255,210,26,.16), rgba(255,255,255,.05));
+      background:linear-gradient(135deg, rgba(255,212,0,.16), rgba(255,255,255,.05));
       border:1px solid var(--yellow-line);
       border-radius:24px;
       padding:26px;
@@ -1220,6 +1255,17 @@
       margin-bottom:14px;
     }
 
+    .footer-brand img{
+      width:110px;
+      height:110px;
+      object-fit:contain;
+      border:none;
+      background:transparent;
+      border-radius:0;
+      padding:0;
+      filter:drop-shadow(0 5px 12px rgba(0,0,0,.45));
+    }
+
     .footer-brand-text h3{
       font-size:20px;
       margin-bottom:6px;
@@ -1271,7 +1317,7 @@
 
     .footer-social a:hover{
       background:var(--yellow);
-      color:#111111;
+      color:#08172c;
     }
 
     .copyright{
@@ -1390,6 +1436,16 @@
         gap:7px;
         min-width:0;
         order:initial;
+      }
+
+      .topbar-logo img{
+        width:68px;
+        height:68px;
+        object-fit:contain;
+        border:none;
+        background:transparent;
+        border-radius:0;
+        padding:0;
       }
 
       .logo-text strong{
@@ -1547,19 +1603,55 @@
 
       .home-team-box:first-child{order:1;}
       .home-team-box.away{order:3;}
-    .home-team-logo{
-      width:64px;
-      height:64px;
-      flex-shrink:0;
-      display:grid;
-      place-items:center;
-      border:1px solid var(--yellow-line);
-      border-radius:16px;
-      background:linear-gradient(145deg,#191919,#060606);
-      color:var(--yellow);
-      font-size:27px;
-      box-shadow:0 0 18px rgba(255,210,26,.12);
+
+      .home-team-logo{
+        width:100px;
+        height:100px;
+      }
     }
+
+    .patrocinio-section{
+      width:min(100% - 32px, var(--max));
+      margin:26px auto 34px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .patrocinio-card{
+      width:100%;
+      max-width:1395px;
+      background:linear-gradient(135deg, rgba(7,28,68,.9), rgba(3,17,45,.92));
+      border:1px solid var(--yellow-line);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:14px;
+      overflow:hidden;
+    }
+
+    .patrocinio-card img{
+      width:100%;
+      height:auto;
+      max-height:410px;
+      display:block;
+      border-radius:18px;
+      object-fit:contain;
+    }
+
+    @media (max-width:600px){
+      .patrocinio-section{
+        width:min(100% - 20px, var(--max));
+        margin:20px auto 28px;
+      }
+
+      .patrocinio-card{
+        padding:8px;
+        border-radius:18px;
+      }
+
+      .patrocinio-card img{
+        border-radius:12px;
+      }
     }
 
   </style>
@@ -1572,7 +1664,6 @@
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-brand">
-        <span class="brand-mark" aria-label="DG Sistemas">DG</span>
         <div class="sidebar-brand-text">
           <strong>DG Sistemas</strong>
           <span>O futebol goiano em primeiro lugar</span>
@@ -1628,7 +1719,6 @@
       </div>
 
       <a href="index.html" class="topbar-logo">
-        <span class="brand-mark" aria-label="DG Sistemas">DG</span>
         <div class="logo-text">
           <strong>DG Sistemas</strong>
           <span>O futebol goiano em primeiro lugar</span>
@@ -1778,7 +1868,7 @@
 
               <h1>Bem-vindo à DG Sistemas</h1>
 
-              <p>O futebol goiano em primeiro lugar.</p>
+              <p>Sistemas para gestão esportiva.</p>
 
               <p>
                 Competição, formação e desenvolvimento para revelar talentos
@@ -1795,6 +1885,10 @@
               </div>
 
               <div class="status-user" id="statusUser"></div>
+            </div>
+
+            <div class="hero-art" aria-hidden="true">
+              <div class="hero-art-dg"><i class="fa-solid fa-trophy"></i><strong>DG</strong><span>SISTEMAS</span></div>
             </div>
           </div>
         </div>
@@ -1859,6 +1953,13 @@
           </aside>
         </div>
 
+
+        <section class="patrocinio-section">
+          <div class="patrocinio-card">
+            <img src="patrocinio.png?v=1395" alt="Patrocínio Oficial">
+          </div>
+        </section>
+
         <section class="cta-banner">
           <div class="cta-banner-inner">
             <div>
@@ -1884,10 +1985,9 @@
       <div class="footer-grid">
         <div class="footer-card">
           <div class="footer-brand">
-            <span class="brand-mark" aria-label="DG Sistemas">DG</span>
             <div class="footer-brand-text">
               <h3>DG Sistemas</h3>
-              <p>O futebol goiano em primeiro lugar.</p>
+              <p>Sistemas para gestão esportiva.</p>
             </div>
           </div>
 
@@ -2208,7 +2308,7 @@
 
     function preencherAvatar(elemento, foto){
       if(!elemento) return;
-      elemento.innerHTML = `<i class="fa-solid fa-user"></i>`;
+      elemento.innerHTML = foto ? `<img src="${foto}" alt="Foto do usuário">` : `<i class="fa-solid fa-user"></i>`;
     }
 
 
@@ -2479,6 +2579,11 @@
         .replace(/"/g,"&quot;")
         .replace(/'/g,"&#039;");
     }
+
+    function pegarLogoTime(valor, fallback = null){
+      if(valor && typeof valor === "object"){
+        return valor.logo || valor.escudo || valor.foto || valor.imagem || fallback;
+      }
       return fallback;
     }
 
@@ -2726,6 +2831,8 @@
         ordenados.forEach(jogo=>{
           const nomeA = nomeTimeDoJogo(jogo.timeA || jogo.timeMandante || jogo.mandante, jogo.timeMandanteNome || jogo.mandanteNome || "Mandante");
           const nomeB = nomeTimeDoJogo(jogo.timeB || jogo.timeVisitante || jogo.visitante, jogo.timeVisitanteNome || jogo.visitanteNome || "Visitante");
+          const logoA = pegarLogoTime(jogo.timeA || jogo.timeMandante || jogo.mandante);
+          const logoB = pegarLogoTime(jogo.timeB || jogo.timeVisitante || jogo.visitante);
           const dataInfo = formatarDataPartes(jogo);
           const local = jogo.local || jogo.campo || jogo.estadio || "-";
           const card = document.createElement("article");
@@ -2733,7 +2840,7 @@
 
           card.innerHTML = `
             <div class="home-team-box">
-              <div class="home-team-logo" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></div>
+              <img class="home-team-logo" src="${escapeHtml(logoA)}" alt="${escapeHtml(nomeA)}" onerror="this.style.display='none'">
               <div>
                 <div class="home-team-name">${escapeHtml(nomeA)}</div>
 
@@ -2751,7 +2858,7 @@
             </div>
 
             <div class="home-team-box away">
-              <div class="home-team-logo" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></div>
+              <img class="home-team-logo" src="${escapeHtml(logoB)}" alt="${escapeHtml(nomeB)}" onerror="this.style.display='none'">
               <div>
                 <div class="home-team-name">${escapeHtml(nomeB)}</div>
 
@@ -2787,7 +2894,7 @@
       newsList.innerHTML = `
         <div class="news-item">
           <h3>Nenhuma notícia publicada</h3>
-          <p>As novidades da DG Sistemas aparecerão aqui assim que o ADM publicar.</p>
+          <p>As novidades aparecerão aqui assim que o ADM publicar.</p>
         </div>
       `;
     }
@@ -2817,7 +2924,7 @@
         newsList.innerHTML = "";
 
         noticias.forEach(item=>{
-          const titulo = valorCampo(item, ["titulo", "title"], "Notícia da DG Sistemas");
+          const titulo = valorCampo(item, ["titulo", "title"], "Notícia");
           const texto = valorCampo(item, ["resumo", "descricao", "texto", "conteudo"], "Clique para visualizar a notícia completa.");
           const link = `noticia.html?id=${encodeURIComponent(item.id)}`;
 
