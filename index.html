@@ -1,1328 +1,2965 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meu Perfil - LIGA GOIANA DE FUTEBOL DE BASE</title>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-:root{
-  --bg:#0b1f3a;
-  --card:#102a52;
-  --gold:#f7c600;
-  --gold-line:rgba(247,198,0,.30);
-  --white:#ffffff;
-  --muted:#d6def0;
-  --success:#1f8b4c;
-  --danger:#c62828;
-  --shadow:0 8px 22px rgba(0,0,0,.28);
-  --transition:.25s ease;
-  --max:1200px;
-}
-
-*{margin:0;padding:0;box-sizing:border-box}
-
-body{
-  font-family:Arial, sans-serif;
-  background:
-    linear-gradient(rgba(11,31,58,.88), rgba(11,31,58,.94)),
-    url("fundo.png") center/cover fixed no-repeat;
-  color:var(--white);
-  min-height:100vh;
-}
-
-a{text-decoration:none;color:inherit}
-button,input,select,textarea{font-family:inherit}
-
-.wrap{
-  width:min(100% - 30px, var(--max));
-  margin:0 auto;
-}
-
-header{
-  background:rgba(8,23,44,.96);
-  border-bottom:3px solid var(--gold);
-  box-shadow:var(--shadow);
-  margin-bottom:20px;
-}
-
-.header-inner{
-  min-height:82px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  flex-wrap:wrap;
-  padding:14px 0;
-}
-
-.header-left,
-.header-right{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.header-title{
-  flex:1;
-  text-align:center;
-  font-size:22px;
-  font-weight:700;
-  color:var(--white);
-}
-
-.top-btn{
-  border:none;
-  padding:10px 16px;
-  border-radius:10px;
-  font-weight:bold;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  cursor:pointer;
-  transition:var(--transition);
-}
-
-.btn-light{background:#fff4cf;color:#111}
-.btn-light:hover{background:var(--gold);transform:translateY(-2px)}
-.btn-gold{background:var(--gold);color:#111}
-.btn-gold:hover{filter:brightness(1.05);transform:translateY(-2px)}
-.btn-red{background:var(--danger);color:#fff}
-
-.container{padding-bottom:30px}
-
-.panel{
-  background:linear-gradient(180deg, rgba(16,42,82,.95), rgba(10,28,56,.96));
-  border:1px solid var(--gold-line);
-  border-radius:20px;
-  padding:22px;
-  box-shadow:var(--shadow);
-  margin-bottom:20px;
-}
-
-.perfil-topo{
-  display:grid;
-  grid-template-columns:280px 1fr;
-  gap:20px;
-  align-items:start;
-}
-
-.foto-box{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:18px;
-  padding:18px;
-  text-align:center;
-}
-
-.foto-preview,
-.foto-placeholder{
-  width:180px;
-  height:180px;
-  border-radius:50%;
-  object-fit:cover;
-  border:3px solid var(--gold);
-  background:#0f274c;
-  margin:0 auto 14px;
-}
-
-.foto-placeholder{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:64px;
-  color:var(--gold);
-}
-
-.foto-actions{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.btn-sec{
-  border:none;
-  padding:12px 14px;
-  border-radius:10px;
-  font-weight:700;
-  cursor:pointer;
-  transition:var(--transition);
-  background:#d9e2f2;
-  color:#111;
-}
-
-.btn-sec:hover{transform:translateY(-2px)}
-
-.perfil-info h2{
-  color:var(--gold);
-  font-size:30px;
-  margin-bottom:8px;
-}
-
-.perfil-info p{
-  color:var(--muted);
-  line-height:1.6;
-  margin-bottom:12px;
-}
-
-.tags{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:8px;
-}
-
-.tag{
-  padding:7px 12px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:700;
-  border:1px solid rgba(255,255,255,.08);
-  background:#14335f;
-  color:#fff;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  gap:12px;
-  margin-top:18px;
-}
-
-.field{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-
-.field.full{grid-column:1 / -1}
-.campo-oculto{display:none !important}
-
-.field label{
-  font-size:14px;
-  font-weight:700;
-  color:#fff;
-}
-
-.field input,
-.field select,
-.field textarea{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  background:#f4f7fb;
-  color:#111;
-  font-size:14px;
-  resize:vertical;
-}
-
-.acoes{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:18px;
-}
-
-.msg{
-  margin-top:14px;
-  padding:12px;
-  border-radius:12px;
-  font-weight:700;
-  display:none;
-}
-
-.msg.error{
-  background:rgba(198,40,40,.18);
-  color:#ffb7b7;
-  border:1px solid rgba(198,40,40,.35);
-}
-
-.msg.success{
-  background:rgba(31,139,76,.18);
-  color:#a8ffd0;
-  border:1px solid rgba(31,139,76,.35);
-}
-
-.mini-grid{
-  display:grid;
-  grid-template-columns:repeat(4, 1fr);
-  gap:12px;
-  margin-top:10px;
-}
-
-.mini-card{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:16px;
-  padding:16px;
-  text-align:center;
-}
-
-.mini-card strong{
-  display:block;
-  color:var(--gold);
-  font-size:26px;
-  margin-bottom:8px;
-}
-
-.mini-card span{
-  color:var(--muted);
-  font-size:14px;
-  font-weight:700;
-}
-
-@media (max-width:980px){
-  .perfil-topo{grid-template-columns:1fr}
-  .grid,.mini-grid{grid-template-columns:1fr 1fr}
-  .header-title{order:3;width:100%}
-  .header-left,.header-right{width:100%;justify-content:center}
-}
-
-@media (max-width:600px){
-  .grid,.mini-grid{grid-template-columns:1fr}
-  .acoes,.header-left,.header-right{flex-direction:column;align-items:stretch}
-  .top-btn,.btn-sec{width:100%;justify-content:center}
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <div class="wrap header-inner">
-    <div class="header-left">
-      <button class="top-btn btn-light" type="button" onclick="voltarPagina()">
-        <i class="fa-solid fa-arrow-left"></i> Voltar
-      </button>
-
-      <a href="index.html" class="top-btn btn-light">
-        <i class="fa-solid fa-house"></i> Página Inicial
-      </a>
-    </div>
-
-    <div class="header-title">Meu Perfil</div>
-
-    <div class="header-right">
-      <button class="top-btn btn-gold" onclick="logout()">
-        <i class="fa-solid fa-right-from-bracket"></i> Sair
-      </button>
-    </div>
-  </div>
-</header>
-
-<div class="wrap container">
-
-  <section class="panel">
-    <div class="perfil-topo">
-      <div class="foto-box">
-        <img id="fotoPreview" class="foto-preview" style="display:none;" alt="Foto do perfil">
-        <div id="fotoPlaceholder" class="foto-placeholder">
-          <i class="fa-solid fa-user"></i>
-        </div>
-
-        <div class="foto-actions">
-          <input type="file" id="fotoInput" accept="image/*" style="display:none;">
-          <button class="btn-sec" type="button" onclick="document.getElementById('fotoInput').click()">
-            <i class="fa-solid fa-camera"></i> Escolher foto
-          </button>
-          <button class="btn-sec" type="button" onclick="removerFoto()">
-            <i class="fa-solid fa-trash"></i> Remover foto
-          </button>
-        </div>
-      </div>
-
-      <div class="perfil-info">
-        <h2 id="tituloNome">Meu Perfil</h2>
-        <p>Edite aqui seu nome, foto, dados do cadastro e acompanhe suas estatísticas automáticas.</p>
-
-        <div class="tags">
-          <span class="tag" id="tagTipoUsuario">Tipo: -</span>
-          <span class="tag" id="tagStatusUsuario">Status: -</span>
-          <span class="tag" id="tagAprovacao">Aprovação: -</span>
-          <span class="tag" id="tagAutorizacao">Autorização: -</span>
-        </div>
-
-        <div id="msgErro" class="msg error"></div>
-        <div id="msgSucesso" class="msg success"></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="panel">
-    <h2 style="color:var(--gold); margin-bottom:10px;">Dados do usuário</h2>
-
-    <div class="grid">
-      <div class="field campo-basico">
-        <label for="nome">Nome completo</label>
-        <input type="text" id="nome" placeholder="Seu nome completo">
-      </div>
-
-      <div class="field campo-basico">
-        <label for="nomeExibicao">Nome que quer usar</label>
-        <input type="text" id="nomeExibicao" placeholder="Nome de exibição">
-      </div>
-
-      <div class="field campo-basico">
-        <label for="tipoUsuario">Tipo de usuário</label>
-        <input type="text" id="tipoUsuario" readonly>
-      </div>
-
-      <div class="field campo-basico">
-        <label for="email">Email</label>
-        <input type="email" id="email" readonly>
-      </div>
-
-      <div class="field campo-basico">
-        <label for="cpf">CPF</label>
-        <input type="text" id="cpf" placeholder="CPF">
-      </div>
-
-      <div class="field campo-basico">
-        <label for="telefone">WhatsApp</label>
-        <input type="text" id="telefone" placeholder="WhatsApp com DDD">
-      </div>
-
-      <div class="field campo-basico">
-        <label for="dataNascimento">Data de nascimento</label>
-        <input type="date" id="dataNascimento">
-      </div>
-
-      <div class="field campo-jogador campo-tecnico campo-assistente">
-        <label for="time">Time</label>
-        <input type="text" id="time" placeholder="Nome do time">
-      </div>
-
-      <div class="field campo-jogador campo-tecnico campo-assistente">
-        <label for="categoria">Categoria</label>
-        <select id="categoria">
-          <option value="">Selecione</option>
-          <option value="Sub-11">Sub-11</option>
-          <option value="Sub-12">Sub-12</option>
-          <option value="Sub-13">Sub-13</option>
-          <option value="Sub-14">Sub-14</option>
-          <option value="Sub-15">Sub-15</option>
-          <option value="Sub-16">Sub-16</option>
-          <option value="Sub-17">Sub-17</option>
-          <option value="Sub-18">Sub-18</option>
-        </select>
-      </div>
-
-      <div class="field campo-jogador campo-tecnico campo-arbitro campo-assistente">
-        <label for="funcao">Função / Cargo</label>
-        <input type="text" id="funcao" placeholder="Ex.: Goleiro, Técnico principal, Árbitro central">
-      </div>
-
-      <div class="field campo-jogador">
-        <label for="numeroCamisa">Número</label>
-        <input type="text" id="numeroCamisa" placeholder="Número da camisa">
-      </div>
-
-      <div class="field campo-basico">
-        <label for="genero">Gênero</label>
-        <select id="genero">
-          <option value="">Selecione</option>
-          <option value="masculino">Masculino</option>
-          <option value="feminino">Feminino</option>
-          <option value="outro">Outro</option>
-        </select>
-      </div>
-
-      <div class="field campo-fotografo campo-arbitro campo-assistente campo-tecnico">
-        <label for="cidade">Cidade</label>
-        <input type="text" id="cidade" placeholder="Ex.: Goiânia - GO">
-      </div>
-
-      <div class="field campo-fotografo">
-        <label for="instagram">Instagram</label>
-        <input type="text" id="instagram" placeholder="@seuinstagram">
-      </div>
-
-      <div class="field campo-fotografo">
-        <label for="portfolio">Site / Portfólio</label>
-        <input type="text" id="portfolio" placeholder="https://...">
-      </div>
-
-      <div class="field campo-fotografo">
-        <label for="especialidade">Especialidade</label>
-        <input type="text" id="especialidade" placeholder="Ex.: fotografia esportiva">
-      </div>
-
-      <div class="field full campo-basico campo-fotografo">
-        <label for="bio">Observações / Biografia</label>
-        <textarea id="bio" rows="4" placeholder="Escreva algo sobre você"></textarea>
-      </div>
-    </div>
-
-    <div class="acoes">
-      <button class="top-btn btn-gold" type="button" onclick="salvarPerfil()">
-        <i class="fa-solid fa-floppy-disk"></i> Salvar perfil
-      </button>
-
-      <button class="top-btn btn-light" type="button" onclick="recarregarDados()">
-        <i class="fa-solid fa-rotate"></i> Recarregar
-      </button>
-    </div>
-  </section>
-
-  <section class="panel">
-    <h2 style="color:var(--gold); margin-bottom:10px;">Resumo</h2>
-    <div class="mini-grid">
-      <div class="mini-card">
-        <strong id="resumoTipo">-</strong>
-        <span>Tipo de usuário</span>
-      </div>
-
-      <div class="mini-card">
-        <strong id="resumoTime">-</strong>
-        <span>Time / Cidade</span>
-      </div>
-
-      <div class="mini-card">
-        <strong id="resumoCategoria">-</strong>
-        <span>Categoria / Função</span>
-      </div>
-
-      <div class="mini-card">
-        <strong id="resumoStatus">-</strong>
-        <span>Status</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="panel">
-    <h2 style="color:var(--gold); margin-bottom:10px;">Estatísticas automáticas</h2>
-    <div class="mini-grid">
-      <div class="mini-card">
-        <strong id="stat1Valor">0</strong>
-        <span id="stat1Label">Jogos</span>
-      </div>
-
-      <div class="mini-card">
-        <strong id="stat2Valor">0</strong>
-        <span id="stat2Label">Gols</span>
-      </div>
-
-      <div class="mini-card">
-        <strong id="stat3Valor">0</strong>
-        <span id="stat3Label">Assistências</span>
-      </div>
-
-      <div class="mini-card">
-        <strong id="stat4Valor">0</strong>
-        <span id="stat4Label">Cartões</span>
-      </div>
-    </div>
-  </section>
-
-</div>
-
-<script type="module">
-import { auth, db } from "./firebase.js";
-
-import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-
-import {
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-
-let usuarioAtualId = "";
-let fotoAtualUrl = "";
-let arquivoFotoSelecionado = null;
-let dadosPerfilAtual = {};
-
-const msgErro = document.getElementById("msgErro");
-const msgSucesso = document.getElementById("msgSucesso");
-const fotoInput = document.getElementById("fotoInput");
-const fotoPreview = document.getElementById("fotoPreview");
-const fotoPlaceholder = document.getElementById("fotoPlaceholder");
-
-function mostrarErro(texto){
-  msgSucesso.style.display = "none";
-  msgErro.style.display = "block";
-  msgErro.innerText = texto;
-}
-
-function mostrarSucesso(texto){
-  msgErro.style.display = "none";
-  msgSucesso.style.display = "block";
-  msgSucesso.innerText = texto;
-}
-
-function limparMensagens(){
-  msgErro.style.display = "none";
-  msgSucesso.style.display = "none";
-  msgErro.innerText = "";
-  msgSucesso.innerText = "";
-}
-
-function normalizarTexto(texto){
-  return String(texto || "")
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-}
-
-function limparCPF(cpf){
-  return String(cpf || "").replace(/\D/g,"");
-}
-
-function tipoNormalizado(tipo){
-  const valor = normalizarTexto(tipo).replace(/\s+/g,"_");
-
-  if(valor === "fotógrafo") return "fotografo";
-  if(valor === "arbitro") return "arbitro";
-  if(valor === "árbitro") return "arbitro";
-  if(valor === "tecnico") return "tecnico";
-  if(valor === "técnico") return "tecnico";
-  if(valor === "pai_de_atleta") return "pai_atleta";
-
-  return valor || "torcedor";
-}
-
-function tipoLabel(tipo){
-  const valor = tipoNormalizado(tipo);
-
-  if(valor === "admin" || valor === "administrador") return "Administrador";
-  if(valor === "arbitro") return "Árbitro";
-  if(valor === "assistente") return "Assistente";
-  if(valor === "tecnico") return "Técnico";
-  if(valor === "jogador") return "Jogador";
-  if(valor === "fotografo") return "Fotógrafo";
-  if(valor === "pai_atleta") return "Pai de Atleta";
-
-  return "Torcedor";
-}
-
-function numero(valor){
-  const n = Number(valor || 0);
-  return Number.isFinite(n) ? n : 0;
-}
-
-function colecaoPorTipo(tipo){
-  const valor = tipoNormalizado(tipo);
-
-  if(valor === "jogador") return "jogadores";
-  if(valor === "tecnico") return "tecnicos";
-  if(valor === "arbitro") return "arbitros";
-  if(valor === "assistente") return "assistentes";
-  if(valor === "fotografo") return "fotografos";
-
-  return "";
-}
-
-function aplicarCamposPorTipo(tipo){
-  const valor = tipoNormalizado(tipo);
-
-  document
-    .querySelectorAll(".campo-jogador,.campo-tecnico,.campo-arbitro,.campo-assistente,.campo-fotografo")
-    .forEach(campo => campo.classList.add("campo-oculto"));
-
-  if(valor === "jogador"){
-    document.querySelectorAll(".campo-jogador").forEach(campo => campo.classList.remove("campo-oculto"));
-  }
-
-  if(valor === "tecnico"){
-    document.querySelectorAll(".campo-tecnico").forEach(campo => campo.classList.remove("campo-oculto"));
-  }
-
-  if(valor === "arbitro"){
-    document.querySelectorAll(".campo-arbitro").forEach(campo => campo.classList.remove("campo-oculto"));
-  }
-
-  if(valor === "assistente"){
-    document.querySelectorAll(".campo-assistente").forEach(campo => campo.classList.remove("campo-oculto"));
-  }
-
-  if(valor === "fotografo"){
-    document.querySelectorAll(".campo-fotografo").forEach(campo => campo.classList.remove("campo-oculto"));
-  }
-}
-
-function preencherFoto(src){
-  if(src){
-    fotoAtualUrl = src;
-    fotoPreview.src = src;
-    fotoPreview.style.display = "block";
-    fotoPlaceholder.style.display = "none";
-  }else{
-    fotoAtualUrl = "";
-    fotoPreview.src = "";
-    fotoPreview.style.display = "none";
-    fotoPlaceholder.style.display = "flex";
-  }
-}
-
-async function uploadFotoPerfil(uid,arquivo){
-  if(!arquivo) return fotoAtualUrl || "";
-
-  const IMGBB_API_KEY = "9556c62fd6864f3e1e33d9fd4431668c";
-  const formData = new FormData();
-  formData.append("image",arquivo);
-  formData.append("name",`perfil-${uid}-${Date.now()}`);
-
-  const resposta = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,{
-    method:"POST",
-    body:formData
-  });
-
-  const resultado = await resposta.json();
-
-  if(!resposta.ok || !resultado.success){
-    console.error("Erro ImgBB:",resultado);
-    throw new Error(resultado?.error?.message || "Erro ao enviar imagem para o ImgBB.");
-  }
-
-  return resultado.data?.url || resultado.data?.display_url || "";
-}
-
-function setStats(a,b,c,d){
-  document.getElementById("stat1Valor").textContent = a.valor ?? 0;
-  document.getElementById("stat1Label").textContent = a.label || "Jogos";
-
-  document.getElementById("stat2Valor").textContent = b.valor ?? 0;
-  document.getElementById("stat2Label").textContent = b.label || "Gols";
-
-  document.getElementById("stat3Valor").textContent = c.valor ?? 0;
-  document.getElementById("stat3Label").textContent = c.label || "Assistências";
-
-  document.getElementById("stat4Valor").textContent = d.valor ?? 0;
-  document.getElementById("stat4Label").textContent = d.label || "Cartões";
-}
-
-function zerarStats(tipo){
-  const valor = tipoNormalizado(tipo);
-
-  if(valor === "arbitro"){
-    setStats(
-      {valor:0,label:"Jogos apitados"},
-      {valor:0,label:"Amarelos"},
-      {valor:0,label:"Vermelhos"},
-      {valor:0,label:"Súmulas"}
-    );
-    return;
-  }
-
-  if(valor === "tecnico"){
-    setStats(
-      {valor:0,label:"Jogos"},
-      {valor:0,label:"Vitórias"},
-      {valor:0,label:"Derrotas"},
-      {valor:"0%",label:"Aproveitamento"}
-    );
-    return;
-  }
-
-  if(valor === "fotografo"){
-    setStats(
-      {valor:0,label:"Galerias"},
-      {valor:0,label:"Jogos cobertos"},
-      {valor:0,label:"Fotos"},
-      {valor:"-",label:"Oficial"}
-    );
-    return;
-  }
-
-  setStats(
-    {valor:0,label:"Jogos"},
-    {valor:0,label:"Gols"},
-    {valor:0,label:"Assistências"},
-    {valor:0,label:"Cartões"}
-  );
-}
-
-function eventoPertenceAoUsuario(evento,dados){
-  if(!evento) return false;
-
-  const ids = [
-    evento.uid,
-    evento.usuarioId,
-    evento.jogadorId,
-    evento.atletaId,
-    evento.arbitroId,
-    evento.tecnicoId,
-    evento.fotografoId
-  ].filter(Boolean);
-
-  if(ids.includes(usuarioAtualId)) return true;
-
-  const cpfEvento = limparCPF(evento.cpf || evento.jogadorCpf || evento.cpfJogador || "");
-  const cpfUsuario = limparCPF(dados.cpf || "");
-  if(cpfEvento && cpfUsuario && cpfEvento === cpfUsuario) return true;
-
-  const nomeEvento = normalizarTexto(
-    evento.nome ||
-    evento.jogador ||
-    evento.jogadorNome ||
-    evento.nomeJogador ||
-    evento.atleta ||
-    evento.atletaNome ||
-    evento.arbitro ||
-    evento.tecnico ||
-    ""
-  );
-
-  const nomeUsuario = normalizarTexto(dados.nome || dados.nomeCompleto || "");
-  return !!nomeEvento && !!nomeUsuario && nomeEvento === nomeUsuario;
-}
-
-function registroPertenceAoUsuario(reg,dados){
-  if(!reg) return false;
-
-  const ids = [
-    reg.id,
-    reg.uid,
-    reg.usuarioId,
-    reg.cadastroUid,
-    reg.jogadorId,
-    reg.arbitroId,
-    reg.tecnicoId,
-    reg.fotografoId
-  ].filter(Boolean);
-
-  if(ids.includes(usuarioAtualId)) return true;
-
-  const emailReg = normalizarTexto(reg.email || "");
-  const emailUser = normalizarTexto(dados.email || auth.currentUser?.email || "");
-  if(emailReg && emailUser && emailReg === emailUser) return true;
-
-  const cpfReg = limparCPF(reg.cpf || "");
-  const cpfUser = limparCPF(dados.cpf || "");
-  if(cpfReg && cpfUser && cpfReg === cpfUser) return true;
-
-  const nomeReg = normalizarTexto(reg.nome || reg.nomeCompleto || "");
-  const nomeUser = normalizarTexto(dados.nome || dados.nomeCompleto || "");
-  return !!nomeReg && !!nomeUser && nomeReg === nomeUser;
-}
-
-async function carregarColecao(nome){
-  const snap = await getDocs(collection(db,nome));
-  return snap.docs.map(d=>({id:d.id,...d.data()}));
-}
-
-async function carregarRegistroPublico(tipo,dados){
-  const colecao = colecaoPorTipo(tipo);
-  if(!colecao) return null;
-
-  const direto = await getDoc(doc(db,colecao,usuarioAtualId)).catch(()=>null);
-  if(direto && direto.exists()){
-    return {id:direto.id,...direto.data()};
-  }
-
-  const lista = await carregarColecao(colecao).catch(()=>[]);
-  return lista.find(reg=>registroPertenceAoUsuario(reg,dados)) || null;
-}
-
-async function carregarEstatisticas(dados){
-  const tipo = tipoNormalizado(dados.tipoUsuario || dados.tipo || dados.perfil || "");
-
-  zerarStats(tipo);
-
-  try{
-    const publico = await carregarRegistroPublico(tipo,dados);
-
-    if(tipo === "jogador"){
-      const sumulas = await carregarColecao("sumulas").catch(()=>[]);
-
-      let golsEventos = 0;
-      let assistEventos = 0;
-      let amarelosEventos = 0;
-      let vermelhosEventos = 0;
-      const jogosSet = new Set();
-
-      sumulas.forEach(s=>{
-        const gols = Array.isArray(s.gols) ? s.gols : [];
-        const assistencias = Array.isArray(s.assistencias) ? s.assistencias : [];
-        const cartoes = Array.isArray(s.cartoes) ? s.cartoes : [];
-
-        gols.forEach(g=>{
-          if(eventoPertenceAoUsuario(g,dados)){
-            golsEventos += numero(g.quantidade || g.qtd || g.gols || 1);
-            jogosSet.add(s.jogoId || s.id || JSON.stringify(s.data || ""));
-          }
-
-          const assistente = {
-            nome:g.assistencia || g.assistente || g.nomeAssistente || g.jogadorAssistencia || g.assistenciaNome || "",
-            uid:g.assistenteId || g.assistenciaId || ""
-          };
-
-          if(eventoPertenceAoUsuario(assistente,dados)){
-            assistEventos++;
-            jogosSet.add(s.jogoId || s.id || JSON.stringify(s.data || ""));
-          }
-        });
-
-        assistencias.forEach(a=>{
-          if(eventoPertenceAoUsuario(a,dados)){
-            assistEventos += numero(a.quantidade || a.qtd || a.assistencias || 1);
-            jogosSet.add(s.jogoId || s.id || JSON.stringify(s.data || ""));
-          }
-        });
-
-        cartoes.forEach(c=>{
-          if(eventoPertenceAoUsuario(c,dados)){
-            const tipoCartao = normalizarTexto(c.tipo || c.cartao || c.cor || "");
-            if(tipoCartao.includes("vermelho") || tipoCartao === "v") vermelhosEventos++;
-            else amarelosEventos++;
-            jogosSet.add(s.jogoId || s.id || JSON.stringify(s.data || ""));
-          }
-        });
-      });
-
-      const jogos = Math.max(numero(publico?.jogos), jogosSet.size);
-      const gols = Math.max(numero(publico?.gols), golsEventos);
-      const assist = Math.max(numero(publico?.assistencias), assistEventos);
-      const cartoes = Math.max(
-        numero(publico?.amarelos || publico?.cartoesAmarelos) + numero(publico?.vermelhos || publico?.cartoesVermelhos),
-        amarelosEventos + vermelhosEventos
-      );
-
-      setStats(
-        {valor:jogos,label:"Jogos"},
-        {valor:gols,label:"Gols"},
-        {valor:assist,label:"Assistências"},
-        {valor:cartoes,label:"Cartões"}
-      );
-
-      return;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AGF - Associação Goiana de Futebol</title>
+  <meta name="description" content="Site oficial da AGF - Associação Goiana de Futebol. Campeonatos, jogos, súmulas, classificação, artilharia e notícias.">
+  <meta property="og:title" content="AGF - Associação Goiana de Futebol">
+  <meta property="og:description" content="Site oficial da AGF - Associação Goiana de Futebol. Campeonatos, jogos, súmulas, classificação, artilharia e notícias.">
+  <meta property="og:url" content="https://agfgoiana.vercel.app/">
+
+  <meta name="theme-color" content="#04132d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AGF">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root{
+      --yellow:#ffd400;
+      --yellow-2:#ffe600;
+      --yellow-soft:rgba(255,212,0,.12);
+      --yellow-line:rgba(255,212,0,.22);
+      --white:#ffffff;
+      --muted:#d8e1ef;
+      --text-soft:#a8b6cf;
+      --shadow:0 12px 30px rgba(0,0,0,.35);
+      --transition:.25s ease;
+      --max:1280px;
     }
 
-    if(tipo === "arbitro"){
-      const jogos = await carregarColecao("jogos").catch(()=>[]);
-      const sumulas = await carregarColecao("sumulas").catch(()=>[]);
+    *{margin:0;padding:0;box-sizing:border-box;}
 
-      const jogosApitados = new Set();
-
-      [...jogos,...sumulas].forEach(j=>{
-        const alvo = {
-          uid:j.arbitroId || j.arbitroUid || j.uid || "",
-          nome:j.arbitroNome || j.nomeArbitro || j.arbitro || "",
-          cpf:j.arbitroCpf || ""
-        };
-
-        const arbitroObj = typeof j.arbitro === "object" ? j.arbitro : null;
-
-        if(
-          eventoPertenceAoUsuario(alvo,dados) ||
-          eventoPertenceAoUsuario(arbitroObj,dados)
-        ){
-          jogosApitados.add(j.jogoId || j.id || JSON.stringify(j.data || ""));
-        }
-      });
-
-      setStats(
-        {valor:Math.max(numero(publico?.jogos), jogosApitados.size),label:"Jogos apitados"},
-        {valor:numero(publico?.amarelos || publico?.cartoesAmarelos),label:"Amarelos"},
-        {valor:numero(publico?.vermelhos || publico?.cartoesVermelhos),label:"Vermelhos"},
-        {valor:jogosApitados.size,label:"Súmulas"}
-      );
-
-      return;
+    html{
+      scroll-behavior:smooth;
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden;
     }
 
-    if(tipo === "tecnico"){
-      const jogos = numero(publico?.jogos);
-      const vitorias = numero(publico?.vitorias);
-      const derrotas = numero(publico?.derrotas);
-      const empates = numero(publico?.empates);
-      const aproveitamento = jogos ? Math.round(((vitorias * 3 + empates) / (jogos * 3)) * 100) : 0;
-
-      setStats(
-        {valor:jogos,label:"Jogos"},
-        {valor:vitorias,label:"Vitórias"},
-        {valor:derrotas,label:"Derrotas"},
-        {valor:`${aproveitamento}%`,label:"Aproveitamento"}
-      );
-
-      return;
+    body{
+      width:100%;
+      max-width:100%;
+      font-family:Arial, Helvetica, sans-serif;
+      background:
+        linear-gradient(rgba(1,7,18,.36), rgba(1,7,18,.58)),
+        url("fundo.png") center top / cover fixed no-repeat;
+      color:var(--white);
+      overflow-x:hidden;
     }
 
-    if(tipo === "assistente"){
-      setStats(
-        {valor:numero(publico?.jogos),label:"Jogos"},
-        {valor:numero(publico?.assistencias),label:"Assistências"},
-        {valor:numero(publico?.amarelos),label:"Amarelos"},
-        {valor:numero(publico?.vermelhos),label:"Vermelhos"}
-      );
+    a{text-decoration:none;color:inherit;transition:var(--transition);}
+    button{font-family:inherit;transition:var(--transition);cursor:pointer;border:none;background:none;}
+    ul{list-style:none;}
+    img{max-width:100%;display:block;}
 
-      return;
+    .wrap{
+      width:min(100% - 32px, var(--max));
+      margin:0 auto;
     }
 
-    if(tipo === "fotografo"){
-      const galerias = await carregarColecao("galeria").catch(()=>[]);
-      const minhasGalerias = galerias.filter(g=>registroPertenceAoUsuario(g,dados));
-
-      const fotosPublicadas = minhasGalerias.reduce((total,g)=>{
-        if(Array.isArray(g.fotos)) return total + g.fotos.length;
-        if(Array.isArray(g.imagens)) return total + g.imagens.length;
-        if(g.imagem || g.foto || g.url) return total + 1;
-        return total;
-      },0);
-
-      setStats(
-        {valor:Math.max(numero(publico?.galerias), minhasGalerias.length),label:"Galerias"},
-        {valor:numero(publico?.jogos),label:"Jogos cobertos"},
-        {valor:Math.max(numero(publico?.fotos), fotosPublicadas),label:"Fotos"},
-        {valor:publico?.fotografoOficial === true ? "Sim" : "Não",label:"Oficial"}
-      );
-
-      return;
+    .sidebar-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      opacity:0;
+      visibility:hidden;
+      transition:var(--transition);
+      z-index:998;
     }
 
-    setStats(
-      {valor:0,label:"Jogos"},
-      {valor:0,label:"Gols"},
-      {valor:0,label:"Assistências"},
-      {valor:0,label:"Cartões"}
-    );
-
-  }catch(erro){
-    console.error("Erro ao carregar estatísticas:",erro);
-  }
-}
-
-function preencherResumo(dados){
-  const tipo = tipoNormalizado(dados.tipoUsuario || dados.tipo || dados.perfil || "");
-
-  document.getElementById("resumoTipo").textContent = tipoLabel(dados.tipoUsuario || dados.tipo || dados.perfil || "");
-
-  if(tipo === "fotografo"){
-    document.getElementById("resumoTime").textContent = dados.cidade || "-";
-    document.getElementById("resumoCategoria").textContent = dados.especialidade || "-";
-  }else if(tipo === "arbitro"){
-    document.getElementById("resumoTime").textContent = dados.cidade || "Árbitro";
-    document.getElementById("resumoCategoria").textContent = dados.categoria || dados.funcao || "-";
-  }else{
-    document.getElementById("resumoTime").textContent = dados.time || dados.timeNome || "-";
-    document.getElementById("resumoCategoria").textContent = dados.categoria || "-";
-  }
-
-  document.getElementById("resumoStatus").textContent = dados.status || "-";
-}
-
-function preencherTela(dados){
-  dadosPerfilAtual = dados || {};
-
-  const tipoOriginal = dados.tipoUsuario || dados.tipo || dados.perfil || "torcedor";
-  aplicarCamposPorTipo(tipoOriginal);
-
-  document.getElementById("tituloNome").textContent = dados.nomeExibicao || dados.nome || "Meu Perfil";
-
-  document.getElementById("nome").value = dados.nome || "";
-  document.getElementById("nomeExibicao").value = dados.nomeExibicao || "";
-  document.getElementById("tipoUsuario").value = tipoLabel(tipoOriginal);
-  document.getElementById("email").value = dados.email || auth.currentUser?.email || "";
-  document.getElementById("cpf").value = dados.cpf || "";
-  document.getElementById("telefone").value = dados.telefone || dados.whatsapp || "";
-  document.getElementById("dataNascimento").value = dados.dataNascimento || dados.nascimento || "";
-  document.getElementById("time").value = dados.time || dados.timeNome || "";
-  document.getElementById("categoria").value = dados.categoria || "";
-  document.getElementById("funcao").value = dados.funcao || dados.posicao || dados.cargo || "";
-  document.getElementById("numeroCamisa").value = dados.numeroCamisa || dados.numero || "";
-  document.getElementById("genero").value = dados.genero || "";
-  document.getElementById("cidade").value = dados.cidade || "";
-  document.getElementById("instagram").value = dados.instagram || "";
-  document.getElementById("portfolio").value = dados.portfolio || dados.site || dados.link || "";
-  document.getElementById("especialidade").value = dados.especialidade || "";
-  document.getElementById("bio").value = dados.bio || dados.observacoes || dados.descricao || "";
-
-  document.getElementById("tagTipoUsuario").textContent = `Tipo: ${tipoLabel(tipoOriginal)}`;
-  document.getElementById("tagStatusUsuario").textContent = `Status: ${dados.status || "-"}`;
-  document.getElementById("tagAprovacao").textContent = `Aprovação: ${dados.aprovado === true ? "Aprovado" : "Pendente"}`;
-  document.getElementById("tagAutorizacao").textContent = `Autorização: ${dados.autorizado === true ? "Autorizado" : "Não autorizado"}`;
-
-  preencherFoto(dados.fotoPerfil || dados.foto || "");
-  preencherResumo(dados);
-  carregarEstatisticas(dados);
-}
-
-async function carregarOuCriarPerfil(user){
-  usuarioAtualId = user.uid;
-
-  const refUser = doc(db,"usuarios",user.uid);
-  const snap = await getDoc(refUser);
-
-  if(!snap.exists()){
-    await signOut(auth);
-    window.location.href = "login.html";
-    return;
-  }
-
-  preencherTela(snap.data());
-}
-
-function montarDadosPublicos(dadosUsuario){
-  const tipo = tipoNormalizado(dadosUsuario.tipoUsuario || dadosUsuario.tipo || dadosUsuario.perfil || "");
-
-  return {
-    uid:usuarioAtualId,
-    usuarioId:usuarioAtualId,
-    cadastroUid:usuarioAtualId,
-    nome:dadosUsuario.nome || "",
-    nomeCompleto:dadosUsuario.nome || "",
-    nomeExibicao:dadosUsuario.nomeExibicao || "",
-    email:dadosUsuario.email || auth.currentUser?.email || "",
-    cpf:dadosUsuario.cpf || "",
-    telefone:dadosUsuario.telefone || dadosUsuario.whatsapp || "",
-    whatsapp:dadosUsuario.whatsapp || dadosUsuario.telefone || "",
-    dataNascimento:dadosUsuario.dataNascimento || dadosUsuario.nascimento || "",
-    nascimento:dadosUsuario.dataNascimento || dadosUsuario.nascimento || "",
-    time:dadosUsuario.time || "",
-    timeNome:dadosUsuario.time || "",
-    categoria:dadosUsuario.categoria || "",
-    categorias:dadosUsuario.categoria ? [dadosUsuario.categoria] : [],
-    funcao:dadosUsuario.funcao || "",
-    posicao:dadosUsuario.funcao || "",
-    numero:dadosUsuario.numeroCamisa || dadosUsuario.numero || "",
-    numeroCamisa:dadosUsuario.numeroCamisa || dadosUsuario.numero || "",
-    genero:dadosUsuario.genero || "",
-    cidade:dadosUsuario.cidade || "",
-    instagram:dadosUsuario.instagram || "",
-    portfolio:dadosUsuario.portfolio || "",
-    site:dadosUsuario.portfolio || "",
-    especialidade:dadosUsuario.especialidade || "",
-    bio:dadosUsuario.bio || "",
-    descricao:dadosUsuario.bio || "",
-    foto:dadosUsuario.foto || dadosUsuario.fotoPerfil || "",
-    fotoPerfil:dadosUsuario.fotoPerfil || dadosUsuario.foto || "",
-    tipoUsuario:tipo,
-    tipo,
-    perfil:tipo,
-    aprovado:dadosUsuario.aprovado === true,
-    autorizado:dadosUsuario.autorizado === true,
-    status:dadosUsuario.status || "pendente",
-    atualizadoEm:new Date().toISOString()
-  };
-}
-
-async function sincronizarPerfilPublico(tipo,dadosUsuario){
-  const colecao = colecaoPorTipo(tipo);
-  if(!colecao) return;
-
-  await setDoc(
-    doc(db,colecao,usuarioAtualId),
-    montarDadosPublicos(dadosUsuario),
-    {merge:true}
-  );
-}
-
-window.recarregarDados = async function(){
-  limparMensagens();
-
-  if(!auth.currentUser || !usuarioAtualId) return;
-
-  try{
-    const refUser = doc(db,"usuarios",usuarioAtualId);
-    const snap = await getDoc(refUser);
-
-    if(!snap.exists()){
-      mostrarErro("Perfil não encontrado.");
-      return;
+    .sidebar-overlay.show{
+      opacity:1;
+      visibility:visible;
     }
 
-    preencherTela(snap.data());
-    mostrarSucesso("Dados recarregados com sucesso.");
-  }catch(erro){
-    console.error(erro);
-    mostrarErro("Erro ao recarregar perfil.");
-  }
-};
-
-window.salvarPerfil = async function(){
-  limparMensagens();
-  mostrarSucesso("Salvando perfil...");
-
-  if(!auth.currentUser || !usuarioAtualId){
-    mostrarErro("Usuário não identificado. Faça login novamente.");
-    return;
-  }
-
-  const nome = document.getElementById("nome").value.trim();
-  const nomeExibicao = document.getElementById("nomeExibicao").value.trim();
-  const cpf = limparCPF(document.getElementById("cpf").value);
-  const telefone = document.getElementById("telefone").value.trim();
-  const dataNascimento = document.getElementById("dataNascimento").value;
-  const time = document.getElementById("time").value.trim();
-  const categoria = document.getElementById("categoria").value;
-  const funcao = document.getElementById("funcao").value.trim();
-  const numeroCamisa = document.getElementById("numeroCamisa").value.trim();
-  const genero = document.getElementById("genero").value;
-  const cidade = document.getElementById("cidade").value.trim();
-  const instagram = document.getElementById("instagram").value.trim();
-  const portfolio = document.getElementById("portfolio").value.trim();
-  const especialidade = document.getElementById("especialidade").value.trim();
-  const bio = document.getElementById("bio").value.trim();
-
-  if(!nome){
-    mostrarErro("Digite seu nome.");
-    return;
-  }
-
-  try{
-    const refUsuario = doc(db,"usuarios",usuarioAtualId);
-    const snapAtual = await getDoc(refUsuario);
-    const dadosAtuais = snapAtual.exists() ? snapAtual.data() : {};
-    const tipoAtual = tipoNormalizado(dadosAtuais.tipoUsuario || dadosAtuais.tipo || dadosAtuais.perfil || "torcedor");
-
-    let fotoUrlFinal = fotoAtualUrl || dadosAtuais.fotoPerfil || dadosAtuais.foto || "";
-
-    if(arquivoFotoSelecionado){
-      mostrarSucesso("Enviando foto...");
-      fotoUrlFinal = await Promise.race([
-        uploadFotoPerfil(usuarioAtualId,arquivoFotoSelecionado),
-        new Promise((_,reject)=>setTimeout(()=>reject(new Error("Tempo limite ao enviar foto. Tente uma imagem menor.")),20000))
-      ]);
+    .sidebar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:320px;
+      max-width:88%;
+      height:100vh;
+      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
+      border-right:1px solid var(--yellow-line);
+      box-shadow:var(--shadow);
+      padding:22px 18px 28px;
+      overflow-y:auto;
+      transform:translateX(-105%);
+      transition:var(--transition);
+      z-index:999;
     }
 
-    const dadosAtualizados = {
-      ...dadosAtuais,
-      nome,
-      nomeCompleto:nome,
-      nomeExibicao,
-      cpf,
-      telefone,
-      whatsapp:telefone,
-      dataNascimento,
-      nascimento:dataNascimento,
-      time,
-      timeNome:time,
-      categoria,
-      funcao,
-      numeroCamisa,
-      numero:numeroCamisa,
-      genero,
-      cidade,
-      instagram,
-      portfolio,
-      site:portfolio,
-      especialidade,
-      bio,
-      descricao:bio,
-      cadastroIncompleto:false,
-      fotoPerfil:fotoUrlFinal,
-      foto:fotoUrlFinal,
-      atualizadoEm:new Date().toISOString()
-    };
-
-    await setDoc(refUsuario,dadosAtualizados,{merge:true});
-
-    try{
-      await sincronizarPerfilPublico(tipoAtual,dadosAtualizados);
-    }catch(erroPublico){
-      console.warn("Perfil salvo em usuarios, mas não sincronizou coleção pública:", erroPublico);
+    .sidebar.open{
+      transform:translateX(0);
     }
 
-    arquivoFotoSelecionado = null;
-    fotoAtualUrl = fotoUrlFinal;
-    preencherTela(dadosAtualizados);
+    .sidebar-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:20px;
+      padding-bottom:16px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
 
-    mostrarSucesso("Perfil salvo com sucesso.");
+    .sidebar-brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
 
-    setTimeout(()=>{
-      window.location.href = "perfil.html";
-    },1200);
+    .sidebar-brand img{
+      width:90px;
+      height:90px;
+      object-fit:contain;
+      border:none;
+      background:transparent;
+      border-radius:0;
+      padding:0;
+      filter:drop-shadow(0 5px 12px rgba(0,0,0,.45));
+    }
 
-  }catch(erro){
-    console.error("Erro ao salvar perfil:",erro);
-    mostrarErro("Erro ao salvar perfil: " + (erro?.message || erro?.code || erro));
-  }
-};
+    .sidebar-brand-text strong{
+      display:block;
+      font-size:16px;
+      color:var(--yellow);
+      line-height:1.25;
+    }
 
-window.removerFoto = async function(){
-  try{
-    preencherFoto("");
-    arquivoFotoSelecionado = null;
+    .sidebar-brand-text span{
+      display:block;
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
 
-    if(usuarioAtualId){
-      const tipoAtual = tipoNormalizado(dadosPerfilAtual.tipoUsuario || dadosPerfilAtual.tipo || dadosPerfilAtual.perfil || "");
-      const colecao = colecaoPorTipo(tipoAtual);
+    .sidebar-close{
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      font-size:24px;
+    }
 
-      await updateDoc(doc(db,"usuarios",usuarioAtualId),{
-        foto:"",
-        fotoPerfil:"",
-        atualizadoEm:new Date().toISOString()
-      }).catch(()=>{});
+    .sidebar-close:hover{
+      background:var(--yellow);
+      color:#08172c;
+    }
 
-      if(colecao){
-        await updateDoc(doc(db,colecao,usuarioAtualId),{
-          foto:"",
-          fotoPerfil:"",
-          atualizadoEm:new Date().toISOString()
-        }).catch(()=>{});
+    .sidebar-block{
+      margin-bottom:22px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:14px;
+    }
+
+    .sidebar-title{
+      font-size:14px;
+      font-weight:700;
+      color:var(--yellow);
+      margin-bottom:12px;
+      letter-spacing:.4px;
+    }
+
+    .side-menu{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .side-menu a{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:11px 12px;
+      border-radius:12px;
+      color:var(--muted);
+      border:1px solid transparent;
+    }
+
+    .side-menu a:hover{
+      background:var(--yellow-soft);
+      color:var(--yellow);
+      border-color:var(--yellow-line);
+      transform:translateX(3px);
+    }
+
+    .side-icon{
+      width:20px;
+      text-align:center;
+      color:var(--yellow);
+      flex-shrink:0;
+    }
+
+    .topbar{
+      position:relative;
+      z-index:100;
+      backdrop-filter:blur(4px);
+      background:rgba(1,7,18,.18);
+      border-bottom:none;
+      overflow:visible;
+    }
+
+    .topbar-inner{
+      min-height:84px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:14px 0;
+      flex-wrap:wrap;
+      overflow:visible;
+      position:relative;
+    }
+
+    .topbar-left{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      flex:0 0 auto;
+      min-width:0;
+      order:1;
+    }
+
+    .menu-toggle{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      border:1px solid var(--yellow-line);
+      background:var(--yellow-soft);
+      color:var(--yellow);
+      font-size:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+
+    .menu-toggle:hover{
+      transform:translateY(-2px);
+      background:var(--yellow);
+      color:#08172c;
+    }
+
+    .topbar-logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+      flex:1 1 auto;
+      order:2;
+    }
+
+    .topbar-logo img{
+      width:92px;
+      height:92px;
+      object-fit:contain;
+      border:none;
+      background:transparent;
+      border-radius:0;
+      padding:0;
+      flex-shrink:0;
+      filter:drop-shadow(0 5px 12px rgba(0,0,0,.45));
+    }
+
+    .logo-text{
+      min-width:0;
+    }
+
+    .logo-text strong{
+      display:block;
+      font-size:17px;
+      color:#fff;
+      line-height:1.2;
+    }
+
+    .logo-text span{
+      display:block;
+      margin-top:4px;
+      color:var(--yellow);
+      font-size:13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .top-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex:0 0 auto;
+      position:relative;
+      z-index:180;
+      order:3;
+      margin-left:auto;
+    }
+
+    .top-nav{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      order:4;
+      overflow:visible;
+      position:relative;
+      z-index:150;
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+    }
+
+    .top-nav::-webkit-scrollbar{
+      display:none;
+    }
+
+    .top-nav ul{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      flex-wrap:nowrap;
+      justify-content:center;
+      width:auto;
+      min-width:0;
+      padding-bottom:2px;
+      overflow:visible;
+      margin:0 auto;
+    }
+
+    .top-nav li{
+      position:relative;
+      flex:0 0 auto;
+    }
+
+    .top-nav a,
+    .dropdown-toggle{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:12px;
+      color:var(--muted);
+      font-weight:600;
+      border:1px solid transparent;
+      background:transparent;
+      white-space:nowrap;
+    }
+
+    .top-nav a:hover,
+    .dropdown-toggle:hover,
+    .top-nav li:hover > a{
+      color:var(--yellow);
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+    }
+
+    .dropdown-toggle .fa-chevron-down{
+      transition:transform .2s ease;
+    }
+
+    .dropdown.open .dropdown-toggle,
+    .dropdown:hover .dropdown-toggle{
+      color:var(--yellow);
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+    }
+
+    .dropdown.open .dropdown-toggle .fa-chevron-down,
+    .dropdown:hover .dropdown-toggle .fa-chevron-down{
+      transform:rotate(180deg);
+    }
+
+    .dropdown-menu{
+      position:absolute;
+      top:calc(100% + 8px);
+      left:50%;
+      transform:translateX(-50%);
+      min-width:240px;
+      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
+      border:1px solid var(--yellow-line);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      padding:8px;
+      display:none;
+      z-index:9999;
+    }
+
+    .dropdown.open .dropdown-menu,
+    .dropdown:hover .dropdown-menu{
+      display:block;
+    }
+
+    .dropdown.mobile-fixed:hover .dropdown-menu{
+      display:none;
+    }
+
+    .dropdown.mobile-fixed.open .dropdown-menu{
+      display:block;
+      position:fixed;
+      left:10px !important;
+      right:10px !important;
+      top:120px;
+      transform:none !important;
+      width:auto;
+      min-width:0;
+      max-width:calc(100vw - 20px);
+      max-height:60vh;
+      overflow-y:auto;
+    }
+
+    .dropdown-menu a{
+      display:flex;
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      color:var(--muted);
+      border:1px solid transparent;
+    }
+
+    .dropdown-menu a:hover{
+      color:var(--yellow);
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-login-chip{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      border-radius:14px;
+      transition:var(--transition);
+      font-weight:700;
+      cursor:pointer;
+      border:1px solid transparent;
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg, var(--yellow), #ffe600);
+      color:#08172c;
+      padding:14px 18px;
+      box-shadow:0 10px 22px rgba(255,212,0,.22);
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.04);
+      box-shadow:0 12px 24px rgba(255,212,0,.3);
+    }
+
+    .btn-secondary{
+      padding:14px 18px;
+      border:1px solid var(--yellow-line);
+      color:#fff;
+      background:rgba(255,255,255,.06);
+    }
+
+    .btn-secondary:hover{
+      transform:translateY(-2px);
+      background:var(--yellow);
+      color:#08172c;
+    }
+
+    .btn-login-chip{
+      padding:10px 16px;
+      border:1px solid var(--yellow-line);
+      background:rgba(255,212,0,.08);
+      color:var(--yellow);
+      white-space:nowrap;
+    }
+
+    .btn-login-chip:hover{
+      background:var(--yellow);
+      color:#08172c;
+    }
+
+    .login-avatar{
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:rgba(255,255,255,.12);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:inherit;
+      overflow:hidden;
+      flex-shrink:0;
+    }
+
+    .login-avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:50%;
+    }
+
+
+
+    .notification-wrap{
+      position:relative;
+      display:none;
+    }
+
+    .notification-btn{
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      border:1px solid var(--yellow-line);
+      background:rgba(255,212,0,.08);
+      color:var(--yellow);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      position:relative;
+    }
+
+    .notification-btn:hover{
+      background:var(--yellow);
+      color:#08172c;
+      transform:translateY(-2px);
+    }
+
+    .notification-count{
+      position:absolute;
+      top:-7px;
+      right:-7px;
+      min-width:20px;
+      height:20px;
+      padding:0 5px;
+      border-radius:999px;
+      background:#e30613;
+      color:#fff;
+      border:2px solid #04132d;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      font-size:11px;
+      font-weight:900;
+    }
+
+    .notification-panel{
+      position:absolute;
+      top:calc(100% + 10px);
+      right:0;
+      width:360px;
+      max-width:calc(100vw - 24px);
+      background:linear-gradient(180deg,#04132d 0%,#021022 100%);
+      border:1px solid var(--yellow-line);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      padding:14px;
+      display:none;
+      z-index:9999;
+    }
+
+    .notification-panel.open{
+      display:block;
+    }
+
+    .notification-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding-bottom:12px;
+      margin-bottom:12px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .notification-head strong{
+      color:#fff;
+      font-size:15px;
+    }
+
+    .notification-head button{
+      color:var(--yellow);
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .notification-list{
+      display:grid;
+      gap:10px;
+      max-height:360px;
+      overflow-y:auto;
+      padding-right:3px;
+    }
+
+    .notification-item{
+      display:grid;
+      gap:5px;
+      padding:12px;
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.07);
+      color:var(--muted);
+      text-align:left;
+      width:100%;
+    }
+
+    .notification-item.nao-lida{
+      border-color:var(--yellow-line);
+      background:rgba(255,212,0,.08);
+    }
+
+    .notification-item strong{
+      color:#fff;
+      font-size:13px;
+      line-height:1.25;
+    }
+
+    .notification-item span{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    .notification-item small{
+      color:var(--yellow);
+      font-size:11px;
+      font-weight:900;
+    }
+
+    .notification-empty{
+      padding:18px;
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color:var(--muted);
+      text-align:center;
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .user-chip{
+      display:none;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:16px;
+      border:1px solid var(--yellow-line);
+      background:rgba(255,212,0,.08);
+      color:var(--yellow);
+      min-height:48px;
+      max-width:250px;
+    }
+
+    .user-chip:hover{
+      background:var(--yellow);
+      color:#08172c;
+    }
+
+    .user-chip-text{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      min-width:0;
+    }
+
+    .user-chip-text strong,
+    .user-chip-text span{
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:150px;
+    }
+
+    .user-chip-text strong{
+      font-size:13px;
+      line-height:1.2;
+    }
+
+    .user-chip-text span{
+      font-size:11px;
+      opacity:.9;
+    }
+
+    .apito-badge{
+      color:inherit;
+      font-size:13px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:18px;
+      flex-shrink:0;
+    }
+
+    .user-dropdown{
+      position:absolute;
+      top:calc(100% + 10px);
+      right:0;
+      width:320px;
+      max-width:calc(100vw - 24px);
+      background:linear-gradient(180deg, #04132d 0%, #021022 100%);
+      border:1px solid var(--yellow-line);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      padding:14px;
+      display:none;
+      z-index:9999;
+    }
+
+    .user-dropdown.open{
+      display:block;
+    }
+
+    .user-card-top{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding-bottom:14px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      margin-bottom:14px;
+    }
+
+    .user-card-avatar{
+      width:58px;
+      height:58px;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+      border:2px solid var(--yellow);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      color:var(--yellow);
+      font-size:22px;
+      flex-shrink:0;
+    }
+
+    .user-card-avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:50%;
+    }
+
+    .user-card-info{
+      min-width:0;
+    }
+
+    .user-card-info strong{
+      display:block;
+      color:#fff;
+      font-size:16px;
+      line-height:1.2;
+      margin-bottom:4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .user-card-info span{
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      margin-bottom:4px;
+    }
+
+    .user-role{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:5px 10px;
+      border-radius:999px;
+      background:var(--yellow-soft);
+      color:var(--yellow);
+      border:1px solid var(--yellow-line);
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .user-details{
+      display:grid;
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .user-detail-row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      color:var(--muted);
+      font-size:13px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      padding-bottom:8px;
+    }
+
+    .user-detail-row strong{
+      color:#fff;
+      font-size:13px;
+      font-weight:600;
+    }
+
+    .user-menu-actions{
+      display:grid;
+      gap:10px;
+    }
+
+    .user-menu-actions a,
+    .user-menu-actions button{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      width:100%;
+      padding:11px 12px;
+      border-radius:12px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color:var(--muted);
+      font-weight:700;
+      text-align:left;
+    }
+
+    .user-menu-actions a:hover,
+    .user-menu-actions button:hover{
+      background:var(--yellow-soft);
+      border-color:var(--yellow-line);
+      color:var(--yellow);
+    }
+
+    .hero{
+      padding:24px 0 20px;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero-card{
+      background:rgba(1,7,18,.16);
+      border:none;
+      border-radius:0;
+      box-shadow:none;
+      overflow:visible;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:34px;
+      align-items:center;
+      min-height:520px;
+      padding:58px 44px 44px;
+      position:relative;
+      z-index:2;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(255,212,0,.12);
+      border:1px solid var(--yellow-line);
+      color:var(--yellow);
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:16px;
+    }
+
+    .hero h1{
+      font-size:52px;
+      line-height:1.08;
+      margin-bottom:18px;
+      color:var(--yellow);
+      text-shadow:0 5px 18px rgba(0,0,0,.65);
+    }
+
+    .hero p{
+      color:#ffffff;
+      font-size:18px;
+      line-height:1.7;
+      max-width:760px;
+      text-shadow:0 4px 12px rgba(0,0,0,.72);
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-top:26px;
+    }
+
+    .hero-art img{
+      width:100%;
+      height:auto;
+      max-height:500px;
+      object-fit:contain;
+      border-radius:0;
+      border:none;
+      box-shadow:none;
+      filter:drop-shadow(0 18px 26px rgba(0,0,0,.55));
+    }
+
+    .cards-pilares{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:18px;
+      margin:28px 0 10px;
+    }
+
+    .pillar{
+      background:linear-gradient(180deg, rgba(7,24,59,.94), rgba(3,17,45,.96));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:20px;
+      padding:22px 18px;
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      box-shadow:var(--shadow);
+      transition:var(--transition);
+    }
+
+    .pillar:hover{
+      border-color:var(--yellow-line);
+      transform:translateY(-2px);
+    }
+
+    .pillar-icon{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:var(--yellow-soft);
+      color:var(--yellow);
+      font-size:22px;
+      flex-shrink:0;
+    }
+
+    .pillar-text h3{
+      font-size:18px;
+      margin-bottom:8px;
+      color:#fff;
+    }
+
+    .pillar-text p{
+      font-size:14px;
+      line-height:1.6;
+      color:var(--muted);
+    }
+
+    .content-grid{
+      display:grid;
+      grid-template-columns:1.3fr .9fr;
+      gap:22px;
+      margin:28px 0;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, rgba(7,24,59,.94), rgba(3,17,45,.96));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .panel-head-title{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .panel-head-icon{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      background:var(--yellow-soft);
+      color:var(--yellow);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
+    }
+
+    .panel-head h2{
+      font-size:28px;
+      color:#fff;
+    }
+
+    .panel-head a{
+      color:var(--yellow);
+      font-weight:700;
+      transition:var(--transition);
+    }
+
+    .panel-head a:hover{
+      color:#fff176;
+    }
+
+    .match-table{
+      width:100%;
+      border-collapse:collapse;
+      overflow:hidden;
+      border-radius:16px;
+    }
+
+    .match-table thead th{
+      background:rgba(255,212,0,.12);
+      color:var(--yellow);
+      text-align:left;
+      padding:14px 12px;
+      font-size:14px;
+    }
+
+    .match-table tbody td{
+      padding:14px 12px;
+      border-top:1px solid rgba(255,255,255,.08);
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .match-table tbody tr:hover{
+      background:rgba(255,212,0,.08);
+    }
+
+    .home-games-list{
+      display:grid;
+      gap:14px;
+    }
+
+    .home-game-card{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      gap:14px;
+      align-items:center;
+      padding:16px;
+      border-radius:20px;
+      background:linear-gradient(135deg, rgba(255,255,255,.055), rgba(255,212,0,.06));
+      border:1px solid rgba(255,212,0,.18);
+      box-shadow:0 10px 24px rgba(0,0,0,.22);
+      transition:var(--transition);
+    }
+
+    .home-game-card:hover{
+      transform:translateY(-2px);
+      border-color:var(--yellow-line);
+      background:linear-gradient(135deg, rgba(255,212,0,.10), rgba(255,255,255,.055));
+    }
+
+    .home-team-box{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .home-team-box.away{
+      flex-direction:row-reverse;
+      text-align:right;
+    }
+
+    .home-team-logo{
+      width:90px;
+      height:90px;
+      object-fit:contain;
+      background:transparent;
+      border:none;
+      border-radius:0;
+      padding:0;
+      flex-shrink:0;
+      filter:drop-shadow(0 6px 12px rgba(0,0,0,.45));
+    }
+
+    .home-team-name{
+      color:#fff;
+      font-size:15px;
+      font-weight:900;
+      line-height:1.25;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .home-team-pos{
+      display:none !important;
+    }
+
+    .home-game-center{
+      text-align:center;
+      min-width:155px;
+    }
+
+    .home-game-versus{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      background:linear-gradient(135deg, var(--yellow), #ffe600);
+      color:#06152e;
+      font-size:18px;
+      font-weight:1000;
+      box-shadow:0 8px 18px rgba(255,212,0,.22);
+      margin-bottom:8px;
+    }
+
+    .home-game-meta{
+      display:grid;
+      gap:4px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+      font-weight:700;
+    }
+
+    .home-game-meta strong{
+      color:var(--yellow);
+    }
+
+    .home-game-status{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      margin-top:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      color:#fff;
+      font-size:11px;
+      font-weight:900;
+    }
+
+    .home-game-status a{
+      color:var(--yellow);
+      font-weight:1000;
+    }
+
+    .home-games-empty{
+      padding:18px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .news-list{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .news-item{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      transition:var(--transition);
+      display:block;
+    }
+
+    .news-item:hover{
+      transform:translateY(-2px);
+      background:rgba(255,212,0,.08);
+      border-color:var(--yellow-line);
+    }
+
+    .news-item h3{
+      font-size:17px;
+      color:#fff;
+      margin-bottom:8px;
+    }
+
+    .news-item p{
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px;
+    }
+
+    .cta-banner{
+      margin:10px 0 34px;
+    }
+
+    .cta-banner-inner{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      flex-wrap:wrap;
+      background:linear-gradient(135deg, rgba(255,212,0,.16), rgba(255,255,255,.05));
+      border:1px solid var(--yellow-line);
+      border-radius:24px;
+      padding:26px;
+      box-shadow:var(--shadow);
+    }
+
+    .cta-banner-inner h3{
+      font-size:30px;
+      color:#fff;
+      margin-bottom:8px;
+    }
+
+    .cta-banner-inner p{
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .status-user{
+      display:none;
+    }
+
+    footer{
+      background:linear-gradient(180deg, rgba(2,10,24,.96), rgba(1,9,24,1));
+      border-top:1px solid rgba(255,255,255,.08);
+      padding:40px 0 18px;
+    }
+
+    .footer-grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr .8fr .8fr;
+      gap:20px;
+    }
+
+    .footer-card{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:22px;
+      padding:22px;
+    }
+
+    .footer-card h4{
+      color:var(--yellow);
+      margin-bottom:14px;
+      font-size:18px;
+    }
+
+    .footer-brand{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      margin-bottom:14px;
+    }
+
+    .footer-brand img{
+      width:110px;
+      height:110px;
+      object-fit:contain;
+      border:none;
+      background:transparent;
+      border-radius:0;
+      padding:0;
+      filter:drop-shadow(0 5px 12px rgba(0,0,0,.45));
+    }
+
+    .footer-brand-text h3{
+      font-size:20px;
+      margin-bottom:6px;
+      color:#fff;
+    }
+
+    .footer-brand-text p{
+      color:var(--muted);
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .footer-card a{
+      display:block;
+      color:var(--muted);
+      margin-bottom:10px;
+      transition:var(--transition);
+    }
+
+    .footer-card a:hover{
+      color:var(--yellow);
+    }
+
+    .footer-contact-line{
+      display:flex !important;
+      align-items:center;
+      gap:10px;
+      margin-bottom:12px !important;
+    }
+
+    .footer-social{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .footer-social a{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      background:rgba(255,255,255,.07);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--yellow);
+      margin-bottom:0;
+    }
+
+    .footer-social a:hover{
+      background:var(--yellow);
+      color:#08172c;
+    }
+
+    .copyright{
+      margin-top:18px;
+      padding-top:18px;
+      border-top:1px solid rgba(255,255,255,.08);
+      text-align:center;
+      color:var(--text-soft);
+      font-size:14px;
+    }
+
+    #menuAdmin{
+      display:none;
+    }
+
+    @media (max-width:1180px){
+      .hero-grid,
+      .content-grid,
+      .footer-grid,
+      .cards-pilares{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .top-nav{
+        justify-content:flex-start;
+        overflow-x:auto;
+        overflow-y:visible;
+      }
+
+      .top-nav ul{
+        justify-content:flex-start;
+        width:max-content;
+        min-width:max-content;
+        margin:0;
+        gap:6px;
       }
     }
 
-    mostrarSucesso("Foto removida com sucesso.");
-  }catch(e){
-    console.error(e);
-    mostrarErro("Erro ao remover foto.");
-  }
-};
+    @media (max-width:900px){
+      .hero-grid,
+      .content-grid,
+      .footer-grid,
+      .cards-pilares{
+        grid-template-columns:1fr;
+      }
 
-fotoInput.addEventListener("change",function(event){
-  const arquivo = event.target.files?.[0];
+      .hero h1{
+        font-size:36px;
+      }
 
-  if(!arquivo) return;
+      .panel-head h2{
+        font-size:24px;
+      }
 
-  arquivoFotoSelecionado = arquivo;
+      .topbar-inner{
+        flex-wrap:wrap;
+        padding:14px 0;
+      }
 
-  const leitor = new FileReader();
+      .top-nav{
+        overflow-x:auto;
+        overflow-y:visible;
+      }
 
-  leitor.onload = function(e){
-    fotoPreview.src = e.target.result;
-    fotoPreview.style.display = "block";
-    fotoPlaceholder.style.display = "none";
+      .top-nav ul{
+        flex-wrap:nowrap;
+        justify-content:flex-start;
+      }
 
-    mostrarSucesso("Foto carregada. Agora clique em salvar perfil.");
-  };
+      .top-nav a,
+      .dropdown-toggle{
+        padding:9px 12px;
+        font-size:13px;
+      }
+    }
 
-  leitor.readAsDataURL(arquivo);
-});
+    @media (max-width:600px){
+      .wrap{
+        width:min(100% - 20px, var(--max));
+      }
 
-window.logout = function(){
-  signOut(auth).then(()=>{
-    window.location.href = "login.html";
-  }).catch((erro)=>{
-    console.error(erro);
-    mostrarErro("Erro ao sair.");
-  });
-};
+      .topbar{
+        overflow:visible;
+      }
 
-window.voltarPagina = function(){
-  if(window.history.length > 1){
-    window.history.back();
-  }else{
-    window.location.href = "index.html";
-  }
-};
+      .topbar-inner{
+        min-height:auto;
+        display:grid;
+        grid-template-columns:auto 1fr auto;
+        grid-template-areas:
+          "menu logo login"
+          "nav nav nav";
+        gap:8px;
+        align-items:center;
+        padding:10px 0;
+      }
 
-onAuthStateChanged(auth,async(user)=>{
-  if(!user){
-    window.location.href = "login.html";
-    return;
-  }
+      .topbar-left{
+        grid-area:menu;
+        width:auto;
+        min-width:0;
+        order:initial;
+      }
 
-  try{
-    await carregarOuCriarPerfil(user);
-  }catch(erro){
-    console.error(erro);
-    mostrarErro("Erro ao carregar perfil.");
-  }
-});
-</script>
+      .menu-toggle{
+        width:42px;
+        height:42px;
+        border-radius:12px;
+        font-size:19px;
+      }
+
+      .topbar-logo{
+        grid-area:logo;
+        width:auto;
+        justify-content:flex-start;
+        gap:7px;
+        min-width:0;
+        order:initial;
+      }
+
+      .topbar-logo img{
+        width:68px;
+        height:68px;
+        object-fit:contain;
+        border:none;
+        background:transparent;
+        border-radius:0;
+        padding:0;
+      }
+
+      .logo-text strong{
+        font-size:12px;
+        line-height:1.12;
+        white-space:normal;
+      }
+
+      .logo-text span{
+        font-size:10px;
+        margin-top:2px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+
+      .top-actions{
+        grid-area:login;
+        width:auto;
+        min-width:0;
+        margin-left:0;
+        justify-content:flex-end;
+        order:initial;
+      }
+
+      .btn-login-chip{
+        min-height:42px;
+        padding:7px 9px;
+        border-radius:12px;
+      }
+
+      .btn-login-chip > span:last-child{
+        display:none;
+      }
+
+      .login-avatar{
+        width:26px;
+        height:26px;
+      }
+
+      .user-chip{
+        min-height:42px;
+        padding:7px 9px;
+        border-radius:12px;
+        max-width:48px;
+      }
+
+      .user-chip-text,
+      .apito-badge{
+        display:none !important;
+      }
+
+      .top-nav{
+        grid-area:nav;
+        order:initial;
+        justify-content:flex-start;
+        overflow-x:auto;
+        overflow-y:visible;
+        width:100%;
+        max-width:100%;
+        margin-top:6px;
+        scrollbar-width:none;
+        -ms-overflow-style:none;
+      }
+
+      .top-nav::-webkit-scrollbar{
+        display:none;
+      }
+
+      .top-nav ul{
+        width:max-content;
+        min-width:max-content;
+        justify-content:flex-start;
+        flex-wrap:nowrap;
+        gap:6px;
+        padding-right:10px;
+      }
+
+      .top-nav a,
+      .dropdown-toggle{
+        padding:8px 10px;
+        font-size:12px;
+        border-radius:10px;
+      }
+
+      .dropdown:hover .dropdown-menu{
+        display:none;
+      }
+
+      .dropdown.open .dropdown-menu{
+        display:block;
+      }
+
+      .dropdown-menu{
+        min-width:220px;
+        max-width:92vw;
+        z-index:9999;
+      }
+
+      .user-dropdown,
+      .notification-panel{
+        right:0;
+        width:300px;
+        max-width:calc(100vw - 20px);
+      }
+
+      .notification-btn{
+        width:42px;
+        height:42px;
+        border-radius:12px;
+      }
+
+      .hero{
+        padding-top:24px;
+      }
+
+      .hero-grid{
+        padding:32px 10px 22px;
+        min-height:auto;
+        gap:22px;
+      }
+
+      .hero h1{
+        font-size:32px;
+      }
+
+      .btn-primary,
+      .btn-secondary{
+        width:100%;
+      }
+
+      .match-table{
+        display:block;
+        overflow-x:auto;
+      }
+
+      .home-game-card{
+        grid-template-columns:1fr auto 1fr;
+        text-align:center;
+        padding:15px;
+        gap:10px;
+      }
+
+      .home-team-box,
+      .home-team-box.away{
+        flex-direction:column;
+        justify-content:center;
+        text-align:center;
+      }
+
+      .home-game-center{
+        min-width:110px;
+        order:2;
+      }
+
+      .home-team-box:first-child{order:1;}
+      .home-team-box.away{order:3;}
+
+      .home-team-logo{
+        width:100px;
+        height:100px;
+      }
+    }
+
+    .patrocinio-section{
+      width:min(100% - 32px, var(--max));
+      margin:26px auto 34px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .patrocinio-card{
+      width:100%;
+      max-width:1395px;
+      background:linear-gradient(135deg, rgba(7,28,68,.9), rgba(3,17,45,.92));
+      border:1px solid var(--yellow-line);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:14px;
+      overflow:hidden;
+    }
+
+    .patrocinio-card img{
+      width:100%;
+      height:auto;
+      max-height:410px;
+      display:block;
+      border-radius:18px;
+      object-fit:contain;
+    }
+
+    @media (max-width:600px){
+      .patrocinio-section{
+        width:min(100% - 20px, var(--max));
+        margin:20px auto 28px;
+      }
+
+      .patrocinio-card{
+        padding:8px;
+        border-radius:18px;
+      }
+
+      .patrocinio-card img{
+        border-radius:12px;
+      }
+    }
+
+  </style>
+</head>
+
+<body data-pagina="inicio">
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <img src="logo-agf.png" alt="Logo AGF">
+        <div class="sidebar-brand-text">
+          <strong>AGF - Associação Goiana de Futebol</strong>
+          <span>O futebol goiano em primeiro lugar</span>
+        </div>
+      </div>
+      <button class="sidebar-close" id="sidebarClose" type="button">×</button>
+    </div>
+
+    <div class="sidebar-block">
+      <div class="sidebar-title">NAVEGAÇÃO PÚBLICA</div>
+      <div class="side-menu">
+        <a href="classificacao.html"><span class="side-icon"><i class="fa-solid fa-ranking-star"></i></span>Classificação</a>
+        <a href="jogos.html"><span class="side-icon"><i class="fa-solid fa-calendar-days"></i></span>Tabela de Jogos</a>
+        <a href="sumulas.html"><span class="side-icon"><i class="fa-solid fa-file-signature"></i></span>Súmula</a>
+        <a href="artilharia.html"><span class="side-icon"><i class="fa-solid fa-futbol"></i></span>Artilharia</a>
+        <a href="cartoes.html"><span class="side-icon"><i class="fa-solid fa-id-card"></i></span>Cartões</a>
+        <a href="suspensos.html"><span class="side-icon"><i class="fa-solid fa-ban"></i></span>Suspensos</a>
+        <a href="tecnicos.html"><span class="side-icon"><i class="fa-solid fa-user-tie"></i></span>Técnicos</a>
+        <a href="jogadores.html"><span class="side-icon"><i class="fa-solid fa-users"></i></span>Jogadores</a>
+        <a href="arbitros.html"><span class="side-icon"><i class="fa-solid fa-whistle"></i></span>Árbitros</a>
+        <a href="assistentes.html"><span class="side-icon"><i class="fa-solid fa-user-group"></i></span>Assistentes</a>
+      </div>
+    </div>
+
+    <div class="sidebar-block">
+      <div class="sidebar-title">INFORMAÇÕES</div>
+      <div class="side-menu">
+        <a href="categorias.html"><span class="side-icon"><i class="fa-solid fa-layer-group"></i></span>Categorias</a>
+        <a href="times.html"><span class="side-icon"><i class="fa-solid fa-shield-halved"></i></span>Clubes</a>
+        <a href="regulamento.html"><span class="side-icon"><i class="fa-solid fa-book"></i></span>Regulamento</a>
+        <a href="noticias.html"><span class="side-icon"><i class="fa-solid fa-newspaper"></i></span>Notícias</a>
+        <a href="galeria.html"><span class="side-icon"><i class="fa-solid fa-images"></i></span>Galeria</a>
+        <a href="fotografos.html"><span class="side-icon"><i class="fa-solid fa-camera-retro"></i></span>Fotógrafos</a>
+        <a href="#contato"><span class="side-icon"><i class="fa-solid fa-phone"></i></span>Contato</a>
+      </div>
+    </div>
+
+    <div class="sidebar-block">
+      <div class="sidebar-title">ÁREA DO SISTEMA</div>
+      <div class="side-menu">
+        <a href="login.html" id="sidebarLoginLink"><span class="side-icon"><i class="fa-solid fa-user"></i></span>Login / Cadastro</a>
+        <a href="perfil.html" id="sidebarPerfilLink" style="display:none;"><span class="side-icon"><i class="fa-solid fa-id-badge"></i></span>Meu Perfil</a>
+        <a href="minhas-sumulas.html" id="sidebarMinhasSumulasLink" style="display:none;"><span class="side-icon"><i class="fa-solid fa-file-signature"></i></span>Minhas Súmulas</a>
+        <a href="admin.html" id="menuAdmin"><span class="side-icon"><i class="fa-solid fa-gears"></i></span>Painel ADM</a>
+      </div>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+      </div>
+
+      <a href="index.html" class="topbar-logo">
+        <img src="logo-agf.png" alt="Logo AGF">
+        <div class="logo-text">
+          <strong>AGF - Associação Goiana de Futebol</strong>
+          <span>O futebol goiano em primeiro lugar</span>
+        </div>
+      </a>
+
+      <div class="top-actions">
+        <a href="login.html" class="btn-login-chip" id="loginChip">
+          <span class="login-avatar"><i class="fa-solid fa-user"></i></span>
+          <span>Login</span>
+        </a>
+
+
+
+        <div class="notification-wrap" id="notificationWrap">
+          <button type="button" class="notification-btn" id="notificationBtn" title="Notificações">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notification-count" id="notificationCount">0</span>
+          </button>
+
+          <div class="notification-panel" id="notificationPanel">
+            <div class="notification-head">
+              <strong><i class="fa-solid fa-bell"></i> Notificações</strong>
+              <button type="button" id="markAllNotificationsRead">Marcar todas como lidas</button>
+            </div>
+            <div class="notification-list" id="notificationList">
+              <div class="notification-empty">Nenhuma notificação no momento.</div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="user-chip" id="userChip">
+          <span class="login-avatar" id="userChipAvatar">
+            <i class="fa-solid fa-user"></i>
+          </span>
+          <span class="user-chip-text">
+            <strong id="userChipName">Usuário</strong>
+            <span id="userChipRole">Perfil</span>
+          </span>
+          <span class="apito-badge" id="userChipWhistle" style="display:none;">
+            <i class="fa-solid fa-whistle"></i>
+          </span>
+        </button>
+
+        <div class="user-dropdown" id="userDropdown">
+          <div class="user-card-top">
+            <div class="user-card-avatar" id="userCardAvatar">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="user-card-info">
+              <strong id="userCardName">Usuário</strong>
+              <span id="userCardEmail">email@site.com</span>
+              <div class="user-role" id="userCardRole">
+                <i class="fa-solid fa-user"></i>
+                <span>Perfil</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="user-details">
+            <div class="user-detail-row">
+              <strong>Status</strong>
+              <span id="userCardStatus">-</span>
+            </div>
+            <div class="user-detail-row">
+              <strong>Time</strong>
+              <span id="userCardTime">-</span>
+            </div>
+            <div class="user-detail-row">
+              <strong>Categoria</strong>
+              <span id="userCardCategoria">-</span>
+            </div>
+          </div>
+
+          <div class="user-menu-actions">
+            <a href="perfil.html">
+              <i class="fa-solid fa-user-pen"></i>
+              <span>Editar perfil</span>
+            </a>
+            <a href="minhas-sumulas.html" id="userMinhasSumulasLink" style="display:none;">
+              <i class="fa-solid fa-file-signature"></i>
+              <span>Minhas Súmulas</span>
+            </a>
+            <a href="admin.html" id="userAdminLink" style="display:none;">
+              <i class="fa-solid fa-gears"></i>
+              <span>Painel ADM</span>
+            </a>
+            <button type="button" id="logoutBtn">
+              <i class="fa-solid fa-right-from-bracket"></i>
+              <span>Sair</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <nav class="top-nav">
+        <ul>
+          <li><a href="index.html">Início</a></li>
+
+          <li class="dropdown" id="campeonatosDropdown">
+            <button class="dropdown-toggle" id="campeonatosToggle" type="button">
+              Campeonatos <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+              <a href="campeonatos.html">Todos os campeonatos</a>
+              <a href="classificacao.html">Classificação</a>
+              <a href="artilharia.html">Artilharia</a>
+              <a href="categorias.html">Categoria</a>
+              <a href="cartoes.html">Cartões</a>
+              <a href="suspensos.html">Suspensos</a>
+              <a href="regulamento.html">Regulamentos</a>
+            </div>
+          </li>
+
+          <li><a href="jogadores.html">Jogadores</a></li>
+
+          <li class="dropdown" id="participantesDropdown">
+            <button class="dropdown-toggle" id="participantesToggle" type="button">
+              Participantes <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+              <a href="times.html">Equipes</a>
+              <a href="tecnicos.html">Técnicos</a>
+              <a href="arbitros.html">Árbitros</a>
+              <a href="assistentes.html">Assistentes</a>
+              <a href="fotografos.html">Fotógrafos</a>
+            </div>
+          </li>
+
+          <li><a href="galeria.html">Galeria</a></li>
+          <li><a href="sumulas.html" onclick="event.stopPropagation()">Súmula</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-card">
+          <div class="hero-grid">
+            <div class="hero-content">
+              <div class="eyebrow">
+                <i class="fa-solid fa-trophy"></i>
+                AGF Oficial
+              </div>
+
+              <h1>Bem-vindo à AGF - Associação Goiana de Futebol</h1>
+
+              <p>O futebol goiano em primeiro lugar.</p>
+
+              <p>
+                Competição, formação e desenvolvimento para revelar talentos
+                e fortalecer o futebol de base em Goiás.
+              </p>
+
+              <div class="hero-actions">
+                <a href="campeonatos.html" class="btn-primary">
+                  <i class="fa-solid fa-trophy"></i> Ver Campeonatos
+                </a>
+                <a href="regulamento.html" class="btn-secondary">
+                  <i class="fa-solid fa-clipboard-list"></i> Regulamentos
+                </a>
+              </div>
+
+              <div class="status-user" id="statusUser"></div>
+            </div>
+
+            <div class="hero-art">
+              <img src="hero-liga.jpeg" alt="AGF Elite de Base" onerror="this.src='fundo.png'">
+            </div>
+          </div>
+        </div>
+
+        <div class="cards-pilares">
+          <div class="pillar">
+            <div class="pillar-icon"><i class="fa-solid fa-trophy"></i></div>
+            <div class="pillar-text">
+              <h3>Competição de alto nível</h3>
+              <p>Jogos organizados e arbitragem qualificada.</p>
+            </div>
+          </div>
+
+          <div class="pillar">
+            <div class="pillar-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="pillar-text">
+              <h3>Formação de atletas</h3>
+              <p>Desenvolvimento dentro e fora de campo.</p>
+            </div>
+          </div>
+
+          <div class="pillar">
+            <div class="pillar-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="pillar-text">
+              <h3>Desenvolvimento que transforma</h3>
+              <p>Estrutura que impulsiona sonhos e resultados.</p>
+            </div>
+          </div>
+
+          <div class="pillar">
+            <div class="pillar-icon"><i class="fa-solid fa-handshake"></i></div>
+            <div class="pillar-text">
+              <h3>Respeito, união e propósito</h3>
+              <p>Valores que constroem campeões para a vida.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-grid">
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-head-title">
+                <div class="panel-head-icon"><i class="fa-solid fa-calendar-days"></i></div>
+                <h2>Próximos Jogos</h2>
+              </div>
+              <a href="jogos.html">Ver todos <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div id="gamesTableBody" class="home-games-list"></div>
+          </section>
+
+          <aside class="panel">
+            <div class="panel-head">
+              <div class="panel-head-title">
+                <div class="panel-head-icon"><i class="fa-solid fa-newspaper"></i></div>
+                <h2>Últimas Notícias</h2>
+              </div>
+              <a href="noticias.html">Ver notícias <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="news-list" id="newsList"></div>
+          </aside>
+        </div>
+
+
+        <section class="patrocinio-section">
+          <div class="patrocinio-card">
+            <img src="patrocinio.png?v=1395" alt="Patrocínio Oficial">
+          </div>
+        </section>
+
+        <section class="cta-banner">
+          <div class="cta-banner-inner">
+            <div>
+              <h3>Faça parte dessa história!</h3>
+              <p>Inscreva sua equipe e viva o futebol de base no mais alto nível.</p>
+            </div>
+
+            <a
+              href="https://wa.me/5562981916316?text=Ol%C3%A1%2C%20quero%20participar%20da%20Associa%C3%A7%C3%A3o%20Goiana%20de%20Futebol."
+              class="btn-primary"
+              target="_blank"
+            >
+              <i class="fa-solid fa-trophy"></i> Quero Participar!
+            </a>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contato">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-card">
+          <div class="footer-brand">
+            <img src="logo-agf.png" alt="Logo AGF">
+            <div class="footer-brand-text">
+              <h3>AGF - Associação Goiana de Futebol</h3>
+              <p>O futebol goiano em primeiro lugar.</p>
+            </div>
+          </div>
+
+          <div class="footer-social">
+            <a href="https://www.instagram.com/" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.facebook.com/" target="_blank" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="https://www.youtube.com/" target="_blank" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-card">
+          <h4>Acesso Rápido</h4>
+          <a href="index.html">Início</a>
+          <a href="campeonatos.html">Campeonatos</a>
+          <a href="times.html">Equipes</a>
+          <a href="jogos.html">Resultados</a>
+          <a href="arbitros.html">Árbitros</a>
+          <a href="#contato">Contato</a>
+        </div>
+
+        <div class="footer-card">
+          <h4>Contato</h4>
+
+          <a href="https://wa.me/5562984284785" target="_blank" class="footer-contact-line">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>(62) 98428-4785</span>
+          </a>
+
+          <a href="mailto:agfoficial@gmail.com" class="footer-contact-line">
+            <i class="fa-solid fa-envelope"></i>
+            <span>agfoficial@gmail.com</span>
+          </a>
+
+          <div class="footer-contact-line">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>Goiânia - GO</span>
+          </div>
+        </div>
+
+        <div class="footer-card">
+          <h4>Siga a AGF</h4>
+          <p style="color: var(--muted); line-height:1.6; margin-bottom:12px;">Acompanhe nossas redes sociais</p>
+
+          <div class="footer-social">
+            <a href="https://www.instagram.com/" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.facebook.com/" target="_blank" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="https://www.youtube.com/" target="_blank" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="copyright">
+        © 2026 AGF - Associação Goiana de Futebol. Todos os direitos reservados.
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import { doc, getDoc, collection, getDocs, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const menuToggle = document.getElementById("menuToggle");
+    const sidebarClose = document.getElementById("sidebarClose");
+    const campeonatosDropdown = document.getElementById("campeonatosDropdown");
+    const campeonatosToggle = document.getElementById("campeonatosToggle");
+    const participantesDropdown = document.getElementById("participantesDropdown");
+    const participantesToggle = document.getElementById("participantesToggle");
+    const gamesTableBody = document.getElementById("gamesTableBody");
+    const newsList = document.getElementById("newsList");
+    const userChip = document.getElementById("userChip");
+    const userDropdown = document.getElementById("userDropdown");
+
+    const loginChip = document.getElementById("loginChip");
+    const sidebarLoginLink = document.getElementById("sidebarLoginLink");
+    const sidebarPerfilLink = document.getElementById("sidebarPerfilLink");
+    const sidebarMinhasSumulasLink = document.getElementById("sidebarMinhasSumulasLink");
+    const menuAdmin = document.getElementById("menuAdmin");
+    const userChipEl = document.getElementById("userChip");
+    const userDropdownEl = document.getElementById("userDropdown");
+    const userChipName = document.getElementById("userChipName");
+    const userChipRole = document.getElementById("userChipRole");
+    const userChipWhistle = document.getElementById("userChipWhistle");
+    const userChipAvatar = document.getElementById("userChipAvatar");
+    const userCardAvatar = document.getElementById("userCardAvatar");
+    const userCardName = document.getElementById("userCardName");
+    const userCardEmail = document.getElementById("userCardEmail");
+    const userCardRole = document.getElementById("userCardRole");
+    const userCardStatus = document.getElementById("userCardStatus");
+    const userCardTime = document.getElementById("userCardTime");
+    const userCardCategoria = document.getElementById("userCardCategoria");
+    const userAdminLink = document.getElementById("userAdminLink");
+    const userMinhasSumulasLink = document.getElementById("userMinhasSumulasLink");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const notificationWrap = document.getElementById("notificationWrap");
+    const notificationBtn = document.getElementById("notificationBtn");
+    const notificationPanel = document.getElementById("notificationPanel");
+    const notificationCount = document.getElementById("notificationCount");
+    const notificationList = document.getElementById("notificationList");
+    const markAllNotificationsRead = document.getElementById("markAllNotificationsRead");
+
+    let sumulasCache = [];
+    let classificacaoCache = [];
+    let usuarioLogadoAtual = null;
+    let dadosUsuarioAtual = null;
+    let unsubscribeNotificacoes = null;
+    let notificacoesCache = [];
+
+    function isMobile(){
+      return window.innerWidth <= 700;
+    }
+
+    function openSidebar(){
+      if(!sidebar || !sidebarOverlay) return;
+      sidebar.classList.add("open");
+      sidebarOverlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeSidebar(){
+      if(!sidebar || !sidebarOverlay) return;
+      sidebar.classList.remove("open");
+      sidebarOverlay.classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    function resetDropdown(dropdown){
+      if(!dropdown) return;
+      dropdown.classList.remove("open");
+      dropdown.classList.remove("mobile-fixed");
+
+      const menu = dropdown.querySelector(".dropdown-menu");
+      if(menu){
+        menu.style.top = "";
+      }
+    }
+
+    function closeAllDropdowns(){
+      resetDropdown(campeonatosDropdown);
+      resetDropdown(participantesDropdown);
+      if(userDropdown) userDropdown.classList.remove("open");
+      if(notificationPanel) notificationPanel.classList.remove("open");
+    }
+
+    function openMenuDropdown(dropdown, toggle){
+      if(!dropdown || !toggle) return;
+
+      const vaiAbrir = !dropdown.classList.contains("open");
+      closeAllDropdowns();
+
+      if(!vaiAbrir) return;
+
+      dropdown.classList.add("open");
+
+      if(isMobile()){
+        dropdown.classList.add("mobile-fixed");
+        const menu = dropdown.querySelector(".dropdown-menu");
+        const rect = toggle.getBoundingClientRect();
+
+        if(menu){
+          menu.style.top = (rect.bottom + 8) + "px";
+        }
+      }
+    }
+
+    if(menuToggle){
+      menuToggle.addEventListener("click", function(event){
+        event.stopPropagation();
+        openSidebar();
+      });
+    }
+
+    if(sidebarClose){
+      sidebarClose.addEventListener("click", closeSidebar);
+    }
+
+    if(sidebarOverlay){
+      sidebarOverlay.addEventListener("click", closeSidebar);
+    }
+
+    if(campeonatosToggle){
+      campeonatosToggle.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        openMenuDropdown(campeonatosDropdown, campeonatosToggle);
+      });
+    }
+
+    if(participantesToggle){
+      participantesToggle.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        openMenuDropdown(participantesDropdown, participantesToggle);
+      });
+    }
+
+    if(userChip){
+      userChip.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
+
+        const vaiAbrir = userDropdown && !userDropdown.classList.contains("open");
+        closeAllDropdowns();
+
+        if(vaiAbrir && userDropdown){
+          userDropdown.classList.add("open");
+        }
+      });
+    }
+
+
+    if(notificationBtn){
+      notificationBtn.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
+
+        const vaiAbrir = notificationPanel && !notificationPanel.classList.contains("open");
+        closeAllDropdowns();
+
+        if(vaiAbrir && notificationPanel){
+          notificationPanel.classList.add("open");
+        }
+      });
+    }
+
+    document.addEventListener("click", function(event){
+      if(event.target.closest("a")) return;
+
+      const clickedInsideSidebar = sidebar && sidebar.contains(event.target);
+      const clickedMenuToggle = menuToggle && menuToggle.contains(event.target);
+      const clickedCampeonatos = campeonatosDropdown && campeonatosDropdown.contains(event.target);
+      const clickedParticipantes = participantesDropdown && participantesDropdown.contains(event.target);
+      const clickedUserMenu = userDropdown && userDropdown.contains(event.target);
+      const clickedUserChip = userChip && userChip.contains(event.target);
+      const clickedNotificationPanel = notificationPanel && notificationPanel.contains(event.target);
+      const clickedNotificationBtn = notificationBtn && notificationBtn.contains(event.target);
+
+      if(sidebar && sidebar.classList.contains("open") && !clickedInsideSidebar && !clickedMenuToggle){
+        closeSidebar();
+      }
+
+      if(!clickedCampeonatos && !clickedParticipantes && !clickedUserMenu && !clickedUserChip && !clickedNotificationPanel && !clickedNotificationBtn){
+        closeAllDropdowns();
+      }
+    });
+
+    window.addEventListener("resize", closeAllDropdowns);
+
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        closeSidebar();
+        closeAllDropdowns();
+      }
+    });
+
+    function normalizarTexto(texto){
+      return String(texto || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function normalizarTipo(tipo){
+      const valor = normalizarTexto(tipo);
+      if(valor === "admin" || valor === "administrador") return "admin";
+      if(valor === "arbitro" || valor === "árbitro") return "arbitro";
+      if(valor === "assistente") return "assistente";
+      if(valor === "tecnico" || valor === "técnico") return "tecnico";
+      if(valor === "jogador") return "jogador";
+      if(valor === "pai_atleta") return "pai_atleta";
+      if(valor === "fotografo" || valor === "fotógrafo") return "fotografo";
+      if(valor === "torcedor") return "torcedor";
+      return valor || "torcedor";
+    }
+
+    function pegarTiposUsuario(dados){
+      const bruto = dados.tipoUsuario ?? dados.tipousuario ?? dados.tipo ?? dados.perfil ?? "torcedor";
+
+      if(Array.isArray(bruto)){
+        return bruto.map(t => normalizarTipo(t)).filter(Boolean);
+      }
+
+      return [normalizarTipo(bruto)].filter(Boolean);
+    }
+
+    function temTipo(tipos, tipo){
+      return tipos.includes(normalizarTipo(tipo));
+    }
+
+    function tipoPrincipal(tipos){
+      if(temTipo(tipos, "admin")) return "admin";
+      if(temTipo(tipos, "arbitro")) return "arbitro";
+      if(temTipo(tipos, "assistente")) return "assistente";
+      if(temTipo(tipos, "tecnico")) return "tecnico";
+      if(temTipo(tipos, "jogador")) return "jogador";
+      if(temTipo(tipos, "pai_atleta")) return "pai_atleta";
+      if(temTipo(tipos, "fotografo")) return "fotografo";
+      return tipos[0] || "torcedor";
+    }
+
+    function tipoLabel(tipo){
+      const valor = normalizarTipo(tipo);
+      if(valor === "admin") return "Administrador";
+      if(valor === "arbitro") return "Árbitro";
+      if(valor === "assistente") return "Assistente";
+      if(valor === "tecnico") return "Técnico";
+      if(valor === "jogador") return "Jogador";
+      if(valor === "pai_atleta") return "Pai de Atleta";
+      if(valor === "fotografo") return "Fotógrafo";
+      return "Torcedor";
+    }
+
+    function tiposLabel(tipos){
+      const unicos = [...new Set(tipos.map(t => normalizarTipo(t)).filter(Boolean))];
+      if(!unicos.length) return "Torcedor";
+      return unicos.map(tipoLabel).join(" / ");
+    }
+
+    function preencherAvatar(elemento, foto){
+      if(!elemento) return;
+      elemento.innerHTML = foto ? `<img src="${foto}" alt="Foto do usuário">` : `<i class="fa-solid fa-user"></i>`;
+    }
+
+
+
+    function dataNotificacao(item){
+      const valor = item.criadoEm || item.data || item.atualizadoEm || item.createdAt || "";
+      if(valor && typeof valor.toDate === "function") return valor.toDate().getTime();
+      const d = new Date(valor).getTime();
+      return Number.isFinite(d) ? d : 0;
+    }
+
+    function formatarDataNotificacao(item){
+      const ts = dataNotificacao(item);
+      if(!ts) return "Agora";
+      return new Date(ts).toLocaleString("pt-BR", {day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit"});
+    }
+
+    function notificacaoEhParaUsuario(item,dados,user){
+      if(!item || !user) return false;
+      if(item.publica === true || item.paraTodos === true || item.destino === "todos") return true;
+
+      const uid = user.uid;
+      const tipo = tipoPrincipal(pegarTiposUsuario(dados || {}));
+      const email = normalizarTexto(dados?.email || user.email || "");
+
+      const ids = [item.uid, item.usuarioId, item.destinatarioUid, item.destinoUid, item.paraUid].filter(Boolean);
+      if(ids.includes(uid)) return true;
+
+      if(Array.isArray(item.destinatarios) && item.destinatarios.includes(uid)) return true;
+      if(Array.isArray(item.usuarios) && item.usuarios.includes(uid)) return true;
+
+      if(Array.isArray(item.tipos) && item.tipos.map(normalizarTipo).includes(tipo)) return true;
+      if(Array.isArray(item.perfis) && item.perfis.map(normalizarTipo).includes(tipo)) return true;
+      if(normalizarTipo(item.tipoDestino || item.perfilDestino || "") === tipo) return true;
+
+      const emailDestino = normalizarTexto(item.email || item.destinatarioEmail || "");
+      if(email && emailDestino && email === emailDestino) return true;
+
+      return false;
+    }
+
+    function notificacaoLida(item,user){
+      if(!user) return false;
+      if(item.lida === true || item.lido === true) return true;
+      if(Array.isArray(item.lidaPor) && item.lidaPor.includes(user.uid)) return true;
+      if(item.lidaPor && item.lidaPor[user.uid] === true) return true;
+      return false;
+    }
+
+    function renderizarNotificacoes(){
+      if(!notificationList || !notificationCount || !usuarioLogadoAtual) return;
+
+      const naoLidas = notificacoesCache.filter(n=>!notificacaoLida(n,usuarioLogadoAtual));
+
+      if(naoLidas.length){
+        notificationCount.style.display = "flex";
+        notificationCount.textContent = naoLidas.length > 99 ? "99+" : String(naoLidas.length);
+      }else{
+        notificationCount.style.display = "none";
+        notificationCount.textContent = "0";
+      }
+
+      if(!notificacoesCache.length){
+        notificationList.innerHTML = `<div class="notification-empty">Nenhuma notificação no momento.</div>`;
+        return;
+      }
+
+      notificationList.innerHTML = notificacoesCache.slice(0,12).map(item=>{
+        const lida = notificacaoLida(item,usuarioLogadoAtual);
+        const titulo = escapeHtml(item.titulo || item.title || "Notificação");
+        const texto = escapeHtml(item.mensagem || item.texto || item.descricao || "Você tem uma nova atualização no sistema.");
+        const data = escapeHtml(formatarDataNotificacao(item));
+        const link = item.link || item.url || "";
+
+        const tag = link ? "a" : "button";
+        const href = link ? `href="${escapeHtml(link)}"` : "type=\"button\"";
+
+        return `
+          <${tag} class="notification-item ${lida ? "" : "nao-lida"}" ${href} onclick="marcarNotificacaoLida('${item.id}')">
+            <strong>${titulo}</strong>
+            <span>${texto}</span>
+            <small>${lida ? "Lida" : "Nova"} • ${data}</small>
+          </${tag}>
+        `;
+      }).join("");
+    }
+
+    function iniciarNotificacoes(user,dados){
+      usuarioLogadoAtual = user;
+      dadosUsuarioAtual = dados;
+
+      if(notificationWrap) notificationWrap.style.display = "block";
+
+      if(unsubscribeNotificacoes){
+        unsubscribeNotificacoes();
+        unsubscribeNotificacoes = null;
+      }
+
+      try{
+        unsubscribeNotificacoes = onSnapshot(collection(db,"notificacoes"), snap=>{
+          notificacoesCache = snap.docs
+            .map(d=>({id:d.id,...d.data()}))
+            .filter(item=>notificacaoEhParaUsuario(item,dados,user))
+            .sort((a,b)=>dataNotificacao(b)-dataNotificacao(a));
+
+          renderizarNotificacoes();
+        }, error=>{
+          console.error("Erro ao ouvir notificações:",error);
+          notificacoesCache = [];
+          renderizarNotificacoes();
+        });
+      }catch(error){
+        console.error("Erro ao iniciar notificações:",error);
+      }
+    }
+
+    function pararNotificacoes(){
+      usuarioLogadoAtual = null;
+      dadosUsuarioAtual = null;
+      notificacoesCache = [];
+
+      if(unsubscribeNotificacoes){
+        unsubscribeNotificacoes();
+        unsubscribeNotificacoes = null;
+      }
+
+      if(notificationWrap) notificationWrap.style.display = "none";
+      if(notificationPanel) notificationPanel.classList.remove("open");
+      if(notificationCount){
+        notificationCount.style.display = "none";
+        notificationCount.textContent = "0";
+      }
+      if(notificationList){
+        notificationList.innerHTML = `<div class="notification-empty">Nenhuma notificação no momento.</div>`;
+      }
+    }
+
+    window.marcarNotificacaoLida = async function(id){
+      if(!id || !usuarioLogadoAtual) return;
+
+      const item = notificacoesCache.find(n=>n.id===id);
+      if(!item || notificacaoLida(item,usuarioLogadoAtual)) return;
+
+      try{
+        await updateDoc(doc(db,"notificacoes",id),{
+          [`lidaPor.${usuarioLogadoAtual.uid}`]:true,
+          atualizadoEm:new Date().toISOString()
+        });
+      }catch(error){
+        console.error("Erro ao marcar notificação:",error);
+      }
+    };
+
+    async function marcarTodasNotificacoesLidas(){
+      if(!usuarioLogadoAtual) return;
+
+      const pendentes = notificacoesCache.filter(n=>!notificacaoLida(n,usuarioLogadoAtual));
+
+      await Promise.allSettled(pendentes.map(item=>
+        updateDoc(doc(db,"notificacoes",item.id),{
+          [`lidaPor.${usuarioLogadoAtual.uid}`]:true,
+          atualizadoEm:new Date().toISOString()
+        })
+      ));
+    }
+
+    if(markAllNotificationsRead){
+      markAllNotificationsRead.addEventListener("click", async function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        await marcarTodasNotificacoesLidas();
+      });
+    }
+
+    function mostrarUsuarioDeslogado(){
+      pararNotificacoes();
+      if(loginChip) loginChip.style.display = "inline-flex";
+      if(userChipEl) userChipEl.style.display = "none";
+      if(userDropdownEl) userDropdownEl.classList.remove("open");
+      if(menuAdmin) menuAdmin.style.display = "none";
+      if(userAdminLink) userAdminLink.style.display = "none";
+      if(userMinhasSumulasLink) userMinhasSumulasLink.style.display = "none";
+      if(sidebarMinhasSumulasLink) sidebarMinhasSumulasLink.style.display = "none";
+      if(sidebarLoginLink) sidebarLoginLink.style.display = "flex";
+      if(sidebarPerfilLink) sidebarPerfilLink.style.display = "none";
+    }
+
+    function mostrarUsuarioLogado(dados, user){
+      const tiposUsuario = pegarTiposUsuario(dados);
+      const tipo = tipoPrincipal(tiposUsuario);
+      const nome = dados.nomeExibicao || dados.nome || dados.nomeCompleto || user.email || "Usuário";
+      const foto = dados.fotoPerfil || dados.foto || "";
+      const aprovado = dados.aprovado === true;
+      const autorizado = dados.autorizado === true;
+      const ehAdmin = temTipo(tiposUsuario, "admin");
+      const ehArbitro = temTipo(tiposUsuario, "arbitro");
+      const podePainel = (ehAdmin && aprovado && autorizado) || (ehArbitro && aprovado && autorizado);
+      const labelPerfil = tiposLabel(tiposUsuario);
+
+      if(loginChip) loginChip.style.display = "none";
+      if(userChipEl) userChipEl.style.display = "inline-flex";
+      if(sidebarLoginLink) sidebarLoginLink.style.display = "none";
+      if(sidebarPerfilLink) sidebarPerfilLink.style.display = "flex";
+      if(menuAdmin) menuAdmin.style.display = podePainel ? "flex" : "none";
+      if(userAdminLink) userAdminLink.style.display = podePainel ? "flex" : "none";
+      if(sidebarMinhasSumulasLink) sidebarMinhasSumulasLink.style.display = ehArbitro ? "flex" : "none";
+      if(userMinhasSumulasLink) userMinhasSumulasLink.style.display = ehArbitro ? "flex" : "none";
+
+      if(userChipName) userChipName.textContent = nome;
+      if(userChipRole) userChipRole.textContent = labelPerfil;
+      if(userCardName) userCardName.textContent = nome;
+      if(userCardEmail) userCardEmail.textContent = dados.email || user.email || "-";
+      if(userCardStatus) userCardStatus.textContent = aprovado && autorizado ? "Aprovado / Autorizado" : aprovado ? "Aprovado" : "Pendente";
+      if(userCardTime) userCardTime.textContent = dados.time || dados.timeNome || "-";
+      if(userCardCategoria) userCardCategoria.textContent = dados.categoria || "-";
+
+      if(userCardRole){
+        userCardRole.innerHTML = `<i class="${ehArbitro ? "fa-solid fa-whistle" : "fa-solid fa-user"}"></i><span>${labelPerfil}</span>`;
+      }
+
+      if(userChipWhistle) userChipWhistle.style.display = ehArbitro ? "inline-flex" : "none";
+
+      preencherAvatar(userChipAvatar, foto);
+      preencherAvatar(userCardAvatar, foto);
+      iniciarNotificacoes(user,dados);
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if(!user){
+        mostrarUsuarioDeslogado();
+        return;
+      }
+
+      try{
+        const ref = doc(db, "usuarios", user.uid);
+        const snap = await getDoc(ref);
+
+        if(!snap.exists()){
+          mostrarUsuarioDeslogado();
+          return;
+        }
+
+        mostrarUsuarioLogado(snap.data(), user);
+      }catch(error){
+        console.error("Erro ao carregar usuário da página inicial:", error);
+        mostrarUsuarioDeslogado();
+      }
+    });
+
+    if(logoutBtn){
+      logoutBtn.addEventListener("click", async function(){
+        try{
+          await signOut(auth);
+          window.location.href = "index.html";
+        }catch(error){
+          console.error("Erro ao sair:", error);
+        }
+      });
+    }
+
+
+
+    function escapeHtml(texto){
+      return String(texto || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+    }
+
+    function pegarLogoTime(valor, fallback = "logo-agf.png"){
+      if(valor && typeof valor === "object"){
+        return valor.logo || valor.escudo || valor.foto || valor.imagem || fallback;
+      }
+      return fallback;
+    }
+
+    function nomeTimeDoJogo(valor, fallback){
+      if(valor && typeof valor === "object"){
+        return valor.nome || valor.nomeTime || valor.time || valor.equipe || fallback;
+      }
+      return valor || fallback;
+    }
+
+    function formatarDataPartes(dados){
+      const dataHora = valorCampo(dados, ["dataHora", "data", "dataJogo"], "");
+      const horaCampo = valorCampo(dados, ["hora", "horario"], "");
+
+      if(dataHora && typeof dataHora.toDate === "function"){
+        const d = dataHora.toDate();
+        return {
+          data:d.toLocaleDateString("pt-BR"),
+          hora:d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" })
+        };
+      }
+
+      const data = String(dataHora || "").trim();
+
+      if(data.includes("T")){
+        const d = new Date(data);
+        if(!isNaN(d.getTime())){
+          return {
+            data:d.toLocaleDateString("pt-BR"),
+            hora:d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" })
+          };
+        }
+      }
+
+      return {
+        data:data || "-",
+        hora:horaCampo || "-"
+      };
+    }
+
+    function buscarRegistroClassificacao(jogo, timeId, nome){
+      const nomeNorm = normalizarTexto(nome);
+      return classificacaoCache.find(item=>{
+        const mesmoTime =
+          item.timeId === timeId ||
+          item.idTime === timeId ||
+          item.equipeId === timeId ||
+          normalizarTexto(item.timeNome || item.nomeTime || item.nome || item.time || item.equipe) === nomeNorm;
+
+        const mesmoCampeonato =
+          !item.campeonatoId || !jogo.campeonatoId || item.campeonatoId === jogo.campeonatoId ||
+          normalizarTexto(item.campeonato || item.campeonatoNome) === normalizarTexto(jogo.campeonato || jogo.campeonatoNome);
+
+        const mesmaCategoria =
+          !item.categoria || !jogo.categoria || normalizarTexto(item.categoria) === normalizarTexto(jogo.categoria);
+
+        return mesmoTime && mesmoCampeonato && mesmaCategoria;
+      }) || null;
+    }
+
+    function textoPosicao(jogo, timeId, nome){
+      const c = buscarRegistroClassificacao(jogo, timeId, nome);
+      if(!c) return "Tabela: a confirmar";
+      const pos = c.posicao || c.classificacao || c.rank || c.colocacao || "-";
+      const pts = c.pontos ?? c.pts ?? c.P ?? "-";
+      const sg = c.saldo ?? c.saldoGols ?? c.sg ?? "-";
+      return `${pos}º lugar • ${pts} pts • SG ${sg}`;
+    }
+
+    async function carregarClassificacaoFirebase(){
+      classificacaoCache = [];
+      const colecoes = ["classificacao", "tabela", "tabelas"];
+
+      for(const nomeColecao of colecoes){
+        try{
+          const snap = await getDocs(collection(db, nomeColecao));
+          snap.forEach(d=>classificacaoCache.push({ id:d.id, ...d.data() }));
+          if(classificacaoCache.length) break;
+        }catch(error){
+          console.warn(`Não foi possível carregar ${nomeColecao}:`, error);
+        }
+      }
+    }
+
+    function valorCampo(obj, chaves, fallback = ""){
+      for(const chave of chaves){
+        if(obj && obj[chave] !== undefined && obj[chave] !== null && obj[chave] !== ""){
+          return obj[chave];
+        }
+      }
+      return fallback;
+    }
+
+    function dataTimestamp(valor){
+      if(!valor) return 0;
+
+      if(typeof valor.toDate === "function"){
+        return valor.toDate().getTime();
+      }
+
+      const data = new Date(valor).getTime();
+
+      if(!isNaN(data)){
+        return data;
+      }
+
+      const partes = String(valor).match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+
+      if(partes){
+        return new Date(`${partes[3]}-${partes[2]}-${partes[1]}T00:00:00`).getTime();
+      }
+
+      return 0;
+    }
+
+    function formatarDataJogo(dados){
+      const dataHora = valorCampo(dados, ["dataHora", "data", "dataJogo"], "");
+      const hora = valorCampo(dados, ["hora", "horario"], "");
+
+      if(dataHora && typeof dataHora.toDate === "function"){
+        const d = dataHora.toDate();
+        return d.toLocaleDateString("pt-BR") + " - " + d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
+      }
+
+      const data = String(dataHora || "").trim();
+
+      if(data.includes("T")){
+        const d = new Date(data);
+        if(!isNaN(d.getTime())){
+          return d.toLocaleDateString("pt-BR") + " - " + d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
+        }
+      }
+
+      if(data && hora) return `${data} - ${hora}`;
+      if(data) return data;
+      return "-";
+    }
+
+    function pegarNomeTime(valor, fallback){
+      if(valor && typeof valor === "object"){
+        return valor.nome || valor.nomeTime || valor.time || fallback;
+      }
+      return valor || fallback;
+    }
+
+    function montarConfronto(dados){
+      const mandante = pegarNomeTime(
+        dados.timeA || dados.timeMandante || dados.mandante,
+        dados.timeMandanteNome || dados.mandanteNome || "Mandante"
+      );
+
+      const visitante = pegarNomeTime(
+        dados.timeB || dados.timeVisitante || dados.visitante,
+        dados.timeVisitanteNome || dados.visitanteNome || "Visitante"
+      );
+
+      return `${mandante} x ${visitante}`;
+    }
+
+    function pegarSumulaDoJogo(jogoId){
+      return sumulasCache.find(s =>
+        s.id === jogoId ||
+        s.jogoId === jogoId ||
+        s.idJogo === jogoId
+      ) || null;
+    }
+
+    function jogoFinalizado(jogo){
+      const s = pegarSumulaDoJogo(jogo.id);
+      const statusJogo = normalizarTexto(jogo.status);
+      const statusSumula = normalizarTexto(s?.status);
+
+      return (
+        jogo.sumulaFinalizada === true ||
+        statusJogo === "finalizado" ||
+        s?.sumulaFinalizada === true ||
+        s?.publica === true ||
+        s?.publico === true ||
+        statusSumula === "finalizado"
+      );
+    }
+
+    function statusJogoHtml(jogo){
+      if(jogoFinalizado(jogo)){
+        return `
+          <a href="sumula-publica.html?id=${encodeURIComponent(jogo.id)}" style="color:var(--yellow);font-weight:900;">
+            Ver Súmula
+          </a>
+        `;
+      }
+
+      const status = valorCampo(jogo, ["status"], "Agendado");
+      return status || "Agendado";
+    }
+
+    function renderizarJogosVazio(){
+      gamesTableBody.innerHTML = `
+        <div class="home-games-empty">Nenhum jogo publicado no momento.</div>
+      `;
+    }
+
+    async function carregarSumulasFirebase(){
+      try{
+        const snap = await getDocs(collection(db, "sumulas"));
+        sumulasCache = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+      }catch(error){
+        console.error("Erro ao carregar súmulas:", error);
+        sumulasCache = [];
+      }
+    }
+
+    async function carregarJogosFirebase(){
+      if(!gamesTableBody) return;
+
+      try{
+        await Promise.allSettled([
+          carregarSumulasFirebase(),
+          carregarClassificacaoFirebase()
+        ]);
+
+        const snap = await getDocs(collection(db, "jogos"));
+
+        if(snap.empty){
+          renderizarJogosVazio();
+          return;
+        }
+
+        const jogos = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+
+        const ordenados = jogos
+          .sort((a,b)=>{
+            const dataA = dataTimestamp(valorCampo(a, ["dataHora", "data", "dataJogo"], ""));
+            const dataB = dataTimestamp(valorCampo(b, ["dataHora", "data", "dataJogo"], ""));
+            return dataA - dataB;
+          })
+          .slice(0,4);
+
+        if(!ordenados.length){
+          renderizarJogosVazio();
+          return;
+        }
+
+        gamesTableBody.innerHTML = "";
+
+        ordenados.forEach(jogo=>{
+          const nomeA = nomeTimeDoJogo(jogo.timeA || jogo.timeMandante || jogo.mandante, jogo.timeMandanteNome || jogo.mandanteNome || "Mandante");
+          const nomeB = nomeTimeDoJogo(jogo.timeB || jogo.timeVisitante || jogo.visitante, jogo.timeVisitanteNome || jogo.visitanteNome || "Visitante");
+          const logoA = pegarLogoTime(jogo.timeA || jogo.timeMandante || jogo.mandante);
+          const logoB = pegarLogoTime(jogo.timeB || jogo.timeVisitante || jogo.visitante);
+          const dataInfo = formatarDataPartes(jogo);
+          const local = jogo.local || jogo.campo || jogo.estadio || "-";
+          const card = document.createElement("article");
+          card.className = "home-game-card";
+
+          card.innerHTML = `
+            <div class="home-team-box">
+              <img class="home-team-logo" src="${escapeHtml(logoA)}" alt="${escapeHtml(nomeA)}" onerror="this.src='logo-agf.png'">
+              <div>
+                <div class="home-team-name">${escapeHtml(nomeA)}</div>
+
+              </div>
+            </div>
+
+            <div class="home-game-center">
+              <div class="home-game-versus">X</div>
+              <div class="home-game-meta">
+                <span><strong>${escapeHtml(jogo.categoria || "Categoria")}</strong></span>
+                <span><i class="fa-solid fa-calendar-days"></i> ${escapeHtml(dataInfo.data)} • ${escapeHtml(dataInfo.hora)}</span>
+                <span><i class="fa-solid fa-location-dot"></i> ${escapeHtml(local)}</span>
+              </div>
+              <div class="home-game-status">${statusJogoHtml(jogo)}</div>
+            </div>
+
+            <div class="home-team-box away">
+              <img class="home-team-logo" src="${escapeHtml(logoB)}" alt="${escapeHtml(nomeB)}" onerror="this.src='logo-agf.png'">
+              <div>
+                <div class="home-team-name">${escapeHtml(nomeB)}</div>
+
+              </div>
+            </div>
+          `;
+
+          gamesTableBody.appendChild(card);
+        });
+
+      }catch(error){
+        console.error("Erro ao carregar jogos do Firebase:", error);
+        renderizarJogosVazio();
+      }
+    }
+
+    function dataNoticia(item){
+      return dataTimestamp(valorCampo(item, ["publicadaEm", "criadoEm", "data", "atualizadoEm"], ""));
+    }
+
+    function noticiaPublicada(item){
+      return (
+        item.publicado === true ||
+        item.publica === true ||
+        item.status === "publicado" ||
+        item.status === "ativa" ||
+        item.status === "ativo" ||
+        item.status === undefined
+      );
+    }
+
+    function renderizarNoticiasVazio(){
+      newsList.innerHTML = `
+        <div class="news-item">
+          <h3>Nenhuma notícia publicada</h3>
+          <p>As novidades da AGF aparecerão aqui assim que o ADM publicar.</p>
+        </div>
+      `;
+    }
+
+    async function carregarNoticiasFirebase(){
+      if(!newsList) return;
+
+      try{
+        const snap = await getDocs(collection(db, "noticias"));
+
+        if(snap.empty){
+          renderizarNoticiasVazio();
+          return;
+        }
+
+        const noticias = snap.docs
+          .map(d => ({ id:d.id, ...d.data() }))
+          .filter(noticiaPublicada)
+          .sort((a,b)=>dataNoticia(b) - dataNoticia(a))
+          .slice(0,3);
+
+        if(!noticias.length){
+          renderizarNoticiasVazio();
+          return;
+        }
+
+        newsList.innerHTML = "";
+
+        noticias.forEach(item=>{
+          const titulo = valorCampo(item, ["titulo", "title"], "Notícia da AGF");
+          const texto = valorCampo(item, ["resumo", "descricao", "texto", "conteudo"], "Clique para visualizar a notícia completa.");
+          const link = `noticia.html?id=${encodeURIComponent(item.id)}`;
+
+          const article = document.createElement("a");
+          article.className = "news-item";
+          article.href = link;
+
+          article.innerHTML = `
+            <h3>${titulo}</h3>
+            <p>${String(texto).slice(0,150)}${String(texto).length > 150 ? "..." : ""}</p>
+          `;
+
+          newsList.appendChild(article);
+        });
+
+      }catch(error){
+        console.error("Erro ao carregar notícias do Firebase:", error);
+        renderizarNoticiasVazio();
+      }
+    }
+
+    carregarJogosFirebase();
+    carregarNoticiasFirebase();
+
+    if("serviceWorker" in navigator){
+      window.addEventListener("load", function(){
+        navigator.serviceWorker.register("service-worker.js").catch(function(error){
+          console.warn("Service Worker não registrado:", error);
+        });
+      });
+    }
+  </script>
 
 </body>
 </html>
